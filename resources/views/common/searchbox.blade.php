@@ -6,7 +6,7 @@
                     <i class="fas fa-search"></i>
                 </span>
             </div>
-            <input type="text" wire:model="search" placeholder="Buscar" class="form-control">
+            <input type="text" wire:model="search" style="Background:#FFFFFF !important" placeholder="Buscar" class="form-control">
         </div>
     </div>
 </div>

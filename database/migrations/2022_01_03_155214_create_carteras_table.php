@@ -16,6 +16,7 @@ class CreateCarterasTable extends Migration
         Schema::create('carteras', function (Blueprint $table) {
             $table->id();
             $table->string("nombre", 255);
+            $table->integer("telefonoNum");
             $table->enum("tipo", ['telefono','sistema','cajafisica']);
             $table->string("descripcion", 255);
             $table->unsignedBigInteger('caja_id');

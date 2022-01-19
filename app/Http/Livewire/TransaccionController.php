@@ -51,7 +51,7 @@ class TransaccionController extends Component
         $this->codigo_transf = 0;
         $this->razon = '';
         $this->nit = 0;
-        $this->importe = 0;
+        $this->importe = '';
         $this->cheq = 0;
         $this->utilidad = 0;
         $this->costo = 0;
@@ -83,7 +83,7 @@ class TransaccionController extends Component
             ->where('mov.type', 'APERTURA')
             ->select('cajas.id as id')
             ->get()->first();
-        
+
         if (strlen($this->search) > 0) {
             $data = Transaccion::join('origen_motivos as om', 'transaccions.origen_motivo_id', 'om.id')
                 ->join('origens as ori', 'ori.id', 'om.origen_id')
@@ -92,6 +92,9 @@ class TransaccionController extends Component
                 ->join('movimientos as m', 'm.id', 'mt.movimiento_id')
                 ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
                 ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
+                ->join('cartera_movs as cmvs', 'm.id', 'cmvs.movimiento_id')
+                ->join('carteras as cart', 'cart.id', 'cmvs.cartera_id')
+                ->join('cajas as ca', 'ca.id', 'cart.caja_id')
                 ->select(
                     'c.cedula as codCliente',
                     'transaccions.telefono as TelCliente',
@@ -110,6 +113,7 @@ class TransaccionController extends Component
                 ->where('c.cedula', 'like', '%' . $this->search . '%')
                 ->orWhere('ori.nombre', 'like', '%' . $this->search . '%')
                 ->orWhere('mot.nombre_motivo', 'like', '%' . $this->search . '%')
+                ->where('ca.id', $cajausuario->id)
                 ->orderBy('transaccions.created_at', 'desc')
                 ->paginate($this->pagination);
         } else {
@@ -142,7 +146,7 @@ class TransaccionController extends Component
                 ->orderBy('transaccions.created_at', 'desc')
                 ->paginate($this->pagination);
         }
-    
+
         $datos = [];
         if (strlen($this->cedula) > 0) {
             $datos = Cliente::where('cedula', 'like', '%' . $this->cedula . '%')->orderBy('cedula', 'desc')->get();
@@ -198,13 +202,13 @@ class TransaccionController extends Component
             /* REALIZAR CALCULO DE INGRESOS - EGRESOS */
             $c->monto = $MONTO - $MONTO2;
         }
-        
+
 
         /* MOSTRAR SOLO TELEFONO O SOLO SISTEMA O AMBOS SI ES QUE EXISTEN EN ESA CAJA */
         $carterasDe = Cartera::join('origens as ori', 'carteras.tipo', 'ori.nombre')
             ->select('ori.nombre as nombre', 'ori.id as id')
             ->where('caja_id', $cajausuario->id)->get();
-        
+
         return view('livewire.transaccion.component', [
             'data' => $data,
             'origenes' => $carterasDe,
@@ -301,11 +305,10 @@ class TransaccionController extends Component
         }
         /* dd($comis); */
         if ($comis->porcentaje == 0) {
-          
+
             if ($comis->monto_a == 'Monto a Registrar') {
                 $this->importe = $this->importe - $comis->comision;
             }
-            
         } else {
 
             if ($comis->monto_a == 'Monto a Cobrar') {
@@ -468,6 +471,7 @@ class TransaccionController extends Component
 
                 CarteraMov::create([
                     'type' => 'EGRESO',
+                    'comentario' => '',
                     'cartera_id' => $cartera->id,
                     'movimiento_id' => $mv->id
                 ]);
@@ -482,6 +486,7 @@ class TransaccionController extends Component
 
                 CarteraMov::create([
                     'type' => 'INGRESO',
+                    'comentario' => '',
                     'cartera_id' => $carteraCaja->id,
                     'movimiento_id' => $mvt->id
                 ]);
@@ -491,11 +496,11 @@ class TransaccionController extends Component
                     'status' => 'ACTIVO',
                     'import' => $this->importe,
                     'user_id' => Auth()->user()->id,
-
                 ]);
 
                 CarteraMov::create([
                     'type' => 'EGRESO',
+                    'comentario' => '',
                     'cartera_id' => $carteraCaja->id,
                     'movimiento_id' => $mv->id
                 ]);
@@ -505,11 +510,11 @@ class TransaccionController extends Component
                     'status' => 'ACTIVO',
                     'import' => $this->importe,
                     'user_id' => Auth()->user()->id,
-
                 ]);
 
                 CarteraMov::create([
                     'type' => 'INGRESO',
+                    'comentario' => '',
                     'cartera_id' => $cartera->id,
                     'movimiento_id' => $mvt->id
                 ]);
@@ -552,20 +557,41 @@ class TransaccionController extends Component
     }
     public function Generar()
     {
+        $rules = [ /* Reglas de validacion */
+            'type' => 'required|not_in:Elegir',
+            'cartera_id' => 'required|not_in:Elegir',
+            'cantidad' => 'required|integer|not_in:0',
+            'comentario' => 'required',
+        ];
+        $messages = [ /* mensajes de validaciones */
+            'type.not_in' => 'Seleccione un valor distinto a Elegir',
+            'type.not_in' => 'Seleccione un valor distinto a Elegir',
+            'cartera_id.not_in' => 'Seleccione un valor distinto a Elegir',
+            'cartera_id.not_in' => 'Seleccione un valor distinto a Elegir',
+            'cantidad.required' => 'Ingrese un monto válido',
+            'cantidad.not_in' => 'Ingrese un monto válido',
+            'cantidad.integer' => 'El monto debe ser un número',
+            'comentario.required' => 'El comentario es obligatorio',
+        ];
+
+        $this->validate($rules, $messages);
+
         $mvt = Movimiento::create([
             'type' => 'TERMINADO',
             'status' => 'ACTIVO',
             'import' => $this->cantidad,
             'user_id' => Auth()->user()->id,
-
         ]);
+
         CarteraMov::create([
             'type' => $this->type,
             'comentario' => $this->comentario,
             'cartera_id' => $this->cartera_id,
             'movimiento_id' => $mvt->id
         ]);
+
         $this->emit('g-i/e', 'Se generó el ingreso/egreso');
+        $this->resetUI();
     }
 
     protected $listeners = ['deleteRow' => 'Anular'];
@@ -610,6 +636,8 @@ class TransaccionController extends Component
         $this->comentario = '';
         $this->type = 'Elegir';
         $this->cartera_id = 'Elegir';
+        $this->cantidad = '';
+        $this->comentario = '';
         $this->resetValidation();
         $this->resetPage();
     }

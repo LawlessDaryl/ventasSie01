@@ -39,17 +39,21 @@
                 @error('importe') <span class="text-danger er">{{ $message }}</span>@enderror
             </div>
         </div>
-        <div class="n-chk">
-            <label class="new-control new-radio radio-classic-primary">
-              <input type="radio" class="new-control-input" name="custom-radio-2" id="SI" value="SI" wire:change="ComisionSi()">
-              <span class="new-control-indicator"></span>SI
-            </label>
-            <label class="new-control new-radio radio-classic-primary">
-              <input type="radio" class="new-control-input" name="custom-radio-2" id="NO" value="NO" wire:change="ComisionNo()">
-              <span class="new-control-indicator"></span>NO
-            </label>
-        </div>
-        @if ($origen != 'Elegir' && $motivo != 'Elegir')
+        @if ($origen != 'Elegir' && $motivo != 'Elegir' && $importe!='')
+            <div class="n-chk">
+                <label class="new-control new-radio radio-classic-primary">
+                    <input type="radio" class="new-control-input" name="custom-radio-2" id="SI" value="SI"
+                        wire:change="ComisionSi()">
+                    <span class="new-control-indicator"></span>SI
+                </label>
+                <label class="new-control new-radio radio-classic-primary">
+                    <input type="radio" class="new-control-input" name="custom-radio-2" id="NO" value="NO"
+                        wire:change="ComisionNo()">
+                    <span class="new-control-indicator"></span>NO
+                </label>
+            </div>
+        @endif
+        {{-- @if ($origen != 'Elegir' && $motivo != 'Elegir')
             <div class="col-sm-4 col-md-4 n-chk">
                 <div class="n-chk">
                     <label class="new-control new-checkbox checkbox-primary">
@@ -60,7 +64,7 @@
                     </label>
                 </div>
             </div>
-        @endif
+        @endif --}}
 
         <div class="col-sm-8 col-md-12">
             <div class="form-group">

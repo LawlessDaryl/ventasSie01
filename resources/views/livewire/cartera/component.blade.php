@@ -22,6 +22,7 @@
                                 <th class="table-th text-withe text-center">NOMBRE</th>
                                 <th class="table-th text-withe text-center">DESCRIPCION</th>
                                 <th class="table-th text-withe text-center">TIPO</th>
+                                <th class="table-th text-withe text-center">NUMERO TELEFONO</th>
                                 <th class="table-th text-withe text-center">CAJA</th>
                                 <th class="table-th text-withe text-center">ACCIONES</th>
                             </tr>
@@ -37,6 +38,9 @@
                                     </td>
                                     <td>
                                         <h6 class="text-center">{{ $item->tipo }}</h6>
+                                    </td>
+                                    <td>
+                                        <h6 class="text-center">{{ $item->telefonoNum }}</h6>
                                     </td>
                                     <td>
                                         <h6 class="text-center">{{ $item->cajanombre }}</h6>

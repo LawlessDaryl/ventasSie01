@@ -28,6 +28,16 @@
             @error('tipo') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>
     </div>
+    @if($variable==1)
+    <div class="col-sm-12 col-md-6">
+        <div class="form-group">
+            <label>Número de telefono</label>
+            <input type="text" wire:model.lazy="telefonoNum" class="form-control" placeholder="ej: 67878455"
+                maxlenght="25">
+            @error('telefonoNum') <span class="text-danger er">{{ $message }}</span>@enderror
+        </div>
+    </div>
+    @endif
     <div class="col-sm-12 col-md-6">
         <div class="form-group">
             <label>Caja</label>
