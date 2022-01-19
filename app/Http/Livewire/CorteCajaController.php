@@ -64,7 +64,7 @@ class CorteCajaController extends Component
             $this->data = Caja::join('sucursals as s', 's.id', 'cajas.sucursal_id')
                 ->join('sucursal_users as su', 'su.sucursal_id', 's.id')
                 ->where('su.id', $idsu->id)
-                ->where('cajas.estado', 'Abierto')
+                ->where('cajas.estado', 'Cerrado')
                 ->select('cajas.*', 's.name as sucursal')
                 ->get();
         }
@@ -81,7 +81,7 @@ class CorteCajaController extends Component
 
         $this->selected_id = $caja->id;
         $this->carteras = Cartera::where('caja_id', $caja->id)
-            ->select('id', 'nombre', DB::raw('0 as monto'))->get();
+            ->select('id', 'nombre','descripcion', DB::raw('0 as monto'))->get();
         if ($this->carteras->count()) {
 
             foreach ($this->carteras as $c) {
@@ -134,7 +134,7 @@ class CorteCajaController extends Component
         /* DESABILITAR CAJA */
         $caja = Caja::find($this->selected_id);
         $caja->update([
-            'estado' => 'Cerrado',
+            'estado' => 'Abierto',
         ]);
         $caja->save();
         $this->habilitado = 1;
@@ -142,6 +142,7 @@ class CorteCajaController extends Component
         session(['sesionCaja' => $caja->nombre]);
         
         $this->emit('caja_funcion', 'Corte de caja Apertura realizado Exitosamente');
+        $this->redirect('cortecajas');
     }
     public function CerrarCaja()
     {
@@ -173,11 +174,12 @@ class CorteCajaController extends Component
         /* HABILITAR CAJA */
         $caja = Caja::find($this->selected_id);
         $caja->update([
-            'estado' => 'Abierto',
+            'estado' => 'Cerrado',
         ]);
         $caja->save();
         $this->habilitado = 0;
         session(['sesionCaja' => null]);
         $this->emit('caja_funcion', 'Corte de caja CIERRE realizado Exitosamente');
+        $this->redirect('cortecajas');
     }
 }

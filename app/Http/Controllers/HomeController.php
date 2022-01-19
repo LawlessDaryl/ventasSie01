@@ -34,13 +34,11 @@ class HomeController extends Controller
             ->where('mov.type', 'APERTURA')
             ->select('cajas.*', 's.name as sucursal')
             ->get()->take(1);
-        
-        if (empty($data)) {
-            
+
+        if ($data->count() == 0) {
             session(['sesionCaja' => null]);
-        } else{
+        } else {
             session(['sesionCaja' => $data[0]->nombre]);
-          
         }
         return view('home');
     }
