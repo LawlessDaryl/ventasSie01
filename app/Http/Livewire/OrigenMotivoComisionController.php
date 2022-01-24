@@ -34,13 +34,13 @@ class OrigenMotivoComisionController extends Component
     public function render()
     {
         if ($this->tipo != 'Elegir') {
-            $comisiones = Comision::select('nombre', 'id', 'tipo', 'monto_a', 'monto_inicial', 'monto_final', 'porcentaje', 'comision', DB::raw('0 as checked'))
+            $comisiones = Comision::select('nombre', 'id', 'tipo', 'monto_inicial', 'monto_final', 'porcentaje', 'comision', DB::raw('0 as checked'))
                 ->where('tipo', $this->tipo)
-                ->orderBy('nombre', 'asc')
+                ->orderBy('monto_inicial', 'asc')
                 ->paginate($this->pagination);
         } else {
-            $comisiones = Comision::select('nombre', 'id', 'tipo', 'monto_a', 'monto_inicial', 'monto_final', 'porcentaje', 'comision', DB::raw('0 as checked'))
-                ->orderBy('nombre', 'asc')
+            $comisiones = Comision::select('nombre', 'id', 'tipo', 'monto_inicial', 'monto_final', 'porcentaje', 'comision', DB::raw('0 as checked'))
+                ->orderBy('monto_inicial', 'asc')
                 ->paginate($this->pagination);
         }
 
@@ -60,10 +60,7 @@ class OrigenMotivoComisionController extends Component
             ->where('o.id', $this->origen)
             ->where('m.id', $this->motivo)->pluck('origen_motivos.id')->toArray();
 
-        /*  $this->omcomi=(int)$idsOrigesMots.value(0); */
         if ($this->tipo != 'Elegir' && $this->origen != 'Elegir' && $this->motivo != 'Elegir') {
-            /* dd($this->motivo); */
-            /* dd($idsOrigesMots); */
             $origenMotivoComi = OrigenMotivoComision::where('origen_motivos_id', $idsOrigesMots)
                 ->pluck('origen_motivo_comisions.comision_id')->toArray();
             foreach ($origenMotivoComi as $OMC) {
@@ -91,7 +88,7 @@ class OrigenMotivoComisionController extends Component
                 ->get();
             if ($state) {
                 $comis = Comision::find($id);
-                /* dd($idsOrigesMots[0]->id); */
+                
                 $lista = OrigenMotivoComision::join('comisions as c', 'origen_motivo_comisions.comision_id', 'c.id')
 
                     ->where('c.tipo', $comis->tipo)

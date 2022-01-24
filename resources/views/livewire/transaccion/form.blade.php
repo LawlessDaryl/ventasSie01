@@ -34,21 +34,21 @@
         <div class="col-sm-12 col-md-12">
             <div class="form-group">
                 <label>Monto a Cobrar</label>
-                <input @if ($origen == 'Elegir' || $motivo == 'Elegir' || $check == 1) disabled @endif type="text" date-type='importe' wire:model="importe"
+                <input @if ($origen == 'Elegir' || $motivo == 'Elegir') disabled @endif type="text" date-type='importe' wire:model="importe"
                     class="form-control" placeholder="">
                 @error('importe') <span class="text-danger er">{{ $message }}</span>@enderror
             </div>
         </div>
-        @if ($origen != 'Elegir' && $motivo != 'Elegir' && $importe!='')
+        @if ($origen != 'Elegir' && $motivo != 'Elegir' && $importe!=''&& $condicional==1)
             <div class="n-chk">
                 <label class="new-control new-radio radio-classic-primary">
                     <input type="radio" class="new-control-input" name="custom-radio-2" id="SI" value="SI"
-                        wire:change="ComisionSi()">
+                    wire:model="comisionSiV">
                     <span class="new-control-indicator"></span>SI
                 </label>
                 <label class="new-control new-radio radio-classic-primary">
                     <input type="radio" class="new-control-input" name="custom-radio-2" id="NO" value="NO"
-                        wire:change="ComisionNo()">
+                    wire:model="comisionNoV">
                     <span class="new-control-indicator"></span>NO
                 </label>
             </div>
@@ -134,7 +134,7 @@
                 @error('celular') <span class="text-danger er">{{ $message }}</span>@enderror
             </div>
         </div>
-        @if ($motivA == 1)
+        @if ($mostrartelf == 1)
             <div class="col-sm-12 col-md-12">
                 <div class="form-group">
                     <label>Teléfono Destino</label>

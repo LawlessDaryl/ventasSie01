@@ -62,7 +62,8 @@ class CarteraController extends Component
         $rules = [
             'nombre' => 'required|unique:carteras',
             'caja_id' => 'required|not_in:Elegir',
-            'tipo' => 'required|not_in:Elegir'
+            'tipo' => 'required|not_in:Elegir',
+            'telefonoNum' => 'required_if:tipo,1',
         ];
         $messages = [
             'nombre.required' => 'Nombre de la cartera requerido.',
