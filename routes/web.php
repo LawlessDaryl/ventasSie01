@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\ExportController;
+use App\Http\Controllers\ExportTigoPdfController;
+use App\Http\Controllers\TigoGananciaPdfController;
 use App\Http\Livewire\ArqueosTigoController;
 use App\Http\Livewire\AsignarController;
 use App\Http\Livewire\CajasController;
@@ -30,6 +32,7 @@ use App\Http\Livewire\SucursalController;
 use App\Http\Livewire\CatProdServiceController;
 use App\Http\Livewire\SubCatProdServiceController;
 use App\Http\Livewire\OrderServiceController;
+use App\Http\Livewire\ReporGananciaTgController;
 use App\Http\Livewire\ServiciosController;
 use App\Http\Livewire\StrProveedorController;
 use Illuminate\Support\Facades\Auth;
@@ -71,6 +74,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('tigomoney', TransaccionController::class)->name('tigomoney');
     Route::get('reportestigo', ReportesTigoController::class)->name('reportestigo');
+    Route::get('ReporteGananciaTg', ReporGananciaTgController::class)->name('ReporteGananciaTg');
     Route::get('arqueostigo', ArqueosTigoController::class)->name('arqueostigo');
 
     Route::get('clientes', ClienteController::class)->name('cliente');
@@ -79,9 +83,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('orderservice', OrderServiceController::class)->name('os');
     Route::get('service', ServiciosController::class)->name('serv');
 
-    //reportes PDDF
+    //reportes PDF
     Route::get('report/pdf/{user}/{type}/{f1}/{f2}', [ExportController::class, 'reportPDF']);
     Route::get('report/pdf/{user}/{type}', [ExportController::class, 'reportPDF']);
+    Route::get('reporteTigo/pdf/{user}/{type}/{f1}/{f2}', [ExportTigoPdfController::class, 'reporteTigoPDF']);
+    Route::get('reporteTigo/pdf/{user}/{type}', [ExportTigoPdfController::class, 'reporteTigoPDF']);
+    Route::get('reporteGananciaTigoM/pdf/{user}/{type}/{f1}/{f2}', [TigoGananciaPdfController::class, 'reporte']);
+    Route::get('reporteGananciaTigoM/pdf/{user}/{type}', [TigoGananciaPdfController::class, 'reporte']);
 });
 
 

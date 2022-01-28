@@ -49,14 +49,14 @@
                                                             class="new-control-input"
                                                             {{ $motivo->checked == 1 ? 'checked' : '' }}>
                                                         <span class="new-control-indicator"></span>
-                                                        <h6>{{ $motivo->nombre_motivo }}</h6>
+                                                        <h6>{{ $motivo->nombre }}</h6>
                                                     </label>
                                                 </div>
                                             </td>
                                             <td class="text-center">
                                                 @if ($motivo->checked == 1)
                                                     @if ($motivo->condicional != 'no')
-                                                        <button onclick="Confirm('{{ $motivo->id }}','{{ $motivo->nombre_motivo }}')" type="button"
+                                                        <button onclick="Confirm('{{ $motivo->id }}','{{ $motivo->nombre }}')" type="button"
                                                             class="btn btn-dark">
                                                             <svg aria-hidden="true" focusable="false" data-prefix="far"
                                                                 data-icon="check-circle" role="img"

@@ -1,19 +1,21 @@
 <?php
 
 namespace App\Http\Livewire;
+
 use App\Models\Transaccion;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
-class ReportesTigoController extends Component
+class ReporGananciaTgController extends Component
 {
     public $componentName, $data, $details, $sumDetails, $countDetails, $reportType,
         $userId, $dateFrom, $dateTo, $transaccionId;
 
     public function mount()
     {
-        $this->componentName = 'Reportes Tigo Money';
+        $this->componentName = 'Reportes Ganancias de Tigo Money';
         $this->data = [];
         $this->details = [];
         $this->sumDetails = 0;
@@ -27,7 +29,7 @@ class ReportesTigoController extends Component
     {
         $this->trsbydate();
 
-        return view('livewire.reportes_tigo.component', [
+        return view('livewire.reportGananciaTg.component', [
             'users' => User::orderBy('name', 'asc')->get()
         ])->extends('layouts.theme.app')
             ->section('content');
@@ -38,6 +40,8 @@ class ReportesTigoController extends Component
         if ($this->reportType == 0) {
             $from = Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00';
             $to = Carbon::parse(Carbon::now())->format('Y-m-d')   . ' 23:59:59';
+            $this->dateFrom='';
+            $this->dateTo='';
         } else {
             $from = Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00';
             $to = Carbon::parse($this->dateTo)->format('Y-m-d')     . ' 23:59:59';
@@ -62,11 +66,15 @@ class ReportesTigoController extends Component
                     'transaccions.*',
                     'ori.nombre as origen_nombre',
                     'mot.nombre as motivo_nombre',
+                    DB::raw('0 as ganancia')
                 )
                 ->whereBetween('transaccions.created_at', [$from, $to])
 
                 ->orderBy('transaccions.id', 'desc')
                 ->get();
+            foreach ($this->data as $d) {
+                $d->ganancia = ($d->importe * 1) / 100;
+            }
         } else {
             $this->data = Transaccion::join('mov_transacs as mt', 'mt.transaccion_id', 'transaccions.id')
                 ->join('movimientos as m', 'm.id', 'mt.movimiento_id')
@@ -87,27 +95,9 @@ class ReportesTigoController extends Component
                 ->where('m.user_id', $this->userId)
                 ->orderBy('transaccions.id', 'desc')
                 ->get();
+            foreach ($this->data as $d) {
+                $d->ganancia = ($d->importe * 1) / 100;
+            }
         }
-    }
-
-    public function getDetails($idtransaccion)
-    {
-        $this->details = Transaccion::join('mov_transacs as mt', 'mt.transaccion_id', 'transaccions.id')
-            ->join('movimientos as m', 'm.id', 'mt.movimiento_id')
-
-            ->join('cartera_movs as cmv', 'cmv.movimiento_id', 'm.id')
-            ->join('carteras as c', 'cmv.cartera_id', 'c.id')
-
-            ->select(
-                'cmv.type as tipo',
-                'transaccions.importe as importe',
-                'c.nombre as nombreCartera',
-            )
-            ->where('transaccions.id', $idtransaccion)
-            ->get();
-
-        $this->transaccionId = $idtransaccion;
-
-        $this->emit('show-modal', 'details loaded');
     }
 }

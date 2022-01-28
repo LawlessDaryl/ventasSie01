@@ -21,9 +21,8 @@ class CreateTransaccionsTable extends Migration
             $table->decimal('costo',10,2);
             $table->string('observaciones',255)->nullable();
             $table->date('fecha_transaccion');
-            $table->string('estado',255);
+            $table->string('estado',255)->default('Activa');
             $table->string('telefono',255);
-            
             $table->unsignedBigInteger('origen_motivo_id');
             $table->foreign('origen_motivo_id')->references('id')->on('origen_motivos');
             $table->timestamps();

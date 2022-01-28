@@ -38,8 +38,8 @@ class OrigenMotivoController extends Component
 
     public function render()
     {
-        $motivos = Motivo::select('nombre_motivo', 'id', DB::raw('0 as checked'), DB::raw('0 as condicional'))
-            ->orderBy('nombre_motivo', 'asc')
+        $motivos = Motivo::select('nombre', 'id', DB::raw('0 as checked'), DB::raw('0 as condicional'))
+            ->orderBy('nombre', 'asc')
             ->paginate($this->pagination);
 
         if ($this->origen != 'Elegir') {
@@ -75,8 +75,8 @@ class OrigenMotivoController extends Component
             $this->emit('sync-error', 'Selecciona un origen válido');
             return;
         }
-        $motivos = Motivo::select('nombre_motivo', 'id', DB::raw('0 as checked'))
-            ->orderBy('nombre_motivo', 'asc')
+        $motivos = Motivo::select('nombre', 'id', DB::raw('0 as checked'))
+            ->orderBy('nombre', 'asc')
             ->paginate($this->pagination);
         $origen = Origen::find($this->origen);
         foreach ($motivos as $mot) {
@@ -97,8 +97,8 @@ class OrigenMotivoController extends Component
             $this->emit('sync-error', 'Selecciona un orígen válido');
             return;
         }
-        $motivos = Motivo::select('nombre_motivo', 'id', DB::raw('0 as checked'))
-            ->orderBy('nombre_motivo', 'asc')
+        $motivos = Motivo::select('nombre', 'id', DB::raw('0 as checked'))
+            ->orderBy('nombre', 'asc')
             ->paginate($this->pagination);
         $origen = Origen::find($this->origen);
         foreach ($motivos as $mot) {
@@ -113,6 +113,8 @@ class OrigenMotivoController extends Component
     {
         if ($this->origen != 'Elegir') {
             $origen = Origen::find($this->origen);
+            $origenMotivo=OrigenMotivo::where('origen_id',$this->origen)->where('motivo_id',$id)->get()->first();
+
             if ($state) {
                 OrigenMotivo::create([
                     'origen_id' => $origen->id,
@@ -120,7 +122,7 @@ class OrigenMotivoController extends Component
                 ]);
                 $this->emit('permi', 'Motivo asignado correctamente');
             } else {
-                if ($origen->relacionados->count() > 0) {
+                if ($origenMotivo->relacionados->count() > 0) {
                     $this->redirect('origen-motivo');
                     $this->emit('sync-error', 'No se puede eliminar porque tiene comisiones relacionadas/ transacciones relacionadas.');
                 } else {
@@ -151,7 +153,7 @@ class OrigenMotivoController extends Component
         $motivoNombre = Motivo::find($mot);
         $this->origenNombre = Origen::find($this->origen)->nombre;
 
-        $this->motivoNombre = $motivoNombre->nombre_motivo;
+        $this->motivoNombre = $motivoNombre->nombre;
 
         $this->emit('asignar', '');
     }

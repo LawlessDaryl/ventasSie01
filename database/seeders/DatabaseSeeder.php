@@ -20,6 +20,14 @@ class DatabaseSeeder extends Seeder
         $this->call(CategorySeeder::class);
         $this->call(ProductSeeder::class);
         $this->call(UserSeeder::class);
+        $this->call(ComisionSeeder::class);
+        $this->call(CompanySeeder::class);
+        $this->call(SucursalSeeder::class);
+        $this->call(SucursalUserSeeder::class);
+        $this->call(CajaSeeder::class);
+        $this->call(CarteraSeeder::class);
+        $this->call(OrigenSeeder::class);
+        $this->call(MotivoSeeder::class);
 
        /*  Category::factory(20)->create(); */
     }

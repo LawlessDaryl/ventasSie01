@@ -9,7 +9,7 @@ class Comision extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nombre','tipo','monto_a','monto_inicial','monto_final','comision','porcentaje'];
+    protected $fillable = ['nombre','tipo','monto_inicial','monto_final','comision','porcentaje'];
 
     public function relacionados()
     {

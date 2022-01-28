@@ -35,7 +35,7 @@
                             <option value="{{$key}}" selected>{{$mot}}</option>
                             @endforeach --}}
                             @foreach($motivos as  $mot)
-                            <option value="{{$mot->id}}" selected>{{$mot->nombre_motivo}}</option>
+                            <option value="{{$mot->id}}" selected>{{$mot->nombre}}</option>
                             @endforeach
                         </select>
                     </div>

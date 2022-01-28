@@ -1,54 +1,34 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade as PDF;
+use Carbon\Carbon;
+use App\Models\Sale;
+use App\Models\SaleDetail;
 use App\Models\Transaccion;
 use App\Models\User;
-use Carbon\Carbon;
-use Livewire\Component;
+use Maatwebsite\Excel\Facades\Excel;
 
-class ReportesTigoController extends Component
+
+class ExportTigoPdfController extends Controller
 {
-    public $componentName, $data, $details, $sumDetails, $countDetails, $reportType,
-        $userId, $dateFrom, $dateTo, $transaccionId;
-
-    public function mount()
+    public function reporteTigoPDF($userId, $reportType, $dateFrom = null, $dateTo = null)
     {
-        $this->componentName = 'Reportes Tigo Money';
-        $this->data = [];
-        $this->details = [];
-        $this->sumDetails = 0;
-        $this->countDetails = 0;
-        $this->reportType = 0;
-        $this->userId = 0;
-        $this->transaccionId = 0;
-    }
+        $data = [];
 
-    public function render()
-    {
-        $this->trsbydate();
-
-        return view('livewire.reportes_tigo.component', [
-            'users' => User::orderBy('name', 'asc')->get()
-        ])->extends('layouts.theme.app')
-            ->section('content');
-    }
-
-    public function trsbydate()
-    {
-        if ($this->reportType == 0) {
+        if ($reportType == 0) //ventas del dia
+        {
             $from = Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00';
             $to = Carbon::parse(Carbon::now())->format('Y-m-d')   . ' 23:59:59';
         } else {
-            $from = Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00';
-            $to = Carbon::parse($this->dateTo)->format('Y-m-d')     . ' 23:59:59';
+            $from = Carbon::parse($dateFrom)->format('Y-m-d') . ' 00:00:00';
+            $to = Carbon::parse($dateTo)->format('Y-m-d')     . ' 23:59:59';
         }
 
-        if ($this->reportType == 1 && ($this->dateFrom == '' || $this->dateTo == '')) {
-            return;
-        }
-
-        if ($this->userId == 0) {
-            $this->data = Transaccion::join('mov_transacs as mt', 'mt.transaccion_id', 'transaccions.id')
+        if ($userId == 0) {
+            $data = Transaccion::join('mov_transacs as mt', 'mt.transaccion_id', 'transaccions.id')
                 ->join('movimientos as m', 'm.id', 'mt.movimiento_id')
                 ->join('users as u', 'm.user_id', 'u.id')
                 ->join('cartera_movs as cmv', 'cmv.movimiento_id', 'm.id')
@@ -64,11 +44,10 @@ class ReportesTigoController extends Component
                     'mot.nombre as motivo_nombre',
                 )
                 ->whereBetween('transaccions.created_at', [$from, $to])
-
                 ->orderBy('transaccions.id', 'desc')
                 ->get();
         } else {
-            $this->data = Transaccion::join('mov_transacs as mt', 'mt.transaccion_id', 'transaccions.id')
+            $data = Transaccion::join('mov_transacs as mt', 'mt.transaccion_id', 'transaccions.id')
                 ->join('movimientos as m', 'm.id', 'mt.movimiento_id')
                 ->join('users as u', 'm.user_id', 'u.id')
                 ->join('cartera_movs as cmv', 'cmv.movimiento_id', 'm.id')
@@ -84,30 +63,15 @@ class ReportesTigoController extends Component
                     'mot.nombre as motivo_nombre',
                 )
                 ->whereBetween('transaccions.created_at', [$from, $to])
-                ->where('m.user_id', $this->userId)
+                ->where('m.user_id', $userId)
                 ->orderBy('transaccions.id', 'desc')
                 ->get();
         }
-    }
 
-    public function getDetails($idtransaccion)
-    {
-        $this->details = Transaccion::join('mov_transacs as mt', 'mt.transaccion_id', 'transaccions.id')
-            ->join('movimientos as m', 'm.id', 'mt.movimiento_id')
+        $user = $userId == 0 ? 'Todos' : User::find($userId)->name;
+        $pdf = PDF::loadView('livewire.pdf.reporteTigo', compact('data', 'reportType', 'user', 'dateFrom', 'dateTo'));
 
-            ->join('cartera_movs as cmv', 'cmv.movimiento_id', 'm.id')
-            ->join('carteras as c', 'cmv.cartera_id', 'c.id')
-
-            ->select(
-                'cmv.type as tipo',
-                'transaccions.importe as importe',
-                'c.nombre as nombreCartera',
-            )
-            ->where('transaccions.id', $idtransaccion)
-            ->get();
-
-        $this->transaccionId = $idtransaccion;
-
-        $this->emit('show-modal', 'details loaded');
+        return $pdf->stream('TigoMoneyReport.pdf');  //visualizar
+        /* return $pdf->download('salesReport.pdf');  //descargar  */
     }
 }

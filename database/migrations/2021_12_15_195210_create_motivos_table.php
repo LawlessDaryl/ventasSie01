@@ -15,7 +15,7 @@ class CreateMotivosTable extends Migration
     {
         Schema::create('motivos', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre_motivo',255);
+            $table->string('nombre',255);
             $table->string('tipo',255);
             $table->timestamps();
         });

@@ -3,53 +3,31 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title text-white">
-                    <b>Detalle de Vanta # {{$saleId}}</b>
+                    <b style="color:black">Detalle de Transacción # {{$transaccionId}}</b>
                 </h5>
                 <h6 class="text-center text-warning" wire:loading>POR FAVOR ESPERE</h6>
             </div>
             <div class="modal-body">
                 <div class="table-responsive">
-                    <table class="table table-unbordered table-hover mt-2">
-                        <thead class="text-white" style="background: #3B3F5C">
+                    <table class="table table-bordered table-striped table-hover mt-1">
+                        <thead class="text-white" style="background: #3b3ff5;">
                             <tr>
-                                <th class="table-th text-withe text-center">FOLIO</th>
-                                <th class="table-th text-withe text-center">PRODUCTO</th>
-                                <th class="table-th text-withe text-center">PRECIO</th>
-                                <th class="table-th text-withe text-center">CANT</th>
-                                <th class="table-th text-withe text-center">IMPORTE</th>
+                                <th class="table-th text-center text-white">Tipo</th>
+                                <th class="table-th text-center text-white">Cantidad</th>
+                                <th class="table-th text-center text-white">Cartera</th>
                             </tr>
                         </thead>
-                        <tbody>
+
+                        <tbody>                                
                             @foreach($details as $d)
-                                <tr>
-                                    <td>
-                                        <h6>{{ $d->id }}</h6>
-                                    </td>
-                                    <td>
-                                        <h6>{{ $d->product }}</h6>
-                                    </td>
-                                    <td>
-                                        <h6>{{ number_format($d->price,2) }}</h6>
-                                    </td>
-                                    <td>
-                                        <h6>{{ number_format($d->quantity,2) }}</h6>
-                                    </td>
-                                    <td>
-                                        <h6>{{ number_format($d->price * $d->quantity,2) }}</h6>
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td class="text-center"> <h6>{{$d->tipo}}</h6></td>
+                                <td class="text-center"> <h6>{{$d->importe}}</h6></td>
+                                <td class="text-center"> <h6>{{$d->nombreCartera}}</h6></td>
+                            </tr>
                             @endforeach
                         </tbody>
-
-                        <tfoot>
-                            <tr>
-                                <td colspan="3"><h5 class="text-center font-weight-bold">TOTALES</h5></td>
-                                <td><h5 class="text-center">{{$countDetails}}</h5></td>
-                                <td><h5 class="text-center">
-                                    ${{number_format($sumDetails, 2)}}
-                                </h5></td>
-                            </tr>
-                        </tfoot>
+                        
                     </table>
                 </div>
             </div>

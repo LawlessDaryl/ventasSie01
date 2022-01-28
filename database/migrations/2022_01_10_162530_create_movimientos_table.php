@@ -16,7 +16,7 @@ class CreateMovimientosTable extends Migration
         Schema::create('movimientos', function (Blueprint $table) {
             $table->id();
             $table->enum('type',['PENDIENTE','PROCESO','TERMINADO','APERTURA','CIERRE','ANULADO','ENTREGADO'])->default('PENDIENTE');
-            $table->enum('status',['ACTIVO','INACTIVO','SM'])->default('ACTIVO');
+            $table->enum('status',['ACTIVO','INACTIVO'])->default('ACTIVO');
             $table->decimal('saldo',10,2)->nullable();//Saldo que coloca el usuario al recepcionar el equipo
             $table->decimal('on_account',10,2)->nullable();
             $table->decimal('import',10,2)->default(0);//El importe final del servicio

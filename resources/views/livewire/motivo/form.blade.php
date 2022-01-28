@@ -5,9 +5,9 @@
     <div class="col-sm-12 col-md-6">
         <div class="form-group">
             <label>Nombre del motivo</label>
-            <input type="text" wire:model.lazy="nombre_motivo" class="form-control" placeholder="ej: 1000"
+            <input type="text" wire:model.lazy="nombre" class="form-control" placeholder="ej: 1000"
             maxlenght="25">
-            @error('nombre_motivo') <span class="text-danger er">{{ $message }}</span>@enderror
+            @error('nombre') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>
     </div>
     <div class="col-sm-12 col-md-6">

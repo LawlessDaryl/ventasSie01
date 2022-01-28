@@ -23,7 +23,7 @@
                     <option value="Elegir" disabled selected>Elegir</option>
                     @if ($origen != 'Elegir')
                         @foreach ($motivos as $mot)
-                            <option value="{{ $mot->id }}" selected>{{ $mot->nombre_motivo }}</option>
+                            <option value="{{ $mot->id }}" selected>{{ $mot->nombre }}</option>
                         @endforeach
                     @endif
                 </select>

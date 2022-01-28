@@ -18,8 +18,8 @@ class CreateOrigenMotivosTable extends Migration
             $table->enum('comision_si_no',['si','no','nopreguntar'])->default('no');
             $table->enum('afectadoSi',['montoR','montoC','ambos']);
             $table->enum('afectadoNo',['montoR','montoC','ambos']);
-            $table->enum('suma_resta_si',['suma','resta']);
-            $table->enum('suma_resta_no',['suma','resta']);
+            $table->enum('suma_resta_si',['suma','resta','mantiene']);
+            $table->enum('suma_resta_no',['suma','resta','mantiene']);
             $table->foreignId('origen_id')->constrained();
             $table->foreignId('motivo_id')->constrained();
             $table->timestamps();

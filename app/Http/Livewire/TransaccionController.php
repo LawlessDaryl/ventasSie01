@@ -28,7 +28,7 @@ class TransaccionController extends Component
     public $codigo, $importe, $importe2, $utilidad, $costo, $observaciones, $fecha, $origen, $motivo, $codigo_transf, $montoR, $estado,
         $pageTitle, $componentName, $selected_id, $hora, $search, $condicion, $mostrartelf, $check, $type, $cartera_id,
         $nombreCliente, $cedula, $celular, $direccion, $email, $fecha_nacim, $razon, $cheq, $nit, $cantidad, $comentario, $condicional,
-        $comisionSiV, $comisionNoV, $metodo2, $metodo;
+        $comisionSiV, $comisionNoV, $metodo2, $metodo, $variable1;
     private $pagination = 10;
     public function paginationView()
     {
@@ -47,7 +47,7 @@ class TransaccionController extends Component
         $this->montoR = 0;
         $this->direccion = '';
         $this->email = '';
-        $this->codigo_transf = 0;
+        $this->codigo_transf = '';
         $this->razon = '';
         $this->nit = 0;
         $this->importe = '';
@@ -68,6 +68,8 @@ class TransaccionController extends Component
         $this->comisionNoV = 'S';
         $this->metodo = 0;
         $this->metodo2 = 'ABC';
+        $this->variable1 = 'asd';
+        $this->variable2 = 'asd';
     }
 
     public function render()
@@ -106,7 +108,7 @@ class TransaccionController extends Component
                     'transaccions.codigo_transf as codigotrans',
                     'ori.nombre as origen_nombre',
                     'transaccions.id as id',
-                    'mot.nombre_motivo as motivo_nombre',
+                    'mot.nombre as motivo_nombre',
                     'transaccions.importe',
                     'transaccions.created_at as hora',
                     'transaccions.observaciones',
@@ -116,7 +118,7 @@ class TransaccionController extends Component
                 ->where('m.user_id', $user_id)
                 ->where('c.cedula', 'like', '%' . $this->search . '%')
                 ->orWhere('ori.nombre', 'like', '%' . $this->search . '%')
-                ->orWhere('mot.nombre_motivo', 'like', '%' . $this->search . '%')
+                ->orWhere('mot.nombre', 'like', '%' . $this->search . '%')
                 ->where('ca.id', $cajausuario->id)
                 ->orderBy('transaccions.created_at', 'desc')
                 ->paginate($this->pagination);
@@ -138,7 +140,7 @@ class TransaccionController extends Component
                     'transaccions.codigo_transf as codigotrans',
                     'ori.nombre as origen_nombre',
                     'transaccions.id as id',
-                    'mot.nombre_motivo as motivo_nombre',
+                    'mot.nombre as motivo_nombre',
                     'transaccions.importe',
                     'transaccions.created_at as hora',
                     'transaccions.observaciones',
@@ -151,6 +153,7 @@ class TransaccionController extends Component
                 ->paginate($this->pagination);
         }
 
+        /* BUSCAR CLIENTE POR CEDULA EN EL INPUT DEL MODAL */
         $datos = [];
         if (strlen($this->cedula) > 0) {
             $datos = Cliente::where('cedula', 'like', '%' . $this->cedula . '%')->orderBy('cedula', 'desc')->get();
@@ -167,6 +170,7 @@ class TransaccionController extends Component
                 $this->select = 1;
         }
 
+        /* LISTADO DE MOTIVOS DE ESE ORIGEN */
         if ($this->origen != 'Elegir') {
             $mot = OrigenMotivo::join('motivos as m', 'm.id', 'origen_motivos.motivo_id')
                 ->where('origen_motivos.origen_id', $this->origen)->pluck('m.id')->toArray();
@@ -174,6 +178,7 @@ class TransaccionController extends Component
         } else {
             $motivos = [];
         }
+
         /* Mostrar label e imput (teléfono solicitante) solo si el motivo es de tipo Abono */
         if ($this->origen != 'Elegir' && $this->motivo != 'Elegir') {
             $motiv = Motivo::find($this->motivo);
@@ -183,6 +188,62 @@ class TransaccionController extends Component
                 $this->mostrartelf = 0;
             }
         }
+
+        /* RESET DE CAMPOS AL CAMBIAR ORIGEN */
+        if ($this->origen != 'Elegir' && $this->variable1 == 'asd') {
+            $this->variable1 = $this->origen;
+        }
+        if ($this->origen != 'Elegir' && $this->motivo != 'Elegir' && $this->origen != $this->variable1) {
+            $this->importe = '';
+            $this->montoR = '';
+            $this->motivo = 'Elegir';
+            $this->variable1 = 'asd';
+            
+            $this->comisionSiV = 'S';
+            $this->comisionNoV = 'S';
+            $this->metodo2 = 'ABC';
+            $this->check = 0;
+            
+            $motivos = Motivo::find($mot);
+        }
+        /* RESET DE CAMPOS AL CAMBIAR MOTIVO */
+        if ($this->motivo != 'Elegir' && $this->variable2 == 'asd') {
+            $this->variable2 = $this->motivo;
+        }
+        if ($this->motivo != 'Elegir' && $this->importe != 0 && $this->motivo != $this->variable2) {
+            $this->importe = '';
+            $this->montoR = '';
+            $this->variable2 = 'asd';
+            $this->comisionSiV = 'S';
+            $this->comisionNoV = 'S';
+            $this->metodo2 = 'ABC';
+            $this->check = 0;
+            
+        }
+
+        /* EJECUTAR METODO DE COMISIONSI CONDICIONADO CON UN VALOR */
+        if ($this->comisionSiV == 'SI' && $this->comisionSiV != $this->metodo2) {
+            $this->comisionNoV = 'S';
+            $this->ComisionSi();
+            $this->metodo2 = $this->comisionSiV;
+        }
+        /* EJECUTAR METODO DE COMISIONNO CONDICIONADO CON UN VALOR */
+        if ($this->comisionNoV == 'NO'  && $this->metodo2 != $this->comisionNoV) {
+            $this->comisionSiV = 'S';
+            $this->ComisionNo();
+            $this->metodo2 = $this->comisionNoV;
+        }
+        /* RESET DE RADIO BUTTONS AL CAMBIAR IMPORTE */
+        if ($this->metodo != 0) {
+            if ($this->metodo != $this->importe) {
+                $this->comisionSiV = 'S';
+                $this->comisionNoV = 'S';
+                $this->metodo2 = 'ABC';
+                $this->check = 0;
+                $this->montoR = $this->importe;
+            }
+        }
+
         /* OBTENER ORIGEN-MOTIVO DE LOS CAMPOS SELECCIONADOS */
         if ($this->origen != 'Elegir' && $this->motivo != 'Elegir') {
             $idsOrigesMots = OrigenMotivo::where('motivo_id', $this->motivo)
@@ -195,29 +256,13 @@ class TransaccionController extends Component
             }
         }
 
-        if ($this->comisionSiV == 'SI' && $this->comisionSiV != $this->metodo2) {
-            $this->comisionNoV = 'S';
-            $this->ComisionSi();
-            $this->metodo2 = $this->comisionSiV;
-        }
-        
-        if ($this->comisionNoV == 'NO'  && $this->metodo2 != $this->comisionNoV) {
-            $this->comisionSiV = 'S';
-            $this->ComisionNo();
-            $this->metodo2 = $this->comisionNoV;
+        /* Monto a registrar igual a importe si variable check es igual a 0 
+        (cambia a 1 cuando se ejecutan las comisiones) */
+        if ($this->check == 0) {
+            $this->montoR = $this->importe;
         }
 
-        if ($this->metodo != 0) {
-            if ($this->metodo != $this->importe) {
-                $this->comisionSiV = 'S';
-                $this->comisionNoV = 'S';
-                $this->metodo2 = 'ABC';
-                $this->montoR = $this->importe;
-            }
-        }
-
-        $this->montoR = $this->importe;
-        /* MOSTRAR CARTERAS DE LA CAJA EN LA QUE SE ENCUENTRA*/
+        /* MOSTRAR CARTERAS DE LA CAJA EN LA QUE SE ENCUENTRA */
         $carterasCaja = Cartera::where('caja_id', $cajausuario->id)
             ->select('id', 'nombre', DB::raw('0 as monto'))->get();
         foreach ($carterasCaja as $c) {
@@ -257,13 +302,13 @@ class TransaccionController extends Component
         $this->celular = $celular;
         $this->select = 0;
     }
-
+    /* NO SIRVE */
     public function Utilidad($monto, $costo)
     {
         $calcUtilidad = $monto - $costo;
         return $calcUtilidad;
     }
-
+    /* CALCULAR COMISION SI SELECCIONA SI EN RADIO BUTTON */
     public function ComisionSi()
     {
         $this->montoR = $this->importe;
@@ -275,7 +320,7 @@ class TransaccionController extends Component
         $lista = OrigenMotivoComision::join('comisions as c', 'origen_motivo_comisions.comision_id', 'c.id')
             ->where('c.monto_inicial', '<=', $this->importe2)
             ->where('c.monto_final', '>=', $this->importe2)
-            ->where('origen_motivo_comisions.origen_motivos_id', $idsOrigesMots->id)
+            ->where('origen_motivo_comisions.origen_motivo_id', $idsOrigesMots->id)
             ->where('c.tipo', 'Cliente')
             ->pluck('c.id')->toArray();
 
@@ -364,7 +409,7 @@ class TransaccionController extends Component
         $this->check = 1;
         $this->metodo = $this->importe;
     }
-
+    /* CALCULAR COMISION SI SELECCIONA NO EN RADIO BUTTON */
     public function ComisionNo()
     {
         $this->montoR = $this->importe;
@@ -376,7 +421,7 @@ class TransaccionController extends Component
         $lista = OrigenMotivoComision::join('comisions as c', 'origen_motivo_comisions.comision_id', 'c.id')
             ->where('c.monto_inicial', '<=', $this->importe2)
             ->where('c.monto_final', '>=', $this->importe2)
-            ->where('origen_motivo_comisions.origen_motivos_id', $idsOrigesMots->id)
+            ->where('origen_motivo_comisions.origen_motivo_id', $idsOrigesMots->id)
             ->where('c.tipo', 'Cliente')
             ->pluck('c.id')->toArray();
 
@@ -465,33 +510,60 @@ class TransaccionController extends Component
         $this->check = 1;
         $this->metodo = $this->importe;
     }
-
-    /* Registrar una transaccion */
+    /* REGISTRAR TRANSACCION */
     public function Store()
     {
+        $motiv = Motivo::find($this->motivo);
+        if ($motiv->tipo == 'Abono') {
+            $rules = [ /* Reglas de validacion */
+                'cedula' => 'required|min:5',
+                'celular' => 'required|integer|min:8',
+                'motivo' => 'required|not_in:Elegir',
+                'origen' => 'required|not_in:Elegir',
+                'importe' => 'required|integer|min:1|not_in:0',
+                'codigo_transf' => 'required'
+            ];
+            $messages = [ /* mensajes de validaciones */
+                'cedula.required' => 'Ingresa el número de carnet de identidad',
+                'cedula.min' => 'El numero de carnet debe tener al menos 3 caracteres',
+                'celular.required' => 'Ingresa el telefono del solicitante',
+                'celular.min' => 'El teléfono debe tener al menos 8 caractéres',
+                'celular.integer' => 'El teléfono debe ser un número',
+                'motivo.not_in' => 'Seleccione un valor distinto a Elegir',
+                'origen.not_in' => 'Seleccione un valor distinto a Elegir',
+                'importe.required' => 'Ingrese un monto válido',
+                'importe.min' => 'Ingrese un monto mayor a 0',
+                'importe.not_in' => 'Ingrese un monto válido',
+                'importe.integer' => 'El monto debe ser un número',
+                'codigo_transf.required' => 'Este campo es obligatorio',
+            ];
 
-        $rules = [ /* Reglas de validacion */
-            'cedula' => 'required|min:5',
-            'celular' => 'required|integer|min:8',
-            'motivo' => 'required|not_in:Elegir',
-            'origen' => 'required|not_in:Elegir',
-            'importe' => 'required|integer|min:1|not_in:0'
-        ];
-        $messages = [ /* mensajes de validaciones */
-            'cedula.required' => 'Ingresa el número de carnet de identidad',
-            'cedula.min' => 'El numero de carnet debe tener al menos 3 caracteres',
-            'celular.required' => 'Ingresa el telefono del solicitante',
-            'celular.min' => 'El teléfono debe tener al menos 8 caractéres',
-            'celular.integer' => 'El teléfono debe ser un número',
-            'motivo.not_in' => 'Seleccione un valor distinto a Elegir',
-            'origen.not_in' => 'Seleccione un valor distinto a Elegir',
-            'importe.required' => 'Ingrese un monto válido',
-            'importe.min' => 'Ingrese un monto mayor a 0',
-            'importe.not_in' => 'Ingrese un monto válido',
-            'importe.integer' => 'El monto debe ser un número'
-        ];
-
-        $this->validate($rules, $messages);
+            $this->validate($rules, $messages);
+        } else {
+            $rules = [ /* Reglas de validacion */
+                'cedula' => 'required|min:5',
+                'celular' => 'required|integer|min:8',
+                'motivo' => 'required|not_in:Elegir',
+                'origen' => 'required|not_in:Elegir',
+                'importe' => 'required|integer|min:1|not_in:0',
+            ];
+            $messages = [ /* mensajes de validaciones */
+                'cedula.required' => 'Ingresa el número de carnet de identidad',
+                'cedula.min' => 'El numero de carnet debe tener al menos 3 caracteres',
+                'celular.required' => 'Ingresa el telefono del solicitante',
+                'celular.min' => 'El teléfono debe tener al menos 8 caractéres',
+                'celular.integer' => 'El teléfono debe ser un número',
+                'motivo.not_in' => 'Seleccione un valor distinto a Elegir',
+                'origen.not_in' => 'Seleccione un valor distinto a Elegir',
+                'importe.required' => 'Ingrese un monto válido',
+                'importe.min' => 'Ingrese un monto mayor a 0',
+                'importe.not_in' => 'Ingrese un monto válido',
+                'importe.integer' => 'El monto debe ser un número',
+                'codigo_transf.required_if' => 'Este campo es obligatorio',
+            ];
+            $this->validate($rules, $messages);
+        }
+         
         /* obtener id del motivo-origen seleccionado */
         $idsOrigesMots = OrigenMotivo::where('motivo_id', $this->motivo)
             ->where('origen_id', $this->origen)
@@ -514,7 +586,7 @@ class TransaccionController extends Component
             ->get()->first();
 
         /* obtener cartera fisica de la caja en la cual esta el usuario */
-        $carteraCaja = Cartera::where('tipo', 'cajafisica')
+        $CajaFisica = Cartera::where('tipo', 'cajafisica')
             ->where('caja_id', $cccc->id)
             ->get()->first();
 
@@ -553,7 +625,7 @@ class TransaccionController extends Component
                 ]);
 
                 CarteraMov::create([
-                    'type' => 'EGRESO',
+                    'type' => 'INGRESO',
                     'comentario' => '',
                     'cartera_id' => $cartera->id,
                     'movimiento_id' => $mv->id
@@ -564,15 +636,15 @@ class TransaccionController extends Component
                     'status' => 'ACTIVO',
                     'import' => $this->importe,
                     'user_id' => Auth()->user()->id,
-
                 ]);
 
                 CarteraMov::create([
-                    'type' => 'INGRESO',
+                    'type' => 'EGRESO',
                     'comentario' => '',
-                    'cartera_id' => $carteraCaja->id,
+                    'cartera_id' => $CajaFisica->id,
                     'movimiento_id' => $mvt->id
                 ]);
+
                 $telefono = Cartera::where('tipo', 'Telefono')
                     ->where('caja_id', $cccc->id)
                     ->get()->first();
@@ -596,9 +668,9 @@ class TransaccionController extends Component
                 ]);
 
                 CarteraMov::create([
-                    'type' => 'EGRESO',
+                    'type' => 'INGRESO',
                     'comentario' => '',
-                    'cartera_id' => $carteraCaja->id,
+                    'cartera_id' => $CajaFisica->id,
                     'movimiento_id' => $mv->id
                 ]);
 
@@ -610,7 +682,7 @@ class TransaccionController extends Component
                 ]);
 
                 CarteraMov::create([
-                    'type' => 'INGRESO',
+                    'type' => 'EGRESO',
                     'comentario' => '',
                     'cartera_id' => $cartera->id,
                     'movimiento_id' => $mvt->id
@@ -632,8 +704,6 @@ class TransaccionController extends Component
                 'movimiento_id' => $mvt->id,
                 'cliente_id' => $listaCL->id
             ]);
-
-
             /* crear movimientos-transaccion de la transaccion */
             MovTransac::create([
                 'movimiento_id' => $mvt->id,
@@ -653,7 +723,7 @@ class TransaccionController extends Component
             $this->emit('item-error', 'ERROR' . $e->getMessage());
         }
     }
-
+    /* GENERAR INGRESO O EGRESO  */
     public function Generar()
     {
         $rules = [ /* Reglas de validacion */
@@ -692,9 +762,9 @@ class TransaccionController extends Component
         $this->emit('g-i/e', 'Se generó el ingreso/egreso');
         $this->resetUI();
     }
-
+    /* LISTENERS */
     protected $listeners = ['deleteRow' => 'Anular'];
-    /* Anular una transacción */
+    /* ANULAR TRANSACCION */
     public function Anular($id)
     {
         $tran = Transaccion::find($id);
@@ -702,13 +772,12 @@ class TransaccionController extends Component
         $tran->save();
         $this->emit('item-anulado', 'Se anuló la transacción');
     }
-
+    /* ABRIR MODAL */
     public function viewDetails()
     {
         $this->emit('show-modal2', 'open modal');
     }
-
-    /* Resetear los imput */
+    /* RESET DE INPUT Y DEMAS */
     public function resetUI()
     {
         $this->selected_id = 0;
@@ -741,6 +810,10 @@ class TransaccionController extends Component
         $this->cantidad = '';
         $this->comentario = '';
         $this->condicional = 0;
+        $this->comisionSiV = 'S';
+        $this->comisionNoV = 'S';
+        $this->metodo = 0;
+        $this->metodo2 = 'ABC';
         $this->resetValidation();
         $this->resetPage();
     }

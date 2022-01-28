@@ -2,9 +2,11 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\MovTransac;
 use App\Models\Transaccion;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class ArqueosTigoController extends Component
@@ -47,13 +49,11 @@ class ArqueosTigoController extends Component
                 'c.cedula as cedula',
                 'transaccions.*',
                 'ori.nombre as origen_nombre',
-                'mot.nombre_motivo as motivo_nombre',
-                'transaccions.telefono as telefonoCl',
-                'transaccions.codigo_transf as teldestino'
+                'mot.nombre as motivo_nombre',
             )
             ->whereBetween('transaccions.created_at', [$fi, $ff])
             ->where('m.user_id', $this->userid)
-            ->where('cmv.type', 'INGRESO')
+            
             ->orderBy('transaccions.id', 'desc')
             ->get();
 
@@ -62,35 +62,22 @@ class ArqueosTigoController extends Component
 
     public function viewDetails(Transaccion $transaccion)
     {
-        $fi = Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00';
-        $ff = Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59';
-
-        $this->details = Transaccion::join('origen_motivos as om', 'transaccions.origen_motivo_id', 'om.id')
-            ->join('clientes as c', 'c.id', 'transaccions.cliente_id')
-            ->join('origens as ori', 'ori.id', 'om.origen_id')
-            ->join('motivos as mot', 'mot.id', 'om.motivo_id')
+        $this->Consultar();
+        $this->details = Transaccion::join('mov_transacs as mt', 'mt.transaccion_id', 'transaccions.id')
+            ->join('movimientos as m', 'm.id', 'mt.movimiento_id')
+            
+            ->join('cartera_movs as cmv', 'cmv.movimiento_id', 'm.id')
+            ->join('carteras as c', 'cmv.cartera_id', 'c.id')
+            
             ->select(
-                'c.cedula as codCliente',
-                'transaccions.telefono as TelCliente',
-                'c.nombre as nomClient',
-                'transaccions.codigo_transf as codigotrans',
-                'ori.nombre as origen_nombre',
-                'transaccions.id as id',
-                'mot.nombre_motivo as motivo_nombre',
-                'transaccions.importe',
-                'transaccions.created_at as hora',
-                'transaccions.observaciones',
-                'transaccions.estado as estado'
+                'cmv.type as tipo',
+                'transaccions.importe as importe',
+                'c.nombre as nombreCartera',
             )
-            ->whereBetween('transaccions.created_at', [$fi, $ff])
-            ->where('transaccions.user_id', $this->userid)
             ->where('transaccions.id', $transaccion->id)
             ->get();
-
         $this->emit('show-modal', 'open modal');
     }
 
-    public function Print()
-    {
-    }
+    
 }
