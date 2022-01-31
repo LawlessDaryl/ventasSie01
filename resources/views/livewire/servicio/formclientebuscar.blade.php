@@ -17,7 +17,17 @@
                             </span>
                         </div>
                         <input type="text" wire:model="buscarCliente" placeholder="Buscar" class="form-control">
+                             
+                   
                     </div>
+               
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-12">
+                            
+                <ul class="tabs tab-pills">
+                    <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
+                        data-target="#theNewClient" wire:click.prevent="resetUI()" data-dismiss="modal">Nuevo Cliente</a>
+                </ul>
                 </div>
             </div>
             @if ($condicion != 0)
