@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
         $this->call(CarteraSeeder::class);
         $this->call(OrigenSeeder::class);
         $this->call(MotivoSeeder::class);
+        $this->call(PermissionSeeder::class);
 
        /*  Category::factory(20)->create(); */
     }
