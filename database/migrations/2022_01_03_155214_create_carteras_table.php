@@ -18,7 +18,7 @@ class CreateCarterasTable extends Migration
             $table->string('nombre', 255);
             $table->string('descripcion', 255)->nullable();
             $table->enum('tipo', ['Telefono','Sistema','CajaFisica']);
-            $table->integer('telefonoNum');
+            $table->integer('telefonoNum')->nullable();
             $table->unsignedBigInteger('caja_id');
             $table->foreign('caja_id')->references('id')->on('cajas');
             $table->timestamps();
