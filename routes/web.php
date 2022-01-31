@@ -49,7 +49,7 @@ Route::middleware(['auth'])->group(function () {
     
     Route::get('roles', RolesController::class)->name('roles')->middleware('permission:Roles_Index');
     Route::get('permisos', PermisosController ::class)->name('permisos')->middleware('permission:Permission_Index');
-    Route::get('asignar', AsignarController::class)->name('asignar');
+    Route::get('asignar', AsignarController::class)->name('asignar')->middleware('permission:Asignar_Index');
     Route::get('companies', CompaniesController::class)->name('empresa')->middleware('permission:Empresa_Index');
     Route::get('sucursales', SucursalController::class)->name('sucursal')->middleware('permission:Sucursal_Index');
     Route::get('cajas', CajasController::class)->name('caja')->middleware('permission:Caja_Index');
