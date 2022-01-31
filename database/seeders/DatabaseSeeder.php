@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Category;
+use App\Models\ModelHasRoles;
 use Database\Factories\CategoryFactory;
 use Illuminate\Database\Seeder;
 
@@ -29,6 +30,9 @@ class DatabaseSeeder extends Seeder
         $this->call(OrigenSeeder::class);
         $this->call(MotivoSeeder::class);
         $this->call(PermissionSeeder::class);
+        $this->call(RoleSeeder::class);
+        $this->call(ModelHasRolesSeeder::class);
+        $this->call(RoleHasPermissionSeeder::class);
 
        /*  Category::factory(20)->create(); */
     }
