@@ -195,7 +195,6 @@ class UsersController extends Component
             $customFileName = uniqid() . '_.' . $this->image->extension();
             $this->image->storeAs('public/usuarios', $customFileName);
             $imageTemp = $user->image;
-
             $user->image = $customFileName;
             $user->save();
 

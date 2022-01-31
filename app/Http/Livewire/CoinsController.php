@@ -104,7 +104,7 @@ class CoinsController extends Component
             }
         }
         $this->resetUI();
-        $this->emit('coin-added', 'Producto Registrado');
+        $this->emit('coin-updated', 'Moneda actualizada');
     }
     protected $listeners = ['deleteRow' => 'Destroy'];
 
@@ -119,7 +119,7 @@ class CoinsController extends Component
             }
         }
         $this->resetUI();
-        $this->emit('coin-deleted', 'Moneda Eliminado');
+        $this->emit('coin-deleted', 'Moneda Eliminada');
     }
     public function resetUI()
     {
@@ -128,7 +128,6 @@ class CoinsController extends Component
         $this->image = null;
         $this->search = '';
         $this->selected_id = 0;
-
         $this->resetValidation();
     }
 }
