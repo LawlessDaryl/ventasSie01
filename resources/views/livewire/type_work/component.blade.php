@@ -20,8 +20,8 @@
                     <table class="table table-unbordered table-hover mt-2">
                         <thead class="text-white" style="background: #3B3F5C">
                             <tr>
-                                <th class="table-th text-withe">DESCRIPCIÓN</th>
-                                <th class="table-th text-withe text-center">IMAGEN</th>
+                                <th class="table-th text-withe">NOMBRE</th>
+                                <th class="table-th text-withe text-center">ESTADO</th>
                                 <th class="table-th text-withe text-center">ACCIONES</th>
                             </tr>
                         </thead>
@@ -29,21 +29,19 @@
                             @foreach ($categories as $category)
                                 <tr>
                                     <td>
-                                        <h6>{{ $category->name }}</h6>
+                                        <h6>{{ $category->name }}  </h6>
                                     </td>
                                     <td class="text-center">
-                                        <span>
-                                            <img src="{{ asset('storage/categorias/' . $category->imagen) }}"
-                                                alt="imagen de ejemplo" height="70" width="80" class="rounded">
-                                        </span>
+                                        <h6>{{ $category->status == 'ACTIVE' ? 'ACTIVO' : 'DESACTIVADO' }}</h6>
                                     </td>
                                     <td class="text-center">
                                         <a href="javascript:void(0)" wire:click="Edit({{ $category->id }})"
                                             class="btn btn-dark mtmobile" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <a href="javascript:void(0)" onclick="Confirm('{{ $category->id }}','{{ $category->name }}',
-                                            '{{ $category->products->count() }}')" class="btn btn-dark"
+                                        <a href="javascript:void(0)" 
+                                        onclick="Confirm('{{ $category->id }}','{{ $category->name }}','{{ $category->servicios->count() }}')" 
+                                        class="btn btn-dark"
                                             title="Delete">
                                             <i class="fas fa-trash"></i>
                                         </a>
@@ -59,7 +57,7 @@
         </div>
     </div>
 
-    @include('livewire.category.form')
+    @include('livewire.type_work.form')
 </div>
 
 <script>
@@ -79,15 +77,16 @@
         window.livewire.on('item-deleted', Msg => {
             noty(Msg)
         });
+
     });
 
-    function Confirm(id, name, products) {
-        if (products > 0) {
+    function Confirm(id, name,servicio) {
+        if (servicio > 0) {
             swal.fire({
                 title: 'PRECAUCION',
                 icon: 'warning',
-                text: 'No se puede eliminar la categoria, ' + name + ' porque tiene ' 
-                + products + ' productos relacionados'
+                text: 'No se puede eliminar el tipo de trabajo, ' + name + ' porque tiene ' 
+                + servicio + ' servicios relacionados'
             })
             return;
         }

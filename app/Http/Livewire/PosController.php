@@ -111,6 +111,7 @@ class PosController extends Component
 
     public function UpdateQty($productId, $cant = 1)
     {
+        
         $title = '';
         $product = Product::find($productId);
         $exist = Cart::get($productId);
@@ -125,6 +126,7 @@ class PosController extends Component
                 return;
             }
         }
+        
         $this->removeItem($productId);
         if ($cant > 0) {
             Cart::add($product->id, $product->name, $product->price, $cant, $product->image);
@@ -148,7 +150,6 @@ class PosController extends Component
         $item = Cart::get($productId);
         Cart::remove($productId);
         $product = Product::find($productId);
-
         $newQty = ($item->quantity) - 1;
         if ($newQty > 0) {
             Cart::add($item->id, $item->name, $item->price, $newQty, $product->image);
@@ -202,7 +203,6 @@ class PosController extends Component
                 'items' => $this->itemsQuantity,
                 'cash' => $this->efectivo,
                 'change' => $this->change,
-
                 'user_id' => Auth()->user()->id
             ]);
 

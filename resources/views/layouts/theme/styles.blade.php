@@ -12,6 +12,7 @@
 <link href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" rel="stylesheet" type="text/css" />
 
 <link href="{{ asset('assets/css/elements/avatar.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('plugins/select2/select2.min.css') }}" rel="stylesheet" type="text/css" />
 
 <link href="{{ asset('assets/css/users/user-profile.css') }}" rel="stylesheet" type="text/css" />
 
@@ -26,6 +27,7 @@
 <link type="text/css" rel="stylesheet" href="{{ asset('assets/css/apps/scrumboard.css') }}">
 <link type="text/css" rel="stylesheet" href="{{ asset('assets/css/apps/notes.css') }}">
 <link href="{{ asset('assets/css/scrollspyNav.css') }}" rel="stylesheet" type="text/css" />
+
 <style>
     aside {
         display: none !important;

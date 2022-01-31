@@ -32,6 +32,7 @@ use App\Http\Livewire\SubCatProdServiceController;
 use App\Http\Livewire\OrderServiceController;
 use App\Http\Livewire\ServiciosController;
 use App\Http\Livewire\StrProveedorController;
+use App\Http\Livewire\TypeWorkController;
 use Illuminate\Support\Facades\Auth;
 
 Auth::routes();
@@ -78,6 +79,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('subcatprodservice', SubCatProdServiceController::class)->name('scps');
     Route::get('orderservice', OrderServiceController::class)->name('os');
     Route::get('service', ServiciosController::class)->name('serv');
+    Route::get('typework', TypeWorkController::class)->name('tw');
 
     //reportes PDDF
     Route::get('report/pdf/{user}/{type}/{f1}/{f2}', [ExportController::class, 'reportPDF']);
