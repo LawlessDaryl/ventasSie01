@@ -55,7 +55,7 @@
                         <div class="form-group">
                             <label>Estado del Equipo</label>
                             <input type="text" wire:model.lazy="detalle" class="form-control"
-                                placeholder="ej: Note 7">
+                                placeholder="ej: Note 7 con protector de pantalla">
                             @error('detalle') <span class="text-danger er">{{ $message }}</span>@enderror
                         </div>
                     </div>

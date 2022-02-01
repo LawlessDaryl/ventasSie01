@@ -242,53 +242,78 @@ class ServiciosController extends Component
     //Eliminar EDIT, no se usa
     public function Edit(Service $product)
     {
-        $this->selected_id = $product->id;
-        $this->name = $product->name;
-        $this->barcode = $product->barcode;
-        $this->cost = $product->cost;
-        $this->price = $product->price;
-        $this->stock = $product->stock;
-        $this->alerts = $product->alerts;
-        $this->categoryid = $product->category_id;
-        $this->image = null;
+        $datosedit = Service::join('type_works as tw','tw.id','services.type_work_id')
+        ->join('cat_prod_services as cps', 'cps.id','services.cat_prod_service_id')
+        ->join('cps.id','sub_cat_prod_services.cat_prod_service_id')
+        ->join('service.id','mov_services.service_id')
+        ->join('movimientos.id','mov_services.movimiento_id')
+        ->select('tw.name', 'cps.nombre','scps.name','movimientos.saldo','movimientos.on_account','movimientos.import')
+        ->where('services.id',$product->id)
+        ->get();
+        //$typework = TypeWork::find($name, ['name']);
+        $this->typeworkid = $product->typeworkid;
+        $this->catprodservid = $product->catprodservid;
+        $this->marc = $product->marc;
+        $this->detalle = $product->detalle;
+        $this->falla_segun_cliente = $product->falla_segun_cliente;
+        $this->diagnostico = $product->diagnostico;
+        $this->solucion = $product->solucion;
+        //$sald = Movimiento::find($id, ['saldo']);
+        $this->saldo = $product->saldo;
+        $this->on_account = $product->on_account;
+        $this->import = $product->import;
+        $this->fecha_estimada_entrega = $product->fecha_estimada_entrega;
 
         $this->emit('modal-show', 'show modal!');
+        
     }
     //Eliminar UPDATE, no se usa
     public function Update()
     {
         $rules = [
-            'name' => "required|min:3|unique:products,name,{$this->selected_id}",
-            'cost' => 'required',
-            'price' => 'required',
-            'stock' => 'required',
-            'alerts' => 'required',
-            'categoryid' => 'required|not_in:Elegir'
+            'typeworkid' => "required|unique:type_works,typeworkid,{$this->selected_id}",
+           
+            'catprodservid' => 'required',
+            'marc' => 'required',
+            'detalle' => 'required',
+            'falla_segun_cliente' => 'required',
+            'diagnostico' => 'required',
+            'solucion' => 'required',
+            'import' => 'required',
+            'fecha_estimada_entrega' => 'required'
         ];
         $messages = [
-            'name.required' => 'Nombre del producto requerido',
-            'name.unique' => 'Ya existe el nombre del producto',
-            'name.min' => 'El nombre debe ser contener al menos 3 caracteres',
-            'cost.required' => 'El costo es requerido',
-            'price.required' => 'El precio es requerido',
-            'stock.required' => 'El stock es requerido',
-            'alerts.required' => 'Ingresa el valor minimo en existencias',
-            'categoryid.not_int' => 'Elegir un nombre de categoria diferente de elegir',
+            'typeworkid.required' => 'El Tipo de Trabajo es requerido',
+            'catprodservid.required' => 'El Tipo de Equipo es requerido',
+            'marc.required' => 'La Marca/Modelo es requerida',
+            'detalle.required' => 'El Estado del Equipo es requerido',
+            'falla_segun_cliente.required' => 'La Falla es requerida',
+            'diagnostico.required' => 'El Diagnostico es requerido',
+            'solucion.required' => 'La Solución es requerida',
+            'import.required' => 'El Saldo es requerido',
+            'fecha_estimada_entrega.required' => 'La Fecha es requerida'
         ];
+
         $this->validate($rules, $messages);
+
         $product = Service::find($this->selected_id);
         $product->update([
-            'name' => $this->name,
-            'cost' => $this->cost,
-            'price' => $this->price,
-            'barcode' => $this->barcode,
-            'stock' => $this->stock,
-            'alerts' => $this->alerts,
-            'category_id' => $this->categoryid
+            'type_work_id' => $this->typeworkid,
+            'cat_prod_service_id' => $this->catprodservid,
+            'marca' => $this->marc,
+            'detalle' => $this->detalle,
+            'falla_segun_cliente' => $this->falla_segun_cliente,
+            'diagnostico' => $this->diagnostico,
+            'solucion' => $this->solucion,
+            'saldo' => $this->saldo,
+            'on_account' => $this->on_account,
+            'import' => $this->import,
+            'fecha_estimada_entrega' => $this->fecha_estimada_entrega,
+            'hora_entrega' => $this->hora_entrega
         ]);
 
         $this->resetUI();
-        $this->emit('product-updated', 'Producto Actualizado');
+        $this->emit('product-updated', 'Servicio Actualizado');
     }
     protected $listeners = ['deleteRow' => 'Destroy'];
 
