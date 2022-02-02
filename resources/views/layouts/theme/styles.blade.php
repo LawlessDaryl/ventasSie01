@@ -92,9 +92,13 @@ display: block;
     cursor: not-allowed;
     pointer-events: none;
 }
+.navbar .navbar-item .nav-item .form-inline.search .search-form-control {
+    width: 100%;
+    width: 255px;
+    height: 40px;
+    background-color: #fbfbfb;
+}
 
-
-    
 
 </style>
 
