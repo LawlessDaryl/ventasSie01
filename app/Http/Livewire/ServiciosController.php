@@ -350,15 +350,24 @@ class ServiciosController extends Component
 
             }
         }
-
-
-
+        
         $this->resetUI();
         $this->emit('service-deleted', 'Servicio Eliminado');
     }
     public function resetUI()
     {
         $this->categoryid = 'Elegir';
+        $this->typeworkid = 'Elegir';
+        $this->catprodservid = 'Elegir';
+        $this->selected_id = 0;
+        $this->typeservice = 'Normal';
+        $this->saldo = 0;
+        $this->on_account = 0;
+        $this->import = 0;
+        $this->condicion = 0;
+        $this->from = Carbon::parse(Carbon::now())->format('d-m-Y  H:i');
+        $this->fecha_estimada_entrega = Carbon::parse(Carbon::now())->format('Y-m-d');
+        $this->hora_entrega = Carbon::parse(Carbon::now())->format('H:i');
         $this->buscarCliente = '';
         $this->nombre = '';
         $this->cedula = '';
@@ -366,17 +375,10 @@ class ServiciosController extends Component
         $this->email = '';
         $this->nit = '';
         $this->razon_social = '';
-        $this->condicion = 0;
-        $this->typeworkid = 'Elegir';
         $this->detalle = '';
-        $this->catprodservid = 'Elegir';
         $this->falla_segun_cliente = '';
         $this->diagnostico = '';
         $this->solucion = '';
-        $this->saldo = 0;
-        $this->on_account = 0;
-        $this->import = 0;
-        $this->fecha_estimada_entrega = '';
         $this->marc = '';
         $this->resetValidation();
     }

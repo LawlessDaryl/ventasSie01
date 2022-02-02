@@ -30,7 +30,8 @@
                                     </td>
                                     <td>
                                         @foreach ($item->services as $service)
-                                        <h6 class="text-center">{{$service->categoria->nombre }}</h6><br/>
+                                        
+                                        <h6 class="text-center">{{$service->categoria->nombre}}</h6><br/>
                                         
                                         @endforeach
                                     </td>

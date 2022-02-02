@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ExportController;
+use App\Http\Controllers\ImprimirController;
 use App\Http\Livewire\ArqueosTigoController;
 use App\Http\Livewire\AsignarController;
 use App\Http\Livewire\CajasController;
@@ -84,6 +85,8 @@ Route::middleware(['auth'])->group(function () {
     //reportes PDDF
     Route::get('report/pdf/{user}/{type}/{f1}/{f2}', [ExportController::class, 'reportPDF']);
     Route::get('report/pdf/{user}/{type}', [ExportController::class, 'reportPDF']);
+    Route::get('reporte/pdf/{id}', [ImprimirController::class, 'print']);
+    /* Route::get('OrdenServicio/print/{user}', [ExportController::class, 'print']); */
 });
 
 

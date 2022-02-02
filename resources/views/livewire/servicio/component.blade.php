@@ -74,42 +74,42 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($data as $product)
+                            @foreach ($data as $item)
                                 <tr>
                                     <td>
                                         <h6 class="text-center">{{ $loop->iteration }}</h6>
                                     </td>
 
                                     <td>
-                                        <h6 class="text-center">{{ $product->category }}</h6>
+                                        <h6 class="text-center">{{ $item->category }}</h6>
                                     </td>
                                     <td>
-                                        <h6 class="text-center">{{ $product->marca }}</h6>
+                                        <h6 class="text-center">{{ $item->marca }}</h6>
                                     </td>
                                     <td>
-                                        <h6>{{ $product->detalle }}</h6>
+                                        <h6>{{ $item->detalle }}</h6>
                                     </td>
                                     <td>
-                                        <h6 class="text-center">{{ $product->tipo }}</h6>
+                                        <h6 class="text-center">{{ $item->tipo }}</h6>
                                     </td>
                                     <td>
-                                        <h6 class="text-center">{{ $product->import }}</h6>
-                                    </td>
-
-                                    <td>
-                                        <h6 class="text-center">{{ $product->on_account }}</h6>
+                                        <h6 class="text-center">{{ $item->import }}</h6>
                                     </td>
 
                                     <td>
-                                        <h6 class="text-center">{{ $product->saldo }}</h6>
+                                        <h6 class="text-center">{{ $item->on_account }}</h6>
+                                    </td>
+
+                                    <td>
+                                        <h6 class="text-center">{{ $item->saldo }}</h6>
                                     </td>
 
                                     <td class="text-center">
-                                        <a href="javascript:void(0)" wire:click="Edit({{ $product->id }})"
+                                        <a href="javascript:void(0)" wire:click="Edit({{ $item->id }})"
                                             class="btn btn-dark mtmobile" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <a href="javascript:void(0)" onclick="Confirm('{{ $product->id }}')"
+                                        <a href="javascript:void(0)" onclick="Confirm('{{ $item->id }}')"
                                             class="btn btn-dark" title="Delete">
                                             <i class="fas fa-trash"></i>
                                         </a>
@@ -124,7 +124,7 @@
             <div class="modal-footer">
 
                 <ul class="tabs tab-pills">
-                    <button class="btn btn-dark mb-2">Guardar</button>
+                    <a class="btn btn-dark mb-2" href="{{ url('reporte/pdf' . '/' . $orderservice)}}">Guardar</a>
                     <button class="btn btn-dark mb-2">Salir</button>
                 </ul>
             </div>

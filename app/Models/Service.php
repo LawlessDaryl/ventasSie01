@@ -13,6 +13,6 @@ class Service extends Model
 
     public function categoria()
     {
-        return $this->hasOne(CatProdService::class);
+        return $this->belongsTo(CatProdService::class,'cat_prod_service_id','id');
     }
 }
