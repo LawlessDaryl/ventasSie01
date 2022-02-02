@@ -15,6 +15,17 @@
             </div>
             @include('common.searchbox')
 
+            <div class="n-chk">
+                <label class="new-control new-radio radio-classic-primary">
+                  <input type="radio" class="new-control-input" name="custom-radio-2" id="SI" value="SI" wire:change="ComisionSi()">
+                  <span class="new-control-indicator"></span>SI
+                </label>
+                <label class="new-control new-radio radio-classic-primary">
+                  <input type="radio" class="new-control-input" name="custom-radio-2" id="NO" value="NO" wire:change="ComisionNo()">
+                  <span class="new-control-indicator"></span>NO
+                </label>
+            </div>
+
             <div>
                 <h6 class="card-title">
                     <b>SALDO DE TUS CARTERAS:</b> <br>

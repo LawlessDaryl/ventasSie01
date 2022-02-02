@@ -83,7 +83,7 @@ class TransaccionController extends Component
             ->where('mov.type', 'APERTURA')
             ->select('cajas.id as id')
             ->get()->first();
-        
+
         if (strlen($this->search) > 0) {
             $data = Transaccion::join('origen_motivos as om', 'transaccions.origen_motivo_id', 'om.id')
                 ->join('origens as ori', 'ori.id', 'om.origen_id')
@@ -142,7 +142,6 @@ class TransaccionController extends Component
                 ->orderBy('transaccions.created_at', 'desc')
                 ->paginate($this->pagination);
         }
-    
         $datos = [];
         if (strlen($this->cedula) > 0) {
             $datos = Cliente::where('cedula', 'like', '%' . $this->cedula . '%')->orderBy('cedula', 'desc')->get();
@@ -198,13 +197,12 @@ class TransaccionController extends Component
             /* REALIZAR CALCULO DE INGRESOS - EGRESOS */
             $c->monto = $MONTO - $MONTO2;
         }
-        
 
         /* MOSTRAR SOLO TELEFONO O SOLO SISTEMA O AMBOS SI ES QUE EXISTEN EN ESA CAJA */
         $carterasDe = Cartera::join('origens as ori', 'carteras.tipo', 'ori.nombre')
             ->select('ori.nombre as nombre', 'ori.id as id')
             ->where('caja_id', $cajausuario->id)->get();
-        
+
         return view('livewire.transaccion.component', [
             'data' => $data,
             'origenes' => $carterasDe,

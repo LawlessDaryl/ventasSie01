@@ -19,7 +19,6 @@
         
         <ul>
             @if (empty(session('sesionCaja')))
-            <h5 style="background-color: white">No tienen ninguna caja abierta</h5>
             @else
             <marquee behavior="" direction="">
             <h5 style="background-color: white">Usted tiene la caja {{session('sesionCaja')}} abierta</h5>

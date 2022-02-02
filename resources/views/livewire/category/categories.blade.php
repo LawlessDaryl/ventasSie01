@@ -79,6 +79,7 @@
         window.livewire.on('item-deleted', Msg => {
             noty(Msg)
         });
+
     });
 
     function Confirm(id, name, products) {

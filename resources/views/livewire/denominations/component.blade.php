@@ -67,14 +67,12 @@
 
         window.livewire.on('coin-added', msg => {
             $('#theModal').modal('hide')
-            noty(msg)
         });
         window.livewire.on('coin-updated', msg => {
             $('#theModal').modal('hide')
-            noty(msg)
         });
         window.livewire.on('coin-deleted', msg => {
-            noty(msg)
+            ///
         });
         window.livewire.on('modal-show', msg => {
             $('#theModal').modal('show')
@@ -82,7 +80,9 @@
         window.livewire.on('modal-hide', msg => {
             $('#theModal').modal('hide')
         });        
-        
+        $('theModal').on('hidden.bs.modal',function(e) {
+            $('.er').css('display','none')
+        })
 
     });
 

@@ -10,10 +10,4 @@ class TypeWork extends Model
     use HasFactory;
 
     protected $fillable = ['name','status'];
-
-    public function servicios()
-    {
-        return $this->hasMany(Service::class);
-    }
 }
-

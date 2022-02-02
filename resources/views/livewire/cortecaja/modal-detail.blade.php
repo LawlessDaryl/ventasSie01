@@ -19,10 +19,10 @@
                                             <div class="card-body">
                                                 <div class="task-header">
                                                     <div>
-                                                        <h5>Descripción: {{ $item->descripcion }}</h5>
+                                                        <h3>Descripción: {{ $item->descripcion }}</h3>
                                                     </div>
                                                     <div>
-                                                        <h3>Total: ${{$item->monto}}</h3>
+                                                        <h3>{{$item->monto}}</h3>
                                                     </div>
                                                 </div>
                                             </div>
