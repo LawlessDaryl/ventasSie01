@@ -16,7 +16,7 @@
                         </div>
                         <div class="infobox">
                             <b class="info-text">Cliente: </b>
-                            @if (isset($cliente))
+                            @if (!empty($cliente))
                                 {{ $cliente->nombre }}
                             @else
                                 NO DEFINIDO

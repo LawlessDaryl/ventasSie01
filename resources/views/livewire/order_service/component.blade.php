@@ -17,57 +17,24 @@
                     <table class="table table-unbordered table-hover mt-2">
                         <thead class="text-white" style="background: #3B3F5C">
                             <tr>
-                                <th class="table-th text-withe">CLIENTE</th>
+                              
                                 <th class="table-th text-withe text-center">CÓDIGO</th>
-                                <th class="table-th text-withe text-center">FECHAS</th>
-                                <th class="table-th text-withe text-center">DETALLE</th>
-                                <th class="table-th text-withe text-center">ESTADO</th>
-                                <th class="table-th text-withe text-center">TOTAL</th>
-                                <th class="table-th text-withe text-center">A CUENTA</th>
-                                <th class="table-th text-withe text-center">SALDO</th>
+                                <th class="table-th text-withe text-center">SERVICIOS</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($data as $product)
+                            @foreach ($data as $item)
                                 <tr>
                                     <td>
-                                        <h6>{{ $product->cliente }}</h6>
+                                        <h6>{{ $item->id }}</h6>
                                     </td>
                                     <td>
-                                        <h6 class="text-center">{{ $product->id }}</h6>
+                                        @foreach ($item->services as $service)
+                                        <h6 class="text-center">{{$service->categoria->nombre }}</h6><br/>
+                                        
+                                        @endforeach
                                     </td>
-                                    <td>
-                                        <h6 class="text-center">{{ $product->fecha_estimada_entrega }}</h6>
-                                    </td>
-                                    <td>
-                                        <h6 class="text-center">{{ $product->detalle }}</h6>
-                                    </td>
-                                    <td>
-                                        <h6 class=" text-center">{{ $product->status }}</h6>
-                                    </td>
-                                    <td>
-                                        <h6 class="text-center">{{ $product->saldo }}</h6>
-                                    </td>
-
-                                    <td>
-                                        <h6 class="text-center">{{ $product->on_account }}</h6>
-                                    </td>
-
-                                    <td>
-                                        <h6 class="text-center">{{ $product->import }}</h6>
-                                    </td>
-
-                                    <td class="text-center">
-                                        <a href="javascript:void(0)" wire:click="Edit({{ $product->id }})"
-                                            class="btn btn-dark mtmobile" title="Edit">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <a href="javascript:void(0)"
-                                            onclick="Confirm('{{ $product->id }}','{{ $product->name }}')"
-                                            class="btn btn-dark" title="Delete">
-                                            <i class="fas fa-trash"></i>
-                                        </a>
-                                    </td>
+                                    
                                 </tr>
                             @endforeach
                         </tbody>

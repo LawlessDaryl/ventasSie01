@@ -12,7 +12,10 @@ class OrderServiceController extends Component
 {
     use WithPagination;
     use WithFileUploads;
-    public $name, $barcode, $cost, $price, $stock, $alerts, $categoryid, $search, $image, $selected_id, $pageTitle, $componentName;
+    public $search, $selected_id, $pageTitle, $componentName,
+    $cliente, $fecha_estimada_entrega, $detalle, $status, $saldo, $on_account, $import, $serviceid, $movtype, $orderservice;
+
+
     private $pagination = 5;
     public function paginationView()
     {
@@ -21,28 +24,22 @@ class OrderServiceController extends Component
     public function mount()
     {
         $this->pageTitle = 'Listado';
-        $this->componentName = 'Productos';
-        $this->categoryid = 'Elegir';
+        $this->componentName = 'Ordenes de Servicio';
+        
+        
     }
     public function render()
     {
         if (strlen($this->search) > 0) {
-            $products = OrderService::join('categories as c', 'c.id', 'products.category_id')
-                ->select('products.*', 'c.name as category')
-                ->where('products.name', 'like', '%' . $this->search . '%')
-                ->orWhere('products.barcode', 'like', '%' . $this->search . '%')
-                ->orWhere('c.name', 'like', '%' . $this->search . '%')
-                ->orderBy('products.id', 'desc')
+            $orderservices = OrderService::orderBy('order_services.id','desc')
                 ->paginate($this->pagination);
         } else {
-            $products = OrderService::join('categories as c', 'c.id', 'products.category_id')
-                ->select('products.*', 'c.name as category')
-                ->orderBy('products.id', 'desc')
-                ->paginate($this->pagination);
+            $orderservices =OrderService::orderBy('order_services.id','desc')
+            ->paginate($this->pagination);
         }
-        return view('livewire.products.component', [
-            'data' => $products,
-            'categories' => Service::orderBy('name', 'asc')->get()
+        return view('livewire.order_service.component', [
+            'data' => $orderservices,
+            'ordserv' => OrderService::orderBy('order_services.id', 'asc')->get()
         ])
             ->extends('layouts.theme.app')
             ->section('content');
@@ -50,7 +47,7 @@ class OrderServiceController extends Component
     public function Store()
     {
         $rules = [
-            'name' => 'required|unique:products|min:3',
+            'name' => 'required|unique:orderservices|min:3',
             'cost' => 'required',
             'price' => 'required',
             'stock' => 'required',
@@ -108,7 +105,7 @@ class OrderServiceController extends Component
     public function Update()
     {
         $rules = [
-            'name' => "required|min:3|unique:products,name,{$this->selected_id}",
+            'name' => "required|min:3|unique:orderservices,name,{$this->selected_id}",
             'cost' => 'required',
             'price' => 'required',
             'stock' => 'required',

@@ -339,6 +339,20 @@ class ServiciosController extends Component
         $movimiento->delete();
         $service->delete();
 
+        if($this->orderservice  != 0){
+            $neworder = OrderService::find($this->orderservice);
+            if($neworder->services->count()==0){
+                $neworder->delete();
+                session(['od' => 0]);
+                session(['clie' =>""]);
+                $this->orderservice=0;
+                $this->cliente="";
+
+            }
+        }
+
+
+
         $this->resetUI();
         $this->emit('service-deleted', 'Servicio Eliminado');
     }
