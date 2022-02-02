@@ -45,8 +45,8 @@
                     <hr style="border-color: black; margin-top: 0px; margin-bottom: 1px; margin-left: 5px; margin-right:5px">
                     <table id="derechatabla" style="font-weight: bold; font-size: 7pt">
                         <tr>
-                            <td style="text-align: right;">TOTAL:</td>
-                            <td style="text-align: right;"> 160.00</td>
+                            <td style="text-align: right;">TOTALEs:</td>
+                            {{-- <td style="text-align: right;"> 160.00</td> --}}
                         </tr>
                         <tr>
                             <td style="text-align: right;">A CUENTA:</td>
