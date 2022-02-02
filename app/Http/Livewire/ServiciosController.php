@@ -47,7 +47,7 @@ class ServiciosController extends Component
         $this->import = 0;
         $this->condicion = 0;
         $this->from = Carbon::parse(Carbon::now())->format('d-m-Y  H:i');
-        $this->fecha_estimada_entrega = Carbon::parse(Carbon::now())->format('d-m-Y');
+        $this->fecha_estimada_entrega = Carbon::parse(Carbon::now())->format('Y-m-d');
 
         $this->hora_entrega = Carbon::parse(Carbon::now())->format('H:i');
         $this->usuariolog = Auth()->user()->name;
@@ -60,9 +60,6 @@ class ServiciosController extends Component
     }
     public function render()
     {
-
-
-
         if (strlen($this->search) > 0) {
 
             $services = Service::join('mov_services as ms', 'services.id', 'ms.service_id')
@@ -161,8 +158,6 @@ class ServiciosController extends Component
     //Store de Agregar Servicio
     public function Store()
     {
-
-
         $rules = [
             'typeworkid' => 'required',
             'catprodservid' => 'required',
@@ -199,6 +194,7 @@ class ServiciosController extends Component
             } else {
                 $neworder = OrderService::find($this->orderservice);
             }
+
             $from = Carbon::parse($this->fecha_estimada_entrega)->format('Y-m-d') . Carbon::parse($this->hora_entrega)->format(' H:i') . ':00';
             $newservice = Service::create([
                 'type_work_id' => $this->typeworkid,
@@ -208,7 +204,6 @@ class ServiciosController extends Component
                 'falla_segun_cliente' => $this->falla_segun_cliente,
                 'diagnostico' => $this->diagnostico,
                 'solucion' => $this->solucion,
-                'import' => $this->import,
                 'fecha_estimada_entrega' => $from,
                 'order_service_id' => $neworder->id
             ]);
@@ -228,6 +223,7 @@ class ServiciosController extends Component
                 'movimiento_id' => $mv->id,
                 'cliente_id' => $this->cliente->id
             ]);
+
             DB::commit();
             $this->orderservice = $neworder->id;
             session(['od' => $this->orderservice]);
@@ -240,39 +236,35 @@ class ServiciosController extends Component
     }
 
     //Eliminar EDIT, no se usa
-    public function Edit(Service $product)
+    public function Edit(Service $service)
     {
-        $datosedit = Service::join('type_works as tw','tw.id','services.type_work_id')
-        ->join('cat_prod_services as cps', 'cps.id','services.cat_prod_service_id')
-        ->join('cps.id','sub_cat_prod_services.cat_prod_service_id')
-        ->join('service.id','mov_services.service_id')
-        ->join('movimientos.id','mov_services.movimiento_id')
-        ->select('tw.name', 'cps.nombre','scps.name','movimientos.saldo','movimientos.on_account','movimientos.import')
-        ->where('services.id',$product->id)
-        ->get();
-        //$typework = TypeWork::find($name, ['name']);
-        $this->typeworkid = $product->typeworkid;
-        $this->catprodservid = $product->catprodservid;
-        $this->marc = $product->marc;
-        $this->detalle = $product->detalle;
-        $this->falla_segun_cliente = $product->falla_segun_cliente;
-        $this->diagnostico = $product->diagnostico;
-        $this->solucion = $product->solucion;
-        //$sald = Movimiento::find($id, ['saldo']);
-        $this->saldo = $product->saldo;
-        $this->on_account = $product->on_account;
-        $this->import = $product->import;
-        $this->fecha_estimada_entrega = $product->fecha_estimada_entrega;
+        $movimiento_Serv = Service::join('mov_services as ms', 'ms.service_id', 'services.id')
+            ->join('movimientos as m', 'ms.movimiento_id', 'm.id')
+            ->select('m.on_account as on_account', 'm.saldo as saldo', 'm.import as import')
+            ->where('services.id', $service->id)
+            ->get()->first();
+
+        $this->selected_id = $service->id;
+        $this->typeworkid = $service->type_work_id;
+        $this->catprodservid = $service->cat_prod_service_id;
+        $this->marc = $service->marca;
+        $this->detalle = $service->detalle;
+        $this->falla_segun_cliente = $service->falla_segun_cliente;
+        $this->diagnostico = $service->diagnostico;
+        $this->solucion = $service->solucion;
+        $this->fecha_estimada_entrega = substr($service->fecha_estimada_entrega, 0, 10);
+        $this->hora_entrega = substr($service->fecha_estimada_entrega, 11, 14);
+        $this->import = $movimiento_Serv->import;
+        $this->on_account = $movimiento_Serv->on_account;
+        $this->saldo = $movimiento_Serv->saldo;
 
         $this->emit('modal-show', 'show modal!');
-        
     }
     //Eliminar UPDATE, no se usa
     public function Update()
     {
         $rules = [
-            'typeworkid' => "required|unique:type_works,typeworkid,{$this->selected_id}",
-           
+            'typeworkid' => 'required',
             'catprodservid' => 'required',
             'marc' => 'required',
             'detalle' => 'required',
@@ -295,9 +287,9 @@ class ServiciosController extends Component
         ];
 
         $this->validate($rules, $messages);
-
-        $product = Service::find($this->selected_id);
-        $product->update([
+        $from = Carbon::parse($this->fecha_estimada_entrega)->format('Y-m-d') . Carbon::parse($this->hora_entrega)->format(' H:i') . ':00';
+        $service = Service::find($this->selected_id);
+        $service->update([
             'type_work_id' => $this->typeworkid,
             'cat_prod_service_id' => $this->catprodservid,
             'marca' => $this->marc,
@@ -305,30 +297,50 @@ class ServiciosController extends Component
             'falla_segun_cliente' => $this->falla_segun_cliente,
             'diagnostico' => $this->diagnostico,
             'solucion' => $this->solucion,
-            'saldo' => $this->saldo,
-            'on_account' => $this->on_account,
+            'fecha_estimada_entrega' => $from,
+        ]);
+
+        $movimientoid = Service::join('mov_services as ms', 'ms.service_id', 'services.id')
+            ->join('movimientos as m', 'ms.movimiento_id', 'm.id')
+            ->select('ms.movimiento_id as movimiendoID')
+            ->where('services.id', $service->id)
+            ->get()->first();
+
+        $movimiento = Movimiento::find($movimientoid->movimiendoID);
+        $movimiento->update([
             'import' => $this->import,
-            'fecha_estimada_entrega' => $this->fecha_estimada_entrega,
-            'hora_entrega' => $this->hora_entrega
+            'on_account' => $this->on_account,
+            'saldo' => $this->saldo,
         ]);
 
         $this->resetUI();
-        $this->emit('product-updated', 'Servicio Actualizado');
+        $this->emit('service-updated', 'Servicio Actualizado');
     }
     protected $listeners = ['deleteRow' => 'Destroy'];
 
-    public function Destroy(Service $product)
+    public function Destroy(Service $service)
     {
-        $imageTemp = $product->image;
-        $product->delete();
+        $ids = Service::join('mov_services as ms', 'ms.service_id', 'services.id')
+            ->join('movimientos as m', 'ms.movimiento_id', 'm.id')
+            ->join('cliente_movs as cm', 'cm.movimiento_id', 'm.id')
+            ->select(
+                'ms.movimiento_id as movimiendoID',
+                'cm.id as clientemovID',
+                'ms.id as servicemovID'
+            )
+            ->where('services.id', $service->id)
+            ->get()->first();
 
-        if ($imageTemp != null) {
-            if (file_exists('storage/productos/' . $imageTemp)) {
-                unlink('storage/productos/' . $imageTemp);
-            }
-        }
+        $movCliente = ClienteMov::find($ids->clientemovID);
+        $movCliente->delete();
+        $movService = MovService::find($ids->servicemovID);
+        $movService->delete();
+        $movimiento = Movimiento::find($ids->movimiendoID);
+        $movimiento->delete();
+        $service->delete();
+
         $this->resetUI();
-        $this->emit('product-deleted', 'Producto Eliminado');
+        $this->emit('service-deleted', 'Servicio Eliminado');
     }
     public function resetUI()
     {

@@ -146,21 +146,22 @@
             $('#theClient').modal('hide'),
                 noty(msg)
         });
-        window.livewire.on('product-updated', msg => {
+        window.livewire.on('service-updated', msg => {
             $('#theModal').modal('hide')
             noty(msg)
         });
-        window.livewire.on('product-deleted', msg => {
+        window.livewire.on('service-deleted', msg => {
             noty(msg)
         });
-
+        window.livewire.on('item-error', msg => {
+            noty(msg)
+        });
         window.livewire.on('modalsearchc-show', msg => {
             $('#theClient').modal('show')
         });
         window.livewire.on('modalsearch-hide', msg => {
             $('#theClient').modal('hide')
         });
-
         window.livewire.on('modalclient-show', msg => {
             $('#theNewClient').modal('show')
         });
@@ -171,7 +172,6 @@
             $('#theNewClient').modal('hide'),
                 noty(msg)
         });
-
         window.livewire.on('modal-show', msg => {
             $('#theModal').modal('show')
         });
