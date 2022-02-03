@@ -49,7 +49,7 @@
                 @endif
                 <ul class="tabs tab-pills">
                     <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
-                        data-target="#theTypeService">Tipo de Servicio</a>
+                        data-target="#theType">Tipo de Servicio</a>
                 </ul>
 
             </div>
@@ -134,7 +134,7 @@
 
     @include('livewire.servicio.formclientenuevo')
     @include('livewire.servicio.formservicio')
-    {{-- @include('livewire.servicio.formtiposervicio') --}}
+    @include('livewire.servicio.formtiposervicio')
 </div>
 </div>
 
@@ -182,6 +182,19 @@
             $('#theModal').modal('hide'),
                 noty(msg)
         });
+
+        window.livewire.on('modaltype-show', msg => {
+            $('#theType').modal('show')
+        });
+        window.livewire.on('modaltype-hide', msg => {
+            $('#theType').modal('hide')
+        });
+        window.livewire.on('modaltype-selected', msg => {
+            $('#theType').modal('hide'),
+                noty(msg)
+        });
+       
+
         window.livewire.on('hidden.bs.modal', function(e) {
             $('.er').css('display', 'none')
         });
