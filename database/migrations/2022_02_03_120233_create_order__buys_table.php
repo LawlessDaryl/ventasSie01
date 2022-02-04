@@ -15,6 +15,11 @@ class CreateOrderBuysTable extends Migration
     {
         Schema::create('order__buys', function (Blueprint $table) {
             $table->id();
+            $table->date('fecha_orden');
+            $table->date('fecha_recepcion');
+            $table->decimal('monto_total');
+            $table->decimal('fecha_factura');
+
             $table->timestamps();
         });
     }

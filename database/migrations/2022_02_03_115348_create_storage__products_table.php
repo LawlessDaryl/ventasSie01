@@ -15,6 +15,14 @@ class CreateStorageProductsTable extends Migration
     {
         Schema::create('storage__products', function (Blueprint $table) {
             $table->id();
+            $table->integer('stock')->nullable();
+            $table->integer('min_stock')->nullable();
+            $table->integer('max_stock')->nullable();
+            $table->decimal('average_cost');
+            $table->foreign('id_producto')->references('id')->on('i_products');
+            
+
+            
             $table->timestamps();
         });
     }

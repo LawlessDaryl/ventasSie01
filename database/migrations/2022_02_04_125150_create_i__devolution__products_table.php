@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateICategoriesTable extends Migration
+class CreateIDevolutionProductsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,8 @@ class CreateICategoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('i__categories', function (Blueprint $table) {
+        Schema::create('i__devolution__products', function (Blueprint $table) {
             $table->id();
-            $table->string('name',100);
-            $table->string('description',255);
-
             $table->timestamps();
         });
     }
@@ -29,6 +26,6 @@ class CreateICategoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('i__categories');
+        Schema::dropIfExists('i__devolution__products');
     }
 }

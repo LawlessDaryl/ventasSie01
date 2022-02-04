@@ -15,6 +15,8 @@ class CreateMovementConceptsTable extends Migration
     {
         Schema::create('movement__concepts', function (Blueprint $table) {
             $table->id();
+            $table->enum('Operation_type',['Compra productos','Venta Productos','Transferencia de productos','Devolucion de productos'])->default('Buy_Operation');
+            $table->string('Observations',250);
             $table->timestamps();
         });
     }
