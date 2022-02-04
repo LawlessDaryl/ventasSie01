@@ -178,9 +178,6 @@
                                     </td>
                                 </tr>
                             </table>
-
-
-
                         </div>
                         <hr style="border-color: black; margin-top: 2px; margin-bottom: 2px">
 
@@ -192,20 +189,24 @@
                                     @foreach ($datos->services as $item)
                                         {{ $item->nombreCateg }} {{ $item->marca }} |
                                     @endforeach<br>
-                                    <b>FALLA SEGUN CLIENTE: </b> @foreach ($datos->services as $item)
-                                    {{ $item->falla_segun_cliente }} |
-                                @endforeach<br>
-                                    <b>DIAGNOSTICO: </b>@foreach ($datos->services as $item)
-                                    {{ $item->diagnostico }} |
-                                @endforeach<br>
-                                    <b>SOLUCION: </b>@foreach ($datos->services as $item)
-                                    {{ $item->solucion }} |
-                                @endforeach<br>
-                                    <b>FECHA ENTREGA APROX.: </b>@foreach ($datos->services as $item)
-                                    {{ $item->fecha_estimada_entrega }} |
-                                @endforeach<br>
+                                    <b>FALLA SEGUN CLIENTE: </b>
+                                    @foreach ($datos->services as $item)
+                                        {{ $item->falla_segun_cliente }} |
+                                    @endforeach<br>
+                                    <b>DIAGNOSTICO: </b>
+                                    @foreach ($datos->services as $item)
+                                        {{ $item->diagnostico }} |
+                                    @endforeach<br>
+                                    <b>SOLUCION: </b>
+                                    @foreach ($datos->services as $item)
+                                        {{ $item->solucion }} |
+                                    @endforeach<br>
+                                    <b>FECHA ENTREGA APROX.: </b>
+                                    @foreach ($datos->services as $item)
+                                        {{ $item->fecha_estimada_entrega }} |
+                                    @endforeach<br>
                                     <b>RESPONSABLE TÉCNICO: </b>{{ $usuario->name }}<br>
-                                    <b>ESTADO: {{$data[0]->type}}</b>
+                                    <b>ESTADO: {{ $data[0]->type }}</b>
                                 </td>
 
                             </tr>

@@ -47,11 +47,12 @@
                             data-target="#theModal">Agregar Servicio</a>
                     </ul>
                 @endif
-                <ul class="tabs tab-pills">
-                    <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
-                        data-target="#theType">Tipo de Servicio</a>
-                </ul>
-
+                @if ($orderservice != 0)
+                    <ul class="tabs tab-pills">
+                        <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
+                            data-target="#theType">Tipo de Servicio</a>
+                    </ul>
+                @endif
             </div>
             @include('common.searchbox')
 
@@ -61,9 +62,7 @@
                         <thead class="text-white" style="background: #3B3F5C">
                             <tr>
                                 <th class="table-th text-withe">#</th>
-
                                 <th class="table-th text-withe text-center">EQUIPO</th>
-
                                 <th class="table-th text-withe text-center">MARCA</th>
                                 <th class="table-th text-withe text-center">DETALLE</th>
                                 <th class="table-th text-withe text-center">ESTADO</th>
@@ -79,7 +78,6 @@
                                     <td>
                                         <h6 class="text-center">{{ $loop->iteration }}</h6>
                                     </td>
-
                                     <td>
                                         <h6 class="text-center">{{ $item->category }}</h6>
                                     </td>
@@ -99,17 +97,16 @@
                                     <td>
                                         <h6 class="text-center">{{ $item->on_account }}</h6>
                                     </td>
-
                                     <td>
                                         <h6 class="text-center">{{ $item->saldo }}</h6>
                                     </td>
-
                                     <td class="text-center">
                                         <a href="javascript:void(0)" wire:click="Edit({{ $item->id }})"
                                             class="btn btn-dark mtmobile" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <a href="javascript:void(0)" onclick="Confirm('{{ $item->id }}')"
+                                        <a href="javascript:void(0)"
+                                            onclick="Confirm('{{ $item->id }}','{{ $item->category }}','{{ $item->marca }}')"
                                             class="btn btn-dark" title="Delete">
                                             <i class="fas fa-trash"></i>
                                         </a>
@@ -124,18 +121,16 @@
             <div class="modal-footer">
 
                 <ul class="tabs tab-pills">
-                    <a class="btn btn-dark mb-2" href="{{ url('reporte/pdf' . '/' . $orderservice)}}">Guardar</a>
+                    <a class="btn btn-dark mb-2" href="{{ url('reporte/pdf' . '/' . $orderservice) }}">Guardar</a>
                     <button class="btn btn-dark mb-2">Salir</button>
                 </ul>
             </div>
         </div>
     </div>
     @include('livewire.servicio.formclientebuscar')
-
     @include('livewire.servicio.formclientenuevo')
     @include('livewire.servicio.formservicio')
     @include('livewire.servicio.formtiposervicio')
-</div>
 </div>
 
 <script>
@@ -148,6 +143,10 @@
         });
         window.livewire.on('service-updated', msg => {
             $('#theModal').modal('hide')
+            noty(msg)
+        });
+        window.livewire.on('tipoServ-updated', msg => {
+            $('#theType').modal('hide')
             noty(msg)
         });
         window.livewire.on('service-deleted', msg => {
@@ -182,7 +181,6 @@
             $('#theModal').modal('hide'),
                 noty(msg)
         });
-
         window.livewire.on('modaltype-show', msg => {
             $('#theType').modal('show')
         });
@@ -193,27 +191,18 @@
             $('#theType').modal('hide'),
                 noty(msg)
         });
-       
+
 
         window.livewire.on('hidden.bs.modal', function(e) {
             $('.er').css('display', 'none')
         });
     });
 
-    function Confirm(id, name, clients) {
-        if (clients > 0) {
-            swal.fire({
-                title: 'PRECAUCION',
-                icon: 'warning',
-                text: 'No se puede eliminar el servicio, ' + name + ' porque tiene ' +
-                    clients + ' clientes relacionados'
-            })
-            return;
-        }
+    function Confirm(id, categoria, marca) {
         swal.fire({
             title: 'CONFIRMAR',
             icon: 'warning',
-            text: 'Confirmar eliminar el prouducto ' + '"' + name + '"',
+            text: 'Confirmar eliminar el servicio "' + categoria + '" de marca "' + marca + '"',
             showCancelButton: true,
             cancelButtonText: 'Cerrar',
             cancelButtonColor: '#383838',

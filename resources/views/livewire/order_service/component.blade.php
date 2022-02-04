@@ -14,28 +14,57 @@
 
             <div class="widget-content">
                 <div class="table-responsive">
-                    <table class="table table-unbordered table-hover mt-2">
+                    <table class="table table-unbordered table-striped mt-2">
                         <thead class="text-white" style="background: #3B3F5C">
                             <tr>
-                              
+                                <th class="table-th text-withe text-center">#</th>
+                                <th class="table-th text-withe text-center">NOMBRE CLIENTE</th>
                                 <th class="table-th text-withe text-center">CÓDIGO</th>
+                                <th class="table-th text-withe text-center">TIPO DE SERVICIO</th>
                                 <th class="table-th text-withe text-center">SERVICIOS</th>
+                                <th class="table-th text-withe text-center">ESTADO</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($data as $item)
                                 <tr>
                                     <td>
-                                        <h6>{{ $item->id }}</h6>
+                                        <h6 class="table-th text-withe text-center">{{ $loop->iteration }}</h6>
                                     </td>
                                     <td>
-                                        @foreach ($item->services as $service)
-                                        
-                                        <h6 class="text-center">{{$service->categoria->nombre}}</h6><br/>
-                                        
+                                        <h6 class="table-th text-withe text-center">{{ $loop->iteration }}</h6>
+
+                                    </td>
+                                    <td>
+                                        <h6 class="table-th text-withe text-center">{{ $item->id }}</h6>
+
+                                    </td>
+                                    <td>
+                                        <h6 class="table-th text-withe text-center">{{ $item->type_service }}</h6>
+                                    </td>
+                                    <td>
+                                        @foreach ($item->services as $key => $service)
+
+                                            <h6 class="text-center">
+                                                {{ $service->categoria->nombre }}&nbsp{{ $service->marca }}&nbsp{{ $service->detalle }}&nbsp{{ $service->falla_segun_cliente }}
+                                            </h6><br />
+
+                                            @if (count($item->services) - 1 != $key)
+
+                                                <hr
+                                                    style="border-color: black; margin-top: 0px; margin-bottom: 3px; margin-left: 5px; margin-right:5px">
+                                                <br />
+                                            @endif
                                         @endforeach
                                     </td>
-                                    
+                                    <td>
+                                        @foreach ($service->movservices as $mm)
+                                            @if ($mm->movs->status == 'ACTIVO')
+                                                <h6 class="table-th text-withe text-center">{{ $mm->movs->type }}</h6>
+                                            @endif
+                                        @endforeach
+                                    </td>
+
                                 </tr>
                             @endforeach
                         </tbody>
@@ -54,7 +83,7 @@
 
         window.livewire.on('product-added', msg => {
             $('#theModal').modal('hide'),
-            noty(msg)
+                noty(msg)
         });
         window.livewire.on('product-updated', msg => {
             $('#theModal').modal('hide')

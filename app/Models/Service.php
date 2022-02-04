@@ -15,4 +15,9 @@ class Service extends Model
     {
         return $this->belongsTo(CatProdService::class,'cat_prod_service_id','id');
     }
+    public function movservices()
+    {
+        return $this->hasMany(MovService::class);
+    }
+
 }

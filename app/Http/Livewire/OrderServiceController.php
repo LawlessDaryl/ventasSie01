@@ -35,7 +35,6 @@ class OrderServiceController extends Component
                 ->paginate($this->pagination);
         } else {
             $orderservices =OrderService::orderBy('order_services.id','desc')
-            
             ->paginate($this->pagination);
         }
         return view('livewire.order_service.component', [

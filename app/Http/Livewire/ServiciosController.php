@@ -26,7 +26,7 @@ class ServiciosController extends Component
     public $user, $cliente, $nombre, $cedula, $celular, $email, $nit, $razon_social, $orderservice, $hora_entrega,
         $movimiento, $typeworkid, $detalle, $categoryid, $from, $usuariolog, $catprodservid, $marc, $typeservice,
         $falla_segun_cliente, $diagnostico, $solucion, $saldo, $on_account, $import, $fecha_estimada_entrega,
-        $search,  $condicion, $selected_id, $pageTitle, $buscarCliente, $service;
+        $search,  $condicion, $selected_id, $pageTitle, $buscarCliente, $service, $type_service, $variableX;
     private $pagination = 5;
     public function paginationView()
     {
@@ -57,6 +57,10 @@ class ServiciosController extends Component
         if (!empty(session('clie'))) {
             $this->cliente = session('clie');
         }
+        if (!empty(session('tservice'))) {
+            $this->type_service = session('tservice');
+        }
+        $this->variableX = 'abc';
     }
     public function render()
     {
@@ -101,6 +105,13 @@ class ServiciosController extends Component
         }
         $typew = TypeWork::orderBy('name', 'asc')->get();
         $dato1 = CatProdService::orderBy('nombre', 'asc')->get();
+
+        /* Cargar Tipo de servicio */
+        /* if ($this->orderservice != 0 && $this->variableX != 'x') {
+            $Ordservice = OrderService::find($this->orderservice);
+            $this->type_service = $Ordservice->type_service;
+        } */
+
 
         if ($this->catprodservid != 'Elegir') {
             $marca = SubCatProdService::where('cat_prod_service_id', $this->catprodservid)->orderBy('name', 'asc')->get();
@@ -233,6 +244,7 @@ class ServiciosController extends Component
             DB::rollback();
             $this->emit('item-error', 'ERROR' . $e->getMessage());
         }
+        session(['tservice' => $this->typeservice]);
     }
 
     //Eliminar EDIT, no se usa
@@ -259,6 +271,16 @@ class ServiciosController extends Component
         $this->saldo = $movimiento_Serv->saldo;
 
         $this->emit('modal-show', 'show modal!');
+    }
+    public function ChangeTypeService()
+    {
+        if ($this->orderservice != 0) {
+            $Ordservice = OrderService::find($this->orderservice);
+            $Ordservice->type_service = $this->type_service;
+            $Ordservice->save();
+        }
+        session(['tservice' => $this->type_service]);
+        $this->emit('tipoServ-updated', 'Servicio Actualizado');
     }
     //Eliminar UPDATE, no se usa
     public function Update()
@@ -339,18 +361,17 @@ class ServiciosController extends Component
         $movimiento->delete();
         $service->delete();
 
-        if($this->orderservice  != 0){
+        if ($this->orderservice  != 0) {
             $neworder = OrderService::find($this->orderservice);
-            if($neworder->services->count()==0){
+            if ($neworder->services->count() == 0) {
                 $neworder->delete();
                 session(['od' => 0]);
-                session(['clie' =>""]);
-                $this->orderservice=0;
-                $this->cliente="";
-
+                session(['clie' => ""]);
+                $this->orderservice = 0;
+                $this->cliente = "";
             }
         }
-        
+
         $this->resetUI();
         $this->emit('service-deleted', 'Servicio Eliminado');
     }

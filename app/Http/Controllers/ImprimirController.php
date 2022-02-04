@@ -3,12 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\OrderService;
-use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade as PDF;
 use App\Models\Service;
 use App\Models\User;
-use Maatwebsite\Excel\Facades\Excel;
-
 
 class ImprimirController extends Controller
 {
@@ -44,7 +41,7 @@ class ImprimirController extends Controller
         $pdf = PDF::loadView('livewire.pdf.ImprimirOrden', compact('data', 'datos', 'usuario'));
         /* $pdf->setPaper("A4", "landscape"); //orientacion y tamaño */
 
-        /* return $pdf->stream('selesReport.pdf');  //visualizar */
-        return $pdf->stream('ordenServicio.pdf');  //descargar 
+        return $pdf->stream('OrdenTrServicio.pdf');  //visualizar
+        /* return $pdf->download('ordenServicio.pdf');  //descargar  */
     }
 }
