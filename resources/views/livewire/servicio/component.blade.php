@@ -30,7 +30,7 @@
                     </div>
 
                 </div>
-                @if ($orderservice == 0)
+                @if ($orderservice == 0 || $cliente == '')
                     <ul class="tabs tab-pills">
                         <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
                             data-target="#theClient">Asignar Cliente</a>
@@ -54,7 +54,7 @@
                     </ul>
                 @endif
             </div>
-            @include('common.searchbox')
+           
 
             <div class="widget-content">
                 <div class="table-responsive">
@@ -122,7 +122,7 @@
 
                 <ul class="tabs tab-pills">
                     <a class="btn btn-dark mb-2" href="{{ url('reporte/pdf' . '/' . $orderservice) }}">Guardar</a>
-                    <button class="btn btn-dark mb-2">Salir</button>
+                    <button class="btn btn-dark mb-2" wire:click="ResetSession">Salir</button>
                 </ul>
             </div>
         </div>

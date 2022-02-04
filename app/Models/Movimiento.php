@@ -10,4 +10,9 @@ class Movimiento extends Model
     use HasFactory;
 
     protected $fillable = ['type','status','saldo','on_account','import','user_id'];
+
+    public function climov()
+    {
+        return $this->hasOne(ClienteMov::class);
+    }
 }

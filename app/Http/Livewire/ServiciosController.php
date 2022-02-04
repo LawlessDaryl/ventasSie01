@@ -58,27 +58,16 @@ class ServiciosController extends Component
             $this->cliente = session('clie');
         }
         if (!empty(session('tservice'))) {
+            $this->typeservice = session('tservice');
             $this->type_service = session('tservice');
+
         }
         $this->variableX = 'abc';
     }
     public function render()
     {
-        if (strlen($this->search) > 0) {
-
-            $services = Service::join('mov_services as ms', 'services.id', 'ms.service_id')
-                ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
-                ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
-                ->select('services.*', 'mov.type as tipo', 'mov.import as import', 'mov.saldo as saldo', 'mov.on_account as on_account', 'cat.nombre as category')
-                ->where('services.order_service_id',  $this->orderservice)
-                ->where('mov.status',  'ACTIVO')
-                ->orderBy('services.id', 'desc')
-                ->paginate($this->pagination);
-        } else {
-
-            $services = Service::join('mov_services as ms', 'services.id', 'ms.service_id')
+        //$this->ResetSession();
+        $services = Service::join('mov_services as ms', 'services.id', 'ms.service_id')
                 ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
                 ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
                 ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
@@ -87,7 +76,7 @@ class ServiciosController extends Component
                 ->where('mov.status',  'ACTIVO')
                 ->orderBy('services.id', 'desc')
                 ->paginate($this->pagination);
-        }
+        
 
         $datos = [];
         if (strlen($this->buscarCliente) > 0) {
@@ -119,6 +108,9 @@ class ServiciosController extends Component
             $marca = [];
         }
 
+        if((strlen($this->import) > 0) || (strlen($this->on_account) > 0))//Este if no funciona correctamente
+        $this->saldo=$this->import-$this->on_account;
+
         return view('livewire.servicio.component', [
             'data' => $services,
             'datos' => $datos,
@@ -138,6 +130,13 @@ class ServiciosController extends Component
         $this->resetUI();
         $this->emit('client-selected', 'Cliente Seleccionado');
     }
+
+    public function ResetSession()
+    {
+        $this->cliente = '';
+        $this->orderservice = '';
+    }
+
     public function StoreClient()
     {
         $rules = [
@@ -279,7 +278,10 @@ class ServiciosController extends Component
             $Ordservice->type_service = $this->type_service;
             $Ordservice->save();
         }
+        $Ordservice = OrderService::find($this->orderservice);
         session(['tservice' => $this->type_service]);
+        $this->typeservice = $this->type_service;
+
         $this->emit('tipoServ-updated', 'Servicio Actualizado');
     }
     //Eliminar UPDATE, no se usa

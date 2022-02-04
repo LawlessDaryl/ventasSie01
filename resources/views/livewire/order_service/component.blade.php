@@ -32,8 +32,16 @@
                                         <h6 class="table-th text-withe text-center">{{ $loop->iteration }}</h6>
                                     </td>
                                     <td>
-                                        <h6 class="table-th text-withe text-center">{{ $loop->iteration }}</h6>
+                                        @foreach ($item->services as $key => $service)
 
+                                
+
+                                        @if (count($item->services) - 1 == $key)
+                                        <h6 class="table-th text-withe text-center">{{ $service->movservices[0]->movs->climov->client->nombre }}</h6>
+                              
+                                       
+                                        @endif
+                                    @endforeach
                                     </td>
                                     <td>
                                         <h6 class="table-th text-withe text-center">{{ $item->id }}</h6>
