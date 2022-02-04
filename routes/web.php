@@ -31,9 +31,11 @@ use App\Http\Livewire\SucursalController;
 use App\Http\Livewire\CatProdServiceController;
 use App\Http\Livewire\SubCatProdServiceController;
 use App\Http\Livewire\OrderServiceController;
+use App\Http\Livewire\ProcedenciaController;
 use App\Http\Livewire\ServiciosController;
 use App\Http\Livewire\StrProveedorController;
 use App\Http\Livewire\TypeWorkController;
+use App\Models\Livewire\ProcedenciaCliente;
 use Illuminate\Support\Facades\Auth;
 
 Auth::routes();
@@ -75,6 +77,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('reportestigo', ReportesTigoController::class)->name('reportestigo');
     Route::get('arqueostigo', ArqueosTigoController::class)->name('arqueostigo');
 
+    Route::get('procedenciaCli', ProcedenciaController::class)->name('proced');
     Route::get('clientes', ClienteController::class)->name('cliente');
     Route::get('catprodservice', CatProdServiceController::class)->name('cps');
     Route::get('subcatprodservice', SubCatProdServiceController::class)->name('scps');

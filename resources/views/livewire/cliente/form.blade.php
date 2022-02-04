@@ -19,7 +19,8 @@
     <div class="col-sm-12 col-md-6">
         <div class="form-group">
             <label>Celular</label>
-            <input type="text" wire:model.lazy="celular" class="form-control" placeholder="ej: 79564859" maxlength="8">
+            <input type="text" wire:model.lazy="celular" class="form-control" placeholder="ej: 79564859"
+                maxlength="8">
             @error('celular') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>
     </div>
@@ -34,18 +35,9 @@
 
     <div class="col-sm-12 col-md-6">
         <div class="form-group">
-            <label>Fecha de Nacimiento</label>            
-                <input type="text" wire:model="fnacim" class="form-control flatpickr" placeholder="Click para elegir">           
+            <label>Fecha de Nacimiento</label>
+            <input type="text" wire:model="fnacim" class="form-control flatpickr" placeholder="Click para elegir">
             @error('fnacim') <span class="text-danger er">{{ $message }}</span>@enderror
-        </div>
-    </div>
-
-    <div class="col-sm-12 col-md-6">
-        <div class="form-group">
-            <label>nit</label>
-            <input type="text" date-type='currency' wire:model.lazy="nit" class="form-control"
-                placeholder="ej: 1515151515">
-            @error('nit') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>
     </div>
 
@@ -58,7 +50,18 @@
         </div>
     </div>
 
-    <div class="col-sm-12 col-md-6">
+    <div class="col-sm-12 col-md-4">
+        <div class="form-group">
+            <label>nit</label>
+            <input type="text" date-type='currency' wire:model.lazy="nit" class="form-control"
+                placeholder="ej: 1515151515">
+            @error('nit') <span class="text-danger er">{{ $message }}</span>@enderror
+        </div>
+    </div>
+
+
+
+    <div class="col-sm-12 col-md-4">
         <div class="form-group">
             <label>Razón Social</label>
             <input type="text" date-type='currency' wire:model.lazy="razonsocial" class="form-control"
@@ -67,11 +70,26 @@
         </div>
     </div>
 
+    <div class="col-sm-12 col-md-4">
+        <div class="form-group">
+            <label>Procedencia</label>
+            <select wire:model='procedencia' class="form-control">
+                <option value="Nuevo" selected>Nuevo</option>
+                @foreach ($procedenciaClientes as $item)
+                    @if ($item->procedencia != 'Nuevo')
+                        <option value="{{ $item->id }}">{{ $item->procedencia }}</option>
+                    @endif
+                @endforeach
+            </select>
+            @error('procedencia') <span class="text-danger er">{{ $message }}</span>@enderror
+        </div>
+    </div>
+
     <div class="col-sm-12 col-md-8">
         <div class="form-group custom-file">
             <input type="file" class="custom-file-input form-control" wire:model="image"
                 accept="image/x-png,image/gif,image/jpeg">
-            <label class="custom-file-label">Imagen {{ $image }}</label>            
+            <label class="custom-file-label">Imagen {{ $image }}</label>
         </div>
     </div>
 </div>

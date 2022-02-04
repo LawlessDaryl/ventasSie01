@@ -26,7 +26,7 @@ class ServiciosController extends Component
     public $user, $cliente, $nombre, $cedula, $celular, $email, $nit, $razon_social, $orderservice, $hora_entrega,
         $movimiento, $typeworkid, $detalle, $categoryid, $from, $usuariolog, $catprodservid, $marc, $typeservice,
         $falla_segun_cliente, $diagnostico, $solucion, $saldo, $on_account, $import, $fecha_estimada_entrega,
-        $search,  $condicion, $selected_id, $pageTitle, $buscarCliente, $service, $type_service, $variableX;
+        $search,  $condicion, $selected_id, $pageTitle, $buscarCliente, $service, $type_service;
     private $pagination = 5;
     public function paginationView()
     {
@@ -60,23 +60,21 @@ class ServiciosController extends Component
         if (!empty(session('tservice'))) {
             $this->typeservice = session('tservice');
             $this->type_service = session('tservice');
-
         }
-        $this->variableX = 'abc';
     }
     public function render()
     {
         //$this->ResetSession();
         $services = Service::join('mov_services as ms', 'services.id', 'ms.service_id')
-                ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
-                ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
-                ->select('services.*', 'mov.type as tipo', 'mov.import as import', 'mov.saldo as saldo', 'mov.on_account as on_account', 'cat.nombre as category')->where('services.order_service_id',  $this->orderservice)
-                ->where('mov.status',  'ACTIVO')
-                ->orderBy('services.id', 'desc')
-                ->paginate($this->pagination);
-        
+            ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
+            ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+            ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
+            ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
+            ->select('services.*', 'mov.type as tipo', 'mov.import as import', 'mov.saldo as saldo', 'mov.on_account as on_account', 'cat.nombre as category')->where('services.order_service_id',  $this->orderservice)
+            ->where('mov.status',  'ACTIVO')
+            ->orderBy('services.id', 'desc')
+            ->paginate($this->pagination);
+
 
         $datos = [];
         if (strlen($this->buscarCliente) > 0) {
@@ -95,21 +93,14 @@ class ServiciosController extends Component
         $typew = TypeWork::orderBy('name', 'asc')->get();
         $dato1 = CatProdService::orderBy('nombre', 'asc')->get();
 
-        /* Cargar Tipo de servicio */
-        /* if ($this->orderservice != 0 && $this->variableX != 'x') {
-            $Ordservice = OrderService::find($this->orderservice);
-            $this->type_service = $Ordservice->type_service;
-        } */
-
-
         if ($this->catprodservid != 'Elegir') {
             $marca = SubCatProdService::where('cat_prod_service_id', $this->catprodservid)->orderBy('name', 'asc')->get();
         } else {
             $marca = [];
         }
 
-        if((strlen($this->import) > 0) || (strlen($this->on_account) > 0))//Este if no funciona correctamente
-        $this->saldo=$this->import-$this->on_account;
+        if ((strlen($this->import) > 0) || (strlen($this->on_account) > 0)) //Este if no funciona correctamente
+            $this->saldo = $this->import - $this->on_account;
 
         return view('livewire.servicio.component', [
             'data' => $services,
@@ -133,8 +124,12 @@ class ServiciosController extends Component
 
     public function ResetSession()
     {
-        $this->cliente = '';
-        $this->orderservice = '';
+        /* $this->cliente = '';
+        $this->orderservice = ''; */
+        session(['od' => null]);
+        session(['clie' => null]);
+        session(['tservice' => null]);
+        $this->redirect('orderservice');
     }
 
     public function StoreClient()

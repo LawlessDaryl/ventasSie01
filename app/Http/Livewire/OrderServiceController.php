@@ -31,10 +31,10 @@ class OrderServiceController extends Component
     public function render()
     {
         if (strlen($this->search) > 0) {
-            $orderservices = OrderService::orderBy('order_services.id','desc')
+            $orderservices = OrderService::orderBy('id','desc')
                 ->paginate($this->pagination);
         } else {
-            $orderservices =OrderService::orderBy('order_services.id','desc')
+            $orderservices =OrderService::orderBy('id','desc')
             ->paginate($this->pagination);
         }
         return view('livewire.order_service.component', [

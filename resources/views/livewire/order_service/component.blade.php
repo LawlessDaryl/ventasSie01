@@ -23,6 +23,7 @@
                                 <th class="table-th text-withe text-center">TIPO DE SERVICIO</th>
                                 <th class="table-th text-withe text-center">SERVICIOS</th>
                                 <th class="table-th text-withe text-center">ESTADO</th>
+                                <th class="table-th text-withe text-center">TOTAL</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -31,46 +32,57 @@
                                     <td>
                                         <h6 class="table-th text-withe text-center">{{ $loop->iteration }}</h6>
                                     </td>
+                                    @php
+                                        $mytotal = 0;
+                                    @endphp
                                     <td>
                                         @foreach ($item->services as $key => $service)
+                                            @php
+                                                $mytotal += $service->movservices[0]->movs->import;
+                                            @endphp
+                                            @if (count($item->services) - 1 == $key)
+                                                <h6 class="table-th text-withe text-center">
+                                                    {{ $service->movservices[0]->movs->climov->client->nombre }}</h6>
+                                            @endif
 
-                                
-
-                                        @if (count($item->services) - 1 == $key)
-                                        <h6 class="table-th text-withe text-center">{{ $service->movservices[0]->movs->climov->client->nombre }}</h6>
-                              
-                                       
-                                        @endif
-                                    @endforeach
+                                        @endforeach
                                     </td>
+                                    
                                     <td>
                                         <h6 class="table-th text-withe text-center">{{ $item->id }}</h6>
-
                                     </td>
+
                                     <td>
                                         <h6 class="table-th text-withe text-center">{{ $item->type_service }}</h6>
                                     </td>
+
                                     <td>
                                         @foreach ($item->services as $key => $service)
 
-                                            <h6 class="text-center">
+                                            <h6>
                                                 {{ $service->categoria->nombre }}&nbsp{{ $service->marca }}&nbsp{{ $service->detalle }}&nbsp{{ $service->falla_segun_cliente }}
-                                            </h6><br />
+                                            </h6><br/>
 
                                             @if (count($item->services) - 1 != $key)
-
                                                 <hr
                                                     style="border-color: black; margin-top: 0px; margin-bottom: 3px; margin-left: 5px; margin-right:5px">
                                                 <br />
                                             @endif
                                         @endforeach
                                     </td>
+
                                     <td>
                                         @foreach ($service->movservices as $mm)
                                             @if ($mm->movs->status == 'ACTIVO')
-                                                <h6 class="table-th text-withe text-center">{{ $mm->movs->type }}</h6>
+                                                <h6 class="table-th text-withe">{{ $mm->movs->type }}</h6>
                                             @endif
                                         @endforeach
+                                    </td>
+
+                                    <td class="text-center">
+                                        <h6 class="text-info">
+                                            {{ number_format($mytotal, 2) }} Bs.
+                                        </h6>
                                     </td>
 
                                 </tr>
