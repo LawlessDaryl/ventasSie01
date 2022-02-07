@@ -51,7 +51,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('pos', PosController::class)->name('ventas');
 
     Route::group(['middleware' => ['role:ADMIN']], function () {
-        Route::get('roles', RolesController::class)->name('roles');
+        
+    });
+    Route::get('roles', RolesController::class)->name('roles');
         Route::get('permisos', PermisosController ::class)->name('permisos');
         Route::get('asignar', AsignarController::class)->name('asignar');
         Route::get('companies', CompaniesController::class)->name('empresa');
@@ -61,8 +63,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('cortecajas', CorteCajaController::class)->name('cortecaja');
         Route::get('plataformas', PlataformasController::class)->name('plataforma');
         Route::get('strproveedores', StrProveedorController::class)->name('proveedor');
-    });
-    
+
+
+
     Route::get('users', UsersController::class)->name('usuarios');
     Route::get('cashout', CashoutController::class)->name('cashout');
     Route::get('reports', ReportsController::class)->name('reportes');

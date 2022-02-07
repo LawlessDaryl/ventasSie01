@@ -16,7 +16,7 @@ class CreateProcedenciaClientesTable extends Migration
         Schema::create('procedencia_clientes', function (Blueprint $table) {
             $table->id();
             $table->string('procedencia',255);
-            $table->enum('estado',['Activo','Desactivado']);
+            $table->enum('estado',['Activo','Desactivado'])->default('Activo');
             $table->timestamps();
         });
     }
