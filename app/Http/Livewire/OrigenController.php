@@ -11,7 +11,7 @@ class OrigenController extends Component
 {
     use WithPagination;
     use WithFileUploads;
-    public  $search, $nombre, $saldo, $selected_id;
+    public  $search, $nombre, $selected_id;
     public  $pageTitle, $componentName;
     private $pagination = 5;
     public function paginationView()
@@ -40,18 +40,15 @@ class OrigenController extends Component
     {
         $rules = [
             'nombre' => 'required|unique:origens',
-            'saldo' => 'required'
         ];
         $messages = [
             'nombre.required' => 'Nombre del orígen requerido.',
             'nombre.unique' => 'El nombre del orígen debe ser único.',
-            'saldo.required' => 'El saldo es requerido.'
         ];
         $this->validate($rules, $messages);
 
         Origen::create([
             'nombre' => $this->nombre,
-            'saldo' => $this->saldo
         ]);
         
         $this->resetUI();
@@ -61,7 +58,7 @@ class OrigenController extends Component
     {
         $this->selected_id = $origen->id;
         $this->nombre = $origen->nombre;
-        $this->saldo = $origen->saldo;
+
 
         $this->emit('show-modal', 'show modal!');
     }
@@ -69,19 +66,16 @@ class OrigenController extends Component
     {
         $rules = [
             'nombre' => "required|unique:origens,nombre,{$this->selected_id}",
-            'saldo' => 'required'
         ];
         $messages = [
             'nombre.required' => 'Nombre del orígen requerido.',
             'nombre.unique' => 'El nombre del orígen debe ser único.',
-            'saldo.required' => 'El saldo es requerido.'
         ];
         $this->validate($rules, $messages);
 
         $orig = Origen::find($this->selected_id);
         $orig->update([
             'nombre' => $this->nombre,
-            'saldo' => $this->saldo
         ]);
         $orig->save();
 
@@ -100,7 +94,6 @@ class OrigenController extends Component
     public function resetUI()
     {
         $this->nombre = '';
-        $this->saldo = '';
         $this->search = '';
         $this->selected_id = 0;
         $this->resetValidation();

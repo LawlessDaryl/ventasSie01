@@ -9,7 +9,7 @@ class Motivo extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nombre_motivo','tipo'];
+    protected $fillable = ['nombre','tipo'];
 
     public function relacionados()
     {

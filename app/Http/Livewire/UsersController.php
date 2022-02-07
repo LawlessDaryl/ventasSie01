@@ -195,6 +195,7 @@ class UsersController extends Component
             $customFileName = uniqid() . '_.' . $this->image->extension();
             $this->image->storeAs('public/usuarios', $customFileName);
             $imageTemp = $user->image;
+
             $user->image = $customFileName;
             $user->save();
 
@@ -218,8 +219,8 @@ class UsersController extends Component
     {   /*  */
         if ($user) {
             $sales = Sale::where('user_id', $user->id)->count();
-            $transaccions = Transaccion::where('user_id', $user->id)->count();
-            if ($sales > 0 || $transaccions > 0) {
+            
+            if ($sales > 0) {
                 $this->emit('user-withsales', 'No es posible eliminar el usuario porque tiene ventas o transacciones registradas');
             } else {
                 $user->delete();

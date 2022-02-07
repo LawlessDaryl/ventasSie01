@@ -35,7 +35,7 @@
                             <option value="{{$key}}" selected>{{$mot}}</option>
                             @endforeach --}}
                             @foreach($motivos as  $mot)
-                            <option value="{{$mot->id}}" selected>{{$mot->nombre_motivo}}</option>
+                            <option value="{{$mot->id}}" selected>{{$mot->nombre}}</option>
                             @endforeach
                         </select>
                     </div>
@@ -53,7 +53,6 @@
                                 <thead class="text-white" style="background: #3B3F5C">
                                     <tr>
                                         <th class="table-th text-withe">NOMBRE COMISION</th>
-                                        <th class="table-th text-withe text-center">MONTO AFECTADO</th>
                                         <th class="table-th text-withe text-center">M INICIAL</th>
                                         <th class="table-th text-withe text-center">M FINAL</th>
                                         <th class="table-th text-withe text-center">COMISION</th>
@@ -80,9 +79,6 @@
                                             </div>
                                         </td>
                                         
-                                        <td>
-                                            <h6 class="text-center">{{$comi->monto_a}}</h6>
-                                        </td>
                                         <td>
                                             <h6 class="text-center">{{$comi->monto_inicial}}</h6>
                                         </td>

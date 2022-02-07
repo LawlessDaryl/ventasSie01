@@ -179,6 +179,7 @@ class ProductsController extends Component
         $this->categoryid = 'Elegir';
         $this->image = null;
         $this->selected_id = 0;
+
         $this->resetValidation();
     }
 }

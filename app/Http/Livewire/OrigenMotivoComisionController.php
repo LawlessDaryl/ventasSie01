@@ -34,13 +34,13 @@ class OrigenMotivoComisionController extends Component
     public function render()
     {
         if ($this->tipo != 'Elegir') {
-            $comisiones = Comision::select('nombre', 'id', 'tipo', 'monto_a', 'monto_inicial', 'monto_final', 'porcentaje', 'comision', DB::raw('0 as checked'))
+            $comisiones = Comision::select('nombre', 'id', 'tipo', 'monto_inicial', 'monto_final', 'porcentaje', 'comision', DB::raw('0 as checked'))
                 ->where('tipo', $this->tipo)
-                ->orderBy('nombre', 'asc')
+                ->orderBy('monto_inicial', 'asc')
                 ->paginate($this->pagination);
         } else {
-            $comisiones = Comision::select('nombre', 'id', 'tipo', 'monto_a', 'monto_inicial', 'monto_final', 'porcentaje', 'comision', DB::raw('0 as checked'))
-                ->orderBy('nombre', 'asc')
+            $comisiones = Comision::select('nombre', 'id', 'tipo', 'monto_inicial', 'monto_final', 'porcentaje', 'comision', DB::raw('0 as checked'))
+                ->orderBy('monto_inicial', 'asc')
                 ->paginate($this->pagination);
         }
 
@@ -60,11 +60,8 @@ class OrigenMotivoComisionController extends Component
             ->where('o.id', $this->origen)
             ->where('m.id', $this->motivo)->pluck('origen_motivos.id')->toArray();
 
-        /*  $this->omcomi=(int)$idsOrigesMots.value(0); */
         if ($this->tipo != 'Elegir' && $this->origen != 'Elegir' && $this->motivo != 'Elegir') {
-            /* dd($this->motivo); */
-            /* dd($idsOrigesMots); */
-            $origenMotivoComi = OrigenMotivoComision::where('origen_motivos_id', $idsOrigesMots)
+            $origenMotivoComi = OrigenMotivoComision::where('origen_motivo_id', $idsOrigesMots)
                 ->pluck('origen_motivo_comisions.comision_id')->toArray();
             foreach ($origenMotivoComi as $OMC) {
                 foreach ($comisiones as $comi) {
@@ -91,11 +88,11 @@ class OrigenMotivoComisionController extends Component
                 ->get();
             if ($state) {
                 $comis = Comision::find($id);
-                /* dd($idsOrigesMots[0]->id); */
+                
                 $lista = OrigenMotivoComision::join('comisions as c', 'origen_motivo_comisions.comision_id', 'c.id')
 
                     ->where('c.tipo', $comis->tipo)
-                    ->where('origen_motivo_comisions.origen_motivos_id', $idsOrigesMots[0]->id)
+                    ->where('origen_motivo_comisions.origen_motivo_id', $idsOrigesMots[0]->id)
 
                     ->pluck('c.id')->toArray();
                 $variable = false;
@@ -116,13 +113,13 @@ class OrigenMotivoComisionController extends Component
                     $this->emit('no_sincronizar', 'Este registro ya tiene asignado una comision entre esos rangos');
                 } else {
                     OrigenMotivoComision::create([
-                        'origen_motivos_id' => $idsOrigesMots[0]->id,
+                        'origen_motivo_id' => $idsOrigesMots[0]->id,
                         'comision_id' => $id
                     ]);
                     $this->emit('permi', 'Comision asignado correctamente');
                 }
             } else {
-                OrigenMotivoComision::where('origen_motivos_id', $idsOrigesMots[0]->id)
+                OrigenMotivoComision::where('origen_motivo_id', $idsOrigesMots[0]->id)
                     ->where('comision_id', $id)->delete();
                 $this->emit('permi', "Comision eliminado correctamente");
             }

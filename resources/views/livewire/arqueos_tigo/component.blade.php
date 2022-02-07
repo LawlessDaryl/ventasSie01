@@ -48,9 +48,9 @@
                         <button wire:click.prevent="Consultar()" type="button" class="btn btn-dark">Consultar</button>
                         @endif
 
-                        @if($total > 0)
+                        {{-- @if($total > 0)
                         <button wire:click.prevent="Print()" type="button" class="btn btn-dark">Imprimir</button>
-                        @endif
+                        @endif --}}
                     </div>
                 </div>
             </div>
@@ -91,15 +91,15 @@
                                 @foreach($transaccions as $row)
                                 <tr style="{{$row->estado == 'Anulada' ? 'background-color: #d97171 !important':''}}">
                                     <td class="text-center"><h6>{{$row->cedula}}</h6></td>
-                                    <td class="text-center"><h6>{{$row->telefonoCl}}</h6></td>
-                                    <td class="text-center"><h6>{{$row->teldestino}}</h6></td>
+                                    <td class="text-center"><h6>{{$row->telefono}}</h6></td>
+                                    <td class="text-center"><h6>{{$row->codigo_transf}}</h6></td>
                                     <td class="text-center"><h6>{{number_format($row->importe,2)}}</h6></td>
                                     <td class="text-center"><h6>{{$row->estado}}</h6></td>
                                     <td class="text-center"><h6>{{$row->origen_nombre}}</h6></td>
                                     <td class="text-center"><h6>{{$row->motivo_nombre}}</h6></td>
                                     <td class="text-center"><h6>{{$row->created_at}}</h6></td>
                                     <td class="text-center">
-                                        <button wire:click.prevent="viewDetails({{$row}})" class="btn btn-dark btn-sm">
+                                        <button wire:click.prevent="viewDetails({{$row->id}})" class="btn btn-dark btn-sm">
                                             <i class="fas fa-list"></i>
                                         </button>
                                     </td>

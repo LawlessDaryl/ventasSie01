@@ -28,7 +28,7 @@
                             @foreach ($data as $motivo)
                                 <tr>
                                     <td>
-                                        <h6 class="text-center">{{ $motivo->nombre_motivo }}</h6>
+                                        <h6 class="text-center">{{ $motivo->nombre }}</h6>
                                     </td>
                                     <td>
                                         <h6 class="text-center">{{ $motivo->tipo }}</h6>
@@ -38,7 +38,7 @@
                                             class="btn btn-dark mtmobile" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <a href="javascript:void(0)" onclick="Confirm('{{ $motivo->id }}','{{ $motivo->nombre_motivo }}',
+                                        <a href="javascript:void(0)" onclick="Confirm('{{ $motivo->id }}','{{ $motivo->nombre }}',
                                         '{{ $motivo->relacionados->count() }}')" class="btn btn-dark" title="Delete">
                                             <i class="fas fa-trash"></i>
                                         </a>

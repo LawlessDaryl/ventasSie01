@@ -21,20 +21,6 @@
         </div>
     </div>
     @if ($selected_id == 0)
-        @if ($tipo != 'Propia')
-            <div class="col-sm-12 col-md-6">
-                <div class="form-group">
-                    <label>Monto Afectado</label>
-                    <select wire:model.lazy="monto_a" class="form-control">
-                        <option value="Ninguna" disabled>Elegir</option>
-                        <option value="Monto a Cobrar">Monto a Cobrar</option>
-                        <option value="Monto a Registrar">Monto a Registrar</option>
-                        <option value="Ambas">Ambas</option>
-                    </select>
-                    @error('monto_a') <span class="text-danger er">{{ $message }}</span>@enderror
-                </div>
-            </div>
-        @endif
         <div class="col-sm-12 col-md-6">
             <div class="form-group">
                 <label>Monto inicial</label>

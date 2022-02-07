@@ -23,7 +23,7 @@
                     <option value="Elegir" disabled selected>Elegir</option>
                     @if ($origen != 'Elegir')
                         @foreach ($motivos as $mot)
-                            <option value="{{ $mot->id }}" selected>{{ $mot->nombre_motivo }}</option>
+                            <option value="{{ $mot->id }}" selected>{{ $mot->nombre }}</option>
                         @endforeach
                     @endif
                 </select>
@@ -34,22 +34,26 @@
         <div class="col-sm-12 col-md-12">
             <div class="form-group">
                 <label>Monto a Cobrar</label>
-                <input @if ($origen == 'Elegir' || $motivo == 'Elegir' || $check == 1) disabled @endif type="text" date-type='importe' wire:model="importe"
+                <input @if ($origen == 'Elegir' || $motivo == 'Elegir') disabled @endif type="text" date-type='importe' wire:model="importe"
                     class="form-control" placeholder="">
                 @error('importe') <span class="text-danger er">{{ $message }}</span>@enderror
             </div>
         </div>
-        <div class="n-chk">
-            <label class="new-control new-radio radio-classic-primary">
-              <input type="radio" class="new-control-input" name="custom-radio-2" id="SI" value="SI" wire:change="ComisionSi()">
-              <span class="new-control-indicator"></span>SI
-            </label>
-            <label class="new-control new-radio radio-classic-primary">
-              <input type="radio" class="new-control-input" name="custom-radio-2" id="NO" value="NO" wire:change="ComisionNo()">
-              <span class="new-control-indicator"></span>NO
-            </label>
-        </div>
-        @if ($origen != 'Elegir' && $motivo != 'Elegir')
+        @if ($origen != 'Elegir' && $motivo != 'Elegir' && $importe!=''&& $condicional==1)
+            <div class="n-chk">
+                <label class="new-control new-radio radio-classic-primary">
+                    <input type="radio" class="new-control-input" name="custom-radio-2" id="SI" value="SI"
+                    wire:model="comisionSiV">
+                    <span class="new-control-indicator"></span>SI
+                </label>
+                <label class="new-control new-radio radio-classic-primary">
+                    <input type="radio" class="new-control-input" name="custom-radio-2" id="NO" value="NO"
+                    wire:model="comisionNoV">
+                    <span class="new-control-indicator"></span>NO
+                </label>
+            </div>
+        @endif
+        {{-- @if ($origen != 'Elegir' && $motivo != 'Elegir')
             <div class="col-sm-4 col-md-4 n-chk">
                 <div class="n-chk">
                     <label class="new-control new-checkbox checkbox-primary">
@@ -60,7 +64,7 @@
                     </label>
                 </div>
             </div>
-        @endif
+        @endif --}}
 
         <div class="col-sm-8 col-md-12">
             <div class="form-group">
@@ -130,7 +134,7 @@
                 @error('celular') <span class="text-danger er">{{ $message }}</span>@enderror
             </div>
         </div>
-        @if ($motivA == 1)
+        @if ($mostrartelf == 1)
             <div class="col-sm-12 col-md-12">
                 <div class="form-group">
                     <label>Teléfono Destino</label>

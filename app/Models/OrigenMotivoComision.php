@@ -9,5 +9,5 @@ class OrigenMotivoComision extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['origen_motivos_id', 'comision_id', 'nombre'];
+    protected $fillable = ['origen_motivo_id', 'comision_id', 'nombre'];
 }

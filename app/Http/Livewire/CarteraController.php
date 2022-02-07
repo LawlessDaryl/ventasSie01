@@ -12,8 +12,8 @@ class CarteraController extends Component
 {
     use WithPagination;
     use WithFileUploads;
-    public  $search, $nombre, $descripcion, $tipo, $selected_id, $caja_id;
-    public  $pageTitle, $componentName;
+    public  $search, $nombre, $descripcion, $tipo, $telefonoNum, $selected_id, $caja_id;
+    public  $pageTitle, $componentName,$variable;
     private $pagination = 5;
     public function paginationView()
     {
@@ -25,6 +25,8 @@ class CarteraController extends Component
         $this->componentName = 'Carteras';
         $this->caja_id = 'Elegir';
         $this->tipo = 'Elegir';
+        $this->variable=0;
+        $this->telefonoNum='';
         $this->selected_id = 0;
     }
     public function render()
@@ -40,6 +42,14 @@ class CarteraController extends Component
                 ->select('carteras.*', 'c.nombre as cajanombre')
                 ->orderBy('id', 'desc')
                 ->paginate($this->pagination);
+
+        if ($this->tipo != 'Elegir') {
+            if ($this->tipo =='Telefono') {
+                $this->variable = 1;
+            } else {
+                $this->variable = 0;
+            }
+        }
         return view('livewire.cartera.component', [
             'data' => $data,
             'cajas' => Caja::orderBy('nombre', 'asc')->get()
@@ -52,7 +62,8 @@ class CarteraController extends Component
         $rules = [
             'nombre' => 'required|unique:carteras',
             'caja_id' => 'required|not_in:Elegir',
-            'tipo' => 'required|not_in:Elegir'
+            'tipo' => 'required|not_in:Elegir',
+            'telefonoNum' => 'required_if:tipo,==,Telefono',
         ];
         $messages = [
             'nombre.required' => 'Nombre de la cartera requerido.',
@@ -60,7 +71,8 @@ class CarteraController extends Component
             'caja_id.required' => 'La caja es requerido.',
             'caja_id.not_in' => 'La caja debe ser distinto de Elegir.',
             'tipo.required' => 'El tipo es requerido.',
-            'tipo.not_in' => 'El tipo debe ser distinto de Elegir.'
+            'tipo.not_in' => 'El tipo debe ser distinto de Elegir.',
+            'telefonoNum.required_if' => 'El teléfono es requerido.',
         ];
         $this->validate($rules, $messages);
 
@@ -68,6 +80,7 @@ class CarteraController extends Component
             'nombre' => $this->nombre,
             'descripcion' => $this->descripcion,
             'tipo' => $this->tipo,
+            'telefonoNum' => $this->telefonoNum,
             'caja_id' => $this->caja_id
         ]);
 
@@ -80,6 +93,7 @@ class CarteraController extends Component
         $this->nombre = $cartera->nombre;
         $this->descripcion = $cartera->descripcion;
         $this->tipo = $cartera->tipo;
+        $this->telefonoNum = $cartera->telefonoNum;
         $this->caja_id = $cartera->caja_id;
 
         $this->emit('show-modal', 'show modal!');
@@ -105,6 +119,7 @@ class CarteraController extends Component
             'nombre' => $this->nombre,
             'descripcion' => $this->descripcion,
             'tipo' => $this->tipo,
+            'telefonoNum' => $this->telefonoNum,
             'caja_id' => $this->caja_id
         ]);
         $cartera->save();
@@ -129,6 +144,7 @@ class CarteraController extends Component
         $this->search = '';
         $this->caja_id = 'Elegir';
         $this->tipo = 'Elegir';
+        $this->telefonoNum = '';
         $this->selected_id = 0;
         $this->resetValidation();
     }

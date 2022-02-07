@@ -8,6 +8,7 @@ use App\Models\MovService;
 use App\Models\OrderService;
 use App\Models\CatProdService;
 use App\Models\Cliente;
+use App\Models\ProcedenciaCliente;
 use App\Models\TypeWork;
 use App\Models\User;
 use App\Models\Service;
@@ -26,7 +27,7 @@ class ServiciosController extends Component
     public $user, $cliente, $nombre, $cedula, $celular, $email, $nit, $razon_social, $orderservice, $hora_entrega,
         $movimiento, $typeworkid, $detalle, $categoryid, $from, $usuariolog, $catprodservid, $marc, $typeservice,
         $falla_segun_cliente, $diagnostico, $solucion, $saldo, $on_account, $import, $fecha_estimada_entrega,
-        $search,  $condicion, $selected_id, $pageTitle, $buscarCliente, $service, $type_service;
+        $search,  $condicion, $selected_id, $pageTitle, $buscarCliente, $service, $type_service, $procedencia;
     private $pagination = 5;
     public function paginationView()
     {
@@ -48,6 +49,8 @@ class ServiciosController extends Component
         $this->condicion = 0;
         $this->from = Carbon::parse(Carbon::now())->format('d-m-Y  H:i');
         $this->fecha_estimada_entrega = Carbon::parse(Carbon::now())->format('Y-m-d');
+
+        $this->procedencia = 'Nuevo';
 
         $this->hora_entrega = Carbon::parse(Carbon::now())->format('H:i');
         $this->usuariolog = Auth()->user()->name;
@@ -108,6 +111,7 @@ class ServiciosController extends Component
             'work' => $typew,
             'cate' => $dato1,
             'marcas' => $marca,
+            'procedenciaClientes' => ProcedenciaCliente::orderBy('id', 'asc')->get()
 
         ])
             ->extends('layouts.theme.app')
@@ -147,14 +151,28 @@ class ServiciosController extends Component
         ];
 
         $this->validate($rules, $messages);
-        $newclient = Cliente::create([
-            'nombre' => $this->nombre,
-            'cedula' => $this->cedula,
-            'celular' => $this->celular,
-            'email' => $this->email,
-            'nit' => $this->nit,
-            'razon_social' => $this->razon_social
-        ]);
+        if ($this->procedencia == 'Nuevo') {
+            $procd = ProcedenciaCliente::where('procedencia', 'Nuevo')->get()->first();
+            $newclient = Cliente::create([
+                'nombre' => $this->nombre,
+                'cedula' => $this->cedula,
+                'celular' => $this->celular,
+                'email' => $this->email,
+                'nit' => $this->nit,
+                'razon_social' => $this->razon_social,
+                'procedencia_cliente_id' => $procd->id,
+            ]);
+        } else {
+            $newclient = Cliente::create([
+                'nombre' => $this->nombre,
+                'cedula' => $this->cedula,
+                'celular' => $this->celular,
+                'email' => $this->email,
+                'razon_social' => $this->razon_social,
+                'nit' => $this->nit,
+                'procedencia_cliente_id' => $this->procedencia,
+            ]);
+        }
         $this->cliente = $newclient;
         session(['clie' => $this->cliente]);
         $this->resetUI();

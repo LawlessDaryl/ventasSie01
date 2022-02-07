@@ -52,13 +52,26 @@
                         </div>
                     </div>
 
-
-
                     <div class="col-sm-12 col-md-6">
                         <div class="form-group">
                             <label>Razón Social</label>
                             <input type="text" wire:model.lazy="razon_social" class="form-control" placeholder="">
                             @error('razon_social') <span class="text-danger er">{{ $message }}</span>@enderror
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-4">
+                        <div class="form-group">
+                            <label>Procedencia</label>
+                            <select wire:model='procedencia' class="form-control">
+                                <option value="Nuevo" selected>Nuevo</option>
+                                @foreach ($procedenciaClientes as $item)
+                                    @if ($item->procedencia != 'Nuevo')
+                                        <option value="{{ $item->id }}">{{ $item->procedencia }}</option>
+                                    @endif
+                                @endforeach
+                            </select>
+                            @error('procedencia') <span class="text-danger er">{{ $message }}</span>@enderror
                         </div>
                     </div>
 

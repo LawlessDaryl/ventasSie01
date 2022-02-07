@@ -21,7 +21,6 @@
                             <tr>
                                 <th class="table-th text-withe text-center">NOMBRE</th>
                                 <th class="table-th text-withe text-center">TIPO</th>
-                                <th class="table-th text-withe text-center">MONTO AFECTADO</th>
                                 <th class="table-th text-withe text-center">MONTO INICIAL</th>
                                 <th class="table-th text-withe text-center">MONTO FINAL</th>
                                 <th class="table-th text-withe text-center">COMISIÓN</th>
@@ -37,9 +36,6 @@
                                     </td>
                                     <td>
                                         <h6 class="text-center">{{ $item->tipo }}</h6>
-                                    </td>
-                                    <td>
-                                        <h6 class="text-center">{{ $item->monto_a }}</h6>
                                     </td>
                                     <td>
                                         <h6 class="text-center">{{ number_format($item->monto_inicial, 2) }}</h6>
