@@ -32,7 +32,7 @@ class OrderServiceController extends Component
     {
         if (strlen($this->search) > 0) {
             $orderservices = OrderService::orderBy('id','desc')
-                ->paginate($this->pagination);
+            ->paginate($this->pagination);
         } else {
             $orderservices =OrderService::orderBy('id','desc')
             ->paginate($this->pagination);
@@ -45,6 +45,17 @@ class OrderServiceController extends Component
             ->extends('layouts.theme.app')
             ->section('content');
     }
+
+    public function GoService()
+    {
+        session(['od' => null]);
+        session(['clie' => null]);
+        session(['tservice' => null]);
+        $this->redirect('service');
+
+    }
+
+
     public function Store()
     {
         $rules = [

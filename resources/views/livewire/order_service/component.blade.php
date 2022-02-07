@@ -7,7 +7,7 @@
                 </h4>
                 <ul class="tabs tab-pills">
                     <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
-                        data-target="#theModal">Agregar</a>
+                        data-target="#theModal" wire:click="GoService">Agregar</a>
                 </ul>
             </div>
             @include('common.searchbox')
