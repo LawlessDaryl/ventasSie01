@@ -16,11 +16,14 @@ class CreateIProductsTable extends Migration
         Schema::create('i__products', function (Blueprint $table) {
             $table->id();
             $table->string('name',250);
+            $table->string('brand',100);
             $table->decimal('cost');
             $table->decimal('sale_Prices');
+            $table->string('lot',100);
             $table->string('barcode',100);
             $table->enum('status',['ACTIVE','INACTIVE'])->default('ACTIVE');
             $table->timestamps();
+
             $table->foreign('i_category')->references('id')->on('i_categories');
             $table->foreign('i_subcats')->references('id')->on('i_subcats');
 
