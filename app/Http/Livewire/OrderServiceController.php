@@ -13,7 +13,8 @@ class OrderServiceController extends Component
     use WithPagination;
     use WithFileUploads;
     public $search, $selected_id, $pageTitle, $componentName,
-    $cliente, $fecha_estimada_entrega, $detalle, $status, $saldo, $on_account, $import, $serviceid, $movtype, $orderservice;
+    $cliente, $fecha_estimada_entrega, $detalle, $status, $saldo, $on_account, $import, 
+    $serviceid, $movtype, $orderservice;
 
 
     private $pagination = 5;
@@ -31,8 +32,33 @@ class OrderServiceController extends Component
     public function render()
     {
         if (strlen($this->search) > 0) {
-            $orderservices = OrderService::orderBy('id','desc')
+            //$orderservices = OrderService::orderBy('id','desc')
+            //->paginate($this->pagination);
+
+
+            $orderservices = OrderService::join('services as s', 'order_services.id', 
+            's.order_service_id')
+            ->join('mov_services as ms', 's.id', 'ms.service_id')
+            ->join('cat_prod_services as cat', 'cat.id', 's.cat_prod_service_id')
+            ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+            ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
+            ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
+            ->select('order_services.*')
+            ->where('c.nombre', 'like', '%' . $this->search . '%')
+            ->orWhere('order_services.id', 'like', '%' . $this->search . '%')
+            ->orWhere('order_services.type_service', 'like', '%' . $this->search . '%')
+            ->orWhere('cat.nombre', 'like', '%' . $this->search . '%')
+            ->orWhere('s.detalle', 'like', '%' . $this->search . '%')
+            ->orWhere('s.marca', 'like', '%' . $this->search . '%')
+            ->orWhere('s.falla_segun_cliente', 'like', '%' . $this->search . '%')
+            ->orWhere('mov.type', 'like', '%' . $this->search . '%')
+            ->orWhere('mov.import', 'like', '%' . $this->search . '%')
+            //->where('services.order_service_id',  $this->orderservice)
+            //->where('mov.status',  'ACTIVO')
+            ->orderBy('order_services.id', 'desc')
             ->paginate($this->pagination);
+
+
         } else {
             $orderservices =OrderService::orderBy('id','desc')
             ->paginate($this->pagination);
