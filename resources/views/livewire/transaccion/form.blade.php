@@ -33,6 +33,15 @@
 
         <div class="col-sm-12 col-md-12">
             <div class="form-group">
+                <label>Monto</label>
+                <input @if ($origen == 'Elegir' || $motivo == 'Elegir') disabled @endif type="text" date-type='montoB' wire:model="montoB"
+                    class="form-control" placeholder="">
+                @error('montoB') <span class="text-danger er">{{ $message }}</span>@enderror
+            </div>
+        </div>
+
+        <div class="col-sm-12 col-md-12">
+            <div class="form-group">
                 <label>Monto a Cobrar</label>
                 <input @if ($origen == 'Elegir' || $motivo == 'Elegir') disabled @endif type="text" date-type='importe' wire:model="importe"
                     class="form-control" placeholder="">
@@ -53,18 +62,6 @@
                 </label>
             </div>
         @endif
-        {{-- @if ($origen != 'Elegir' && $motivo != 'Elegir')
-            <div class="col-sm-4 col-md-4 n-chk">
-                <div class="n-chk">
-                    <label class="new-control new-checkbox checkbox-primary">
-                        <input type="checkbox" wire:change="Comision($('#p').is(':checked'))" id="p"
-                            class="new-control-input" {{ $cheq }}>
-                        <span class="new-control-indicator"></span>
-                        <h6>Comisión</h6>
-                    </label>
-                </div>
-            </div>
-        @endif --}}
 
         <div class="col-sm-8 col-md-12">
             <div class="form-group">

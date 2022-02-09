@@ -28,7 +28,7 @@ class TransaccionController extends Component
     public $codigo, $importe, $importe2, $utilidad, $costo, $observaciones, $fecha, $origen, $motivo, $codigo_transf, $montoR, $estado,
         $pageTitle, $componentName, $selected_id, $hora, $search, $condicion, $mostrartelf, $check, $type, $cartera_id,
         $nombreCliente, $cedula, $celular, $direccion, $email, $fecha_nacim, $razon, $cheq, $nit, $cantidad, $comentario, $condicional,
-        $comisionSiV, $comisionNoV, $metodo2, $metodo, $variable1;
+        $comisionSiV, $comisionNoV, $metodo2, $metodo, $variable1, $montoB, $origMotObjeto;
     private $pagination = 10;
     public function paginationView()
     {
@@ -70,6 +70,8 @@ class TransaccionController extends Component
         $this->metodo2 = 'ABC';
         $this->variable1 = 'asd';
         $this->variable2 = 'asd';
+        $this->montoB = '';
+        $this->origMotObjeto = 0;
     }
 
     public function render()
@@ -196,14 +198,14 @@ class TransaccionController extends Component
         if ($this->origen != 'Elegir' && $this->motivo != 'Elegir' && $this->origen != $this->variable1) {
             $this->importe = '';
             $this->montoR = '';
+            $this->montoB = '';
             $this->motivo = 'Elegir';
             $this->variable1 = 'asd';
-            
             $this->comisionSiV = 'S';
             $this->comisionNoV = 'S';
             $this->metodo2 = 'ABC';
             $this->check = 0;
-            
+
             $motivos = Motivo::find($mot);
         }
         /* RESET DE CAMPOS AL CAMBIAR MOTIVO */
@@ -213,12 +215,12 @@ class TransaccionController extends Component
         if ($this->motivo != 'Elegir' && $this->importe != 0 && $this->motivo != $this->variable2) {
             $this->importe = '';
             $this->montoR = '';
+            $this->montoB = '';
             $this->variable2 = 'asd';
             $this->comisionSiV = 'S';
             $this->comisionNoV = 'S';
             $this->metodo2 = 'ABC';
             $this->check = 0;
-            
         }
 
         /* EJECUTAR METODO DE COMISIONSI CONDICIONADO CON UN VALOR */
@@ -249,16 +251,24 @@ class TransaccionController extends Component
             $idsOrigesMots = OrigenMotivo::where('motivo_id', $this->motivo)
                 ->where('origen_id', $this->origen)
                 ->get()->first();
+            $this->origMotObjeto = $idsOrigesMots->id;
             if ($idsOrigesMots->comision_si_no == 'si') {
                 $this->condicional = 1;
             } else {
                 $this->condicional = 0;
             }
         }
+        if ($this->origMotObjeto != 0 && $this->montoB != '') {
+            $ormt = OrigenMotivo::find($this->origMotObjeto);
+            if ($ormt->comision_si_no == 'nopreguntar' && $ormt->suma_resta_si != 'mantiene' || $ormt->suma_resta_no != 'mantiene') {
+                $this->ComisionSi();
+            }
+        }
 
         /* Monto a registrar igual a importe si variable check es igual a 0 
         (cambia a 1 cuando se ejecutan las comisiones) */
         if ($this->check == 0) {
+            $this->importe = $this->montoB;
             $this->montoR = $this->importe;
         }
 
@@ -316,14 +326,13 @@ class TransaccionController extends Component
         $this->importe2 = $this->importe;
         $idsOrigesMots = OrigenMotivo::where('origen_id', $this->origen)
             ->where('motivo_id', $this->motivo)->get()->first();
-
         $lista = OrigenMotivoComision::join('comisions as c', 'origen_motivo_comisions.comision_id', 'c.id')
             ->where('c.monto_inicial', '<=', $this->importe2)
             ->where('c.monto_final', '>=', $this->importe2)
             ->where('origen_motivo_comisions.origen_motivo_id', $idsOrigesMots->id)
             ->where('c.tipo', 'Cliente')
             ->pluck('c.id')->toArray();
-
+        
         try {
             $comis = Comision::find($lista[0]);
         } catch (Exception $e) {
@@ -369,6 +378,7 @@ class TransaccionController extends Component
                 }
             }
         } else {/* porcentajes */
+            
             if ($idsOrigesMots->afectadoSi == 'montoR') {
                 if ($idsOrigesMots->suma_resta_si == 'suma') {
                     $this->montoR = ($this->importe * $comis->comision) / 100 + $this->importe;
@@ -381,8 +391,9 @@ class TransaccionController extends Component
                 }
             }
             if ($idsOrigesMots->afectadoSi == 'montoC') {
+
                 if ($idsOrigesMots->suma_resta_si == 'suma') {
-                    $this->importe = ($this->importe + $comis->comision) / 100 + $this->importe;
+                    $this->importe = ($this->importe * $comis->comision) / 100 + $this->importe;
                 }
                 if ($idsOrigesMots->suma_resta_si == 'resta') {
                     $this->importe = ($this->importe - $comis->comision) / 100 + $this->importe;
@@ -563,7 +574,7 @@ class TransaccionController extends Component
             ];
             $this->validate($rules, $messages);
         }
-         
+
         /* obtener id del motivo-origen seleccionado */
         $idsOrigesMots = OrigenMotivo::where('motivo_id', $this->motivo)
             ->where('origen_id', $this->origen)

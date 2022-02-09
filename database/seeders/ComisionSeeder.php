@@ -118,5 +118,13 @@ class ComisionSeeder extends Seeder
             'comision' => '3',
             'porcentaje' => 'Activo'
         ]);
+        Comision::create([
+            'nombre' => 'Comision 6% de Abono CI',
+            'tipo' => 'Cliente',
+            'monto_inicial' => '10',
+            'monto_final' => '5000',
+            'comision' => '6',
+            'porcentaje' => 'Activo'
+        ]);
     }
 }

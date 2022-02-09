@@ -33,6 +33,8 @@ class DatabaseSeeder extends Seeder
         $this->call(RoleSeeder::class);
         $this->call(ModelHasRolesSeeder::class);
         $this->call(RoleHasPermissionSeeder::class);
+        $this->call(OrigenMotivoSeeder::class);
+        $this->call(OrigenMotivoComisionSeeder::class);
 
        /*  Category::factory(20)->create(); */
     }
