@@ -23,6 +23,10 @@ class ReporGananciaTgController extends Component
         $this->reportType = 0;
         $this->userId = 0;
         $this->transaccionId = 0;
+        
+        $this->dateFrom = Carbon::parse(Carbon::now())->format('Y-m-d');
+        $this->dateTo = Carbon::parse(Carbon::now())->format('Y-m-d');
+
     }
 
     public function render()
@@ -47,8 +51,10 @@ class ReporGananciaTgController extends Component
             $to = Carbon::parse($this->dateTo)->format('Y-m-d')     . ' 23:59:59';
         }
 
-        if ($this->reportType == 1 && ($this->dateFrom == '' || $this->dateTo == '')) {
-            return;
+        if($this->reportType == 1 && ($this->dateFrom == '' || $this->dateTo == '')){
+            $this->dateFrom = Carbon::parse(Carbon::now())->format('Y-m-d');
+            $this->dateTo = Carbon::parse(Carbon::now())->format('Y-m-d');
+            $this->emit('item','Reportes de Hoy');
         }
 
         if ($this->userId == 0) {

@@ -115,17 +115,24 @@ class OrigenMotivoController extends Component
             $origen = Origen::find($this->origen);
             $origenMotivo=OrigenMotivo::where('origen_id',$this->origen)->where('motivo_id',$id)->get()->first();
 
-            if ($state) {
+            if ($state)
+            {
                 OrigenMotivo::create([
                     'origen_id' => $origen->id,
                     'motivo_id' => $id
                 ]);
                 $this->emit('permi', 'Motivo asignado correctamente');
-            } else {
-                if ($origenMotivo->relacionados->count() > 0) {
+            }
+            else
+            {
+                //dd($origenMotivo->relaciontr->count());
+                if ($origenMotivo->relaciontr->count() > 0)
+                {
                     $this->redirect('origen-motivo');
                     $this->emit('sync-error', 'No se puede eliminar porque tiene comisiones relacionadas/ transacciones relacionadas.');
-                } else {
+                }
+                else
+                {
                     OrigenMotivo::where('origen_id', $origen->id)
                         ->where('motivo_id', $id)->delete();
                     $this->emit('permi', "Motivo eliminado correctamente");

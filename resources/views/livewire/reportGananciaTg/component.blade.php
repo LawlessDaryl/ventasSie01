@@ -34,14 +34,16 @@
                             <div class="col-sm-12 mt-2">
                                 <h6>Fecha desde</h6>
                                 <div class="form-group">
-                                    <input @if ($reportType == 0) disabled @endif type="text" wire:model="dateFrom" class="form-control flatpickr" placeholder="Click para elegir">
+                                    <input @if ($reportType == 0) disabled @endif type="date" wire:model="dateFrom" class="form-control" >
+                                    {{-- <input @if ($reportType == 0) disabled @endif type="date" wire:model="dateFrom" class="form-control" placeholder="Click para elegir"> --}}
                                 </div>
                             </div>
 
                             <div class="col-sm-12 mt-2">
                                 <h6>Fecha hasta</h6>
                                 <div class="form-group">
-                                    <input @if ($reportType == 0) disabled @endif type="text" wire:model="dateTo" class="form-control flatpickr" placeholder="Click para elegir">
+                                    <input @if ($reportType == 0) disabled @endif type="date" wire:model="dateTo" class="form-control">
+                                    {{-- <input @if ($reportType == 0) disabled @endif type="date" wire:model="dateTo" class="form-control" placeholder="Click para elegir"> --}}
                                 </div>
                             </div>
                             
@@ -106,6 +108,11 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+
+        window.livewire.on('item', msg => {
+            noty(msg)
+        });
+
         flatpickr(document.getElementsByClassName('flatpickr'), {
             enableTime: false,
             dateFormat: 'Y-m-d',
