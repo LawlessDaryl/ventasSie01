@@ -138,7 +138,7 @@
                                 <tr>
                                     <td style="width: 300px">
                                         <div style="width: auto;">
-                                            <b>FECHA: </b>27/01/2022&nbsp; - &nbsp;15:50:50<br>
+                                            <b>FECHA: </b>{{\Carbon\Carbon::now()->format('Y-m-d')}}&nbsp; - &nbsp;{{\Carbon\Carbon::now()->format('H:i:s')}}<br>
                                             <b>CODIGO: </b>MAA1191<br>
                                             <b>CLIENTE: </b>{{ $data[0]->nombreC }}
                                         </div>

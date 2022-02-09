@@ -92,14 +92,14 @@
                     <div class="col-lg-4 col-sm-12 col-md-4">
                         <div class="form-group">
                             <label>Total</label>
-                            <input type="number" wire:model.lazy="import" class="form-control" placeholder="ej: 0.0">
+                            <input type="number" wire:model="import" class="form-control" placeholder="ej: 0.0">
                             @error('import') <span class="text-danger er">{{ $message }}</span>@enderror
                         </div>
                     </div>
                     <div class="col-sm-12 col-md-4">
                         <div class="form-group">
                             <label>A Cuenta</label>
-                            <input type="number" wire:model.lazy="on_account" class="form-control"
+                            <input type="number" wire:model="on_account" class="form-control"
                                 placeholder="ej: 0.0">
                             @error('on_account') <span class="text-danger er">{{ $message }}</span>@enderror
                         </div>
@@ -108,7 +108,7 @@
                     <div class="col-lg-4 col-sm-12 col-md-4">
                         <div class="form-group">
                             <label>Saldo</label>
-                            <input type="number" wire:model.lazy="saldo" class="form-control" placeholder="ej: 0.0">
+                            <input type="number" wire:model.lazy="saldo" class="form-control" placeholder="ej: 0.0" disabled>
                             @error('saldo') <span class="text-danger er">{{ $message }}</span>@enderror
                         </div>
                     </div>

@@ -14,6 +14,7 @@ use App\Models\User;
 use App\Models\Service;
 use App\Models\SubCatProdService;
 use Carbon\Carbon;
+use Dompdf\Renderer\Text;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
@@ -42,7 +43,7 @@ class ServiciosController extends Component
         $this->catprodservid = 'Elegir';
 
         $this->selected_id = 0;
-        $this->typeservice = 'Normal';
+        $this->typeservice = 'NORMAL';
         $this->saldo = 0;
         $this->on_account = 0;
         $this->import = 0;
@@ -101,9 +102,13 @@ class ServiciosController extends Component
         } else {
             $marca = [];
         }
-
-        if ((strlen($this->import) > 0) || (strlen($this->on_account) > 0)) //Este if no funciona correctamente
+  
+        if ((strlen($this->import)) != 0 && (strlen($this->on_account) != 0))
             $this->saldo = $this->import - $this->on_account;
+        elseif((strlen($this->on_account) == 0))
+            $this->saldo = $this->import;
+        elseif((strlen($this->import) == 0))
+            $this->saldo = 0;
 
         return view('livewire.servicio.component', [
             'data' => $services,
@@ -190,6 +195,7 @@ class ServiciosController extends Component
             'diagnostico' => 'required',
             'solucion' => 'required',
             'import' => 'required',
+            'on_account' => 'required',
             'fecha_estimada_entrega' => 'required'
         ];
         $messages = [
@@ -201,6 +207,7 @@ class ServiciosController extends Component
             'diagnostico.required' => 'El Diagnostico es requerido',
             'solucion.required' => 'La Solución es requerida',
             'import.required' => 'El Saldo es requerido',
+            'on_account.required' => 'Si no desea ingresar nada ingrese "0"',
             'fecha_estimada_entrega.required' => 'La Fecha es requerida'
         ];
 
@@ -297,7 +304,7 @@ class ServiciosController extends Component
 
         $this->emit('tipoServ-updated', 'Servicio Actualizado');
     }
-    //Eliminar UPDATE, no se usa
+    //Update de Servicios
     public function Update()
     {
         $rules = [
@@ -309,6 +316,7 @@ class ServiciosController extends Component
             'diagnostico' => 'required',
             'solucion' => 'required',
             'import' => 'required',
+            'on_account' => 'required',
             'fecha_estimada_entrega' => 'required'
         ];
         $messages = [
@@ -320,6 +328,7 @@ class ServiciosController extends Component
             'diagnostico.required' => 'El Diagnostico es requerido',
             'solucion.required' => 'La Solución es requerida',
             'import.required' => 'El Saldo es requerido',
+            'on_account.required' => 'Si no desea ingresar nada ingrese "0"',
             'fecha_estimada_entrega.required' => 'La Fecha es requerida'
         ];
 
@@ -396,7 +405,7 @@ class ServiciosController extends Component
         $this->typeworkid = 'Elegir';
         $this->catprodservid = 'Elegir';
         $this->selected_id = 0;
-        $this->typeservice = 'Normal';
+        $this->typeservice = 'NORMAL';
         $this->saldo = 0;
         $this->on_account = 0;
         $this->import = 0;
