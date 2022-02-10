@@ -34,20 +34,20 @@
         <div class="col-sm-12 col-md-12">
             <div class="form-group">
                 <label>Monto</label>
-                <input @if ($origen == 'Elegir' || $motivo == 'Elegir') disabled @endif type="text" date-type='montoB' wire:model="montoB"
+                <input @if ($origen == 'Elegir' || $motivo == 'Elegir') disabled @endif type="text" wire:model.lazy="montoB"
                     class="form-control" placeholder="">
                 @error('montoB') <span class="text-danger er">{{ $message }}</span>@enderror
             </div>
         </div>
 
-        <div class="col-sm-12 col-md-12">
+        <div class="col-sm-8 col-md-12">
             <div class="form-group">
-                <label>Monto a Cobrar</label>
-                <input @if ($origen == 'Elegir' || $motivo == 'Elegir') disabled @endif type="text" date-type='importe' wire:model="importe"
-                    class="form-control" placeholder="">
-                @error('importe') <span class="text-danger er">{{ $message }}</span>@enderror
+                <label>Monto a Registrar</label>
+                <label class="form-control" wire:model.lazy="montoR" disabled>{{ $montoR }}</label>
+                @error('montoR') <span class="text-danger er">{{ $message }}</span>@enderror
             </div>
         </div>
+        
         @if ($origen != 'Elegir' && $motivo != 'Elegir' && $importe!=''&& $condicional==1)
             <div class="n-chk">
                 <label class="new-control new-radio radio-classic-primary">
@@ -63,13 +63,15 @@
             </div>
         @endif
 
-        <div class="col-sm-8 col-md-12">
+        <div class="col-sm-12 col-md-12">
             <div class="form-group">
-                <label>Monto a Registrar</label>
-                <label class="form-control" wire:model.lazy="montoR" disabled>{{ $montoR }}</label>
-                @error('montoR') <span class="text-danger er">{{ $message }}</span>@enderror
+                <label>{{$montoCobrarPagar}}</label>
+                <label class="form-control" wire:model="importe" disabled>{{ $importe }}</label>
+                @error('importe') <span class="text-danger er">{{ $message }}</span>@enderror
             </div>
         </div>
+
+        
     </div>
     <div class="col-sm-6 col-md-6" style="background: #f0ecec">
 

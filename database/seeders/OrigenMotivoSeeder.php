@@ -22,6 +22,7 @@ class OrigenMotivoSeeder extends Seeder
             'suma_resta_no' => 'mantiene',
             'origen_id' => '2',
             'motivo_id' => '1',
+            'telefSolicitante' => 'SI',
         ]);
         OrigenMotivo::create([
             'comision_si_no' => 'si',
@@ -31,6 +32,7 @@ class OrigenMotivoSeeder extends Seeder
             'suma_resta_no' => 'resta',
             'origen_id' => '2',
             'motivo_id' => '4',
+            'telefSolicitante' => 'NO',
         ]);
         OrigenMotivo::create([
             'comision_si_no' => 'nopreguntar',
@@ -40,6 +42,7 @@ class OrigenMotivoSeeder extends Seeder
             'suma_resta_no' => 'mantiene',
             'origen_id' => '2',
             'motivo_id' => '5',
+            'telefSolicitante' => 'SI',
         ]);
         OrigenMotivo::create([
             'comision_si_no' => 'si',
@@ -49,6 +52,7 @@ class OrigenMotivoSeeder extends Seeder
             'suma_resta_no' => 'mantiene',
             'origen_id' => '1',
             'motivo_id' => '1',
+            'telefSolicitante' => 'NO',
         ]);
         OrigenMotivo::create([
             'comision_si_no' => 'nopreguntar',
@@ -58,6 +62,7 @@ class OrigenMotivoSeeder extends Seeder
             'suma_resta_no' => 'suma',
             'origen_id' => '1',
             'motivo_id' => '2',
+            'telefSolicitante' => 'SI',
         ]);
         OrigenMotivo::create([
             'comision_si_no' => 'si',
@@ -67,6 +72,7 @@ class OrigenMotivoSeeder extends Seeder
             'suma_resta_no' => 'resta',
             'origen_id' => '1',
             'motivo_id' => '4',
+            'telefSolicitante' => 'NO',
         ]);
         OrigenMotivo::create([
             'comision_si_no' => 'nopreguntar',
@@ -76,6 +82,7 @@ class OrigenMotivoSeeder extends Seeder
             'suma_resta_no' => 'mantiene',
             'origen_id' => '1',
             'motivo_id' => '3',
+            'telefSolicitante' => 'SI',
         ]);
     }
 }

@@ -2,9 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Category;
-use App\Models\ModelHasRoles;
-use Database\Factories\CategoryFactory;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -33,6 +30,10 @@ class DatabaseSeeder extends Seeder
         $this->call(RoleSeeder::class);
         $this->call(ModelHasRolesSeeder::class);
         $this->call(RoleHasPermissionSeeder::class);
+        $this->call(ProcedenciaSeeder::class);
+        $this->call(TypeworkSeeder::class);
+        $this->call(CatProdServiceSeeder::class);
+        $this->call(SubCatProdServicesSeeder::class);
         $this->call(OrigenMotivoSeeder::class);
         $this->call(OrigenMotivoComisionSeeder::class);
 

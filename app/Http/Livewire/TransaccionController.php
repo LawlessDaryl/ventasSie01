@@ -28,7 +28,7 @@ class TransaccionController extends Component
     public $codigo, $importe, $importe2, $utilidad, $costo, $observaciones, $fecha, $origen, $motivo, $codigo_transf, $montoR, $estado,
         $pageTitle, $componentName, $selected_id, $hora, $search, $condicion, $mostrartelf, $check, $type, $cartera_id,
         $nombreCliente, $cedula, $celular, $direccion, $email, $fecha_nacim, $razon, $cheq, $nit, $cantidad, $comentario, $condicional,
-        $comisionSiV, $comisionNoV, $metodo2, $metodo, $variable1, $montoB, $origMotObjeto;
+        $comisionSiV, $comisionNoV, $metodo2, $metodo, $variable1, $montoB, $origMotObjeto,$montoCobrarPagar;
     private $pagination = 10;
     public function paginationView()
     {
@@ -71,6 +71,7 @@ class TransaccionController extends Component
         $this->variable1 = 'asd';
         $this->variable2 = 'asd';
         $this->montoB = '';
+        $this->montoCobrarPagar = 'Monto a cobrar/pagar';
         $this->origMotObjeto = 0;
     }
 
@@ -181,15 +182,6 @@ class TransaccionController extends Component
             $motivos = [];
         }
 
-        /* Mostrar label e imput (teléfono solicitante) solo si el motivo es de tipo Abono */
-        if ($this->origen != 'Elegir' && $this->motivo != 'Elegir') {
-            $motiv = Motivo::find($this->motivo);
-            if ($motiv->tipo == 'Abono') {
-                $this->mostrartelf = 1;
-            } else {
-                $this->mostrartelf = 0;
-            }
-        }
 
         /* RESET DE CAMPOS AL CAMBIAR ORIGEN */
         if ($this->origen != 'Elegir' && $this->variable1 == 'asd') {
@@ -197,8 +189,8 @@ class TransaccionController extends Component
         }
         if ($this->origen != 'Elegir' && $this->motivo != 'Elegir' && $this->origen != $this->variable1) {
             $this->importe = '';
-            $this->montoR = '';
             $this->montoB = '';
+            $this->montoR = '';
             $this->motivo = 'Elegir';
             $this->variable1 = 'asd';
             $this->comisionSiV = 'S';
@@ -214,8 +206,8 @@ class TransaccionController extends Component
         }
         if ($this->motivo != 'Elegir' && $this->importe != 0 && $this->motivo != $this->variable2) {
             $this->importe = '';
-            $this->montoR = '';
             $this->montoB = '';
+            $this->montoR = '';
             $this->variable2 = 'asd';
             $this->comisionSiV = 'S';
             $this->comisionNoV = 'S';
@@ -237,12 +229,13 @@ class TransaccionController extends Component
         }
         /* RESET DE RADIO BUTTONS AL CAMBIAR IMPORTE */
         if ($this->metodo != 0) {
-            if ($this->metodo != $this->importe) {
+            if ($this->metodo != $this->montoB) {
                 $this->comisionSiV = 'S';
                 $this->comisionNoV = 'S';
                 $this->metodo2 = 'ABC';
                 $this->check = 0;
-                $this->montoR = $this->importe;
+                $this->importe = $this->montoB;
+                $this->montoR = $this->montoB;
             }
         }
 
@@ -258,10 +251,24 @@ class TransaccionController extends Component
                 $this->condicional = 0;
             }
         }
-        if ($this->origMotObjeto != 0 && $this->montoB != '') {
+
+        /* Mostrar label e imput (teléfono solicitante) solo si el motivo es de tipo Abono */
+        if ($this->origen != 'Elegir' && $this->motivo != 'Elegir') {
             $ormt = OrigenMotivo::find($this->origMotObjeto);
-            if ($ormt->comision_si_no == 'nopreguntar' && $ormt->suma_resta_si != 'mantiene' || $ormt->suma_resta_no != 'mantiene') {
-                $this->ComisionSi();
+            if ($ormt->telefSolicitante == 'SI') {
+                $this->mostrartelf = 1;
+            } else {
+                $this->mostrartelf = 0;
+            }
+        }
+        /* Monto a cobrar o pagar */
+        if ($this->origen != 'Elegir' && $this->motivo != 'Elegir') {
+            $motiv = Motivo::find($this->motivo);
+            if ($motiv->tipo == 'Retiro') {
+                $this->montoCobrarPagar = 'Monto a Pagar';
+            }
+            if($motiv->tipo == 'Abono'){
+                $this->montoCobrarPagar = 'Monto a cobrar';
             }
         }
 
@@ -270,6 +277,16 @@ class TransaccionController extends Component
         if ($this->check == 0) {
             $this->importe = $this->montoB;
             $this->montoR = $this->importe;
+        }
+
+        /* Calcular comision cuando cuando comision_si_no de origen_motivo es nopreguntar pero si son afectados los montos */
+        if ($this->origMotObjeto != 0 && $this->montoB != '' && $this->importe != '' && $this->montoR != '' && $this->check == 0) {
+            $ormt = OrigenMotivo::find($this->origMotObjeto);
+            if ($ormt->comision_si_no == 'nopreguntar' && ($ormt->suma_resta_si != 'mantiene' || $ormt->suma_resta_no != 'mantiene')) {
+                $this->importe = $this->montoB;
+                $this->montoR = $this->importe;
+                $this->ComisionSi();
+            }
         }
 
         /* MOSTRAR CARTERAS DE LA CAJA EN LA QUE SE ENCUENTRA */
@@ -321,18 +338,21 @@ class TransaccionController extends Component
     /* CALCULAR COMISION SI SELECCIONA SI EN RADIO BUTTON */
     public function ComisionSi()
     {
-        $this->montoR = $this->importe;
+        $this->importe = $this->montoB;
+        $this->montoR = $this->montoB;
 
-        $this->importe2 = $this->importe;
+        $this->importe2 = $this->montoB;
+        /* dd($this->montoR, $this->montoB, $this->importe, $this->importe2); */
         $idsOrigesMots = OrigenMotivo::where('origen_id', $this->origen)
             ->where('motivo_id', $this->motivo)->get()->first();
+
         $lista = OrigenMotivoComision::join('comisions as c', 'origen_motivo_comisions.comision_id', 'c.id')
             ->where('c.monto_inicial', '<=', $this->importe2)
             ->where('c.monto_final', '>=', $this->importe2)
             ->where('origen_motivo_comisions.origen_motivo_id', $idsOrigesMots->id)
             ->where('c.tipo', 'Cliente')
             ->pluck('c.id')->toArray();
-        
+        /* dd($lista); */
         try {
             $comis = Comision::find($lista[0]);
         } catch (Exception $e) {
@@ -340,85 +360,91 @@ class TransaccionController extends Component
             return;
         }
 
-        if ($comis->porcentaje == 0) {
+        if ($comis->porcentaje == 'Desactivo') {
             if ($idsOrigesMots->afectadoSi == 'montoR') {
+
                 if ($idsOrigesMots->suma_resta_si == 'suma') {
-                    $this->montoR = $this->importe + $comis->comision;
+                    $this->montoR = $this->montoB + $comis->comision;
                 }
                 if ($idsOrigesMots->suma_resta_si == 'resta') {
-                    $this->montoR = $this->importe - $comis->comision;
+                    $this->montoR = $this->montoB - $comis->comision;
                 }
                 if ($idsOrigesMots->suma_resta_si == 'mantiene') {
-                    $this->montoR = $this->importe;
-                }
-            }
-            if ($idsOrigesMots->afectadoSi == 'montoC') {
-                if ($idsOrigesMots->suma_resta_si == 'suma') {
-                    $this->importe = $this->importe + $comis->comision;
-                }
-                if ($idsOrigesMots->suma_resta_si == 'resta') {
-                    $this->importe = $this->importe - $comis->comision;
-                }
-                if ($idsOrigesMots->suma_resta_si == 'mantiene') {
-                    $this->importe = $this->importe;
-                }
-            }
-            if ($idsOrigesMots->afectadoSi == 'ambos') {
-                if ($idsOrigesMots->suma_resta_si == 'suma') {
-                    $this->montoR = $this->importe + $comis->comision;
-                    $this->importe = $this->importe + $comis->comision;
-                }
-                if ($idsOrigesMots->suma_resta_si == 'resta') {
-                    $this->montoR = $this->importe - $comis->comision;
-                    $this->importe = $this->importe - $comis->comision;
-                }
-                if ($idsOrigesMots->suma_resta_si == 'mantiene') {
-                    $this->importe = $this->importe;
-                    $this->montoR = $this->montoR;
-                }
-            }
-        } else {/* porcentajes */
-            
-            if ($idsOrigesMots->afectadoSi == 'montoR') {
-                if ($idsOrigesMots->suma_resta_si == 'suma') {
-                    $this->montoR = ($this->importe * $comis->comision) / 100 + $this->importe;
-                }
-                if ($idsOrigesMots->suma_resta_si == 'resta') {
-                    $this->montoR = ($this->importe - $comis->comision) / 100 + $this->importe;
-                }
-                if ($idsOrigesMots->suma_resta_si == 'mantiene') {
-                    $this->montoR = $this->importe;
+                    $this->importe = $this->montoB;
+                    $this->montoR = $this->montoB;
                 }
             }
             if ($idsOrigesMots->afectadoSi == 'montoC') {
 
                 if ($idsOrigesMots->suma_resta_si == 'suma') {
-                    $this->importe = ($this->importe * $comis->comision) / 100 + $this->importe;
+                    $this->importe = $this->montoB + $comis->comision;
                 }
                 if ($idsOrigesMots->suma_resta_si == 'resta') {
-                    $this->importe = ($this->importe - $comis->comision) / 100 + $this->importe;
+                    $this->importe = $this->montoB - $comis->comision;
                 }
                 if ($idsOrigesMots->suma_resta_si == 'mantiene') {
-                    $this->importe = $this->importe;
+                    $this->importe = $this->montoB;
+                    $this->montoR = $this->montoB;
                 }
             }
             if ($idsOrigesMots->afectadoSi == 'ambos') {
                 if ($idsOrigesMots->suma_resta_si == 'suma') {
-                    $this->montoR = ($this->importe + $comis->comision) / 100 + $this->importe;
-                    $this->importe = ($this->importe + $comis->comision) / 100 + $this->importe;
+                    $this->montoR = $this->montoB + $comis->comision;
+                    $this->importe = $this->montoB + $comis->comision;
                 }
                 if ($idsOrigesMots->suma_resta_si == 'resta') {
-                    $this->montoR = ($this->importe - $comis->comision) / 100 + $this->importe;
-                    $this->importe = ($this->importe - $comis->comision) / 100 + $this->importe;
+                    $this->montoR = $this->montoB - $comis->comision;
+                    $this->importe = $this->montoB - $comis->comision;
                 }
                 if ($idsOrigesMots->suma_resta_si == 'mantiene') {
-                    $this->importe = $this->importe;
-                    $this->montoR = $this->montoR;
+                    $this->importe = $this->montoB;
+                    $this->montoR = $this->montoB;
+                }
+            }
+        } else {/* porcentajes */
+
+            if ($idsOrigesMots->afectadoSi == 'montoR') {
+                if ($idsOrigesMots->suma_resta_si == 'suma') {
+                    $this->montoR = ($this->montoB * $comis->comision) / 100 + $this->montoB;
+                }
+                if ($idsOrigesMots->suma_resta_si == 'resta') {
+                    $this->montoR = - (($this->montoB * $comis->comision) / 100) + $this->montoB;
+                }
+                if ($idsOrigesMots->suma_resta_si == 'mantiene') {
+                    $this->importe = $this->montoB;
+                    $this->montoR = $this->montoB;
+                }
+            }
+            if ($idsOrigesMots->afectadoSi == 'montoC') {
+
+                if ($idsOrigesMots->suma_resta_si == 'suma') {
+                    $this->importe = ($this->montoB * $comis->comision) / 100 + $this->montoB;
+                }
+                if ($idsOrigesMots->suma_resta_si == 'resta') {
+                    $this->importe = - (($this->montoB * $comis->comision) / 100) + $this->montoB;
+                }
+                if ($idsOrigesMots->suma_resta_si == 'mantiene') {
+                    $this->importe = $this->montoB;
+                    $this->montoR = $this->montoB;
+                }
+            }
+            if ($idsOrigesMots->afectadoSi == 'ambos') {
+                if ($idsOrigesMots->suma_resta_si == 'suma') {
+                    $this->montoR = ($this->montoB * $comis->comision) / 100 + $this->montoB;
+                    $this->importe = ($this->montoB * $comis->comision) / 100 + $this->montoB;
+                }
+                if ($idsOrigesMots->suma_resta_si == 'resta') {
+                    $this->montoR = - (($this->montoB - $comis->comision) / 100) + $this->montoB;
+                    $this->importe = - (($this->montoB - $comis->comision) / 100) + $this->montoB;
+                }
+                if ($idsOrigesMots->suma_resta_si == 'mantiene') {
+                    $this->importe = $this->montoB;
+                    $this->montoR = $this->montoB;
                 }
             }
         }
         $this->check = 1;
-        $this->metodo = $this->importe;
+        $this->metodo = $this->montoB;
     }
     /* CALCULAR COMISION SI SELECCIONA NO EN RADIO BUTTON */
     public function ComisionNo()
@@ -443,83 +469,87 @@ class TransaccionController extends Component
             return;
         }
 
-        if ($comis->porcentaje == 0) {
+        if ($comis->porcentaje == 'Desactivo') {
             if ($idsOrigesMots->afectadoNo == 'montoR') {
                 if ($idsOrigesMots->suma_resta_no == 'suma') {
-                    $this->montoR = $this->importe + $comis->comision;
+                    $this->montoR = $this->montoB + $comis->comision;
                 }
                 if ($idsOrigesMots->suma_resta_no == 'resta') {
-                    $this->montoR = $this->importe - $comis->comision;
+                    $this->montoR = $this->montoB - $comis->comision;
                 }
                 if ($idsOrigesMots->suma_resta_no == 'mantiene') {
-                    $this->montoR = $this->importe;
+                    $this->importe = $this->montoB;
+                    $this->montoR = $this->montoB;
                 }
             }
             if ($idsOrigesMots->afectadoNo == 'montoC') {
                 if ($idsOrigesMots->suma_resta_no == 'suma') {
-                    $this->importe = $this->importe + $comis->comision;
+                    $this->importe = $this->montoB + $comis->comision;
                 }
                 if ($idsOrigesMots->suma_resta_no == 'resta') {
-                    $this->importe = $this->importe - $comis->comision;
+                    $this->importe = $this->montoB - $comis->comision;
                 }
                 if ($idsOrigesMots->suma_resta_no == 'mantiene') {
-                    $this->importe = $this->importe;
+                    $this->importe = $this->montoB;
+                    $this->montoR = $this->montoB;
                 }
             }
             if ($idsOrigesMots->afectadoNo == 'ambos') {
                 if ($idsOrigesMots->suma_resta_no == 'suma') {
-                    $this->montoR = $this->importe + $comis->comision;
-                    $this->importe = $this->importe + $comis->comision;
+                    $this->montoR = $this->montoB + $comis->comision;
+                    $this->importe = $this->montoB + $comis->comision;
                 }
                 if ($idsOrigesMots->suma_resta_no == 'resta') {
-                    $this->montoR = $this->importe - $comis->comision;
-                    $this->importe = $this->importe - $comis->comision;
+                    $this->montoR = $this->montoB - $comis->comision;
+                    $this->importe = $this->montoB - $comis->comision;
                 }
                 if ($idsOrigesMots->suma_resta_no == 'mantiene') {
-                    $this->importe = $this->importe;
-                    $this->montoR = $this->montoR;
+                    $this->importe = $this->montoB;
+                    $this->montoR = $this->montoB;
                 }
             }
         } else {/* porcentajes */
             if ($idsOrigesMots->afectadoNo == 'montoR') {
                 if ($idsOrigesMots->suma_resta_no == 'suma') {
-                    $this->montoR = ($this->importe + $comis->comision) / 100 + $this->importe;
+                    $this->montoR = ($this->montoB * $comis->comision) / 100 + $this->montoB;
                 }
                 if ($idsOrigesMots->suma_resta_no == 'resta') {
-                    $this->montoR = ($this->importe - $comis->comision) / 100 + $this->importe;
+                    $this->montoR = - (($this->montoB * $comis->comision) / 100) + $this->montoB;
                 }
                 if ($idsOrigesMots->suma_resta_no == 'mantiene') {
-                    $this->montoR = $this->importe;
+                    $this->importe = $this->montoB;
+                    $this->montoR = $this->montoB;
                 }
             }
             if ($idsOrigesMots->afectadoNo == 'montoC') {
                 if ($idsOrigesMots->suma_resta_no == 'suma') {
-                    $this->importe = ($this->importe + $comis->comision) / 100 + $this->importe;
+                    $this->importe = ($this->montoB * $comis->comision) / 100 + $this->montoB;
                 }
                 if ($idsOrigesMots->suma_resta_no == 'resta') {
-                    $this->importe = ($this->importe - $comis->comision) / 100 + $this->importe;
+                    $this->importe = - (($this->montoB - $comis->comision) / 100) + $this->montoB;
                 }
                 if ($idsOrigesMots->suma_resta_no == 'mantiene') {
-                    $this->importe = $this->importe;
+                    $this->importe = $this->montoB;
+                    $this->montoR = $this->montoB;
                 }
             }
             if ($idsOrigesMots->afectadoNo == 'ambos') {
                 if ($idsOrigesMots->suma_resta_no == 'suma') {
-                    $this->montoR = ($this->importe + $comis->comision) / 100 + $this->importe;
-                    $this->importe = ($this->importe + $comis->comision) / 100 + $this->importe;
+                    $this->montoR = ($this->montoB * $comis->comision) / 100 + $this->montoB;
+                    $this->importe = ($this->montoB * $comis->comision) / 100 + $this->montoB;
                 }
                 if ($idsOrigesMots->suma_resta_no == 'resta') {
-                    $this->montoR = ($this->importe - $comis->comision) / 100 + $this->importe;
-                    $this->importe = ($this->importe - $comis->comision) / 100 + $this->importe;
+                    $this->montoR = - (($this->montoB * $comis->comision) / 100) + $this->montoB;
+                    $this->importe = - (($this->montoB * $comis->comision) / 100) + $this->montoB;
                 }
                 if ($idsOrigesMots->suma_resta_no == 'mantiene') {
-                    $this->importe = $this->importe;
-                    $this->montoR = $this->montoR;
+                    $this->importe = $this->montoB;
+                    $this->montoR = $this->montoB;
                 }
             }
         }
         $this->check = 1;
-        $this->metodo = $this->importe;
+        $this->metodo = $this->montoB;
     }
     /* REGISTRAR TRANSACCION */
     public function Store()
@@ -528,7 +558,7 @@ class TransaccionController extends Component
 
 
 
-        if($this->motivo == 'Elegir'){
+        if ($this->motivo == 'Elegir') {
             $rules = [ /* Reglas de validacion */
                 'cedula' => 'required|min:5',
                 'celular' => 'required|integer|min:8',
@@ -563,13 +593,13 @@ class TransaccionController extends Component
                 $rules = [ /* Reglas de validacion */
                     'cedula' => 'required|min:5',
                     'celular' => 'required|integer|min:8',
-    
+
                     'motivo' => 'required|not_in:Elegir',
                     'origen' => 'required|not_in:Elegir',
-    
-    
-    
-    
+
+
+
+
                     'importe' => 'required|integer|min:1|not_in:0',
                     'codigo_transf' => 'required'
                 ];
@@ -579,19 +609,19 @@ class TransaccionController extends Component
                     'celular.required' => 'Ingresa el telefono del solicitante',
                     'celular.min' => 'El teléfono debe tener al menos 8 caractéres',
                     'celular.integer' => 'El teléfono debe ser un número',
-    
-    
+
+
                     'motivo.not_in' => 'Seleccione un valor distinto a Elegir',
                     'origen.not_in' => 'Seleccione un valor distinto a Elegir',
-                    
-    
+
+
                     'importe.required' => 'Ingrese un monto válido',
                     'importe.min' => 'Ingrese un monto mayor a 0',
                     'importe.not_in' => 'Ingrese un monto válido',
                     'importe.integer' => 'El monto debe ser un número',
                     'codigo_transf.required' => 'Este campo es obligatorio',
                 ];
-    
+
                 $this->validate($rules, $messages);
             } else {
                 $rules = [ /* Reglas de validacion */
@@ -607,12 +637,12 @@ class TransaccionController extends Component
                     'celular.required' => 'Ingresa el telefono del solicitante',
                     'celular.min' => 'El teléfono debe tener al menos 8 caractéres',
                     'celular.integer' => 'El teléfono debe ser un número',
-    
-    
+
+
                     'motivo.not_in' => 'Seleccione un valor distinto a Elegir',
                     'origen.not_in' => 'Seleccione un valor distinto a Elegir',
-    
-    
+
+
                     'importe.required' => 'Ingrese un monto válido',
                     'importe.min' => 'Ingrese un monto mayor a 0',
                     'importe.not_in' => 'Ingrese un monto válido',
@@ -624,8 +654,8 @@ class TransaccionController extends Component
         }
         //------------------------------------------------------------------------------------------------------
         //------------------------------------------------------------------------------------------------------
-       
-         
+
+
         /* obtener id del motivo-origen seleccionado */
         $idsOrigesMots = OrigenMotivo::where('motivo_id', $this->motivo)
             ->where('origen_id', $this->origen)
@@ -674,7 +704,8 @@ class TransaccionController extends Component
                     'email' => $this->email,
                     'fecha_nacim' => $this->fecha_nacim,
                     'razon_social' => $this->razon,
-                    'nit' => $this->nit
+                    'nit' => $this->nit,
+                    'procedencia_cliente_id' => 1,
                 ]);
             }
             $motiv = Motivo::find($this->motivo);
@@ -876,6 +907,8 @@ class TransaccionController extends Component
         $this->comisionNoV = 'S';
         $this->metodo = 0;
         $this->metodo2 = 'ABC';
+        $this->origMotObjeto = 0;
+        $this->montoB = '';
         $this->resetValidation();
         $this->resetPage();
     }

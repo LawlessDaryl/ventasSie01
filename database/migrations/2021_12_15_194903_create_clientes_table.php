@@ -23,6 +23,8 @@ class CreateClientesTable extends Migration
             $table->date('fecha_nacim')->nullable();
             $table->string('razon_social')->nullable();
             $table->integer('nit')->nullable();
+            $table->unsignedBigInteger('procedencia_cliente_id');
+            $table->foreign('procedencia_cliente_id')->references('id')->on('procedencia_clientes');
             $table->timestamps();
         });
     }
