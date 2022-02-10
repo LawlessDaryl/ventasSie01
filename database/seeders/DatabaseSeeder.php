@@ -34,6 +34,8 @@ class DatabaseSeeder extends Seeder
         $this->call(TypeworkSeeder::class);
         $this->call(CatProdServiceSeeder::class);
         $this->call(SubCatProdServicesSeeder::class);
+        $this->call(OrigenMotivoSeeder::class);
+        $this->call(OrigenMotivoComisionSeeder::class);
 
        /*  Category::factory(20)->create(); */
     }
