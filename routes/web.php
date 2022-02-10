@@ -41,8 +41,7 @@ Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('ho
 
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('categories', CategoriesController::class)->name('categorias')->middleware('role:ADMIN');
-    Route::get('products', ProductsController::class)->name('productos');
+   
     Route::get('coins', CoinsController::class)->name('monedas');
     Route::get('pos', PosController::class)->name('ventas');
 
@@ -57,6 +56,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('cortecajas', CorteCajaController::class)->name('cortecaja');
         Route::get('plataformas', PlataformasController::class)->name('plataforma');
         Route::get('strproveedores', StrProveedorController::class)->name('proveedor');
+        
     });
     
     Route::get('users', UsersController::class)->name('usuarios');
@@ -78,6 +78,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('subcatprodservice', SubCatProdServiceController::class)->name('scps');
     Route::get('orderservice', OrderServiceController::class)->name('os');
     Route::get('service', ServiciosController::class)->name('serv');
+
+    Route::get('categories', CategoriesController::class)->name('categorias');
+    Route::get('products', ProductsController::class)->name('productos');
+    Route::get('locations', ProductsController::class)->name('locations');
+    
 
     //reportes PDDF
     Route::get('report/pdf/{user}/{type}/{f1}/{f2}', [ExportController::class, 'reportPDF']);

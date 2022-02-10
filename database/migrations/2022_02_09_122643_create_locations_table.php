@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateICategoriesTable extends Migration
+class CreateLocationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CreateICategoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('i__categories', function (Blueprint $table) {
+        Schema::create('locations', function (Blueprint $table) {
             $table->id();
-            $table->string('name',100);
-            $table->string('description',255);
-
+            $table->foreignId('sucursal_id')->constrained();
+            $table->string('codigo',100);
+            $table->string('descripcion',255);
+            $table->enum('tipo',['VITRINA','MOSTRADOR','ESTANTE'])->default('ESTANTE');
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ class CreateICategoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('i__categories');
+        Schema::dropIfExists('locations');
     }
 }
