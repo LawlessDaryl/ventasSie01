@@ -9,5 +9,5 @@ class Cartera extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'descripcion','tipo','caja_id'];/*ssss*/
+    protected $fillable = ['nombre', 'descripcion','tipo','caja_id'];
 }
