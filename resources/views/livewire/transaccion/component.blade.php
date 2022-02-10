@@ -6,8 +6,7 @@
                     <b>{{ $componentName }} | {{ $pageTitle }}</b>
                 </h4>
                 <ul class="tabs tab-pills">
-                    <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal" data-target="#theModal">+
-                        Nueva</a>
+                    <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal" data-target="#theModal">+ Nueva</a>
                     <a wire:click.prevent="viewDetails()" class="btn btn-dark">
                         Generar Ingreso/Egreso
                     </a>

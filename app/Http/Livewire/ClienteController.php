@@ -49,14 +49,17 @@ class ClienteController extends Component
     public function Store()
     {
         $rules = [
-            'cedula' => 'required|min:5',
-            'celular' => 'required|min:8'
+            'cedula' => 'required|min:5,unique|unique:clientes',
+            'celular' => 'required|min:8',
+            'nit' => 'required'
         ];
         $messages = [
             'cedula.required' => 'Numero de cédula es requerido.',
             'cedula.min' => 'Ingrese un numero de cédula superior a 5 dígitos.',
+            'cedula.unique' => 'El CI ya existe',
             'celular.required' => 'Numero de celular es requerido.',
-            'celular.min' => 'Ingrese un celular superior a 7 dígitos.'
+            'celular.min' => 'Ingrese un celular superior a 7 dígitos.',
+            'nit.required' => 'El Nit es requerido'
         ];
         $this->validate($rules, $messages);
 
@@ -93,14 +96,17 @@ class ClienteController extends Component
     public function Update()
     {
         $rules = [
-            'cedula' => 'required|min:5',
-            'celular' => 'required|min:8'
+            'cedula' => "required|min:5|unique:clientes,cedula,{$this->selected_id}",
+            'celular' => 'required|min:8',
+            'nit' => 'required'
         ];
         $messages = [
             'cedula.required' => 'Numero de cédula es requerido.',
             'cedula.min' => 'Ingrese un numero de cédula superior a 5 dígitos.',
+            'cedula.unique' => 'El CI ya existe',
             'celular.required' => 'Numero de celular es requerido.',
-            'celular.min' => 'Ingrese un celular superior a 7 dígitos.'
+            'celular.min' => 'Ingrese un celular superior a 7 dígitos.',
+            'nit.required' => 'El Nit es requerido'
         ];
         $this->validate($rules, $messages);
 

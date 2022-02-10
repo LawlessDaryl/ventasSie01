@@ -525,32 +525,10 @@ class TransaccionController extends Component
     public function Store()
     {
         $motiv = Motivo::find($this->motivo);
-        if ($motiv->tipo == 'Abono') {
-            $rules = [ /* Reglas de validacion */
-                'cedula' => 'required|min:5',
-                'celular' => 'required|integer|min:8',
-                'motivo' => 'required|not_in:Elegir',
-                'origen' => 'required|not_in:Elegir',
-                'importe' => 'required|integer|min:1|not_in:0',
-                'codigo_transf' => 'required'
-            ];
-            $messages = [ /* mensajes de validaciones */
-                'cedula.required' => 'Ingresa el número de carnet de identidad',
-                'cedula.min' => 'El numero de carnet debe tener al menos 3 caracteres',
-                'celular.required' => 'Ingresa el telefono del solicitante',
-                'celular.min' => 'El teléfono debe tener al menos 8 caractéres',
-                'celular.integer' => 'El teléfono debe ser un número',
-                'motivo.not_in' => 'Seleccione un valor distinto a Elegir',
-                'origen.not_in' => 'Seleccione un valor distinto a Elegir',
-                'importe.required' => 'Ingrese un monto válido',
-                'importe.min' => 'Ingrese un monto mayor a 0',
-                'importe.not_in' => 'Ingrese un monto válido',
-                'importe.integer' => 'El monto debe ser un número',
-                'codigo_transf.required' => 'Este campo es obligatorio',
-            ];
 
-            $this->validate($rules, $messages);
-        } else {
+
+
+        if($this->motivo == 'Elegir'){
             $rules = [ /* Reglas de validacion */
                 'cedula' => 'required|min:5',
                 'celular' => 'required|integer|min:8',
@@ -564,8 +542,12 @@ class TransaccionController extends Component
                 'celular.required' => 'Ingresa el telefono del solicitante',
                 'celular.min' => 'El teléfono debe tener al menos 8 caractéres',
                 'celular.integer' => 'El teléfono debe ser un número',
+
+
                 'motivo.not_in' => 'Seleccione un valor distinto a Elegir',
                 'origen.not_in' => 'Seleccione un valor distinto a Elegir',
+
+
                 'importe.required' => 'Ingrese un monto válido',
                 'importe.min' => 'Ingrese un monto mayor a 0',
                 'importe.not_in' => 'Ingrese un monto válido',
@@ -574,7 +556,73 @@ class TransaccionController extends Component
             ];
             $this->validate($rules, $messages);
         }
+        else {
+            if ($motiv->tipo == 'Abono') {
+                $rules = [ /* Reglas de validacion */
+                    'cedula' => 'required|min:5',
+                    'celular' => 'required|integer|min:8',
+    
+                    'motivo' => 'required|not_in:Elegir',
+                    'origen' => 'required|not_in:Elegir',
+    
+    
+    
+    
+                    'importe' => 'required|integer|min:1|not_in:0',
+                    'codigo_transf' => 'required'
+                ];
+                $messages = [ /* mensajes de validaciones */
+                    'cedula.required' => 'Ingresa el número de carnet de identidad',
+                    'cedula.min' => 'El numero de carnet debe tener al menos 3 caracteres',
+                    'celular.required' => 'Ingresa el telefono del solicitante',
+                    'celular.min' => 'El teléfono debe tener al menos 8 caractéres',
+                    'celular.integer' => 'El teléfono debe ser un número',
+    
+    
+                    'motivo.not_in' => 'Seleccione un valor distinto a Elegir',
+                    'origen.not_in' => 'Seleccione un valor distinto a Elegir',
+                    
+    
+                    'importe.required' => 'Ingrese un monto válido',
+                    'importe.min' => 'Ingrese un monto mayor a 0',
+                    'importe.not_in' => 'Ingrese un monto válido',
+                    'importe.integer' => 'El monto debe ser un número',
+                    'codigo_transf.required' => 'Este campo es obligatorio',
+                ];
+    
+                $this->validate($rules, $messages);
+            } else {
+                $rules = [ /* Reglas de validacion */
+                    'cedula' => 'required|min:5',
+                    'celular' => 'required|integer|min:8',
+                    'motivo' => 'required|not_in:Elegir',
+                    'origen' => 'required|not_in:Elegir',
+                    'importe' => 'required|integer|min:1|not_in:0',
+                ];
+                $messages = [ /* mensajes de validaciones */
+                    'cedula.required' => 'Ingresa el número de carnet de identidad',
+                    'cedula.min' => 'El numero de carnet debe tener al menos 3 caracteres',
+                    'celular.required' => 'Ingresa el telefono del solicitante',
+                    'celular.min' => 'El teléfono debe tener al menos 8 caractéres',
+                    'celular.integer' => 'El teléfono debe ser un número',
+    
+    
+                    'motivo.not_in' => 'Seleccione un valor distinto a Elegir',
+                    'origen.not_in' => 'Seleccione un valor distinto a Elegir',
+    
+    
+                    'importe.required' => 'Ingrese un monto válido',
+                    'importe.min' => 'Ingrese un monto mayor a 0',
+                    'importe.not_in' => 'Ingrese un monto válido',
+                    'importe.integer' => 'El monto debe ser un número',
+                    'codigo_transf.required_if' => 'Este campo es obligatorio',
+                ];
+                $this->validate($rules, $messages);
+            }
+        }
 
+       
+         
         /* obtener id del motivo-origen seleccionado */
         $idsOrigesMots = OrigenMotivo::where('motivo_id', $this->motivo)
             ->where('origen_id', $this->origen)
