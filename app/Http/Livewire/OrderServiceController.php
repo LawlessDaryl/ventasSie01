@@ -78,8 +78,17 @@ class OrderServiceController extends Component
         session(['clie' => null]);
         session(['tservice' => null]);
         $this->redirect('service');
-
     }
+
+    
+
+    /*public function ChangeState()
+    {
+        if($this->movtype)
+        {
+
+        }
+    }*/
 
 
     public function Store()

@@ -24,6 +24,9 @@
                                 <th class="table-th text-withe text-center">SERVICIOS</th>
                                 <th class="table-th text-withe text-center">ESTADO</th>
                                 <th class="table-th text-withe text-center">TOTAL</th>
+                                <th class="table-th text-withe text-center">A CUENTA</th>
+                                <th class="table-th text-withe text-center">SALDO</th>
+                                <th class="table-th text-withe text-center">ACCIONES</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -34,11 +37,15 @@
                                     </td>
                                     @php
                                         $mytotal = 0;
+                                        $myacuenta = 0;
+                                        $mysaldo = 0;
                                     @endphp
                                     <td>
                                         @foreach ($item->services as $key => $service)
                                             @php
                                                 $mytotal += $service->movservices[0]->movs->import;
+                                                $myacuenta += $service->movservices[0]->movs->on_account;
+                                                $mysaldo += $service ->movservices[0]->movs->saldo;
                                             @endphp
                                             @if (count($item->services) - 1 == $key)
                                                 <h6 class="table-th text-withe text-center">
@@ -60,7 +67,7 @@
                                         @foreach ($item->services as $key => $service)
 
                                             <h6>
-                                                {{ $service->categoria->nombre }}&nbsp{{ $service->marca }}&nbsp{{ $service->detalle }}&nbsp{{ $service->falla_segun_cliente }}
+                                                {{ $service->categoria->nombre }}&nbsp{{ $service->marca }}&nbsp | {{ $service->detalle }}&nbsp | {{ $service->falla_segun_cliente }}
                                             </h6><br/>
 
                                             @if (count($item->services) - 1 != $key)
@@ -72,10 +79,17 @@
                                     </td>
 
                                     <td>
-                                        @foreach ($service->movservices as $mm)
-                                            @if ($mm->movs->status == 'ACTIVO')
-                                                <h6 class="table-th text-withe">{{ $mm->movs->type }}</h6>
-                                            @endif
+                                        @foreach ($item->services as $key => $service)
+                                            @foreach ($service->movservices as $mm)
+                                                @if ($mm->movs->status == 'ACTIVO')
+                                                    <h6 class="table-th text-withe">{{ $mm->movs->type }}</h6><br/>
+                                                    @if (count($item->services) - 1 != $key)
+                                                        <hr
+                                                            style="border-color: black; margin-top: 0px; margin-bottom: 3px; margin-left: 5px; margin-right:5px">
+                                                        <br />
+                                                    @endif
+                                                @endif
+                                            @endforeach
                                         @endforeach
                                     </td>
 
@@ -83,6 +97,63 @@
                                         <h6 class="text-info">
                                             {{ number_format($mytotal, 2) }} Bs.
                                         </h6>
+                                    </td>
+
+                                    <td class="text-center">
+                                        <h6 class="text-info">
+                                            {{ number_format($myacuenta, 2) }} Bs.
+                                        </h6>
+                                    </td>
+
+                                    <td class="text-center">
+                                        <h6 class="text-info">
+                                            {{ number_format($mysaldo, 2) }} Bs.
+                                        </h6>
+                                    </td>
+
+                                    <td class="text-center">
+                                        @foreach ($item->services as $key => $service)
+                                            @if($mm->movs->type == 'PENDIENTE')
+                                                <a href="javascript:void(0)" class="btn btn-dark mtmobile" 
+                                                title="Cambiar Estado" data-toggle="modal" 
+                                                data-target="#theModal">PENDIENTE</a><br/><br/>
+
+                                                @if (count($item->services) - 1 != $key)
+                                                <hr
+                                                    style="border-color: black; margin-top: 0px; margin-bottom: 3px; margin-left: 5px; margin-right:5px">
+                                                <br />
+                                                @endif
+
+                                                
+                                            @elseif($mm->movs->type == 'PROCESO')
+                                                <a href="javascript:void(0)" class="btn btn-dark mtmobile" 
+                                                title="Cambiar Estado">PROCESO</a>
+
+                                                @if (count($item->services) - 1 != $key)
+                                                <hr
+                                                    style="border-color: black; margin-top: 0px; margin-bottom: 3px; margin-left: 5px; margin-right:5px">
+                                                <br />
+                                                @endif
+                                            
+                                            @elseif($mm->movs->type == 'TERMINADO')
+                                                <a href="javascript:void(0)" class="btn btn-dark mtmobile" 
+                                                title="Cambiar Estado">TERMINADO</a>
+                                            
+                                                @if (count($item->services) - 1 != $key)
+                                                <hr
+                                                    style="border-color: black; margin-top: 0px; margin-bottom: 3px; margin-left: 5px; margin-right:5px">
+                                                <br />
+                                                @endif
+
+                                            @endif
+
+                                        @endforeach
+
+                                        {{--<a href="javascript:void(0)"
+                                            onclick="Confirm('{{ $item->id }}','{{ $item->category }}','{{ $item->marca }}')"
+                                            class="btn btn-dark" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </a>--}}
                                     </td>
 
                                 </tr>
@@ -149,4 +220,10 @@
             }
         })
     }
+
+    function ChangeStates()
+    {
+        
+    }
+
 </script>

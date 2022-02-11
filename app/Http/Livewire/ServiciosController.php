@@ -146,13 +146,16 @@ class ServiciosController extends Component
         $rules = [
             'nombre' => 'required|min:1',
             'cedula' => 'required',
-            'celular' => 'required'
+            'celular' => 'required|numeric',
+            'nit' => 'numeric'
         ];
         $messages = [
             'nombre.required' => 'Nombre es requerido',
             'nombre.min' => 'El nombre debe ser contener al menos 1 caracter',
             'cedula.required' => 'La cédula es requerida',
-            'celular.required' => 'El celular es requerido'
+            'celular.required' => 'El celular es requerido',
+            'celular.numeric' => 'No puede ingresar letras',
+            'nit.numeric' => 'El nit debe ser un número'
         ];
 
         $this->validate($rules, $messages);
