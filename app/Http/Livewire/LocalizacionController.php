@@ -15,7 +15,7 @@ class LocalizacionController extends Component
 {
     use WithPagination;
     use WithFileUploads;
-    public $sucursal_id, $codigo, $descripcion, $tipo, 
+    public $sucursal_id, $codigo, $descripcion,$ubicacion, $tipo, 
     $selected_id, $pageTitle, $componentName,$search;
     private $pagination = 5;
     public function paginationView()
@@ -27,6 +27,7 @@ class LocalizacionController extends Component
         $this->pageTitle = 'Listado';
         $this->componentName = 'Locaciones';
         $this->tipo = 'Elegir';
+        $this->ubicacion = 'Elegir';
         $this->sucursal_id = 'Elegir';
      
 
@@ -47,7 +48,7 @@ class LocalizacionController extends Component
                 ->orderBy('locations.id', 'desc')
                 ->paginate($this->pagination);
         }
-        return view('livewire.locations.component', [
+        return view('livewire.localizacion.component', [
             'data_locations' => $locations,
         
         ])->extends('layouts.theme.app')->section('content');

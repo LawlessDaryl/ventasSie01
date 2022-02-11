@@ -15,6 +15,9 @@ class CreateMovementInventoriesTable extends Migration
     {
         Schema::create('movement__inventories', function (Blueprint $table) {
             $table->id();
+            $table->enum('estado',['PENDIENTE','TERMINADO'])->default('PENDIENTE');
+            $table->string('operacion_id');
+
             $table->timestamps();
         });
     }

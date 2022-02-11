@@ -35,7 +35,7 @@ class HomeController extends Controller
             ->select('cajas.*', 's.name as sucursal')
             ->get()->take(1);
         
-        if (empty($data)) {
+        if ($data->count()==0) {
             
             session(['sesionCaja' => null]);
         } else{
