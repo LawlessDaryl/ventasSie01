@@ -6,7 +6,8 @@
                     <b>{{ $componentName }} | {{ $pageTitle }}</b>
                 </h4>
                 <ul class="tabs tab-pills">
-                    <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal" data-target="#theModal">+ Nueva</a>
+                    <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal" data-target="#theModal">+
+                        Nueva</a>
                     <a wire:click.prevent="viewDetails()" class="btn btn-dark">
                         Generar Ingreso/Egreso
                     </a>
@@ -73,8 +74,11 @@
                                                 <i class="fas fa-trash"></i>
                                             </a>
                                         @endif
+                                        <a href="javascript:void(0)" wire:click="VerObservaciones({{ $d->id }})"
+                                            class="btn btn-dark mtmobile" title="Observaciones">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
                                     </td>
-
                                 </tr>
                             @endforeach
                         </tbody>
@@ -86,6 +90,7 @@
     </div>
     @include('livewire.transaccion.modalDetails')
     @include('livewire.transaccion.form')
+    @include('livewire.transaccion.modalObservaciones')
 </div>
 
 <script>
@@ -101,6 +106,10 @@
         window.livewire.on('item-error', Msg => {
             noty(Msg)
         })
+        window.livewire.on('item-actualizado', Msg => {
+            $('#Modal_Observaciones').modal('hide')
+            noty(Msg)
+        })
         window.livewire.on('show-modal', Msg => {
             $('#theModal').modal('show')
         })
@@ -109,7 +118,10 @@
         })
         window.livewire.on('show-modal2', Msg => {
             $('#modal-detailes').modal('show')
-        }) 
+        })
+        window.livewire.on('show-modal3', Msg => {
+            $('#Modal_Observaciones').modal('show')
+        })
         window.livewire.on('g-i/e', Msg => {
             $('#modal-detailes').modal('hide')
             noty(Msg)

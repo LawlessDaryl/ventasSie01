@@ -21,17 +21,39 @@
                             </tr>
                         </thead>
 
-                        <tbody>                                
-                            @foreach($details as $d)
-                            <tr>
-                                <td class="text-center"> <h6>{{$d->tipo}}</h6></td>
-                                <td class="text-center"> <h6>{{$d->importe}}</h6></td>
-                                <td class="text-center"> <h6>{{$d->nombreCartera}}</h6></td>
-                            </tr>
+                        <tbody>
+                            @foreach ($details as $d)
+                                <tr>
+                                    <td class="text-center">
+                                        <h6>{{ $d->tipo }}</h6>
+                                    </td>
+                                    <td class="text-center">
+                                        <h6>{{ $d->importe }}</h6>
+                                    </td>
+                                    <td class="text-center">
+                                        <h6>{{ $d->nombreCartera }}</h6>
+                                    </td>
+                                </tr>
                             @endforeach
+
+
+
                         </tbody>
-                        
+
                     </table>
+
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <label>Observaciones: </label><br>
+                            <label>
+                                @if(!empty($details))
+                                {{$details[0]->observaciones}}
+                                @endif
+                            </label>
+                            @error('estado') <span class="text-danger er">{{ $message }}</span>@enderror
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>

@@ -20,9 +20,9 @@ class CreateOrigenMotivosTable extends Migration
             $table->enum('afectadoNo',['montoR','montoC','ambos']);
             $table->enum('suma_resta_si',['suma','resta','mantiene']);
             $table->enum('suma_resta_no',['suma','resta','mantiene']);
-            $table->enum('CIdeCliente',['SI','NO']);
-            $table->enum('telefSolicitante',['SI','NO']);
-            $table->enum('telefDestino_codigo',['SI','NO']);
+            $table->enum('CIdeCliente',['SI','NO'])->default('SI');
+            $table->enum('telefSolicitante',['SI','NO'])->default('SI');
+            $table->enum('telefDestino_codigo',['SI','NO'])->default('SI');
             $table->foreignId('origen_id')->constrained();
             $table->foreignId('motivo_id')->constrained();
             $table->timestamps();

@@ -87,16 +87,22 @@ class CorteCajaController extends Component
             foreach ($this->carteras as $c) {
                 /* SUMAR TODO LOS INGRESOS DE LA CARTERA */
                 $MONTO = Cartera::join('cartera_movs as cm', 'carteras.id', 'cm.cartera_id')
-                    ->join('movimientos as m', 'm.id', 'cm.movimiento_id')
-                    ->where('cm.type', 'INGRESO')
-                    ->where('carteras.id', $c->id)->sum('m.import');
-                /* SUMAR TODO LOS EGRESOS DE LA CARTERA */
-                $MONTO2 = Cartera::join('cartera_movs as cm', 'carteras.id', 'cm.cartera_id')
-                    ->join('movimientos as m', 'm.id', 'cm.movimiento_id')
-                    ->where('cm.type', 'EGRESO')
-                    ->where('carteras.id', $c->id)->sum('m.import');
-                    /* REALIZAR CALCULO DE INGRESOS - EGRESOS */
-                $c->monto = $MONTO - $MONTO2;
+                ->join('movimientos as m', 'm.id', 'cm.movimiento_id')
+                ->join('mov_transacs as mtr', 'm.id', 'mtr.movimiento_id')
+                ->join('transaccions as tr', 'tr.id', 'mtr.transaccion_id')
+                ->where('cm.type', 'INGRESO')
+                ->where('tr.estado', 'Activa')
+                ->where('carteras.id', $c->id)->sum('m.import');
+            /* SUMAR TODO LOS EGRESOS DE LA CARTERA */
+            $MONTO2 = Cartera::join('cartera_movs as cm', 'carteras.id', 'cm.cartera_id')
+                ->join('movimientos as m', 'm.id', 'cm.movimiento_id')
+                ->join('mov_transacs as mtr', 'm.id', 'mtr.movimiento_id')
+                ->join('transaccions as tr', 'tr.id', 'mtr.transaccion_id')
+                ->where('cm.type', 'EGRESO')
+                ->where('tr.estado', 'Activa')
+                ->where('carteras.id', $c->id)->sum('m.import');
+            /* REALIZAR CALCULO DE INGRESOS - EGRESOS */
+            $c->monto = $MONTO - $MONTO2;
             }
 
             $this->emit('show-modal', 'details loaded');

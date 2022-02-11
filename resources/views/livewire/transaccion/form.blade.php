@@ -136,7 +136,7 @@
         @if ($mostrartelf == 1)
             <div class="col-sm-12 col-md-12">
                 <div class="form-group">
-                    <label>Teléfono Destino</label>
+                    <label>Teléfono/Codigo Destino</label>
                     <input type="text" wire:model.lazy="codigo_transf" class="form-control"
                         placeholder="ej: 61718787">
                     @error('codigo_transf') <span class="text-danger er">{{ $message }}</span>@enderror

@@ -42,16 +42,27 @@
                         </div>
                     </div>
 
+                    <div class="col-sm-12 col-md-3">
+                        <div class="form-group">
+                            <label>Tipo de transacción</label>
+                            <select wire:model="tipotr" class="form-control">
+                                <option value="0" selected>Todas</option>
+                                    <option value="Retiro">Retiro</option>
+                                    <option value="Abono">Abono</option>                                
+                            </select>
+                        </div>
+                    </div>
 
-                    <div class="col-sm-12 col-md-3 align-self-center d-flex justify-content-around">
+
+                    {{-- <div class="col-sm-12 col-md-3 align-self-center d-flex justify-content-around">
                         @if($userid > 0 && $fromDate != null && $toDate != null)
                         <button wire:click.prevent="Consultar()" type="button" class="btn btn-dark">Consultar</button>
-                        @endif
+                        @endif --}}
 
                         {{-- @if($total > 0)
                         <button wire:click.prevent="Print()" type="button" class="btn btn-dark">Imprimir</button>
                         @endif --}}
-                    </div>
+                    {{-- </div> --}}
                 </div>
             </div>
 

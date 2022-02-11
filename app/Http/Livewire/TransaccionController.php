@@ -28,7 +28,7 @@ class TransaccionController extends Component
     public $codigo, $importe, $importe2, $utilidad, $costo, $observaciones, $fecha, $origen, $motivo, $codigo_transf, $montoR, $estado,
         $pageTitle, $componentName, $selected_id, $hora, $search, $condicion, $mostrartelf, $check, $type, $cartera_id,
         $nombreCliente, $cedula, $celular, $direccion, $email, $fecha_nacim, $razon, $cheq, $nit, $cantidad, $comentario, $condicional,
-        $comisionSiV, $comisionNoV, $metodo2, $metodo, $variable1, $montoB, $origMotObjeto,$montoCobrarPagar;
+        $comisionSiV, $comisionNoV, $metodo2, $metodo, $variable1, $montoB, $origMotObjeto, $montoCobrarPagar;
     private $pagination = 10;
     public function paginationView()
     {
@@ -267,7 +267,7 @@ class TransaccionController extends Component
             if ($motiv->tipo == 'Retiro') {
                 $this->montoCobrarPagar = 'Monto a Pagar';
             }
-            if($motiv->tipo == 'Abono'){
+            if ($motiv->tipo == 'Abono') {
                 $this->montoCobrarPagar = 'Monto a cobrar';
             }
         }
@@ -296,12 +296,18 @@ class TransaccionController extends Component
             /* SUMAR TODO LOS INGRESOS DE LA CARTERA */
             $MONTO = Cartera::join('cartera_movs as cm', 'carteras.id', 'cm.cartera_id')
                 ->join('movimientos as m', 'm.id', 'cm.movimiento_id')
+                ->join('mov_transacs as mtr', 'm.id', 'mtr.movimiento_id')
+                ->join('transaccions as tr', 'tr.id', 'mtr.transaccion_id')
                 ->where('cm.type', 'INGRESO')
+                ->where('tr.estado', 'Activa')
                 ->where('carteras.id', $c->id)->sum('m.import');
             /* SUMAR TODO LOS EGRESOS DE LA CARTERA */
             $MONTO2 = Cartera::join('cartera_movs as cm', 'carteras.id', 'cm.cartera_id')
                 ->join('movimientos as m', 'm.id', 'cm.movimiento_id')
+                ->join('mov_transacs as mtr', 'm.id', 'mtr.movimiento_id')
+                ->join('transaccions as tr', 'tr.id', 'mtr.transaccion_id')
                 ->where('cm.type', 'EGRESO')
+                ->where('tr.estado', 'Activa')
                 ->where('carteras.id', $c->id)->sum('m.import');
             /* REALIZAR CALCULO DE INGRESOS - EGRESOS */
             $c->monto = $MONTO - $MONTO2;
@@ -342,7 +348,7 @@ class TransaccionController extends Component
         $this->montoR = $this->montoB;
 
         $this->importe2 = $this->montoB;
-        /* dd($this->montoR, $this->montoB, $this->importe, $this->importe2); */
+
         $idsOrigesMots = OrigenMotivo::where('origen_id', $this->origen)
             ->where('motivo_id', $this->motivo)->get()->first();
 
@@ -687,7 +693,6 @@ class TransaccionController extends Component
         $cartera = Cartera::where('tipo', $origen->nombre)
             ->where('caja_id', $cccc->id)->get()->first(); /* obtener la cartera con el mismo nombre del origen */
 
-        /* DD($listaCL); */
         DB::beginTransaction();
         try {
             if ($listaCL) { /* Actualizar telefono del cliente */
@@ -713,7 +718,7 @@ class TransaccionController extends Component
                 $mv = Movimiento::create([
                     'type' => 'TERMINADO',
                     'status' => 'ACTIVO',
-                    'import' => $this->importe,
+                    'import' => $this->montoR,
                     'user_id' => Auth()->user()->id,
                 ]);
 
@@ -756,7 +761,7 @@ class TransaccionController extends Component
                 $mv = Movimiento::create([
                     'type' => 'TERMINADO',
                     'status' => 'ACTIVO',
-                    'import' => $this->importe,
+                    'import' => $this->montoR,
                     'user_id' => Auth()->user()->id,
                 ]);
 
@@ -858,9 +863,8 @@ class TransaccionController extends Component
     /* LISTENERS */
     protected $listeners = ['deleteRow' => 'Anular'];
     /* ANULAR TRANSACCION */
-    public function Anular($id)
+    public function Anular(Transaccion $tran)
     {
-        $tran = Transaccion::find($id);
         $tran->estado = 'Anulada';
         $tran->save();
         $this->emit('item-anulado', 'Se anuló la transacción');
@@ -869,6 +873,21 @@ class TransaccionController extends Component
     public function viewDetails()
     {
         $this->emit('show-modal2', 'open modal');
+    }
+
+    public function VerObservaciones(Transaccion $tr)
+    {
+        $this->selected_id = $tr->id;
+        $this->observaciones = $tr->observaciones;
+        $this->emit('show-modal3', 'open modal');
+    }
+    public function Modificar()
+    {
+        $tr=Transaccion::find($this->selected_id);
+        $tr->observaciones = $this->observaciones;
+        $tr->save();
+        $this->resetUI();
+        $this->emit('item-actualizado', 'Se actulizaron las observaciones');
     }
     /* RESET DE INPUT Y DEMAS */
     public function resetUI()
@@ -884,7 +903,7 @@ class TransaccionController extends Component
         $this->direccion = '';
         $this->observaciones = '';
         $this->email = '';
-        $this->codigo_transf = 0;
+        $this->codigo_transf = '';
         $this->razon = '';
         $this->nit = 0;
         $this->importe = 0;

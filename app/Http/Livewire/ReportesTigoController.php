@@ -114,12 +114,13 @@ class ReportesTigoController extends Component
 
             ->select(
                 'cmv.type as tipo',
-                'transaccions.importe as importe',
+                'm.import as importe',
+                'transaccions.observaciones as observaciones',
                 'c.nombre as nombreCartera',
             )
             ->where('transaccions.id', $idtransaccion)
             ->get();
-
+                
         $this->transaccionId = $idtransaccion;
 
         $this->emit('show-modal', 'details loaded');
