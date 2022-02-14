@@ -6,8 +6,7 @@
                     <b>{{ $componentName }} | {{ $pageTitle }}</b>
                 </h4>
                 <ul class="tabs tab-pills">
-                    <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
-                        data-target="#theModal" wire:click="GoService">Agregar</a>
+                    <a href="javascript:void(0)" class="btn btn-dark" wire:click="GoService">Agregar</a>
                 </ul>
             </div>
             @include('common.searchbox')
@@ -20,7 +19,7 @@
                                 <th class="table-th text-withe text-center">#</th>
                                 <th class="table-th text-withe text-center">NOMBRE CLIENTE</th>
                                 <th class="table-th text-withe text-center">CÓDIGO</th>
-                                <th class="table-th text-withe text-center">TIPO DE SERVICIO</th>
+                                <th class="table-th text-withe text-center">FECHAS</th>
                                 <th class="table-th text-withe text-center">SERVICIOS</th>
                                 <th class="table-th text-withe text-center">ESTADO</th>
                                 <th class="table-th text-withe text-center">TOTAL</th>
@@ -82,7 +81,8 @@
                                         @foreach ($item->services as $key => $service)
                                             @foreach ($service->movservices as $mm)
                                                 @if ($mm->movs->status == 'ACTIVO')
-                                                    <h6 class="table-th text-withe">{{ $mm->movs->type }}</h6><br/>
+                                                    <h6 class="table-th text-withe text-center">{{ $mm->movs->type }}</h6>
+                                                    <h6 class="table-th text-withe text-center">Serv: {{ $item->type_service }}</h6>
                                                     @if (count($item->services) - 1 != $key)
                                                         <hr
                                                             style="border-color: black; margin-top: 0px; margin-bottom: 3px; margin-left: 5px; margin-right:5px">
@@ -116,7 +116,7 @@
                                             @if($mm->movs->type == 'PENDIENTE')
                                                 <a href="javascript:void(0)" class="btn btn-dark mtmobile" 
                                                 title="Cambiar Estado" data-toggle="modal" 
-                                                data-target="#theModal">PENDIENTE</a><br/><br/>
+                                                data-target="#theMod">PENDIENTE</a><br/><br/>
 
                                                 @if (count($item->services) - 1 != $key)
                                                 <hr
@@ -148,12 +148,6 @@
                                             @endif
 
                                         @endforeach
-
-                                        {{--<a href="javascript:void(0)"
-                                            onclick="Confirm('{{ $item->id }}','{{ $item->category }}','{{ $item->marca }}')"
-                                            class="btn btn-dark" title="Delete">
-                                            <i class="fas fa-trash"></i>
-                                        </a>--}}
                                     </td>
 
                                 </tr>

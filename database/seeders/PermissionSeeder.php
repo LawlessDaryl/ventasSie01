@@ -150,5 +150,9 @@ class PermissionSeeder extends Seeder
             'name' => 'Report_Ganancia_Tigo_Export',
             'guard_name' => 'web'
         ]);
+        Permission::create([
+            'name' => 'Asignar_Tecnico_Servicio',
+            'guard_name' => 'web'
+        ]);
     }
 }
