@@ -29,7 +29,7 @@
                             @foreach ($data_locations as $location)
                                 <tr>
                                     <td>
-                                        <h6>{{ $location->sucursal_id }}</h6>
+                                        <h6>{{ $location->sucursal }}</h6>
                                     </td>
                                     <td>
                                         <h6 class="text-center">{{ $location->codigo }}</h6>
@@ -45,12 +45,7 @@
                                     </td>
             
 
-                                    <td class="text-center">
-                                        <span>
-                                            <img src="{{ asset('storage/productos/' . $product->imagen) }}"
-                                                alt="imagen de ejemplo" height="70" width="80" class="rounded">
-                                        </span>
-                                    </td>
+                                
                                     <td class="text-center">
                                         <a href="javascript:void(0)" wire:click="Edit({{ $location->id }})"
                                             class="btn btn-dark mtmobile" title="Edit">
@@ -66,14 +61,16 @@
                             @endforeach
                         </tbody>
                     </table>
-                    {{ $data->links() }}
+                    {{ $data_locations->links() }}
                 </div>
             </div>
         </div>
     </div>
-    @include('livewire.products.form')
+   @include('livewire.localizacion.form') 
 </div>
 
+
+{{--
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
@@ -127,3 +124,4 @@
         })
     }
 </script>
+--}}
