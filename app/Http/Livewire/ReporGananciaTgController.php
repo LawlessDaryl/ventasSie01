@@ -23,10 +23,9 @@ class ReporGananciaTgController extends Component
         $this->reportType = 0;
         $this->userId = 0;
         $this->transaccionId = 0;
-        
+
         $this->dateFrom = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->dateTo = Carbon::parse(Carbon::now())->format('Y-m-d');
-
     }
 
     public function render()
@@ -44,17 +43,17 @@ class ReporGananciaTgController extends Component
         if ($this->reportType == 0) {
             $from = Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00';
             $to = Carbon::parse(Carbon::now())->format('Y-m-d')   . ' 23:59:59';
-            $this->dateFrom='';
-            $this->dateTo='';
+            $this->dateFrom = '';
+            $this->dateTo = '';
         } else {
             $from = Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00';
             $to = Carbon::parse($this->dateTo)->format('Y-m-d')     . ' 23:59:59';
         }
 
-        if($this->reportType == 1 && ($this->dateFrom == '' || $this->dateTo == '')){
+        if ($this->reportType == 1 && ($this->dateFrom == '' || $this->dateTo == '')) {
             $this->dateFrom = Carbon::parse(Carbon::now())->format('Y-m-d');
             $this->dateTo = Carbon::parse(Carbon::now())->format('Y-m-d');
-            $this->emit('item','Reportes de Hoy');
+            $this->emit('item', 'Reportes de Hoy');
         }
 
         if ($this->userId == 0) {
@@ -72,14 +71,30 @@ class ReporGananciaTgController extends Component
                     'transaccions.*',
                     'ori.nombre as origen_nombre',
                     'mot.nombre as motivo_nombre',
-                    DB::raw('0 as ganancia')
+                    DB::raw('0 as ganancia'),DB::raw('0 as prueba')
                 )
                 ->whereBetween('transaccions.created_at', [$from, $to])
 
                 ->orderBy('transaccions.id', 'desc')
                 ->get();
             foreach ($this->data as $d) {
-                $d->ganancia = ($d->importe * 1) / 100;
+                $t = Transaccion::join('mov_transacs as mtr', 'mtr.transaccion_id', 'transaccions.id')
+                    ->join('movimientos as m', 'mtr.movimiento_id', 'm.id')
+                    ->select('m.import as import')
+                    ->where('transaccions.id', $d->id)
+                    ->get();
+                    
+                if ($d->origen_nombre == 'Telefono' && $d->motivo_nombre == 'Retiro') {
+                    $d->prueba='Retiro';
+                    $d->ganancia = $t[1]->import - $t[0]->import;
+                }
+                elseif ($d->origen_nombre == 'Telefono' && $d->motivo_nombre == 'Recarga') {    
+                    $d->prueba='recarga';
+                    $d->ganancia = $d->importe * 0.08;
+                }else{
+                    $d->prueba='otro';
+                    $d->ganancia = 0;
+                }
             }
         } else {
             $this->data = Transaccion::join('mov_transacs as mt', 'mt.transaccion_id', 'transaccions.id')

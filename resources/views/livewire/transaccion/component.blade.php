@@ -76,7 +76,7 @@
                                         @endif
                                         <a href="javascript:void(0)" wire:click="VerObservaciones({{ $d->id }})"
                                             class="btn btn-dark mtmobile" title="Observaciones">
-                                            <i class="fas fa-trash"></i>
+                                            <i class="fa-regular fa-address-book"></i>
                                         </a>
                                     </td>
                                 </tr>

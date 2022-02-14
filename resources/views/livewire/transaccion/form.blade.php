@@ -9,7 +9,7 @@
                     <option value="Elegir" disabled selected>Elegir</option>
 
                     @foreach ($origenes as $orige)
-                        <option value="{{ $orige->id }}" selected>{{ $orige->nombre }}</option>
+                        <option value="{{ $orige->id }}">{{ $orige->nombre }}</option>
                     @endforeach
                 </select>
                 @error('origen') <span class="text-danger er">{{ $message }}</span>@enderror
@@ -23,7 +23,7 @@
                     <option value="Elegir" disabled selected>Elegir</option>
                     @if ($origen != 'Elegir')
                         @foreach ($motivos as $mot)
-                            <option value="{{ $mot->id }}" selected>{{ $mot->nombre }}</option>
+                            <option value="{{ $mot->id }}">{{ $mot->nombre }}</option>
                         @endforeach
                     @endif
                 </select>
@@ -74,7 +74,7 @@
         
     </div>
     <div class="col-sm-6 col-md-6" style="background: #f0ecec">
-
+        @if ($mostrarCI == 1)
         <div class="col-sm-12 col-md-12">
             <div class="form-group">
                 <label>CI</label>
@@ -82,6 +82,7 @@
                 @error('cedula') <span class="text-danger er">{{ $message }}</span>@enderror
             </div>
         </div>
+        @endif
 
         @if ($condicion != 0)
             <div class="vertical-scrollable">
@@ -126,6 +127,7 @@
             </div>
         @endif
 
+        @if ($mostrartelf == 1)
         <div class="col-sm-12 col-md-12">
             <div class="form-group">
                 <label>Teléfono Solicitante</label>
@@ -133,7 +135,9 @@
                 @error('celular') <span class="text-danger er">{{ $message }}</span>@enderror
             </div>
         </div>
-        @if ($mostrartelf == 1)
+        @endif
+
+        @if ($mostrarTelfCodigo == 1)
             <div class="col-sm-12 col-md-12">
                 <div class="form-group">
                     <label>Teléfono/Codigo Destino</label>
@@ -143,6 +147,7 @@
                 </div>
             </div>
         @endif
+        
         <div class="col-sm-12 col-md-12">
             <div class="form-group">
                 <label>Observaciones</label>

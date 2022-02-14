@@ -30,6 +30,28 @@
                                     </select>
                                 </div>
                             </div>
+
+                            <div class="col-sm-12 col-md-12">
+                                <div class="form-group">
+                                    <label>Origen</label>
+                                    <select wire:model="origenfiltro" class="form-control">
+                                        <option value="0" selected>Todas</option>
+                                            <option value="Sistema">Sistema</option>
+                                            <option value="Telefono">Telefono</option>                                
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12 col-md-12">
+                                <div class="form-group">
+                                    <label>Tipo de transacción</label>
+                                    <select wire:model="tipotr" class="form-control">
+                                        <option value="0" selected>Todas</option>
+                                            <option value="Retiro">Retiro</option>
+                                            <option value="Abono">Abono</option>                                
+                                    </select>
+                                </div>
+                            </div>
                             
                             <div class="col-sm-12 mt-2">
                                 <h6>Fecha desde</h6>

@@ -7,7 +7,7 @@
 
             <div class="widget-content">
                 <div class="row">
-                    <div class="col-sm-12 col-md-3">
+                    <div class="col-sm-12 col-md-2">
                         <div class="form-group">
                             <label for="">Usuario</label>
                             <select wire:model="userid" class="form-control">
@@ -41,28 +41,32 @@
                             @enderror
                         </div>
                     </div>
-
-                    <div class="col-sm-12 col-md-3">
+                    
+                    <div class="col-sm-12 col-md-2">
                         <div class="form-group">
-                            <label>Tipo de transacción</label>
-                            <select wire:model="tipotr" class="form-control">
+                            <label>Origen</label>
+                            <select wire:model="origenfiltro" class="form-control">
                                 <option value="0" selected>Todas</option>
-                                    <option value="Retiro">Retiro</option>
-                                    <option value="Abono">Abono</option>                                
+                                    <option value="Sistema">Sistema</option>
+                                    <option value="Telefono">Telefono</option>                                
                             </select>
                         </div>
                     </div>
 
-
-                    {{-- <div class="col-sm-12 col-md-3 align-self-center d-flex justify-content-around">
-                        @if($userid > 0 && $fromDate != null && $toDate != null)
-                        <button wire:click.prevent="Consultar()" type="button" class="btn btn-dark">Consultar</button>
-                        @endif --}}
-
-                        {{-- @if($total > 0)
-                        <button wire:click.prevent="Print()" type="button" class="btn btn-dark">Imprimir</button>
-                        @endif --}}
-                    {{-- </div> --}}
+                    <div class="col-sm-12 col-md-2">
+                        <div class="form-group">
+                            <label for="">Tipo de transacción</label>
+                            <select wire:model="tipotr" class="form-control">
+                                <option value="0" selected>Todas</option>
+                                    <option value="Retiro">Retiro</option>
+                                    <option value="Abono">Abono</option> 
+                            </select>
+                            @error('tipotr')
+                            <span class="text-danger">{{ $message}}</span>
+                            @enderror
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
 
