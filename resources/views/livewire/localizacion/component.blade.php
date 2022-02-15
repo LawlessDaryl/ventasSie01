@@ -17,7 +17,7 @@
                     <table class="table table-unbordered table-hover mt-2">
                         <thead class="text-white" style="background: #3B3F5C">
                             <tr>
-                                <th class="table-th text-withe">DESCRIPCIÓN</th>
+                                <th class="table-th text-withe">SUCURSALita</th>
                                 <th class="table-th text-withe text-center">BARCODE</th>
                                 <th class="table-th text-withe text-center">CATEGORIA</th>
                                 <th class="table-th text-withe text-center">PRECIO</th>
