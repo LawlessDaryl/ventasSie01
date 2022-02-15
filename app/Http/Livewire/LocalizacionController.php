@@ -130,8 +130,8 @@ class LocalizacionController extends Component
             'descripcion.required' => 'La descripcion es requerida',
         ];
         $this->validate($rules, $messages);
-        $product = Location::find($this->selected_id);
-        $product->update([
+        $locations = Location::find($this->selected_id);
+        $locations->update([
             'name' => $this->name,
             'cost' => $this->cost,
             'price' => $this->price,
