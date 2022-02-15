@@ -19,7 +19,7 @@ class CreateLocationsTable extends Migration
             $table->string('codigo',100);
             $table->string('descripcion',250);
             $table->enum('ubicacion',['ALMACEN','TIENDA'])->default('ALMACEN');
-            $table->enum('tipo',['VITRINA','MOSTRADOR','ESTANTE'])->default('ESTANTE');
+            $table->enum('tipo',['VITRINA','MOSTRADOR','ESTANTE','OTRO'])->default('ESTANTE');
             $table->timestamps();
         });
     }
