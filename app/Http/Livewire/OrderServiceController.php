@@ -20,7 +20,8 @@ class OrderServiceController extends Component
     use WithFileUploads;
     public $search, $selected_id, $pageTitle, $componentName,
     $cliente, $fecha_estimada_entrega, $detalle, $status, $saldo, $on_account, $import, 
-    $serviceid, $movtype, $orderservice, $users1;
+    $serviceid, $movtype, $orderservice, $users1,$service1,$categoria,$marca,$numeroOrden
+    ,$detalle1,$falla_segun_cliente,$nombreCliente,$celular,$usuarioId;
 
 
     private $pagination = 5;
@@ -32,6 +33,7 @@ class OrderServiceController extends Component
     {
         $this->pageTitle = 'Listado';
         $this->componentName = 'Ordenes de Servicio';
+        $this->usuarioId=-1;
         
         
     }
@@ -71,6 +73,7 @@ class OrderServiceController extends Component
         }
         $users =User::all();
        
+       
         return view('livewire.order_service.component', [
             'data' => $orderservices,
             'users' => $users,
@@ -90,19 +93,34 @@ class OrderServiceController extends Component
     }
 
     
+    public function Edit($id)
+    {
+        $this->service1 = Service::find($id);
+        
+        $this->categoria=$this->service1->categoria->nombre;
+        $this->marca=$this->service1->marca;
+        $this->numeroOrden=$this->service1->order_service_id;
+        $this->detalle1=$this->service1->detalle;
+        $this->falla_segun_cliente=$this->service1->falla_segun_cliente;
+        $this->nombreCliente=$this->service1->movservices[0]->movs->climov->client->nombre;
+        $this->celular=$this->service1->movservices[0]->movs->climov->client->celular;
+        $this->usuarioId=$this->service1->movservices[0]->movs->user_id;
+        $this->emit('show-modal', 'show modal!');
+    }
 
     public function Cambio(Service $service)
     {
-        dd('jose');
-       foreach($service->movservices() as $servmov)
+      
+       foreach($service->movservices as $servmov)
        {
-           if($servmov->movimientos->status == 'ACTIVO' && $servmov->movimientos->type == 'PENDIENTE')
+
+           if($servmov->movs->status == 'ACTIVO' && $servmov->movs->type == 'PENDIENTE')
            {
-                $movimiento= $servmov->movimientos;
+                $movimiento= $servmov->movs;
                 
                 DB::beginTransaction();
                 try {
-                    if(Auth()->user->hasPermissionTo('Asignar_Tecnico_Servicio')){
+                    if(Auth::user()->hasPermissionTo('Asignar_Tecnico_Servicio')){
                     $mv = Movimiento::create([
                         'type' => 'PROCESO',
                         'status' => 'ACTIVO',
@@ -136,7 +154,7 @@ class OrderServiceController extends Component
                         
                     ]);
                     $this->resetUI();
-                    $this->emit('modal-selected', 'Servicio Registrado Correctamente');
+                    $this->emit('product-added', 'Servicio en Proceso');
                 } catch (Exception $e) {
                     DB::rollback();
                     $this->emit('item-error', 'ERROR' . $e->getMessage());
@@ -176,6 +194,15 @@ class OrderServiceController extends Component
         $this->categoryid = 'Elegir';
         $this->image = null;
         $this->selected_id = 0;
+
+        $this->categoria = '';
+        $this->marca = '';
+        $this->numeroOrden = '';
+        $this->detalle1 = '';
+        $this->falla_segun_cliente = '';
+        $this->nombreCliente = '';
+        $this->celular = 0;
+        $this->usuarioId = -1;
 
         $this->resetValidation();
     }

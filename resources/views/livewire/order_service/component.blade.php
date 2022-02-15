@@ -88,6 +88,7 @@
                                                             style="border-color: black; margin-top: 0px; margin-bottom: 3px; margin-left: 5px; margin-right:5px">
                                                         <br />
                                                     @endif
+                                                    
                                                 @endif
                                             @endforeach
                                         @endforeach
@@ -112,41 +113,20 @@
                                     </td>
 
                                     <td class="text-center">
-                                        @foreach ($item->services as $key => $service)
-                                            @if($mm->movs->type == 'PENDIENTE')
-                                                <a href="javascript:void(0)" class="btn btn-dark mtmobile" 
-                                                title="Cambiar Estado" data-toggle="modal" 
-                                                data-target="#theMod">PENDIENTE</a><br/><br/>
+                                        @foreach ($item->services as $key => $service2)
+                                         @foreach ($service2->movservices as $mm2)
+                                            @if ($mm2->movs->status == 'ACTIVO')
+                                                <a href="javascript:void(0)" class="btn btn-dark mtmobile" wire:click="Edit({{ $service2->id }})"
+                                                title="Cambiar Estado" 
+                                                >{{ $mm2->movs->type }}</a><br/><br/>
 
                                                 @if (count($item->services) - 1 != $key)
                                                 <hr
-                                                    style="border-color: black; margin-top: 0px; margin-bottom: 3px; margin-left: 5px; margin-right:5px">
+                                                    style="border-color: black; margin-top: 5px; margin-bottom: 3px; margin-left: 5px; margin-right:5px">
                                                 <br />
                                                 @endif
-
-                                                
-                                            @elseif($mm->movs->type == 'PROCESO')
-                                                <a href="javascript:void(0)" class="btn btn-dark mtmobile" 
-                                                title="Cambiar Estado">PROCESO</a>
-
-                                                @if (count($item->services) - 1 != $key)
-                                                <hr
-                                                    style="border-color: black; margin-top: 0px; margin-bottom: 3px; margin-left: 5px; margin-right:5px">
-                                                <br />
-                                                @endif
-                                            
-                                            @elseif($mm->movs->type == 'TERMINADO')
-                                                <a href="javascript:void(0)" class="btn btn-dark mtmobile" 
-                                                title="Cambiar Estado">TERMINADO</a>
-                                            
-                                                @if (count($item->services) - 1 != $key)
-                                                <hr
-                                                    style="border-color: black; margin-top: 0px; margin-bottom: 3px; margin-left: 5px; margin-right:5px">
-                                                <br />
-                                                @endif
-
                                             @endif
-
+                                            @endforeach
                                         @endforeach
                                     </td>
 
@@ -177,7 +157,7 @@
         window.livewire.on('product-deleted', msg => {
             noty(msg)
         });
-        window.livewire.on('modal-show', msg => {
+        window.livewire.on('show-modal', Msg => {
             $('#theModal').modal('show')
         });
         window.livewire.on('modal-hide', msg => {
