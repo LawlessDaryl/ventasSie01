@@ -42,5 +42,17 @@ class OrigenMotivoComisionSeeder extends Seeder
                 'comision_id' => $x,
             ]);
         }
+        for ($x = 17; $x < 30; $x++) {
+            OrigenMotivoComision::create([
+                'origen_motivo_id' => '6',
+                'comision_id' => $x,
+            ]);
+        }
+
+        OrigenMotivoComision::create([
+            'origen_motivo_id' => '7',
+            'comision_id' => '16',
+        ]);
+
     }
 }

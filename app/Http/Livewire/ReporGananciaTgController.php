@@ -70,32 +70,12 @@ class ReporGananciaTgController extends Component
                     'c.cedula as cedula',
                     'transaccions.*',
                     'ori.nombre as origen_nombre',
-                    'mot.nombre as motivo_nombre',
-                    DB::raw('0 as ganancia'),DB::raw('0 as prueba')
+                    'mot.nombre as motivo_nombre'
                 )
                 ->whereBetween('transaccions.created_at', [$from, $to])
 
                 ->orderBy('transaccions.id', 'desc')
                 ->get();
-            foreach ($this->data as $d) {
-                $t = Transaccion::join('mov_transacs as mtr', 'mtr.transaccion_id', 'transaccions.id')
-                    ->join('movimientos as m', 'mtr.movimiento_id', 'm.id')
-                    ->select('m.import as import')
-                    ->where('transaccions.id', $d->id)
-                    ->get();
-                    
-                if ($d->origen_nombre == 'Telefono' && $d->motivo_nombre == 'Retiro') {
-                    $d->prueba='Retiro';
-                    $d->ganancia = $t[1]->import - $t[0]->import;
-                }
-                elseif ($d->origen_nombre == 'Telefono' && $d->motivo_nombre == 'Recarga') {    
-                    $d->prueba='recarga';
-                    $d->ganancia = $d->importe * 0.08;
-                }else{
-                    $d->prueba='otro';
-                    $d->ganancia = 0;
-                }
-            }
         } else {
             $this->data = Transaccion::join('mov_transacs as mt', 'mt.transaccion_id', 'transaccions.id')
                 ->join('movimientos as m', 'm.id', 'mt.movimiento_id')

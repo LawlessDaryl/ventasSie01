@@ -73,7 +73,7 @@
                                         <th class="table-th text-withe text-center">ORIGEN</th>
                                         <th class="table-th text-withe text-center">MOTIVO</th>
                                         <th class="table-th text-withe text-center">GANANCIA</th>
-                                        <th class="table-th text-withe text-center">prueba</th>
+                                        
                                         <th class="table-th text-withe text-center">FECHA</th>
                                     </tr>
                                 </thead>
@@ -92,8 +92,8 @@
                                             <td class="text-center"><h6>{{$d->estado}}</h6></td>
                                             <td class="text-center"><h6>{{$d->origen_nombre}}</h6></td>
                                             <td class="text-center"><h6>{{$d->motivo_nombre}}</h6></td>
-                                            <td class="text-center"><h6>{{number_format($d->ganancia)}}</h6></td>
-                                            <td class="text-center"><h6>{{($d->prueba)}}</h6></td>
+                                            <td class="text-center"><h6>{{number_format($d->ganancia,2)}}</h6></td>
+                                            
                                             <td class="text-center"><h6>{{$d->created_at}}</h6></td>
                                         </tr>
                                         @endforeach

@@ -23,19 +23,16 @@
                         <select wire:model="origen" class="form-control">
                             <option value="Elegir" disabled>==Seleccione el Origen==</option>
                             @foreach($origenes as $origen)
-                            <option value="{{$origen->id}}" selected>{{$origen->nombre}}</option>
+                            <option value="{{$origen->id}}">{{$origen->nombre}}</option>
                             @endforeach
                         </select>
                     </div>
                     @if($motivos !="Elegir")
                     <div class="form-group mr-5">
                         <select wire:model="motivo" class="form-control">
-                            <option value="Elegir" selected>==Seleccione el motivo==</option>
-                            {{-- @foreach($motivos as  $key => $mot)
-                            <option value="{{$key}}" selected>{{$mot}}</option>
-                            @endforeach --}}
+                            <option value="Elegir" disabled>==Seleccione el motivo==</option>
                             @foreach($motivos as  $mot)
-                            <option value="{{$mot->id}}" selected>{{$mot->nombre}}</option>
+                            <option value="{{$mot->id}}">{{$mot->nombre}}</option>
                             @endforeach
                         </select>
                     </div>
