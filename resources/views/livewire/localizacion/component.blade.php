@@ -22,6 +22,7 @@
                                 <th class="table-th text-withe text-center">DESCRIPCION</th>
                                 <th class="table-th text-withe text-center">UBICACION</th>
                                 <th class="table-th text-withe">SUCURSAL</th>
+                                <th class="table-th text-withe text-center">ACCIONES</th>
                                
                             </tr>
                         </thead>
@@ -79,7 +80,7 @@
             $('#theModal').modal('hide'),
             noty(msg)
         });
-        window.livewire.on('product-updated', msg => {
+        window.livewire.on('location-updated', msg => {
             $('#theModal').modal('hide')
             noty(msg)
         });

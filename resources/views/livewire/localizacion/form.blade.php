@@ -5,7 +5,7 @@
         <div class="form-group">
             <label>Aparador</label>
             <select wire:model='aparador' class="form-control">
-                <option value="Elegir" disabled>Elegir</option>
+                <option value="Elegir">Elegir</option>
                
                     <option value="VITRINA">Vitrina</option>
                     <option value="MOSTRADOR">Mostrador</option>
@@ -36,10 +36,10 @@
         <div class="form-group">
             <label>Ubicacion</label>
             <select  wire:model='ubicacion' class="form-control">
-                <option value="Elegir" disabled>Elegir</option>
+                <option value="Elegir">Elegir</option>
                
-                    <option value=1>TIENDA</option>
-                    <option value=2>ALMACEN</option>
+                    <option value="TIENDA">TIENDA</option>
+                    <option value="ALMACEN">ALMACEN</option>
                 
             </select>
         </div>
@@ -48,7 +48,7 @@
         <div class="form-group">
             <label>Sucursal</label>
             <select wire:model='sucursal' class="form-control">
-                <option value="Elegir" disabled>Elegir</option>
+                <option value="Elegir">Elegir</option>
                 @foreach ($data_suc as $data)
                 
                     <option value="{{$data->id}}">{{ $data->name }}</option>
