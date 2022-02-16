@@ -1,5 +1,5 @@
       </div>
-      <div class="modal-footer" style="background: #f0ecec">
+      <div class="modal-footer" style="background: #cabbbb">
           <button type="button" wire:click.prevent="resetUI()" class="btn btn-dark close-btn text-info"
               data-dismiss="modal" style="background: #3b3f5c">CANCELAR</button>
           @if ($selected_id < 1)
