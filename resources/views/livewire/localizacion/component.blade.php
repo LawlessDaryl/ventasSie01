@@ -17,51 +17,42 @@
                     <table class="table table-unbordered table-hover mt-2">
                         <thead class="text-white" style="background: #3B3F5C">
                             <tr>
-                                <th class="table-th text-withe">SUCURSALita</th>
-                                <th class="table-th text-withe text-center">BARCODE</th>
-                                <th class="table-th text-withe text-center">CATEGORIA</th>
-                                <th class="table-th text-withe text-center">PRECIO</th>
-                                <th class="table-th text-withe text-center">STOCK</th>
-                                <th class="table-th text-withe text-center">INV.MIN</th>
-                                <th class="table-th text-withe text-center">IMAGEN</th>
-                                <th class="table-th text-withe text-center">ACCIONES</th>
+                                <th class="table-th text-withe">SUCURSAL</th>
+                                <th class="table-th text-withe text-center">CODIGO</th>
+                                <th class="table-th text-withe text-center">DESCRIPCION</th>
+                                <th class="table-th text-withe text-center">UBICACION</th>
+                                <th class="table-th text-withe text-center">TIPO</th>
+                               
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($data as $product)
+                            @foreach ($data_locations as $location)
                                 <tr>
                                     <td>
-                                        <h6>{{ $product->name }}</h6>
+                                        <h6>{{ $location->sucursal }}</h6>
                                     </td>
                                     <td>
-                                        <h6 class="text-center">{{ $product->barcode }}</h6>
+                                        <h6 class="text-center">{{ $location->codigo }}</h6>
                                     </td>
                                     <td>
-                                        <h6 class="text-center">{{ $product->category }}</h6>
+                                        <h6 class="text-center">{{ $location->descripcion }}</h6>
                                     </td>
                                     <td>
-                                        <h6 class="text-center">{{ $product->price }}</h6>
+                                        <h6 class="text-center">{{ $location->ubicacion }}</h6>
                                     </td>
                                     <td>
-                                        <h6 class=" text-center">{{ $product->stock }}</h6>
+                                        <h6 class=" text-center">{{ $location->tipo }}</h6>
                                     </td>
-                                    <td>
-                                        <h6 class="text-center">{{ $product->alerts }}</h6>
-                                    </td>
+            
 
+                                
                                     <td class="text-center">
-                                        <span>
-                                            <img src="{{ asset('storage/productos/' . $product->imagen) }}"
-                                                alt="imagen de ejemplo" height="70" width="80" class="rounded">
-                                        </span>
-                                    </td>
-                                    <td class="text-center">
-                                        <a href="javascript:void(0)" wire:click="Edit({{ $product->id }})"
+                                        <a href="javascript:void(0)" wire:click="Edit({{ $location->id }})"
                                             class="btn btn-dark mtmobile" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         <a href="javascript:void(0)"
-                                            onclick="Confirm('{{ $product->id }}','{{ $product->name }}')"
+                                            onclick="Confirm('{{ $location->id }}','{{ $location->codigo }}')"
                                             class="btn btn-dark" title="Delete">
                                             <i class="fas fa-trash"></i>
                                         </a>
@@ -70,14 +61,16 @@
                             @endforeach
                         </tbody>
                     </table>
-                    {{ $data->links() }}
+                    {{ $data_locations->links() }}
                 </div>
             </div>
         </div>
     </div>
-    @include('livewire.products.form')
+   @include('livewire.localizacion.form') 
 </div>
 
+
+{{--
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
@@ -131,3 +124,4 @@
         })
     }
 </script>
+--}}

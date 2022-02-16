@@ -31,6 +31,7 @@ use App\Http\Livewire\CatProdServiceController;
 use App\Http\Livewire\SubCatProdServiceController;
 use App\Http\Livewire\OrderServiceController;
 use App\Http\Livewire\ServiciosController;
+use App\Http\Livewire\LocalizacionController;
 use App\Http\Livewire\StrProveedorController;
 use Illuminate\Support\Facades\Auth;
 
@@ -81,7 +82,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('categories', CategoriesController::class)->name('categorias');
     Route::get('products', ProductsController::class)->name('productos');
-    Route::get('locations', ProductsController::class)->name('locations');
+    Route::get('locations', LocalizacionController::class)->name('locations');
     
 
     //reportes PDDF

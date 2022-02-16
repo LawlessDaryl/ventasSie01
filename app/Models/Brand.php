@@ -5,8 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class I_Category extends Model
+class Brand extends Model
 {
     use HasFactory;
-    protected $fillable = ['name','cost','sale_price','barcode','status','i_category','i_subcats'];
 }

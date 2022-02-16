@@ -15,11 +15,11 @@ class CreateISuppliersTable extends Migration
     {
         Schema::create('i__suppliers', function (Blueprint $table) {
             $table->id();
-            $table->string('name',100);
-            $table->string('lastname',100);
-            $table->string('address',200);
-            $table->string('phone',100);
-            $table->string('email',100);
+            $table->string('nombre',100);
+            $table->string('apellido',100);
+            $table->string('direccion',200);
+            $table->string('telefono',100);
+            $table->string('correo',100);
             $table->timestamps();
         });
     }

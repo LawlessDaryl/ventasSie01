@@ -17,11 +17,9 @@ class CreateMovementDetailsTable extends Migration
             $table->id();
 
             $table->integer('cantidad');
-            $table->decimal('costo');
-            $table->decimal('subtotal');
+            $table->decimal('costo');            
+            $table->foreign('id')->references('id')->on('products');
             
-            $table->foreign('id_producto')->references('id')->on('i_products');
-
             $table->timestamps();
         });
     }

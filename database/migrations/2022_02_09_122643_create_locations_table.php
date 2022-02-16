@@ -17,7 +17,8 @@ class CreateLocationsTable extends Migration
             $table->id();
             $table->foreignId('sucursal_id')->constrained();
             $table->string('codigo',100);
-            $table->string('descripcion',255);
+            $table->string('descripcion',250);
+            $table->enum('ubicacion',['ALMACEN','TIENDA'])->default('ALMACEN');
             $table->enum('tipo',['VITRINA','MOSTRADOR','ESTANTE'])->default('ESTANTE');
             $table->timestamps();
         });

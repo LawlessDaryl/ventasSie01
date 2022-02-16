@@ -5,7 +5,7 @@ namespace App\Http\Livewire;
 
 use App\Models\Sucursal;
 use App\Models\Location;
-
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -15,8 +15,8 @@ class LocalizacionController extends Component
 {
     use WithPagination;
     use WithFileUploads;
-    public $sucursal_id, $codigo, $descripcion, $tipo, 
-    $selected_id, $pageTitle, $componentName,$search;
+    public $sucursal_id, $codigo, $descripcion,$ubicacion, $tipo, 
+    $selected_id, $pageTitle, $componentName,$search,$sucursals;
     private $pagination = 5;
     public function paginationView()
     {
@@ -27,6 +27,7 @@ class LocalizacionController extends Component
         $this->pageTitle = 'Listado';
         $this->componentName = 'Locaciones';
         $this->tipo = 'Elegir';
+        $this->ubicacion = 'Elegir';
         $this->sucursal_id = 'Elegir';
      
 
@@ -35,20 +36,28 @@ class LocalizacionController extends Component
     {
         if (strlen($this->search) > 0) {
             $locations = Location::join('sucursals as s', 's.id', 'locations.sucursal_id')
-                ->select('locations.*', 's.id as sucursal')
+                ->select('locations.*', 's.name as sucursal')
                 ->where('locations.codigo', 'like', '%' . $this->search . '%')
                 ->orWhere('locations.tipo', 'like', '%' . $this->search . '%')
-                ->orWhere('sucursals.name', 'like', '%' . $this->search . '%')
+                ->orWhere('s.name', 'like', '%' . $this->search . '%')
+                ->orWhere('locations.ubicacion', 'like', '%' . $this->search . '%')
                 ->orderBy('locations.id', 'desc')
                 ->paginate($this->pagination);
         } else {
             $locations = Location::join('sucursals as s', 's.id', 'locations.sucursal_id')
-                ->select('locations.*', 's.id as sucursal')
+                ->select('locations.*', 's.name as sucursal')
                 ->orderBy('locations.id', 'desc')
                 ->paginate($this->pagination);
         }
-        return view('livewire.locations.component', [
+
+        $suc_data=Sucursal::select('sucursals.*')
+        ->orderBy('sucursals.id','asc');
+
+    
+        return view('livewire.localizacion.component', [
             'data_locations' => $locations,
+            'data_suc' => $suc_data->get(),
+           
         
         ])->extends('layouts.theme.app')->section('content');
     }
