@@ -17,19 +17,19 @@
                     <table class="table table-unbordered table-hover mt-2">
                         <thead class="text-white" style="background: #3B3F5C">
                             <tr>
-                                <th class="table-th text-withe">SUCURSAL</th>
+                                <th class="table-th text-withe text-center">TIPO</th>
                                 <th class="table-th text-withe text-center">CODIGO</th>
                                 <th class="table-th text-withe text-center">DESCRIPCION</th>
                                 <th class="table-th text-withe text-center">UBICACION</th>
-                                <th class="table-th text-withe text-center">TIPO</th>
+                                <th class="table-th text-withe">SUCURSAL</th>
                                
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($data_locations as $location)
-                                <tr>
+                            <tr>
                                     <td>
-                                        <h6>{{ $location->sucursal }}</h6>
+                                        <h6 class=" text-center">{{ $location->tipo }}</h6>
                                     </td>
                                     <td>
                                         <h6 class="text-center">{{ $location->codigo }}</h6>
@@ -41,7 +41,7 @@
                                         <h6 class="text-center">{{ $location->ubicacion }}</h6>
                                     </td>
                                     <td>
-                                        <h6 class=" text-center">{{ $location->tipo }}</h6>
+                                        <h6>{{ $location->sucursal }}</h6>
                                     </td>
             
 
@@ -52,7 +52,7 @@
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         <a href="javascript:void(0)"
-                                            onclick="Confirm('{{ $location->id }}','{{ $location->codigo }}')"
+                                            onclick="Confirm('{{ $location->id }}','{{ $location->descripcion }}')"
                                             class="btn btn-dark" title="Delete">
                                             <i class="fas fa-trash"></i>
                                         </a>
@@ -70,12 +70,12 @@
 </div>
 
 
-{{--
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
 
-        window.livewire.on('product-added', msg => {
+        window.livewire.on('localizacion-added', msg => {
             $('#theModal').modal('hide'),
             noty(msg)
         });
@@ -83,10 +83,10 @@
             $('#theModal').modal('hide')
             noty(msg)
         });
-        window.livewire.on('product-deleted', msg => {
+        window.livewire.on('localizacion-deleted', msg => {
             noty(msg)
         });
-        window.livewire.on('modal-show', msg => {
+        window.livewire.on('modal-locacion', msg => {
             $('#theModal').modal('show')
         });
         window.livewire.on('modal-hide', msg => {
@@ -97,20 +97,20 @@
         });
     });
 
-    function Confirm(id, name, products) {
-        if (products > 0) {
+    function Confirm(id, descripcion, locations) {
+        if (locations > 0) {
             swal.fire({
                 title: 'PRECAUCION',
                 icon: 'warning',
-                text: 'No se puede eliminar el producto, ' + name + ' porque tiene ' +
-                    products + ' ventas relacionadas'
+                text: 'No se puede eliminar el producto, ' + descripcion + ' porque tiene ' +
+                    locations + ' ventas relacionadas'
             })
             return;
         }
         swal.fire({
             title: 'CONFIRMAR',
             icon: 'warning',
-            text: 'Confirmar eliminar el prouducto ' + '"' + name + '"',
+            text: 'Confirmar eliminar la locacion ' + '"' + descripcion + '"',
             showCancelButton: true,
             cancelButtonText: 'Cerrar',
             cancelButtonColor: '#383838',
@@ -124,4 +124,3 @@
         })
     }
 </script>
---}}

@@ -5,7 +5,7 @@ namespace App\Http\Livewire;
 
 use App\Models\Sucursal;
 use App\Models\Location;
-use Illuminate\Support\Facades\DB;
+
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -15,9 +15,9 @@ class LocalizacionController extends Component
 {
     use WithPagination;
     use WithFileUploads;
-    public $sucursal_id, $codigo, $descripcion,$ubicacion, $tipo, 
+    public $sucursal, $codigo, $descripcion,$ubicacion, $aparador, 
     $selected_id, $pageTitle, $componentName,$search,$sucursals;
-    private $pagination = 5;
+    private $pagination = 8;
     public function paginationView()
     {
         return 'vendor.livewire.bootstrap';
@@ -64,79 +64,74 @@ class LocalizacionController extends Component
     public function Store()
     {
         $rules = [
+            'sucursal' => 'required|not_in:Elegir',
             'codigo' => 'required|unique:locations|min:4',
-            'sucursal_id' => 'required|not_in:Elegir',
-            'tipo' => 'required|not_in:Elegir'
+            'aparador' => 'required|not_in:Elegir',
+            'ubicacion' => 'required|not_in:Elegir',
+            'descripcion' => 'required|min:5',
             
         ];
         $messages = [
+            'sucursal' => 'La sucursal es requerida',
+            'sucursal_id.not_in' => 'Elegir un nombre de categoria diferente de Elegir',
             'codigo.required' => 'Codigo de la locacion es requerido',
             'codigo.unique' => 'Ya existe el codigo de la locacion',
             'codigo.min' => 'El codigo debe contener al menos 4 caracteres',
-            'sucursal_id' => 'La sucursal es requerida',
-            'sucursal_id.not_in' => 'Elegir un nombre de categoria diferente de Elegir',
+            'aparador.required' => 'El codigo debe contener al menos 4 caracteres',
+            'aparador.not_in' => 'El codigo debe contener al menos 4 caracteres',
+            'ubicacion.required' => 'La ubicacion es requerida',
+            'ubicacion.not_in' => 'Elegir una ubicacion  diferente de Elegir',
+            
+            'descripcion.required' => 'La descripcion es requerida',
+            'descripcion.min' => 'La descripcion debe contener al menos 10 caracteres',
         ];
 
         $this->validate($rules, $messages);
-        $product = Location::create([
-            'name' => $this->name,
-            'cost' => $this->cost,
-            'price' => $this->price,
-            'barcode' => $this->barcode,
-            'stock' => $this->stock,
-            'alerts' => $this->alerts,
-            'category_id' => $this->categoryid
+        $localizacion = Location::create([
+            'sucursal_id' => $this->sucursal,
+            'codigo' => $this->codigo,
+            'descripcion' => $this->descripcion,
+            'ubicacion' => $this->ubicacion,
+            'tipo' => $this->aparador
+            
         ]);
-        if ($this->image) {
-            $customFileName = uniqid() . '_.' . $this->image->extension();
-            $this->image->storeAs('public/productos', $customFileName);
-            $product->image = $customFileName;
-            $product->save();
-        }
-        else{
-            $product->image='noimage.jpg';
-            $product->save();
-        }
+        
+        $localizacion->save();
         $this->resetUI();
-        $this->emit('product-added', 'Producto Registrado');
+        $this->emit('localizacion-added', 'Localizacion Registrada Exitosamente');
     }
-    public function Edit(Location $product)
+    public function Edit(Location $loc)
     {
-        $this->selected_id = $product->id;
-        $this->name = $product->name;
-        $this->barcode = $product->barcode;
-        $this->cost = $product->cost;
-        $this->price = $product->price;
-        $this->stock = $product->stock;
-        $this->alerts = $product->alerts;
-        $this->categoryid = $product->category_id;
-        $this->image = null;
+        $this->selected_id = $loc->id;
+        $this->aparador = $loc->tipo;
+        $this->codigo = $loc->codigo;
+        $this->descripcion = $loc->descripcion;
+        $this->ubicacion = $loc->ubicacion;
+        $this->sucursal = $loc->sucursal_id;
+  
 
-        $this->emit('modal-show', 'show modal!');
+        $this->emit('modal-locacion', 'show modal!');
     }
     public function Update()
     {
         $rules = [
-            'name' => "required|min:3|unique:products,name,{$this->selected_id}",
-            'cost' => 'required',
-            'price' => 'required',
-            'stock' => 'required',
-            'alerts' => 'required',
-            'categoryid' => 'required|not_in:Elegir'
+            'sucursal' => 'required|not_in:Elegir',
+            'codigo' => 'required',
+            'aparador' => 'required',
+            'ubicacion' => 'required',
+            'descripcion' => 'required',
         ];
         $messages = [
-            'name.required' => 'Nombre del producto requerido',
-            'name.unique' => 'Ya existe el nombre del producto',
-            'name.min' => 'El nombre debe ser contener al menos 3 caracteres',
-            'cost.required' => 'El costo es requerido',
-            'price.required' => 'El precio es requerido',
-            'stock.required' => 'El stock es requerido',
-            'alerts.required' => 'Ingresa el valor minimo en existencias',
-            'categoryid.not_int' => 'Elegir un nombre de categoria diferente de elegir',
+            'sucursal.required' => 'Sucursal requerida',
+            'sucursal.not_int' => 'Elegir un nombre de categoria diferente de elegir',
+            'codigo.required' => 'El codigo es requerido',
+            'aparador.required' => 'El nombre de tipo aparador es requerido',
+            'ubicacion.required' => 'La ubicacion es requerido',
+            'descripcion.required' => 'La descripcion es requerida',
         ];
         $this->validate($rules, $messages);
-        $product = Location::find($this->selected_id);
-        $product->update([
+        $locations = Location::find($this->selected_id);
+        $locations->update([
             'name' => $this->name,
             'cost' => $this->cost,
             'price' => $this->price,
@@ -163,31 +158,22 @@ class LocalizacionController extends Component
     }
     protected $listeners = ['deleteRow' => 'Destroy'];
 
-    public function Destroy(Location $product)
+    public function Destroy(Location $loc)
     {
-        $imageTemp = $product->image;
-        $product->delete();
+   
+        $loc->delete();
 
-        if ($imageTemp != null) {
-            if (file_exists('storage/productos/' . $imageTemp)) {
-                unlink('storage/productos/' . $imageTemp);
-            }
-        }
         $this->resetUI();
-        $this->emit('product-deleted', 'Producto Eliminado');
+        $this->emit('localizacion-deleted', 'Localizacion Eliminada');
     }
     public function resetUI()
     {
-        $this->name = '';
-        $this->barcode = '';
-        $this->cost = '';
-        $this->price = '';
-        $this->stock = '';
-        $this->alerts = '';
-        $this->search = '';
-        $this->categoryid = 'Elegir';
-        $this->image = null;
-        $this->selected_id = 0;
+        $this->aparador = 'Elegir';
+        $this->codigo = '';
+        $this->descripcion = '';
+        $this->ubicacion = 'Elegir';
+        $this->sucursal = 'Elegir';
+       
 
         $this->resetValidation();
     }
