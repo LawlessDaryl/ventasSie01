@@ -14,19 +14,20 @@ class OrigenMotivoComisionSeeder extends Seeder
      */
     public function run()
     {
-        for ($x = 1; $x < 13; $x++) {
-            OrigenMotivoComision::create([
-                'origen_motivo_id' => '2',
-                'comision_id' => $x,
-            ]);
-        }
-        for ($x = 1; $x < 13; $x++) {
+        for ($x = 1; $x < 14; $x++) {
             OrigenMotivoComision::create([
                 'origen_motivo_id' => '1',
                 'comision_id' => $x,
             ]);
         }
-        for ($x = 1; $x < 13; $x++) {
+        for ($x = 1; $x < 14; $x++) {
+            OrigenMotivoComision::create([
+                'origen_motivo_id' => '2',
+                'comision_id' => $x,
+            ]);
+        }
+        
+        for ($x = 1; $x < 14; $x++) {
             OrigenMotivoComision::create([
                 'origen_motivo_id' => '4',
                 'comision_id' => $x,
@@ -36,7 +37,7 @@ class OrigenMotivoComisionSeeder extends Seeder
             'origen_motivo_id' => '5',
             'comision_id' => 14,
         ]);
-        for ($x = 1; $x < 13; $x++) {
+        for ($x = 1; $x < 14; $x++) {
             OrigenMotivoComision::create([
                 'origen_motivo_id' => '6',
                 'comision_id' => $x,
@@ -48,7 +49,6 @@ class OrigenMotivoComisionSeeder extends Seeder
                 'comision_id' => $x,
             ]);
         }
-
         OrigenMotivoComision::create([
             'origen_motivo_id' => '7',
             'comision_id' => '16',

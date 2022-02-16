@@ -19,5 +19,10 @@ class ModelHasRolesSeeder extends Seeder
             'model_type' => 'App\Models\User',
             'model_id' => 1,
         ]);
+        ModelHasRoles::create([
+            'role_id' => 2,
+            'model_type' => 'App\Models\User',
+            'model_id' => 2,
+        ]);
     }
 }

@@ -32,6 +32,7 @@ use App\Http\Livewire\SucursalController;
 use App\Http\Livewire\CatProdServiceController;
 use App\Http\Livewire\SubCatProdServiceController;
 use App\Http\Livewire\OrderServiceController;
+use App\Http\Livewire\ProcedenciaController;
 use App\Http\Livewire\ReporGananciaTgController;
 use App\Http\Livewire\ServiciosController;
 use App\Http\Livewire\StrProveedorController;
@@ -73,6 +74,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('ReporteGananciaTg', ReporGananciaTgController::class)->name('ReporteGananciaTg')->middleware('permission:Rep_Gan_Tigo_Index');
     Route::get('arqueostigo', ArqueosTigoController::class)->name('arqueostigo')->middleware('permission:Arqueos_Tigo_Index');
 
+    Route::get('procedenciaCli', ProcedenciaController::class)->name('proced');
     Route::get('clientes', ClienteController::class)->name('cliente')->middleware('permission:Cliente_Index');
     Route::get('catprodservice', CatProdServiceController::class)->name('cps')->middleware('permission:Cat_Prod_Service_Index');
     Route::get('subcatprodservice', SubCatProdServiceController::class)->name('scps')->middleware('permission:SubCat_Prod_Service_Index');

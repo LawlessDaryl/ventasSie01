@@ -85,7 +85,7 @@ class TransaccionController extends Component
 
         $this->cartera_id = 'Elegir';
         $this->type = 'Elegir';
-        $this->cantidad = 0;
+        $this->cantidad = '';
         $this->comentario = '';
 
         $this->metodo = 0;
@@ -1000,7 +1000,7 @@ class TransaccionController extends Component
         $rules = [ /* Reglas de validacion */
             'type' => 'required|not_in:Elegir',
             'cartera_id' => 'required|not_in:Elegir',
-            'cantidad' => 'required|integer|not_in:0',
+            'cantidad' => 'required|not_in:0',
             'comentario' => 'required',
         ];
         $messages = [ /* mensajes de validaciones */
@@ -1010,7 +1010,6 @@ class TransaccionController extends Component
             'cartera_id.not_in' => 'Seleccione un valor distinto a Elegir',
             'cantidad.required' => 'Ingrese un monto válido',
             'cantidad.not_in' => 'Ingrese un monto válido',
-            'cantidad.integer' => 'El monto debe ser un número',
             'comentario.required' => 'El comentario es obligatorio',
         ];
 
@@ -1065,6 +1064,7 @@ class TransaccionController extends Component
         $this->observaciones = $tr->observaciones;
         $this->emit('show-modal3', 'open modal');
     }
+    
     public function Modificar()
     {
         $tr = Transaccion::find($this->selected_id);
@@ -1119,7 +1119,7 @@ class TransaccionController extends Component
 
         $this->cartera_id = 'Elegir';
         $this->type = 'Elegir';
-        $this->cantidad = 0;
+        $this->cantidad = '';
         $this->comentario = '';
 
         $this->metodo = 0;

@@ -90,7 +90,9 @@
                                     </div>
                                 </div>
                             </div>
-                            @error('suma_resta_si') <span class="text-danger er">{{ $message }}</span>@enderror
+                            @error('suma_resta_si')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
                         </div>
                     </div>
 
@@ -138,7 +140,9 @@
                                         </div>
                                     </div>
                                 </div>
-                                @error('suma_resta_no') <span class="text-danger er">{{ $message }}</span>@enderror
+                                @error('suma_resta_no')
+                                    <span class="text-danger er">{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
                     @endif
@@ -151,7 +155,9 @@
                                 <option value="montoC">Monto a Cobrar</option>
                                 <option value="ambos">Ambos</option>
                             </select>
-                            @error('afectadoSi') <span class="text-danger er">{{ $message }}</span>@enderror
+                            @error('afectadoSi')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
                         </div>
                     </div>
                     @if ($preguntar == 'si')
@@ -164,11 +170,13 @@
                                     <option value="montoC">Monto a Cobrar</option>
                                     <option value="ambos">Ambos</option>
                                 </select>
-                                @error('afectadoNo') <span class="text-danger er">{{ $message }}</span>@enderror
+                                @error('afectadoNo')
+                                    <span class="text-danger er">{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
                     @endif
-                    <div class="col-sm-12 col-md-6">
+                    <div class="col-sm-12 col-md-4">
                         <div class="form-group">
                             <label>¿CI DE CLIENTE?</label>
                             <select wire:model.lazy="CIdeCliente" class="form-control">
@@ -176,11 +184,13 @@
                                 <option value="SI">SI</option>
                                 <option value="NO">NO</option>
                             </select>
-                            @error('CIdeCliente') <span class="text-danger er">{{ $message }}</span>@enderror
+                            @error('CIdeCliente')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-md-6">
+                    <div class="col-sm-12 col-md-4">
                         <div class="form-group">
                             <label>¿Teléfono Solicitante?</label>
                             <select wire:model.lazy="telefSolicitante" class="form-control">
@@ -188,11 +198,13 @@
                                 <option value="SI">SI</option>
                                 <option value="NO">NO</option>
                             </select>
-                            @error('telefSolicitante') <span class="text-danger er">{{ $message }}</span>@enderror
+                            @error('telefSolicitante')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-md-6">
+                    <div class="col-sm-12 col-md-4">
                         <div class="form-group">
                             <label>¿Teléfono Destino / Código?</label>
                             <select wire:model.lazy="telefDestino_codigo" class="form-control">
@@ -200,14 +212,15 @@
                                 <option value="SI">SI</option>
                                 <option value="NO">NO</option>
                             </select>
-                            @error('telefDestino_codigo') <span class="text-danger er">{{ $message }}</span>@enderror
+                            @error('telefDestino_codigo')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
                         </div>
                     </div>
-
-                    <br>
-                    <td class="text-right">
-                        <a href="javascript:void(0)" class="btn btn-dark" wire:click.prevent="Asignar()">Terminar</a>
-                    </td>
+                    <div class="modal-footer">
+                        <button type="button" wire:click.prevent="Asignar()" class="btn btn-dark close-btn text-info"
+                            style="background: #3b3f5c">Terminar</button>
+                    </div>
                 </div>
             </div>
 

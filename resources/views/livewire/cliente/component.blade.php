@@ -27,6 +27,7 @@
                                 <th class="table-th text-withe text-center">NIT</th>
                                 <th class="table-th text-withe text-center">DIRECCIÓN</th>
                                 <th class="table-th text-withe text-center">RAZÓN SOCIAL</th>
+                                <th class="table-th text-withe text-center">PROCEDENCIA</th>
                                 <th class="table-th text-withe text-center">ACCIONES</th>
                             </tr>
                         </thead>
@@ -56,6 +57,9 @@
                                     </td>
                                     <td class="text-center">
                                         <h6 class="text-center">{{ $c->razon_social }}</h6>
+                                    </td>
+                                    <td class="text-center">
+                                        <h6 class="text-center">{{ $c->procedencia }}</h6>
                                     </td>
                                     <td class="text-center">
                                         <a href="javascript:void(0)" wire:click="Edit({{ $c->id }})"

@@ -20,5 +20,33 @@ class RoleHasPermissionSeeder extends Seeder
                 'role_id' => 1,
             ]);
         }
+        RoleHasPermissions::create([
+            'permission_id' => 26,
+            'role_id' => 2,
+        ]);
+        RoleHasPermissions::create([
+            'permission_id' => 12,
+            'role_id' => 2,
+        ]);
+        RoleHasPermissions::create([
+            'permission_id' => 23,
+            'role_id' => 2,
+        ]);
+        RoleHasPermissions::create([
+            'permission_id' => 24,
+            'role_id' => 2,
+        ]);
+        RoleHasPermissions::create([
+            'permission_id' => 25,
+            'role_id' => 2,
+        ]);
+        RoleHasPermissions::create([
+            'permission_id' => 34,
+            'role_id' => 2,
+        ]);
+        RoleHasPermissions::create([
+            'permission_id' => 33,
+            'role_id' => 2,
+        ]);
     }
 }
