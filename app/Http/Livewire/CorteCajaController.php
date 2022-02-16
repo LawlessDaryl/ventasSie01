@@ -149,7 +149,7 @@ class CorteCajaController extends Component
         session(['sesionCaja' => $caja->nombre]);
 
         $this->emit('caja_funcion', 'Corte de caja Apertura realizado Exitosamente');
-        $this->Cargar();
+        $this->redirect('cortecajas');
     }
     public function CerrarCaja()
     {
@@ -188,6 +188,6 @@ class CorteCajaController extends Component
         $this->habilitado = 0;
         session(['sesionCaja' => null]);
         $this->emit('caja_funcion', 'Corte de caja CIERRE realizado Exitosamente');
-        $this->Cargar();
+        $this->redirect('cortecajas');
     }
 }

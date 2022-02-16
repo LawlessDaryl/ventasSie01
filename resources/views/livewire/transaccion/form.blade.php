@@ -86,6 +86,7 @@
     </div>
 
     <div class="col-sm-6 col-md-6" style="background: #f0ecec">
+        
         @if ($mostrarCI == 1)
             <div class="col-sm-12 col-md-12">
                 <div class="form-group">
@@ -153,7 +154,7 @@
             </div>
         @endif
 
-        @if ($BuscarClientePorCel != 0)
+        @if ($BuscarClientePorCel != 0) 
             <div class="vertical-scrollable">
                 <div class="row layout-spacing">
                     <div class="col-md-12 ">

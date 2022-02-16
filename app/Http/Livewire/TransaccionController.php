@@ -69,6 +69,7 @@ class TransaccionController extends Component
 
         $this->nombreCliente = '';
         $this->cedula = '';
+        $this->celular = '';
         $this->direccion = '';
         $this->email = '';
         $this->razon = '';
@@ -411,6 +412,7 @@ class TransaccionController extends Component
         $this->cedula = $cedula;
         $this->celular = $celular;
         $this->ClienteSelect = 0;
+        $this->TelfSelect = 0;
     }
     /* Cargar los datos seleccionados de la tabla a los label */
     public function SeleccionarTelf($celular)
@@ -983,7 +985,6 @@ class TransaccionController extends Component
                 'movimiento_id' => $mv->id,
                 'transaccion_id' => $this->transaccion->id
             ]);
-
             DB::commit();
 
             $this->resetUI();
@@ -1075,7 +1076,6 @@ class TransaccionController extends Component
     /* RESET DE INPUT Y DEMAS */
     public function resetUI()
     {
-        $this->selected_id = 0;
         $this->motivo = 'Elegir';
         $this->origen = 'Elegir';
         $this->montoCobrarPagar = 'Monto a cobrar/pagar';
@@ -1103,6 +1103,7 @@ class TransaccionController extends Component
 
         $this->nombreCliente = '';
         $this->cedula = '';
+        $this->celular = '';
         $this->direccion = '';
         $this->email = '';
         $this->razon = '';
@@ -1127,6 +1128,6 @@ class TransaccionController extends Component
         $this->condicionalMotivo = 'asd';
 
         $this->resetValidation();
-        $this->resetPage();
+        /* $this->resetPage(); */
     }
 }
