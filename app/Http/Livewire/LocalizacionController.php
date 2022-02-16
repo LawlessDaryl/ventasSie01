@@ -132,29 +132,15 @@ class LocalizacionController extends Component
         $this->validate($rules, $messages);
         $locations = Location::find($this->selected_id);
         $locations->update([
-            'name' => $this->name,
-            'cost' => $this->cost,
-            'price' => $this->price,
-            'barcode' => $this->barcode,
-            'stock' => $this->stock,
-            'alerts' => $this->alerts,
-            'category_id' => $this->categoryid
+            'sucursal_id' => $this->sucursal,
+            'codigo' => $this->codigo,
+            'descripcion' => $this->descripcion,
+            'ubicacion' => $this->ubicacion,
+            'tipo' => $this->aparador
         ]);
-        if ($this->image) {
-            $customFileName = uniqid() . '_.' . $this->image->extension();
-            $this->image->storeAs('public/productos', $customFileName);
-            $imageTemp = $product->image;
-            $product->image = $customFileName;
-            $product->save();
-
-            if ($imageTemp != null) {
-                if (file_exists('storage/productos/' . $imageTemp)) {
-                    unlink('storage/productos/' . $imageTemp);
-                }
-            }
-        }
+       
         $this->resetUI();
-        $this->emit('product-updated', 'Producto Actualizado');
+        $this->emit('location-updated', 'Locacion Actualizada');
     }
     protected $listeners = ['deleteRow' => 'Destroy'];
 
