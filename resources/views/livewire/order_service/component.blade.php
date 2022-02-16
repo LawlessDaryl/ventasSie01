@@ -17,7 +17,7 @@
                         <thead class="text-white" style="background: #3B3F5C">
                             <tr>
                                 <th class="table-th text-withe text-center">#</th>
-                                <th class="table-th text-withe text-center">NOMBRE CLIENTE</th>
+                                <th class="table-th text-withe text-center">CLIENTE</th>
                                 <th class="table-th text-withe text-center">CÓDIGO</th>
                                 <th class="table-th text-withe text-center">FECHAS</th>
                                 <th class="table-th text-withe text-center">SERVICIOS</th>
@@ -47,8 +47,8 @@
                                                 $mysaldo += $service ->movservices[0]->movs->saldo;
                                             @endphp
                                             @if (count($item->services) - 1 == $key)
-                                                <h6 class="table-th text-withe text-center">
-                                                    {{ $service->movservices[0]->movs->climov->client->nombre }}</h6>
+                                                <h6 class="table-th text-withe text-center"><b>
+                                                    {{ $service->movservices[0]->movs->climov->client->nombre }}</b></h6>
                                             @endif
 
                                         @endforeach
@@ -58,8 +58,18 @@
                                         <h6 class="table-th text-withe text-center">{{ $item->id }}</h6>
                                     </td>
 
+                                    <div class="text-center">
+                                    
                                     <td>
-                                        <h6 class="table-th text-withe text-center">{{ $item->type_service }}</h6>
+                                        @foreach($item->services as $key => $service2)
+                                            <h6 class="table-th text-withe text-center">{{ $service2->fecha_estimada_entrega }}</h6><br/>
+                                            @if (count($item->services) - 1 != $key)
+                                                <hr
+                                                    style="border-color: black; margin-top: 0px; margin-bottom: 3px; margin-left: 5px; margin-right:5px">
+                                                <br />
+                                            @endif
+                                        
+                                        @endforeach
                                     </td>
 
                                     <td>
@@ -68,7 +78,7 @@
                                             <h6>
                                                 {{ $service->categoria->nombre }}&nbsp{{ $service->marca }}&nbsp | {{ $service->detalle }}&nbsp | {{ $service->falla_segun_cliente }}
                                             </h6><br/>
-
+                                            <h6><b>Responsable:</b> {{ $service->movservices[0]->movs->usermov->name }}</h6>
                                             @if (count($item->services) - 1 != $key)
                                                 <hr
                                                     style="border-color: black; margin-top: 0px; margin-bottom: 3px; margin-left: 5px; margin-right:5px">
@@ -81,7 +91,7 @@
                                         @foreach ($item->services as $key => $service)
                                             @foreach ($service->movservices as $mm)
                                                 @if ($mm->movs->status == 'ACTIVO')
-                                                    <h6 class="table-th text-withe text-center">{{ $mm->movs->type }}</h6>
+                                                    <h6 class="table-th text-withe text-center"><b>{{ $mm->movs->type }}</b></h6>
                                                     <h6 class="table-th text-withe text-center">Serv: {{ $item->type_service }}</h6>
                                                     @if (count($item->services) - 1 != $key)
                                                         <hr
@@ -93,6 +103,8 @@
                                             @endforeach
                                         @endforeach
                                     </td>
+
+                                    </div>
 
                                     <td class="text-center">
                                         <h6 class="text-info">

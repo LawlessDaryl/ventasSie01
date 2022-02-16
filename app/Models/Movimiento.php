@@ -15,4 +15,9 @@ class Movimiento extends Model
     {
         return $this->hasOne(ClienteMov::class);
     }
+
+    public function usermov()
+    {
+        return $this->belongsTo(User::class,'user_id','id');
+    }
 }
