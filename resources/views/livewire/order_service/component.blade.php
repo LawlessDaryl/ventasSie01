@@ -58,7 +58,7 @@
                                         <h6 class="table-th text-withe text-center">{{ $item->id }}</h6>
                                     </td>
 
-                                    <div class="text-center">
+                                    <div class="row">
                                     
                                     <td>
                                         @foreach($item->services as $key => $service2)
@@ -88,20 +88,35 @@
                                     </td>
 
                                     <td>
+                                        <div class="row">
                                         @foreach ($item->services as $key => $service)
                                             @foreach ($service->movservices as $mm)
+                                            
                                                 @if ($mm->movs->status == 'ACTIVO')
+                                                <div class="col-2 col-xl-6 col-lg-1 mb-xl-1 mb-1 ">
                                                     <h6 class="table-th text-withe text-center"><b>{{ $mm->movs->type }}</b></h6>
                                                     <h6 class="table-th text-withe text-center">Serv: {{ $item->type_service }}</h6>
+                                                </div>
+                                                <div class="col-2 col-xl-6 col-lg-1 mb-xl-1 mb-1 ">
+                                                    <a href="javascript:void(0)" class="btn btn-dark mtmobile" wire:click="Edit({{ $service->id }})"
+                                                        title="Cambiar Estado">{{ $mm->movs->type }}</a><br/><br/>
+                                                    <ul class="tabs tab-pills">
+                                                        <a href="javascript:void(0)" class="btn btn-dark mtmobile" wire:click="Detalles({{ $service->id }})"
+                                                            title="Cambiar Estado">Detalle</a>
+                                                    </ul>
+
                                                     @if (count($item->services) - 1 != $key)
                                                         <hr
                                                             style="border-color: black; margin-top: 0px; margin-bottom: 3px; margin-left: 5px; margin-right:5px">
                                                         <br />
                                                     @endif
-                                                    
+                                                </div>
                                                 @endif
+                                                
+                                            
                                             @endforeach
                                         @endforeach
+                                        </div>
                                     </td>
 
                                     </div>
@@ -128,9 +143,8 @@
                                         @foreach ($item->services as $key => $service2)
                                          @foreach ($service2->movservices as $mm2)
                                             @if ($mm2->movs->status == 'ACTIVO')
-                                                <a href="javascript:void(0)" class="btn btn-dark mtmobile" wire:click="Edit({{ $service2->id }})"
-                                                title="Cambiar Estado" 
-                                                >{{ $mm2->movs->type }}</a><br/><br/>
+                                                
+                                                
 
                                                 @if (count($item->services) - 1 != $key)
                                                 <hr
@@ -152,6 +166,7 @@
         </div>
     </div>
     @include('livewire.order_service.form')
+    @include('livewire.order_service.formdetalle')
 </div>
 
 <script>
@@ -175,6 +190,13 @@
         window.livewire.on('modal-hide', msg => {
             $('#theModal').modal('hide')
         });
+        window.livewire.on('show-detail', Msg => {
+            $('#theDetail').modal('show')
+        });
+        window.livewire.on('detail-hide', msg => {
+            $('#theDetail').modal('hide')
+        });
+
         window.livewire.on('hidden.bs.modal', function(e) {
             $('.er').css('display', 'none')
         });

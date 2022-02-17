@@ -2,11 +2,14 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\CatProdService;
 use App\Models\ClienteMov;
 use App\Models\Movimiento;
 use App\Models\MovService;
 use App\Models\Service;
 use App\Models\OrderService;
+use App\Models\SubCatProdService;
+use App\Models\TypeWork;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -21,7 +24,8 @@ class OrderServiceController extends Component
     public $search, $selected_id, $pageTitle, $componentName,
     $cliente, $fecha_estimada_entrega, $detalle, $status, $saldo, $on_account, $import, 
     $serviceid, $movtype, $orderservice, $users1,$service1,$categoria,$marca,$numeroOrden
-    ,$detalle1,$falla_segun_cliente,$nombreCliente,$celular,$usuarioId;
+    ,$detalle1,$falla_segun_cliente,$nombreCliente,$celular,$usuarioId,
+    $typew, $typeworkid, $catprodservid, $diagnostico, $solucion, $hora_entrega;
 
 
     private $pagination = 5;
@@ -34,6 +38,17 @@ class OrderServiceController extends Component
         $this->pageTitle = 'Listado';
         $this->componentName = 'Ordenes de Servicio';
         $this->usuarioId=-1;
+
+        $this->typeworkid = 'Elegir';
+        $this->catprodservid = 'Elegir';
+        $this->diagnostico = '';
+        $this->solucion = '';
+        $this->fecha_estimada_entrega = '';
+        $this->hora_entrega = '';
+        $this->import = 0;
+        $this->on_account = 0;
+        $this->saldo = 0;
+        $this->detalle= '';
         
         
     }
@@ -69,14 +84,32 @@ class OrderServiceController extends Component
 
         } else {
             $orderservices =OrderService::orderBy('id','desc')
+            
             ->paginate($this->pagination);
         }
         $users =User::all();
-       
-       
+        $typew = TypeWork::orderBy('name', 'asc')->get();
+        $dato1 = CatProdService::orderBy('nombre', 'asc')->get();
+        if ($this->catprodservid != 'Elegir') {
+            $marca = SubCatProdService::where('cat_prod_service_id', $this->catprodservid)->orderBy('name', 'asc')->get();
+        } else {
+            $marca = [];
+        }
+
+        if ((strlen($this->import)) != 0 && (strlen($this->on_account) != 0))
+        $this->saldo = $this->import - $this->on_account;
+        elseif((strlen($this->on_account) == 0))
+        $this->saldo = $this->import;
+        elseif((strlen($this->import) == 0))
+        $this->saldo = 0;
+
+
         return view('livewire.order_service.component', [
             'data' => $orderservices,
             'users' => $users,
+            'work' => $typew,
+            'cate' => $dato1,
+            'marcas' => $marca,
             'ordserv' => OrderService::orderBy('order_services.id', 'asc')
             ->get()
         ])
@@ -106,6 +139,36 @@ class OrderServiceController extends Component
         $this->celular=$this->service1->movservices[0]->movs->climov->client->celular;
         $this->usuarioId=$this->service1->movservices[0]->movs->user_id;
         $this->emit('show-modal', 'show modal!');
+    }
+
+    public function Detalles($id)
+    {
+
+
+        $this->service1 = Service::find($id);
+        $this->movimiento= Movimiento::find($id);
+
+        $this->typeworkid = $this->service1->type_work_id;
+        $this->catprodservid = $this->service1->cat_prod_service_id;
+        $this->diagnostico = $this->service1->diagnostico;
+        $this->solucion = $this->service1->solucion;
+        $this->fecha_estimada_entrega = substr($this->service1->fecha_estimada_entrega, 0, 10);
+        $this->hora_entrega = substr($this->service1->fecha_estimada_entrega, 11, 14);
+        $this->import = $this->movimiento->import;
+        $this->on_account = $this->movimiento->on_account;
+        $this->saldo = $this->movimiento->saldo;
+        $this->detalle=$this->service1->detalle;
+        
+        $this->categoria=$this->service1->categoria->nombre;
+        $this->marca=$this->service1->marca;
+        $this->numeroOrden=$this->service1->order_service_id;
+        $this->detalle1=$this->service1->detalle;
+        $this->falla_segun_cliente=$this->service1->falla_segun_cliente;
+        $this->nombreCliente=$this->service1->movservices[0]->movs->climov->client->nombre;
+        $this->celular=$this->service1->movservices[0]->movs->climov->client->celular;
+        $this->usuarioId=$this->service1->movservices[0]->movs->user_id;
+
+        $this->emit('show-detail', 'show modal!');
     }
 
     public function Cambio(Service $service)
@@ -203,6 +266,18 @@ class OrderServiceController extends Component
         $this->nombreCliente = '';
         $this->celular = 0;
         $this->usuarioId = -1;
+
+        $this->typeworkid = 'Elegir';
+        $this->catprodservid = 'Elegir';
+        $this->diagnostico = '';
+        $this->solucion = '';
+        $this->fecha_estimada_entrega = '';
+        $this->hora_entrega = '';
+        $this->import = 0;
+        $this->on_account = 0;
+        $this->saldo = 0;
+        $this->detalle= '';
+
 
         $this->resetValidation();
     }

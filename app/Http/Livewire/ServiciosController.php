@@ -269,7 +269,7 @@ class ServiciosController extends Component
         session(['tservice' => $this->typeservice]);
     }
 
-    //Eliminar EDIT, no se usa
+    
     public function Edit(Service $service)
     {
         $movimiento_Serv = Service::join('mov_services as ms', 'ms.service_id', 'services.id')
