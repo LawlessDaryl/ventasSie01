@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ExportController;
 use App\Http\Livewire\ArqueosTigoController;
+use App\Http\Livewire\UnidadesController;
 use App\Http\Livewire\AsignarController;
 use App\Http\Livewire\CajasController;
 use App\Http\Livewire\CarteraController;
@@ -82,7 +83,10 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('categories', CategoriesController::class)->name('categorias');
     Route::get('products', ProductsController::class)->name('productos');
+
+
     Route::get('locations', LocalizacionController::class)->name('locations');
+    Route::get('unidades', UnidadesController::class)->name('unities');
     
 
     //reportes PDDF
