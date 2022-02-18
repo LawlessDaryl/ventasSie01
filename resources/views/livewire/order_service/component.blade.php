@@ -16,22 +16,30 @@
                     <table class="table table-unbordered table-striped mt-2">
                         <thead class="text-white" style="background: #3B3F5C">
                             <tr>
-                                <th class="table-th text-withe text-center">#</th>
-                                <th class="table-th text-withe text-center">CLIENTE</th>
-                                <th class="table-th text-withe text-center">CÓDIGO</th>
-                                <th class="table-th text-withe text-center">FECHAS</th>
-                                <th class="table-th text-withe text-center">SERVICIOS</th>
-                                <th class="table-th text-withe text-center">ESTADO</th>
-                                <th class="table-th text-withe text-center">TOTAL</th>
-                                <th class="table-th text-withe text-center">A CUENTA</th>
-                                <th class="table-th text-withe text-center">SALDO</th>
-                                <th class="table-th text-withe text-center">ACCIONES</th>
+                                <th class="table-th text-withe text-center" width="2%">#</th>
+                                <th class="table-th text-withe text-center" width="60%"> 
+                             
+                                    <div class="col-sm-12 col-md-12">
+                                    <div class="row">
+                                       
+                                        <div class="col-sm-1">CLIENTE</div>                                
+                                        <div class="col-sm-2">FECHAS</div>
+                                        <div class="col-sm-5"> SERVICIOS</div>
+                                        <div class="col-sm-4">ESTADO</div>
+                                     </div>
+                                     </div>
+                                        </th>
+                                <th class="table-th text-withe text-center" width="7%">CÓDIGO</th>
+                                <th class="table-th text-withe text-center" width="7%">TOTAL</th>
+                                <th class="table-th text-withe text-center" width="10%">A CUENTA</th>
+                                <th class="table-th text-withe text-center" width="7%">SALDO</th>
+                                <th class="table-th text-withe text-center" width="7%">ACCIONES</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($data as $item)
                                 <tr>
-                                    <td>
+                                    <td width="2%">
                                         <h6 class="table-th text-withe text-center">{{ $loop->iteration }}</h6>
                                     </td>
                                     @php
@@ -39,121 +47,98 @@
                                         $myacuenta = 0;
                                         $mysaldo = 0;
                                     @endphp
-                                    <td>
+                                    <td width="60%">
+                                       
                                         @foreach ($item->services as $key => $service)
                                             @php
                                                 $mytotal += $service->movservices[0]->movs->import;
                                                 $myacuenta += $service->movservices[0]->movs->on_account;
                                                 $mysaldo += $service ->movservices[0]->movs->saldo;
                                             @endphp
-                                            @if (count($item->services) - 1 == $key)
+                                         <div class="col-sm-12 col-md-12">
+                                         <div class="row">
+                                  
+                                        <div class="col-sm-1">
+                                            @if ($key== 0)
                                                 <h6 class="table-th text-withe text-center"><b>
                                                     {{ $service->movservices[0]->movs->climov->client->nombre }}</b></h6>
                                             @endif
-
-                                        @endforeach
-                                    </td>
-                                    
-                                    <td>
-                                        <h6 class="table-th text-withe text-center">{{ $item->id }}</h6>
-                                    </td>
-
-                                    <div class="row">
-                                    
-                                    <td>
-                                        @foreach($item->services as $key => $service2)
-                                            <h6 class="table-th text-withe text-center">{{ $service2->fecha_estimada_entrega }}</h6><br/>
-                                            @if (count($item->services) - 1 != $key)
-                                                <hr
-                                                    style="border-color: black; margin-top: 0px; margin-bottom: 3px; margin-left: 5px; margin-right:5px">
-                                                <br />
-                                            @endif
-                                        
-                                        @endforeach
-                                    </td>
-
-                                    <td>
-                                        @foreach ($item->services as $key => $service)
-
+                                        </div>
+                                   
+                                        <div class="col-sm-2">
+                                            <h6 class="table-th text-withe text-center">{{ $service->fecha_estimada_entrega }}</h6><br/>
+                                        </div>
+                                      
+                 
+                                        <div class="col-sm-5">
                                             <h6>
                                                 {{ $service->categoria->nombre }}&nbsp{{ $service->marca }}&nbsp | {{ $service->detalle }}&nbsp | {{ $service->falla_segun_cliente }}
-                                            </h6><br/>
+                                            </h6>
                                             <h6><b>Responsable:</b> {{ $service->movservices[0]->movs->usermov->name }}</h6>
-                                            @if (count($item->services) - 1 != $key)
-                                                <hr
-                                                    style="border-color: black; margin-top: 0px; margin-bottom: 3px; margin-left: 5px; margin-right:5px">
-                                                <br />
-                                            @endif
-                                        @endforeach
-                                    </td>
+                                        </div>
 
-                                    <td>
-                                        <div class="row">
-                                        @foreach ($item->services as $key => $service)
+                                  
+                                        <div class="col-sm-4">
+                                       
                                             @foreach ($service->movservices as $mm)
                                             
                                                 @if ($mm->movs->status == 'ACTIVO')
                                                 <div class="col-2 col-xl-6 col-lg-1 mb-xl-1 mb-1 ">
                                                     <h6 class="table-th text-withe text-center"><b>{{ $mm->movs->type }}</b></h6>
-                                                    <h6 class="table-th text-withe text-center">Serv: {{ $item->type_service }}</h6>
+                                                    Serv: {{ $item->type_service }}
                                                 </div>
-                                                <div class="col-2 col-xl-6 col-lg-1 mb-xl-1 mb-1 ">
+                                               
                                                     <a href="javascript:void(0)" class="btn btn-dark mtmobile" wire:click="Edit({{ $service->id }})"
-                                                        title="Cambiar Estado">{{ $mm->movs->type }}</a><br/><br/>
-                                                    <ul class="tabs tab-pills">
-                                                        <a href="javascript:void(0)" class="btn btn-dark mtmobile" wire:click="Detalles({{ $service->id }})"
-                                                            title="Cambiar Estado">Detalle</a>
-                                                    </ul>
+                                                        title="Cambiar Estado">{{ $mm->movs->type }}</a>
+                                                 
+                                                    <a href="javascript:void(0)" class="btn btn-dark mtmobile" wire:click="Detalles({{ $service->id }})"
+                                                        title="Cambiar Estado">Detalle</a>
+                                                   
 
                                                     @if (count($item->services) - 1 != $key)
-                                                        <hr
-                                                            style="border-color: black; margin-top: 0px; margin-bottom: 3px; margin-left: 5px; margin-right:5px">
-                                                        <br />
+                                                            <br />
                                                     @endif
-                                                </div>
+                                                
                                                 @endif
                                                 
                                             
                                             @endforeach
-                                        @endforeach
                                         </div>
+                                        
+                                    </div> 
+                                    @if (count($item->services) - 1 != $key)
+                                        <hr
+                                            style="border-color: black; margin-top: 0px; margin-bottom: 3px; margin-left: 5px; margin-right:5px">
+                                        <br />
+                                    @endif
+                                </div>
+                                        @endforeach
                                     </td>
 
-                                    </div>
+                                    <td class="text-center" width="7%">
+                                        <h6 class="table-th text-withe text-center">{{ $item->id }}</h6>
+                                    </td>
 
-                                    <td class="text-center">
+                                    <td class="text-center" width="7%">
                                         <h6 class="text-info">
                                             {{ number_format($mytotal, 2) }} Bs.
                                         </h6>
                                     </td>
 
-                                    <td class="text-center">
+                                    <td class="text-center" width="10%">
                                         <h6 class="text-info">
                                             {{ number_format($myacuenta, 2) }} Bs.
                                         </h6>
                                     </td>
 
-                                    <td class="text-center">
+                                    <td class="text-center" width="7%">
                                         <h6 class="text-info">
                                             {{ number_format($mysaldo, 2) }} Bs.
                                         </h6>
                                     </td>
 
-                                    <td class="text-center">
-                                        @foreach ($item->services as $key => $service2)
-                                         @foreach ($service2->movservices as $mm2)
-                                            @if ($mm2->movs->status == 'ACTIVO')
-                                                
-                                                
-
-                                                @if (count($item->services) - 1 != $key)
-                                                <hr
-                                                    style="border-color: black; margin-top: 5px; margin-bottom: 3px; margin-left: 5px; margin-right:5px">
-                                                <br />
-                                                @endif
-                                            @endif
-                                            @endforeach
-                                        @endforeach
+                                    <td class="text-center" width="7%">
+                                
                                     </td>
 
                                 </tr>

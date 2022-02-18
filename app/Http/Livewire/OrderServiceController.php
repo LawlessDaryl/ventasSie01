@@ -192,6 +192,7 @@ class OrderServiceController extends Component
                         'saldo' => $movimiento->saldo,
                         'user_id' => $this->users1,
                     ]);
+                   
                 }else{
                     $mv = Movimiento::create([
                         'type' => 'PROCESO',
@@ -225,6 +226,55 @@ class OrderServiceController extends Component
                 
            }
       
+           if($servmov->movs->status == 'ACTIVO' && $servmov->movs->type == 'PROCESO')
+           {
+                $movimiento= $servmov->movs;
+                
+                DB::beginTransaction();
+                try {
+                    if(Auth::user()->hasPermissionTo('Asignar_Tecnico_Servicio')){
+                    $mv = Movimiento::create([
+                        'type' => 'TERMINADO',
+                        'status' => 'ACTIVO',
+                        'import' => $movimiento->import,
+                        'on_account' => $movimiento->on_account,
+                        'saldo' => $movimiento->saldo,
+                        'user_id' => $this->users1,
+                    ]);
+                   
+                }else{
+                    $mv = Movimiento::create([
+                        'type' => 'TERMINADO',
+                        'status' => 'ACTIVO',
+                        'import' => $movimiento->import,
+                        'on_account' => $movimiento->on_account,
+                        'saldo' => $movimiento->saldo,
+                        'user_id' => Auth()->user()->id,
+                    ]);
+                }
+                    MovService::create([
+                        'movimiento_id' => $mv->id,
+                        'service_id' => $service->id
+                    ]);
+                    ClienteMov::create([
+                        'movimiento_id' => $mv->id,
+                        'cliente_id' => $movimiento->climov->cliente_id,
+                    ]);
+        
+                    DB::commit();
+                    $movimiento->update([
+                        'status' =>'INACTIVO'
+                        
+                    ]);
+                    $this->resetUI();
+                    $this->emit('product-added', 'Servicio en Proceso');
+                } catch (Exception $e) {
+                    DB::rollback();
+                    $this->emit('item-error', 'ERROR' . $e->getMessage());
+                }
+                
+           }
+
        }
     }
 

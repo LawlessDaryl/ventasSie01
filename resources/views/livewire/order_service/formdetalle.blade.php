@@ -25,7 +25,7 @@
                     <div class="col-lg-12 col-sm-12 col-md-6">
                         <div class="form-group row">
                             <div class="col-lg-3 col-sm-12 col-md-6">
-                                <label>Tipo de Trabajo</label>
+                                <label><h6>Tipo de Trabajo</h6></label>
                             </div>
                             <div class="col-lg-9 col-sm-12 col-md-6">
                                 <select wire:model.lazy="typeworkid" class="form-control">
@@ -44,7 +44,7 @@
                     <div class="col-lg-12 col-sm-12 col-md-6">
                         <div class="form-group row">
                             <div class="col-lg-3 col-sm-12 col-md-6">
-                                <label>Tipo de equipo</label>
+                                <label><h6>Tipo de equipo</h6></label>
                             </div>
                             <div class="col-lg-9 col-sm-12 col-md-6">
                                 <select wire:model.lazy="catprodservid" class="form-control">
@@ -63,7 +63,7 @@
                     <div class="col-lg-12 col-sm-12 col-md-6">
                         <div class="form-group row">
                             <div class="col-lg-3 col-sm-12 col-md-6">
-                                <label>Marca/Modelo</label>
+                                <label><h6>Marca/Modelo</h6></label>
                             </div>
                             <div class="col-lg-9 col-sm-12 col-md-6">
                                 <datalist id="colores">
@@ -79,7 +79,7 @@
                     <div class="col-lg-12 col-sm-12 col-md-12">
                         <div class="form-group row">
                             <div class="col-lg-3 col-sm-12 col-md-6">
-                                <label>Estado del Equipo</label>
+                                <label><h6>Estado del Equipo</h6></label>
                             </div>
                             <div class="col-lg-9 col-sm-12 col-md-6">
                             <input type="text" wire:model.lazy="detalle" class="form-control"
@@ -93,7 +93,7 @@
                     <div class="col-lg-12 col-sm-12 col-md-8">
                         <div class="form-group row">
                             <div class="col-lg-3 col-sm-12 col-md-6">
-                                <label>Falla según el cliente</label>
+                                <label><h6>Falla según el cliente</h6></label>
                             </div>
                             <div class="col-lg-9 col-sm-12 col-md-6">
                             <input type="text" wire:model.lazy="falla_segun_cliente" class="form-control"
@@ -106,7 +106,7 @@
                     <div class="col-lg-12 col-sm-12 col-md-8">
                         <div class="form-group row">
                             <div class="col-lg-3 col-sm-12 col-md-6">
-                                <label>Diagnóstico</label>
+                                <label><h6>Diagnóstico</h6></label>
                             </div>
                             <div class="col-lg-9 col-sm-12 col-md-6">
                                 <input type="text" wire:model.lazy="diagnostico" class="form-control"
@@ -119,7 +119,7 @@
                     <div class="col-lg-12 col-sm-12 col-md-8">
                         <div class="form-group row">
                             <div class="col-lg-3 col-sm-12 col-md-6">
-                                <label>Solución</label>
+                                <label><h6>Solución</h6></label>
                             </div>
                             <div class="col-lg-9 col-sm-12 col-md-6">
                                 <input type="text" wire:model.lazy="solucion" class="form-control"
@@ -132,7 +132,7 @@
                     <div class="col-lg-4 col-sm-12 col-md-4">
                         <div class="form-group row">
                             <div class="col-lg-3 col-sm-12 col-md-6">
-                                <label>Total</label>
+                                <label><h6>Total</h6></label>
                             </div>
                             <div class="col-lg-8 col-sm-12 col-md-6">
                                 <input type="number" wire:model="import" class="form-control" placeholder="ej: 0.0">
@@ -143,7 +143,7 @@
                     <div class="col-sm-12 col-md-4">
                         <div class="form-group row">
                             <div class="col-lg-3 col-sm-12 col-md-6">
-                                <label>A Cuenta</label>
+                                <label><h6>A Cuenta</h6></label>
                             </div>
                             <div class="col-lg-8 col-sm-12 col-md-6">
                                 <input type="number" wire:model="on_account" class="form-control"
@@ -156,7 +156,7 @@
                     <div class="col-lg-4 col-sm-12 col-md-4">
                         <div class="form-group row">
                             <div class="col-lg-3 col-sm-12 col-md-6">
-                                <label>Saldo</label>
+                                <label><h6>Saldo</h6></label>
                             </div>
                             <div class="col-lg-8 col-sm-12 col-md-6">
                                 <input type="number" wire:model.lazy="saldo" class="form-control" placeholder="ej: 0.0" disabled>
@@ -166,10 +166,10 @@
                     </div>
 
 
-                    <div class="col-lg-4 col-sm-12 col-md-4">
+                    <div class="col-lg-5 col-sm-12 col-md-4">
                         <div class="form-group row">
                             <div class="col-lg-3 col-sm-12 col-md-6">
-                                <label>Fecha Entrega</label>
+                                <label><h6>Fecha Entrega</h6></label>
                             </div>
                             <div class="col-lg-9 col-sm-12 col-md-6">
                                 <input type="date" wire:model.lazy="fecha_estimada_entrega" class="form-control">
@@ -180,10 +180,10 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-5 col-sm-12 col-md-4">
+                    <div class="col-lg-7 col-sm-12 col-md-4">
                         <div class="form-group row">
                             <div class="col-lg-4 col-sm-12 col-md-6">
-                                <label>Hora Entrega</label>
+                                <label><h6>Hora Entrega</h6></label>
                             </div>
                             <div class="col-lg-6 col-sm-12 col-md-6">
                                 <input type="time" name="hora_entrega" wire:model.lazy="hora_entrega"
@@ -191,6 +191,8 @@
                             </div>
                         </div>
                     </div>
+
+
                 </div>
 
 
@@ -198,7 +200,7 @@
                     <button type="button" wire:click.prevent="resetUI()" class="btn btn-dark close-btn text-info"
                         data-dismiss="modal" style="background: #3b3f5c">CANCELAR</button>
                     @if ($selected_id < 1)
-                        <button type="button" wire:click.prevent="Store()"
+                        <button type="button" wire:click.prevent="Cambio({{$service1}})"
                             class="btn btn-dark close-btn text-info">GUARDAR</button>
                     @else
                         <button type="button" wire:click.prevent="Update()"
