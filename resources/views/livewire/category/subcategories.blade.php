@@ -1,23 +1,10 @@
-<div class="row sales layout-top-spacing">
-    <div class="col-sm-12">
-        <div class="widget widget-chart-one">
-            <div class="widget-heading">
-                <h4 class="card-title">
-                    <b>{{ $componentName }} | {{ $pageTitle }}</b>
-                </h4>
-                <ul class="tabs tab-pills">
-                   
-                    <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
-                        data-target="#theModal">Agregar Categoria</a>
-                    <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
-                        data-target="#theModal">Agregar Subcategoria</a>
-                    
-                </ul>
-            </div>
-
-            
-            @include('common.searchbox')
-            <div class="widget-content">
+<div wire:ignore.self class="modal fade" id="theModal_subcategory" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header" style="background: #b3a8a8">
+          <h5 class="modal-title text-white">
+              <b>{{$componentName}}</b>
+              <div class="widget-content">
                 <div class="table-responsive">
                     <table class="table table-unbordered table-hover mt-2">
                         <thead class="text-white" style="background: #3B3F5C">
@@ -62,61 +49,7 @@
                     {{ $categories->links() }}
                 </div>
             </div>
+          </h5>
+     
         </div>
-    </div>
-
-    @include('livewire.category.form')
-    @include('livewire.category.subcategories')
-    @include('livewire.category.form_subcategory')
-</div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-
-        window.livewire.on('show-modal', Msg => {
-            $('#theModal').modal('show')
-        });
-        window.livewire.on('item-added', Msg => {
-            $('#theModal').modal('hide')
-            noty(Msg)
-        });
-        window.livewire.on('item-updated', Msg => {
-            $('#theModal').modal('hide')
-            noty(Msg)
-        });
-        window.livewire.on('item-deleted', Msg => {
-            noty(Msg)
-        });
-        window.livewire.on('show-modal_sub', Msg => {
-            $('#theModal_subcategory').modal('show')
-        });
-
-    });
-
-    function Confirm(id, name, products) {
-        if (products > 0) {
-            swal.fire({
-                title: 'PRECAUCION',
-                icon: 'warning',
-                text: 'No se puede eliminar la categoria, ' + name + ' porque tiene ' 
-                + products + ' productos relacionados'
-            })
-            return;
-        }
-        swal.fire({
-            title: 'CONFIRMAR',
-            icon: 'warning',
-            text: 'Confirmar eliminar la categoria ' + '"' + name + '"',
-            showCancelButton: true,
-            cancelButtonText: 'Cerrar',
-            cancelButtonColor: '#383838',
-            confirmButtonColor: '#3B3F5C',
-            confirmButtonText: 'Aceptar'
-        }).then(function(result) {
-            if (result.value) {
-                window.livewire.emit('deleteRow', id)
-                Swal.close()
-            }
-        })
-    }
-</script>
+        <div class="modal-body" style="background: #f0ecec">
