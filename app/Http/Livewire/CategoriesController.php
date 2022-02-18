@@ -14,7 +14,7 @@ class CategoriesController extends Component
     use WithFileUploads;
     use WithPagination;
 
-    public $name, $search, $image, $selected_id, $pageTitle, $componentName;
+    public $name,$descripcion, $search, $selected_id, $pageTitle, $componentName,$categoria_padre;
     private $pagination = 5;
 
     public function mount()
@@ -40,14 +40,26 @@ class CategoriesController extends Component
     }
 
     public function Edit($id)
+
     {
-        $record = Category::find($id, ['id', 'name', 'image']);
+        $record = Category::find($id, ['id', 'name', 'descripcion']);
         $this->name = $record->name;
+        $this->descripcion = $record->descripcion;
         $this->selected_id = $record->id;
-        $this->image = null;
 
         $this->emit('show-modal', 'show modal!');
     }
+    public function Ver(Category $id)
+
+    {
+        $data=Category::select('categories.*')
+        ->orderBy('categories.id','asc')
+        ->where('categories.categoria_padre==0');
+        
+
+        $this->emit('show-modal_sub', 'show modal!');
+    }
+
     public function Store()
     {
         $rules = ['name' => 'required|unique:categories|min:3'];
@@ -59,15 +71,34 @@ class CategoriesController extends Component
         $this->validate($rules, $messages);
 
         $category = Category::create([
-            'name' => $this->name
+            'name' => $this->name,
+            'descripcion'=>$this->descripcion
         ]);
 
-        if ($this->image) {
-            $customFileName = uniqid() . '_.' . $this->image->extension();
-            $this->image->storeAs('public/categorias', $customFileName);
-            $category->image = $customFileName;
-            $category->save();
-        }
+        $category->save();
+        $this->resetUI();
+        $this->emit('item-added', 'Categoría Registrada');
+    }
+
+    
+
+    public function Store_Subcategoria()
+    {
+        $rules = ['name' => 'required|unique:categories|min:3'];
+        $messages = [
+            'name.required' => 'El nombre de la categoría es requerido',
+            'name.unique' => 'Ya existe el nombre de la categoría',
+            'name.min' => 'El nombre de la categoría debe tener al menos 3 caracteres'
+        ];
+        $this->validate($rules, $messages);
+
+        $category = Category::create([
+            'name' => $this->name,
+            'descripcion'=>$this->descripcion,
+            'categoria_padre'=>$this->categoria_padre
+        ]);
+
+        $category->save();
         $this->resetUI();
         $this->emit('item-added', 'Categoría Registrada');
     }

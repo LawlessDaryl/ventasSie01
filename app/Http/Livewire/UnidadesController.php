@@ -12,7 +12,7 @@ class UnidadesController extends Component
 
     use WithPagination;
     use WithFileUploads;
-    public  $search, $name, $selected_id;
+    public  $search, $nombre, $selected_id;
     public  $pageTitle, $componentName;
     private $pagination = 5;
 
@@ -49,12 +49,12 @@ class UnidadesController extends Component
     public function Store()
     {
         $rules = [
-            'name' => 'required|unique:unidads',
+            'nombre' => 'required|unique:unidads',
             
         ];
         $messages = [
-            'name.required' => 'El nombre de la unidad es requerido.',
-            'name.unique' => 'Ya existe una unidad con ese nombre.',
+            'nombre.required' => 'El nombre de la unidad es requerido.',
+            'nombre.unique' => 'Ya existe una unidad con ese nombre.',
         ];
         $this->validate($rules, $messages);
 
@@ -79,7 +79,7 @@ class UnidadesController extends Component
             'nombre' => 'required'
         ];
         $messages = [
-            'name.required' => 'El nombre de la unidad es requerido.',
+            'nombre.required' => 'El nombre de la unidad es requerido, ingrese la unidad.',
             
 
         ];
