@@ -11,6 +11,7 @@ use App\Models\OrderService;
 use App\Models\SubCatProdService;
 use App\Models\TypeWork;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
@@ -171,6 +172,49 @@ class OrderServiceController extends Component
         $this->emit('show-detail', 'show modal!');
     }
 
+    public function GuardarCambio(Service $service)
+    {
+        
+        $from = Carbon::parse($this->fecha_estimada_entrega)->format('Y-m-d') . Carbon::parse($this->hora_entrega)->format(' H:i') . ':00';
+        $service->update([
+         
+            'type_work_id' => $this->typeworkid,
+            'cat_prod_service_id' => $this->catprodservid,
+            'marca' => $this->marca,
+            'detalle' => $this->detalle,
+            'falla_segun_cliente' => $this->falla_segun_cliente,
+            'diagnostico' => $this->diagnostico,
+            'solucion' => $this->solucion,
+            'fecha_estimada_entrega' => $from,
+            
+
+        ]);
+
+        $this->movimiento->update([
+            'import' => $this->import,
+            'on_account' => $this->on_account,
+            'saldo' => $this->saldo,
+        ]);
+
+           /* $this->typeworkid = $this->service1->type_work_id;
+            $this->catprodservid = $this->service1->cat_prod_service_id;
+            $this->marca = $this->service1->marca;
+            $this->detalle = $this->service1->detalle;
+            $this->falla_segun_cliente = $this->service1->falla_segun_cliente;
+            $this->diagnostico = $this->service1->diagnostico;
+            $this->solucion = $this->service1->solucion;
+            $this->import = $this->movimiento->import;
+            $this->on_account = $this->movimiento->on_account;
+            $this->saldo = $this->movimiento->saldo;
+            $this->fecha_estimada_entrega = substr($this->service1->fecha_estimada_entrega, 0, 10);
+            $this->hora_entrega = substr($this->service1->fecha_estimada_entrega, 11, 14);
+*/
+
+        $this->resetUI();
+        $this->emit('detail-hide-msg', 'Servicio Actualizado');
+    }
+
+
     public function Cambio(Service $service)
     {
       
@@ -192,7 +236,7 @@ class OrderServiceController extends Component
                         'saldo' => $movimiento->saldo,
                         'user_id' => $this->users1,
                     ]);
-                   
+                
                 }else{
                     $mv = Movimiento::create([
                         'type' => 'PROCESO',
@@ -217,6 +261,7 @@ class OrderServiceController extends Component
                         'status' =>'INACTIVO'
                         
                     ]);
+                    $this->GuardarCambio($service);
                     $this->resetUI();
                     $this->emit('product-added', 'Servicio en Proceso');
                 } catch (Exception $e) {
@@ -225,7 +270,16 @@ class OrderServiceController extends Component
                 }
                 
            }
+       }
+    }
+
+
+    public function CambioProceso(Service $service)
+    {
       
+       foreach($service->movservices as $servmov)
+       {
+
            if($servmov->movs->status == 'ACTIVO' && $servmov->movs->type == 'PROCESO')
            {
                 $movimiento= $servmov->movs;
@@ -233,24 +287,15 @@ class OrderServiceController extends Component
                 DB::beginTransaction();
                 try {
                     if(Auth::user()->hasPermissionTo('Asignar_Tecnico_Servicio')){
-                    $mv = Movimiento::create([
-                        'type' => 'TERMINADO',
-                        'status' => 'ACTIVO',
-                        'import' => $movimiento->import,
-                        'on_account' => $movimiento->on_account,
-                        'saldo' => $movimiento->saldo,
-                        'user_id' => $this->users1,
-                    ]);
-                   
-                }else{
-                    $mv = Movimiento::create([
-                        'type' => 'TERMINADO',
-                        'status' => 'ACTIVO',
-                        'import' => $movimiento->import,
-                        'on_account' => $movimiento->on_account,
-                        'saldo' => $movimiento->saldo,
-                        'user_id' => Auth()->user()->id,
-                    ]);
+                        $mv = Movimiento::create([
+                            'type' => 'TERMINADO',
+                            'status' => 'ACTIVO',
+                            'import' => $movimiento->import,
+                            'on_account' => $movimiento->on_account,
+                            'saldo' => $movimiento->saldo,
+                            'user_id' => Auth()->user()->id,
+                        ]);
+                
                 }
                     MovService::create([
                         'movimiento_id' => $mv->id,
@@ -266,6 +311,7 @@ class OrderServiceController extends Component
                         'status' =>'INACTIVO'
                         
                     ]);
+                    $this->GuardarCambio($service);
                     $this->resetUI();
                     $this->emit('product-added', 'Servicio en Proceso');
                 } catch (Exception $e) {
@@ -274,10 +320,57 @@ class OrderServiceController extends Component
                 }
                 
            }
-
-       }
+        }
     }
 
+    public function CambioTerminado(Service $service)
+    {
+      
+       foreach($service->movservices as $servmov)
+       {
+
+           if($servmov->movs->status == 'ACTIVO' && $servmov->movs->type == 'TERMINADO')
+           {
+                $movimiento= $servmov->movs;
+                
+                DB::beginTransaction();
+                try {
+                    if(Auth::user()->hasPermissionTo('Asignar_Tecnico_Servicio')){
+                        $mv = Movimiento::create([
+                            'type' => 'ENTREGADO',
+                            'status' => 'ACTIVO',
+                            'import' => $movimiento->import,
+                            'on_account' => $movimiento->on_account,
+                            'saldo' => $movimiento->saldo,
+                            'user_id' => Auth()->user()->id,
+                        ]);
+                
+                }
+                    MovService::create([
+                        'movimiento_id' => $mv->id,
+                        'service_id' => $service->id
+                    ]);
+                    ClienteMov::create([
+                        'movimiento_id' => $mv->id,
+                        'cliente_id' => $movimiento->climov->cliente_id,
+                    ]);
+        
+                    DB::commit();
+                    $movimiento->update([
+                        'status' =>'INACTIVO'
+                        
+                    ]);
+                    $this->GuardarCambio($service);
+                    $this->resetUI();
+                    $this->emit('product-added', 'Servicio en Proceso');
+                } catch (Exception $e) {
+                    DB::rollback();
+                    $this->emit('item-error', 'ERROR' . $e->getMessage());
+                }
+                
+           }
+        }
+    }
 
     
     protected $listeners = ['deleteRow' => 'Destroy'];

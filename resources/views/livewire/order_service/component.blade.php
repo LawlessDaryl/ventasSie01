@@ -74,22 +74,29 @@
                                             <h6>
                                                 {{ $service->categoria->nombre }}&nbsp{{ $service->marca }}&nbsp | {{ $service->detalle }}&nbsp | {{ $service->falla_segun_cliente }}
                                             </h6>
-                                            <h6><b>Responsable:</b> {{ $service->movservices[0]->movs->usermov->name }}</h6>
+                                            @foreach ($service->movservices as $mm)
+                                            
+                                            @if ($mm->movs->status == 'ACTIVO')
+                                            <h6><b>Responsable:</b> {{ $mm->movs->usermov->name }}</h6>
                                         </div>
 
                                   
                                         <div class="col-sm-4">
                                        
-                                            @foreach ($service->movservices as $mm)
-                                            
-                                                @if ($mm->movs->status == 'ACTIVO')
+                                           
                                                 <div class="col-2 col-xl-6 col-lg-1 mb-xl-1 mb-1 ">
                                                     <h6 class="table-th text-withe text-center"><b>{{ $mm->movs->type }}</b></h6>
                                                     Serv: {{ $item->type_service }}
                                                 </div>
-                                               
-                                                    <a href="javascript:void(0)" class="btn btn-dark mtmobile" wire:click="Edit({{ $service->id }})"
-                                                        title="Cambiar Estado">{{ $mm->movs->type }}</a>
+                                                    @if($mm->movs->type == 'PENDIENTE')
+                                                        <a href="javascript:void(0)" class="btn btn-dark mtmobile" wire:click="Edit({{ $service->id }})"
+                                                            title="Cambiar Estado">{{ $mm->movs->type }}</a>
+                                                    @endif
+                                                    @if($mm->movs->type == 'PROCESO')
+                                                        <a href="javascript:void(0)" class="btn btn-dark mtmobile" wire:click="Detalles({{ $service->id }})"
+                                                            title="Cambiar Estado">{{ $mm->movs->type }}</a>
+                                                    
+                                                    @endif
                                                  
                                                     <a href="javascript:void(0)" class="btn btn-dark mtmobile" wire:click="Detalles({{ $service->id }})"
                                                         title="Cambiar Estado">Detalle</a>
@@ -180,6 +187,10 @@
         });
         window.livewire.on('detail-hide', msg => {
             $('#theDetail').modal('hide')
+        });
+        window.livewire.on('detail-hide-msg', msg => {
+            $('#theDetail').modal('hide')
+            noty(msg)
         });
 
         window.livewire.on('hidden.bs.modal', function(e) {
