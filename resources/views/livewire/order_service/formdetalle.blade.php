@@ -133,7 +133,7 @@
                 <td class="text-right" >
                     <label><h6>Total</h6></label>
                 </td>
-                <td class="text-left" colspan="2">
+                <td class="text-left" >
                     <input type="number" wire:model="import" class="form-control" placeholder="ej: 0.0">
                         @error('import') <span class="text-danger er">{{ $message }}</span>@enderror
                  </td>
@@ -141,7 +141,7 @@
                 <td class="text-right" >
                     <label><h6>A Cuenta</h6></label>
                 </td>
-                <td class="text-left" colspan="2">
+                <td class="text-left" >
                     <input type="number" wire:model="on_account" class="form-control"
                     placeholder="ej: 0.0">
                     @error('on_account') <span class="text-danger er">{{ $message }}</span>@enderror
@@ -150,7 +150,7 @@
                 <td class="text-right" >
                     <label><h6>Saldo</h6></label>
                 </td>
-                <td class="text-left" colspan="2">
+                <td class="text-left" >
                     <input type="number" wire:model.lazy="saldo" class="form-control" placeholder="ej: 0.0" disabled>
                     @error('saldo') <span class="text-danger er">{{ $message }}</span>@enderror
                 </td>
