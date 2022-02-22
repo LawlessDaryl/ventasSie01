@@ -21,6 +21,7 @@ class CategoriesController extends Component
     {
         $this->pageTitle = 'Listado';
         $this->componentName = 'Categorias';
+        $this->category_s = 0;
     }
 
     public function paginationView()
@@ -49,14 +50,13 @@ class CategoriesController extends Component
 
         $this->emit('show-modal', 'show modal!');
     }
-    public function Ver(Category $id)
+    public function Ver(Category $category)
 
     {
+        $this->selected_id = $category->id;
         $data=Category::select('categories.*')
-        ->orderBy('categories.id','asc')
-        ->where('categories.categoria_padre==0');
-        
-
+        ->where('categories.categoria_padre',$this->selected_id)
+        ->orderBy('categories.id','desc');
         $this->emit('show-modal_sub', 'show modal!');
     }
 
