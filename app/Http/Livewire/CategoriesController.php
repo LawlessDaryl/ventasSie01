@@ -16,11 +16,13 @@ class CategoriesController extends Component
 
     public $name,$descripcion, $search, $selected_id, $pageTitle, $componentName,$categoria_padre;
     private $pagination = 5;
+    public $category_s = 0;
 
     public function mount()
     {
         $this->pageTitle = 'Listado';
         $this->componentName = 'Categorias';
+        $this->componentSub = 'Subcategorias';
     }
 
     public function paginationView()
@@ -31,10 +33,22 @@ class CategoriesController extends Component
     public function render()
     {
         if (strlen($this->search) > 0)
-            $data = Category::where('name', 'like', '%' . $this->search . '%')->paginate($this->pagination);
+            $data = Category::where('name', 'like', '%' . $this->search . '%')
+            ->orWhere('categoria_padre',$this->category_s)
+            ->paginate($this->pagination);
         else
-            $data = Category::orderBy('id', 'desc')->paginate($this->pagination);
-        return view('livewire.category.categories', ['categories' => $data])
+            $data = Category::orderBy('id', 'desc')
+            ->orWhere('categoria_padre',$this->category_s)
+            ->paginate($this->pagination);
+
+
+
+            $data2=Category::where('categoria_padre',$this->selected_id)
+            ->select('categories.*')->get();
+           
+
+
+        return view('livewire.category.categories', ['categories' => $data,'subcat'=>$data2])
             ->extends('layouts.theme.app')
             ->section('content');
     }
@@ -49,14 +63,11 @@ class CategoriesController extends Component
 
         $this->emit('show-modal', 'show modal!');
     }
-    public function Ver(Category $id)
-
+    public function Ver(Category $category)
     {
-        $data=Category::select('categories.*')
-        ->orderBy('categories.id','asc')
-        ->where('categories.categoria_padre==0');
-        
-
+        $this->selected_id = $category->id;
+       
+    
         $this->emit('show-modal_sub', 'show modal!');
     }
 

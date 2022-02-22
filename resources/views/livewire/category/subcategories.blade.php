@@ -1,9 +1,9 @@
 <div wire:ignore.self class="modal fade" id="theModal_subcategory" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-lg-12" role="document">
       <div class="modal-content">
-        <div class="modal-header" style="background: #b3a8a8">
-          <h5 class="modal-title text-white">
-              <b>{{$componentName}}</b>
+        <div class="modal-header" style="background: #f8f6f6">
+          <h5 class="modal-title text-dark">
+              <b>{{$componentSub}}</b>
               <div class="widget-content">
                 <div class="table-responsive">
                     <table class="table table-unbordered table-hover mt-2">
@@ -12,11 +12,10 @@
                                 <th class="table-th text-withe">NOMBRE</th>
                                 <th class="table-th text-withe text-center">DESCRIPCION</th>
                                 <th class="table-th text-withe text-center">ACCIONES</th>
-                             
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($categories as $category)
+                            @foreach ($subcat as $category)
                                 <tr>
                                     <td>
                                         <h6>{{ $category->name }}</h6>
