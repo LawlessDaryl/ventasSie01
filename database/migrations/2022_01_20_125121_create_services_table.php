@@ -21,6 +21,7 @@ class CreateServicesTable extends Migration
             $table->string('diagnostico',255);
             $table->string('solucion',255);
             $table->decimal('costo',10,2)->default(0);
+            $table->string('detalle_costo',255)->nullable();
             $table->dateTime('fecha_estimada_entrega');
             $table->unsignedBigInteger('cat_prod_service_id');
             $table->foreign('cat_prod_service_id')->references('id')->on('cat_prod_services');

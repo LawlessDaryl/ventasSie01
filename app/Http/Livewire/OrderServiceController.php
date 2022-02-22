@@ -40,8 +40,8 @@ class OrderServiceController extends Component
         $this->componentName = 'Ordenes de Servicio';
         $this->usuarioId=-1;
 
-        $this->typeworkid = 'Elegir';
-        $this->catprodservid = 'Elegir';
+        $this->typeworkid = '';
+        $this->catprodservid = '';
         $this->diagnostico = '';
         $this->solucion = '';
         $this->fecha_estimada_entrega = '';
@@ -174,7 +174,12 @@ class OrderServiceController extends Component
 
     public function GuardarCambio(Service $service)
     {
-        
+        $rules = [
+        ];
+        $messages = [
+        ];
+
+
         $from = Carbon::parse($this->fecha_estimada_entrega)->format('Y-m-d') . Carbon::parse($this->hora_entrega)->format(' H:i') . ':00';
         $service->update([
          
@@ -261,7 +266,7 @@ class OrderServiceController extends Component
                         'status' =>'INACTIVO'
                         
                     ]);
-                    $this->GuardarCambio($service);
+
                     $this->resetUI();
                     $this->emit('product-added', 'Servicio en Proceso');
                 } catch (Exception $e) {
@@ -410,8 +415,8 @@ class OrderServiceController extends Component
         $this->celular = 0;
         $this->usuarioId = -1;
 
-        $this->typeworkid = 'Elegir';
-        $this->catprodservid = 'Elegir';
+        $this->typeworkid = '';
+        $this->catprodservid = '';
         $this->diagnostico = '';
         $this->solucion = '';
         $this->fecha_estimada_entrega = '';
