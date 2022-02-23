@@ -10,7 +10,7 @@
                     <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
                         data-target="#theModal">Agregar Categoria</a>
                     <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
-                        data-target="#theModal">Agregar Subcategoria</a>
+                        data-target="#theModal_subcat">Agregar Subcategoria</a>
                     
                 </ul>
             </div>
@@ -66,7 +66,6 @@
     </div>
 
     @include('livewire.category.form')
-    @include('livewire.category.subcategories')
     @include('livewire.category.form_subcategory')
 </div>
 
@@ -75,6 +74,9 @@
 
         window.livewire.on('show-modal', Msg => {
             $('#theModal').modal('show')
+        });
+        window.livewire.on('show-modal_s', Msg => {
+            $('#theModal_sub').modal('show')
         });
         window.livewire.on('item-added', Msg => {
             $('#theModal').modal('hide')

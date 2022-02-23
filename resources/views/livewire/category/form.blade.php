@@ -1,30 +1,24 @@
 @include('common.modalHead')
 <div class="row">
-    <div class="col-sm-12">
-        <div class="input-group">
-            <div class="input-group-prepend">
-                <span class="input-group-text">
-                    <span class="fas fa-edit">Nombre</span>
-                </span>
-            </div>
+    <div class="col-lg-12">
+        <div class="form-group">
+            
+             <label> Nombre </label>
+            
             <input type="text" wire:model.lazy="name" class="form-control" placeholder="ej: Impresoras">
         </div>
         @error('name')<span class="text-danger er">{{ $message }}</span> @enderror
     </div>
-    
-</div>
-<div class="row">
 
-    <div class="col-sm-12">
-        <div class="input-group">
-            <div class="input-group-prepend">
-                <span class="input-group-text">
-                    <span class="fas fa-edit">Descripcion</span>
-                </span>
-            </div>
-            <input type="text" wire:model.lazy="descripcion" class="form-control" placeholder="ej: breve descripcion de la categoria">
+
+    <div class="col-lg-12">
+        <div class="form-group">
+            
+            <label>Descripcion</label>
+            
+            <input type="text" wire:model.lazy="descripcion" class="form-control" placeholder="ej: breve descripcion">
         </div>
         @error('descripcion')<span class="text-danger er">{{ $message }}</span> @enderror
     </div>
-</div>
+
 @include('common.modalFooter')
