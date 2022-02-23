@@ -92,14 +92,15 @@
                                                         <a href="javascript:void(0)" class="btn btn-dark mtmobile" wire:click="Edit({{ $service->id }})"
                                                             title="Cambiar Estado">{{ $mm->movs->type }}</a>
                                                     @endif
-                                                    @if($mm->movs->type == 'PROCESO')
-                                                        <a href="javascript:void(0)" class="btn btn-dark mtmobile" wire:click="Detalles({{ $service->id }})"
-                                                            title="Cambiar Estado">{{ $mm->movs->type }}</a>
                                                     
+                                                    @if($mm->movs->type == 'TERMINADO')
+                                                    <a href="javascript:void(0)" class="btn btn-dark mtmobile" wire:click="DetallesTerminado({{ $service->id }})"
+                                                        title="Cambiar Estado">Entregar</a>
                                                     @endif
-                                                 
+
                                                     <a href="javascript:void(0)" class="btn btn-dark mtmobile" wire:click="Detalles({{ $service->id }})"
                                                         title="Cambiar Estado">Detalle</a>
+
                                                    
 
                                                     @if (count($item->services) - 1 != $key)
@@ -159,6 +160,7 @@
     </div>
     @include('livewire.order_service.form')
     @include('livewire.order_service.formdetalle')
+    @include('livewire.order_service.formdetalleentrega')
 </div>
 
 <script>
@@ -190,6 +192,16 @@
         });
         window.livewire.on('detail-hide-msg', msg => {
             $('#theDetail').modal('hide')
+            noty(msg)
+        });
+        window.livewire.on('show-detalle-entrega', Msg => {
+            $('#theDetalleEntrega').modal('show')
+        });
+        window.livewire.on('hide-detalle-entrega', msg => {
+            $('#theDetalleEntrega').modal('hide')
+        });
+        window.livewire.on('hide-detalle-entrega-msg', msg => {
+            $('#theDetalleEntrega').modal('hide')
             noty(msg)
         });
 

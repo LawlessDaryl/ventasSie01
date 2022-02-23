@@ -43,6 +43,7 @@ class ServiciosController extends Component
         $this->catprodservid = 'Elegir';
 
         $this->selected_id = 0;
+        $this->marc = '';
         $this->typeservice = 'NORMAL';
         $this->saldo = 0;
         $this->on_account = 0;

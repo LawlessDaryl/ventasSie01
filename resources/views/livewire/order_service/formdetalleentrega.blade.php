@@ -1,4 +1,4 @@
-<div wire:ignore.self class="modal fade" id="theDetail" tabindex="-1" role="dialog">
+<div wire:ignore.self class="modal fade" id="theDetalleEntrega" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header" style="background: #b3a8a8">
@@ -184,21 +184,14 @@
 
             <div class="modal-footer" style="background: #f0ecec">
                
-                @if($proceso)
-                        <button type="button" wire:click.prevent="CambioProceso({{$service1}})" class="btn btn-dark close-btn text-info"
-                            data-dismiss="modal" style="background: #3b3f5c">REGISTRAR TERMINADO</button>
-                @endif
+               
+                        <button type="button" wire:click.prevent="CambioTerminado({{$service1}})" class="btn btn-dark close-btn text-info"
+                            data-dismiss="modal" style="background: #3b3f5c">REGISTRAR ENTREGADO</button>
                 
              
                     <button type="button" wire:click.prevent="resetUI()" class="btn btn-dark close-btn text-info"
                         data-dismiss="modal" style="background: #3b3f5c">CANCELAR</button>
-                    @if ($selected_id < 1)
-                        <button type="button" wire:click.prevent="GuardarCambio({{$service1}})"
-                            class="btn btn-dark close-btn text-info">REGISTRAR INFORMACIÓN</button>
-                    @else
-                        <button type="button" wire:click.prevent="Update()"
-                            class="btn btn-dark close-btn text-info">ACTUALIZAR</button>
-                    @endif
+                   
 
 
             </div>

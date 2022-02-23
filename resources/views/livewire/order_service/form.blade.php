@@ -27,7 +27,7 @@
                                
                                 @foreach ($users as $usuario)
                                 
-                                    <option value="{{ $usuario->id }}" @if($usuarioId==$usuario->id )selected @endif>{{ $usuario->name }}</option>
+                                    <option value="{{ $usuario->id }}" >{{ $usuario->name }}</option>
                                 @endforeach
 
                             </select>

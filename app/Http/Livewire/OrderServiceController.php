@@ -26,7 +26,7 @@ class OrderServiceController extends Component
     $cliente, $fecha_estimada_entrega, $detalle, $status, $saldo, $on_account, $import, 
     $serviceid, $movtype, $orderservice, $users1,$service1,$categoria,$marca,$numeroOrden
     ,$detalle1,$falla_segun_cliente,$nombreCliente,$celular,$usuarioId,
-    $typew, $typeworkid, $catprodservid, $diagnostico, $solucion, $hora_entrega;
+    $typew, $typeworkid, $catprodservid, $diagnostico, $solucion, $hora_entrega, $proceso, $terminado;
 
 
     private $pagination = 5;
@@ -50,6 +50,8 @@ class OrderServiceController extends Component
         $this->on_account = 0;
         $this->saldo = 0;
         $this->detalle= '';
+        $this->proceso=false;
+        $this->terminado=false;
         
         
     }
@@ -131,6 +133,8 @@ class OrderServiceController extends Component
     {
         $this->service1 = Service::find($id);
         
+      
+    
         $this->categoria=$this->service1->categoria->nombre;
         $this->marca=$this->service1->marca;
         $this->numeroOrden=$this->service1->order_service_id;
@@ -138,16 +142,20 @@ class OrderServiceController extends Component
         $this->falla_segun_cliente=$this->service1->falla_segun_cliente;
         $this->nombreCliente=$this->service1->movservices[0]->movs->climov->client->nombre;
         $this->celular=$this->service1->movservices[0]->movs->climov->client->celular;
-        $this->usuarioId=$this->service1->movservices[0]->movs->user_id;
+        $this->users1=$this->service1->movservices[0]->movs->user_id;
         $this->emit('show-modal', 'show modal!');
     }
 
     public function Detalles($id)
     {
-
-
         $this->service1 = Service::find($id);
         $this->movimiento= Movimiento::find($id);
+        $this->proceso=false;
+        foreach ($this->service1->movservices as $mm){
+            if ($mm->movs->status == 'ACTIVO' && $mm->movs->type == 'PROCESO'){
+                $this->proceso=true;
+            }
+        }
 
         $this->typeworkid = $this->service1->type_work_id;
         $this->catprodservid = $this->service1->cat_prod_service_id;
@@ -172,13 +180,46 @@ class OrderServiceController extends Component
         $this->emit('show-detail', 'show modal!');
     }
 
+    public function DetallesTerminado($id)
+    {
+        $this->service1 = Service::find($id);
+        $this->movimiento= Movimiento::find($id);
+        $this->terminado=false;
+        foreach ($this->service1->movservices as $mm){
+            if ($mm->movs->status == 'ACTIVO' && $mm->movs->type == 'TERMINADO'){
+                $this->terminado=true;
+            }
+        }
+
+
+
+        $this->typeworkid = $this->service1->type_work_id;
+        $this->catprodservid = $this->service1->cat_prod_service_id;
+        $this->diagnostico = $this->service1->diagnostico;
+        $this->solucion = $this->service1->solucion;
+        $this->fecha_estimada_entrega = substr($this->service1->fecha_estimada_entrega, 0, 10);
+        $this->hora_entrega = substr($this->service1->fecha_estimada_entrega, 11, 14);
+        $this->import = $this->movimiento->import;
+        $this->on_account = $this->movimiento->on_account;
+        $this->saldo = $this->movimiento->saldo;
+        $this->detalle=$this->service1->detalle;
+        
+        $this->categoria=$this->service1->categoria->nombre;
+        $this->marca=$this->service1->marca;
+        $this->numeroOrden=$this->service1->order_service_id;
+        $this->detalle1=$this->service1->detalle;
+        $this->falla_segun_cliente=$this->service1->falla_segun_cliente;
+        $this->nombreCliente=$this->service1->movservices[0]->movs->climov->client->nombre;
+        $this->celular=$this->service1->movservices[0]->movs->climov->client->celular;
+        $this->usuarioId=$this->service1->movservices[0]->movs->user_id;
+
+        $this->emit('show-detalle-entrega', 'show modal!');
+    }
+
+
     public function GuardarCambio(Service $service)
     {
-        $rules = [
-        ];
-        $messages = [
-        ];
-
+        
 
         $from = Carbon::parse($this->fecha_estimada_entrega)->format('Y-m-d') . Carbon::parse($this->hora_entrega)->format(' H:i') . ':00';
         $service->update([
@@ -241,6 +282,7 @@ class OrderServiceController extends Component
                         'saldo' => $movimiento->saldo,
                         'user_id' => $this->users1,
                     ]);
+                    
                 
                 }else{
                     $mv = Movimiento::create([
@@ -251,6 +293,7 @@ class OrderServiceController extends Component
                         'saldo' => $movimiento->saldo,
                         'user_id' => Auth()->user()->id,
                     ]);
+                    
                 }
                     MovService::create([
                         'movimiento_id' => $mv->id,
@@ -318,7 +361,7 @@ class OrderServiceController extends Component
                     ]);
                     $this->GuardarCambio($service);
                     $this->resetUI();
-                    $this->emit('product-added', 'Servicio en Proceso');
+                    $this->emit('product-added', 'Servicio Terminado');
                 } catch (Exception $e) {
                     DB::rollback();
                     $this->emit('item-error', 'ERROR' . $e->getMessage());
@@ -365,9 +408,9 @@ class OrderServiceController extends Component
                         'status' =>'INACTIVO'
                         
                     ]);
-                    $this->GuardarCambio($service);
+                    
                     $this->resetUI();
-                    $this->emit('product-added', 'Servicio en Proceso');
+                    $this->emit('hide-detalle-entrega-msg', 'Servicio Entregado');
                 } catch (Exception $e) {
                     DB::rollback();
                     $this->emit('item-error', 'ERROR' . $e->getMessage());
@@ -426,6 +469,8 @@ class OrderServiceController extends Component
         $this->saldo = 0;
         $this->detalle= '';
 
+        $this->proceso=false;
+        $this->terminado=false;
 
         $this->resetValidation();
     }
