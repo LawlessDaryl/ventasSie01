@@ -77,6 +77,9 @@
         window.livewire.on('show-modal', Msg => {
             $('#theModal').modal('show')
         });
+        window.livewire.on('show-modal_s', Msg => {
+            $('#theModal_sub').modal('show')
+        });
         window.livewire.on('item-added', Msg => {
             $('#theModal').modal('hide')
             noty(Msg)

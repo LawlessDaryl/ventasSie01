@@ -10,21 +10,17 @@
         <div class="modal-body" style="background: #f0ecec">
 
 <div class="row">
-    <div class="col-sm-12">
-        <div class="input-group">
-            <div class="input-group-prepend">
-                <span class="input-group-text">
-                    <span class="fas fa-edit">Nombre</span>
-                </span>
-            </div>
+    <div class="col-lg-8">
+        <div class="form-group">
+            
+             <label> Nombre </label>
+            
             <input type="text" wire:model.lazy="name" class="form-control" placeholder="ej: Impresoras">
         </div>
         @error('name')<span class="text-danger er">{{ $message }}</span> @enderror
     </div>
-    
-</div>
-<div class="row">
 
+<<<<<<< HEAD
     <div class="col-sm-12">
         <div class="input-group">
             <div class="input-group-prepend">
@@ -48,6 +44,31 @@
             @endforeach
         </select>
         @error('categoryid') <span class="text-danger er">{{ $message }}</span>@enderror
+=======
+
+    <div class="col-lg-8">
+        <div class="form-group">
+            
+            <label>Descripcion</label>
+            
+            <input type="text" wire:model.lazy="descripcion" class="form-control" placeholder="ej: breve descripcion">
+        </div>
+        @error('descripcion')<span class="text-danger er">{{ $message }}</span> @enderror
     </div>
-</div>
+    <div class="col-lg-8">
+        <div class="form-group">
+            
+            <label>Categoria</label>
+            
+            <select wire:model='subcat1' class="form-control">
+                <option value="Elegir">Elegir</option>
+                @foreach ($subcat as $data)
+                
+                    <option value="{{$subcat->id}}">{{ $subcat->name }}</option>
+                @endforeach
+              
+            </select>
+>>>>>>> e68d32792045decd18f0e7fed9b6321c7cde6b04
+    </div>
+
 @include('common.modalFooter')
