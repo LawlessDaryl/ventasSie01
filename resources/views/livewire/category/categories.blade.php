@@ -10,7 +10,7 @@
                     <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
                         data-target="#theModal">Agregar Categoria</a>
                     <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
-                        data-target="#theModal">Agregar Subcategoria</a>
+                        data-target="#theModal_s">Agregar Subcategoria</a>
                     
                 </ul>
             </div>
@@ -28,10 +28,12 @@
                              
                             </tr>
                         </thead>
+                       
                         <tbody>
                             @foreach ($categories as $category)
                                 <tr>
                                     <td>
+                                        
                                         <h6>{{ $category->name }}</h6>
                                     </td>
                                     <td>
@@ -50,7 +52,7 @@
                                         </a>
                                         <a href="javascript:void(0)" wire:click="Ver({{$category->id}})"
                                             class="btn btn-dark mtmobile" title="Ver subcategorias">
-                                            <i class="fas fa-list"></i>
+                                            <i class="fas fa-eye"></i>
                                            
                                         </a>
                                         
@@ -66,7 +68,6 @@
     </div>
 
     @include('livewire.category.form')
-    @include('livewire.category.subcategories')
     @include('livewire.category.form_subcategory')
 </div>
 

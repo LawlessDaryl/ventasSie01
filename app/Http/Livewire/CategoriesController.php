@@ -14,7 +14,7 @@ class CategoriesController extends Component
     use WithFileUploads;
     use WithPagination;
 
-    public $name,$descripcion, $search, $selected_id, $pageTitle, $componentName,$categoria_padre;
+    public $name,$descripcion, $search,$categoryid, $selected_id, $pageTitle, $componentName,$categoria_padre;
     private $pagination = 5;
     public $category_s = 0;
 
@@ -56,10 +56,11 @@ class CategoriesController extends Component
     public function Edit($id)
 
     {
+        
         $record = Category::find($id, ['id', 'name', 'descripcion']);
+        $this->selected_id = $record->id;
         $this->name = $record->name;
         $this->descripcion = $record->descripcion;
-        $this->selected_id = $record->id;
 
         $this->emit('show-modal', 'show modal!');
     }
