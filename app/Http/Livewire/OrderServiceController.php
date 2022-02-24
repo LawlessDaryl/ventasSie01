@@ -26,7 +26,8 @@ class OrderServiceController extends Component
     $cliente, $fecha_estimada_entrega, $detalle, $status, $saldo, $on_account, $import, 
     $serviceid, $movtype, $orderservice, $users1,$service1,$categoria,$marca,$numeroOrden
     ,$detalle1,$falla_segun_cliente,$nombreCliente,$celular,$usuarioId,
-    $typew, $typeworkid, $catprodservid, $diagnostico, $solucion, $hora_entrega, $proceso, $terminado;
+    $typew, $typeworkid, $catprodservid, $diagnostico, $solucion, $hora_entrega, $proceso, 
+    $terminado, $costo, $detalle_costo, $nombreUsuario;
 
 
     private $pagination = 5;
@@ -52,7 +53,9 @@ class OrderServiceController extends Component
         $this->detalle= '';
         $this->proceso=false;
         $this->terminado=false;
-        
+        $this->costo=0;
+        $this->detalle_costo='';
+        $this->nombreUsuario='';
         
     }
     public function render()
@@ -133,8 +136,6 @@ class OrderServiceController extends Component
     {
         $this->service1 = Service::find($id);
         
-      
-    
         $this->categoria=$this->service1->categoria->nombre;
         $this->marca=$this->service1->marca;
         $this->numeroOrden=$this->service1->order_service_id;
@@ -151,71 +152,113 @@ class OrderServiceController extends Component
         $this->service1 = Service::find($id);
         $this->movimiento= Movimiento::find($id);
         $this->proceso=false;
-        foreach ($this->service1->movservices as $mm){
-            if ($mm->movs->status == 'ACTIVO' && $mm->movs->type == 'PROCESO'){
-                $this->proceso=true;
+        foreach ($this->service1->movservices as $mm)
+        {
+            if ($mm->movs->status == 'ACTIVO')
+            {
+                if($mm->movs->type == 'PROCESO')
+                {
+                    $this->proceso=true;
+                }
+                $this->import =$mm->movs->import;
+                $this->on_account =$mm->movs->on_account;
+                $this->saldo =$mm->movs->saldo;
+                $this->nombreCliente=$mm->movs->climov->client->nombre;
+                $this->celular=$mm->movs->climov->client->celular;
+                $this->usuarioId=$mm->movs->user_id;
             }
         }
 
-        $this->typeworkid = $this->service1->type_work_id;
-        $this->catprodservid = $this->service1->cat_prod_service_id;
+        $this->typeworkid = TypeWork::find($this->service1->type_work_id)->name;
+        $this->catprodservid = CatProdService::find($this->service1->cat_prod_service_id)->nombre;
         $this->diagnostico = $this->service1->diagnostico;
         $this->solucion = $this->service1->solucion;
         $this->fecha_estimada_entrega = substr($this->service1->fecha_estimada_entrega, 0, 10);
         $this->hora_entrega = substr($this->service1->fecha_estimada_entrega, 11, 14);
-        $this->import = $this->movimiento->import;
-        $this->on_account = $this->movimiento->on_account;
-        $this->saldo = $this->movimiento->saldo;
         $this->detalle=$this->service1->detalle;
-        
         $this->categoria=$this->service1->categoria->nombre;
         $this->marca=$this->service1->marca;
         $this->numeroOrden=$this->service1->order_service_id;
         $this->detalle1=$this->service1->detalle;
         $this->falla_segun_cliente=$this->service1->falla_segun_cliente;
-        $this->nombreCliente=$this->service1->movservices[0]->movs->climov->client->nombre;
-        $this->celular=$this->service1->movservices[0]->movs->climov->client->celular;
-        $this->usuarioId=$this->service1->movservices[0]->movs->user_id;
-
+        
         $this->emit('show-detail', 'show modal!');
     }
 
     public function DetallesTerminado($id)
     {
         $this->service1 = Service::find($id);
-        $this->movimiento= Movimiento::find($id);
+        $this->typeworkid = TypeWork::find($this->service1->type_work_id)->name;
+        $this->catprodservid = CatProdService::find($this->service1->cat_prod_service_id)->nombre;
+
         $this->terminado=false;
         foreach ($this->service1->movservices as $mm){
-            if ($mm->movs->status == 'ACTIVO' && $mm->movs->type == 'TERMINADO'){
-                $this->terminado=true;
+            if ($mm->movs->status == 'ACTIVO')
+            {
+                if($mm->movs->type == 'TERMINADO')
+                {
+                    $this->terminado=true;
+                }
+                $this->import =$mm->movs->import;
+                $this->on_account =$mm->movs->on_account;
+                $this->saldo =$mm->movs->saldo;
+                $this->nombreCliente=$mm->movs->climov->client->nombre;
+                $this->celular=$mm->movs->climov->client->celular;
+                $this->usuarioId=$mm->movs->user_id;
             }
         }
-
-
-
-        $this->typeworkid = $this->service1->type_work_id;
-        $this->catprodservid = $this->service1->cat_prod_service_id;
+        
         $this->diagnostico = $this->service1->diagnostico;
         $this->solucion = $this->service1->solucion;
         $this->fecha_estimada_entrega = substr($this->service1->fecha_estimada_entrega, 0, 10);
         $this->hora_entrega = substr($this->service1->fecha_estimada_entrega, 11, 14);
-        $this->import = $this->movimiento->import;
-        $this->on_account = $this->movimiento->on_account;
-        $this->saldo = $this->movimiento->saldo;
         $this->detalle=$this->service1->detalle;
-        
         $this->categoria=$this->service1->categoria->nombre;
         $this->marca=$this->service1->marca;
         $this->numeroOrden=$this->service1->order_service_id;
         $this->detalle1=$this->service1->detalle;
         $this->falla_segun_cliente=$this->service1->falla_segun_cliente;
-        $this->nombreCliente=$this->service1->movservices[0]->movs->climov->client->nombre;
-        $this->celular=$this->service1->movservices[0]->movs->climov->client->celular;
-        $this->usuarioId=$this->service1->movservices[0]->movs->user_id;
-
+        
         $this->emit('show-detalle-entrega', 'show modal!');
     }
 
+    public function InfoService($id)
+    {
+        $this->service1 = Service::find($id);
+
+        $this->typeworkid = TypeWork::find($this->service1->type_work_id)->name;
+        $this->catprodservid = CatProdService::find($this->service1->cat_prod_service_id)->nombre;
+        $this->diagnostico = $this->service1->diagnostico;
+        $this->solucion = $this->service1->solucion;
+        $this->fecha_estimada_entrega = substr($this->service1->fecha_estimada_entrega, 0, 10);
+        $this->hora_entrega = substr($this->service1->fecha_estimada_entrega, 11, 14);
+       
+        foreach ($this->service1->movservices as $mm){
+            if ($mm->movs->status == 'ACTIVO'){
+                $this->import =$mm->movs->import;
+                $this->on_account =$mm->movs->on_account;
+                $this->saldo =$mm->movs->saldo;
+                $this->nombreCliente=$mm->movs->climov->client->nombre;
+                $this->celular=$mm->movs->climov->client->celular;
+                $this->usuarioId=$mm->movs->user_id;
+                $this->nombreUsuario=$mm->movs->usermov->name;
+            }
+        }
+        $this->costo=$this->service1->costo;
+        $this->detalle_costo=$this->service1->detalle_costo;
+        $this->detalle=$this->service1->detalle;
+        $this->categoria=$this->service1->categoria->nombre;
+        $this->marca=$this->service1->marca;
+        $this->numeroOrden=$this->service1->order_service_id;
+        $this->falla_segun_cliente=$this->service1->falla_segun_cliente;
+
+        $this->emit('show-infserv', 'show modal!');
+    }
+
+    public function VerOpciones()
+    {
+        $this->emit('show-options', 'show modal!');
+    }
 
     public function GuardarCambio(Service $service)
     {
@@ -471,6 +514,10 @@ class OrderServiceController extends Component
 
         $this->proceso=false;
         $this->terminado=false;
+
+        $this->costo=0;
+        $this->detalle_costo='';
+        $this->nombreUsuario='';
 
         $this->resetValidation();
     }

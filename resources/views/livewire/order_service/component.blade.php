@@ -71,9 +71,9 @@
                                       
                  
                                         <div class="col-sm-5">
-                                            <h6>
-                                                {{ $service->categoria->nombre }}&nbsp{{ $service->marca }}&nbsp | {{ $service->detalle }}&nbsp | {{ $service->falla_segun_cliente }}
-                                            </h6>
+                                            <a href="javascript:void(0)" wire:click="InfoService({{ $service->id }})"
+                                                title="Ver Servicio"><h6>{{ $service->categoria->nombre }}&nbsp{{ $service->marca }}&nbsp | {{ $service->detalle }}&nbsp | {{ $service->falla_segun_cliente }}</h6></a>
+                                            
                                             @foreach ($service->movservices as $mm)
                                             
                                             @if ($mm->movs->status == 'ACTIVO')
@@ -98,10 +98,15 @@
                                                         title="Cambiar Estado">Entregar</a>
                                                     @endif
 
+                                                    @if($mm->movs->type != 'ENTREGADO')
                                                     <a href="javascript:void(0)" class="btn btn-dark mtmobile" wire:click="Detalles({{ $service->id }})"
                                                         title="Cambiar Estado">Detalle</a>
+                                                    @endif
 
-                                                   
+                                                    @if($mm->movs->type == 'ENTREGADO')
+                                                        <a href="javascript:void(0)" class="btn btn-dark mtmobile" wire:click="Detalles({{ $service->id }})"
+                                                            title="Ver Detalle">Detalle Entregado</a>
+                                                    @endif
 
                                                     @if (count($item->services) - 1 != $key)
                                                             <br />
@@ -146,7 +151,8 @@
                                     </td>
 
                                     <td class="text-center" width="7%">
-                                
+                                        <a href="javascript:void(0)" class="btn btn-dark mtmobile" wire:click="VerOpciones()"
+                                            title="Opciones">Opciones</a>
                                     </td>
 
                                 </tr>
@@ -161,6 +167,8 @@
     @include('livewire.order_service.form')
     @include('livewire.order_service.formdetalle')
     @include('livewire.order_service.formdetalleentrega')
+    @include('livewire.order_service.forminfoservicio')
+    @include('livewire.order_service.formopciones')
 </div>
 
 <script>
@@ -184,6 +192,7 @@
         window.livewire.on('modal-hide', msg => {
             $('#theModal').modal('hide')
         });
+
         window.livewire.on('show-detail', Msg => {
             $('#theDetail').modal('show')
         });
@@ -194,6 +203,7 @@
             $('#theDetail').modal('hide')
             noty(msg)
         });
+
         window.livewire.on('show-detalle-entrega', Msg => {
             $('#theDetalleEntrega').modal('show')
         });
@@ -202,6 +212,28 @@
         });
         window.livewire.on('hide-detalle-entrega-msg', msg => {
             $('#theDetalleEntrega').modal('hide')
+            noty(msg)
+        });
+
+        window.livewire.on('show-infserv', Msg => {
+            $('#theInfoService').modal('show')
+        });
+        window.livewire.on('hide-infserv', msg => {
+            $('#theInfoService').modal('hide')
+        });
+        window.livewire.on('hide-infserv-msg', msg => {
+            $('#theInfoService').modal('hide')
+            noty(msg)
+        });
+
+        window.livewire.on('show-options', Msg => {
+            $('#theOptions').modal('show')
+        });
+        window.livewire.on('hide-options', msg => {
+            $('#theOptions').modal('hide')
+        });
+        window.livewire.on('hide-options-msg', msg => {
+            $('#theOptions').modal('hide')
             noty(msg)
         });
 
