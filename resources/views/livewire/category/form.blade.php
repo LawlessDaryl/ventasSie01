@@ -15,6 +15,7 @@
         <div class="form-group">
             
             <label>Descripcion</label>
+            <label>holis</label>
             
             <input type="text" wire:model.lazy="descripcion" class="form-control" placeholder="ej: breve descripcion">
         </div>
