@@ -20,5 +20,6 @@
         </div>
         @error('descripcion')<span class="text-danger er">{{ $message }}</span> @enderror
     </div>
+</div>
 
 @include('common.modalFooter')

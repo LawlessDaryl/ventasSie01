@@ -66,9 +66,10 @@
             </div>
         </div>
     </div>
-
     @include('livewire.category.form')
     @include('livewire.category.form_subcategory')
+    @include('livewire.category.subcategories')
+
 </div>
 
 <script>
@@ -78,7 +79,7 @@
             $('#theModal').modal('show')
         });
         window.livewire.on('show-modal_s', Msg => {
-            $('#theModal_sub').modal('show')
+            $('#theModal_subcategory').modal('show')
         });
         window.livewire.on('item-added', Msg => {
             $('#theModal').modal('hide')
@@ -91,9 +92,7 @@
         window.livewire.on('item-deleted', Msg => {
             noty(Msg)
         });
-        window.livewire.on('show-modal_sub', Msg => {
-            $('#theModal_subcategory').modal('show')
-        });
+       
 
     });
 

@@ -17,12 +17,14 @@ class CategoriesController extends Component
     public $name,$descripcion, $search,$categoryid, $selected_id, $pageTitle, $componentName,$categoria_padre;
     private $pagination = 5;
     public $category_s = 0;
+    public $subcat_s=false;
 
     public function mount()
     {
         $this->pageTitle = 'Listado';
         $this->componentName = 'Categorias';
         $this->componentSub = 'Subcategorias';
+        $this->subcat_fill= 'Elegir';
     }
 
     public function paginationView()
@@ -41,35 +43,27 @@ class CategoriesController extends Component
             ->orWhere('categoria_padre',$this->category_s)
             ->paginate($this->pagination);
 
-
-
             $data2=Category::where('categoria_padre',$this->selected_id)
             ->select('categories.*')->get();
            
-
-
         return view('livewire.category.categories', ['categories' => $data,'subcat'=>$data2])
             ->extends('layouts.theme.app')
             ->section('content');
     }
 
     public function Edit($id)
-
     {
-        
         $record = Category::find($id, ['id', 'name', 'descripcion']);
         $this->selected_id = $record->id;
         $this->name = $record->name;
         $this->descripcion = $record->descripcion;
-
         $this->emit('show-modal', 'show modal!');
+
     }
     public function Ver(Category $category)
     {
         $this->selected_id = $category->id;
-       
-    
-        $this->emit('show-modal_sub', 'show modal!');
+        $this->emit('show-modal_s', 'show modal!');
     }
 
     public function Store()
@@ -81,11 +75,24 @@ class CategoriesController extends Component
             'name.min' => 'El nombre de la categoría debe tener al menos 3 caracteres'
         ];
         $this->validate($rules, $messages);
-
-        $category = Category::create([
-            'name' => $this->name,
-            'descripcion'=>$this->descripcion
-        ]);
+        if ($this->categoria_padre) 
+        {
+            $category = Category::create([
+                'name' => $this->name,
+                'descripcion'=>$this->descripcion,
+                'categoria_padre'=>$this->categoria_padre
+           
+                
+            ]);
+        }
+        else
+        {
+          
+            $category = Category::create([
+                'name' => $this->name,
+                'descripcion'=>$this->descripcion
+            ]);
+        }
 
         $category->save();
         $this->resetUI();

@@ -12,7 +12,9 @@ class ProductsController extends Component
 {
     use WithPagination;
     use WithFileUploads;
-    public $name, $barcode, $cost, $price, $stock, $alerts, $categoryid, $search, $image, $selected_id, $pageTitle, $componentName;
+    public $name, $barcode, $cost, $price,$codigo,$lote,$unidad,$industria,$caracteristicas,$status,$categoryid, $search,
+     $image, $selected_id, $pageTitle, $componentName;
+
     private $pagination = 5;
     public function paginationView()
     {
@@ -48,22 +50,31 @@ class ProductsController extends Component
     public function Store()
     {
         $rules = [
-            'name' => 'required|unique:products|min:3',
-            'cost' => 'required',
-            'price' => 'required',
-            'stock' => 'required',
-            'alerts' => 'required',
+            'nombre' => 'required|unique:products|min:5',
+            'codigo' => 'required',
+            'caracteristicas'=>'required|min:5',
+            'costo' => 'required',
+            'precio_venta' => 'required',
+            'cantidad_min' => 'required',
+            'unidad'=>'required',
+            'marca'=>'required',
+            'lote'=>'required',
+            'status'=>'required|not_in:Elegir',
             'categoryid' => 'required|not_in:Elegir'
         ];
         $messages = [
-            'name.required' => 'Nombre del producto requerido',
-            'name.unique' => 'Ya existe el nombre del producto',
-            'name.min' => 'El nombre debe ser contener al menos 3 caracteres',
+            'nombre.required' => 'Nombre del producto requerido',
+            'nombre.unique' => 'Ya existe el nombre del producto',
+            'nombre.min' => 'El nombre debe ser contener al menos 3 caracteres',
             'cost.required' => 'El costo es requerido',
-            'price.required' => 'El precio es requerido',
-            'stock.required' => 'El stock es requerido',
-            'alerts.required' => 'Ingresa el valor minimo en existencias',
+            'codigo.required' => 'Codigo del producto requerido',
+            'precio_venta.required' => 'El precio es requerido',
+            'cantidad_min.required' => 'La cantidad es requerida',
+            'lote.required' => 'Ingresa el valor minimo en existencias',
             'categoryid.not_in' => 'Elegir un nombre de categoria diferente de Elegir',
+            'categoryid.required' => 'La categoria es requerida',
+            'status.not_in' => 'Elegir un status diferente de Elegir',
+            'status.required' => 'El status es requerido'
         ];
 
         $this->validate($rules, $messages);
