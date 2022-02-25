@@ -12,10 +12,12 @@ class ProductsController extends Component
 {
     use WithPagination;
     use WithFileUploads;
-    public $name, $barcode, $cost, $price,$codigo,$lote,$unidad,$industria,$caracteristicas,$status,$categoryid, $search,
-     $image, $selected_id, $pageTitle, $componentName;
+    public $nombre, $barcode, $costo, $precio_venta,$cantidad_minima,$codigo,$lote,$unidad,$industria,$caracteristicas,$status,$categoryid, $search,
+     $image, $selected_id, $pageTitle, $componentName,$cate;
 
     private $pagination = 5;
+    public $subs=0;
+    public $selected_id2=0;
     public function paginationView()
     {
         return 'vendor.livewire.bootstrap';
@@ -25,6 +27,9 @@ class ProductsController extends Component
         $this->pageTitle = 'Listado';
         $this->componentName = 'Productos';
         $this->categoryid = 'Elegir';
+        $this->selected_id2=0;
+        $this->cate='Elegir';
+        
     }
     public function render()
     {
@@ -42,49 +47,53 @@ class ProductsController extends Component
                 ->orderBy('products.id', 'desc')
                 ->paginate($this->pagination);
         }
+        $sub= Category::where('categories.categoria_padre',$this->selected_id2)
+        ->where('categories.categoria_padre','!=','Elegir')
+        ->get();
+
+     
+
         return view('livewire.products.component', [
             'data' => $products,
-            'categories' => Category::orderBy('name', 'asc')->get()
+            'categories' => Category::where('categories.categoria_padre',0)->orderBy('name', 'asc')->get(),
+            'subcat'=>$sub,
+            
         ])->extends('layouts.theme.app')->section('content');
     }
     public function Store()
     {
         $rules = [
             'nombre' => 'required|unique:products|min:5',
-            'codigo' => 'required',
-            'caracteristicas'=>'required|min:5',
             'costo' => 'required',
             'precio_venta' => 'required',
             'cantidad_min' => 'required',
-            'unidad'=>'required',
-            'marca'=>'required',
-            'lote'=>'required',
-            'status'=>'required|not_in:Elegir',
             'categoryid' => 'required|not_in:Elegir'
         ];
         $messages = [
             'nombre.required' => 'Nombre del producto requerido',
             'nombre.unique' => 'Ya existe el nombre del producto',
             'nombre.min' => 'El nombre debe ser contener al menos 3 caracteres',
-            'cost.required' => 'El costo es requerido',
-            'codigo.required' => 'Codigo del producto requerido',
-            'precio_venta.required' => 'El precio es requerido',
-            'cantidad_min.required' => 'La cantidad es requerida',
-            'lote.required' => 'Ingresa el valor minimo en existencias',
-            'categoryid.not_in' => 'Elegir un nombre de categoria diferente de Elegir',
+            'costo.required' =>'El costo es requerido',
+            'precio_venta.required'=> 'El precio es requerido',
+            'cantidad_min.required'=> 'La cantidad minima es requerida',
             'categoryid.required' => 'La categoria es requerida',
-            'status.not_in' => 'Elegir un status diferente de Elegir',
-            'status.required' => 'El status es requerido'
+            'categoryid.not_in' => 'Elegir un nombre de categoria diferente de Elegir'
         ];
 
         $this->validate($rules, $messages);
         $product = Product::create([
-            'name' => $this->name,
-            'cost' => $this->cost,
-            'price' => $this->price,
+            'nombre' => $this->nombre,
+            'costo' => $this->costo,
+            'precio_venta' => $this->precio_venta,
             'barcode' => $this->barcode,
-            'stock' => $this->stock,
-            'alerts' => $this->alerts,
+            'codigo'=>$this->codigo,
+            'caracteristicas'=>$this->caracteristicas,
+            'lote'=>$this->lote,
+            'unidad'=>$this->unidad,
+            'marca' => $this->marca,
+            'industria' => $this->industria,
+            'cantidad_minima'=>$this->cantidad_minima,
+            'status'=>$this->status,
             'category_id' => $this->categoryid
         ]);
         if ($this->image) {
@@ -103,12 +112,15 @@ class ProductsController extends Component
     public function Edit(Product $product)
     {
         $this->selected_id = $product->id;
-        $this->name = $product->name;
+        $this->costo = $product->costo;
+        $this->nombre = $product->nombre;
+        $this->precio_venta=$product->precio_venta;
+        $this->caracteristicas=$product->caracteristicas;
         $this->barcode = $product->barcode;
-        $this->cost = $product->cost;
-        $this->price = $product->price;
-        $this->stock = $product->stock;
-        $this->alerts = $product->alerts;
+        $this->lote = $product->lote;
+        $this->unidad = $product->unidad;
+        $this->marca = $product->marca;
+        $this->industria = $product->industria;
         $this->categoryid = $product->category_id;
         $this->image = null;
 
@@ -117,32 +129,37 @@ class ProductsController extends Component
     public function Update()
     {
         $rules = [
-            'name' => "required|min:3|unique:products,name,{$this->selected_id}",
-            'cost' => 'required',
-            'price' => 'required',
-            'stock' => 'required',
-            'alerts' => 'required',
+            'nombre' => "required|min:3|unique:products,nombre,{$this->selected_id}",
+            'costo' => 'required',
+            'precio_venta' => 'required',
+            'cantidad_min' => 'required',
             'categoryid' => 'required|not_in:Elegir'
         ];
         $messages = [
-            'name.required' => 'Nombre del producto requerido',
-            'name.unique' => 'Ya existe el nombre del producto',
-            'name.min' => 'El nombre debe ser contener al menos 3 caracteres',
-            'cost.required' => 'El costo es requerido',
-            'price.required' => 'El precio es requerido',
-            'stock.required' => 'El stock es requerido',
-            'alerts.required' => 'Ingresa el valor minimo en existencias',
-            'categoryid.not_int' => 'Elegir un nombre de categoria diferente de elegir',
+            'nombre.required' => 'Nombre del producto requerido',
+            'nombre.unique' => 'Ya existe el nombre del producto',
+            'nombre.min' => 'El nombre debe ser contener al menos 3 caracteres',
+            'costo.required' =>'El costo es requerido',
+            'precio_venta.required'=> 'El precio es requerido',
+            'cantidad_min.required'=> 'La cantidad minima es requerida',
+            'categoryid.required' => 'La categoria es requerida',
+            'categoryid.not_in' => 'Elegir un nombre de categoria diferente de Elegir'
         ];
         $this->validate($rules, $messages);
         $product = Product::find($this->selected_id);
         $product->update([
-            'name' => $this->name,
-            'cost' => $this->cost,
-            'price' => $this->price,
+            'nombre' => $this->nombre,
+            'costo' => $this->costo,
+            'precio_venta' => $this->precio_venta,
             'barcode' => $this->barcode,
-            'stock' => $this->stock,
-            'alerts' => $this->alerts,
+            'codigo'=>$this->codigo,
+            'caracteristicas'=>$this->caracteristicas,
+            'lote'=>$this->lote,
+            'unidad'=>$this->unidad,
+            'marca' => $this->marca,
+            'industria' => $this->industria,
+            'cantidad_minima'=>$this->cantidad_minima,
+            'status'=>$this->status,
             'category_id' => $this->categoryid
         ]);
         if ($this->image) {
@@ -178,16 +195,19 @@ class ProductsController extends Component
     }
     public function resetUI()
     {
-        $this->name = '';
-        $this->barcode = '';
-        $this->cost = '';
-        $this->price = '';
-        $this->stock = '';
-        $this->alerts = '';
-        $this->search = '';
+        
+        $this->selected_id =0;
+        $this->costo = '';
+        $this->nombre = '';
+        $this->precio_venta='';
+        $this->caracteristicas='';
+        $this->barcode ='';
+        $this->lote = '';
+        $this->unidad = '';
+        $this->marca = '';
+        $this->industria = '';
         $this->categoryid = 'Elegir';
         $this->image = null;
-        $this->selected_id = 0;
 
         $this->resetValidation();
     }
