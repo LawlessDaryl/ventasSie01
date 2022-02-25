@@ -3,18 +3,16 @@
         <div class="modal-content">
             <div class="modal-header" style="background: #b3a8a8">
                 <h5 class="modal-title text-white">
-                    <b>REGISTRAR SERVICIO TÉCNICO{{ $orderservice == '0' ? 'NO DEFINIDO' : $orderservice }} </b>
-                    | {{ $selected_id > 0 ? 'EDITAR' : 'FINALIZADO' }}
+                    <b>REGISTRAR SERVICIO TÉCNICO</b>
                 </h5>
                 <h6 class="text-center text-warning" wire:loading>POR FAVOR ESPERE</h6>
             </div>
             <div class="modal-body" style="background: #f0ecec">
-                <div class="row">
+                
                     <div class="text-center">
                         <label><h5><b>CLIENTE: {{ $nombreCliente }}</b></h5></label><br/>
                         <label><h6>Teléfono: {{ $celular }}</h6></label>
                     </div>
-                </div>
                 
             <div class="row mt-3 container">
                 <div class="col-sm-12 col-md-12">

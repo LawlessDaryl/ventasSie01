@@ -9,24 +9,24 @@
             </div>
             <div class="modal-body" style="background: #f0ecec">
 
-                <div class="row">
-                    <div class="col-lg-4 col-sm-12 col-md-6">
+                <div class="text-center">
+                    <div class="col-lg-12 col-sm-12 col-md-6">
                         <div class="form-group">
-                            <button type="button" wire:click.prevent="resetUI()" class="btn btn-dark close-btn text-info"
-                            data-dismiss="modal" style="background: #3b3f5c">Imprimir</button>
+                                <a class="btn btn-dark mb-2" href="{{ url('reporte/pdf' . '/' . $orderservice) }}" 
+                                target="_blank">Imprimir</a>
                         </div>
                     </div>
 
-                    <div class="col-lg-4 col-sm-12 col-md-6">
+                    <div class="col-lg-12 col-sm-12 col-md-6">
                         <div class="form-group">
-                            <button type="button" wire:click.prevent="resetUI()" class="btn btn-dark close-btn text-info"
-                            data-dismiss="modal" style="background: #3b3f5c">Anular</button>
+                            <button type="button" wire:click.prevent="EditService({{$orderservice}})" class="btn btn-dark close-btn text-info"
+                            data-dismiss="modal">Modificar Servicio</button>
                         </div>
                     </div>
 
-                    <div class="col-lg-4 col-sm-12 col-md-6">
+                    <div class="col-lg-12 col-sm-12 col-md-6">
                         <button type="button" wire:click.prevent="resetUI()" class="btn btn-dark close-btn text-info"
-                        data-dismiss="modal" style="background: #3b3f5c">ATRÁS</button>
+                        data-dismiss="modal">Eliminar Servicio</button>
                     </div>
                 </div>
             </div>

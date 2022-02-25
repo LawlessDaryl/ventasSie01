@@ -104,7 +104,7 @@
                                                     @endif
 
                                                     @if($mm->movs->type == 'ENTREGADO')
-                                                        <a href="javascript:void(0)" class="btn btn-dark mtmobile" wire:click="Detalles({{ $service->id }})"
+                                                        <a href="javascript:void(0)" class="btn btn-dark mtmobile" wire:click="DetalleEntregado({{ $service->id }})"
                                                             title="Ver Detalle">Detalle Entregado</a>
                                                     @endif
 
@@ -151,7 +151,7 @@
                                     </td>
 
                                     <td class="text-center" width="7%">
-                                        <a href="javascript:void(0)" class="btn btn-dark mtmobile" wire:click="VerOpciones()"
+                                        <a href="javascript:void(0)" class="btn btn-dark mtmobile" wire:click="VerOpciones({{$item->id}})"
                                             title="Opciones">Opciones</a>
                                     </td>
 
@@ -169,6 +169,8 @@
     @include('livewire.order_service.formdetalleentrega')
     @include('livewire.order_service.forminfoservicio')
     @include('livewire.order_service.formopciones')
+    @include('livewire.order_service.formentregado')
+    @include('livewire.order_service.formeliminar')
 </div>
 
 <script>
@@ -234,6 +236,28 @@
         });
         window.livewire.on('hide-options-msg', msg => {
             $('#theOptions').modal('hide')
+            noty(msg)
+        });
+
+        window.livewire.on('show-enddetail', Msg => {
+            $('#theEndDetail').modal('show')
+        });
+        window.livewire.on('hide-enddetail', msg => {
+            $('#theEndDetail').modal('hide')
+        });
+        window.livewire.on('hide-enddetail-msg', msg => {
+            $('#theEndDetail').modal('hide')
+            noty(msg)
+        });
+
+        window.livewire.on('show-deletemodal', Msg => {
+            $('#theDeleteModal').modal('show')
+        });
+        window.livewire.on('hide-deletemodal', msg => {
+            $('#theDeleteModal').modal('hide')
+        });
+        window.livewire.on('hide-deletemodal-msg', msg => {
+            $('#theDeleteModal').modal('hide')
             noty(msg)
         });
 

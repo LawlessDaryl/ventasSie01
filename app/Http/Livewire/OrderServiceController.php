@@ -27,7 +27,7 @@ class OrderServiceController extends Component
     $serviceid, $movtype, $orderservice, $users1,$service1,$categoria,$marca,$numeroOrden
     ,$detalle1,$falla_segun_cliente,$nombreCliente,$celular,$usuarioId,
     $typew, $typeworkid, $catprodservid, $diagnostico, $solucion, $hora_entrega, $proceso, 
-    $terminado, $costo, $detalle_costo, $nombreUsuario;
+    $terminado, $costo, $detalle_costo, $nombreUsuario, $modificar, $type_service;
 
 
     private $pagination = 5;
@@ -131,6 +131,23 @@ class OrderServiceController extends Component
         $this->redirect('service');
     }
 
+    public function EditService($id)
+    {
+        $this->orderservice=$id;
+        $order = OrderService::find($id);
+        $this->nombreCliente=$order->services[0]->movservices[0]->movs->climov->client;
+        $this->type_service=$order->type_service;
+        session(['clie' => $this->nombreCliente]);
+        session(['od' => $this->orderservice]);
+        session(['tservice' => $this->type_service]);
+
+        $this->redirect('service');
+    }
+
+    public function Delete()
+    {
+        $this->emit('show-deletemodal', 'show modal!');
+    }
     
     public function Edit($id)
     {
@@ -150,7 +167,8 @@ class OrderServiceController extends Component
     public function Detalles($id)
     {
         $this->service1 = Service::find($id);
-        $this->movimiento= Movimiento::find($id);
+        $this->typeworkid = TypeWork::find($this->service1->type_work_id)->id;
+        $this->catprodservid = CatProdService::find($this->service1->cat_prod_service_id)->id;
         $this->proceso=false;
         foreach ($this->service1->movservices as $mm)
         {
@@ -168,9 +186,8 @@ class OrderServiceController extends Component
                 $this->usuarioId=$mm->movs->user_id;
             }
         }
-
-        $this->typeworkid = TypeWork::find($this->service1->type_work_id)->name;
-        $this->catprodservid = CatProdService::find($this->service1->cat_prod_service_id)->nombre;
+        $this->costo=$this->service1->costo;
+        $this->detalle_costo=$this->service1->detalle_costo;
         $this->diagnostico = $this->service1->diagnostico;
         $this->solucion = $this->service1->solucion;
         $this->fecha_estimada_entrega = substr($this->service1->fecha_estimada_entrega, 0, 10);
@@ -179,7 +196,6 @@ class OrderServiceController extends Component
         $this->categoria=$this->service1->categoria->nombre;
         $this->marca=$this->service1->marca;
         $this->numeroOrden=$this->service1->order_service_id;
-        $this->detalle1=$this->service1->detalle;
         $this->falla_segun_cliente=$this->service1->falla_segun_cliente;
         
         $this->emit('show-detail', 'show modal!');
@@ -188,8 +204,8 @@ class OrderServiceController extends Component
     public function DetallesTerminado($id)
     {
         $this->service1 = Service::find($id);
-        $this->typeworkid = TypeWork::find($this->service1->type_work_id)->name;
-        $this->catprodservid = CatProdService::find($this->service1->cat_prod_service_id)->nombre;
+        $this->typeworkid = TypeWork::find($this->service1->type_work_id)->id;
+        $this->catprodservid = CatProdService::find($this->service1->cat_prod_service_id)->id;
 
         $this->terminado=false;
         foreach ($this->service1->movservices as $mm){
@@ -207,7 +223,8 @@ class OrderServiceController extends Component
                 $this->usuarioId=$mm->movs->user_id;
             }
         }
-        
+        $this->costo=$this->service1->costo;
+        $this->detalle_costo=$this->service1->detalle_costo;
         $this->diagnostico = $this->service1->diagnostico;
         $this->solucion = $this->service1->solucion;
         $this->fecha_estimada_entrega = substr($this->service1->fecha_estimada_entrega, 0, 10);
@@ -220,6 +237,33 @@ class OrderServiceController extends Component
         $this->falla_segun_cliente=$this->service1->falla_segun_cliente;
         
         $this->emit('show-detalle-entrega', 'show modal!');
+    }
+
+    public function DetalleEntregado($id)
+    {
+        $this->service1 = Service::find($id);
+        foreach ($this->service1->movservices as $mm)
+        {
+            if ($mm->movs->status == 'ACTIVO')
+            {
+                $this->import =$mm->movs->import;
+                $this->on_account =$mm->movs->on_account;
+                $this->saldo =$mm->movs->saldo;
+                $this->nombreCliente=$mm->movs->climov->client->nombre;
+                $this->celular=$mm->movs->climov->client->celular;
+                $this->usuarioId=$mm->movs->user_id;
+            }
+        }
+        $this->costo=$this->service1->costo;
+        $this->detalle_costo=$this->service1->detalle_costo;
+        $this->numeroOrden=$this->service1->order_service_id;
+        $this->emit('show-enddetail', 'show modal!');
+    }
+
+    public function Imprimir($id)
+    {
+        $this->orderservice=OrderService::find($id);
+
     }
 
     public function InfoService($id)
@@ -255,8 +299,10 @@ class OrderServiceController extends Component
         $this->emit('show-infserv', 'show modal!');
     }
 
-    public function VerOpciones()
+    public function VerOpciones($id)
     {
+        $this->orderservice=$id;
+        
         $this->emit('show-options', 'show modal!');
     }
 
