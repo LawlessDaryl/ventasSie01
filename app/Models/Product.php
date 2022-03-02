@@ -9,8 +9,8 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nombre','caracteristicas','codigo','barcode','lote','unidad','cantidad_minima','costo',
-                         'marca','industria','status','precio_venta','image', 'category_id'];
+    protected $fillable = ['nombre','costo','caracteristicas','codigo','barcode','lote','unidad','marca','industria','precio_venta','cantidad_minima',
+                         'status','image', 'category_id'];
 
 
     public function category()
@@ -22,7 +22,7 @@ class Product extends Model
     {
         if ($this->image == null)
         {
-            return 'noimage.jpg';
+           return 'noimage.jpg';
         }
         if (file_exists('storage/productos/'. $this->image))
             return $this->image;

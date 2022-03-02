@@ -31,14 +31,24 @@
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
             <label>Unidad</label>
-            <input type="text" wire:model.lazy="unidad" class="form-control" placeholder="ej: 012020222">
-            @error('barcode') <span class="text-danger er">{{ $message }}</span>@enderror
+            <input type="text" list="un" name="un" wire:model.lazy="unidad" class="form-control" placeholder="ej: unidad de medida">
+            <datalist id="un">
+                @foreach($unidades as $unidad)
+                <option value="{{ $unidad->nombre }}" selected>{{ $unidad->nombre }}</option>
+                @endforeach
+            </datalist>
+            @error('unidad') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>
     </div>
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
             <label>Marca</label>
-            <input type="text" wire:model.lazy="marca" class="form-control" placeholder="ej: 012020222">
+            <input type="text" list="marc" name="marca" wire:model.lazy="marca" class="form-control" placeholder="ej: marca">
+            <datalist id="marc">
+                @foreach($marcas as $unidad)
+                <option value="{{ $unidad->nombre }}" selected>{{ $unidad->nombre }}</option>
+                @endforeach
+            </datalist>
             @error('barcode') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>
     </div>
@@ -54,6 +64,13 @@
             <label>Precio de venta</label>
             <input type="text" wire:model.lazy="precio_venta" class="form-control" placeholder="ej: 012020222">
             @error('barcode') <span class="text-danger er">{{ $message }}</span>@enderror
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-4">
+        <div class="form-group">
+            <label>Costo</label>
+            <input type="text" wire:model.lazy="costo" class="form-control" placeholder="ej: 12">
+            @error('costo') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>
     </div>
   
@@ -74,14 +91,14 @@
                     <option value="{{ $category->id }}">{{ $category->name }}</option>
                 @endforeach
             </select>
-            @error('categoryid') <span class="text-danger er">{{ $message }}</span>@enderror
+      
         </div>
     </div>
 
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
             <label>Subcategoría</label>
-            <select wire:model='cate' class="form-control">
+            <select wire:model='categoryid' class="form-control">
                 <option value="Elegir" disabled>Elegir</option>
                 @foreach ($subcat as $category)
                     <option value="{{ $category->id }}">{{ $category->name }}</option>

@@ -16,6 +16,7 @@ class CreateProductsTable extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('nombre',255);
+            $table->decimal('costo',10,2);
             $table->string('caracteristicas',255)->nullable();
             $table->string('codigo',45)->nullable();
             $table->string('barcode',45)->nullable();
@@ -23,7 +24,7 @@ class CreateProductsTable extends Migration
             $table->string('unidad')->nullable();
             $table->string('marca')->nullable();
             $table->string('industria')->nullable();
-            $table->string('precio_venta');
+            $table->decimal('precio_venta',10,2);
             $table->string('cantidad_minima');
             $table->enum("status", ['ACTIVO','INACTIVO'])->default('ACTIVO');
             $table->string('image',55)->nullable();

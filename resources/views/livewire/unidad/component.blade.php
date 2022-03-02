@@ -54,7 +54,7 @@
         </div>
     </div>
     @include('livewire.unidad.form')
-</div>z
+</div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {

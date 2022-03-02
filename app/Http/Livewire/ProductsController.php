@@ -3,7 +3,9 @@
 namespace App\Http\Livewire;
 
 use App\Models\Category;
+use App\Models\Marca;
 use App\Models\Product;
+use App\Models\Unidad;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -13,7 +15,7 @@ class ProductsController extends Component
     use WithPagination;
     use WithFileUploads;
     public $nombre, $barcode, $costo, $precio_venta,$cantidad_minima,$codigo,$lote,$unidad,$industria,$caracteristicas,$status,$categoryid, $search,
-     $image, $selected_id, $pageTitle, $componentName,$cate;
+     $image, $selected_id, $pageTitle, $componentName,$cate,$marca;
 
     private $pagination = 5;
     public $subs=0;
@@ -57,6 +59,8 @@ class ProductsController extends Component
             'data' => $products,
             'categories' => Category::where('categories.categoria_padre',0)->orderBy('name', 'asc')->get(),
             'subcat'=>$sub,
+            'unidades'=>Unidad::orderBy('nombre','asc')->get(),
+            'marcas'=>Marca::orderBy('nombre','asc')->get()
             
         ])->extends('layouts.theme.app')->section('content');
     }
@@ -66,7 +70,7 @@ class ProductsController extends Component
             'nombre' => 'required|unique:products|min:5',
             'costo' => 'required',
             'precio_venta' => 'required',
-            'cantidad_min' => 'required',
+            'cantidad_minima' => 'required',
             'categoryid' => 'required|not_in:Elegir'
         ];
         $messages = [
@@ -75,7 +79,7 @@ class ProductsController extends Component
             'nombre.min' => 'El nombre debe ser contener al menos 3 caracteres',
             'costo.required' =>'El costo es requerido',
             'precio_venta.required'=> 'El precio es requerido',
-            'cantidad_min.required'=> 'La cantidad minima es requerida',
+            'cantidad_minima.required'=> 'La cantidad minima es requerida',
             'categoryid.required' => 'La categoria es requerida',
             'categoryid.not_in' => 'Elegir un nombre de categoria diferente de Elegir'
         ];
