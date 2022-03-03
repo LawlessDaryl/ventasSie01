@@ -34,7 +34,7 @@ use App\Http\Livewire\OrderServiceController;
 use App\Http\Livewire\ServiciosController;
 use App\Http\Livewire\LocalizacionController;
 use App\Http\Livewire\StrProveedorController;
-use App\Http\Livewire\MarcaController;
+use App\Http\Livewire\MarcasController;
 use Illuminate\Support\Facades\Auth;
 
 Auth::routes();
@@ -88,7 +88,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('locations', LocalizacionController::class)->name('locations');
     Route::get('unidades', UnidadesController::class)->name('unities');
-    Route::get('marcas', MarcaController::class)->name('brands');
+    Route::get('marcas', MarcasController::class)->name('brands');
 
     
 

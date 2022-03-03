@@ -4,7 +4,7 @@
         <div class="form-group">
             <label>Nombre</label>
             <input type="text" wire:model.lazy="nombre" class="form-control" placeholder="ej: Curso Laravel">
-            @error('name') <span class="text-danger er">{{ $message }}</span>@enderror
+            @error('nombre') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>
     </div>
     <div class="col-sm-12 col-md-4">
@@ -18,14 +18,14 @@
         <div class="form-group">
             <label>Caracteristicas</label>
             <input type="text" wire:model.lazy="caracteristicas" class="form-control" placeholder="ej: 012020222">
-            @error('barcode') <span class="text-danger er">{{ $message }}</span>@enderror
+            @error('caracteristicas') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>
     </div>
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
             <label>Lote de produccion</label>
             <input type="text" wire:model.lazy="lote" class="form-control" placeholder="ej: 012020222">
-            @error('barcode') <span class="text-danger er">{{ $message }}</span>@enderror
+            @error('lote') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>
     </div>
     <div class="col-sm-12 col-md-4">
@@ -49,21 +49,21 @@
                 <option value="{{ $unidad->nombre }}" selected>{{ $unidad->nombre }}</option>
                 @endforeach
             </datalist>
-            @error('barcode') <span class="text-danger er">{{ $message }}</span>@enderror
+            @error('marca') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>
     </div>
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
             <label>Industria</label>
             <input type="text" wire:model.lazy="industria" class="form-control" placeholder="ej: 012020222">
-            @error('barcode') <span class="text-danger er">{{ $message }}</span>@enderror
+            @error('industria') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>
     </div>
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
             <label>Precio de venta</label>
             <input type="text" wire:model.lazy="precio_venta" class="form-control" placeholder="ej: 012020222">
-            @error('barcode') <span class="text-danger er">{{ $message }}</span>@enderror
+            @error('precio_venta') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>
     </div>
     <div class="col-sm-12 col-md-4">
@@ -77,8 +77,8 @@
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
             <label>Cantidad Míninma</label>
-            <input type="number" wire:model.lazy="cantidad_minima" class="form-control" placeholder="ej: 0.0">
-            @error('alerts') <span class="text-danger er">{{ $message }}</span>@enderror
+            <input type="number" wire:model.lazy="cantidad_minima" class="form-control" placeholder="ej: 20">
+            @error('cantidad_minima') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>
     </div>
 

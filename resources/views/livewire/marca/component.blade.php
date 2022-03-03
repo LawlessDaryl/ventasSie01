@@ -8,7 +8,7 @@
                 <ul class="tabs tab-pills">
                     
                         <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
-                        data-target="#theModal">Agregar Unidad</a>
+                        data-target="#theModal">Agregar Marca</a>
                     
                 </ul>
             </div>
@@ -19,17 +19,14 @@
                     <table class="table table-unbordered table-hover mt-2">
                         <thead class="text-white" style="background: #3B3F5C">
                             <tr>
-                                <th class="table-th text-withe text-center">ITEM</th>
+                               
                                 <th class="table-th text-withe text-center">NOMBRE</th>                                
                                 <th class="table-th text-withe text-center">ACCIONES</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($data_unidad as $data)
+                            @foreach ($marcas as $data)
                                 <tr>
-                                    <td>
-                                        <h6 class="text-center">{{ $data->id }}</h6>
-                                    </td>
                                     <td>
                                         <h6 class="text-center">{{ $data->nombre }}</h6>
                                     </td>
@@ -48,24 +45,24 @@
                             @endforeach
                         </tbody>
                     </table>
-                    {{ $data_unidad->links() }}
+                    {{ $marcas->links()}}
                 </div>
             </div>
         </div>
     </div>
-    @include('livewire.unidad.form')
+    @include('livewire.marca.form')
 </div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
-        window.livewire.on('unidad-added', msg => {
+        window.livewire.on('marca-added', msg => {
             $('#theModal').modal('hide')
         });
-        window.livewire.on('unidad-updated', msg => {
+        window.livewire.on('marca-updated', msg => {
             $('#theModal').modal('hide')
         });
-        window.livewire.on('unidad-deleted', msg => {
+        window.livewire.on('marca-deleted', msg => {
             ///
         });
         window.livewire.on('show-modal', msg => {
@@ -85,7 +82,7 @@
         swal.fire({
             title: 'CONFIRMAR',
             icon: 'warning',
-            text: 'Confirmar eliminar la unidad ' + '"' + nombre + '"',
+            text: 'Confirmar eliminar la marca ' + '"' + nombre + '"',
             showCancelButton: true,
             cancelButtonText: 'Cerrar',
             cancelButtonColor: '#383838',

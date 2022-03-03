@@ -14,11 +14,11 @@ class ProductsController extends Component
 {
     use WithPagination;
     use WithFileUploads;
-    public $nombre, $barcode, $costo, $precio_venta,$cantidad_minima,$codigo,$lote,$unidad,$industria,$caracteristicas,$status,$categoryid, $search,
+    public $nombre, $barcode, $costo, $precio_venta,$cantidad_minima,
+    $codigo,$lote,$unidad,$industria,$caracteristicas,$status,$categoryid, $search,
      $image, $selected_id, $pageTitle, $componentName,$cate,$marca;
 
     private $pagination = 5;
-    public $subs=0;
     public $selected_id2=0;
     public function paginationView()
     {
@@ -58,9 +58,9 @@ class ProductsController extends Component
         return view('livewire.products.component', [
             'data' => $products,
             'categories' => Category::where('categories.categoria_padre',0)->orderBy('name', 'asc')->get(),
-            'subcat'=>$sub,
             'unidades'=>Unidad::orderBy('nombre','asc')->get(),
-            'marcas'=>Marca::orderBy('nombre','asc')->get()
+            'marcas'=>Marca::select('nombre')->orderBy('nombre','asc')->get(),
+            'subcat'=>$sub
             
         ])->extends('layouts.theme.app')->section('content');
     }
@@ -85,6 +85,7 @@ class ProductsController extends Component
         ];
 
         $this->validate($rules, $messages);
+
         $product = Product::create([
             'nombre' => $this->nombre,
             'costo' => $this->costo,
@@ -97,12 +98,11 @@ class ProductsController extends Component
             'marca' => $this->marca,
             'industria' => $this->industria,
             'cantidad_minima'=>$this->cantidad_minima,
-            'status'=>$this->status,
             'category_id' => $this->categoryid
         ]);
         if ($this->image) {
             $customFileName = uniqid() . '_.' . $this->image->extension();
-            $this->image->storeAs('public/productos', $customFileName);
+            $this->image->storeAs('public/images/productos/', $customFileName);
             $product->image = $customFileName;
             $product->save();
         }

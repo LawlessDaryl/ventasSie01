@@ -2,14 +2,13 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\Unidad;
+use App\Models\Marca;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 
-class UnidadesController extends Component
+class MarcasController extends Component
 {
-
     use WithPagination;
     use WithFileUploads;
     public  $search, $nombre, $selected_id;
@@ -23,29 +22,25 @@ class UnidadesController extends Component
     public function mount()
     {
         $this->pageTitle = 'Listado';
-        $this->componentName = 'Unidades';
+        $this->componentName = 'Marcas';
         $this->selected_id = 0;
     }
 
-
     public function render()
     {
-        
-            if (strlen($this->search) > 0)
-                $unidad = Unidad::select('unidads.*')
-                ->where('nombre', 'like', '%' . $this->search . '%')
-                ->paginate($this->pagination);
+        if (strlen($this->search) > 0)
+                $marcas = Marca::select('marcas.*')
+                ->where('nombre', 'like', '%' . $this->search . '%')->paginate($this->pagination);
             else
-            $unidad = Unidad::select('unidads.*')
-            ->paginate($this->pagination);
+            $marcas = Marca::select('marcas.*')->paginate($this->pagination);
 
-            return view('livewire.unidad.component', [
-                'data_unidad' => $unidad
+            return view('livewire.marca.component', [
+                'marcas' => $marcas
             ])
                 ->extends('layouts.theme.app')
                 ->section('content');
-        
     }
+
     public function Store()
     {
         $rules = [
@@ -58,14 +53,14 @@ class UnidadesController extends Component
         ];
         $this->validate($rules, $messages);
 
-        Unidad::create([
+        Marca::create([
             'nombre' => $this->nombre
         ]);
 
         $this->resetUI();
-        $this->emit('unidad-added', 'Unidad Registrada');
+        $this->emit('marca-added', 'Marca Registrada');
     }
-    public function Edit(Unidad $unity)
+    public function Edit(Marca $unity)
     {
         $this->selected_id = $unity->id;
         $this->nombre = $unity->nombre;
@@ -85,7 +80,7 @@ class UnidadesController extends Component
 
         ];
         $this->validate($rules, $messages);
-        $uni = Unidad::find($this->selected_id);
+        $uni = Marca::find($this->selected_id);
         $uni->update([
             'nombre' => $this->nombre,
             
@@ -93,15 +88,15 @@ class UnidadesController extends Component
         $uni->save();
 
         $this->resetUI();
-        $this->emit('unidad-updated', 'Unidad Actualizada');
+        $this->emit('marca-updated', 'Marca Actualizada');
     }
     protected $listeners = ['deleteRow' => 'Destroy'];
 
-    public function Destroy(Unidad $uni)
+    public function Destroy(Marca $uni)
     {
         $uni->delete();
         $this->resetUI();
-        $this->emit('unidad-deleted', 'Unidad Eliminada');
+        $this->emit('marca-deleted', 'Marca Eliminada');
     }
 
     public function resetUI()

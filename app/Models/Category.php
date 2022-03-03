@@ -16,6 +16,10 @@ class Category extends Model
         return $this->hasMany(Product::class);
     }
 
+    public function subcategory(){
+        return $this->hasMany(Category::class,'categoria_padre');
+    }
+
     
   
 }

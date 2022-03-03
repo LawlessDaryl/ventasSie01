@@ -49,6 +49,9 @@ class CategoriesController extends Component
         return view('livewire.category.categories', ['categories' => $data,'subcat'=>$data2])
             ->extends('layouts.theme.app')
             ->section('content');
+
+
+
     }
 
     public function Edit($id)
