@@ -20,6 +20,7 @@ class CreateISuppliersTable extends Migration
             $table->string('direccion',200);
             $table->string('telefono',100);
             $table->string('correo',100);
+            $table->enum('status',['Activo','Inactivo'])->default('Activo');
             $table->timestamps();
         });
     }

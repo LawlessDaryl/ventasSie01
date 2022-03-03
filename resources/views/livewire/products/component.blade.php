@@ -54,7 +54,7 @@
 
                                     <td class="text-center">
                                         <span>
-                                            <img src="{{('storage/productos/'.$product->image) }}"
+                                            <img src="{{('storage/productos/'.$product->imagen) }}"
                                                 alt="imagen de ejemplo" height="40" width="50" class="rounded">
                                         </span>
                                     </td>

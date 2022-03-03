@@ -16,7 +16,7 @@ class ProductsController extends Component
     use WithFileUploads;
     public $nombre, $barcode, $costo, $precio_venta,$cantidad_minima,
     $codigo,$lote,$unidad,$industria,$caracteristicas,$status,$categoryid, $search,
-     $image, $selected_id, $pageTitle, $componentName,$cate,$marca;
+     $image, $selected_id, $pageTitle, $componentName,$cate,$marca,$stock,$stock_v;
 
     private $pagination = 5;
     public $selected_id2=0;
@@ -78,6 +78,7 @@ class ProductsController extends Component
             'nombre.unique' => 'Ya existe el nombre del producto',
             'nombre.min' => 'El nombre debe ser contener al menos 3 caracteres',
             'costo.required' =>'El costo es requerido',
+            
             'precio_venta.required'=> 'El precio es requerido',
             'cantidad_minima.required'=> 'La cantidad minima es requerida',
             'categoryid.required' => 'La categoria es requerida',
@@ -88,6 +89,7 @@ class ProductsController extends Component
 
         $product = Product::create([
             'nombre' => $this->nombre,
+            'stock'=>$this->stock,
             'costo' => $this->costo,
             'precio_venta' => $this->precio_venta,
             'barcode' => $this->barcode,
@@ -116,6 +118,7 @@ class ProductsController extends Component
     public function Edit(Product $product)
     {
         $this->selected_id = $product->id;
+        $this->selected_id2 = $product->category->categoria_padre;
         $this->costo = $product->costo;
         $this->nombre = $product->nombre;
         $this->precio_venta=$product->precio_venta;
@@ -123,10 +126,12 @@ class ProductsController extends Component
         $this->barcode = $product->barcode;
         $this->lote = $product->lote;
         $this->unidad = $product->unidad;
+        $this->cantidad_minima = $product->cantidad_minima;
         $this->marca = $product->marca;
         $this->industria = $product->industria;
         $this->categoryid = $product->category_id;
         $this->image = null;
+        $this->stock_v=$product->stock;
 
         $this->emit('modal-show', 'show modal!');
     }
@@ -153,6 +158,7 @@ class ProductsController extends Component
         $product = Product::find($this->selected_id);
         $product->update([
             'nombre' => $this->nombre,
+            'stock'=>$this->stock,
             'costo' => $this->costo,
             'precio_venta' => $this->precio_venta,
             'barcode' => $this->barcode,
@@ -201,14 +207,15 @@ class ProductsController extends Component
     {
         
         $this->selected_id =0;
+        $this->stock='';
         $this->costo = '';
         $this->nombre = '';
         $this->precio_venta='';
         $this->caracteristicas='';
         $this->barcode ='';
         $this->lote = '';
-        $this->unidad = '';
-        $this->marca = '';
+        $this->unidad = 'Elegir';
+        $this->marca = 'Elegir';
         $this->industria = '';
         $this->categoryid = 'Elegir';
         $this->image = null;
