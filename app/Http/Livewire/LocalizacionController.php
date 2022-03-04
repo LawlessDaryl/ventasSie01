@@ -30,7 +30,6 @@ class LocalizacionController extends Component
         $this->ubicacion = 'Elegir';
         $this->sucursal_id = 'Elegir';
      
-
     }
     public function render()
     {

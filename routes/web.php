@@ -30,13 +30,14 @@ use App\Http\Livewire\PlataformasController;
 use App\Http\Livewire\SucursalController;
 use App\Http\Livewire\CatProdServiceController;
 use App\Http\Livewire\ComprasController;
-use App\Http\Livewire\InvSupliersController;
+
 use App\Http\Livewire\SubCatProdServiceController;
 use App\Http\Livewire\OrderServiceController;
 use App\Http\Livewire\ServiciosController;
 use App\Http\Livewire\LocalizacionController;
 use App\Http\Livewire\StrProveedorController;
 use App\Http\Livewire\MarcasController;
+use App\Http\Livewire\ProvidersController;
 use App\Http\Livewire\TransaccionesController;
 use Illuminate\Support\Facades\Auth;
 
@@ -92,7 +93,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('locations', LocalizacionController::class)->name('locations');
     Route::get('unidades', UnidadesController::class)->name('unities');
     Route::get('marcas', MarcasController::class)->name('brands');
-    Route::get('proveedores', InvSupliersController::class)->name('supliers');
+    Route::get('proveedores', ProvidersController::class)->name('supliers');
     Route::get('compras', ComprasController::class)->name('buys');
     Route::get('transacciones', TransaccionesController::class)->name('transactions');
 

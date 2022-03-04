@@ -19,7 +19,6 @@
                     <table class="table table-unbordered table-hover mt-2">
                         <thead class="text-white" style="background: #3B3F5C">
                             <tr>
-                              
                                 <th class="table-th text-withe text-center">PROVEEDOR</th>                                
                                 <th class="table-th text-withe text-center">STATUS</th>
                                 <th class="table-th text-withe text-center">ACCIONES</th>
@@ -34,8 +33,8 @@
                                         <h5>Apellido</h5>
                                         <label class="text-center">{{ $data->apellido }}</label>
                                     </td>
-                                    <td>
-                                        <button class="text-center">{{ $data->status }}</button>
+                                    <td class="text-center">
+                                        <button type="button" class="btn-center btn btn-primary">{{ $data->status }}</button>
                                     </td>
                                     
                                     <td class="text-center">
@@ -52,12 +51,12 @@
                             @endforeach
                         </tbody>
                     </table>
-                    {{ $data_unidad->links() }}
+                    {{ $data_proveedor->links() }}
                 </div>
             </div>
         </div>
     </div>
-    @include('livewire.unidad.form')
+    @include('livewire.i_suplier.form')
 </div>
 
 <script>

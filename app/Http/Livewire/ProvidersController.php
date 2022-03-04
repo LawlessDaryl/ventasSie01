@@ -3,11 +3,12 @@
 namespace App\Http\Livewire;
 
 use App\Models\I_Supplier;
+use App\Models\Provider;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 
-class InvSupliersController extends Component
+class ProvidersController extends Component
 {
     use WithPagination;
     use WithFileUploads;
@@ -30,14 +31,14 @@ class InvSupliersController extends Component
     {
         
             if (strlen($this->search) > 0)
-                $suplier = I_Supplier::select('i_supliers.*')
+                $suplier = Provider::select('providers.*')
                 ->where('nombre', 'like', '%' . $this->search . '%')
                 ->orWhere('apellido','like','%'.$this->search.'%')
                 ->orWhere('direccion','like','%'.$this->search.'%')
                 ->orWhere('status','like','%'.$this->search.'%')
                 ->paginate($this->pagination);
             else
-            $suplier = I_Supplier::select('i_supliers.*')
+            $suplier = Provider::select('providers.*')
             ->paginate($this->pagination);
 
             return view('livewire.i_suplier.component', [
@@ -50,7 +51,7 @@ class InvSupliersController extends Component
     public function Store()
     {
         $rules = [
-            'nombre' => 'required|unique:i_supliers',
+            'nombre' => 'required|unique:providers',
             'apellido' => 'required',
             
             
@@ -62,7 +63,7 @@ class InvSupliersController extends Component
         ];
         $this->validate($rules, $messages);
 
-        I_Supplier::create([
+        Provider::create([
             'nombre' => $this->nombre,
             'apellido'=>$this->apellido,
             'direccion' => $this->direccion,
@@ -74,7 +75,7 @@ class InvSupliersController extends Component
         $this->resetUI();
         $this->emit('proveedor-added', 'proveedor Registrada');
     }
-    public function Edit(I_Supplier $sup)
+    public function Edit(Provider $sup)
     {
         $this->selected_id = $sup->id;
         $this->nombre = $sup->nombre;
@@ -99,7 +100,7 @@ class InvSupliersController extends Component
 
         ];
         $this->validate($rules, $messages);
-        $uni = I_Supplier::find($this->selected_id);
+        $uni = Provider::find($this->selected_id);
         $uni->update([
             'nombre' => $this->nombre,
             'apellidos'=>$this->apellido,
@@ -115,7 +116,7 @@ class InvSupliersController extends Component
     }
     protected $listeners = ['deleteRow' => 'Destroy'];
 
-    public function Destroy(I_Supplier $uni)
+    public function Destroy(Provider $uni)
     {
         $uni->delete();
         $this->resetUI();
