@@ -94,12 +94,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('unidades', UnidadesController::class)->name('unities');
     Route::get('marcas', MarcasController::class)->name('brands');
     Route::get('proveedores', ProvidersController::class)->name('supliers');
-    Route::get('compras', ComprasController::class)->name('buys');
+    Route::get('compras', ComprasController::class)->name('compras');
     Route::get('transacciones', TransaccionesController::class)->name('transactions');
 
-    
+
 
     //reportes PDDF
+
     Route::get('report/pdf/{user}/{type}/{f1}/{f2}', [ExportController::class, 'reportPDF']);
     Route::get('report/pdf/{user}/{type}', [ExportController::class, 'reportPDF']);
 });

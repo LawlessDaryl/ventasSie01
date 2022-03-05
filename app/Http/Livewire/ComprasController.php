@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\Unidad;
+use App\Models\Compras;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -19,12 +19,9 @@ class ComprasController extends Component
     }
     public function render()
     {
-        $unidad = Unidad::select('unidads.*')
-        ->paginate($this->pagination);
+        $hola="hola mundo";
 
-    return view('livewire.compras.component', [
-        'data_unidad' => $unidad
-    ])
+    return view('livewire.compras.component',['data'=>$hola])
         ->extends('layouts.theme.app')
         ->section('content');
         

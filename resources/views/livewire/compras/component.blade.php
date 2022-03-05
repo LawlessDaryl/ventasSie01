@@ -6,6 +6,7 @@
                     <h4 class="card-title">
                         <b>Compras</b>
                     </h4>
+                    <h1>{{$data}}</h1>
                     <ul class="tabs tab-pills">
                         <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
                             data-target="#theModal">Agregar Proveedor</a>

@@ -8,6 +8,9 @@ class TransaccionesController extends Component
 {
     public function render()
     {
-        return view('livewire.transacciones');
+        $casa="mimos";
+        return view('livewire.i_transacciones.component')
+        ->extends('layouts.theme.app')
+        ->section('content');
     }
 }

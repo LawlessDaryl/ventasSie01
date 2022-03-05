@@ -9,7 +9,6 @@ use Livewire\WithPagination;
 
 class UnidadesController extends Component
 {
-
     use WithPagination;
     use WithFileUploads;
     public  $search, $nombre, $selected_id;
@@ -32,15 +31,15 @@ class UnidadesController extends Component
     {
         
             if (strlen($this->search) > 0)
-                $unidad = Unidad::select('unidads.*')
+                $uni = Unidad::select('unidads.*')
                 ->where('nombre', 'like', '%' . $this->search . '%')
                 ->paginate($this->pagination);
             else
-            $unidad = Unidad::select('unidads.*')
+            $uni = Unidad::select('unidads.*')
             ->paginate($this->pagination);
 
             return view('livewire.unidad.component', [
-                'data_unidad' => $unidad
+                'data_unidad' => $uni
             ])
                 ->extends('layouts.theme.app')
                 ->section('content');
