@@ -62,13 +62,13 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
-        window.livewire.on('unidad-added', msg => {
+        window.livewire.on('proveedor-added', msg => {
             $('#theModal').modal('hide')
         });
-        window.livewire.on('unidad-updated', msg => {
+        window.livewire.on('proveedor-updated', msg => {
             $('#theModal').modal('hide')
         });
-        window.livewire.on('unidad-deleted', msg => {
+        window.livewire.on('proveedor-deleted', msg => {
             ///
         });
         window.livewire.on('show-modal', msg => {
@@ -88,7 +88,7 @@
         swal.fire({
             title: 'CONFIRMAR',
             icon: 'warning',
-            text: 'Confirmar eliminar la unidad ' + '"' + nombre + '"',
+            text: 'Confirmar eliminar la proveedor ' + '"' + nombre + '"',
             showCancelButton: true,
             cancelButtonText: 'Cerrar',
             cancelButtonColor: '#383838',

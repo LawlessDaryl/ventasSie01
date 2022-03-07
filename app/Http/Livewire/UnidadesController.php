@@ -106,6 +106,7 @@ class UnidadesController extends Component
     public function resetUI()
     {
         $this->nombre = '';
+        $this->selected_id=0;
        
     }
 }

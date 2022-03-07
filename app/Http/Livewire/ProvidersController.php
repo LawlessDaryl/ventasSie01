@@ -126,6 +126,7 @@ class ProvidersController extends Component
     public function resetUI()
     {
         $this->nombre = '';
+        $this->selected_id=0;
         $this->apellido='';
         $this->direccion='';
         $this->telefono='';
