@@ -6,12 +6,9 @@
             <input type="text" wire:model.lazy="nombre" class="form-control" placeholder="ej:Celular Samsung Galaxy A01">
             @error('nombre') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>
-        <div class="form-group">
-            <label>Cantidad inicial</label>
-            <input type="text" wire:model.lazy="stock" class="form-control" placeholder="ej: 200">
-            @error('stock') <span class="text-danger er">{{ $message }}</span>@enderror
-        </div>
     </div>
+  
+  
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
             <label>Codigo de barras</label>
@@ -117,9 +114,11 @@
         <div class="form-group custom-file">
             <input type="file" class="custom-file-input form-control" wire:model="image"
                 accept="image/x-png,image/gif,image/jpeg">
-            <label class="custom-file-label">Imagen {{ $image }}</label>
+            <label class="custom-file-label">Imagen{{ $image }}</label>
             
         </div>
     </div>
+   
+
 </div>
     @include('common.modalFooter')
