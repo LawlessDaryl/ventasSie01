@@ -36,6 +36,8 @@ class DatabaseSeeder extends Seeder
         $this->call(SubCatProdServicesSeeder::class);
         $this->call(OrigenMotivoSeeder::class);
         $this->call(OrigenMotivoComisionSeeder::class);
+        $this->call(ClientSeeder::class);
+
 
        /*  Category::factory(20)->create(); */
     }
