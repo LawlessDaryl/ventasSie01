@@ -6,8 +6,12 @@ use App\Models\Denomination;
 use App\Models\Product;
 use App\Models\Sale;
 use App\Models\SaleDetail;
+use App\Models\Movimiento;
+use App\Models\ClienteMov;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+//Modulo para buscar clientes en las ventas
+use App\Models\Cliente;
 
 use Darryldecode\Cart\Facades\CartFacade as Cart;
 use Exception;
@@ -15,7 +19,7 @@ use Illuminate\Support\Facades\Redirect;
 
 class PosController extends Component
 {
-    public $total, $itemsQuantity, $efectivo, $change;
+    public $total, $itemsQuantity, $efectivo, $change, $nit;
 
 
 
@@ -25,16 +29,59 @@ class PosController extends Component
         $this->change = 0;
         $this->total = Cart::getTotal();
         $this->itemsQuantity = Cart::getTotalQuantity();
+        $this->ClienteSelectnit = 1;
     }
     public function render()
     {
+        /* BUSCAR CLIENTE POR NIT EN EL INPUT DEL MODAL */
+        $datosnit = [];
+        if (strlen($this->nit) > 0)
+        {
+            $datosnit = Cliente::where('nit', 'like', '%' . $this->nit . '%')->orderBy('nit', 'desc')->get();
+            if ($datosnit->count() > 0)
+            {
+                $this->BuscarClienteNit = 1;
+            }
+            else
+            {
+                $this->BuscarClienteNit = 0;
+            }
+            if ($this->ClienteSelectnit == 0)
+            {
+                $this->BuscarClienteNit = 0;
+            }
+        }
+        else
+        {
+            //Para cerrar el cuadro de clientes encontrados por Nit cuando se borre todos los caracteres del input
+            $this->BuscarClienteNit = 0;
+            //---------------------------------------------------------------------------------------------------
+            if ($this->ClienteSelectnit == 0)
+            {
+                $this->ClienteSelectnit = 1;
+            }
+        }
+
 
         return view('livewire.pos.component', [
             'denominations' => Denomination::orderBy('value', 'desc')->get(),
-            'cart' => Cart::getContent()->sortBy('name')
+            'cart' => Cart::getContent()->sortBy('name'),
+            'datosnit' => $datosnit
         ])
             ->extends('layouts.theme.app')
             ->section('content');
+    }
+    /* Cargar los datos seleccionados de la tabla a los label */
+    public function llenardatoscliente($id)
+    {
+        $dcliente = Cliente::where('id', $id)->first();
+        
+        $this->nit = $dcliente->nit;
+        $this->razonsocial = $dcliente->razon_social;
+        $this->celular = $dcliente->celular;
+        $this->ClienteSelectnit = 0;
+        $this->idcliente = $id;
+        $this->resetUI();
     }
     public function ACash($value)
     {
@@ -197,12 +244,26 @@ class PosController extends Component
         DB::beginTransaction();
 
         try {
+            // Creando Movimiento
+            $Movimiento = Movimiento::create([
+                'type' => "VENTAS",
+                'import' => $this->total,
+                'user_id' => Auth()->user()->id,
+            ]);
+            // Creando Cliente_Movimiento
+            ClienteMov::create([
+                'movimiento_id' => $Movimiento->id,
+                'cliente_id' => $this->idcliente,
+            ]);
+
+
+
             $sale = Sale::create([
                 'total' => $this->total,
                 'items' => $this->itemsQuantity,
                 'cash' => $this->efectivo,
                 'change' => $this->change,
-
+                'movimiento_id' => $Movimiento->id,
                 'user_id' => Auth()->user()->id
             ]);
 
@@ -230,7 +291,7 @@ class PosController extends Component
             $this->total = Cart::getTotal();
             $this->itemsQuantity = Cart::getTotalQuantity();
             $this->emit('save-ok', 'venta registrada con exito');
-            $this->emit('print-ticket', $sale->id);
+            //$this->emit('print-ticket', $sale->id);
         } catch (Exception $e) {
             DB::rollback();
             $this->emit('sale-error', $e->getMessage());
@@ -239,5 +300,22 @@ class PosController extends Component
     public function printTicket($sale)
     {
         return Redirect::to('print://$sale->id');
+    }
+    
+    // Quitar los valores de la ventana Modal
+    public function resetUI()
+    {
+        $this->name = '';
+        $this->barcode = '';
+        $this->cost = '';
+        $this->price = '';
+        $this->stock = '';
+        $this->alerts = '';
+        $this->search = '';
+        $this->categoryid = 'Elegir';
+        $this->image = null;
+        $this->selected_id = 0;
+
+        $this->resetValidation();
     }
 }

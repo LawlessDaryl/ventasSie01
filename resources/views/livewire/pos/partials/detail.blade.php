@@ -8,7 +8,7 @@
                         <thead class="text-white" style="background: #3b3f5c ">
                             <tr>
                                 <th class="table-th text-left text-white">IMAGEN</th>
-                                <th class="table-th text-left text-white">DESCRIPCION</th>
+                                <th class="table-th text-left text-white">DESCRIPCIóN</th>
                                 <th class="table-th text-center text-white">PRECIO</th>
                                 <th width="12%" class="table-th text-center text-white">CANT</th>
                                 <th class="table-th text-center text-white">IMPORTE</th>

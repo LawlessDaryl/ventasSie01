@@ -1,11 +1,15 @@
 <div>
-    <div class="row layout-top-spacing">
+    <div class="row">
+        <!-- Datos Cliente -->
+        <div class="col-sm-12 col-md-12">
+            @include('livewire.pos.partials.client')
+        </div>
+        <!-- Tabla Productos (Shopping Cart) -->
         <div class="col-sm-12 col-md-8">
-            {{-- detalles --}}
             @include('livewire.pos.partials.detail')
         </div>
+        <!-- Cuadro Total Bs y Monedas -->
         <div class="col-sm-12 col-md-4">
-            {{-- total --}}
             @include('livewire.pos.partials.total')
             {{-- denominaciones --}}
             @include('livewire.pos.partials.coins')
