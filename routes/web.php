@@ -56,8 +56,7 @@ Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('ho
 
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('categories', CategoriesController::class)->name('categorias')->middleware('permission:Category_Index');
-    Route::get('products', ProductsController::class)->name('productos')->middleware('permission:Product_Index');
+  
     Route::get('coins', CoinsController::class)->name('monedas')->middleware('permission:Coins_Index');
     Route::get('pos', PosController::class)->name('ventas')->middleware('permission:Sales_Index');
 
@@ -110,6 +109,19 @@ Route::middleware(['auth'])->group(function () {
     Route::get('inicio', InicioController::class)->name('in')->middleware('permission:Asignar_Tecnico_Servicio');
     Route::get('typework', TypeWorkController::class)->name('tw');
     Route::get('reporteservices', ReporteServiceController ::class)->name('tw');
+
+    /* INVENTARIOS */
+
+    Route::get('categories', CategoriesController::class)->name('categorias');
+    Route::get('products', ProductsController::class)->name('productos');
+
+
+    Route::get('locations', LocalizacionController::class)->name('locations');
+    Route::get('unidades', UnidadesController::class)->name('unities');
+    Route::get('marcas', MarcasController::class)->name('brands');
+    Route::get('proveedores', ProvidersController::class)->name('supliers');
+    //Route::get('compras', ComprasController::class)->name('compras');
+    Route::get('transacciones', TransaccionesController::class)->name('transactions');
 
     //reportes PDF
     Route::group(['middleware' => ['permission:Report_Sales_Export']], function () {

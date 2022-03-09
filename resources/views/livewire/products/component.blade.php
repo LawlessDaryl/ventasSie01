@@ -14,15 +14,15 @@
 
             <div class="widget-content">
                 <div class="table-responsive">
-                    <table class="table table-unbordered table-hover mt-2">
+                    <table class="table table-unbordered table-hover mt-4">
                         <thead class="text-white" style="background: #3B3F5C">
                             <tr>
-                                <th class="table-th text-withe">DESCRIPCIÓN</th>
+                                <th class="table-th text-withe">NOMBRE</th>
                                 <th class="table-th text-withe text-center">BARCODE</th>
-                                <th class="table-th text-withe text-center">CATEGORIA</th>
                                 <th class="table-th text-withe text-center">PRECIO</th>
                                 <th class="table-th text-withe text-center">STOCK</th>
                                 <th class="table-th text-withe text-center">INV.MIN</th>
+                                <th class="table-th text-withe text-center">STATUS</th>
                                 <th class="table-th text-withe text-center">IMAGEN</th>
                                 <th class="table-th text-withe text-center">ACCIONES</th>
                             </tr>
@@ -31,28 +31,31 @@
                             @foreach ($data as $product)
                                 <tr>
                                     <td>
-                                        <h6>{{ $product->name }}</h6>
+                                        <h6>{{ $product->nombre }}</h6>
                                     </td>
                                     <td>
                                         <h6 class="text-center">{{ $product->barcode }}</h6>
                                     </td>
                                     <td>
-                                        <h6 class="text-center">{{ $product->category }}</h6>
-                                    </td>
-                                    <td>
-                                        <h6 class="text-center">{{ $product->price }}</h6>
+                                        <h6 class="text-center">{{ $product->precio_venta }}</h6>
                                     </td>
                                     <td>
                                         <h6 class=" text-center">{{ $product->stock }}</h6>
                                     </td>
+
                                     <td>
-                                        <h6 class="text-center">{{ $product->alerts }}</h6>
+                                        <h6 class="text-center">{{ $product->cantidad_minima }}</h6>
                                     </td>
+
+                                    <td>
+                                        <h6 class="text-center">{{ $product->status }}</h6>
+                                    </td>
+                                    
 
                                     <td class="text-center">
                                         <span>
-                                            <img src="{{ asset('storage/productos/' . $product->imagen) }}"
-                                                alt="imagen de ejemplo" height="70" width="80" class="rounded">
+                                            <img src="{{('storage/productos/'.$product->imagen) }}"
+                                                alt="imagen de ejemplo" height="40" width="50" class="rounded">
                                         </span>
                                     </td>
                                     <td class="text-center">
@@ -61,7 +64,7 @@
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         <a href="javascript:void(0)"
-                                            onclick="Confirm('{{ $product->id }}','{{ $product->name }}')"
+                                            onclick="Confirm('{{ $product->id }}','{{ $product->nombre }}')"
                                             class="btn btn-dark" title="Delete">
                                             <i class="fas fa-trash"></i>
                                         </a>

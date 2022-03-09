@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Category;
 use Illuminate\Database\Seeder;
+
 class CategorySeeder extends Seeder
 {
     /**
@@ -14,20 +15,18 @@ class CategorySeeder extends Seeder
     public function run()
     {
         Category::create([
-            'name'=>'CURSOS',
-            'image'=>'https://dummyimage.com/200x150/f516f5/0a0a0a'
+            'name' => 'Dispositivos Moviles',
+            'descripcion' => 'ninguna',
+            'categoria_padre' => '0',
+            
+          
         ]);
         Category::create([
-            'name'=>'TENIS',
-            'image'=>'https://dummyimage.com/200x150/f516f5/0a0a0a'
-        ]);
-        Category::create([
-            'name'=>'CELULARES',
-            'image'=>'https://dummyimage.com/200x150/f516f5/0a0a0a'
-        ]);
-        Category::create([
-            'name'=>'COMPUTADORAS',
-            'image'=>'https://dummyimage.com/200x150/f516f5/0a0a0a'
+            'name' => 'Celulares',
+            'descripcion' => 'ninguna',
+            'categoria_padre' => '1',
+            
+          
         ]);
     }
 }

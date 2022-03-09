@@ -41,7 +41,12 @@ class DatabaseSeeder extends Seeder
         $this->call(EmailSeeder::class);
         $this->call(AccountSeeder::class);
         $this->call(ProfileSeeder::class);
+        /* INVENTARIOS */
         $this->call(AccountProfileSeeder::class);
+        $this->call(LocationSeeder::class);
+        $this->call(UnidadSeeder::class);
+        $this->call(CategorySeeder::class);
+        
        /*  Category::factory(20)->create(); */
     }
 }

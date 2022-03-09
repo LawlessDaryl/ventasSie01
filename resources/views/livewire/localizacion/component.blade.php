@@ -6,110 +6,112 @@
                     <b>{{ $componentName }} | {{ $pageTitle }}</b>
                 </h4>
                 <ul class="tabs tab-pills">
-                   
                     <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
-                        data-target="#theModal">Agregar Categoria</a>
-                    <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
-                        data-target="#theModal_s">Agregar Subcategoria</a>
-                    
+                        data-target="#theModal">Agregar</a>
                 </ul>
             </div>
-
-            
             @include('common.searchbox')
+
             <div class="widget-content">
                 <div class="table-responsive">
                     <table class="table table-unbordered table-hover mt-2">
                         <thead class="text-white" style="background: #3B3F5C">
                             <tr>
-                                <th class="table-th text-withe">NOMBRE</th>
+                                <th class="table-th text-withe text-center">TIPO</th>
+                                <th class="table-th text-withe text-center">CODIGO</th>
                                 <th class="table-th text-withe text-center">DESCRIPCION</th>
+                                <th class="table-th text-withe text-center">UBICACION</th>
+                                <th class="table-th text-withe">SUCURSAL</th>
                                 <th class="table-th text-withe text-center">ACCIONES</th>
-                             
+                               
                             </tr>
                         </thead>
-                       
                         <tbody>
-                            @foreach ($categories as $category)
-                                <tr>
+                            @foreach ($data_locations as $location)
+                            <tr>
                                     <td>
-                                        
-                                        <h6>{{ $category->name }}</h6>
+                                        <h6 class=" text-center">{{ $location->tipo }}</h6>
                                     </td>
                                     <td>
-                                        <h6>{{ $category->descripcion }}</h6>
+                                        <h6 class="text-center">{{ $location->codigo }}</h6>
                                     </td>
-                                   
+                                    <td>
+                                        <h6 class="text-center">{{ $location->descripcion }}</h6>
+                                    </td>
+                                    <td>
+                                        <h6 class="text-center">{{ $location->ubicacion }}</h6>
+                                    </td>
+                                    <td>
+                                        <h6>{{ $location->sucursal }}</h6>
+                                    </td>
+            
+
+                                
                                     <td class="text-center">
-                                        <a href="javascript:void(0)" wire:click="Edit({{ $category->id }})"
+                                        <a href="javascript:void(0)" wire:click="Edit({{ $location->id }})"
                                             class="btn btn-dark mtmobile" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <a href="javascript:void(0)" onclick="Confirm('{{ $category->id }}','{{ $category->name }}',
-                                            '{{ $category->products->count() }}')" class="btn btn-dark"
-                                            title="Delete">
+                                        <a href="javascript:void(0)"
+                                            onclick="Confirm('{{ $location->id }}','{{ $location->descripcion }}')"
+                                            class="btn btn-dark" title="Delete">
                                             <i class="fas fa-trash"></i>
                                         </a>
-                                        <a href="javascript:void(0)" wire:click="Ver({{$category->id}})"
-                                            class="btn btn-dark mtmobile" title="Ver subcategorias">
-                                            <i class="fas fa-eye"></i>
-                                           
-                                        </a>
-                                        
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
-                    {{ $categories->links() }}
+                    {{ $data_locations->links() }}
                 </div>
             </div>
         </div>
     </div>
-    @include('livewire.category.form')
-    @include('livewire.category.form_subcategory')
-    @include('livewire.category.subcategories')
-
+   @include('livewire.localizacion.form') 
 </div>
+
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
-        window.livewire.on('show-modal', Msg => {
+
+        window.livewire.on('localizacion-added', msg => {
+            $('#theModal').modal('hide'),
+            noty(msg)
+        });
+        window.livewire.on('location-updated', msg => {
+            $('#theModal').modal('hide')
+            noty(msg)
+        });
+        window.livewire.on('localizacion-deleted', msg => {
+            noty(msg)
+        });
+        window.livewire.on('modal-locacion', msg => {
             $('#theModal').modal('show')
         });
-        window.livewire.on('show-modal_s', Msg => {
-            $('#theModal_subcategory').modal('show')
-        });
-        window.livewire.on('item-added', Msg => {
+        window.livewire.on('modal-hide', msg => {
             $('#theModal').modal('hide')
-            noty(Msg)
         });
-        window.livewire.on('item-updated', Msg => {
-            $('#theModal').modal('hide')
-            noty(Msg)
+        window.livewire.on('hidden.bs.modal', function(e) {
+            $('.er').css('display', 'none')
         });
-        window.livewire.on('item-deleted', Msg => {
-            noty(Msg)
-        });
-       
-
     });
 
-    function Confirm(id, name, products) {
-        if (products > 0) {
+    function Confirm(id, descripcion, locations) {
+        if (locations > 0) {
             swal.fire({
                 title: 'PRECAUCION',
                 icon: 'warning',
-                text: 'No se puede eliminar la categoria, ' + name + ' porque tiene ' 
-                + products + ' productos relacionados'
+                text: 'No se puede eliminar el producto, ' + descripcion + ' porque tiene ' +
+                    locations + ' ventas relacionadas'
             })
             return;
         }
         swal.fire({
             title: 'CONFIRMAR',
             icon: 'warning',
-            text: 'Confirmar eliminar la categoria ' + '"' + name + '"',
+            text: 'Confirmar eliminar la locacion ' + '"' + descripcion + '"',
             showCancelButton: true,
             cancelButtonText: 'Cerrar',
             cancelButtonColor: '#383838',
