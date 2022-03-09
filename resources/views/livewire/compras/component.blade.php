@@ -3,9 +3,9 @@
         <div class="col-sm-12" >
             <div class="widget widget-chart-one">
                 <div class="widget-heading">
-                    <h2 class="card-title">
+                    <h5>
                         <b>DETALLE COMPRA COD:{{$nro_compra}}</b>
-                    </h2>
+                    </h5>
                     <div class="card component-card_1">
                         <div class="card-body">
                             <h5 class="card-title">Datos Proveedor</h5>
@@ -20,8 +20,7 @@
                     <ul class="tabs tab-pills">
                         <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
                             data-target="#theModal">Agregar Proveedor</a>
-                    </ul>
-                    <ul class="tabs tab-pills">
+                
                         <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
                             data-target="#theModal">Generar Orden de Compra
                         </a>
