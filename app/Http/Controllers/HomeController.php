@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Caja;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -34,12 +35,18 @@ class HomeController extends Controller
             ->where('mov.type', 'APERTURA')
             ->select('cajas.*', 's.name as sucursal')
             ->get()->take(1);
-
-        if ($data->count() == 0) {
+         
+        if ($data->count()==0) {
             session(['sesionCaja' => null]);
-        } else {
+        } else{
             session(['sesionCaja' => $data[0]->nombre]);
         }
+        if (Auth::user()->hasPermissionTo('Asignar_Tecnico_Servicio')) {
+            return redirect()->intended("inicio");
+        }else{
+            return redirect()->intended("cortecajas");
+        }
+      
         return view('home');
     }
 }

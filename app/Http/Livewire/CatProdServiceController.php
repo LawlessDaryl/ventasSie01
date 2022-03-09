@@ -52,8 +52,9 @@ class CatProdServiceController extends Component
     }
     public function Store()
     {
-        $rules = ['nombre' => 'required|unique:cat_prod_services|min:1',
-        'estado' => 'required|not_in:Elegir'
+        $rules = [
+            'nombre' => 'required|unique:cat_prod_services|min:1',
+            'estado' => 'required|not_in:Elegir'
     ];
         $messages = [
             'nombre.required' => 'El nombre de la categoría es requerido',

@@ -30,30 +30,41 @@
     aside {
         display: none !important;
     }
+
     .page-item.active .page-link {
         z-index: 3;
         color: #ffffff;
         background-color: #3b3f5c;
         border-color: #3b3f5c;
     }
+
     
+
 .widget-chart-one .widget-heading .tabs a{
         background: #3b3f5c;
     }
+
     @media (max-width:480px) {
         .mtmobile {
             margin-bottom: 20px !important;
         }
+
         .mbmobile {
             margin-bottom: 10px !important;
         }
+
         .hideonm {
             display: none !important;
         }
+
         .indblock {
             display: block;
         }
+
+
+
     }
+
     .table>thead>tr>th {
         color: #ff7600 !important;
         font-weight: 500;
@@ -87,9 +98,14 @@ display: block;
     height: 40px;
     background-color: #fbfbfb;
 }
+
+
 </style>
 
 <link type="text/css" rel="stylesheet" href="{{ asset('plugins/flatpickr/flatpickr.dark.css') }}">
 
+<link rel="stylesheet" type="text/css" href="plugins/table/datatable/datatables.css">
+<link rel="stylesheet" type="text/css" href="plugins/table/datatable/dt-global_style.css">
+<link rel="stylesheet" type="text/css" href="plugins/table/datatable/custom_dt_custom.css">
 
 @livewireStyles

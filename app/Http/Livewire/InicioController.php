@@ -21,7 +21,7 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 
-class OrderServiceController extends Component
+class InicioController extends Component
 {
     use WithPagination;
     use WithFileUploads;
@@ -150,7 +150,7 @@ class OrderServiceController extends Component
             $this->saldo = 0;
 
 
-        return view('livewire.order_service.component', [
+        return view('livewire.inicio.component', [
             'data' => $orderservices,
             'users' => $users,
             'work' => $typew,

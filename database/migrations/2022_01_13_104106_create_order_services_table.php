@@ -16,6 +16,7 @@ class CreateOrderServicesTable extends Migration
         Schema::create('order_services', function (Blueprint $table) {
             $table->id();
             $table->string('type_service',255);
+            $table->enum('status',['ACTIVO','INACTIVO'])->default('ACTIVO');
             $table->timestamps();
         });
     }

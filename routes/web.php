@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\ExportController;
+use App\Http\Controllers\ExportServicioPdfController;
 use App\Http\Controllers\ExportTigoPdfController;
+use App\Http\Controllers\ImprimirController;
 use App\Http\Livewire\ArqueosStreamingController;
 use App\Http\Livewire\ArqueosTigoController;
 use App\Http\Livewire\AsignarController;
@@ -32,6 +34,7 @@ use App\Http\Livewire\SucursalController;
 use App\Http\Livewire\CatProdServiceController;
 use App\Http\Livewire\CuentasController;
 use App\Http\Livewire\EmailsController;
+use App\Http\Livewire\InicioController;
 use App\Http\Livewire\ModulosController;
 use App\Http\Livewire\SubCatProdServiceController;
 use App\Http\Livewire\OrderServiceController;
@@ -43,6 +46,8 @@ use App\Http\Livewire\ReportStreamingController;
 use App\Http\Livewire\StrProveedorController;
 use App\Http\Livewire\ReporGananciaTgController;
 use App\Http\Livewire\ProcedenciaController;
+use App\Http\Livewire\ReporteServiceController;
+use App\Http\Livewire\TypeWorkController;
 use Illuminate\Support\Facades\Auth;
 
 Auth::routes();
@@ -102,6 +107,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('subcatprodservice', SubCatProdServiceController::class)->name('scps')->middleware('permission:SubCat_Prod_Service_Index');
     Route::get('orderservice', OrderServiceController::class)->name('os')->middleware('permission:Orden_Servicio_Index');
     Route::get('service', ServiciosController::class)->name('serv')->middleware('permission:Service_Index');
+    Route::get('inicio', InicioController::class)->name('in')->middleware('permission:Asignar_Tecnico_Servicio');
+    Route::get('typework', TypeWorkController::class)->name('tw');
+    Route::get('reporteservices', ReporteServiceController ::class)->name('tw');
 
     //reportes PDF
     Route::group(['middleware' => ['permission:Report_Sales_Export']], function () {
@@ -118,6 +126,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('reporteGananciaTigoM/pdf/{user}/{type}/{f1}/{f2}', [TigoGananciaPdfController::class, 'reporte']);
         Route::get('reporteGananciaTigoM/pdf/{user}/{type}', [TigoGananciaPdfController::class, 'reporte']);
     });
+
+    Route::get('reporteServicio/pdf/{user}/{estado}/{type}/{f1}/{f2}', [ExportServicioPdfController::class, 'reporteServPDF']);
+    Route::get('reporteServicio/pdf/{user}/{estado}/{type}', [ExportServicioPdfController::class, 'reporteServPDF']);
+
+    Route::get('reporte/pdf/{id}', [ImprimirController::class, 'print']);
+
 });
 
 

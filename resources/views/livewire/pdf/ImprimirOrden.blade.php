@@ -9,14 +9,14 @@
     <link rel="stylesheet" href="{{ asset('css/custom_pdf.css') }}">
     <link rel="stylesheet" href="{{ asset('css/custom_page.css') }}">
 
-    
 
-<style>
 
-    body{
-        font-family: 'Open Sans', sans-serif;
-    }
-</style>
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+        }
+
+    </style>
 
 <body>
     <section class="header" style="top: -290px; left:-30px">
@@ -25,53 +25,84 @@
                 <td style="width: 4.3cm; vertical-align: top; margin-left: 5px; margin-right:5px">
                     <div style=" font-size: 9pt; text-align: center;">
                         <div>
-                            <b>SERVICIO TÉCNICO<br>Nro.: 005503</b>
+                            <b>SERVICIO TÉCNICO<br>{{ $data[0]->order_service_id }}</b>
                         </div>
                     </div>
-                    <hr style="border-color: black; margin-top: 0px; margin-bottom: 3px; margin-left: 5px; margin-right:5px">
+                    <hr
+                        style="border-color: black; margin-top: 0px; margin-bottom: 3px; margin-left: 5px; margin-right:5px">
                     <div style="text-align: center; font-size: 7pt;">
-                        <b>MAURO QUESADA</b>
-                        <b>0 79989789</b>
+                        <b>{{ $data[0]->nombreC }}</b>
+                        Celular: <b>{{ $data[0]->celular }}</b>
                     </div>
                     <div style=" font-size: 7pt; line-height: 12px">
-                        <b>CANT.: </b>1&nbsp;&nbsp;
-                        <b>DESCRIPCIÓN: </b>CELULAR HUAWEI MATE 9 LITE<br>
-                        <b><u>FALLA:</u> </b> CAMBIO DE BATERIA<br>
-                        <b><u>DIAGNOSTICO:</u> </b>REVISION<br>
-                        <b><u>SOLUCION:</u> </b>REVISION<br>
-                        <b>FECHA ENTREGA APROX.: </b>27/01/2022-18:30:00<br>
-                        <b>RESPONSABLE TÉCNICO: </b>FABIO ORELLANA BARRIDO<br>
+                        <b>CANT.:{{ $datos->services->count() }}</b>&nbsp;&nbsp;
+
+                        <b>DESCRIPCIÓN: </b>
+                        @foreach ($datos->services as $item)
+                            {{ $item->nombreCateg }} {{ $item->marca }} |
+                        @endforeach<br>
+                        <b><u>FALLA:</u> </b>
+                        @foreach ($datos->services as $item)
+                            {{ $item->falla_segun_cliente }} |
+                        @endforeach<br>
+                        <b><u>DIAGNOSTICO:</u> </b>
+                        @foreach ($datos->services as $item)
+                            {{ $item->diagnostico }} |
+                        @endforeach<br>
+                        <b><u>SOLUCION:</u> </b>
+                        @foreach ($datos->services as $item)
+                            {{ $item->solucion }} |
+                        @endforeach<br>
+                        <b>FECHA ENTREGA APROX.: </b>
+                        @foreach ($datos->services as $item)
+                            {{ $item->fecha_estimada_entrega }} |
+                        @endforeach<br>
+                        <b>RESPONSABLE TÉCNICO: </b>{{ $usuario->name }}<br>
                     </div>
-                    <hr style="border-color: black; margin-top: 0px; margin-bottom: 1px; margin-left: 5px; margin-right:5px">
+                    <hr
+                        style="border-color: black; margin-top: 0px; margin-bottom: 1px; margin-left: 5px; margin-right:5px">
                     <table id="derechatabla" style="font-weight: bold; font-size: 7pt">
                         <tr>
-                            <td style="text-align: right;">TOTAL:</td>
-                            <td style="text-align: right;"> 160.00</td>
+                            <td style="text-align: right;">TOTALES:</td>
+                            <td style="text-align: right;">
+                                @foreach ($data as $item)
+                                    {{ $item->import }} |
+                                @endforeach
+                            </td>
                         </tr>
                         <tr>
                             <td style="text-align: right;">A CUENTA:</td>
-                            <td style="text-align: right;">0.00</td>
+                            <td style="text-align: right;">
+                                @foreach ($data as $item)
+                                    {{ $item->on_account }} |
+                                @endforeach
+                            </td>
                         </tr>
                         <tr>
                             <td style="text-align: right;">SALDO:</td>
-                            <td style="text-align: right;">160.00</td>
+                            <td style="text-align: right;">
+                                @foreach ($data as $item)
+                                    {{ $item->saldo }} |
+                                @endforeach
+                            </td>
                         </tr>
                     </table>
                     <div style="font-size: 7pt">
-                        TIPO SERV.:Normal<br>
+                        TIPO SERV.:{{ $datos->type_service }}<br>
                         27/01/2022 06:25:15 pm </div>
                 </td>
 
-                <td style="width: 5px;"></td>   {{-- espaciador entre columnas --}}
+                <td style="width: 5px;"></td> {{-- espaciador entre columnas --}}
 
                 <td style="width: 15.3cm; vertical-align: top; margin-left: 5px; margin-right:5px;">
-                    <div >
+                    <div>
                         <table>
                             <tr>
                                 <td width="50%">
-                                    <div  class ="col-sm-6 col-md-6" style="text-align: center" >
-                                        <div class="text-bold" style="font-size: 15px; margin-top: 0px; margin-bottom: 0px;">
-                                            <b>ORDEN DE SERVICIO TÉCNICO<br>Nro.: 005503</b>
+                                    <div class="col-sm-6 col-md-6" style="text-align: center">
+                                        <div class="text-bold"
+                                            style="font-size: 15px; margin-top: 0px; margin-bottom: 0px;">
+                                            <b>ORDEN DE SERVICIO TÉCNICO<br>{{ $data[0]->order_service_id }}</b>
                                         </div>
                                         <!--<font size="2"><b>Nro.:  </b></font>-->
                                         <span style="font-size: 9px">27/01/2022 06:25:15 pm</span><br>
@@ -79,20 +110,21 @@
                                 </td>
 
                                 <td width="50%">
-                                    <div class ="col-sm-6 col-md-6">
+                                    <div class="col-sm-6 col-md-6">
                                         <div style=" font-size: 10px; text-align: center;">
-                                            <span class="text-bold"><u>SOLUCIONES INFORMÁTICAS EMANUEL ( S.I.E. )</u></span><br>
+                                            <span class="text-bold"><u>SOLUCIONES INFORMÁTICAS EMANUEL ( S.I.E.
+                                                    )</u></span><br>
                                             <span style="font-size: 8px">
                                                 AV. AMÉRICA NO. 949 ENTRE AV. GABRIEL RENE MORENO Y MUNCHAY PUITO<br>
                                                 4240013- 79771777 </span>
                                         </div>
                                     </div>
-                                </td>                                
+                                </td>
                             </tr>
 
                         </table>
-                        
-                        
+
+
                         {{-- <div style=" width: 20%; text-align: right">
                             <div style="padding-top: 45px; width: 100%"><b>TIPO SERV.: </b>Normal</div>
                         </div> --}}
@@ -106,57 +138,81 @@
                                 <tr>
                                     <td style="width: 300px">
                                         <div style="width: auto;">
-                                            <b>FECHA: </b>27/01/2022&nbsp; - &nbsp;15:50:50<br>
+                                            <b>FECHA: </b>{{\Carbon\Carbon::now()->format('Y-m-d')}}&nbsp; - &nbsp;{{\Carbon\Carbon::now()->format('H:i:s')}}<br>
                                             <b>CODIGO: </b>MAA1191<br>
-                                            <b>CLIENTE: </b>MAURO QUESADA
+                                            <b>CLIENTE: </b>{{ $data[0]->nombreC }}
                                         </div>
                                     </td>
-    
+
                                     <td style="width: 140px"></td>
-    
+
                                     <td style="width: auto;">
                                         <div style="width: auto; display: flex;">
                                             <table id="derechatabla" style="font-weight: bold;">
                                                 <tr>
                                                     <td style="text-align: right;">TOTAL:</td>
-                                                    <td style="text-align: right;"> 160.00</td>
+                                                    <td style="text-align: right;">
+                                                        @foreach ($data as $item)
+                                                            {{ $item->import }} |
+                                                        @endforeach
+                                                    </td>
                                                 </tr>
                                                 <tr>
                                                     <td style="text-align: right;">A CUENTA:</td>
-                                                    <td style="text-align: right;">0.00</td>
+                                                    <td style="text-align: right;">
+                                                        @foreach ($data as $item)
+                                                            {{ $item->on_account }} |
+                                                        @endforeach
+                                                    </td>
                                                 </tr>
                                                 <tr>
                                                     <td style="text-align: right;">SALDO:</td>
-                                                    <td style="text-align: right;">160.00</td>
+                                                    <td style="text-align: right;">
+                                                        @foreach ($data as $item)
+                                                            {{ $item->saldo }} |
+                                                        @endforeach
+                                                    </td>
                                                 </tr>
                                             </table>
                                         </div>
                                     </td>
                                 </tr>
                             </table>
-                            
-    
-                            
                         </div>
                         <hr style="border-color: black; margin-top: 2px; margin-bottom: 2px">
-    
+
                         <table>
                             <tr>
                                 <td style="font-size: 10px; width: 10cm">
-                                    <b>CANT.: </b>1<br>
-                                    <b>DESCRIPCIÓN: </b>CELULAR HUAWEI MATE 9 LITE<br>
-                                    <b>FALLA SEGUN CLIENTE: </b> CAMBIO DE BATERIA<br>
-                                    <b>DIAGNOSTICO: </b>REVISION<br>
-                                    <b>SOLUCION: </b>REVISION<br>
-                                    <b>FECHA ENTREGA APROX.: </b>27/01/2022-18:30:00<br>
-                                    <b>RESPONSABLE TÉCNICO: </b>FABIO ORELLANA BARRIDO<br>
-                                    <b>ESTADO: PENDIENTE</b>
+                                    <b>CANT.: </b>{{ $datos->services->count() }}<br>
+                                    <b>DESCRIPCIÓN: </b>
+                                    @foreach ($datos->services as $item)
+                                        {{ $item->nombreCateg }} {{ $item->marca }} |
+                                    @endforeach<br>
+                                    <b>FALLA SEGUN CLIENTE: </b>
+                                    @foreach ($datos->services as $item)
+                                        {{ $item->falla_segun_cliente }} |
+                                    @endforeach<br>
+                                    <b>DIAGNOSTICO: </b>
+                                    @foreach ($datos->services as $item)
+                                        {{ $item->diagnostico }} |
+                                    @endforeach<br>
+                                    <b>SOLUCION: </b>
+                                    @foreach ($datos->services as $item)
+                                        {{ $item->solucion }} |
+                                    @endforeach<br>
+                                    <b>FECHA ENTREGA APROX.: </b>
+                                    @foreach ($datos->services as $item)
+                                        {{ $item->fecha_estimada_entrega }} |
+                                    @endforeach<br>
+                                    <b>RESPONSABLE TÉCNICO: </b>{{ $usuario->name }}<br>
+                                    <b>ESTADO: {{ $data[0]->type }}</b>
                                 </td>
-                          
+
                             </tr>
                         </table>
                     </div>
-                    
+
 
                     <hr style="border-color: black;">
                     <div style="width: 100%; font-size: 10px">
@@ -172,9 +228,9 @@
                                 <td style="width: 350px"></td>
 
                                 <td>
-                                    <div class="text-center" >
+                                    <div class="text-center">
                                         CLIENTE<br>
-                                        MAURO QUESADA 
+                                        {{ $data[0]->nombreC }}
                                     </div>
                                 </td>
                             </tr>
@@ -186,7 +242,7 @@
                             CCA: SIS.INF.SOLUCIONES INFORMÁTICAS EMANUEL ( S.I.E. ) | 27/01/2022 - 06:25:15 pm </div>
                     </div>
                 </td>
-            </tr>                       
+            </tr>
         </table>
     </section>
 

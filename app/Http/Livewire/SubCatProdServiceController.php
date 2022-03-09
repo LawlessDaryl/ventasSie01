@@ -51,7 +51,7 @@ class SubCatProdServiceController extends Component
     public function Store()
     {
         $rules = [
-            'name' => 'required|unique:sub_cat_prod_services|min:1',
+            'name' => "required|min:1|exclude_if:sub_cat_prod_services,name,{$this->selected_id}",
             'price' => 'required',
             'price' => 'required|numeric',
             'status' => 'required|not_in:Elegir',
@@ -91,7 +91,7 @@ class SubCatProdServiceController extends Component
     }
     public function Update()
     { $rules = [
-        'name' => "required|min:3|unique:sub_cat_prod_services,name,{$this->selected_id}",
+        'name' => "required|min:1|unique:sub_cat_prod_services,name,{$this->selected_id}",
         'price' => 'required',
         'price' => 'required|numeric',
         'status' => 'required|not_in:Elegir',
@@ -100,7 +100,7 @@ class SubCatProdServiceController extends Component
     $messages = [
         'name.required' => 'Nombre de la sub categoria requerida',
         'name.unique' => 'Ya existe el nombre de la sub categoria ',
-        'name.min' => 'El nombre debe ser contener al menos 3 caracteres',
+        'name.min' => 'El nombre debe ser contener al menos 1 caracter',
         'price.required' => 'El precio es requerido',
         'price.numeric' => 'No puede ingresar letras',
         'status.required' => 'Selecciona el estado de la categoria',

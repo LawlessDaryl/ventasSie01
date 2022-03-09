@@ -16,7 +16,7 @@
                         </div>
                         <div class="infobox">
                             <b class="info-text">Cliente: </b>
-                            @if (isset($cliente))
+                            @if (!empty($cliente))
                                 {{ $cliente->nombre }}
                             @else
                                 NO DEFINIDO
@@ -25,78 +25,88 @@
                             <b class="info-text">Fecha: </b>{{ $from }}<br />
 
                             <b class="info-text">Registrado por: </b>{{ $usuariolog }} <br />
-                            <b class="info-text">Tipo de servicio: </b> <br />
+                            <b class="info-text">Tipo de servicio: </b> {{ $typeservice }} <br />
                         </div>
                     </div>
 
                 </div>
-                <ul class="tabs tab-pills">
-                    <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
-                        data-target="#theClient">Asignar Cliente</a>
-                </ul>
+                @if ($orderservice == 0 || $cliente == '')
+                    <ul class="tabs tab-pills">
+                        <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
+                            data-target="#theClient">Asignar Cliente</a>
+                    </ul>
 
-                <ul class="tabs tab-pills">
-                    <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
-                        data-target="#theNewClient">Nuevo Cliente</a>
-                </ul>
-
-                <ul class="tabs tab-pills">
-                    <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
-                        data-target="#theModal">Agregar Servicio</a>
-                </ul>
-
-
+                    <ul class="tabs tab-pills">
+                        <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
+                            data-target="#theNewClient">Nuevo Cliente</a>
+                    </ul>
+                @endif
+                @if (!empty($cliente))
+                    <ul class="tabs tab-pills">
+                        <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
+                            data-target="#theModal">Agregar Servicio</a>
+                    </ul>
+                @endif
+                @if ($orderservice != 0)
+                    <ul class="tabs tab-pills">
+                        <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
+                            data-target="#theType">Tipo de Servicio</a>
+                    </ul>
+                @endif
             </div>
-            @include('common.searchbox')
+           
 
             <div class="widget-content">
                 <div class="table-responsive">
                     <table class="table table-unbordered table-hover mt-2">
                         <thead class="text-white" style="background: #3B3F5C">
                             <tr>
-                                <th class="table-th text-withe">DETALLE</th>
-                                <th class="table-th text-withe text-center">CÓDIGO</th>
-                                <th class="table-th text-withe text-center">CATEGORÍA PRODUCTO SERVICIO</th>
+                                <th class="table-th text-withe">#</th>
+                                <th class="table-th text-withe text-center">EQUIPO</th>
+                                <th class="table-th text-withe text-center">MARCA</th>
+                                <th class="table-th text-withe text-center">DETALLE</th>
                                 <th class="table-th text-withe text-center">ESTADO</th>
                                 <th class="table-th text-withe text-center">TOTAL</th>
                                 <th class="table-th text-withe text-center">A CUENTA</th>
                                 <th class="table-th text-withe text-center">SALDO</th>
+                                <th class="table-th text-withe text-center">ACCIONES</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($data as $product)
+                            @foreach ($data as $item)
                                 <tr>
                                     <td>
-                                        <h6>{{ $product->DETALLE }}</h6>
+                                        <h6 class="text-center">{{ $loop->iteration }}</h6>
                                     </td>
                                     <td>
-                                        <h6 class="text-center">{{ $product->id }}</h6>
+                                        <h6 class="text-center">{{ $item->category }}</h6>
                                     </td>
                                     <td>
-                                        <h6 class="text-center">{{ $product->cat_prod_service }}</h6>
+                                        <h6 class="text-center">{{ $item->marca }}</h6>
                                     </td>
                                     <td>
-                                        <h6 class="text-center">{{ $product->status }}</h6>
+                                        <h6>{{ $item->detalle }}</h6>
+                                    </td>
+                                    <td>
+                                        <h6 class="text-center">{{ $item->tipo }}</h6>
+                                    </td>
+                                    <td>
+                                        <h6 class="text-center">{{ $item->import }}</h6>
                                     </td>
 
                                     <td>
-                                        <h6 class="text-center">{{ $product->saldo }}</h6>
+                                        <h6 class="text-center">{{ $item->on_account }}</h6>
                                     </td>
-
                                     <td>
-                                        <h6 class="text-center">{{ $product->on_account }}</h6>
+                                        <h6 class="text-center">{{ $item->saldo }}</h6>
                                     </td>
-
-                                    <td>
-                                        <h6 class="text-center">{{ $product->import }}</h6>
-                                    </td>
-
                                     <td class="text-center">
-                                        <a href="javascript:void(0)" wire:click="Edit({{ $product->id }})"
+                                        <a href="javascript:void(0)" wire:click="Edit({{ $item->id }})"
                                             class="btn btn-dark mtmobile" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <a href="javascript:void(0)" onclick="Confirm('{{ $product->id }}')"
+                                        <a href="javascript:void(0)"
+                                            onclick="Confirm('{{ $item->id }}','{{ $item->category }}','{{ $item->marca }}')"
                                             class="btn btn-dark" title="Delete">
                                             <i class="fas fa-trash"></i>
                                         </a>
@@ -108,13 +118,21 @@
                     {{ $data->links() }}
                 </div>
             </div>
+            <div class="modal-footer">
+
+                <ul class="tabs tab-pills">
+                    
+                    <a class="btn btn-dark mb-2" href="{{ url('reporte/pdf' . '/' . $orderservice) }}" target="_blank" wire:click="ResetSession">Guardar</a>
+                    
+                    <button class="btn btn-dark mb-2" wire:click="ResetSession">Salir</button>
+                </ul>
+            </div>
         </div>
     </div>
     @include('livewire.servicio.formclientebuscar')
-
     @include('livewire.servicio.formclientenuevo')
-    {{-- @include('livewire.servicio.formservicio')
-    @include('livewire.servicio.formtiposervicio') --}}
+    @include('livewire.servicio.formservicio')
+    @include('livewire.servicio.formtiposervicio')
 </div>
 
 <script>
@@ -125,21 +143,26 @@
             $('#theClient').modal('hide'),
                 noty(msg)
         });
-        window.livewire.on('product-updated', msg => {
+        window.livewire.on('service-updated', msg => {
             $('#theModal').modal('hide')
             noty(msg)
         });
-        window.livewire.on('product-deleted', msg => {
+        window.livewire.on('tipoServ-updated', msg => {
+            $('#theType').modal('hide')
             noty(msg)
         });
-
+        window.livewire.on('service-deleted', msg => {
+            noty(msg)
+        });
+        window.livewire.on('item-error', msg => {
+            noty(msg)
+        });
         window.livewire.on('modalsearchc-show', msg => {
             $('#theClient').modal('show')
         });
         window.livewire.on('modalsearch-hide', msg => {
             $('#theClient').modal('hide')
         });
-
         window.livewire.on('modalclient-show', msg => {
             $('#theNewClient').modal('show')
         });
@@ -150,32 +173,38 @@
             $('#theNewClient').modal('hide'),
                 noty(msg)
         });
-
         window.livewire.on('modal-show', msg => {
             $('#theModal').modal('show')
         });
         window.livewire.on('modal-hide', msg => {
             $('#theModal').modal('hide')
         });
+        window.livewire.on('modal-selected', msg => {
+            $('#theModal').modal('hide'),
+                noty(msg)
+        });
+        window.livewire.on('modaltype-show', msg => {
+            $('#theType').modal('show')
+        });
+        window.livewire.on('modaltype-hide', msg => {
+            $('#theType').modal('hide')
+        });
+        window.livewire.on('modaltype-selected', msg => {
+            $('#theType').modal('hide'),
+                noty(msg)
+        });
+
+
         window.livewire.on('hidden.bs.modal', function(e) {
             $('.er').css('display', 'none')
         });
     });
 
-    function Confirm(id, name, clients) {
-        if (clients > 0) {
-            swal.fire({
-                title: 'PRECAUCION',
-                icon: 'warning',
-                text: 'No se puede eliminar el servicio, ' + name + ' porque tiene ' +
-                    clients + ' clientes relacionados'
-            })
-            return;
-        }
+    function Confirm(id, categoria, marca) {
         swal.fire({
             title: 'CONFIRMAR',
             icon: 'warning',
-            text: 'Confirmar eliminar el prouducto ' + '"' + name + '"',
+            text: 'Confirmar eliminar el servicio "' + categoria + '" de marca "' + marca + '"',
             showCancelButton: true,
             cancelButtonText: 'Cerrar',
             cancelButtonColor: '#383838',
