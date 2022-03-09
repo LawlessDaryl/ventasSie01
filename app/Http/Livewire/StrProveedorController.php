@@ -3,9 +3,6 @@
 namespace App\Http\Livewire;
 
 use App\Models\StrSupplier;
-use App\Models\SuplPlatform;
-use Exception;
-use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -15,10 +12,8 @@ class StrProveedorController extends Component
     use WithPagination;
     use WithFileUploads;
 
-    public $name, $phone, $mail, $address, $status, $image, $selected_id, $fileLoaded, $profile;
-    public $pageTitle, $componentName, $search, $hora;
-    public $contract_id, $platform_id, $plataformname, $platform, $contract_date, $contr=[];
-
+    public $name, $phone, $mail, $address, $status, $image, $selected_id;
+    public $pageTitle, $componentName, $search;
     private $pagination = 5;
 
     public function paginationView()
@@ -29,9 +24,12 @@ class StrProveedorController extends Component
     public function mount()
     {
         $this->selected_id = 0;
-        $this->hora = date("d-m-y H:i:s ");
         $this->pageTitle = 'Listado';
         $this->componentName = 'Proveedores Streaming';
+        $this->name = '';
+        $this->phone = '';
+        $this->mail = '';
+        $this->address = '';
         $this->status = 'Elegir';
     }
 
@@ -45,9 +43,11 @@ class StrProveedorController extends Component
                 ->paginate($this->pagination);
         else
             $data = StrSupplier::orderBy('id', 'desc')->paginate($this->pagination);
-        
 
-        return view('livewire.str_proveedor.component', [ 'data' => $data ])
+
+        return view('livewire.str_proveedor.component', [
+            'data' => $data,
+        ])
             ->extends('layouts.theme.app')
             ->section('content');
     }
@@ -76,30 +76,26 @@ class StrProveedorController extends Component
 
         $this->validate($rules, $messages);
 
-        DB::beginTransaction();
-        try {
-            $supplier = StrSupplier::create([
-                'name' => $this->name,
-                'phone' => $this->phone,
-                'mail' => $this->mail,
-                'address' => $this->address,
-                'status' => $this->status
-            ]);
+        $supplier = StrSupplier::create([
+            'name' => $this->name,
+            'phone' => $this->phone,
+            'mail' => $this->mail,
+            'address' => $this->address,
+            'status' => $this->status
+        ]);
 
-            if ($this->image) {
-                $customFileName = uniqid() . '_.' . $this->image->extension();
-                $this->image->storeAs('public/proveedores', $customFileName);
-                $supplier->image = $customFileName;
-                $supplier->save();
-            }
-
-            DB::commit();
-            $this->resetUI();
-            $this->emit('item-added', 'Proveedor Registrado');
-        } catch (Exception $e) {
-            DB::rollback();
-            $this->emit('item-error', 'No se pudo crear el proveedor ' . $e->getMessage());
+        if ($this->image) {
+            $customFileName = uniqid() . '_.' . $this->image->extension();
+            $this->image->storeAs('public/proveedores', $customFileName);
+            $supplier->image = $customFileName;
+            $supplier->save();
+        } else {
+            $supplier->image = 'noimage.jpg';
+            $supplier->save();
         }
+
+        $this->resetUI();
+        $this->emit('item-added', 'Proveedor Registrado');
     }
 
     public function Edit(StrSupplier $supl)
@@ -119,7 +115,7 @@ class StrProveedorController extends Component
         $rules = [
             'name' => 'required|min:3',
             'phone' => 'required|min:3',
-            'mail' => 'required|email|unique:str_suppliers',
+            'mail' => "required|email|unique:str_suppliers,mail,{$this->selected_id}",
             'status' => 'required|not_in:Elegir'
         ];
 
@@ -166,37 +162,26 @@ class StrProveedorController extends Component
         $this->emit('item-updated', 'Proveedor Actualizado');
     }
 
-    protected $listeners = [
-        'deleteRow' => 'destroy',
-        'resetUI' => 'resetUI'
-    ];
+    protected $listeners = ['deleteRow' => 'destroy', 'resetUI' => 'resetUI'];
 
     public function destroy(StrSupplier $supl)
     {
+        $imageTemp = $supl->image;
+        $supl->delete();
 
-        if ($supl) {
-            $contrato = SuplPlatform ::where('id_supplier', $supl->id)->count();
-            if ($contrato > 0 ) {
-                $this->emit('supplier-withcontracts', 'No es posible eliminar el proveedor porque tiene plataformas asosiadas');
-            } else {
-                $supl->delete();
-
-                $imageName = $supl->image;
-
-                if ($imageName != null) {
-                    unlink('storage/proveedores/' . $imageName);
-                }
-
-                $this->resetUI();
-                $this->emit('item-deleted', 'Proveedor Eliminado');
+        if ($imageTemp != null) {
+            if (file_exists('storage/proveedores/' . $imageTemp)) {
+                unlink('storage/proveedores/' . $imageTemp);
             }
         }
+        $this->resetUI();
+        $this->emit('item-deleted', 'Proveedor Eliminado');
     }
     /* VENTANA MODAL DE HISTORIAL DE contratos con el proveedor */
-    public function viewDetails(StrSupplier $s)
+    /* public function viewDetails(StrSupplier $s)
     {
         $this->selected_id = $s->id;
-               
+
         $this->contr = StrSupplier::join('supl_platforms as pp', 'pp.str_supplier_id', 'str_suppliers.id')
             ->join('platforms as p', 'p.id', 'pp.platform_id')
             ->where('pp.str_supplier_id', $s->id)
@@ -204,22 +189,18 @@ class StrProveedorController extends Component
             ->orderBy('pp.id', 'desc')
             ->get();
 
-        if($this->contr == null)
-        {
+        if ($this->contr == null) {
             $this->contract_id = $this->contr->provplatformid;
-        $this->platform_id = $this->contr->platformid;
-        $this->plataformname = $this->contr->platformname;
-        $this->contract_date = $this->contr->provplatformdate;
-        $this->platform = $this->platform_id;
+            $this->platform_id = $this->contr->platformid;
+            $this->plataformname = $this->contr->platformname;
+            $this->contract_date = $this->contr->provplatformdate;
+            $this->platform = $this->platform_id;
 
-        $this->emit('show-modal2', 'open modal');
-        } else{
+            $this->emit('show-modal2', 'open modal');
+        } else {
             $this->emit('item-error', 'Proveedor no tiene historial de contratos');
         }
-
-        
-        
-    }
+    } */
     public function resetUI()
     {
         $this->name = '';

@@ -126,6 +126,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        
         flatpickr(document.getElementsByClassName('flatpickr'), {
             enableTime: false,
             dateFormat: 'Y-m-d',

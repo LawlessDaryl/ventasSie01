@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\ExportController;
+use App\Http\Controllers\ExportTigoPdfController;
+use App\Http\Livewire\ArqueosStreamingController;
 use App\Http\Livewire\ArqueosTigoController;
 use App\Http\Livewire\AsignarController;
 use App\Http\Livewire\CajasController;
@@ -28,10 +30,19 @@ use App\Http\Livewire\CorteCajaController;
 use App\Http\Livewire\PlataformasController;
 use App\Http\Livewire\SucursalController;
 use App\Http\Livewire\CatProdServiceController;
+use App\Http\Livewire\CuentasController;
+use App\Http\Livewire\EmailsController;
+use App\Http\Livewire\ModulosController;
 use App\Http\Livewire\SubCatProdServiceController;
 use App\Http\Livewire\OrderServiceController;
+use App\Http\Livewire\PerfilesController;
 use App\Http\Livewire\ServiciosController;
+use App\Http\Livewire\PhonesController;
+use App\Http\Livewire\PlanesController;
+use App\Http\Livewire\ReportStreamingController;
 use App\Http\Livewire\StrProveedorController;
+use App\Http\Livewire\ReporGananciaTgController;
+use App\Http\Livewire\ProcedenciaController;
 use Illuminate\Support\Facades\Auth;
 
 Auth::routes();
@@ -39,49 +50,74 @@ Auth::routes();
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 
-
 Route::middleware(['auth'])->group(function () {
-    Route::get('categories', CategoriesController::class)->name('categorias')->middleware('role:ADMIN');
-    Route::get('products', ProductsController::class)->name('productos');
-    Route::get('coins', CoinsController::class)->name('monedas');
-    Route::get('pos', PosController::class)->name('ventas');
+    Route::get('categories', CategoriesController::class)->name('categorias')->middleware('permission:Category_Index');
+    Route::get('products', ProductsController::class)->name('productos')->middleware('permission:Product_Index');
+    Route::get('coins', CoinsController::class)->name('monedas')->middleware('permission:Coins_Index');
+    Route::get('pos', PosController::class)->name('ventas')->middleware('permission:Sales_Index');
 
     Route::group(['middleware' => ['role:ADMIN']], function () {
-        Route::get('roles', RolesController::class)->name('roles');
-        Route::get('permisos', PermisosController ::class)->name('permisos');
-        Route::get('asignar', AsignarController::class)->name('asignar');
-        Route::get('companies', CompaniesController::class)->name('empresa');
-        Route::get('sucursales', SucursalController::class)->name('sucursal');
-        Route::get('cajas', CajasController::class)->name('caja');
-        Route::get('carteras', CarteraController::class)->name('cartera');
-        Route::get('cortecajas', CorteCajaController::class)->name('cortecaja');
-        Route::get('plataformas', PlataformasController::class)->name('plataforma');
-        Route::get('strproveedores', StrProveedorController::class)->name('proveedor');
     });
+
+    Route::get('roles', RolesController::class)->name('roles')->middleware('permission:Roles_Index');
+    Route::get('permisos', PermisosController ::class)->name('permisos')->middleware('permission:Permission_Index');
+    Route::get('asignar', AsignarController::class)->name('asignar')->middleware('permission:Asignar_Index');
+    Route::get('companies', CompaniesController::class)->name('empresa')->middleware('permission:Empresa_Index');
+    Route::get('sucursales', SucursalController::class)->name('sucursal')->middleware('permission:Sucursal_Index');
+    Route::get('cajas', CajasController::class)->name('caja')->middleware('permission:Caja_Index');
+    Route::get('carteras', CarteraController::class)->name('cartera')->middleware('permission:Cartera_Index');
+    Route::get('cortecajas', CorteCajaController::class)->name('cortecaja')->middleware('permission:Corte_Caja_Index');
+
+    Route::get('plataformas', PlataformasController::class)->name('plataforma')->middleware('permission:Plataforma_Index');
+    Route::get('strproveedores', StrProveedorController::class)->name('proveedor')->middleware('permission:Proveedor_Index');
     
-    Route::get('users', UsersController::class)->name('usuarios');
-    Route::get('cashout', CashoutController::class)->name('cashout');
-    Route::get('reports', ReportsController::class)->name('reportes');
+    Route::get('emails', EmailsController::class)->name('email');
+    Route::get('cuentas', CuentasController::class)->name('cuentas');
+    Route::get('perfiles', PerfilesController::class)->name('perfiles');
+    Route::get('telefonos', PhonesController::class)->name('telefonos');
+    Route::get('planes', PlanesController::class)->name('planes');
+    Route::get('reportStreaming', ReportStreamingController::class)->name('reportStreaming');
+    Route::get('arqueosStreaming', ArqueosStreamingController::class)->name('arqueosStreaming');
 
-    Route::get('comisiones', ComisionesController ::class)->name('comision');
-    Route::get('motivos', MotivoController ::class)->name('motivo');
-    Route::get('origenes', OrigenController ::class)->name('origen');
-    Route::get('origen-motivo', OrigenMotivoController ::class)->name('origenmot');
-    Route::get('origen-motivo-comision', OrigenMotivoComisionController ::class)->name('origenmotcom');
+    Route::get('modulos', ModulosController::class)->name('modulos');
 
-    Route::get('tigomoney', TransaccionController::class)->name('tigomoney');
-    Route::get('reportestigo', ReportesTigoController::class)->name('reportestigo');
-    Route::get('arqueostigo', ArqueosTigoController::class)->name('arqueostigo');
+    Route::get('users', UsersController::class)->name('usuarios')->middleware('permission:Usuarios_Index');
+    Route::get('cashout', CashoutController::class)->name('cashout')->middleware('permission:Cashout_Index');
+    Route::get('reports', ReportsController::class)->name('reportes')->middleware('permission:Reportes_Index');
 
-    Route::get('clientes', ClienteController::class)->name('cliente');
-    Route::get('catprodservice', CatProdServiceController::class)->name('cps');
-    Route::get('subcatprodservice', SubCatProdServiceController::class)->name('scps');
-    Route::get('orderservice', OrderServiceController::class)->name('os');
-    Route::get('service', ServiciosController::class)->name('serv');
+    Route::get('comisiones', ComisionesController ::class)->name('comision')->middleware('permission:Comision_Index');
+    Route::get('motivos', MotivoController ::class)->name('motivo')->middleware('permission:Motivo_Index');
+    Route::get('origenes', OrigenController ::class)->name('origen')->middleware('permission:Origen_Index');
+    Route::get('origen-motivo', OrigenMotivoController ::class)->name('origenmot')->middleware('permission:Origen_Mot_Index');
+    Route::get('origen-motivo-comision', OrigenMotivoComisionController ::class)->name('origenmotcom')->middleware('permission:Origen_Mot_Com_Index');
+    
+    Route::get('tigomoney', TransaccionController::class)->name('tigomoney')->middleware('permission:Tigo_Money_Index');
+    Route::get('reportestigo', ReportesTigoController::class)->name('reportestigo')->middleware('permission:Reportes_Tigo_Index');
+    Route::get('ReporteGananciaTg', ReporGananciaTgController::class)->name('ReporteGananciaTg')->middleware('permission:Rep_Gan_Tigo_Index');
+    Route::get('arqueostigo', ArqueosTigoController::class)->name('arqueostigo')->middleware('permission:Arqueos_Tigo_Index');
 
-    //reportes PDDF
-    Route::get('report/pdf/{user}/{type}/{f1}/{f2}', [ExportController::class, 'reportPDF']);
-    Route::get('report/pdf/{user}/{type}', [ExportController::class, 'reportPDF']);
+    Route::get('procedenciaCli', ProcedenciaController::class)->name('proced');
+    Route::get('clientes', ClienteController::class)->name('cliente')->middleware('permission:Cliente_Index');
+    Route::get('catprodservice', CatProdServiceController::class)->name('cps')->middleware('permission:Cat_Prod_Service_Index');
+    Route::get('subcatprodservice', SubCatProdServiceController::class)->name('scps')->middleware('permission:SubCat_Prod_Service_Index');
+    Route::get('orderservice', OrderServiceController::class)->name('os')->middleware('permission:Orden_Servicio_Index');
+    Route::get('service', ServiciosController::class)->name('serv')->middleware('permission:Service_Index');
+
+    //reportes PDF
+    Route::group(['middleware' => ['permission:Report_Sales_Export']], function () {
+        Route::get('report/pdf/{user}/{type}/{f1}/{f2}', [ExportController::class, 'reportPDF']);
+        Route::get('report/pdf/{user}/{type}', [ExportController::class, 'reportPDF']);
+    });
+
+    Route::group(['middleware' => ['permission:Report_Tigo_Export']], function () {
+        Route::get('reporteTigo/pdf/{user}/{type}/{f1}/{f2}', [ExportTigoPdfController::class, 'reporteTigoPDF']);
+        Route::get('reporteTigo/pdf/{user}/{type}', [ExportTigoPdfController::class, 'reporteTigoPDF']);
+    });
+
+    Route::group(['middleware' => ['permission:Report_Ganancia_Tigo_Export']], function () {
+        Route::get('reporteGananciaTigoM/pdf/{user}/{type}/{f1}/{f2}', [TigoGananciaPdfController::class, 'reporte']);
+        Route::get('reporteGananciaTigoM/pdf/{user}/{type}', [TigoGananciaPdfController::class, 'reporte']);
+    });
 });
 
 

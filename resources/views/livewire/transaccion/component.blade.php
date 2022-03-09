@@ -15,17 +15,6 @@
             </div>
             @include('common.searchbox')
 
-            <div class="n-chk">
-                <label class="new-control new-radio radio-classic-primary">
-                  <input type="radio" class="new-control-input" name="custom-radio-2" id="SI" value="SI" wire:change="ComisionSi()">
-                  <span class="new-control-indicator"></span>SI
-                </label>
-                <label class="new-control new-radio radio-classic-primary">
-                  <input type="radio" class="new-control-input" name="custom-radio-2" id="NO" value="NO" wire:change="ComisionNo()">
-                  <span class="new-control-indicator"></span>NO
-                </label>
-            </div>
-
             <div>
                 <h6 class="card-title">
                     <b>SALDO DE TUS CARTERAS:</b> <br>
@@ -85,8 +74,11 @@
                                                 <i class="fas fa-trash"></i>
                                             </a>
                                         @endif
+                                        <a href="javascript:void(0)" wire:click="VerObservaciones({{ $d->id }})"
+                                            class="btn btn-dark mtmobile" title="Observaciones">
+                                            <svg viewBox="0 0 1024 1024" focusable="false" data-icon="bars" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M912 192H328c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h584c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 284H328c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h584c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 284H328c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h584c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM104 228a56 56 0 10112 0 56 56 0 10-112 0zm0 284a56 56 0 10112 0 56 56 0 10-112 0zm0 284a56 56 0 10112 0 56 56 0 10-112 0z"></path></svg>
+                                        </a>
                                     </td>
-
                                 </tr>
                             @endforeach
                         </tbody>
@@ -98,6 +90,7 @@
     </div>
     @include('livewire.transaccion.modalDetails')
     @include('livewire.transaccion.form')
+    @include('livewire.transaccion.modalObservaciones')
 </div>
 
 <script>
@@ -113,6 +106,10 @@
         window.livewire.on('item-error', Msg => {
             noty(Msg)
         })
+        window.livewire.on('item-actualizado', Msg => {
+            $('#Modal_Observaciones').modal('hide')
+            noty(Msg)
+        })
         window.livewire.on('show-modal', Msg => {
             $('#theModal').modal('show')
         })
@@ -121,7 +118,10 @@
         })
         window.livewire.on('show-modal2', Msg => {
             $('#modal-detailes').modal('show')
-        }) 
+        })
+        window.livewire.on('show-modal3', Msg => {
+            $('#Modal_Observaciones').modal('show')
+        })
         window.livewire.on('g-i/e', Msg => {
             $('#modal-detailes').modal('hide')
             noty(Msg)

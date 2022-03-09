@@ -81,7 +81,7 @@
         </div>
     </div>
     @include('livewire.str_proveedor.form')
-    @include('livewire.str_proveedor.modalDetails')
+    {{-- @include('livewire.str_proveedor.modalDetails') --}}
 </div>
 
 <script>

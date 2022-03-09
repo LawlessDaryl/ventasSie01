@@ -1,0 +1,112 @@
+@include('common.modalHead')
+<div class="row">
+    <div class="col-sm-12 col-md-6">
+
+        <div class="col-sm-12 col-md-12">
+            <div class="form-group">
+                <label>Plataforma</label>
+                <select wire:model='platform_id' class="form-control">
+                    <option value="Elegir" disabled>Elegir</option>
+                    @foreach ($plataformas as $p)
+                        <option value="{{ $p->id }}">{{ $p->nombre }}</option>
+                    @endforeach
+                </select>
+                @error('platform_id')
+                    <span class="text-danger er">{{ $message }}</span>
+                @enderror
+            </div>
+        </div>
+
+        <div class="col-sm-12 col-md-12">
+            <div class="form-group">
+                <label>Proveedor</label>
+                <select wire:model='proveedor' class="form-control">
+                    <option value="Elegir" disabled>Elegir</option>
+                    @foreach ($proveedores as $p)
+                            <option value="{{ $p->id }}">{{ $p->name }}</option>                        
+                    @endforeach
+                </select>
+                @error('proveedor')
+                    <span class="text-danger er">{{ $message }}</span>
+                @enderror
+            </div>
+        </div>
+
+        <div class="col-sm-12 col-md-12">
+            <h6>Fecha de expiración</h6>
+            <div class="form-group">
+                <input type="text" wire:model="expiration_account" class="form-control flatpickr"
+                    placeholder="Click para elegir">
+                @error('expiration_account')
+                    <span class="text-danger er">{{ $message }}</span>
+                @enderror
+            </div>
+        </div>
+
+        <div class="col-sm-12 col-md-12">
+            <div class="form-group">
+                <label>Estado</label>
+                <select wire:model='estado' class="form-control">
+                    <option value="Elegir" selected>Elegir</option>
+                    <option value="ACTIVO">ACTIVO</option>
+                    <option value="INACTIVO">INACTIVO</option>
+                </select>
+                @error('status')
+                    <span class="text-danger er">{{ $message }}</span>
+                @enderror
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-sm-12 col-md-6">
+
+        <div class="col-sm-12 col-md-12">
+            <div class="form-group">
+                <label>Correo</label>
+                <select wire:model='email_id' class="form-control">
+                    <option value="Elegir" disabled>Elegir</option>
+                    @foreach ($correos as $c)
+                        <option value="{{ $c->id }}">{{ $c->content }}</option>
+                    @endforeach
+                </select>
+                @error('email_id')
+                    <span class="text-danger er">{{ $message }}</span>
+                @enderror
+            </div>
+        </div>
+
+        <div class="col-sm-12 col-md-12">
+            <div class="form-group">
+                <label>Número de Perfiles</label>
+                <input type="number" wire:model.lazy="number_profiles" class="form-control" placeholder="ej: 0.0">
+                @error('number_profiles')
+                    <span class="text-danger er">{{ $message }}</span>
+                @enderror
+            </div>
+        </div>
+
+        <div class="col-sm-12 col-md-12">
+            <div class="form-group">
+                <label>Precio</label>
+                <input type="number" wire:model.lazy="price" class="form-control" placeholder="ej: 0.0">
+                @error('price')
+                    <span class="text-danger er">{{ $message }}</span>
+                @enderror
+            </div>
+        </div>
+
+        <div class="col-sm-12 col-md-12">
+            <div class="form-group">
+                <label>Contraseña cuenta Plataforma</label>
+                <input type="text" wire:model.lazy="password_account" class="form-control" placeholder="ej: 0.0">
+                @error('password_account')
+                    <span class="text-danger er">{{ $message }}</span>
+                @enderror
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@include('common.modalFooter')

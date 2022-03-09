@@ -16,7 +16,6 @@ class CreateOrigensTable extends Migration
         Schema::create('origens', function (Blueprint $table) {
             $table->id();
             $table->string('nombre',255);
-            $table->decimal('saldo',10,2);
             $table->timestamps();
         });
     }

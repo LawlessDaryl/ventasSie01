@@ -17,11 +17,10 @@ class CreateComisionsTable extends Migration
             $table->id();
             $table->string('nombre',250);
             $table->string('tipo',250);
-            $table->string('monto_a',250);
             $table->decimal('monto_inicial',10,2);
             $table->decimal('monto_final',10,2);
             $table->string('comision',250);
-            $table->boolean('porcentaje');
+            $table->enum('porcentaje',['Activo','Desactivo'])->default('Activo');
             $table->timestamps();
         });
     }

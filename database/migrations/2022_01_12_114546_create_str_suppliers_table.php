@@ -15,11 +15,11 @@ class CreateStrSuppliersTable extends Migration
     {
         Schema::create('str_suppliers', function (Blueprint $table) {
             $table->id();
-            $table->string('name',10,2);
+            $table->string('name', 50);
             $table->string('phone');
             $table->string('mail')->nullable();
             $table->string('address')->nullable();
-            $table->enum('status',['ACTIVO','INACTIVO'])->default('ACTIVO');
+            $table->enum('status', ['ACTIVO', 'INACTIVO'])->default('ACTIVO');
             $table->string('image')->nullable();
             $table->timestamps();
         });

@@ -167,6 +167,12 @@ class OrderServiceController extends Component
         $this->resetUI();
         $this->emit('product-deleted', 'Producto Eliminado');
     }
+
+
+
+
+
+    
     public function resetUI()
     {
         $this->name = '';

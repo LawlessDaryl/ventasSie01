@@ -11,7 +11,7 @@ class ComisionesController extends Component
 {
     use WithPagination;
     use WithFileUploads;
-    public $nombre, $tipo, $monto_a, $monto_inicial, $monto_final, $comision, $por, $search,
+    public $nombre, $tipo, $monto_inicial, $monto_final, $comision, $por, $search,
     $selected_id, $pageTitle, $componentName, $porcentaje;
     private $pagination = 8;
 
@@ -22,7 +22,6 @@ class ComisionesController extends Component
         $this->por = '';
         $this->porcentaje = 'Elegir';
         $this->tipo = 'Elegir';
-        $this->monto_a = 'Ninguna';
     }
     public function paginationView()
     {
@@ -77,7 +76,6 @@ class ComisionesController extends Component
         Comision::create([
             'nombre' => $this->nombre,
             'tipo' => $this->tipo,
-            'monto_a' => $this->monto_a,
             'monto_inicial' => $this->monto_inicial,
             'monto_final' => $this->monto_final,
             'comision' => $this->comision,
@@ -93,7 +91,6 @@ class ComisionesController extends Component
         $this->selected_id = $comision->id;
         $this->nombre = $comision->nombre;
         $this->tipo = $comision->tipo;
-        $this->monto_a = $comision->monto_a;
         $this->monto_inicial = $comision->monto_inicial;
         $this->monto_final = $comision->monto_final;
         $this->comision = $comision->comision;
@@ -122,7 +119,6 @@ class ComisionesController extends Component
         $comision->update([
             'nombre' => $this->nombre,
             'tipo' => $this->tipo,
-            'monto_a' => $this->monto_a,
             'monto_inicial' => $this->monto_inicial,
             'monto_final' => $this->monto_final,
             'comision' => $this->comision,
@@ -145,7 +141,6 @@ class ComisionesController extends Component
     public function resetUI()
     {
         $this->nombre = '';
-        $this->monto_a = 'Ninguna';
         $this->monto_inicial = '';
         $this->monto_final = '';
         $this->comision = '';

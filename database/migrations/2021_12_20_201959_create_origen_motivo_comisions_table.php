@@ -15,7 +15,7 @@ class CreateOrigenMotivoComisionsTable extends Migration
     {
         Schema::create('origen_motivo_comisions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('origen_motivos_id')->constrained();
+            $table->foreignId('origen_motivo_id')->constrained();
             $table->foreignId('comision_id')->constrained();
             $table->timestamps();
         });

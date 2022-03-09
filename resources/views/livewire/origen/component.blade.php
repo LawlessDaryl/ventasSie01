@@ -20,7 +20,6 @@
                         <thead class="text-white" style="background: #3B3F5C">
                             <tr>
                                 <th class="table-th text-withe text-center">NOMBRE ORÍGEN</th>
-                                <th class="table-th text-withe text-center">SALDO</th>
                                 <th class="table-th text-withe text-center">ACCIONES</th>
                             </tr>
                         </thead>
@@ -29,10 +28,6 @@
                                 <tr>
                                     <td>
                                         <h6 class="text-center">{{ $item->nombre }}</h6>
-                                    </td>
-
-                                    <td>
-                                        <h6 class="text-center">{{ $item->saldo }}</h6>
                                     </td>
 
                                     <td class="text-center">

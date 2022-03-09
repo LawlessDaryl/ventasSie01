@@ -15,8 +15,8 @@ class CreateCajasTable extends Migration
     {
         Schema::create('cajas', function (Blueprint $table) {
             $table->id();
-            $table->string("nombre", 255);
-            $table->enum('estado',['Abierto','Cerrado','Inactivo'])->default('Abierto');
+            $table->string('nombre', 255);
+            $table->enum('estado',['Abierto','Cerrado','Inactivo'])->default('Cerrado');
             $table->unsignedBigInteger('sucursal_id');
             $table->foreign('sucursal_id')->references('id')->on('sucursals');
             $table->timestamps();

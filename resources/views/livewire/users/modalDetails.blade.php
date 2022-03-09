@@ -64,7 +64,7 @@
                         <tfoot>
                             <td class="text-right">
                                 <a href="javascript:void(0)" class="btn btn-dark"
-                                wire:click.prevent="finalizar()" >TERMINAR CICLO DE USUARIO</a>
+                                wire:click.prevent="finalizar()" >DAR DE BAJA AL USUARIO</a>
                             </td>
                         </tfoot>
 

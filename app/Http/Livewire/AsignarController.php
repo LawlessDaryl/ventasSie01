@@ -14,7 +14,7 @@ class AsignarController extends Component
     use WithPagination;
 
     public $role, $componentName, $permisosSelected = [], $old_permissions = [];
-    private $pagination = 3;
+    private $pagination = 10;
 
     public function paginationView()
     {

@@ -9,7 +9,7 @@ class Origen extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nombre','saldo'];
+    protected $fillable = ['nombre'];
 
     public function relacionados()
     {
