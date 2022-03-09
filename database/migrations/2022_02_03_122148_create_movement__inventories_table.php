@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCategoriesTable extends Migration
+class CreateMovementInventoriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,11 @@ class CreateCategoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('categories', function (Blueprint $table) {
+        Schema::create('movement__inventories', function (Blueprint $table) {
             $table->id();
-            $table->string('name',255);
-            $table->string('descripcion',255)->nullable();
-            $table->integer('categoria_padre')->nullable()->default('0');
-           
-      
+            $table->enum('estado',['PENDIENTE','TERMINADO'])->default('PENDIENTE');
+            $table->string('operacion_id');
+
             $table->timestamps();
         });
     }
@@ -31,6 +29,6 @@ class CreateCategoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('categories');
+        Schema::dropIfExists('movement__inventories');
     }
 }

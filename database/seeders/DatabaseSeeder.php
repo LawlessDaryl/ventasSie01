@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
         // \App\Models\User::fctory(10)->create();
         $this->call(DenominationSeeder::class);
         $this->call(CategorySeeder::class);
-        $this->call(ProductSeeder::class);
+       
         $this->call(UserSeeder::class);
         $this->call(ComisionSeeder::class);
         $this->call(CompanySeeder::class);
