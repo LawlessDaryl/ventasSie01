@@ -43,7 +43,7 @@ class PerfilesController extends Component
         $this->condicional = 'libres';
         $this->meses = 0;
         $this->expirationNueva = Carbon::parse(Carbon::now())->format('Y-m-d');
-        $this->tipopago = 'Elegir';
+        $this->tipopago = 'EFECTIVO';
         $this->importe = 0;
     }
     public function render()
@@ -265,8 +265,6 @@ class PerfilesController extends Component
     }
     public function Acciones(Profile $prof)
     {
-        $this->selected_id = $prof->id;
-        $this->selected_id = $prof->id;
         $this->selected_id = $prof->id;
         $this->expirationActual = Plan::join('mov_plans as mp', 'plans.id', 'mp.plan_id')
             ->join('movimientos as m', 'm.id', 'mp.movimiento_id')

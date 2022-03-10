@@ -99,7 +99,16 @@
                                         <td class="text-center">
                                             <a href="javascript:void(0)" wire:click="Crear({{ $acounts->id }})"
                                                 class="btn btn-dark mtmobile" title="Crear Perfil">
-                                                <i class="fas fa-edit"></i>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="feather feather-file-plus">
+                                                    <path
+                                                        d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                                    <polyline points="14 2 14 8 20 8" />
+                                                    <line x1="12" y1="18" x2="12" y2="12" />
+                                                    <line x1="9" y1="15" x2="15" y2="15" />
+                                                </svg>
                                             </a>
                                             <a href="javascript:void(0)" wire:click="Edit({{ $acounts->id }})"
                                                 class="btn btn-dark mtmobile" title="Edit">
@@ -132,7 +141,8 @@
                                     <th class="table-th text-withe text-center">TIPO</th>
                                     <th class="table-th text-withe text-center">MAX PERF</th>
                                     <th class="table-th text-withe text-center">EXPIRACION PLAN</th>
-                                    <th class="table-th text-withe text-center">ACCIONES</th>
+                                    <th class="table-th text-withe text-center">RENOVAR</th>
+                                    <th class="table-th text-withe text-center">EDITAR</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -166,18 +176,31 @@
                                             <a href="javascript:void(0)"
                                                 wire:click="Acciones({{ $acounts->planid }})"
                                                 class="btn btn-dark mtmobile" title="Renovación">
-                                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
-                                                    <path style="fill:#E9EBEF;" d="M256,499.2C121.899,499.2,12.8,390.101,12.8,256S121.899,12.8,256,12.8S499.2,121.899,499.2,256  S390.101,499.2,256,499.2z"/>
+                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                    xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+                                                    id="Layer_1" x="0px" y="0px" viewBox="0 0 512 512"
+                                                    style="enable-background:new 0 0 512 512;" xml:space="preserve">
+                                                    <path style="fill:#E9EBEF;"
+                                                        d="M256,499.2C121.899,499.2,12.8,390.101,12.8,256S121.899,12.8,256,12.8S499.2,121.899,499.2,256  S390.101,499.2,256,499.2z" />
                                                     <g>
-                                                        <path style="fill:#573A32;" d="M256,0C114.62,0,0,114.62,0,256s114.62,256,256,256c141.389,0,256-114.62,256-256S397.389,0,256,0z    M256,486.4C128.956,486.4,25.6,383.044,25.6,256S128.956,25.6,256,25.6S486.4,128.956,486.4,256S383.044,486.4,256,486.4z"/>
-                                                        <path style="fill:#573A32;" d="M371.2,243.2H268.8v-128c0-7.074-5.726-12.8-12.8-12.8c-7.074,0-12.8,5.726-12.8,12.8V256   c0,7.074,5.726,12.8,12.8,12.8h115.2c7.074,0,12.8-5.726,12.8-12.8C384,248.926,378.274,243.2,371.2,243.2z"/>
-                                                        <rect x="243.2" y="51.2" style="fill:#573A32;" width="25.6" height="25.6"/>
-                                                        <rect x="243.2" y="435.2" style="fill:#573A32;" width="25.6" height="25.6"/>
-                                                        <rect x="51.2" y="243.2" style="fill:#573A32;" width="25.6" height="25.6"/>
-                                                        <rect x="435.2" y="243.2" style="fill:#573A32;" width="25.6" height="25.6"/>
-                                                    </g>                                                    
-                                                    </svg>
+                                                        <path style="fill:#573A32;"
+                                                            d="M256,0C114.62,0,0,114.62,0,256s114.62,256,256,256c141.389,0,256-114.62,256-256S397.389,0,256,0z    M256,486.4C128.956,486.4,25.6,383.044,25.6,256S128.956,25.6,256,25.6S486.4,128.956,486.4,256S383.044,486.4,256,486.4z" />
+                                                        <path style="fill:#573A32;"
+                                                            d="M371.2,243.2H268.8v-128c0-7.074-5.726-12.8-12.8-12.8c-7.074,0-12.8,5.726-12.8,12.8V256   c0,7.074,5.726,12.8,12.8,12.8h115.2c7.074,0,12.8-5.726,12.8-12.8C384,248.926,378.274,243.2,371.2,243.2z" />
+                                                        <rect x="243.2" y="51.2" style="fill:#573A32;" width="25.6"
+                                                            height="25.6" />
+                                                        <rect x="243.2" y="435.2" style="fill:#573A32;" width="25.6"
+                                                            height="25.6" />
+                                                        <rect x="51.2" y="243.2" style="fill:#573A32;" width="25.6"
+                                                            height="25.6" />
+                                                        <rect x="435.2" y="243.2" style="fill:#573A32;" width="25.6"
+                                                            height="25.6" />
+                                                    </g>
+                                                </svg>
                                             </a>
+
+                                        </td>
+                                        <td>
                                             <a href="javascript:void(0)" wire:click="Edit({{ $acounts->id }})"
                                                 class="btn btn-dark mtmobile" title="Edit">
                                                 <i class="fas fa-edit"></i>
@@ -237,6 +260,10 @@
         });
         window.livewire.on('modal-hide', msg => {
             $('#modal-details2').modal('hide')
+        });
+        window.livewire.on('cuenta-renovado-vencida', msg => {
+            $('#modal-details2').modal('hide')
+            noty(msg)
         });
 
         flatpickr(document.getElementsByClassName('flatpickr'), {

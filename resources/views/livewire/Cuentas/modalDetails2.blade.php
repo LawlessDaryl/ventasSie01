@@ -14,8 +14,7 @@
                     <div class="col-sm-12 col-md-6">
                         <div class="form-group">
                             <label>Meses a renovar</label>
-                            <input type="number" wire:model="meses" class="form-control"
-                                placeholder="PerfilNetflix1">
+                            <input type="number" wire:model="meses" class="form-control" placeholder="PerfilNetflix1">
                             @error('meses')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror
@@ -25,7 +24,7 @@
                     <div class="col-sm-12 col-md-6">
                         <h6>Fecha de expiración Actual</h6>
                         <div class="form-group">
-                            <input type="date" wire:model="expirationActual" class="form-control">
+                            <input type="date" wire:model="expirationActual" class="form-control" disabled>
                             @error('expirationActual')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror
@@ -35,7 +34,7 @@
                     <div class="col-sm-12 col-md-6">
                         <h6>Fecha de expiración nueva</h6>
                         <div class="form-group">
-                            <input type="date" wire:model="expirationNueva" class="form-control">
+                            <input type="date" wire:model="expirationNueva" class="form-control" disabled>
                             @error('expirationNueva')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror
@@ -46,8 +45,7 @@
                         <div class="form-group">
                             <label>Tipo de pago</label>
                             <select wire:model="tipopago" class="form-control">
-                                <option value="Elegir" disabled selected>Elegir</option>
-                                <option value="EFECTIVO">EFECTIVO</option>
+                                <option value="EFECTIVO" selected>EFECTIVO</option>
                                 <option value="Banco">CUENTA BANCARIA</option>
                                 <option value="TigoStreaming">TIGO MONEY</option>
                             </select>
@@ -59,15 +57,15 @@
 
                     <div class="col-sm-12 col-md-6">
                         <div class="form-group text-center mt-4">
-                            <a href="javascript:void(0)" class="btn btn-dark" 
-                            wire:click.prevent="Renovar()">Renovar Perfil</a>
+                            <a href="javascript:void(0)" class="btn btn-dark" wire:click.prevent="Renovar()">Renovar
+                                Cuenta</a>
                         </div>
                     </div>
 
                     <div class="col-sm-12 col-md-6">
                         <div class="form-group text-center mt-4">
-                            <a href="javascript:void(0)" class="btn btn-dark"
-                                wire:click.prevent="Vencer()">Vencer Perfil</a>
+                            <a href="javascript:void(0)" class="btn btn-dark" wire:click.prevent="Vencer()">Vencer
+                                Cuenta</a>
                         </div>
                     </div>
 

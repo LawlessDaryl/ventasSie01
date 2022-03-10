@@ -63,12 +63,11 @@
         </div>
     </div>
 
-    <div class="col-sm-12 col-md-6">
+    <div class="col-sm-12 col-md-4">
         <div class="form-group">
             <label>Tipo de pago</label>
             <select wire:model="tipopago" class="form-control">
-                <option value="Elegir" disabled selected>Elegir</option>
-                <option value="EFECTIVO">EFECTIVO</option>
+                <option value="EFECTIVO" selected>EFECTIVO</option>
                 <option value="Banco">CUENTA BANCARIA</option>
                 <option value="TigoStreaming">TIGO MONEY</option>
             </select>
@@ -78,22 +77,31 @@
         </div>
     </div>
 
-    <div class="col-sm-12 col-md-6">
+    <div class="col-sm-12 col-md-4">
         <div class="form-group">
             <label>Meses para el plan</label>
-            <input type="number" wire:model="meses" class="form-control"
-                placeholder="PerfilNetflix1">
+            <input type="number" wire:model="meses" class="form-control" placeholder="PerfilNetflix1">
             @error('meses')
                 <span class="text-danger er">{{ $message }}</span>
             @enderror
         </div>
     </div>
 
-    <div class="col-sm-12 col-md-6">
+    <div class="col-sm-12 col-md-4">
         <h6>Fecha de expiración del plan</h6>
         <div class="form-group">
             <input type="date" wire:model="expiration_plan" class="form-control">
             @error('expiration_plan')
+                <span class="text-danger er">{{ $message }}</span>
+            @enderror
+        </div>
+    </div>
+
+    <div class="col-sm-12 col-md-12">
+        <div class="form-group">
+            <label>Observaciones</label>
+            <input wire:model.lazy="observaciones" class="form-control" name="" rows="5">
+            @error('observaciones')
                 <span class="text-danger er">{{ $message }}</span>
             @enderror
         </div>
@@ -123,12 +131,12 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @if($accounts->count()==0)
-                                <tr>
-                                    <td colspan="2">
-                                        <h6 class="text-center">No tienes cuentas enteras de esa plataforma</h6>
-                                    </td>
-                                </tr>
+                                @if ($accounts->count() == 0)
+                                    <tr>
+                                        <td colspan="2">
+                                            <h6 class="text-center">No tienes cuentas enteras de esa plataforma</h6>
+                                        </td>
+                                    </tr>
                                 @endif
                                 @foreach ($accounts as $ap)
                                     <tr>
@@ -166,12 +174,12 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @if($profiles->count()==0)
-                                <tr>
-                                    <td colspan="5">
-                                        <h6 class="text-center">No tienes perfiles de esa plataforma</h6>
-                                    </td>
-                                </tr>
+                                @if ($profiles->count() == 0)
+                                    <tr>
+                                        <td colspan="5">
+                                            <h6 class="text-center">No tienes perfiles de esa plataforma</h6>
+                                        </td>
+                                    </tr>
                                 @endif
                                 @foreach ($profiles as $ap)
                                     <tr>

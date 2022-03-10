@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\ExportServicioPdfController;
+use App\Http\Controllers\ExportStreamingPdfController;
 use App\Http\Controllers\ExportTigoPdfController;
 use App\Http\Controllers\ImprimirController;
 use App\Http\Livewire\ArqueosStreamingController;
@@ -147,6 +148,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('reporteServicio/pdf/{user}/{estado}/{type}/{f1}/{f2}', [ExportServicioPdfController::class, 'reporteServPDF']);
     Route::get('reporteServicio/pdf/{user}/{estado}/{type}', [ExportServicioPdfController::class, 'reporteServPDF']);
+    
+    Route::get('reporteStreaming/pdf/{user}/{tipo}/{type}/{f1}/{f2}', [ExportStreamingPdfController::class, 'reporteStrPDF']);
+    Route::get('reporteStreaming/pdf/{user}/{tipo}/{type}', [ExportStreamingPdfController::class, 'reporteStrPDF']);
 
     Route::get('reporte/pdf/{id}', [ImprimirController::class, 'print']);
 

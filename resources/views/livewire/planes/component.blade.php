@@ -121,19 +121,17 @@
                                                     xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
                                                     id="Layer_1" x="0px" y="0px" viewBox="0 0 512 512"
                                                     style="enable-background:new 0 0 512 512;" xml:space="preserve">
-                                                    <path style="fill:#E4F1FB;"
-                                                        d="M512,256c0,0-85.333,170.667-256,170.667S0,256,0,256S85.333,85.333,256,85.333S512,256,512,256z" />
-                                                    <path style="fill:#C9E3F7;"
-                                                        d="M512,256c0,0-85.333,170.667-256,170.667c0-42.667,0-284.444,0-341.333  C426.667,85.333,512,256,512,256z" />
-                                                    <circle style="fill:#78B9EB;" cx="256" cy="256" r="128" />
-                                                    <path style="fill:#5A8BB0;"
-                                                        d="M256,128c70.692,0,128,57.307,128,128s-57.308,128-128,128" />
-                                                    <circle style="fill:#1E2E3B;" cx="256" cy="256" r="85.333" />
+                                                    <circle style="fill:#88C5CC;" cx="256" cy="256" r="256" />
+                                                    <path style="fill:#F5F5F5;"
+                                                        d="M192,72h176c4.4,0,8,3.6,8,8v328c0,4.4-3.6,8-8,8H120c-4.4,0-8-3.6-8-8V156L192,72z" />
+                                                    <path style="fill:#E6E6E6;"
+                                                        d="M184,156c4.4,0,8-3.6,8-8V72l-80,84H184z" />
+                                                    <circle style="fill:#2179A6;" cx="352" cy="392" r="52" />
                                                     <g>
-                                                        <circle style="fill:#FFFFFF;" cx="213.333" cy="298.667"
-                                                            r="42.667" />
-                                                        <circle style="fill:#FFFFFF;" cx="312.889" cy="199.111"
-                                                            r="28.444" />
+                                                        <path style="fill:#F5F5F5;"
+                                                            d="M352,424c-2.212,0-4-1.788-4-4v-56c0-2.212,1.788-4,4-4s4,1.788,4,4v56   C356,422.212,354.212,424,352,424z" />
+                                                        <path style="fill:#F5F5F5;"
+                                                            d="M380,396h-56c-2.212,0-4-1.788-4-4s1.788-4,4-4h56c2.212,0,4,1.788,4,4S382.212,396,380,396z" />
                                                     </g>
                                                 </svg>
                                             </a>
@@ -198,7 +196,7 @@
                                                 {{ \Carbon\Carbon::parse($p->planfin)->format('d:m:Y') }} </h6>
                                         </td>
                                         <td class="text-center">
-                                            @if ($p->estado != 'Anulada')
+                                            @if ($p->estado != 'ANULADO')
                                                 <a href="javascript:void(0)" onclick="Confirm({{ $p->id }})"
                                                     class="btn btn-dark mtmobile" title="Anular">
                                                     <i class="fas fa-trash"></i>
@@ -207,11 +205,22 @@
                                             <a href="javascript:void(0)"
                                                 wire:click="VerObservaciones({{ $p->id }})"
                                                 class="btn btn-dark mtmobile" title="Observaciones">
-                                                <svg viewBox="0 0 1024 1024" focusable="false" data-icon="bars"
-                                                    width="1em" height="1em" fill="currentColor" aria-hidden="true">
-                                                    <path
-                                                        d="M912 192H328c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h584c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 284H328c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h584c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 284H328c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h584c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM104 228a56 56 0 10112 0 56 56 0 10-112 0zm0 284a56 56 0 10112 0 56 56 0 10-112 0zm0 284a56 56 0 10112 0 56 56 0 10-112 0z">
-                                                    </path>
+                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                    xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+                                                    id="Layer_1" x="0px" y="0px" viewBox="0 0 512 512"
+                                                    style="enable-background:new 0 0 512 512;" xml:space="preserve">
+                                                    <circle style="fill:#88C5CC;" cx="256" cy="256" r="256" />
+                                                    <path style="fill:#F5F5F5;"
+                                                        d="M192,72h176c4.4,0,8,3.6,8,8v328c0,4.4-3.6,8-8,8H120c-4.4,0-8-3.6-8-8V156L192,72z" />
+                                                    <path style="fill:#E6E6E6;"
+                                                        d="M184,156c4.4,0,8-3.6,8-8V72l-80,84H184z" />
+                                                    <circle style="fill:#2179A6;" cx="352" cy="392" r="52" />
+                                                    <g>
+                                                        <path style="fill:#F5F5F5;"
+                                                            d="M352,424c-2.212,0-4-1.788-4-4v-56c0-2.212,1.788-4,4-4s4,1.788,4,4v56   C356,422.212,354.212,424,352,424z" />
+                                                        <path style="fill:#F5F5F5;"
+                                                            d="M380,396h-56c-2.212,0-4-1.788-4-4s1.788-4,4-4h56c2.212,0,4,1.788,4,4S382.212,396,380,396z" />
+                                                    </g>
                                                 </svg>
                                             </a>
                                         </td>
@@ -225,8 +234,8 @@
             @endif
         </div>
     </div>
-
     @include('livewire.planes.form')
+    @include('livewire.planes.modalObservaciones')
 </div>
 
 <script>
@@ -254,6 +263,13 @@
         window.livewire.on('g-i/e', Msg => {
             $('#modal-detailes').modal('hide')
             noty(Msg)
+        })
+        window.livewire.on('item-actualizado', Msg => {
+            $('#Modal_Observaciones').modal('hide')
+            noty(Msg)
+        })
+        window.livewire.on('show-modal3', Msg => {
+            $('#Modal_Observaciones').modal('show')
         })
         flatpickr(document.getElementsByClassName('flatpickr'), {
             enableTime: false,

@@ -22,8 +22,8 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-md-3">
-                        <h6>Elige el tipo 'Perfiles' 'Cuentas'</h6>
+                    <div class="col-sm-12 col-md-2">
+                        <label>Perfiles / Cuentas</label>
                         <div class="form-group">
                             <select wire:model="condicional" class="form-control">
                                 <option value="0">Perfiles</option>
@@ -32,7 +32,7 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-md-3">
+                    <div class="col-sm-12 col-md-2">
                         <div class="form-group">
                             <label>Fecha inicial</label>
                             <input type="date" wire:model.lazy="fromDate" class="form-control">
@@ -42,7 +42,7 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-md-3">
+                    <div class="col-sm-12 col-md-2">
                         <div class="form-group">
                             <label>Fecha final</label>
                             <input type="date" wire:model.lazy="toDate" class="form-control">
@@ -51,18 +51,20 @@
                             @enderror
                         </div>
                     </div>
+
+                    <div class="col-sm-12 col-md-3 mbmobile mt-2">
+                        <div class="connect-sorting bg-dark">
+                            <h5 class="text-white">Transacciones totales : <br> ${{number_format($total,2)}}</h5>
+                        </div>
+                    </div>
                     
                 </div>
             </div>
 
-            <div class="row mt-5">
-                <div class="col-sm-12 col-md-3 mbmobile">
-                    <div class="connect-sorting bg-dark">
-                        <h5 class="text-white">Transacciones totales : <br> ${{number_format($total,2)}}</h5>
-                    </div>
-                </div>
+            <div class="row mt-4">
+                
                 @if($condicional==0)
-                <div class="col-sm-12 col-md-9">
+                
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped mt-1">
                             <thead class="text-white" style="background: #3b3ff5;">
@@ -138,10 +140,9 @@
                             </tbody>
                         </table>
                     </div>
-                </div>
+                
                 
                 @else
-                <div class="col-sm-12 col-md-9">
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped mt-1">
                             <thead class="text-white" style="background: #3b3ff5;">
@@ -208,8 +209,7 @@
                                 @endforeach
                             </tbody>
                         </table>
-                    </div>
-                </div>
+                    </div>                
                 @endif
             </div>
         </div>

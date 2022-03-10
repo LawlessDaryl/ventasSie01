@@ -25,10 +25,11 @@ class PlanesController extends Component
 {
     use WithPagination;
 
-    public $profile_id, $movimiento_id, $expiration_plan, $status, $p_type, $observations, $importe,
+    public $profile_id, $movimiento_id, $expiration_plan, $status, $p_type, $importe,
         $pageTitle, $componentName, $selected_id, $hora, $search, $condicion, $type, $cartera_id,
         $nombre, $cedula, $celular, $direccion, $email, $fecha_nacim, $razon, $nit, $plataforma,
-        $cuentaperfil, $accounts, $profiles, $cantidaperf, $mostrartabla, $tipopago, $condicional, $meses;
+        $cuentaperfil, $accounts, $profiles, $cantidaperf, $mostrartabla, $tipopago, $condicional,
+        $meses, $observaciones;
 
     private $pagination = 10;
     public function paginationView()
@@ -54,9 +55,10 @@ class PlanesController extends Component
         $this->condicion = 0;
         $this->select = 1;
         $this->mostrartabla = 0;
-        $this->tipopago = 'Elegir';
+        $this->tipopago = 'EFECTIVO';
         $this->condicional = 'perfiles';
         $this->meses = 1;
+        $this->observaciones = '';
     }
 
     public function render()
@@ -335,7 +337,7 @@ class PlanesController extends Component
                         'expiration_plan' => $this->expiration_plan,
                         'status' => 'VIGENTE',
                         'type_pay' => $this->tipopago,
-                        'observations' => $this->observations
+                        'observations' => $this->observaciones
                     ]);
 
                     PlanAccount::create([
@@ -378,9 +380,9 @@ class PlanesController extends Component
                     'expiration_plan' => $this->expiration_plan,
                     'status' => 'VIGENTE',
                     'type_pay' => $this->tipopago,
-                    'observations' => $this->observations
+                    'observations' => $this->observaciones
                 ]);
-
+                
                 foreach ($this->profiles as $accp) {
 
                     $this->importe += $accp->CuentaPerfil->Cuenta->Plataforma->precioPerfil;
@@ -508,11 +510,28 @@ class PlanesController extends Component
 
         $this->emit('item-anulado', 'Se anuló el plan');
     }
+    
     public function viewDetails()
     {
         $this->emit('show-modal2', 'open modal');
     }
-    /* Resetear los imput */
+
+    public function VerObservaciones(Plan $plan)
+    {
+        $this->selected_id = $plan->id;
+        $this->observaciones = $plan->observations;
+        $this->emit('show-modal3', 'open modal');
+    }
+
+    public function Modificar()
+    {
+        $plan = Plan::find($this->selected_id);
+        $plan->observations = $this->observaciones;
+        $plan->save();
+        $this->resetUI();
+        $this->emit('item-actualizado', 'Se actulizaron las observaciones');
+    }
+    
     public function resetUI()
     {
         $this->selected_id = 0;
@@ -532,7 +551,7 @@ class PlanesController extends Component
         $this->tipopago = 'Elegir';
         $this->condicional = 'perfiles';
         $this->meses = 1;
-
+        $this->observaciones = '';
         $this->resetValidation();
     }
 }

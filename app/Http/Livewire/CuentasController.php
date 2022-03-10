@@ -31,7 +31,7 @@ class CuentasController extends Component
         $search, $selected_id, $pageTitle, $componentName, $proveedor, $nameP, $PIN, $estado,
         $availability, $Observaciones, $perfiles, $correos, $selected,
         $expiration_account, $password_account, $price, $mostrarCampos, $condicional,
-        $meses, $expirationActual, $expirationNueva;
+        $meses, $expirationActual, $expirationNueva, $observations;
     private $pagination = 10;
     public function paginationView()
     {
@@ -42,7 +42,7 @@ class CuentasController extends Component
         $this->componentName = 'Cuentas';
         $this->pageTitle = 'Listado';
         $this->selected_id = 0;
-        $this->selected = 0;        
+        $this->selected = 0;
         $this->email_id = 'Elegir';
         $this->platform_id = 'Elegir';
         $this->proveedor = 'Elegir';
@@ -60,7 +60,7 @@ class CuentasController extends Component
         $this->condicional = 'cuentas';
         $this->meses = 0;
         $this->expirationNueva = Carbon::parse(Carbon::now())->format('Y-m-d');
-        $this->tipopago = 'Elegir';
+        $this->tipopago = 'EFECTIVO';
         $this->importe = 0;
     }
     public function render()
@@ -407,7 +407,7 @@ class CuentasController extends Component
     public function Acciones(Plan $plan)
     {
         $this->selected_id = $plan->id;
-        
+
         $this->expirationActual = Plan::join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
             ->join('accounts as acc', 'acc.id', 'pa.account_id')
             ->select(
@@ -416,7 +416,7 @@ class CuentasController extends Component
             ->where('plans.id', $plan->id)
             ->get()->first()->expiration_plan;
 
-            $this->emit('details2-show', 'show modal!');
+        $this->emit('details2-show', 'show modal!');
     }
     public function Renovar()
     {
@@ -467,13 +467,10 @@ class CuentasController extends Component
             ->where('plans.id', $this->selected_id)
             ->get()->first();
         $cuenta = Account::find($datos->cuentaid);
-        $this->importe += $cuenta->Plataforma->precioPerfil;
+        $this->importe += $cuenta->Plataforma->precioEntera;
+
         DB::beginTransaction();
         try {
-            $planviejo = Plan::find($datos->planid);
-            $planviejo->status = 'VENCIDO';
-            $planviejo->save();
-
             $plan = Plan::create([
                 'importe' => $this->importe,
                 'expiration_plan' => $this->expirationNueva,
@@ -482,14 +479,10 @@ class CuentasController extends Component
                 'observations' => $this->observations
             ]);
 
-            $pa = PlanAccount::create([
+            PlanAccount::create([
                 'plan_id' => $plan->id,
                 'account_id' => $cuenta->id,
             ]);
-
-            $planCuenta = PlanAccount::find($datos->planAccountid);
-            $planCuenta->status = 'INACTIVO';
-            $planCuenta->save();
 
             $mv = Movimiento::create([
                 'type' => 'TERMINADO',
@@ -515,23 +508,29 @@ class CuentasController extends Component
                 'plan_id' => $plan->id
             ]);
 
+            $planviejo = Plan::find($datos->planid);
+            $planviejo->status = 'VENCIDO';
+            $planviejo->save();
+
+            $planCuenta = PlanAccount::find($datos->planAccountid);
+            $planCuenta->status = 'INACTIVO';
+            $planCuenta->save();
+
             DB::commit();
             $this->resetUI();
-            $this->emit('item-accion', 'Se renovó este perfil');
+            $this->emit('cuenta-renovado-vencida', 'Se renovó la cuenta');
         } catch (Exception $e) {
             DB::rollback();
             $this->emit('item-error', 'ERROR' . $e->getMessage());
         }
-
-        $this->emit('details-show', 'show modal!');
     }
     public function Vencer()
     {
         $datos = Plan::join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
-            ->join('accounts as acc', 'acc.id', 'pa.account_id')            
+            ->join('accounts as acc', 'acc.id', 'pa.account_id')
             ->select(
                 'acc.id as cuentaid',
-                'pa.id as paid'        
+                'pa.id as paid'
             )
             ->where('plans.id', $this->selected_id)
             ->where('pa.status', 'ACTIVO')
@@ -543,13 +542,13 @@ class CuentasController extends Component
         $plancuenta->status = 'INACTIVO';
         $plancuenta->save();
         $this->resetUI();
-        $this->emit('item-accion', 'No se renovó este perfil y ahora esta inactivo');
+        $this->emit('cuenta-renovado-vencida', 'No se renovó este perfil y ahora esta inactivo');
     }
 
     public function resetUI()
     {
         $this->selected_id = 0;
-        $this->selected = 0;        
+        $this->selected = 0;
         $this->email_id = 'Elegir';
         $this->platform_id = 'Elegir';
         $this->proveedor = 'Elegir';
@@ -564,10 +563,9 @@ class CuentasController extends Component
         $this->password_account = '';
         $this->price = '';
         $this->mostrarCampos = 0;
-        $this->condicional = 'cuentas';
         $this->meses = 0;
         $this->expirationNueva = Carbon::parse(Carbon::now())->format('Y-m-d');
-        $this->tipopago = 'Elegir';
+        $this->tipopago = 'EFECTIVO';
         $this->importe = 0;
         $this->resetValidation();
     }
