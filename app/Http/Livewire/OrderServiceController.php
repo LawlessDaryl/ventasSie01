@@ -61,14 +61,22 @@ class OrderServiceController extends Component
         $this->nombreUsuario = '';
         $this->opciones = 'TODOS';
         $this->tipopago = 'EFECTIVO';
+     
     }
     public function render()
     {
+        if (!empty(session('orderserv'))) {
+            $this->search = session('orderserv');
+        session(['orderserv' => null]);
+        $orderservices = OrderService::where('id', $this->search)->orderBy('order_services.id', 'desc')->paginate($this->pagination);
+       
+        
+        }else{
         if (strlen($this->search) > 0) {
             //$orderservices = OrderService::orderBy('id','desc')
             //->paginate($this->pagination);
 
-
+           
             $orderservices = OrderService::join(
                 'services as s',
                 'order_services.id',
@@ -132,6 +140,7 @@ class OrderServiceController extends Component
                 ->distinct()
                 ->paginate($this->pagination);
         }
+    }
         $users = User::all();
         $typew = TypeWork::orderBy('name', 'asc')->get();
         $dato1 = CatProdService::orderBy('nombre', 'asc')->get();
@@ -366,6 +375,12 @@ class OrderServiceController extends Component
         $this->marca = $this->service1->marca;
         $this->falla_segun_cliente = $this->service1->falla_segun_cliente;
         $this->emit('show-enddetail', 'show modal!');
+    }
+    public function buscarid($id)
+    {
+        session(['orderserv' => $id]);
+      
+        return redirect()->intended("orderservice");
     }
 
     public function Imprimir($id)
