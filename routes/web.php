@@ -68,8 +68,6 @@ Route::middleware(['auth'])->group(function () {
     });
     /* ADMINISTRACION */
     Route::get('users', UsersController::class)->name('usuarios')->middleware('permission:Usuarios_Index');
-    Route::get('cashout', CashoutController::class)->name('cashout')->middleware('permission:Cashout_Index');
-    Route::get('reports', ReportsController::class)->name('reportes')->middleware('permission:Reportes_Index');
     Route::get('procedenciaCli', ProcedenciaController::class)->name('proced');
     Route::get('clientes', ClienteController::class)->name('cliente')->middleware('permission:Cliente_Index');
     Route::get('roles', RolesController::class)->name('roles')->middleware('permission:Roles_Index');
@@ -92,7 +90,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('arqueosStreaming', ArqueosStreamingController::class)->name('arqueosStreaming');
     Route::get('reporteStreaming/pdf/{user}/{tipo}/{type}/{f1}/{f2}', [ExportStreamingPdfController::class, 'reporteStrPDF']);
     Route::get('reporteStreaming/pdf/{user}/{tipo}/{type}', [ExportStreamingPdfController::class, 'reporteStrPDF']);
-    
+
     /* NOTIFICACIONES */
     Route::get('telefonos', PhonesController::class)->name('telefonos');
     Route::get('modulos', ModulosController::class)->name('modulos');
@@ -142,6 +140,8 @@ Route::middleware(['auth'])->group(function () {
     /* VENTAS */
     Route::get('coins', CoinsController::class)->name('monedas')->middleware('permission:Coins_Index');
     Route::get('pos', PosController::class)->name('ventas')->middleware('permission:Sales_Index');
+    Route::get('cashout', CashoutController::class)->name('cashout')->middleware('permission:Cashout_Index');
+    Route::get('reports', ReportsController::class)->name('reportes')->middleware('permission:Reportes_Index');
     Route::group(['middleware' => ['permission:Report_Sales_Export']], function () {
         Route::get('report/pdf/{user}/{type}/{f1}/{f2}', [ExportController::class, 'reportPDF']);
         Route::get('report/pdf/{user}/{type}', [ExportController::class, 'reportPDF']);
