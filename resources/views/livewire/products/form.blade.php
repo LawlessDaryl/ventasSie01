@@ -25,6 +25,13 @@
     </div>
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
+            <label>Garantia(en dias)</label>
+            <input type="text" wire:model.lazy="garantia" class="form-control" placeholder="introducir dias">
+            @error('garantia') <span class="text-danger er">{{ $message }}</span>@enderror
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-4">
+        <div class="form-group">
             <label>Lote de produccion</label>
             <input type="text" wire:model.lazy="lote" class="form-control" placeholder="ej: 012020222">
             @error('lote') <span class="text-danger er">{{ $message }}</span>@enderror
@@ -56,16 +63,9 @@
     </div>
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
-            <label>Industria</label>
+            <label>Pais de Procedencia</label>
             <input type="text" wire:model.lazy="industria" class="form-control" placeholder="ej: 012020222">
             @error('industria') <span class="text-danger er">{{ $message }}</span>@enderror
-        </div>
-    </div>
-    <div class="col-sm-12 col-md-4">
-        <div class="form-group">
-            <label>Precio de venta</label>
-            <input type="text" wire:model.lazy="precio_venta" class="form-control" placeholder="ej: 012020222">
-            @error('precio_venta') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>
     </div>
     <div class="col-sm-12 col-md-4">
@@ -78,9 +78,9 @@
   
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
-            <label>Cantidad Míninma</label>
-            <input type="number" wire:model.lazy="cantidad_minima" class="form-control" placeholder="ej: 20">
-            @error('cantidad_minima') <span class="text-danger er">{{ $message }}</span>@enderror
+            <label>Precio de venta</label>
+            <input type="text" wire:model.lazy="precio_venta" class="form-control" placeholder="ej: 012020222">
+            @error('precio_venta') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>
     </div>
 
