@@ -265,7 +265,8 @@ class PerfilesController extends Component
     }
     public function Acciones(Profile $prof)
     {
-        dd(1);
+        $this->selected_id = $prof->id;
+        $this->selected_id = $prof->id;
         $this->selected_id = $prof->id;
         $this->expirationActual = Plan::join('mov_plans as mp', 'plans.id', 'mp.plan_id')
             ->join('movimientos as m', 'm.id', 'mp.movimiento_id')
