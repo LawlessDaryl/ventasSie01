@@ -39,8 +39,8 @@
                                             class="btn btn-dark mtmobile" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <a href="javascript:void(0)" onclick="Confirm('{{ $category->id }}','{{ $category->nombre }}',
-                                            '{{ $category->servicios->count() }}')" class="btn btn-dark"
+                                        <a href="javascript:void(0)" onclick="Confirm('{{ $category->id }}','{{ $category->nombre }}'
+                                            ,'{{ $category->servicios->count() }}','{{ $category->subcat->count() }}')" class="btn btn-dark"
                                             title="Delete">
                                             <i class="fas fa-trash"></i>
                                         </a>
@@ -79,13 +79,13 @@
 
     });
 
-    function Confirm(id, name, servicio) {
-        if (servicio > 0) {
+    function Confirm(id, name, servicio, subcat) {
+        if (servicio > 0 || subcat > 0) {
             swal.fire({
                 title: 'PRECAUCION',
                 icon: 'warning',
                 text: 'No se puede eliminar la categoria, ' + name + ' porque tiene ' 
-                + servicio + ' servicios relacionados'
+                + ' registros relacionados'
             })
             return;
         }

@@ -13,6 +13,10 @@ class CatProdService extends Model
 
     public function servicios()
     {
-        return $this->hasMany(Service::class);
+        return $this->hasMany(Service::class,'cat_prod_service_id','id');
+    }
+    public function subcat()
+    {
+        return $this->hasMany(SubCatProdService::class);
     }
 }
