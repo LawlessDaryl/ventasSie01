@@ -69,7 +69,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::group(['middleware' => ['role:ADMIN']], function () {
     });
-
+    Route::get('idorderservice/{id}', [OrderServiceController::class, 'buscarid'])->name('buscarid');
     Route::get('roles', RolesController::class)->name('roles')->middleware('permission:Roles_Index');
     Route::get('permisos', PermisosController ::class)->name('permisos')->middleware('permission:Permission_Index');
     Route::get('asignar', AsignarController::class)->name('asignar')->middleware('permission:Asignar_Index');
