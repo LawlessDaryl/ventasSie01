@@ -23,6 +23,8 @@ class CreateProductosDestinosTable extends Migration
             $table->foreign('destino-id')->references('id')->on('locations');
             
             $table->integer('stock');
+            $table->integer('cantidad_minima');
+            $table->string('alertas');
 
             $table->timestamps();
         });

@@ -17,14 +17,13 @@
                     <table class="table table-unbordered table-hover mt-4">
                         <thead class="text-white" style="background: #3B3F5C">
                             <tr>
-                                <th class="table-th text-withe">NOMBRE</th>
-                                <th class="table-th text-withe text-center">BARCODE</th>
-                                <th class="table-th text-withe text-center">PRECIO</th>
-                                <th class="table-th text-withe text-center">STOCK</th>
-                                <th class="table-th text-withe text-center">INV.MIN</th>
-                                <th class="table-th text-withe text-center">STATUS</th>
-                                <th class="table-th text-withe text-center">IMAGEN</th>
-                                <th class="table-th text-withe text-center">ACCIONES</th>
+                                <th class="table-th text-withe"> <b>NOMBRE</b> </th>
+                                <th class="table-th text-withe text-center"> <b>CARACTERISTICAS</b> </th>
+                                <th class="table-th text-withe text-center"> <b>PRECIO</b> </th>
+                                <th class="table-th text-withe text-center"> <b>STOCK</b> </th>
+                                <th class="table-th text-withe text-center"> <b>STATUS</b> </th>
+                                <th class="table-th text-withe text-center"> <b>IMAGEN</b> </th>
+                                <th class="table-th text-withe text-center"> <b>ACCIONES</b> </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -34,7 +33,7 @@
                                         <h6>{{ $product->nombre }}</h6>
                                     </td>
                                     <td>
-                                        <h6 class="text-center">{{ $product->barcode }}</h6>
+                                        <h6 class="text-center">{{ $product->caracteristicas }}</h6>
                                     </td>
                                     <td>
                                         <h6 class="text-center">{{ $product->precio_venta }}</h6>
@@ -43,9 +42,7 @@
                                         <h6 class=" text-center">{{ $product->stock }}</h6>
                                     </td>
 
-                                    <td>
-                                        <h6 class="text-center">{{ $product->cantidad_minima }}</h6>
-                                    </td>
+                        
 
                                     <td>
                                         <h6 class="text-center">{{ $product->status }}</h6>

@@ -16,7 +16,7 @@ class ProductsController extends Component
     use WithFileUploads;
     public $nombre, $barcode, $costo, $precio_venta,$cantidad_minima,
     $codigo,$lote,$unidad,$industria,$caracteristicas,$status,$categoryid, $search,
-     $image, $selected_id, $pageTitle, $componentName,$cate,$marca,$stock,$stock_v;
+     $image, $selected_id, $pageTitle, $componentName,$cate,$marca,$garantia,$stock,$stock_v;
 
     private $pagination = 5;
     public $selected_id2=0;
@@ -70,17 +70,15 @@ class ProductsController extends Component
             'nombre' => 'required|unique:products|min:5',
             'costo' => 'required',
             'precio_venta' => 'required',
-            'cantidad_minima' => 'required',
             'categoryid' => 'required|not_in:Elegir'
         ];
+
         $messages = [
             'nombre.required' => 'Nombre del producto requerido',
             'nombre.unique' => 'Ya existe el nombre del producto',
             'nombre.min' => 'El nombre debe ser contener al menos 3 caracteres',
             'costo.required' =>'El costo es requerido',
-            
             'precio_venta.required'=> 'El precio es requerido',
-            'cantidad_minima.required'=> 'La cantidad minima es requerida',
             'categoryid.required' => 'La categoria es requerida',
             'categoryid.not_in' => 'Elegir un nombre de categoria diferente de Elegir'
         ];
@@ -89,7 +87,6 @@ class ProductsController extends Component
 
         $product = Product::create([
             'nombre' => $this->nombre,
-            'stock'=>$this->stock,
             'costo' => $this->costo,
             'precio_venta' => $this->precio_venta,
             'barcode' => $this->barcode,
@@ -98,8 +95,8 @@ class ProductsController extends Component
             'lote'=>$this->lote,
             'unidad'=>$this->unidad,
             'marca' => $this->marca,
+            'garantia' => $this->garantia,
             'industria' => $this->industria,
-            'cantidad_minima'=>$this->cantidad_minima,
             'category_id' => $this->categoryid
         ]);
         if ($this->image) {
@@ -126,12 +123,13 @@ class ProductsController extends Component
         $this->barcode = $product->barcode;
         $this->lote = $product->lote;
         $this->unidad = $product->unidad;
-        $this->cantidad_minima = $product->cantidad_minima;
+   
         $this->marca = $product->marca;
+        $this->garantia = $product->garantia;
         $this->industria = $product->industria;
         $this->categoryid = $product->category_id;
         $this->image = null;
-        $this->stock_v=$product->stock;
+   
 
         $this->emit('modal-show', 'show modal!');
     }
@@ -141,7 +139,6 @@ class ProductsController extends Component
             'nombre' => "required|min:3|unique:products,nombre,{$this->selected_id}",
             'costo' => 'required',
             'precio_venta' => 'required',
-            'cantidad_min' => 'required',
             'categoryid' => 'required|not_in:Elegir'
         ];
         $messages = [
@@ -150,7 +147,6 @@ class ProductsController extends Component
             'nombre.min' => 'El nombre debe ser contener al menos 3 caracteres',
             'costo.required' =>'El costo es requerido',
             'precio_venta.required'=> 'El precio es requerido',
-            'cantidad_min.required'=> 'La cantidad minima es requerida',
             'categoryid.required' => 'La categoria es requerida',
             'categoryid.not_in' => 'Elegir un nombre de categoria diferente de Elegir'
         ];
@@ -167,9 +163,9 @@ class ProductsController extends Component
             'lote'=>$this->lote,
             'unidad'=>$this->unidad,
             'marca' => $this->marca,
+            'garantia' => $this->garantia,
             'industria' => $this->industria,
-            'cantidad_minima'=>$this->cantidad_minima,
-            'status'=>$this->status,
+         
             'category_id' => $this->categoryid
         ]);
         if ($this->image) {
@@ -207,7 +203,7 @@ class ProductsController extends Component
     {
         
         $this->selected_id =0;
-        $this->stock='';
+        $this->selected_id2 =0;
         $this->costo = '';
         $this->nombre = '';
         $this->precio_venta='';
@@ -217,6 +213,7 @@ class ProductsController extends Component
         $this->unidad = 'Elegir';
         $this->marca = 'Elegir';
         $this->industria = '';
+        $this->garantia = '';
         $this->categoryid = 'Elegir';
         $this->image = null;
 
