@@ -1,6 +1,19 @@
 <div class="row mt-3">
     <div class="col-sm-12">
         <div class="connect-sorting">
+            <div class="container">
+                <div class="row mt-6">
+                    Factura:
+                </div>
+                <div class="row mt-6">
+                    Factura:
+                </div>
+            </div>
+            {{-- <div class="connect-sorting-content mt-4">
+                Tipo de Pago
+            </div> --}}
+        </div>
+        <div class="connect-sorting">
             <h5 class="text-center mb-2">Monedas</h5>
             <div class="container">
                 <div class="row">

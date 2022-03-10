@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\Denomination;
 use App\Models\Product;
+use App\Models\ProductosDestino;
 use App\Models\Sale;
 use App\Models\SaleDetail;
 use App\Models\Movimiento;
@@ -97,12 +98,22 @@ class PosController extends Component
     ];
     public function ScanCode($barcode, $cant = 1)
     {
+        $product = Product::join("productos_destinos as pd", "pd.product-id", "products.id")
+        ->select("products.id as id","products.nombre as name","products.precio_venta as price","products.barcode", "pd.stock as stock")
+        ->where("products.barcode", $barcode)
+        ->get()->first();
 
-        $product = Product::where('barcode', $barcode)->first();
+        //dd($product->id);
+
+
+
+
+
+
+        //$product = Product::where('barcode', $barcode)->first();
         if ($product == null || empty($product)) {
             $this->emit('scan-notfound', 'El producto no esta registrado');
         } else {
-
             if ($this->inCart($product->id)) {
                 $this->increaseQty($product->id);
                 return;
@@ -111,6 +122,7 @@ class PosController extends Component
                 $this->emit('no-stock', 'stock insuficiente :/');
                 return;
             }
+            dd($product->cant);
             Cart::add(
                 $product->id,
                 $product->name,
