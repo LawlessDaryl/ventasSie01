@@ -3,7 +3,7 @@
         <div class="card simple-title-task ui-sortable-handle">
             <div class="card-body">
                 @if ($total > 0)
-                <div class="table-responsive tblscroll" style="max-height: 650px; overflow: hidden">
+                <div class="table-responsive tblscroll" style="overflow: hidden">
                     <table class="table table-bordered table-striped mt-1">
                         <thead class="text-white" style="background: #3b3f5c ">
                             <tr>
@@ -22,7 +22,7 @@
                                 <td class="text-center table-th">
                                     @if (count($item->attributes) > 0)
                                     <span>
-                                        <img src="{{ asset('storage/productos/' . $item->attributes[0]) }}" alt="imágen del producto" height="90" width="90" class="rounded">
+                                        <img src="{{ asset('storage/productos/' . $item->attributes[0]) }}" alt="imágen del producto" height="90" class="rounded">
                                     </span>
                                     @endif
                                 </td>

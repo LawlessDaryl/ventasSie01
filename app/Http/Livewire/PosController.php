@@ -98,27 +98,10 @@ class PosController extends Component
     ];
     public function ScanCode($barcode, $cant = 1)
     {
-
-
-
         $product = Product::join("productos_destinos as pd", "pd.product-id", "products.id")
         ->select("products.id as id","products.image as image","products.nombre as name","products.precio_venta as price","products.barcode", "pd.stock as stock")
         ->where("products.barcode", $barcode)
         ->get()->first();
-
-
-
-
-
-
-        //dd($product->id);
-
-
-
-
-
-
-
         //$product = Product::where('barcode', $barcode)->first();
         if ($product == null || empty($product))
         {
@@ -162,19 +145,27 @@ class PosController extends Component
     public function increaseQty($productId, $cant = 1)
     {
         $title = '';
-        $product = Product::find($productId);
+        
+        $product = Product::join("productos_destinos as pd", "pd.product-id", "products.id")
+        ->select("products.id as id","products.image as image","products.nombre as name","products.precio_venta as price","products.barcode", "pd.stock as stock")
+        ->where("products.id", $productId)
+        ->get()->first();
+        //$product = ProductosDestino::find($productId);
         $exist = Cart::get($productId);
         if ($exist) {
             $title = 'Cantidad actualizada';
         } else {
             $title = "Producto agregado";
         }
-        if ($exist) {
-            if ($product->stock < ($cant + $exist->quantity)) {
+        if ($exist)
+        {
+            if ($product->stock < ($cant + $exist->quantity))
+            {
                 $this->emit('no-stock', 'stock insuficiente');
                 return;
             }
         }
+        //dd($product->price);
         Cart::add($product->id, $product->name, $product->price, $cant, $product->image);
 
         $this->total = Cart::getTotal();
@@ -296,12 +287,11 @@ class PosController extends Component
                     SaleDetail::create([
                         'price' => $item->price,
                         'quantity' => $item->quantity,
-                        dd($item->id),
                         'product_id' => $item->id,
                         'sale_id' => $sale->id,
                     ]);
 
-                    $product = Product::find($item->id);
+                    $product = ProductosDestino::find($item->id);
                     $product->stock = $product->stock - $item->quantity;
                     $product->save();
                 }

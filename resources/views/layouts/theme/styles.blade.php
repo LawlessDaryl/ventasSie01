@@ -26,6 +26,9 @@
 <link type="text/css" rel="stylesheet" href="{{ asset('assets/css/apps/scrumboard.css') }}">
 <link type="text/css" rel="stylesheet" href="{{ asset('assets/css/apps/notes.css') }}">
 <link href="{{ asset('assets/css/scrollspyNav.css') }}" rel="stylesheet" type="text/css" />
+<!-- END GLOBAL MANDATORY STYLES -->
+<link href="assets/css/scrollspyNav.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="assets/css/forms/switches.css">
 <style>
     aside {
         display: none !important;

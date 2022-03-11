@@ -47,6 +47,7 @@ class DatabaseSeeder extends Seeder
         $this->call(CategorySeeder::class);
         $this->call(ClientSeeder::class);
         $this->call(ProductSeeder::class);
+        $this->call(ProductoDestinoSeeder::class);
        /*  Category::factory(20)->create(); */
     }
 }

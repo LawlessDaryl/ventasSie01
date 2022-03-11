@@ -14,6 +14,7 @@ class ProductSeeder extends Seeder
      */
     public function run()
     {
+        //ID=1
         Product::create([
             'nombre' => 'Cable Usb C Huawei 0.5 Metros',
             'costo' => 40,
@@ -24,6 +25,7 @@ class ProductSeeder extends Seeder
             'image' => 'Cable_Usb_C_Huawei_0.5_Metros.png',
             'category_id' => 7,
         ]);
+        //ID=2
         Product::create([
             'nombre' => 'Cargador Lapto',
             'costo' => 100,
@@ -34,6 +36,7 @@ class ProductSeeder extends Seeder
             'image' => 'Cargador_Lapto.png',
             'category_id' => 5,
         ]);
+        //ID=3
         Product::create([
             'nombre' => 'Iphone 11',
             'costo' => 4000,
@@ -44,6 +47,7 @@ class ProductSeeder extends Seeder
             'image' => 'Iphone_11.png',
             'category_id' => 8,
         ]);
+        //ID=4
         Product::create([
             'nombre' => 'PC Gammer',
             'costo' => 5000,
@@ -54,6 +58,7 @@ class ProductSeeder extends Seeder
             'image' => 'PC_Gammer.png',
             'category_id' => 3,
         ]);
+        //ID=5
         Product::create([
             'nombre' => 'Vidrio Templado j5 Prime',
             'costo' => 7,
@@ -64,6 +69,7 @@ class ProductSeeder extends Seeder
             'image' => 'Vidrio_Templado_j5_Prime.png',
             'category_id' => 6,
         ]);
+        //ID=6
         Product::create([
             'nombre' => 'Mouse Gammer',
             'costo' => 70,
@@ -74,6 +80,7 @@ class ProductSeeder extends Seeder
             'image' => 'Mouse_Gammer.png',
             'category_id' => 5,
         ]);
+        //ID=7
         Product::create([
             'nombre' => 'Teclado Pc',
             'costo' => 60,
@@ -84,6 +91,7 @@ class ProductSeeder extends Seeder
             'image' => 'Teclado_Pc.png',
             'category_id' => 5,
         ]);
+        //ID=8
         Product::create([
             'nombre' => 'SSD Kingston 240GB',
             'costo' => 270,
@@ -94,6 +102,7 @@ class ProductSeeder extends Seeder
             'image' => 'SSD_Kingston_240GB.png',
             'category_id' => 5,
         ]);
+        //ID=9
         Product::create([
             'nombre' => 'Monitor LG 15 Pulgadas',
             'costo' => 1700,
