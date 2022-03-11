@@ -233,8 +233,8 @@ class ServiciosController extends Component
             } else {
                 $neworder = OrderService::find($this->orderservice);
             }
-
-            $from = Carbon::parse($this->fecha_estimada_entrega)->format('Y-m-d') . Carbon::parse($this->hora_entrega)->format(' H:i') . ':00';
+            
+            $from = Carbon::parse($this->fecha_estimada_entrega)->format('Y-m-d') ." " . $this->hora_entrega . ':00';
             $newservice = Service::create([
                 'type_work_id' => $this->typeworkid,
                 'cat_prod_service_id' => $this->catprodservid,
@@ -344,9 +344,11 @@ class ServiciosController extends Component
 
         $this->validate($rules, $messages);
         DB::beginTransaction();
+        /* dd($this->hora_entrega); */
         try {
-            $from = Carbon::parse($this->fecha_estimada_entrega)->format('Y-m-d') . Carbon::parse($this->hora_entrega)->format(' H:i') . ':00';
+            $from = Carbon::parse($this->fecha_estimada_entrega)->format('Y-m-d') ." " . $this->hora_entrega . ':00';
             $service = Service::find($this->selected_id);
+            
             $service->update([
                 'type_work_id' => $this->typeworkid,
                 'cat_prod_service_id' => $this->catprodservid,

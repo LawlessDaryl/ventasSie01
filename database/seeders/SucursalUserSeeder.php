@@ -32,5 +32,11 @@ class SucursalUserSeeder extends Seeder
             'estado' => 'ACTIVO',
             'fecha_fin' => null,
         ]);
+        SucursalUser::create([
+            'user_id' => '4',
+            'sucursal_id' => '1',
+            'estado' => 'ACTIVO',
+            'fecha_fin' => null,
+        ]);
     }
 }
