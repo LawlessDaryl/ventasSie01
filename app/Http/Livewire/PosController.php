@@ -98,10 +98,18 @@ class PosController extends Component
     ];
     public function ScanCode($barcode, $cant = 1)
     {
+
+
+
         $product = Product::join("productos_destinos as pd", "pd.product-id", "products.id")
-        ->select("products.id as id","products.nombre as name","products.precio_venta as price","products.barcode", "pd.stock as stock")
+        ->select("products.id as id","products.image as image","products.nombre as name","products.precio_venta as price","products.barcode", "pd.stock as stock")
         ->where("products.barcode", $barcode)
         ->get()->first();
+
+
+
+
+
 
         //dd($product->id);
 
@@ -110,19 +118,24 @@ class PosController extends Component
 
 
 
+
         //$product = Product::where('barcode', $barcode)->first();
-        if ($product == null || empty($product)) {
+        if ($product == null || empty($product))
+        {
             $this->emit('scan-notfound', 'El producto no esta registrado');
-        } else {
-            if ($this->inCart($product->id)) {
+        }
+        else
+        {
+            if ($this->inCart($product->id))
+            {
                 $this->increaseQty($product->id);
                 return;
             }
-            if ($product->stock < 1) {
+            if ($product->stock < 1)
+            {
                 $this->emit('no-stock', 'stock insuficiente :/');
                 return;
             }
-            dd($product->cant);
             Cart::add(
                 $product->id,
                 $product->name,
@@ -132,6 +145,7 @@ class PosController extends Component
             );
             $this->total = Cart::getTotal();
             $this->itemsQuantity = Cart::getTotalQuantity();
+            //dd($this->itemsQuantity);
             $this->emit('scan-ok', 'Producto agregado');
         }
     }
@@ -267,9 +281,6 @@ class PosController extends Component
                 'movimiento_id' => $Movimiento->id,
                 'cliente_id' => $this->idcliente,
             ]);
-
-
-
             $sale = Sale::create([
                 'total' => $this->total,
                 'items' => $this->itemsQuantity,
@@ -285,6 +296,7 @@ class PosController extends Component
                     SaleDetail::create([
                         'price' => $item->price,
                         'quantity' => $item->quantity,
+                        dd($item->id),
                         'product_id' => $item->id,
                         'sale_id' => $sale->id,
                     ]);
