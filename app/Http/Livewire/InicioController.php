@@ -38,7 +38,7 @@ class InicioController extends Component
     {
         return 'vendor.livewire.bootstrap';
     }
-    /*
+    
     public function mount()
     {
         $this->pageTitle = 'Listado';
@@ -46,7 +46,7 @@ class InicioController extends Component
         $this->usuarioId = -1;
 
         $this->typeworkid = '';
-        $this->catprodservid = '';
+        $this->catprodservid = 'Elegir';
         $this->diagnostico = '';
         $this->solucion = '';
         $this->fecha_estimada_entrega = '';
@@ -60,10 +60,12 @@ class InicioController extends Component
         $this->costo = 0;
         $this->detalle_costo = '';
         $this->nombreUsuario = '';
-        $this->opciones = 'TODOS';
+        $this->opciones = 'PENDIENTE';
         $this->tipopago = 'EFECTIVO';
+        $this->usuariolog = Auth()->user()->name;
+
     }
-    */
+    
     public function render()
     {
         if (strlen($this->search) > 0) {
@@ -81,6 +83,7 @@ class InicioController extends Component
                 ->select('order_services.*')
                 ->where('mov.type', $this->opciones)
                 ->where('mov.status', 'ACTIVO')
+                ->where('cat.nombre',$this->catprodservid)
                 ->orWhere('c.nombre', 'like', '%' . $this->search . '%')
                 ->orWhere('order_services.id', 'like', '%' . $this->search . '%')
                 ->orWhere('order_services.type_service', 'like', '%' . $this->search . '%')
@@ -110,7 +113,7 @@ class InicioController extends Component
                 ->orderBy('order_services.id', 'desc')
                 ->distinct()
                 ->paginate($this->pagination);
-        } else {
+        } elseif ($this->catprodservid != 'Elegir') {
             $orderservices = OrderService::join(
                 'services as s',
                 'order_services.id',
@@ -123,6 +126,25 @@ class InicioController extends Component
                 ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
                 ->where('mov.type', 'like', '%' . $this->opciones)
                 ->where('mov.status', 'like', 'ACTIVO')
+                ->where('cat.id',$this->catprodservid)
+                ->select('order_services.*')
+                ->orderBy('order_services.id', 'desc')
+                ->distinct()
+                ->paginate($this->pagination);
+        }else {
+            $orderservices = OrderService::join(
+                'services as s',
+                'order_services.id',
+                's.order_service_id'
+            )
+                ->join('mov_services as ms', 's.id', 'ms.service_id')
+                ->join('cat_prod_services as cat', 'cat.id', 's.cat_prod_service_id')
+                ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+                ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
+                ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
+                ->where('mov.type', 'like', '%' . $this->opciones)
+                ->where('mov.status', 'like', 'ACTIVO')
+                ->where('mov.user_id', Auth()->user()->id)
                 ->select('order_services.*')
                 ->orderBy('order_services.id', 'desc')
                 ->distinct()
@@ -132,26 +154,12 @@ class InicioController extends Component
         $typew = TypeWork::orderBy('name', 'asc')->get();
         $dato1 = CatProdService::orderBy('nombre', 'asc')->get();
 
-        if ($this->catprodservid != 'Elegir') {
-            $marca = SubCatProdService::where('cat_prod_service_id', $this->catprodservid)->orderBy('name', 'asc')->get();
-        } else {
-            $marca = [];
-        }
-
-        if ((strlen($this->import)) != 0 && (strlen($this->on_account) != 0))
-            $this->saldo = $this->import - $this->on_account;
-        elseif ((strlen($this->on_account) == 0))
-            $this->saldo = $this->import;
-        elseif ((strlen($this->import) == 0))
-            $this->saldo = 0;
-
 
         return view('livewire.inicio.component', [
             'data' => $orderservices,
             'users' => $users,
             'work' => $typew,
             'cate' => $dato1,
-            'marcas' => $marca,
             'ordserv' => OrderService::orderBy('order_services.id', 'asc')
                 ->get()
         ])
@@ -180,7 +188,7 @@ class InicioController extends Component
     }
 
     
-    /*
+    
     public function resetUI()
     {
         $this->name = '';
@@ -204,7 +212,7 @@ class InicioController extends Component
         $this->usuarioId = -1;
 
         $this->typeworkid = '';
-        $this->catprodservid = '';
+        $this->catprodservid = 'Elegir';
         $this->diagnostico = '';
         $this->solucion = '';
         $this->fecha_estimada_entrega = '';
@@ -220,10 +228,10 @@ class InicioController extends Component
         $this->costo = 0;
         $this->detalle_costo = '';
         $this->nombreUsuario = '';
-        $this->opciones = 'TODOS';
+        $this->opciones = 'PENDIENTE';
         $this->tipopago = 'EFECTIVO';
 
         $this->resetValidation();
     }
-    */
+    
 }

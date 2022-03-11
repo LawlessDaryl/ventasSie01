@@ -26,7 +26,6 @@
                 </div>
                 <div class="col-lg-4 col-md-4 col-sm-12">
                     <select wire:model.lazy="opciones" class="form-control">
-                            <option value="TODOS" >TODOS</option>
                             <option value="PENDIENTE" >PENDIENTE</option>
                             <option value="PROCESO" >PROCESO</option>
                             <option value="TERMINADO" >TERMINADO</option>
