@@ -16,8 +16,13 @@ class CreateComprasTable extends Migration
         Schema::create('compras', function (Blueprint $table)
         {
             $table->id();
-            $table->string('importe_total',100)->nullable();
-            $table->string('documento',100)->nullable();
+            $table->decimal('importe_total',10,2)->nullable();
+            $table->dateTime('fecha_compra');
+            $table->enum('impuestos',['EXENTO','FACTURADO','P'])->default('P');
+            $table->enum('pago',['PENDIENTE DE PAGO','PAGADO','P'])->default('P');
+            $table->decimal('saldo_por_pagar',10,2)->default(0);
+            $table->enum('tipo_doc',['FACTURA','COMPROBANTE','NOTA DE VENTA','P'])->default('P');
+            $table->string('nro_documento',100)->nullable();
             $table->string('observacion',100)->nullable();
             $table->unsignedBigInteger('proveedor_id');
             $table->foreign('proveedor_id')->references('id')->on('providers');
