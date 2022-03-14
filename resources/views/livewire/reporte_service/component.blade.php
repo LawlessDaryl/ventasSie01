@@ -275,6 +275,8 @@
         //eventos
         window.livewire.on('show-modal', msg => {
             $('#modalDetails').modal('show')
+            noty(msg)
         });
+        
     })
 </script>

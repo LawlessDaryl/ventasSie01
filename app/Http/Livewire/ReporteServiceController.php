@@ -7,6 +7,7 @@ use App\Models\Service;
 use App\Models\Transaccion;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class ReporteServiceController extends Component
@@ -33,7 +34,18 @@ class ReporteServiceController extends Component
     public function render()
     {
         $this->trsbydate();
+        
+        /* $rules = [
+            'dateFrom' => 'required|max:10',
+            
+        ];
+        $messages = [
+            'dateFrom.required' => 'La fecha es requerida',
+            'dateFrom.max' => 'Máximo 10 digitos',
+            
+        ];
 
+        $this->validate($rules, $messages); */
         return view('livewire.reporte_service.component', [
             'users' => User::orderBy('name', 'asc')->get()
         ])->extends('layouts.theme.app')
@@ -42,18 +54,27 @@ class ReporteServiceController extends Component
 
     public function trsbydate()
     {
-        if ($this->reportType == 0) {
-            $from = Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00';
-            $to = Carbon::parse(Carbon::now())->format('Y-m-d')   . ' 23:59:59';
-        } else {
-            $from = Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00';
-            $to = Carbon::parse($this->dateTo)->format('Y-m-d')     . ' 23:59:59';
-        }
-
-        if ($this->reportType == 1 && ($this->dateFrom == '' || $this->dateTo == '')) {
-            return;
-        }
-
+       
+            if ($this->reportType == 0) {
+                $from = Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00';
+                $to = Carbon::parse(Carbon::now())->format('Y-m-d')   . ' 23:59:59';
+            } else {
+                try
+                {
+                    
+                $from = Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00';
+                $to = Carbon::parse($this->dateTo)->format('Y-m-d')     . ' 23:59:59';
+            }
+            catch(Exception $e) {
+                DB::rollback();
+                $this->emit('','Datos no Validos',$e->getMessage());
+            }
+            }
+        
+            if ($this->reportType == 1 && ($this->dateFrom == '' || $this->dateTo == '')) {
+                return;
+            }
+       
         if ($this->estado == 'Todos') {
             if ($this->userId == 0) {
                 /* $this->data=Service::orderBy('id','desc')->get(); */
