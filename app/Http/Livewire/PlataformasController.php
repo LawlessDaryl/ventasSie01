@@ -12,7 +12,7 @@ class PlataformasController extends Component
     use WithFileUploads;
     use WithPagination;
 
-    public $nombre, $description, $status = 'Elegir', $image, $precioEntera, $precioPerfil, $selected_id,
+    public $nombre, $description, $status = 'ACTIVO', $image, $precioEntera, $precioPerfil, $selected_id,
         $pageTitle, $componentName, $search, $readytoload = false;
     public $pagination = 5;
 
@@ -24,7 +24,7 @@ class PlataformasController extends Component
         $this->search = '';
         $this->nombre = '';
         $this->description = '';
-        $this->status = 'Elegir';
+        $this->status = 'ACTIVO';
         $this->precioEntera = '';
         $this->precioPerfil = '';
         $this->selected_id = 0;
@@ -79,7 +79,7 @@ class PlataformasController extends Component
 
     protected $rules = [
         'nombre' => 'required|unique:platforms|min:3',
-        'status' => 'required|not_in:Elegir',
+        'status' => 'required',
         'precioEntera' => 'required',
         'precioPerfil' => 'required',
     ];
@@ -88,13 +88,11 @@ class PlataformasController extends Component
         'nombre.unique' => 'Ya existe el nombre de la plataforma',
         'nombre.min' => 'El nombre de la plataforma debe tener al menos 3 caracteres',
         'status.required' => 'El estado de la plataforma es requerido',
-        'status.not_in' => 'Eliga un valor distinto a Elegir',
         'precioEntera.required' => 'El precio de las cuentas Enteras de esta plataforma es requerido',
         'precioPerfil.required' => 'El precio individual de los Perfiles de esta plataforma es requerido',
     ];
     public function Store()
     {
-
         $this->validate();
 
         $plataf = Platform::create([
@@ -135,7 +133,7 @@ class PlataformasController extends Component
     {
         $rules = [
             'nombre' => "required|unique:platforms,nombre,{$this->selected_id}",
-            'status' => 'required|not_in:Elegir',
+            'status' => 'required',
             'precioEntera' => 'required',
             'precioPerfil' => 'required',
         ];
@@ -187,6 +185,7 @@ class PlataformasController extends Component
 
     public function resetUI()
     {
+
         $this->reset(['nombre', 'description', 'status', 'precioEntera', 'precioPerfil', 'image', 'selected_id']);
         $this->resetValidation();
     }
