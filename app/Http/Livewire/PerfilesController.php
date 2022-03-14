@@ -279,6 +279,7 @@ class PerfilesController extends Component
             )
             ->where('prof.id', $prof->id)
             ->whereColumn('pa.id', '=', 'ap.plan_account_id')
+            ->orderBy('plans.id','desc')
             ->get()->first()->expiration_plan;
         $this->emit('details-show', 'show modal!');
     }

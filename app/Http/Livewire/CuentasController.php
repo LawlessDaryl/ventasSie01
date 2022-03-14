@@ -468,7 +468,7 @@ class CuentasController extends Component
             ->get()->first();
         $cuenta = Account::find($datos->cuentaid);
         $this->importe += $cuenta->Plataforma->precioEntera;
-
+        $this->importe *= $this->meses;
         DB::beginTransaction();
         try {
             $plan = Plan::create([

@@ -76,7 +76,6 @@
                 </div>
             </div>
         </div>
-
     </div>
     @include('livewire.plataformas.form')
 </div>
