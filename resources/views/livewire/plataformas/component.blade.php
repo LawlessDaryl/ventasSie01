@@ -1,4 +1,4 @@
-<div class="row sales layout-top-spacing">
+<div class="row sales layout-top-spacing" wire:init="loadPage">
     <div class="col-sm-12">
         <div class="widget widget-chart-one">
             <div class="widget-heading">
@@ -6,72 +6,132 @@
                     <b>{{ $componentName }} | {{ $pageTitle }}</b>
                 </h4>
                 <ul class="tabs tab-pills">
-                   
+
                     <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
                         data-target="#theModal">Agregar</a>
-                    
+
                 </ul>
             </div>
 
-            
+
             @include('common.searchbox')
-            <div class="widget-content">
-                <div class="table-responsive">
-                    <table class="table table-unbordered table-hover mt-2">
-                        <thead class="text-white" style="background: #3B3F5C">
-                            <tr>
-                                <th class="table-th text-withe">NOMBRE</th>
-                                <th class="table-th text-withe text-center">DESCRIPCIÓN</th>
-                                <th class="table-th text-withe tect-center">ESTADO</th>
-                                <th class="table-th text-withe text-center">IMAGEN</th>
-                                <th class="table-th text-withe text-center">ACCIONES</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($platforms as $p)
-                                <tr>
-                                    <td>
-                                        <h6>{{ $p->nombre }}</h6>
-                                    </td>
-
-                                    <td class="text-center">
-                                        <h6>{{ $p->descripcion }}</h6>
-                                    </td>
-
-                                    <td class="text-center">
-                                        <h6>{{ $p->estado }}</h6>
-                                    </td>
-
-                                    <td class="text-center">
-                                        <span>
-                                            <img src="{{ asset('storage/plataformas/' . $p->imagen) }}"
-                                                alt="imagen de ejemplo" height="70" width="80" class="rounded">
-                                        </span>
-                                    </td>
-
-                                    <td class="text-center">
-                                        <a href="javascript:void(0)" wire:click="Edit({{ $p->id }})"
-                                            class="btn btn-dark mtmobile" title="Edit">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <a href="javascript:void(0)" onclick="Confirm('{{ $p->id }}','{{ $p->nombre }}')" class="btn btn-dark"
-                                            title="Delete">
-                                            <i class="fas fa-trash"></i>
-                                        </a>
-                                        
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                    {{ $platforms->links() }}
+            <div class="row"></div>
+            <div class="col-sm-12 col-md-6">
+                <div class="form-group">
+                    <label>paginacion</label>
+                    <select wire:model='pagination' class="form-control">
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                    @error('pagination')
+                        <span class="text-danger er">{{ $message }}</span>
+                    @enderror
                 </div>
             </div>
         </div>
-    </div>
+        <div class="widget-content">
+            <div class="table-responsive">
+                <table class="table table-unbordered table-hover mt-2">
+                    <thead class="text-white" style="background: #3B3F5C">
+                        <tr>
+                            <th class="table-th text-withe">NOMBRE</th>
+                            <th class="table-th text-withe text-center">DESCRIPCIÓN</th>
+                            <th class="table-th text-withe tect-center">ESTADO</th>
+                            <th class="table-th text-withe text-center">IMAGEN</th>
+                            <th class="table-th text-withe text-center">ACCIONES</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($platforms as $p)
+                            <tr>
+                                <td>
+                                    <h6>{{ $p->nombre }}</h6>
+                                </td>
 
-    @include('livewire.plataformas.form')
+                                <td class="text-center">
+                                    <h6>{{ $p->descripcion }}</h6>
+                                </td>
+
+                                <td class="text-center">
+                                    <h6>{{ $p->estado }}</h6>
+                                </td>
+
+                                <td class="text-center">
+                                    <span>
+                                        <img src="{{ asset('storage/plataformas/' . $p->imagen) }}"
+                                            alt="imagen de ejemplo" height="70" width="80" class="rounded">
+                                    </span>
+                                </td>
+
+                                <td class="text-center">
+                                    <a href="javascript:void(0)" wire:click="Edit({{ $p->id }})"
+                                        class="btn btn-dark mtmobile" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="javascript:void(0)"
+                                        onclick="Confirm('{{ $p->id }}','{{ $p->nombre }}')"
+                                        class="btn btn-dark" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                @if (count($platforms))
+                    @if ($platforms->hasPages())
+                        {{ $platforms->links() }}
+                    @endif
+                @else
+                    <div>
+                        <h6> No existen registros coincidentes</h6>
+                    </div>
+                @endif
+            </div>
+        </div>
+    </div>
 </div>
+
+
+@include('livewire.plataformas.form')
+</div>
+
+{{-- @stack('js')
+
+
+@push('js')
+    <script>
+        function Confirm(id, name, cuentas) {
+        if (cuentas > 0) {
+            swal.fire({
+                title: 'PRECAUCION',
+                icon: 'warning',
+                text: 'No se puede eliminar la plataforma, ' + name + ' porque tiene ' +
+                    cuentas + ' cuentas relacionadas'
+            })
+            return;
+        }
+        swal.fire({
+            title: 'CONFIRMAR',
+            icon: 'warning',
+            text: 'Confirmar eliminar la plataforma ' + '"' + name + '"',
+            showCancelButton: true,
+            cancelButtonText: 'Cerrar',
+            cancelButtonColor: '#383838',
+            confirmButtonColor: '#3B3F5C',
+            confirmButtonText: 'Aceptar'
+        }).then(function(result) {
+            if (result.value) {
+                window.livewire.emit('deleteRow', id)
+                Swal.close()
+            }
+        })
+    }
+    </script>
+@endpush --}}
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -98,8 +158,8 @@
             swal.fire({
                 title: 'PRECAUCION',
                 icon: 'warning',
-                text: 'No se puede eliminar la plataforma, ' + name + ' porque tiene ' 
-                + cuentas + ' cuentas relacionadas'
+                text: 'No se puede eliminar la plataforma, ' + name + ' porque tiene ' +
+                    cuentas + ' cuentas relacionadas'
             })
             return;
         }
@@ -114,7 +174,7 @@
             confirmButtonText: 'Aceptar'
         }).then(function(result) {
             if (result.value) {
-                window.livewire.emit('deleteRow', id)
+                window.livewire.emit('destroy', id)
                 Swal.close()
             }
         })
