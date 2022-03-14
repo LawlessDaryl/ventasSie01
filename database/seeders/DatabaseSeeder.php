@@ -46,6 +46,10 @@ class DatabaseSeeder extends Seeder
         $this->call(LocationSeeder::class);
         $this->call(UnidadSeeder::class);
         $this->call(CategorySeeder::class);
+        $this->call(ProviderSeeder::class);
+        $this->call(CompraSeeder::class);
+        $this->call(CompraDetalleSeeder::class);
+        
         
        /*  Category::factory(20)->create(); */
     }

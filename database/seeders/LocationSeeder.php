@@ -17,8 +17,16 @@ class LocationSeeder extends Seeder
         Location::create([
             'sucursal_id' => '1',
             'codigo' => '41213',
-            'descripcion' => 'jam',
+            'descripcion' => 'ESTANTE DE MADERA',
             'ubicacion' => 'ALMACEN',
+            'tipo' => 'ESTANTE'
+          
+        ]);
+        Location::create([
+            'sucursal_id' => '1',
+            'codigo' => '41214',
+            'descripcion' => 'VITRINA NUEVA METALICA',
+            'ubicacion' => 'TIENDA',
             'tipo' => 'VITRINA'
           
         ]);
