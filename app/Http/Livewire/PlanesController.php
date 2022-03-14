@@ -260,6 +260,14 @@ class PlanesController extends Component
             ->section('content');
     }
 
+    public function Agregar()
+    {
+        if ($this->selected_id != 0) {
+            $this->resetUI();
+        }
+        $this->emit('show-modal', 'show modal!');
+    }
+
     /* Registrar una transaccion */
     public function Store()
     {
@@ -382,7 +390,7 @@ class PlanesController extends Component
                     'type_pay' => $this->tipopago,
                     'observations' => $this->observaciones
                 ]);
-                
+
                 foreach ($this->profiles as $accp) {
 
                     $this->importe += $accp->CuentaPerfil->Cuenta->Plataforma->precioPerfil;
@@ -510,7 +518,7 @@ class PlanesController extends Component
 
         $this->emit('item-anulado', 'Se anuló el plan');
     }
-    
+
     public function viewDetails()
     {
         $this->emit('show-modal2', 'open modal');
@@ -531,7 +539,7 @@ class PlanesController extends Component
         $this->resetUI();
         $this->emit('item-actualizado', 'Se actulizaron las observaciones');
     }
-    
+
     public function resetUI()
     {
         $this->selected_id = 0;
