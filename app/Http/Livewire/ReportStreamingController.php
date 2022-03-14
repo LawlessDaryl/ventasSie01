@@ -22,7 +22,7 @@ class ReportStreamingController extends Component
         $this->countDetails = 0;
         $this->reportType = 0;
         $this->userId = 0;
-        $this->transaccionId = 0;        
+        $this->transaccionId = 0; 
         $this->condicional = 0;
         $this->dateFrom = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->dateTo = Carbon::parse(Carbon::now())->format('Y-m-d');
