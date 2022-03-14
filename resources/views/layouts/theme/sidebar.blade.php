@@ -590,6 +590,18 @@
         <div class="submenu" id="ventas">
             <ul class="submenu-list" data-parent-element="ventas">
 
+
+
+
+                @if (empty(session('sesionCaja')))
+                <li>
+                    <strong>
+                    <p> No tiene una caja abierta </p>
+                    </strong>
+                </li>
+                @else
+
+
                 <li>
                     <a href="{{ url('pos') }}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -638,7 +650,7 @@
                         </svg>
                         Denominaciones </a>
                 </li>
-
+                @endif
 
             </ul>
         </div>

@@ -6,6 +6,9 @@ use App\Models\Denomination;
 use App\Models\Product;
 use App\Models\ProductosDestino;
 use App\Models\Sale;
+use App\Models\Caja;
+use App\Models\Cartera;
+use App\Models\CarteraMov;
 use App\Models\SaleDetail;
 use App\Models\Movimiento;
 use App\Models\ClienteMov;
@@ -20,7 +23,7 @@ use Illuminate\Support\Facades\Redirect;
 
 class PosController extends Component
 {
-    public $total, $itemsQuantity, $efectivo, $change, $nit;
+    public $total, $itemsQuantity, $efectivo, $change, $nit,$clienteanonimo="true", $tipopago ,$anonimo;
 
 
 
@@ -31,6 +34,8 @@ class PosController extends Component
         $this->total = Cart::getTotal();
         $this->itemsQuantity = Cart::getTotalQuantity();
         $this->ClienteSelectnit = 1;
+        $this->tipopago = 'EFECTIVO';
+        $this->anonimo = 0;
     }
     public function render()
     {
@@ -72,6 +77,22 @@ class PosController extends Component
             ->extends('layouts.theme.app')
             ->section('content');
     }
+
+
+    public function clienteanonimo()
+    {
+        //dd($this->clienteanonimo);
+        if($this->clienteanonimo == 'true')
+        {
+            $this->anonimo = 0;
+        }
+        else
+        {
+            $this->anonimo = 1;
+        }
+    }
+
+
     /* Cargar los datos seleccionados de la tabla a los label */
     public function llenardatoscliente($id)
     {
@@ -267,16 +288,63 @@ class PosController extends Component
                 'import' => $this->total,
                 'user_id' => Auth()->user()->id,
             ]);
-            // Creando Cliente_Movimiento
-            ClienteMov::create([
-                'movimiento_id' => $Movimiento->id,
-                'cliente_id' => $this->idcliente,
-            ]);
+            // Creando Cliente_Movimiento 
+            //Dependiendo si es o no un Cliente Anònimo
+            if($this->clienteanonimo == 'true')
+            {
+                ClienteMov::create([
+                    'movimiento_id' => $Movimiento->id,
+                    'cliente_id' => 1,
+                ]);
+            }
+            else
+            {
+                ClienteMov::create([
+                    'movimiento_id' => $Movimiento->id,
+                    'cliente_id' => $this->idcliente,
+                ]);
+            }
+
+            /* Caja en la cual se encuentra el usuario */
+            $cajausuario = Caja::join('sucursals as s', 's.id', 'cajas.sucursal_id')
+            ->join('sucursal_users as su', 'su.sucursal_id', 's.id')
+            ->join('carteras as car', 'cajas.id', 'car.caja_id')
+            ->join('cartera_movs as cartmovs', 'car.id', 'cartmovs.cartera_id')
+            ->join('movimientos as mov', 'mov.id', 'cartmovs.movimiento_id')
+            ->where('mov.user_id', Auth()->user()->id)
+            ->where('mov.status', 'ACTIVO')
+            ->where('mov.type', 'APERTURA')
+            ->select('cajas.id as id')
+            ->get()->first();
+
+
+
+            // $cajafisica = Cartera::
+            // where('caja_id',$cajausuario->id)
+            // ->where('tipo','CajaFisica')->get()->first();
+
+
+            if ($this->tipopago == 'EFECTIVO')
+            {
+                $cartera = Cartera::where('tipo', 'cajafisica')
+                    ->where('caja_id', $cajausuario->id)
+                    ->get()->first();
+            }
+            else
+            {
+                $cartera = Cartera::where('tipo', $this->tipopago)
+                    ->where('caja_id', $cajausuario->id)->get()->first();
+            }
             $sale = Sale::create([
                 'total' => $this->total,
                 'items' => $this->itemsQuantity,
                 'cash' => $this->efectivo,
                 'change' => $this->change,
+
+                'tipopago' => $this->tipopago,
+                'factura' => 'No',
+
+
                 'movimiento_id' => $Movimiento->id,
                 'user_id' => Auth()->user()->id
             ]);
@@ -304,7 +372,25 @@ class PosController extends Component
             $this->change = 0;
             $this->total = Cart::getTotal();
             $this->itemsQuantity = Cart::getTotalQuantity();
+            $this->clienteanonimo = 'true';
+            
+            
+
+            
+
+
+
+            // Creando Cartera Movimiento
+            CarteraMov::create([
+                'type' => "INGRESO",
+                'comentario' => "",
+                'cartera_id' => $cartera->id,
+                'movimiento_id' => $Movimiento->id,
+            ]);
+            $this->anonimo = 0;
+
             $this->emit('save-ok', 'venta registrada con exito');
+
             //$this->emit('print-ticket', $sale->id);
         } catch (Exception $e) {
             DB::rollback();
@@ -315,6 +401,7 @@ class PosController extends Component
     {
         return Redirect::to('print://$sale->id');
     }
+
     
     // Quitar los valores de la ventana Modal
     public function resetUI()

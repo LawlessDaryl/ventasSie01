@@ -1,26 +1,13 @@
 <div class="row mt-3">
     <div class="col-sm-12">
         <div class="connect-sorting">
-            <div class="container">
-                <div class="row mt-6">
-                    Factura:
-                </div>
-                <div class="row mt-6">
-                    Factura:
-                </div>
-            </div>
-            {{-- <div class="connect-sorting-content mt-4">
-                Tipo de Pago
-            </div> --}}
-        </div>
-        <div class="connect-sorting">
             <h5 class="text-center mb-2">Monedas</h5>
             <div class="container">
                 <div class="row">
                     @foreach ($denominations as $d)
                         <div class="col-sm mt-2">
                             <button wire:click.prevent="ACash({{ $d->value }})" class="btn btn-dark btn-block den">
-                                {{ $d->value > 0 ? '$' . number_format($d->value, 2, '.', '') : 'Exacto' }}
+                                {{ $d->value > 0 ? 'Bs' . number_format($d->value, 2, '.', '') : 'Exacto' }}
                             </button>
                         </div>
                     @endforeach

@@ -185,7 +185,7 @@ code {
   min-height: calc(100vh - 140px) !important; }
 
 .widget.box .widget-header {
-  background: #fff;
+  background: #383838;
   padding: 0px 8px 0px;
   border-top-right-radius: 6px;
   border-top-left-radius: 6px; }

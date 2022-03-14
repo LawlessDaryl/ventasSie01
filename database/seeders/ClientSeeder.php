@@ -15,6 +15,14 @@ class ClientSeeder extends Seeder
     public function run()
     {
         Cliente::create([
+            'nombre'=> 'Cliente Anónimo',
+            'cedula' => '',
+            'celular' => '',
+            'razon_social' => '',
+            'nit' => '0',
+            'procedencia_cliente_id' => 1
+        ]);
+        Cliente::create([
             'nombre'=> 'Juan Gabriel Gonzales Colque',
             'cedula' => '8693545',
             'celular' => '71787966',

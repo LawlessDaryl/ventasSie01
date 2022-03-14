@@ -1,4 +1,4 @@
-@if ($total > 0)
+@if ($anonimo == 1)
 <div class="connect-sorting">
     <div class="connect-sorting-content">
         <div class="card simple-title-task ui-sortable-handle">
@@ -8,14 +8,14 @@
 
                 <div class="row">
                     
-                    <div class="col-sm-12 col-md-3">
+                    <div class="col-sm-12 col-md-4">
                         <div class="form-group">
                             <label style="color: black">NIT:</label>
                             <input type="text" wire:model="nit" class="form-control" placeholder="">
                             @error('nombre') <span class="text-danger er">{{ $message }}</span>@enderror
                         </div>
                     </div>
-                    <div class="col-sm-12 col-md-3">
+                    <div class="col-sm-12 col-md-4">
                         <div class="form-group">
                             <label style="color: black">RAZON SOCIAL:</label>
                             <input type="text" wire:model="razonsocial" class="form-control" placeholder="">
@@ -24,22 +24,13 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="col-sm-12 col-md-3">
+                    <div class="col-sm-12 col-md-4">
                         <div class="form-group">
                             <label style="color: black">CELULAR:</label>
                             <input type="text" wire:model="celular" class="form-control" placeholder="">
                             @error('cedula')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror
-                        </div>
-                    </div>
-                    <div class="col-sm-12 col-md-3">
-                        <label style="color: black">Cliente Anónimo:</label>
-                        <div class="form-group">
-                            <label class="switch s-outline s-outline-primary  mb-4 mr-2">
-                                <input type="checkbox" checked="">
-                                <span class="slider round"></span>
-                            </label>
                         </div>
                     </div>
                     
