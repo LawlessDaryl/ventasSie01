@@ -46,7 +46,7 @@
     <div class="col-sm-12 col-md-6">
         <div class="form-group">
             <label>Nombre Cliente</label>
-            <input type="text" wire:model="nombre" class="form-control">
+            <input type="text" wire:model="nombre" class="form-control" placeholder="Juan Perez">
             @error('nombre')
                 <span class="text-danger er">{{ $message }}</span>
             @enderror
@@ -56,7 +56,7 @@
     <div class="col-sm-12 col-md-6">
         <div class="form-group">
             <label>Telefono Cliente</label>
-            <input type="text" wire:model="celular" class="form-control">
+            <input type="text" wire:model="celular" class="form-control" placeholder="67786522">
             @error('celular')
                 <span class="text-danger er">{{ $message }}</span>
             @enderror

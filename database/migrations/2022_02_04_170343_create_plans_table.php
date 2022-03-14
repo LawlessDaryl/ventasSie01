@@ -16,7 +16,8 @@ class CreatePlansTable extends Migration
         Schema::create('plans', function (Blueprint $table) {
             $table->id();
             $table->integer('importe');
-            $table->date('expiration_plan');
+            $table->dateTime('plan_start');
+            $table->dateTime('expiration_plan');
             $table->enum('status', ['VIGENTE', 'VENCIDO','ANULADO'])->default('VIGENTE');
             $table->enum('type_pay', ['EFECTIVO', 'Banco', 'TigoStreaming']);
             $table->string('observations')->nullable();

@@ -48,7 +48,60 @@ class PerfilesController extends Component
     }
     public function render()
     {
-        if ($this->condicional == 'ocupados') {
+        if ($this->condicional == 'libres') {
+            if (strlen($this->search) > 0) {
+                /* $prof = Profile::join('account_profiles as ap', 'ap.profile_id', 'profiles.id')
+                    ->join('accounts as a', 'ap.account_id', 'a.id')
+                    ->join('emails as e', 'e.id', 'a.email_id')
+                    ->join('platforms as p', 'p.id', 'a.platform_id')
+                    ->select(
+                        'profiles.*',
+                        'pl.expiration_plan as expiration',
+                        'a.expiration_account as expiration',
+                        'profiles.nameprofile as namep',
+                        'a.password_account as passAccount',
+                        'p.nombre',
+                        'p.image',
+                        'e.content',
+                        'e.pass',
+                        'a.expiration_account as exp',
+                    )
+                    ->where('profiles.availability', 'LIBRE')
+                    ->where('profiles.status', 'ACTIVO')
+                    ->where('a.expiration_account', 'like', '%' . $this->search . '%')
+                    ->orWhere('profiles.pin', 'like', '%' . $this->search . '%')
+                    ->orWhere('profiles.status', 'like', '%' . $this->search . '%')
+                    ->orWhere('profiles.availability', 'like', '%' . $this->search . '%')
+                    ->orWhere('profiles.observations', 'like', '%' . $this->search . '%')
+                    ->orWhere('p.nombre', 'like', '%' . $this->search . '%')
+                    ->orWhere('e.content', 'like', '%' . $this->search . '%')
+                    ->orWhere('e.pass', 'like', '%' . $this->search . '%')
+                    ->orderBy('profiles.id', 'desc')
+                    ->paginate($this->pagination); */
+            } else {
+                $prof = Profile::join('account_profiles as ap', 'ap.profile_id', 'profiles.id')
+                    ->join('accounts as a', 'ap.account_id', 'a.id')
+                    ->join('emails as e', 'e.id', 'a.email_id')
+                    ->join('platforms as p', 'p.id', 'a.platform_id')
+                    /* ->join('plan_accounts as pa', 'pa.account_id', 'a.id')
+                    ->join('plans as pl', 'pa.plan_id', 'pl.id') */
+                    ->select(
+                        'profiles.*',
+                        'a.expiration_account as expiration',
+                        'profiles.nameprofile as namep',
+                        'a.password_account as passAccount',
+                        'p.nombre',
+                        'p.image',
+                        'e.content',
+                        'e.pass',
+                        'ap.status as estadoCuentaPerfil',
+                    )
+                    ->where('profiles.availability', 'LIBRE')
+                    ->where('profiles.status', 'ACTIVO')
+                    ->orderBy('a.expiration_account', 'desc')
+                    ->paginate($this->pagination);
+            }
+        } elseif ($this->condicional == 'ocupados') {
             if (strlen($this->search) > 0) {
                 /* $prof = Profile::join('account_profiles as ap', 'ap.profile_id', 'profiles.id')
                     ->join('accounts as a', 'ap.account_id', 'a.id')
@@ -97,12 +150,14 @@ class PerfilesController extends Component
                         'prof.*',
                         'prof.nameprofile as namep',
                         'plans.expiration_plan as expiration_plan',
+                        'plans.plan_start as plan_start',
                         'acc.expiration_account as expiration',
                         'acc.password_account as passAccount',
                         'plat.nombre',
                         'plat.image',
                         'e.content',
                         'e.pass',
+                        'ap.status as estadoCuentaPerfil',
                     )
                     ->where('acc.whole_account', 'DIVIDIDA')
                     ->where('prof.availability', 'OCUPADO')
@@ -114,58 +169,7 @@ class PerfilesController extends Component
                     ->orderBy('plans.expiration_plan', 'desc')
                     ->paginate($this->pagination);
             }
-        } elseif ($this->condicional == 'libres') {
-            if (strlen($this->search) > 0) {
-                /* $prof = Profile::join('account_profiles as ap', 'ap.profile_id', 'profiles.id')
-                    ->join('accounts as a', 'ap.account_id', 'a.id')
-                    ->join('emails as e', 'e.id', 'a.email_id')
-                    ->join('platforms as p', 'p.id', 'a.platform_id')
-                    ->select(
-                        'profiles.*',
-                        'pl.expiration_plan as expiration',
-                        'a.expiration_account as expiration',
-                        'profiles.nameprofile as namep',
-                        'a.password_account as passAccount',
-                        'p.nombre',
-                        'p.image',
-                        'e.content',
-                        'e.pass',
-                        'a.expiration_account as exp',
-                    )
-                    ->where('profiles.availability', 'LIBRE')
-                    ->where('profiles.status', 'ACTIVO')
-                    ->where('a.expiration_account', 'like', '%' . $this->search . '%')
-                    ->orWhere('profiles.pin', 'like', '%' . $this->search . '%')
-                    ->orWhere('profiles.status', 'like', '%' . $this->search . '%')
-                    ->orWhere('profiles.availability', 'like', '%' . $this->search . '%')
-                    ->orWhere('profiles.observations', 'like', '%' . $this->search . '%')
-                    ->orWhere('p.nombre', 'like', '%' . $this->search . '%')
-                    ->orWhere('e.content', 'like', '%' . $this->search . '%')
-                    ->orWhere('e.pass', 'like', '%' . $this->search . '%')
-                    ->orderBy('profiles.id', 'desc')
-                    ->paginate($this->pagination); */
-            } else {
-                $prof = Profile::join('account_profiles as ap', 'ap.profile_id', 'profiles.id')
-                    ->join('accounts as a', 'ap.account_id', 'a.id')
-                    ->join('emails as e', 'e.id', 'a.email_id')
-                    ->join('platforms as p', 'p.id', 'a.platform_id')
-                    /* ->join('plan_accounts as pa', 'pa.account_id', 'a.id')
-                    ->join('plans as pl', 'pa.plan_id', 'pl.id') */
-                    ->select(
-                        'profiles.*',
-                        'a.expiration_account as expiration',
-                        'profiles.nameprofile as namep',
-                        'a.password_account as passAccount',
-                        'p.nombre',
-                        'p.image',
-                        'e.content',
-                        'e.pass',
-                    )
-                    ->where('profiles.availability', 'LIBRE')
-                    ->where('profiles.status', 'ACTIVO')
-                    ->orderBy('a.expiration_account', 'desc')
-                    ->paginate($this->pagination);
-            }
+            
         } else {
             $prof = Plan::join('mov_plans as mp', 'plans.id', 'mp.plan_id')
                 ->join('movimientos as m', 'm.id', 'mp.movimiento_id')
@@ -181,12 +185,14 @@ class PerfilesController extends Component
                     'prof.*',
                     'prof.nameprofile as namep',
                     'plans.expiration_plan as expiration_plan',
+                    'plans.plan_start as plan_start',
                     'acc.expiration_account as expiration',
                     'acc.password_account as passAccount',
                     'plat.nombre',
                     'plat.image',
                     'e.content',
                     'e.pass',
+                    'ap.status as estadoCuentaPerfil',
                 )
                 ->whereColumn('pa.id', '=', 'ap.plan_account_id')
                 ->where('ap.status', 'INACTIVO')
@@ -279,6 +285,7 @@ class PerfilesController extends Component
             )
             ->where('prof.id', $prof->id)
             ->whereColumn('pa.id', '=', 'ap.plan_account_id')
+            ->orderBy('plans.id','desc')
             ->get()->first()->expiration_plan;
         $this->emit('details-show', 'show modal!');
     }
@@ -333,6 +340,7 @@ class PerfilesController extends Component
             )
             ->where('prof.id', $perfil->id)
             ->whereColumn('pa.id', '=', 'ap.plan_account_id')
+            ->orderby('plans.id','desc')
             ->get()->first();
 
         $this->importe += $perfil->CuentaPerfil->Cuenta->Plataforma->precioPerfil;
@@ -345,6 +353,7 @@ class PerfilesController extends Component
 
             $plan = Plan::create([
                 'importe' => $this->importe,
+                'plan_start' => $this->expirationActual,
                 'expiration_plan' => $this->expirationNueva,
                 'status' => 'VIGENTE',
                 'type_pay' => $this->tipopago,
@@ -449,13 +458,13 @@ class PerfilesController extends Component
     }
     public function resetUI()
     {
-        $this->importe = 0;
-        $this->selected_id = 0;
-        $this->nameperfil = '';
-        $this->pin = '';
         $this->status = 'Elegir';
+        $this->nameperfil = '';
         $this->availability = 'Elegir';
-        $this->observations = '';
+        $this->meses = 0;
+        $this->expirationNueva = Carbon::parse(Carbon::now())->format('Y-m-d');
+        $this->tipopago = 'EFECTIVO';
+        $this->importe = 0;
         $this->resetValidation();
     }
 }

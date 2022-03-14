@@ -15,7 +15,7 @@ class ReportStreamingController extends Component
 
     public function mount()
     {
-        $this->componentName = 'Reportes Streamings';
+        $this->componentName = 'Reportes Streaming';
         $this->data = [];
         $this->details = [];
         $this->sumDetails = 0;

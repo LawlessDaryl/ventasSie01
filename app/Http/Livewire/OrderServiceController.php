@@ -59,7 +59,7 @@ class OrderServiceController extends Component
         $this->costo = 0;
         $this->detalle_costo = '';
         $this->nombreUsuario = '';
-        $this->opciones = 'TODOS';
+        $this->opciones = 'PENDIENTE';
         $this->tipopago = 'EFECTIVO';
      
     }
@@ -681,7 +681,7 @@ class OrderServiceController extends Component
         $this->costo = 0;
         $this->detalle_costo = '';
         $this->nombreUsuario = '';
-        $this->opciones = 'TODOS';
+        $this->opciones = 'PENDIENTE';
         $this->tipopago = 'EFECTIVO';
 
         $this->resetValidation();

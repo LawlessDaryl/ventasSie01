@@ -6,7 +6,7 @@
                     <b>{{ $componentName }} | {{ $pageTitle }}</b>
                 </h4>
                 <ul class="tabs tab-pills">
-                    <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal" data-target="#theModal">+
+                    <a href="javascript:void(0)" class="btn btn-dark" wire:click="Agregar()" data-target="#theModal">+
                         Nueva</a>
                 </ul>
             </div>
@@ -47,7 +47,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
             @if ($condicional == 'perfiles')
                 <div class="widget-content">
@@ -117,23 +116,7 @@
                                             <a href="javascript:void(0)"
                                                 wire:click="VerObservaciones({{ $p->id }})"
                                                 class="btn btn-dark mtmobile" title="Observaciones">
-                                                <svg xmlns="http://www.w3.org/2000/svg"
-                                                    xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
-                                                    id="Layer_1" x="0px" y="0px" viewBox="0 0 512 512"
-                                                    style="enable-background:new 0 0 512 512;" xml:space="preserve">
-                                                    <circle style="fill:#88C5CC;" cx="256" cy="256" r="256" />
-                                                    <path style="fill:#F5F5F5;"
-                                                        d="M192,72h176c4.4,0,8,3.6,8,8v328c0,4.4-3.6,8-8,8H120c-4.4,0-8-3.6-8-8V156L192,72z" />
-                                                    <path style="fill:#E6E6E6;"
-                                                        d="M184,156c4.4,0,8-3.6,8-8V72l-80,84H184z" />
-                                                    <circle style="fill:#2179A6;" cx="352" cy="392" r="52" />
-                                                    <g>
-                                                        <path style="fill:#F5F5F5;"
-                                                            d="M352,424c-2.212,0-4-1.788-4-4v-56c0-2.212,1.788-4,4-4s4,1.788,4,4v56   C356,422.212,354.212,424,352,424z" />
-                                                        <path style="fill:#F5F5F5;"
-                                                            d="M380,396h-56c-2.212,0-4-1.788-4-4s1.788-4,4-4h56c2.212,0,4,1.788,4,4S382.212,396,380,396z" />
-                                                    </g>
-                                                </svg>
+                                                <i class="fa-solid fa-file-signature"></i>
                                             </a>
                                         </td>
 

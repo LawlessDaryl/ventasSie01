@@ -161,8 +161,8 @@ class PlanesController extends Component
             }
         }
 
-        if ($this->meses > 0) {
-            $date_now = date("Y-m-d");
+        if ($this->meses > 0) {            
+            $date_now = date('Y-m-d h:i:s', time()); 
             $dias = $this->meses * 30;
             $this->expiration_plan = strtotime('+' . $dias . ' day', strtotime($date_now));
             $this->expiration_plan = date('Y-m-d', $this->expiration_plan);
@@ -240,6 +240,7 @@ class PlanesController extends Component
                     )
                     ->where('profiles.availability', 'LIBRE')
                     ->where('profiles.status', 'ACTIVO')
+                    ->where('a.status', 'ACTIVO')
                     ->where('a.availability', 'LIBRE')
                     ->orderBy('a.expiration_account', 'desc')
                     ->where('p.id', $this->plataforma)->get()->take($this->cantidaperf);
@@ -258,6 +259,14 @@ class PlanesController extends Component
         ])
             ->extends('layouts.theme.app')
             ->section('content');
+    }
+
+    public function Agregar()
+    {
+        if ($this->selected_id != 0) {
+            $this->resetUI();
+        }
+        $this->emit('show-modal', 'show modal!');
     }
 
     /* Registrar una transaccion */
@@ -330,10 +339,11 @@ class PlanesController extends Component
             if ($this->cuentaperfil == 'ENTERA') {
 
                 foreach ($this->accounts as $accp) {
-
+                    $DateAndTime = date('Y-m-d h:i:s', time()); 
                     $this->importe += $accp->Plataforma->precioEntera;
                     $plan = Plan::create([
                         'importe' => $this->importe,
+                        'plan_start' => $DateAndTime,
                         'expiration_plan' => $this->expiration_plan,
                         'status' => 'VIGENTE',
                         'type_pay' => $this->tipopago,
@@ -374,15 +384,17 @@ class PlanesController extends Component
                     $this->importe = 0;
                 }
             } elseif ($this->cuentaperfil == 'PERFIL') {
-
+                $DateAndTime = date('Y-m-d h:i:s', time()); 
+                
                 $plan = Plan::create([
                     'importe' => $this->importe,
+                    'plan_start' => $DateAndTime,
                     'expiration_plan' => $this->expiration_plan,
                     'status' => 'VIGENTE',
                     'type_pay' => $this->tipopago,
                     'observations' => $this->observaciones
                 ]);
-                
+
                 foreach ($this->profiles as $accp) {
 
                     $this->importe += $accp->CuentaPerfil->Cuenta->Plataforma->precioPerfil;
@@ -510,7 +522,7 @@ class PlanesController extends Component
 
         $this->emit('item-anulado', 'Se anuló el plan');
     }
-    
+
     public function viewDetails()
     {
         $this->emit('show-modal2', 'open modal');
@@ -531,7 +543,7 @@ class PlanesController extends Component
         $this->resetUI();
         $this->emit('item-actualizado', 'Se actulizaron las observaciones');
     }
-    
+
     public function resetUI()
     {
         $this->selected_id = 0;
@@ -548,7 +560,7 @@ class PlanesController extends Component
         $this->condicion = 0;
         $this->select = 1;
         $this->mostrartabla = 0;
-        $this->tipopago = 'Elegir';
+        $this->tipopago = 'EFECTIVO';
         $this->condicional = 'perfiles';
         $this->meses = 1;
         $this->observaciones = '';

@@ -26,7 +26,6 @@
                 </div>
                 <div class="col-lg-4 col-md-4 col-sm-12">
                     <select wire:model.lazy="opciones" class="form-control">
-                            <option value="TODOS" >TODOS</option>
                             <option value="PENDIENTE" >PENDIENTE</option>
                             <option value="PROCESO" >PROCESO</option>
                             <option value="TERMINADO" >TERMINADO</option>
@@ -43,18 +42,16 @@
                         <thead class="text-white" style="background: #3B3F5C">
                             <tr>
                                 <th class="table-th text-withe text-center" width="2%">#</th>
-                                <th class="table-th text-withe text-center" width="60%"> 
-                             
+                                <th class="table-th text-withe text-center" width="60%">
                                     <div class="col-sm-12 col-md-12">
-                                    <div class="row">
-                                       
-                                        <div class="col-sm-1">CLIENTE</div>                                
-                                        <div class="col-sm-2">FECHAS</div>
-                                        <div class="col-sm-5">SERVICIOS</div>
-                                        <div class="col-sm-4">ESTADO</div>
+                                        <div class="row">
+                                            <div class="col-sm-1">CLIENTE</div>                                
+                                            <div class="col-sm-2">FECHAS</div>
+                                            <div class="col-sm-4">SERVICIOS</div>
+                                            <div class="col-sm-5">ESTADO</div>
+                                        </div>
                                      </div>
-                                     </div>
-                                        </th>
+                                </th>
                                 <th class="table-th text-withe text-center" width="7%">CÓDIGO</th>
                                 <th class="table-th text-withe text-center" width="7%">TOTAL</th>
                                 <th class="table-th text-withe text-center" width="10%">A CUENTA</th>
@@ -82,103 +79,96 @@
                                                 $myacuenta += $service->movservices[0]->movs->on_account;
                                                 $mysaldo += $service ->movservices[0]->movs->saldo;
                                             @endphp
-                                         <div class="col-sm-12 col-md-12">
-                                         <div class="row">
-                                  
-                                        <div class="col-sm-1">
-                                            @if ($key== 0)
-                                                <h6 class="table-th text-withe text-center"><b>
-                                                    {{ $service->movservices[0]->movs->climov->client->nombre }}</b></h6>
+                                        <div class="col-sm-12 col-md-12">
+                                            <div class="row">
+                                                {{-- CLIENTE --}}
+                                                <div class="col-sm-1">
+                                                    @if ($key== 0)
+                                                        <h6 class="table-th text-withe text-center"><b>
+                                                            {{ $service->movservices[0]->movs->climov->client->nombre }}</b></h6>
+                                                    @endif
+                                                </div>
+                                                {{-- FECHA --}}
+                                                <div class="col-sm-2">
+                                                    <h6 class="table-th text-withe text-center">{{ $service->fecha_estimada_entrega }}</h6><br/>
+                                                </div>
+                                                {{-- SERVICIOS --}}
+                                                <div class="col-sm-4">
+                                                    <a href="javascript:void(0)" wire:click="InfoService({{ $service->id }})"
+                                                        title="Ver Servicio"><h6>{{ $service->categoria->nombre }}&nbsp{{ $service->marca }}&nbsp | {{ $service->detalle }}&nbsp | {{ $service->falla_segun_cliente }}</h6></a>
+                                                    
+                                                    @foreach ($service->movservices as $mm)
+                                                    
+                                                    @if ($mm->movs->status == 'ACTIVO')
+                                                    <h6><b>Responsable:</b> {{ $mm->movs->usermov->name }}</h6>
+                                                </div>
+                                                {{-- ESTADO --}}
+                                                <div class="col-sm-5">
+                                                        <div class="col-2 col-xl-6 col-lg-1 mb-xl-1 mb-1 ">
+                                                            <h6 class="table-th text-withe text-center"><b>{{ $mm->movs->type }}</b></h6>
+                                                            Serv: {{ $item->type_service }}
+                                                        </div>
+                                                            @if($mm->movs->type == 'PENDIENTE')
+                                                                <a href="javascript:void(0)" class="btn btn-dark mtmobile" wire:click="Edit({{ $service->id }})"
+                                                                    title="Cambiar Estado">{{ $mm->movs->type }}</a>
+                                                            @endif
+
+                                                            @if (!empty(session('sesionCaja')))
+                                                            @if($mm->movs->type == 'TERMINADO')
+                                                            <a href="javascript:void(0)" class="btn btn-dark mtmobile" wire:click="DetallesTerminado({{ $service->id }})"
+                                                                title="Cambiar Estado">Entregar</a>
+                                                            @endif
+                                                            @endif
+
+                                                            @if($mm->movs->type != 'ENTREGADO')
+                                                            <a href="javascript:void(0)" class="btn btn-dark mtmobile" wire:click="Detalles({{ $service->id }})"
+                                                                title="Cambiar Estado">Detalle</a>
+                                                            @endif
+
+                                                            @if($mm->movs->type == 'ENTREGADO')
+                                                                <a href="javascript:void(0)" class="btn btn-dark mtmobile" wire:click="DetalleEntregado({{ $service->id }})"
+                                                                    title="Ver Detalle">Detalle Entregado</a>
+                                                            @endif
+
+                                                            @if (count($item->services) - 1 != $key)
+                                                                    <br />
+                                                            @endif
+                                                        @endif
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                            {{-- BORDE ENTRE SERVICIOS --}}
+                                            @if (count($item->services) - 1 != $key)
+                                                <hr
+                                                    style="border-color: black; margin-top: 0px; margin-bottom: 3px; margin-left: 5px; margin-right:5px">
+                                                <br />
                                             @endif
                                         </div>
-                                   
-                                        <div class="col-sm-2">
-                                            <h6 class="table-th text-withe text-center">{{ $service->fecha_estimada_entrega }}</h6><br/>
-                                        </div>
-                                      
-                 
-                                        <div class="col-sm-5">
-                                            <a href="javascript:void(0)" wire:click="InfoService({{ $service->id }})"
-                                                title="Ver Servicio"><h6>{{ $service->categoria->nombre }}&nbsp{{ $service->marca }}&nbsp | {{ $service->detalle }}&nbsp | {{ $service->falla_segun_cliente }}</h6></a>
-                                            
-                                            @foreach ($service->movservices as $mm)
-                                            
-                                            @if ($mm->movs->status == 'ACTIVO')
-                                            <h6><b>Responsable:</b> {{ $mm->movs->usermov->name }}</h6>
-                                        </div>
-
-                                  
-                                        <div class="col-sm-4">
-                                       
-                                           
-                                                <div class="col-2 col-xl-6 col-lg-1 mb-xl-1 mb-1 ">
-                                                    <h6 class="table-th text-withe text-center"><b>{{ $mm->movs->type }}</b></h6>
-                                                    Serv: {{ $item->type_service }}
-                                                </div>
-                                                    @if($mm->movs->type == 'PENDIENTE')
-                                                        <a href="javascript:void(0)" class="btn btn-dark mtmobile" wire:click="Edit({{ $service->id }})"
-                                                            title="Cambiar Estado">{{ $mm->movs->type }}</a>
-                                                    @endif
-
-                                                    @if (!empty(session('sesionCaja')))
-                                                    @if($mm->movs->type == 'TERMINADO')
-                                                    <a href="javascript:void(0)" class="btn btn-dark mtmobile" wire:click="DetallesTerminado({{ $service->id }})"
-                                                        title="Cambiar Estado">Entregar</a>
-                                                    @endif
-                                                    @endif
-
-                                                    @if($mm->movs->type != 'ENTREGADO')
-                                                    <a href="javascript:void(0)" class="btn btn-dark mtmobile" wire:click="Detalles({{ $service->id }})"
-                                                        title="Cambiar Estado">Detalle</a>
-                                                    @endif
-
-                                                    @if($mm->movs->type == 'ENTREGADO')
-                                                        <a href="javascript:void(0)" class="btn btn-dark mtmobile" wire:click="DetalleEntregado({{ $service->id }})"
-                                                            title="Ver Detalle">Detalle Entregado</a>
-                                                    @endif
-
-                                                    @if (count($item->services) - 1 != $key)
-                                                            <br />
-                                                    @endif
-                                                
-                                                @endif
-                                                
-                                            
-                                            @endforeach
-                                        </div>
-                                        
-                                    </div> 
-                                    @if (count($item->services) - 1 != $key)
-                                        <hr
-                                            style="border-color: black; margin-top: 0px; margin-bottom: 3px; margin-left: 5px; margin-right:5px">
-                                        <br />
-                                    @endif
-                                </div>
                                         @endforeach
                                     </td>
-
+                                    {{-- CODIGO --}}
                                     <td class="text-center" width="7%">
                                         <h6 class="table-th text-withe text-center">{{ $item->id }}</h6>
                                     </td>
-
+                                    {{-- TOTAL --}}
                                     <td class="text-center" width="7%">
                                         <h6 class="text-info">
                                             {{ number_format($mytotal, 2) }} Bs.
                                         </h6>
                                     </td>
-
+                                    {{-- A CUENTA --}}
                                     <td class="text-center" width="10%">
                                         <h6 class="text-info">
                                             {{ number_format($myacuenta, 2) }} Bs.
                                         </h6>
                                     </td>
-
+                                    {{-- SALDO --}}
                                     <td class="text-center" width="7%">
                                         <h6 class="text-info">
                                             {{ number_format($mysaldo, 2) }} Bs.
                                         </h6>
                                     </td>
-
+                                    {{-- ACCIONES --}}
                                     <td class="text-center" width="7%">
                                         <a href="javascript:void(0)" class="btn btn-dark mtmobile" wire:click="VerOpciones({{$item->id}})"
                                             title="Opciones">Opciones</a>

@@ -138,11 +138,14 @@ class CuentasController extends Component
                     'accounts.expiration_account as expiration_account',
                     'accounts.number_profiles',
                     'accounts.whole_account',
+                    'accounts.status',
                     'p.nombre as nombre',
                     'e.content as content',
                     'e.pass as pass',
                     'strsp.name as name',
-                    'pl.expiration_plan as expiration_plan'
+                    'pl.expiration_plan as expiration_plan',
+                    'pl.plan_start as plan_start',
+                    'pl.status as plan_status'
                 )
                 ->where('pa.status', 'ACTIVO')
                 ->where('accounts.availability', 'OCUPADO')
@@ -151,19 +154,26 @@ class CuentasController extends Component
                 ->get();
         } else {
             $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
-                ->join('emails as e', 'accounts.email_id', 'e.id')
-                ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
-                ->select(
+            ->join('emails as e', 'accounts.email_id', 'e.id')
+            ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
+            ->join('plan_accounts as pa', 'pa.account_id', 'accounts.id')
+            ->join('plans as pl', 'pa.plan_id', 'pl.id')
+            ->select(
+                    'pl.id as planid',
                     'accounts.id as id',
                     'accounts.expiration_account as expiration_account',
                     'accounts.number_profiles',
                     'accounts.whole_account',
+                    'accounts.status',
                     'p.nombre as nombre',
                     'e.content as content',
                     'e.pass as pass',
-                    'strsp.name as name'
+                    'strsp.name as name',
+                    'pl.expiration_plan as expiration_plan',
+                    'pl.plan_start as plan_start',
+                    'pl.status as plan_status'
                 )
-                ->where('accounts.status', 'INACTIVO')
+                ->where('pl.status', 'VENCIDO')
                 ->orderBy('accounts.id', 'desc')
                 ->get();
         }
@@ -414,6 +424,7 @@ class CuentasController extends Component
                 'plans.expiration_plan'
             )
             ->where('plans.id', $plan->id)
+            ->orderBy('plans.id', 'desc')
             ->get()->first()->expiration_plan;
 
         $this->emit('details2-show', 'show modal!');
@@ -468,11 +479,12 @@ class CuentasController extends Component
             ->get()->first();
         $cuenta = Account::find($datos->cuentaid);
         $this->importe += $cuenta->Plataforma->precioEntera;
-
+        $this->importe *= $this->meses;
         DB::beginTransaction();
         try {
             $plan = Plan::create([
                 'importe' => $this->importe,
+                'plan_start' => $this->expirationActual,
                 'expiration_plan' => $this->expirationNueva,
                 'status' => 'VIGENTE',
                 'type_pay' => $this->tipopago,
