@@ -197,7 +197,11 @@ class PosController extends Component
     public function UpdateQty($productId, $cant = 1)
     {
         $title = '';
-        $product = Product::find($productId);
+        $product = Product::join("productos_destinos as pd", "pd.product-id", "products.id")
+        ->select("products.id as id","products.image as image","products.nombre as name","products.precio_venta as price","products.barcode", "pd.stock as stock")
+        ->where("products.id", $productId)
+        ->get()->first();
+        //$product = Product::find($productId);
         $exist = Cart::get($productId);
         if ($exist) {
             $title = "cantidad actualizada";
