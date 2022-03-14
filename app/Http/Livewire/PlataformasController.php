@@ -12,17 +12,19 @@ class PlataformasController extends Component
     use WithFileUploads;
     use WithPagination;
 
-    public $nombre, $description, $status, $image, $precioEntera, $precioPerfil, $selected_id,
-        $pageTitle, $componentName, $search;
-    private $pagination = 5;
+    public $nombre, $description, $status = 'ACTIVO', $image, $precioEntera, $precioPerfil, $selected_id,
+        $pageTitle, $componentName, $search, $readytoload = false;
+    public $pagination = 5;
 
     public function mount()
     {
         $this->pageTitle = 'Listado';
         $this->componentName = 'Plataformas';
+        $this->pagination = '5';
+        $this->search = '';
         $this->nombre = '';
         $this->description = '';
-        $this->status = 'Elegir';
+        $this->status = 'ACTIVO';
         $this->precioEntera = '';
         $this->precioPerfil = '';
         $this->selected_id = 0;
@@ -32,17 +34,34 @@ class PlataformasController extends Component
     {
         return 'vendor.livewire.bootstrap';
     }
+    public function loadPage()
+    {
+        $this->readytoload = true;
+    }
+
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+    protected $queryString = [
+        'pagination' => ['except' => '5'],
+        'search' => ['except' => ''],
+    ];
 
     public function render()
     {
-        if (strlen($this->search) > 0) {
-            $plataformas = Platform::where('nombre', 'like', '%' . $this->nombre . '%')
-                ->orWhere('ACTIVO', 'like', '%' . $this->status . '%')
-                ->orderBy('id', 'desc')
-                ->paginate($this->pagination);
+        if ($this->readytoload) {
+            if (strlen($this->search) > 0) {
+                $plataformas = Platform::where('nombre', 'like', '%' . $this->search . '%')
+                    ->where('estado', 'ACTIVO')
+                    ->orderBy('id', 'desc')
+                    ->paginate($this->pagination);
+            } else {
+                $plataformas = Platform::orderBy('id', 'desc')
+                    ->paginate($this->pagination);
+            }
         } else {
-            $plataformas = Platform::orderBy('id', 'desc')
-                ->paginate($this->pagination);
+            $plataformas = [];
         }
         return view(
             'livewire.plataformas.component',
@@ -53,26 +72,28 @@ class PlataformasController extends Component
             ->extends('layouts.theme.app')
             ->section('content');
     }
+    public function updated($propertyName)
+    {
+        $this->validateOnly($propertyName);
+    }
 
+    protected $rules = [
+        'nombre' => 'required|unique:platforms|min:3',
+        'status' => 'required',
+        'precioEntera' => 'required',
+        'precioPerfil' => 'required',
+    ];
+    protected $messages = [
+        'nombre.required' => 'El nombre de la plataforma es requerido',
+        'nombre.unique' => 'Ya existe el nombre de la plataforma',
+        'nombre.min' => 'El nombre de la plataforma debe tener al menos 3 caracteres',
+        'status.required' => 'El estado de la plataforma es requerido',
+        'precioEntera.required' => 'El precio de las cuentas Enteras de esta plataforma es requerido',
+        'precioPerfil.required' => 'El precio individual de los Perfiles de esta plataforma es requerido',
+    ];
     public function Store()
     {
-        $rules = [
-            'nombre' => 'required|unique:platforms|min:3',
-            'status' => 'required|not_in:Elegir',
-            'precioEntera' => 'required',
-            'precioPerfil' => 'required',
-
-        ];
-        $messages = [
-            'nombre.required' => 'El nombre de la plataforma es requerido',
-            'nombre.unique' => 'Ya existe el nombre de la plataforma',
-            'nombre.min' => 'El nombre de la plataforma debe tener al menos 3 caracteres',
-            'status.required' => 'El estado de la plataforma es requerido',
-            'status.not_in' => 'Eliga un valor distinto a Elegir',
-            'precioEntera.required' => 'El precio de las cuentas Enteras de esta plataforma es requerido',
-            'precioPerfil.required' => 'El precio individual de los Perfiles de esta plataforma es requerido',
-        ];
-        $this->validate($rules, $messages);
+        $this->validate();
 
         $plataf = Platform::create([
             'nombre' => $this->nombre,
@@ -112,21 +133,11 @@ class PlataformasController extends Component
     {
         $rules = [
             'nombre' => "required|unique:platforms,nombre,{$this->selected_id}",
-            'status' => 'required|not_in:Elegir',
+            'status' => 'required',
             'precioEntera' => 'required',
             'precioPerfil' => 'required',
-
         ];
-        $messages = [
-            'nombre.required' => 'El nombre de la plataforma es requerido',
-            'nombre.unique' => 'Ya existe el nombre de la plataforma',
-            'nombre.min' => 'El nombre de la plataforma debe tener al menos 3 caracteres',
-            'status.required' => 'El estado de la plataforma es requerido',
-            'status.not_in' => 'Eliga un valor distinto a Elegir',
-            'precioEntera.required' => 'El precio de las cuentas Enteras de esta plataforma es requerido',
-            'precioPerfil.required' => 'El precio individual de los Perfiles de esta plataforma es requerido',
-        ];
-        $this->validate($rules, $messages);
+        $this->validate($rules);
 
         $plataf = Platform::find($this->selected_id);
 
@@ -155,7 +166,7 @@ class PlataformasController extends Component
         $this->emit('item-updated', 'Plataforma Actualizada');
     }
 
-    protected $listeners = ['deleteRow' => 'Destroy'];
+    protected $listeners = ['Destroy'];
 
     public function Destroy(Platform $plataform)
     {
@@ -174,12 +185,8 @@ class PlataformasController extends Component
 
     public function resetUI()
     {
-        $this->nombre = '';
-        $this->description = '';
-        $this->status = 'Elegir';
-        $this->precioEntera = '';
-        $this->precioPerfil = '';
-        $this->selected_id = 0;
+
+        $this->reset(['nombre', 'description', 'status', 'precioEntera', 'precioPerfil', 'image', 'selected_id']);
         $this->resetValidation();
     }
 }

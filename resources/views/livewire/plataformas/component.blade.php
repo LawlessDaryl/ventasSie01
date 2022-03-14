@@ -1,4 +1,4 @@
-<div class="row sales layout-top-spacing">
+<div class="row sales layout-top-spacing" wire:init="loadPage">
     <div class="col-sm-12">
         <div class="widget widget-chart-one">
             <div class="widget-heading">
@@ -6,15 +6,12 @@
                     <b>{{ $componentName }} | {{ $pageTitle }}</b>
                 </h4>
                 <ul class="tabs tab-pills">
-                   
                     <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
                         data-target="#theModal">Agregar</a>
-                    
                 </ul>
             </div>
-
-            
             @include('common.searchbox')
+
             <div class="widget-content">
                 <div class="table-responsive">
                     <table class="table table-unbordered table-hover mt-2">
@@ -54,24 +51,69 @@
                                             class="btn btn-dark mtmobile" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <a href="javascript:void(0)" onclick="Confirm('{{ $p->id }}','{{ $p->nombre }}')" class="btn btn-dark"
-                                            title="Delete">
+                                        <a href="javascript:void(0)"
+                                            onclick="Confirm('{{ $p->id }}','{{ $p->nombre }}')"
+                                            class="btn btn-dark" title="Delete">
                                             <i class="fas fa-trash"></i>
                                         </a>
-                                        
+
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
-                    {{ $platforms->links() }}
+                    @if (count($platforms))
+                        @if ($platforms->hasPages())
+                            {{ $platforms->links() }}
+                        @endif
+                    @else
+                        <tr>
+                            <td colspan="5">
+                                <h5 class="text-center">Sin Resultados</h5>
+                            </td>
+                        </tr>
+                    @endif
                 </div>
             </div>
         </div>
-    </div>
 
+    </div>
     @include('livewire.plataformas.form')
 </div>
+
+{{-- @stack('js')
+
+
+@push('js')
+    <script>
+        function Confirm(id, name, cuentas) {
+        if (cuentas > 0) {
+            swal.fire({
+                title: 'PRECAUCION',
+                icon: 'warning',
+                text: 'No se puede eliminar la plataforma, ' + name + ' porque tiene ' +
+                    cuentas + ' cuentas relacionadas'
+            })
+            return;
+        }
+        swal.fire({
+            title: 'CONFIRMAR',
+            icon: 'warning',
+            text: 'Confirmar eliminar la plataforma ' + '"' + name + '"',
+            showCancelButton: true,
+            cancelButtonText: 'Cerrar',
+            cancelButtonColor: '#383838',
+            confirmButtonColor: '#3B3F5C',
+            confirmButtonText: 'Aceptar'
+        }).then(function(result) {
+            if (result.value) {
+                window.livewire.emit('deleteRow', id)
+                Swal.close()
+            }
+        })
+    }
+    </script>
+@endpush --}}
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -98,8 +140,8 @@
             swal.fire({
                 title: 'PRECAUCION',
                 icon: 'warning',
-                text: 'No se puede eliminar la plataforma, ' + name + ' porque tiene ' 
-                + cuentas + ' cuentas relacionadas'
+                text: 'No se puede eliminar la plataforma, ' + name + ' porque tiene ' +
+                    cuentas + ' cuentas relacionadas'
             })
             return;
         }
@@ -114,7 +156,7 @@
             confirmButtonText: 'Aceptar'
         }).then(function(result) {
             if (result.value) {
-                window.livewire.emit('deleteRow', id)
+                window.livewire.emit('Destroy', id)
                 Swal.close()
             }
         })
