@@ -17,5 +17,24 @@
         });
         
 
+
+        window.livewire.on('no-stocktienda', Msg => {
+            $("#exampleModalCenter").modal("show");
+        });
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
     })
 </script>

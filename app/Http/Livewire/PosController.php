@@ -215,7 +215,8 @@ class PosController extends Component
                 if($productoalmacen->stock > 0)
                 {
                     //$this->mostrarmodal = 1;
-                    $this->emit('no-stock', 'Stock Insuficiente en Tienda, Se encontraro Productos Disponibles en Almacen');
+                    //$this->emit('no-stock', 'Stock Insuficiente en Tienda, Se encontraro Productos Disponibles en Almacen');
+                    $this->emit('no-stocktienda', 'Stock Insuficiente en Tienda, Se encontraro Productos Disponibles en Almacen');
                     return;
                 }
                 else

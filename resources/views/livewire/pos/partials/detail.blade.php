@@ -63,13 +63,6 @@
                                     <div id="modalVerticallyCentered" class="col-lg-12 layout-spacing">
                                         <div class="statbox widget box box-shadow">
                                             <div class="widget-content widget-content-area">
-                                                <div class="text-center">
-                                                    <!-- Button trigger modal -->
-                                                    <button type="button" class="btn btn-primary mb-2 mr-2" data-toggle="modal" data-target="#exampleModalCenter">
-                                                      Añadir de Almacen
-                                                    </button>
-                                                </div>
-            
                                                 <!-- Modal -->
                                                 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                                     <div class="modal-dialog modal-dialog-centered" role="document">
