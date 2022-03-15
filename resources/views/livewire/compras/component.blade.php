@@ -12,8 +12,7 @@
                            <div>
                                <b>Proveedor:</b>
                                    {{$provider}}<br/>
-                               <b>Comprobante nro: </b>
-                                   {{$comprobante}}<br/>
+                               
                                <b>Fecha: </b>
                                {{$fecha}}<br/>           
                                <b>Registrado por: </b> 
@@ -30,12 +29,19 @@
                                 <span class="input-group-text">.00</span>
                               </div>
                              
-                              <b>Tipo de Documento:</b>
-                              <select class="form-select" aria-label="Default select example">
-                                <option selected>Seleccionar Documento</option>
-                                <option value="2">COMPROBANTE</option>
-                                <option value="3">NOTA DE VENTA</option>
-                              </select><br/>
+                              @if($impuestos == true)
+                              {
+                                  <b>Tipo de Documento:</b>
+                                  <select class="form-select" aria-label="Default select example">
+                                    <option selected>Seleccionar Documento</option>
+                                    <option value="2">COMPROBANTE</option>
+                                    <option value="3">NOTA DE VENTA</option>
+                                  </select><br/>
+                              }
+                                @endif
+
+
+
                               <b>Nro. Documento: </b>
                                {{$nro_documento}}<br/> 
                               <b>Observacion: </b>
