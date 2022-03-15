@@ -2,11 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\Company;
 use App\Models\Compra;
 use Illuminate\Database\Seeder;
 
-class CompanySeeder extends Seeder
+class CompraSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -17,12 +16,12 @@ class CompanySeeder extends Seeder
     {
         Compra::create([
             'importe_total' => '850',
-            'fecha_compra' => 'Av. America casi G.Rene Moreno',
+            'fecha_compra' => '2022-02-10',
             'impuestos' => '2',
             'pago' => 'pagado',
             'saldo_por_pagar' => 'pagado',
             'tipo_doc' => 'FACTURA',
-            'nro_doc' => '12012',
+            'nro_documento' => '12012',
             'observacion' => 'ninguna',
             'proveedor_id' => '1'
         ]);

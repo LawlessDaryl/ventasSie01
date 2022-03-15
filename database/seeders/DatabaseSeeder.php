@@ -44,11 +44,12 @@ class DatabaseSeeder extends Seeder
         /* INVENTARIOS */
         $this->call(AccountProfileSeeder::class);
         $this->call(LocationSeeder::class);
+        $this->call(ProductSeeder::class);
         $this->call(UnidadSeeder::class);
         $this->call(CategorySeeder::class);
         $this->call(ProviderSeeder::class);
-        $this->call(CompraSeeder::class);
-        $this->call(CompraDetalleSeeder::class);
+       // $this->call(CompraSeeder::class);
+        //$this->call(CompraDetalleSeeder::class);
         
         
        /*  Category::factory(20)->create(); */

@@ -27,6 +27,7 @@ class CreateComprasTable extends Migration
             $table->string('observacion',100)->nullable();
             $table->unsignedBigInteger('proveedor_id');
             $table->foreign('proveedor_id')->references('id')->on('providers');
+            $table->timestamps();
         });
     }
 

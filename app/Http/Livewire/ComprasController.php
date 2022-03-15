@@ -12,12 +12,14 @@ class ComprasController extends Component
 {
     use WithPagination;
     use WithFileUploads;
-    public  $nro_compra,$search;
+    public  $nro_compra,$search,$provider,$comprobante,$fecha,
+    $usuario,$impuestos,$pago_parcial,$tipo_documento,$nro_docuemnto,$observacion;
 
     private $pagination = 5;
     public function mount()
     {
         $this->nro_compra = 00200;
+
      
     }
     public function render()
