@@ -163,7 +163,7 @@
                                         </td>
                                         <td class="text-center">
                                             @if($p->estadoCuentaPerfil=='ACTIVO')
-                                            <a href="javascript:void(0)" wire:click="Acciones({{ $p->id }})"
+                                            <a href="javascript:void(0)" wire:click="Acciones({{ $p->planid}})"
                                                 class="btn btn-dark mtmobile" title="Renovación">
                                                 <i class="fa-regular fa-calendar-check"></i>
                                             </a>

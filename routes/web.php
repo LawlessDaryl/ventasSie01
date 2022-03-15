@@ -59,11 +59,13 @@ use Illuminate\Support\Facades\Auth;
 
 Auth::routes();
 
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+/* Route::get('inicio', InicioController::class)->name('in')->middleware('permission:Asignar_Tecnico_Servicio'); */
 
 
 Route::middleware(['auth'])->group(function () {
-
+    Route::get('/', InicioController::class)->name('home');
+    Route::get('/home', InicioController::class);
     Route::group(['middleware' => ['role:ADMIN']], function () {
     });
     /* ADMINISTRACION */

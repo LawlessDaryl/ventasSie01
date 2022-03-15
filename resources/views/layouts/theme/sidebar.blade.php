@@ -36,7 +36,7 @@
                 </svg>
             </li>
 
-            <li class="menu {{ request()->routeIs('notificaciones') ? 'active' : '' }}">
+            {{-- <li class="menu {{ request()->routeIs('notificaciones') ? 'active' : '' }}">
                 <a href="#notificaciones" data-active="false" class="menu-toggle">
                     <div class="base-menu">
                         <div class="base-icons">
@@ -56,7 +56,7 @@
                     class="feather feather-chevron-left">
                     <polyline points="15 18 9 12 15 6"></polyline>
                 </svg>
-            </li>
+            </li> --}}
 
             <li class="menu {{ request()->routeIs('servicio') ? 'active' : '' }}">
                 <a href="#servicio" data-active="false" class="menu-toggle">
@@ -350,7 +350,7 @@
                 </ul>
             </div>
         @endif
-        <div class="submenu" id="notificaciones">
+        {{-- <div class="submenu" id="notificaciones">
             <ul class="submenu-list" data-parent-element="#uiKit">
                 <li>
                     <a href="{{ url('modulos') }}">
@@ -378,7 +378,7 @@
                         Modulos </a>
                 </li>
             </ul>
-        </div>
+        </div> --}}
 
         <div class="submenu" id="servicio">
             <ul class="submenu-list" data-parent-element="servicio">

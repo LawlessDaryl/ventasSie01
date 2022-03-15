@@ -88,7 +88,7 @@
 
         <div class="col-sm-12 col-md-12">
             <div class="form-group">
-                <label>Precio</label>
+                <label>Precio Compra Cuenta</label>
                 <input type="number" wire:model.lazy="price" class="form-control" placeholder="ej: 0.0">
                 @error('price')
                     <span class="text-danger er">{{ $message }}</span>

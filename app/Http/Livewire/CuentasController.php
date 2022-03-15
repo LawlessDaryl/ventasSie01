@@ -154,11 +154,11 @@ class CuentasController extends Component
                 ->get();
         } else {
             $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
-            ->join('emails as e', 'accounts.email_id', 'e.id')
-            ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
-            ->join('plan_accounts as pa', 'pa.account_id', 'accounts.id')
-            ->join('plans as pl', 'pa.plan_id', 'pl.id')
-            ->select(
+                ->join('emails as e', 'accounts.email_id', 'e.id')
+                ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
+                ->join('plan_accounts as pa', 'pa.account_id', 'accounts.id')
+                ->join('plans as pl', 'pa.plan_id', 'pl.id')
+                ->select(
                     'pl.id as planid',
                     'accounts.id as id',
                     'accounts.expiration_account as expiration_account',
@@ -369,7 +369,7 @@ class CuentasController extends Component
             'account_id' => $this->selected_id,
             'profile_id' => $perfil->id,
         ]);
-
+        /* LA CUENTA PASA A DIVIDIDA */
         $cuenta->whole_account = 'DIVIDIDA';
         $cuenta->save();
 
@@ -380,13 +380,6 @@ class CuentasController extends Component
         $this->Observaciones = '';
 
         $this->emit('item-deleted', 'Perfil Registrado');
-    }
-
-    public function Destroy(Account $acc)
-    {
-        $acc->delete();
-        $this->resetUI();
-        $this->emit('item-deleted', 'Cuenta Eliminada');
     }
 
     public function BorrarPerfil(Profile $perf)
@@ -416,17 +409,14 @@ class CuentasController extends Component
 
     public function Acciones(Plan $plan)
     {
+        $this->meses = 0;
         $this->selected_id = $plan->id;
-
-        $this->expirationActual = Plan::join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
-            ->join('accounts as acc', 'acc.id', 'pa.account_id')
-            ->select(
-                'plans.expiration_plan'
-            )
-            ->where('plans.id', $plan->id)
-            ->orderBy('plans.id', 'desc')
+        /* OBTENER FECHA DE EXPIRACION DEL PLAN */
+        $this->expirationActual = Plan::where('plans.id', $plan->id)            
             ->get()->first()->expiration_plan;
 
+        $this->expirationActual = substr($this->expirationActual, 0, 10);
+        /* dd($this->expirationActual); */
         $this->emit('details2-show', 'show modal!');
     }
     public function Renovar()
@@ -443,8 +433,8 @@ class CuentasController extends Component
         ];
 
         $this->validate($rules, $messages);
-
-        $cccc = Caja::join('sucursals as s', 's.id', 'cajas.sucursal_id')
+        /* CAJA EN LA QUE ESTA EL USUARIO */
+        $CajaActual = Caja::join('sucursals as s', 's.id', 'cajas.sucursal_id')
             ->join('sucursal_users as su', 'su.sucursal_id', 's.id')
             ->join('carteras as car', 'cajas.id', 'car.caja_id')
             ->join('cartera_movs as cartmovs', 'car.id', 'cartmovs.cartera_id')
@@ -455,14 +445,15 @@ class CuentasController extends Component
             ->select('cajas.id as id')
             ->get()->first();
 
-        if ($this->tipopago == 'EFECTIVO') {
+        if ($this->tipopago == 'EFECTIVO') {    /* SI PAGA EN EFECTIVO */
             $cartera = Cartera::where('tipo', 'cajafisica')
-                ->where('caja_id', $cccc->id)
+                ->where('caja_id', $CajaActual->id)
                 ->get()->first();
-        } else {
+        } else {        /* SI PAGA POR TIGO MNY O BANCO */
             $cartera = Cartera::where('tipo', $this->tipopago)
-                ->where('caja_id', $cccc->id)->get()->first();
+                ->where('caja_id', $CajaActual->id)->get()->first();
         }
+        /* OBTENER IDS PARA HACER LOS CAMBIOS */
         $datos = Plan::join('mov_plans as mp', 'plans.id', 'mp.plan_id')
             ->join('movimientos as m', 'm.id', 'mp.movimiento_id')
             ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
@@ -477,6 +468,7 @@ class CuentasController extends Component
             )
             ->where('plans.id', $this->selected_id)
             ->get()->first();
+            /* CALCULAR IMPORTE SEGUN LA PLATAFORMA DE LA CUENTA */
         $cuenta = Account::find($datos->cuentaid);
         $this->importe += $cuenta->Plataforma->precioEntera;
         $this->importe *= $this->meses;
@@ -486,6 +478,7 @@ class CuentasController extends Component
                 'importe' => $this->importe,
                 'plan_start' => $this->expirationActual,
                 'expiration_plan' => $this->expirationNueva,
+                'ready' => 'NO',
                 'status' => 'VIGENTE',
                 'type_pay' => $this->tipopago,
                 'observations' => $this->observations
@@ -520,10 +513,12 @@ class CuentasController extends Component
                 'plan_id' => $plan->id
             ]);
 
+            /* PONER EN VENCIDO EL PLAN ANTIGUO */
             $planviejo = Plan::find($datos->planid);
             $planviejo->status = 'VENCIDO';
             $planviejo->save();
 
+            /* PONER EN INACTIVO EL PLAN ACCOUNT */
             $planCuenta = PlanAccount::find($datos->planAccountid);
             $planCuenta->status = 'INACTIVO';
             $planCuenta->save();
@@ -538,6 +533,7 @@ class CuentasController extends Component
     }
     public function Vencer()
     {
+        /* OBTENER IDS */
         $datos = Plan::join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
             ->join('accounts as acc', 'acc.id', 'pa.account_id')
             ->select(
@@ -545,14 +541,16 @@ class CuentasController extends Component
                 'pa.id as paid'
             )
             ->where('plans.id', $this->selected_id)
-            ->where('pa.status', 'ACTIVO')
             ->get()->first();
+        /* PONER LA CUENTA EN LIBRE */
         $cuenta = Account::find($datos->cuentaid);
         $cuenta->availability = 'LIBRE';
         $cuenta->save();
+        /* PONER EL PLANACCOUNT EN INACTIVO */
         $plancuenta = PlanAccount::find($datos->paid);
         $plancuenta->status = 'INACTIVO';
         $plancuenta->save();
+
         $this->resetUI();
         $this->emit('cuenta-renovado-vencida', 'No se renovó este perfil y ahora esta inactivo');
     }

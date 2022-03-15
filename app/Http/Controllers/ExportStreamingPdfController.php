@@ -63,7 +63,7 @@ class ExportStreamingPdfController extends Controller
                     ->where('acc.whole_account', 'DIVIDIDA')
                     ->where('prof.availability', 'OCUPADO')
                     ->where('prof.status', 'ACTIVO')
-                    ->whereColumn('pa.id', '=', 'ap.plan_account_id')
+                    ->whereColumn('plans.id', '=', 'ap.plan_id')
                     ->orderBy('plans.created_at', 'desc')
                     ->get();
             } else {
@@ -101,7 +101,7 @@ class ExportStreamingPdfController extends Controller
                     ->where('acc.whole_account', 'DIVIDIDA')
                     ->where('prof.availability', 'OCUPADO')
                     ->where('prof.status', 'ACTIVO')
-                    ->whereColumn('pa.id', '=', 'ap.plan_account_id')
+                    ->whereColumn('plans.id', '=', 'ap.plan_id')
                     ->orderBy('plans.created_at', 'desc')
                     ->get();
             }
