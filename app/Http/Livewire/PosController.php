@@ -23,7 +23,8 @@ use Illuminate\Support\Facades\Redirect;
 
 class PosController extends Component
 {
-    public $total, $itemsQuantity, $efectivo, $change, $nit,$clienteanonimo="true", $tipopago ,$anonimo;
+    public $total, $itemsQuantity, $efectivo, $change, 
+    $nit, $clienteanonimo="true", $tipopago ,$anonimo, $factura, $facturasino;
 
 
 
@@ -36,6 +37,7 @@ class PosController extends Component
         $this->ClienteSelectnit = 1;
         $this->tipopago = 'EFECTIVO';
         $this->anonimo = 0;
+        $this->facturasino = 'No';
     }
     public function render()
     {
@@ -76,6 +78,20 @@ class PosController extends Component
         ])
             ->extends('layouts.theme.app')
             ->section('content');
+    }
+
+
+    public function ventafactura()
+    {
+        //dd($this->clienteanonimo);
+        if($this->factura == 'true')
+        {
+            $this->facturasino = 'Si';
+        }
+        else
+        {
+            $this->facturasino = 'No';
+        }
     }
 
 
@@ -120,8 +136,11 @@ class PosController extends Component
     public function ScanCode($barcode, $cant = 1)
     {
         $product = Product::join("productos_destinos as pd", "pd.product-id", "products.id")
-        ->select("products.id as id","products.image as image","products.nombre as name","products.precio_venta as price","products.barcode", "pd.stock as stock")
+        ->join('locations as d', 'd.id', 'pd.destino-id')
+        ->select("products.id as id","products.image as image","products.nombre as name",
+        "products.precio_venta as price","products.barcode", "pd.stock as stock")
         ->where("products.barcode", $barcode)
+        ->where("d.ubicacion", 'TIENDA')
         ->get()->first();
         //$product = Product::where('barcode', $barcode)->first();
         if ($product == null || empty($product))
@@ -165,25 +184,45 @@ class PosController extends Component
 
     public function increaseQty($productId, $cant = 1)
     {
-        $title = '';
-        
+        $title = 'aaaaaaaaaaa';
         $product = Product::join("productos_destinos as pd", "pd.product-id", "products.id")
-        ->select("products.id as id","products.image as image","products.nombre as name","products.precio_venta as price","products.barcode", "pd.stock as stock")
+        ->join('locations as d', 'd.id', 'pd.destino-id')
+        ->select("products.id as id","products.image as image","products.nombre as name",
+        "products.precio_venta as price","products.barcode", "pd.stock as stock")
         ->where("products.id", $productId)
+        ->where("d.ubicacion", 'TIENDA')
         ->get()->first();
-        //$product = ProductosDestino::find($productId);
         $exist = Cart::get($productId);
-        if ($exist) {
+        if ($exist)
+        {
             $title = 'Cantidad actualizada';
-        } else {
+        }
+        else
+        {
             $title = "Producto agregado";
         }
         if ($exist)
         {
             if ($product->stock < ($cant + $exist->quantity))
             {
-                $this->emit('no-stock', 'stock insuficiente');
-                return;
+                $productoalmacen = Product::join("productos_destinos as pd", "pd.product-id", "products.id")
+                ->join('locations as d', 'd.id', 'pd.destino-id')
+                ->select("products.id as id","products.image as image","products.nombre as name",
+                "products.precio_venta as price","products.barcode", "pd.stock as stock")
+                ->where("products.id", $productId)
+                ->where("d.ubicacion", 'ALMACEN')
+                ->get()->first();
+                if($productoalmacen->stock > 0)
+                {
+                    //$this->mostrarmodal = 1;
+                    $this->emit('no-stock', 'Stock Insuficiente en Tienda, Se encontraro Productos Disponibles en Almacen');
+                    return;
+                }
+                else
+                {
+                    $this->emit('no-stock', 'stock insuficiente');
+                    return;
+                }
             }
         }
         //dd($product->price);
@@ -198,8 +237,11 @@ class PosController extends Component
     {
         $title = '';
         $product = Product::join("productos_destinos as pd", "pd.product-id", "products.id")
-        ->select("products.id as id","products.image as image","products.nombre as name","products.precio_venta as price","products.barcode", "pd.stock as stock")
+        ->join('locations as d', 'd.id', 'pd.destino-id')
+        ->select("products.id as id","products.image as image","products.nombre as name",
+        "products.precio_venta as price","products.barcode", "pd.stock as stock")
         ->where("products.id", $productId)
+        ->where("d.ubicacion", 'TIENDA')
         ->get()->first();
         //$product = Product::find($productId);
         $exist = Cart::get($productId);
@@ -327,7 +369,7 @@ class PosController extends Component
             // where('caja_id',$cajausuario->id)
             // ->where('tipo','CajaFisica')->get()->first();
 
-
+            //Topo de Pago en la Venta
             if ($this->tipopago == 'EFECTIVO')
             {
                 $cartera = Cartera::where('tipo', 'cajafisica')
@@ -339,6 +381,7 @@ class PosController extends Component
                 $cartera = Cartera::where('tipo', $this->tipopago)
                     ->where('caja_id', $cajausuario->id)->get()->first();
             }
+            //Creando Venta
             $sale = Sale::create([
                 'total' => $this->total,
                 'items' => $this->itemsQuantity,
@@ -346,15 +389,17 @@ class PosController extends Component
                 'change' => $this->change,
 
                 'tipopago' => $this->tipopago,
-                'factura' => 'No',
+                'factura' => $this->facturasino,
 
 
                 'movimiento_id' => $Movimiento->id,
                 'user_id' => Auth()->user()->id
             ]);
-
-            if ($sale) {
+            //Creando Detalle de Venta
+            if ($sale)
+            {
                 $items = Cart::getContent();
+                dd($items);
                 foreach ($items as $item) {
                     SaleDetail::create([
                         'price' => $item->price,
@@ -391,8 +436,12 @@ class PosController extends Component
                 'cartera_id' => $cartera->id,
                 'movimiento_id' => $Movimiento->id,
             ]);
-            $this->anonimo = 0;
 
+            //Dejando la variable Cliente Anònimo ($anonimo) en True=0
+            $this->anonimo = 0;
+            //Dejando la variable Factura en False
+            $this->factura = 'false';
+            $this->facturasino = 'No';
             $this->emit('save-ok', 'venta registrada con exito');
 
             //$this->emit('print-ticket', $sale->id);

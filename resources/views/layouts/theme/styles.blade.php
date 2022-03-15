@@ -28,9 +28,15 @@
 
 
 
-<!-- Estilo ventas Switches -->
+<!-- Estilo ventas Switches en Ventas -->
 <link href="{{ asset('assets/css/scrollspyNav.css') }}" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/forms/switches.css') }}">
+
+{{-- Estilos para las alertas en Ventas --}}
+<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/elements/alert.css') }}">
+
+
+
 <style>
     aside {
         display: none !important;
