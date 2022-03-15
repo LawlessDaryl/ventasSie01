@@ -220,6 +220,11 @@ class InicioController extends Component
             ->section('content');
     }
 
+    public function GoOrderservice()
+    {
+        $this->redirect('orderservice');
+    }
+
     public function ListadoTipo()
     {
         $orderservices = OrderService::join(

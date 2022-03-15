@@ -6,8 +6,10 @@
                     <b>{{ $componentName }} | {{ $pageTitle }}</b>
                 </h4>
                 <ul class="tabs tab-pills">
+                    <a href="javascript:void(0)" class="btn btn-dark" wire:click="IrInicio">Ir a Inicio</a>
                     <a href="javascript:void(0)" class="btn btn-dark" wire:click="GoService">Agregar</a>
                 </ul>
+                
             </div>
 
             {{-- SEARCH-> --}}

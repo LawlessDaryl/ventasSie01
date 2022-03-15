@@ -172,6 +172,11 @@ class OrderServiceController extends Component
             ->section('content');
     }
 
+    public function IrInicio()
+    {
+        $this->redirect('inicio');
+    }
+
     public function GoService()
     {
         session(['od' => null]);
@@ -681,7 +686,7 @@ class OrderServiceController extends Component
         $this->costo = 0;
         $this->detalle_costo = '';
         $this->nombreUsuario = '';
-        $this->opciones = 'PENDIENTE';
+        /* $this->opciones = 'PENDIENTE'; */
         $this->tipopago = 'EFECTIVO';
 
         $this->resetValidation();

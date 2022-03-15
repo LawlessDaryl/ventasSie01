@@ -39,7 +39,7 @@
 
                         <b>DESCRIPCIÓN: </b>
                         @foreach ($datos->services as $item)
-                            {{ $item->nombreCateg }} {{ $item->marca }} |
+                            {{ $item->categoria->nombre }} {{ $item->marca }} |
                         @endforeach<br>
                         <b><u>FALLA:</u> </b>
                         @foreach ($datos->services as $item)
@@ -153,7 +153,7 @@
                                                     <td style="text-align: right;">TOTAL:</td>
                                                     <td style="text-align: right;">
                                                         @foreach ($data as $item)
-                                                            {{ $item->import }} |
+                                                        {{ $item->import }}
                                                         @endforeach
                                                     </td>
                                                 </tr>
@@ -161,7 +161,7 @@
                                                     <td style="text-align: right;">A CUENTA:</td>
                                                     <td style="text-align: right;">
                                                         @foreach ($data as $item)
-                                                            {{ $item->on_account }} |
+                                                            {{ $item->on_account }} 
                                                         @endforeach
                                                     </td>
                                                 </tr>
@@ -169,7 +169,7 @@
                                                     <td style="text-align: right;">SALDO:</td>
                                                     <td style="text-align: right;">
                                                         @foreach ($data as $item)
-                                                            {{ $item->saldo }} |
+                                                            {{ $item->saldo }} 
                                                         @endforeach
                                                     </td>
                                                 </tr>
@@ -187,7 +187,7 @@
                                     <b>CANT.: </b>{{ $datos->services->count() }}<br>
                                     <b>DESCRIPCIÓN: </b>
                                     @foreach ($datos->services as $item)
-                                        {{ $item->nombreCateg }} {{ $item->marca }} |
+                                        {{ $item->categoria->nombre }} {{ $item->marca }} |
                                     @endforeach<br>
                                     <b>FALLA SEGUN CLIENTE: </b>
                                     @foreach ($datos->services as $item)

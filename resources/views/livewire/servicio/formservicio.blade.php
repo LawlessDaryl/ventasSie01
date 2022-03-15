@@ -18,7 +18,9 @@
                                 <option value="Elegir" disabled selected>Elegir</option>
 
                                 @foreach ($work as $wor)
-                                    <option value="{{ $wor->id }}" selected>{{ $wor->name }}</option>
+                                    @if($wor->status=='ACTIVE')
+                                        <option value="{{ $wor->id }}" selected>{{ $wor->name }}</option>
+                                    @endif
                                 @endforeach
 
                             </select>
@@ -33,7 +35,9 @@
                                 <option value="Elegir" disabled selected>Elegir</option>
 
                                 @foreach ($cate as $cat)
-                                    <option value="{{ $cat->id }}" selected>{{ $cat->nombre }}</option>
+                                    @if($cat->estado == 'ACTIVO')
+                                        <option value="{{ $cat->id }}" selected>{{ $cat->nombre }}</option>
+                                    @endif
                                 @endforeach
 
                             </select>
@@ -45,7 +49,9 @@
                         <label>Marca/Modelo</label>
                         <datalist id="colores">
                             @foreach ($marcas as $cat)
-                                <option value="{{ $cat->name }}" selected>{{ $cat->name }}</option>
+                                @if($cat->status=='ACTIVE')
+                                    <option value="{{ $cat->name }}" selected>{{ $cat->name }}</option>
+                                @endif
                             @endforeach
                         </datalist>
                         <input list="colores" wire:model.lazy="marc" name="colores" type="text" class="form-control">

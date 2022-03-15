@@ -31,6 +31,7 @@ class ImprimirController extends Controller
                 'cps.nombre as nombreCateg'
             )
             ->where('services.order_service_id',  $idServicio)
+            ->where('mov.status', 'ACTIVO')
             ->get();
 
         /* DATOS ORDEN DE SERVICIO */
