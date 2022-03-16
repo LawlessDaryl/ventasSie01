@@ -20,7 +20,7 @@
                                     <label><h6>Tipo de Trabajo: </h6></label>
                                 </td>
                                 <td class="text-center" colspan="2">   
-                                    <select wire:model.lazy="typeworkid" class="form-control">
+                                    <select disabled wire:model.lazy="typeworkid" class="form-control">
                                         <option value="Elegir" disabled selected>Elegir</option>
                         
                                         @foreach ($work as $wor)
@@ -35,7 +35,7 @@
                                     <label><h6>Tipo de equipo: </h6></label>
                                 </td>
                                     <td class="text-center" colspan="2">
-                                        <select wire:model.lazy="catprodservid" class="form-control">
+                                        <select disabled wire:model.lazy="catprodservid" class="form-control">
                                             <option value="Elegir" disabled selected>Elegir</option>
                                                 @foreach ($cate as $cat)
                                                     <option value="{{ $cat->id }}" selected>{{ $cat->nombre }}</option>
@@ -57,7 +57,7 @@
                                             <option value="{{ $cat->name }}" selected>{{ $cat->name }}</option>
                                         @endforeach
                                         </datalist>
-                                        <input list="colores" wire:model.lazy="marca" name="colores" type="text" class="form-control">
+                                        <input disabled list="colores" wire:model.lazy="marca" name="colores" type="text" class="form-control">
                                         
                                     </td>
                             </tr>
@@ -67,7 +67,7 @@
                                     <label><h6>Estado del Equipo</h6></label>
                                 </td>
                                 <td class="text-left" colspan="5">
-                                    <input type="text" wire:model.lazy="detalle" class="form-control"
+                                    <input disabled type="text" wire:model.lazy="detalle" class="form-control"
                                     placeholder="ej: Note 7 con protector de pantalla">
                                     @error('detalle') <span class="text-danger er">{{ $message }}</span>@enderror
                                 </td>
@@ -78,7 +78,7 @@
                                     <label><h6>Falla según el cliente</h6></label>
                                 </td>
                                 <td class="text-left" colspan="5">
-                                    <input type="text" wire:model.lazy="falla_segun_cliente" class="form-control"
+                                    <input disabled type="text" wire:model.lazy="falla_segun_cliente" class="form-control"
                                     placeholder="ej: Revisión">
                                     @error('falla_segun_cliente') <span class="text-danger er">{{ $message }}</span>@enderror
                                 </td>

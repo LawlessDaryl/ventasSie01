@@ -158,5 +158,9 @@ class PermissionSeeder extends Seeder
             'name' => 'Boton_Entregar_Servicio',
             'guard_name' => 'web'
         ]);
+        Permission::create([
+            'name' => 'Ver_Modificar_Eliminar_Servicio',
+            'guard_name' => 'web'
+        ]);
     }
 }

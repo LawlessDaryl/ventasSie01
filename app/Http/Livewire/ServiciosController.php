@@ -112,6 +112,8 @@ class ServiciosController extends Component
             $this->saldo = $this->import;
         elseif ((strlen($this->import) == 0))
             $this->saldo = 0;
+        /* $us=User::find(2);
+        dd($us->getAllPermissions()); */
 
         return view('livewire.servicio.component', [
             'data' => $services,
@@ -346,7 +348,7 @@ class ServiciosController extends Component
         DB::beginTransaction();
         /* dd($this->hora_entrega); */
         try {
-            $from = Carbon::parse($this->fecha_estimada_entrega)->format('Y-m-d') ." " . $this->hora_entrega . ':00';
+            $from = Carbon::parse($this->fecha_estimada_entrega)->format('Y-m-d') ." " . $this->hora_entrega;
             $service = Service::find($this->selected_id);
             
             $service->update([
