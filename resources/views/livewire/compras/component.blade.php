@@ -17,39 +17,56 @@
                                {{$fecha}}<br/>           
                                <b>Registrado por: </b> 
                                {{$usuario}}<br/>
-                             <div class="form-check form-check-inline">
-                                 <label class="form-check-label">
-                                     <input class="form-check-input" type="checkbox" name="" id="" value="checkedValue"> Exento IVA
+
+                             <div class="form-group mb-0">
+                                 <label class="form-group-check-label">
+                                     <input wire:model='impuestos' type="checkbox" name="" id="" value="checkedValue"> Exento IVA
                                  </label>
                              </div>
-                             <b>Pago parcial:</b> 
-                             <div class="input-group mb-3">
-                                <span class="input-group-text">Bs.</span>
-                                <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
-                                <span class="input-group-text">.00</span>
-                              </div>
-                             
                               @if($impuestos == true)
-                              {
-                                  <b>Tipo de Documento:</b>
-                                  <select class="form-select" aria-label="Default select example">
-                                    <option selected>Seleccionar Documento</option>
-                                    <option value="2">COMPROBANTE</option>
-                                    <option value="3">NOTA DE VENTA</option>
-                                  </select><br/>
-                              }
-                                @endif
-
-
-
-                              <b>Nro. Documento: </b>
-                               {{$nro_documento}}<br/> 
-                              <b>Observacion: </b>
-                               <br/> 
-                               <div class="input-group">
-                                <span class="input-group-text">With textarea</span>
-                                <textarea class="form-control" aria-label="With textarea"></textarea>
+                              <div class="col-lg-6 col-md-4 col-12 pl-0">
+                                  <div class="form-group">
+                                    <strong>Tipo de Documento:</strong>
+                                    <select wire:model='tipo_documento' class="form-control">
+                                        <option value="Elegir" selected>Elegir</option>
+                                        <option value="NOTA DE VENTA">NOTA DE VENTA</option>
+                                        <option value="RECIBO">RECIBO</option>
+                                    </select>
+                                    @error('tipo_documento')
+                                        <span class="text-danger er">{{ $message }}</span>
+                                    @enderror
+                                 </div>
                               </div>
+                              
+                                @endif
+                            <div class="col-lg-6 col-md-4 col-12 pl-0">
+                                <div class="form-group">
+                                    <strong>Número de Documento</strong>
+                                    <input type="text" wire:model.lazy="nro_documento" class="form-control" placeholder="Introduzca el numero de factura">
+                                    @error('nro_documento')
+                                        <span class="text-danger er">{{ $message }}</span>
+                                    @enderror
+                                  </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-4 col-12 pl-0">
+                                <div class="form-group">
+                                    <label>Pago parcial:</label>
+                                   <input  wire:model='pago_parcial' type="text" class="form-control" placeholder="Bs. 0">
+                                   @error('pago_parcial')
+                                   <span class="text-danger er">{{ $message }}</span>
+                                   @enderror
+                               </div>
+                            </div>
+                          <div class="col-lg-6 col-md-4 col-12 pl-0">
+                              <div class="form-group">
+                                     <label>Observacion: </label>
+                                  <textarea  wire:model='observacion' class="form-control" aria-label="With textarea"></textarea>
+                                  @error('observacion')
+                                  <span class="text-danger er">{{ $message }}</span>
+                                  @enderror
+                              </div>
+                          </div>
                              </div>
                        </div>
 

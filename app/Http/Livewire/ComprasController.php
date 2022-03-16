@@ -14,7 +14,7 @@ class ComprasController extends Component
     use WithPagination;
     use WithFileUploads;
     public  $nro_compra,$search,$provider,$fecha,
-    $usuario,$impuestos,$pago_parcial,$tipo_documento,$nro_docuemnto,$observacion;
+    $usuario,$impuestos,$pago_parcial,$tipo_documento,$nro_documento,$observacion;
 
     private $pagination = 5;
     public function mount()
@@ -24,9 +24,8 @@ class ComprasController extends Component
         $this->fecha = Carbon::now();
         $this->usuario = Auth()->user()->name;
         $this->impuestos = false;
-        $this->pago_parcial = 0;
         $this->impuestos = false;
-        $this->nro_docuemnto = 0;
+       
 
 
 
