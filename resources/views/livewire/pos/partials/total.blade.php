@@ -27,7 +27,7 @@
                         </div>
                         <div class="col-md-2">
                             <label class="switch s-icons s-outline  s-outline-primary  mb-4 mr-2">
-                                <input type="checkbox" wire:click="ventafactura()" wire:model="factura">
+                                <input type="checkbox" wire:model="factura">
                                 <span class="slider round"></span>
                             </label>
                         </div>

@@ -26,6 +26,9 @@ class PosController extends Component
     public $total, $itemsQuantity, $efectivo, $change, 
     $nit, $clienteanonimo="true", $tipopago ,$anonimo, $factura, $facturasino;
 
+    //Variables para la venta desde almacen, moviendo productos de almacen a la tienda
+    public  $stockalmacen, $nombrestockproducto, $cantidadToTienda = 1, $idproductoalmacen;
+
 
 
     public function mount()
@@ -38,6 +41,7 @@ class PosController extends Component
         $this->tipopago = 'EFECTIVO';
         $this->anonimo = 0;
         $this->facturasino = 'No';
+
     }
     public function render()
     {
@@ -214,9 +218,12 @@ class PosController extends Component
                 ->get()->first();
                 if($productoalmacen->stock > 0)
                 {
+                    $this->stockalmacen = $productoalmacen->stock;
+                    $this->nombrestockproducto = $productoalmacen->name;
+                    $this->idproductoalmacen = $productoalmacen->id;
                     //$this->mostrarmodal = 1;
                     //$this->emit('no-stock', 'Stock Insuficiente en Tienda, Se encontraro Productos Disponibles en Almacen');
-                    $this->emit('no-stocktienda', 'Stock Insuficiente en Tienda, Se encontraro Productos Disponibles en Almacen');
+                    $this->emit('no-stocktienda');
                     return;
                 }
                 else
@@ -454,6 +461,41 @@ class PosController extends Component
     public function printTicket($sale)
     {
         return Redirect::to('print://$sale->id');
+    }
+
+    //Mètodo para mover productos de la tabbla ALM
+    public function almacenToTienda()
+    {
+        //Eliminando la cantidad de productos de ALMACEN para pasar a TIENDA
+        $productoalmacenid = ProductosDestino::join("products as p", "p.id", "productos_destinos.product-id")
+                ->join('locations as d', 'd.id', 'productos_destinos.destino-id')
+                ->select("productos_destinos.id as id","p.nombre as name",
+                "productos_destinos.stock as stock")
+                ->where("p.id", $this->idproductoalmacen)
+                ->where("d.ubicacion", 'ALMACEN')
+                ->get()->first();
+
+
+        $productoalmacenid->update([
+            'stock' => $productoalmacenid->stock - $this->cantidadToTienda
+        ]);
+        //Incrementando la cantidad de productos en TIENDA que vienen de ALMACEN
+        $productotiendaid = ProductosDestino::join("products as p", "p.id", "productos_destinos.product-id")
+                ->join('locations as d', 'd.id', 'productos_destinos.destino-id')
+                ->select("productos_destinos.id as id","p.nombre as name",
+                "productos_destinos.stock as stock")
+                ->where("p.id", $this->idproductoalmacen)
+                ->where("d.ubicacion", 'TIENDA')
+                ->get()->first();
+
+
+        $productotiendaid->update([
+            'stock' => $productotiendaid->stock + $this->cantidadToTienda
+        ]);
+
+
+        //Añadimos al Carrito
+        $this->increaseQty($this->idproductoalmacen, $this->cantidadToTienda);
     }
 
     

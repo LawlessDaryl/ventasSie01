@@ -32,10 +32,10 @@
 <link href="{{ asset('assets/css/scrollspyNav.css') }}" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/forms/switches.css') }}">
 
-{{-- Estilos para las alertas en Ventas --}}
-<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/elements/alert.css') }}">
 
-
+{{-- Scripts para los TouchsSpin en Ventas --}}
+<script src="{{ asset('plugins/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js') }}"></script>
+<script src="{{ asset('plugins/bootstrap-touchspin/custom-bootstrap-touchspin.js') }}"></script>
 
 <style>
     aside {
