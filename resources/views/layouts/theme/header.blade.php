@@ -24,6 +24,10 @@
 
         </livewire:search-controller>
 
+        <ul class="tabs tab-pills text-center mt-2">            
+            <a href="{{ url('cortecajas') }}" class="btn btn-warning btn-lg active" role="button" aria-pressed="true">CORTE DE CAJA</a>            
+        </ul>
+
         <ul>
             @if (empty(session('sesionCaja')))
                 <h5 style="background-color: white">No tienen ninguna caja abierta</h5>
@@ -215,7 +219,7 @@
                         class="img-fluid">
                 </a>
                 <div class="dropdown-menu position-absolute animated fadeInUp" aria-labelledby="userProfileDropdown"">
-                    <div class="      user-profile-section" style="background: #ff7600;">
+                    <div class="       user-profile-section" style="background: #ff7600;">
                     <div class="media mx-auto">
                         <img src="{{ asset('storage/usuarios/' . auth()->user()->imagen) }}" class="img-fluid mr-2"
                             alt="avatar">

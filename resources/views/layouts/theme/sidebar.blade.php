@@ -36,7 +36,7 @@
                 </svg>
             </li>
 
-            <li class="menu {{ request()->routeIs('notificaciones') ? 'active' : '' }}">
+            {{-- <li class="menu {{ request()->routeIs('notificaciones') ? 'active' : '' }}">
                 <a href="#notificaciones" data-active="false" class="menu-toggle">
                     <div class="base-menu">
                         <div class="base-icons">
@@ -56,7 +56,7 @@
                     class="feather feather-chevron-left">
                     <polyline points="15 18 9 12 15 6"></polyline>
                 </svg>
-            </li>
+            </li> --}}
 
             <li class="menu {{ request()->routeIs('servicio') ? 'active' : '' }}">
                 <a href="#servicio" data-active="false" class="menu-toggle">
@@ -78,6 +78,7 @@
                     <polyline points="15 18 9 12 15 6"></polyline>
                 </svg>
             </li>
+            @role('ADMIN')
             <li class="menu {{request()->routeIs('inventario') ? 'active':''}}">
                 <a href="#inventario" data-active="false" class="menu-toggle">
                     <div class="base-menu">
@@ -106,7 +107,8 @@
                     <polyline points="15 18 9 12 15 6"></polyline>
                 </svg>
             </li>
-
+            @endcan
+            @role('ADMIN')
             <li class="menu {{ request()->routeIs('registro') ? 'active' : '' }}">
                 <a href="#registro" data-active="false" class="menu-toggle">
                     <div class="base-menu">
@@ -116,9 +118,8 @@
                                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                                 <circle cx="12" cy="7" r="4"></circle>
                             </svg>
-
                         </div>
-                        <span>REGISTRO</span>
+                        <span>ADMINISTRACION</span>
                     </div>
                 </a>
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -127,7 +128,7 @@
                     <polyline points="15 18 9 12 15 6"></polyline>
                 </svg>
             </li>
-
+            @endcan
             @role('ADMIN')
                 <li class="menu {{ request()->routeIs('ventas') ? 'active' : '' }}">
                     <a href="#ventas" data-active="false" class="menu-toggle">
@@ -151,7 +152,7 @@
                     </svg>
                 </li>
             @endcan
-
+            @role('ADMIN')
             <li class="menu {{ request()->routeIs('permisos') ? 'active' : '' }}">
                 <a href="#permisos" data-active="false" class="menu-toggle">
                     <div class="base-menu">
@@ -172,7 +173,7 @@
                     <polyline points="15 18 9 12 15 6"></polyline>
                 </svg>
             </li>
-
+            
             <li class="menu {{ request()->routeIs('contabilidad') ? 'active' : '' }}">
                 <a href="#contabilidad" data-active="false" class="menu-toggle">
                     <div class="base-menu">
@@ -193,7 +194,7 @@
                     <polyline points="15 18 9 12 15 6"></polyline>
                 </svg>
             </li>
-
+            @endcan
         </ul>
     </nav>
 
@@ -216,7 +217,7 @@
                             <img src="{{ asset('storage/icons/transfer.png') }}" alt="Transacciones" width="25px">
                             Nueva Transacción </a>
                     </li>
-
+                    @role('ADMIN')
                     <li>
                         <a href="{{ url('origenes') }}">
                             <img src="{{ asset('storage/icons/origen.png') }}" alt="Origen CRUD" width="25px">
@@ -234,7 +235,7 @@
                             <img src="{{ asset('storage/icons/comision.png') }}" alt="Comision CRUD" width="25px">
                             Comisión CRUD </a>
                     </li>
-
+                    
                     <li>
                         <a href="{{ url('origen-motivo') }}">
                             <img src="{{ asset('storage/icons/comision.png') }}" alt="Comision CRUD" width="25px">
@@ -246,7 +247,7 @@
                             <img src="{{ asset('storage/icons/comision.png') }}" alt="Comision CRUD" width="25px">
                             Origen motivo comisiones</a>
                     </li>
-
+                    @endcan
                     <li>
                         <a href="{{ url('arqueostigo') }}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -268,6 +269,18 @@
                             </svg>
                             Reportes Tigo</a>
                     </li>
+
+                    <li>
+                        <a href="{{ url('ReporteGananciaTg') }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="feather feather-pie-chart">
+                                <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
+                                <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
+                            </svg>
+                            Reporte Ganancias Tigo</a>
+                    </li>
+
                 </ul>
             </div>
         @endif
@@ -350,7 +363,7 @@
                 </ul>
             </div>
         @endif
-        <div class="submenu" id="notificaciones">
+        {{-- <div class="submenu" id="notificaciones">
             <ul class="submenu-list" data-parent-element="#uiKit">
                 <li>
                     <a href="{{ url('modulos') }}">
@@ -378,11 +391,11 @@
                         Modulos </a>
                 </li>
             </ul>
-        </div>
+        </div> --}}
 
         <div class="submenu" id="servicio">
             <ul class="submenu-list" data-parent-element="servicio">
-
+                @role('ADMIN')
                 <li>
                     <a href="{{ url('catprodservice') }}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -418,7 +431,7 @@
                         </svg>
                         Tipo de Trabajo </a>
                 </li>
-
+                @endcan
                 <li>
                     <a href="{{ url('orderservice') }}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
