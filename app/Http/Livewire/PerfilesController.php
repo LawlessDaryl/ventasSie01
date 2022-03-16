@@ -279,7 +279,7 @@ class PerfilesController extends Component
             ->where('p.status', 'ACTIVO')->get();
         /* SI LA CUENTA NO TIENE PERFILES REGRESA A SER ENTERA */
         if ($perfilesActivos->count() == 0) {
-            $cuenta = Account::find($this->selected_id);
+            $cuenta = Account::find($Cuenta->id);
             $cuenta->whole_account = 'ENTERA';
             $cuenta->save();
         }
