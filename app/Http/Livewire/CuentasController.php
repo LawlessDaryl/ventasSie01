@@ -390,14 +390,13 @@ class CuentasController extends Component
         /* PONER EN INACTIVO EL PERFIL */
         $perf->status = 'INACTIVO';
         $perf->save();
-        /* CONTAR LOS PERFILES ACTIVOS */
+        /* CONTAR LOS PERFILES ACTIVOS OCUPADOS */
         $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
             ->join('profiles as p', 'ap.profile_id', 'p.id')
             ->where('accounts.id', $this->selected_id)
-            ->where('p.availability', 'LIBRE')
             ->where('ap.status', 'ACTIVO')
             ->where('p.status', 'ACTIVO')->get();
-        /* SI LA CUENTA NO TIENE PERFILES REGRESA A SER ENTERA */
+        /* SI LA CUENTA NO TIENE PERFILES ACTIVOS REGRESA A SER ENTERA */
         if ($perfilesActivos->count() == 0) {
             $cuenta = Account::find($this->selected_id);
             $cuenta->whole_account = 'ENTERA';

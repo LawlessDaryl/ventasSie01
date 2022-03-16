@@ -473,80 +473,87 @@ class PlanesController extends Component
         /* SABER SI ES UN PERFIL O UNA CUENTA */
         $cuentaPerf = AccountProfile::where('plan_id', $plan->id)->get();
 
-        if ($cuentaPerf->count() > 0) {  /* CUANDO ES UN PERFIL */
-            /* OBTENER IDS */
-            $anular = Plan::join('mov_plans as mp', 'mp.plan_id', 'plans.id')
-                ->join('movimientos as m', 'mp.movimiento_id', 'm.id')
-                ->join('plan_accounts as pa', 'pa.plan_id', 'plans.id')
-                ->join('accounts as a', 'pa.account_id', 'a.id')
-                ->join('account_profiles as ap', 'ap.account_id', 'a.id')
-                ->join('profiles as p', 'ap.profile_id', 'p.id')
-                ->select('m.*', 'pa.id as paid', 'a.id as cuentaid', 'p.id as perfilid', 'ap.id as apid')
-                ->whereColumn('plans.id', '=', 'ap.plan_id')
-                ->where('plans.id', $plan->id)
-                ->get()->first();
-            /* PONER EN INACTIVO EL MOVIMIENTO */
-            $movimiento = Movimiento::find($anular->id);
-            $movimiento->status = 'INACTIVO';
-            $movimiento->save();
-            /* ANULAR PLAN */
-            $plan->status = 'ANULADO';
-            $plan->save();
-            /* PONER EN INACTIVO PLANACCOUNT */
-            $planCuenta = PlanAccount::find($anular->paid);
-            $planCuenta->status = 'INACTIVO';
-            $planCuenta->save();
+        DB::beginTransaction();
+        try {
+            if ($cuentaPerf->count() > 0) {  /* CUANDO ES UN PERFIL */
+                /* OBTENER IDS */
+                $anular = Plan::join('mov_plans as mp', 'mp.plan_id', 'plans.id')
+                    ->join('movimientos as m', 'mp.movimiento_id', 'm.id')
+                    ->join('plan_accounts as pa', 'pa.plan_id', 'plans.id')
+                    ->join('accounts as a', 'pa.account_id', 'a.id')
+                    ->join('account_profiles as ap', 'ap.account_id', 'a.id')
+                    ->join('profiles as p', 'ap.profile_id', 'p.id')
+                    ->select('m.*', 'pa.id as paid', 'a.id as cuentaid', 'p.id as perfilid', 'ap.id as apid')
+                    ->whereColumn('plans.id', '=', 'ap.plan_id')
+                    ->where('plans.id', $plan->id)
+                    ->get()->first();
+                /* PONER EN INACTIVO EL MOVIMIENTO */
+                $movimiento = Movimiento::find($anular->id);
+                $movimiento->status = 'INACTIVO';
+                $movimiento->save();
+                /* ANULAR PLAN */
+                $plan->status = 'ANULADO';
+                $plan->save();
+                /* PONER EN INACTIVO PLANACCOUNT */
+                $planCuenta = PlanAccount::find($anular->paid);
+                $planCuenta->status = 'INACTIVO';
+                $planCuenta->save();
 
-            $cuenta = Account::find($anular->cuentaid);
-            /* PÓNER EN INACTIVO ACCOUNTPROFILE */
-            $CuentaPerf = AccountProfile::find($anular->apid);
-            $CuentaPerf->status = 'INACTIVO';
-            $CuentaPerf->save();
-            /* PONER EN LIBRE EL PERFIL Y PONER NUEVA CONTRASEÑA */
-            $perf = Profile::find($anular->perfilid);
-            $perf->availability = 'LIBRE';
-            $perf->pin = $perf->pin . rand(100, 999);
-            $perf->save();
-            /* CONTAR LOS PERFILES ACTIVOS DE ESA CUENTA */
-            $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
-                ->join('profiles as p', 'ap.profile_id', 'p.id')
-                ->where('accounts.id', $anular->cuentaid)
-                ->where('p.availability', 'LIBRE')
-                ->where('ap.status', 'ACTIVO')
-                ->where('p.status', 'ACTIVO')->get();
-            /* SI LA CUENTA NO TIENE PERFILES REGRESA A SER ENTERA */
-            if ($perfilesActivos->count() == 0) {
-                $cuenta->whole_account = 'ENTERA';
+                $cuenta = Account::find($anular->cuentaid);
+                /* PONER EN NULL PLAN_ID DE ACCOUNTPROFILE */
+                $CuentaPerf = AccountProfile::find($anular->apid);
+                $CuentaPerf->plan_id = null;
+                $CuentaPerf->save();
+                /* PONER EN LIBRE EL PERFIL Y PONER NUEVA CONTRASEÑA */
+                $perf = Profile::find($anular->perfilid);
+                $perf->availability = 'LIBRE';
+                $perf->pin = $perf->pin . rand(100, 999);
+                $perf->save();
+                
+                /* CONTAR LOS PERFILES ACTIVOS DE ESA CUENTA */
+                /* $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
+                    ->join('profiles as p', 'ap.profile_id', 'p.id')
+                    ->where('accounts.id', $anular->cuentaid)
+                    ->where('ap.status', 'ACTIVO')
+                    ->where('p.status', 'ACTIVO')->get(); */
+                /* SI LA CUENTA NO TIENE PERFILES REGRESA A SER ENTERA */
+                /* if ($perfilesActivos->count() == 0) {
+                    $cuenta->whole_account = 'ENTERA';
+                    $cuenta->save();
+                } */
+            } else {  /* CUANDO ES UNA CUENTA */
+                /* OBTENER IDS */
+                $anular = Plan::join('mov_plans as mp', 'mp.plan_id', 'plans.id')
+                    ->join('movimientos as m', 'mp.movimiento_id', 'm.id')
+                    ->join('plan_accounts as pa', 'pa.plan_id', 'plans.id')
+                    ->join('accounts as a', 'pa.account_id', 'a.id')
+                    ->select('m.*', 'pa.id as paid', 'a.id as cuentaid')
+                    ->where('plans.id', $plan->id)
+                    ->get()->first();
+                /* PONER EN INACTIVO EL MOVIMIENTO */
+                $movimiento = Movimiento::find($anular->id);
+                $movimiento->status = 'INACTIVO';
+                $movimiento->save();
+                /* PONER EN ANULADO EL PLAN */
+                $plan->status = 'ANULADO';
+                $plan->save();
+                /* PONER EN INACTIVO EL PLANACCOUNT */
+                $planCuenta = PlanAccount::find($anular->paid);
+                $planCuenta->status = 'INACTIVO';
+                $planCuenta->save();
+                /* PONER LA CUENTA EN LIBRE Y PONER NUEVA CONTRASEÑA */
+                $cuenta = Account::find($anular->cuentaid);
+                $cuenta->availability = 'LIBRE';
+                $cuenta->password_account = $cuenta->password_account . rand(100, 999);
                 $cuenta->save();
             }
-        } else {  /* CUANDO ES UNA CUENTA */
-            /* OBTENER IDS */
-            $anular = Plan::join('mov_plans as mp', 'mp.plan_id', 'plans.id')
-                ->join('movimientos as m', 'mp.movimiento_id', 'm.id')
-                ->join('plan_accounts as pa', 'pa.plan_id', 'plans.id')
-                ->join('accounts as a', 'pa.account_id', 'a.id')
-                ->select('m.*', 'pa.id as paid', 'a.id as cuentaid')
-                ->where('plans.id', $plan->id)
-                ->get()->first();
-            /* PONER EN INACTIVO EL MOVIMIENTO */
-            $movimiento = Movimiento::find($anular->id);
-            $movimiento->status = 'INACTIVO';
-            $movimiento->save();
-            /* PONER EN ANULADO EL PLAN */
-            $plan->status = 'ANULADO';
-            $plan->save();
-            /* PONER EN INACTIVO EL PLANACCOUNT */
-            $planCuenta = PlanAccount::find($anular->paid);
-            $planCuenta->status = 'INACTIVO';
-            $planCuenta->save();
-            /* PONER LA CUENTA EN LIBRE Y PONER NUEVA CONTRASEÑA */
-            $cuenta = Account::find($anular->cuentaid);
-            $cuenta->availability = 'LIBRE';
-            $cuenta->password_account = $cuenta->password_account . rand(100, 999);
-            $cuenta->save();
+            DB::commit();
+            $this->resetUI();
+            $this->emit('item-anulado', 'Se anuló el plan');
+        } catch (Exception $e) {
+            DB::rollback();
+            $this->emit('item-error', 'ERROR' . $e->getMessage());
         }
-
-        $this->emit('item-anulado', 'Se anuló el plan');
     }
 
     public function viewDetails()

@@ -270,11 +270,11 @@ class PerfilesController extends Component
         /* PONER EN INACTIVO EL PERFIL */
         $perf->status = 'INACTIVO';
         $perf->save();
+        $Cuenta = Account::find($perf->CuentaPerfil->Cuenta->id);
         /* CONTAR LOS PERFILES ACTIVOS */
         $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
             ->join('profiles as p', 'ap.profile_id', 'p.id')
-            ->where('accounts.id', $this->selected_id)
-            ->where('p.availability', 'LIBRE')
+            ->where('accounts.id', $Cuenta->id)
             ->where('ap.status', 'ACTIVO')
             ->where('p.status', 'ACTIVO')->get();
         /* SI LA CUENTA NO TIENE PERFILES REGRESA A SER ENTERA */
@@ -469,17 +469,18 @@ class PerfilesController extends Component
         $perf->availability = 'LIBRE';
         $perf->status = 'INACTIVO';
         $perf->save();
+
+        $Cuenta = Account::find($perf->CuentaPerfil->Cuenta->id);
         /* CONTAR LOS PERFILES ACTIVOS */
         $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
             ->join('profiles as p', 'ap.profile_id', 'p.id')
-            ->where('accounts.id', $datos->cuentaid)
+            ->where('accounts.id', $Cuenta->id)
             ->where('ap.status', 'ACTIVO')
             ->where('p.status', 'ACTIVO')->get();
-        /* SI LA CUENTA NO TIENE PERFILES REGRESA A SER ENTERA */
-        if ($perfilesActivos->count() == 0) {
-            $cuenta = Account::find($datos->cuentaid);
-            $cuenta->whole_account = 'ENTERA';
-            $cuenta->save();
+        /* SI LA CUENTA NO TIENE PERFILES ACTIVOS REGRESA A SER ENTERA */
+        if ($perfilesActivos->count() == 0) {            
+            $Cuenta->whole_account = 'ENTERA';
+            $Cuenta->save();
         }
         $this->resetUI();
         $this->emit('item-accion', 'No se renovó este perfil y ahora esta inactivo');
