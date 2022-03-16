@@ -143,9 +143,6 @@
                                         <td class="text-center">
                                             <h6 class="text-center">{{ $ap->Correo->content }}</h6>
                                         </td>
-                                        {{-- <td class="text-center">
-                                            <h6 class="text-center">{{ $ap->Correo->pass }}</h6>
-                                        </td> --}}
                                         <td class="text-center">
                                             <h6 class="text-center">{{ $ap->password_account }}</h6>
                                         </td>
@@ -198,13 +195,6 @@
                                         <td class="text-center">
                                             <h6 class="text-center">{{ $ap->pin }}</h6>
                                         </td>
-                                        {{-- <td class="text-center">
-                                                        <a href="javascript:void(0)"
-                                                            wire:click="Seleccionar({{ $d->cedula }},{{ $d->celular }})"
-                                                            class="btn btn-dark mtmobile" title="Seleccionar">
-                                                            <i class="fas fa-check"></i>
-                                                        </a>
-                                                    </td> --}}
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -213,7 +203,6 @@
                 </div>
             </div>
         </div>
-
     @endif
 </div>
 @include('common.modalFooter')

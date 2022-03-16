@@ -49,9 +49,9 @@
                 </div>
             </div>
             @if ($condicional == 'perfiles')
-            <div class="table-responsive mb-4">
-                <table id="show-hide-col" class="table table-hover" style="width:100%">
-                    <thead style="border-bottom: none;">
+                <div class="widget-content">
+                    <div class="table-responsive">
+                        <table class="table table-unbordered table-hover mt-2">
                             <thead class="text-white" style="background: #3B3F5C">
                                 <tr>
                                     <th class="table-th text-withe text-center">PLATAFORMA</th>
@@ -203,6 +203,7 @@
             @endif
         </div>
     </div>
+
     @include('livewire.planes.form')
     @include('livewire.planes.modalObservaciones')
 </div>
