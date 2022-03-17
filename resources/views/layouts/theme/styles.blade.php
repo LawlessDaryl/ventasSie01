@@ -26,7 +26,6 @@
 <link type="text/css" rel="stylesheet" href="{{ asset('assets/css/apps/scrumboard.css') }}">
 <link type="text/css" rel="stylesheet" href="{{ asset('assets/css/apps/notes.css') }}">
 <link href="{{ asset('assets/css/scrollspyNav.css') }}" rel="stylesheet" type="text/css" />
-
 <style>
     aside {
         display: none !important;
