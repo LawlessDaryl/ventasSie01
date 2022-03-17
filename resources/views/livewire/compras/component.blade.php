@@ -4,83 +4,128 @@
 
            <div class="widget widget-chart-one">
                <div class="widget-heading">
-                   <div class="col-9 col-lg-8 col-md-10 mt-3">
-                       <div>
-                           <h5 class="mb-2 mt-2">DETALLE DE COMPRA NRO. {{$nro_compra}}</h5>
-                       </div>
-                       <div class="d-flex-inline-flex">
-                           <div>
-                               <b>Proveedor:</b>
-                                   {{$provider}}<br/>
-                               
+                   <div class="col-12 col-lg-12 col-md-10 mt-3">
+                       <div class="row mb-4" >
+                           <div class="col-sm-12" >
+                               <h5 class="mb-2 mt-2">DETALLE DE COMPRA NRO. {{$nro_compra}}</h5>
                                <b>Fecha: </b>
-                               {{$fecha}}<br/>           
+                               {{$fecha}}<br/>  
                                <b>Registrado por: </b> 
                                {{$usuario}}<br/>
+                               <hr style="height:3px;border:none;color:rgb(189, 188, 188);background-color:rgb(230, 152, 64);" />
 
-                             <div class="form-group mb-0">
-                                 <label class="form-group-check-label">
-                                     <input wire:model='impuestos' type="checkbox" name="" id="" value="checkedValue"> Exento IVA
-                                 </label>
-                             </div>
-                              @if($impuestos == true)
-                              <div class="col-lg-6 col-md-4 col-12 pl-0">
-                                  <div class="form-group">
-                                    <strong>Tipo de Documento:</strong>
-                                    <select wire:model='tipo_documento' class="form-control">
-                                        <option value="Elegir" selected>Elegir</option>
-                                        <option value="NOTA DE VENTA">NOTA DE VENTA</option>
-                                        <option value="RECIBO">RECIBO</option>
-                                    </select>
-                                    @error('tipo_documento')
-                                        <span class="text-danger er">{{ $message }}</span>
-                                    @enderror
-                                 </div>
-                              </div>
-                              
-                                @endif
-                            <div class="col-lg-6 col-md-4 col-12 pl-0">
-                                <div class="form-group">
-                                    <strong>Número de Documento</strong>
-                                    <input type="text" wire:model.lazy="nro_documento" class="form-control" placeholder="Introduzca el numero de factura">
-                                    @error('nro_documento')
-                                        <span class="text-danger er">{{ $message }}</span>
-                                    @enderror
-                                  </div>
-                            </div>
-
-                            <div class="col-lg-6 col-md-4 col-12 pl-0">
-                                <div class="form-group">
-                                    <label>Pago parcial:</label>
-                                   <input  wire:model='pago_parcial' type="text" class="form-control" placeholder="Bs. 0">
-                                   @error('pago_parcial')
-                                   <span class="text-danger er">{{ $message }}</span>
-                                   @enderror
-                               </div>
-                            </div>
-                          <div class="col-lg-6 col-md-4 col-12 pl-0">
-                              <div class="form-group">
-                                     <label>Observacion: </label>
-                                  <textarea  wire:model='observacion' class="form-control" aria-label="With textarea"></textarea>
-                                  @error('observacion')
-                                  <span class="text-danger er">{{ $message }}</span>
-                                  @enderror
-                              </div>
-                          </div>
-                             </div>
+                           </div>
                        </div>
+                     
+                        
+                           <div class="row">
+
+                                <div class="col-12 col-md-3 col-lg-4" style="border-left: thick solid #b4b4b1;" >
+                                    <div class="col-lg-12">
+                                        <div class="form-group">
+                                            <strong>Proveedor</strong>
+                                            <div class="input-group-prepend mb-3" >
+
+                                                <input type="text" wire:model.lazy="provider" class="form-control" placeholder="Introduzca el numero de factura">
+                                               
+                                                    <span class="input-group-text input-gp">
+                                                        <a href="javascript:void(0)" data-toggle="modal"
+                                                            data-target="#modal_prov" class="fas fa-plus" ></a>
+                                                    </span>
+                                                
+                                            </div>
+                                            @error('provider')
+                                                <span class="text-danger er">{{ $message }}</span>
+                                            @enderror
+                                          </div>
+                                          
+                                    </div>
+
+                                    <div class="col-lg-12">
+                                        <div class="form-group">
+                                          <strong>Metodo de Pago:</strong>
+                                          <select wire:model='tipo_documento' class="form-control">
+                                              <option value="Elegir" selected>Elegir</option>
+                                              <option value="NOTA DE VENTA">Pago en efectivo</option>
+                                              <option value="RECIBO">Transferencia bancaria</option>
+                                              <option value="RECIBO">Pago por Movil</option>
+                                          </select>
+                                          @error('tipo_documento')
+                                              <span class="text-danger er">{{ $message }}</span>
+                                          @enderror
+                                       </div>
+                                    </div>
+
+                                </div>
+
+
+                                <div class="col-12 col-md-3 col-lg-4" style="border-left: thick solid #b4b4b1;" >
+                                    <div class="col-lg-12">
+                                        <div class="form-group">
+                                          <strong>Tipo de Documento:</strong>
+                                          <select wire:model='tipo_documento' class="form-control">
+                                              <option value="Elegir" selected>Elegir</option>
+                                              <option value="FACTURA">FACTURA</option>
+                                              <option value="NOTA DE VENTA">NOTA DE VENTA</option>
+                                              <option value="RECIBO">RECIBO</option>
+                                          </select>
+                                          @error('tipo_documento')
+                                              <span class="text-danger er">{{ $message }}</span>
+                                          @enderror
+                                       </div>
+                                    </div>
+
+                                    <div class="col-lg-12">
+                                        <div class="form-group">
+                                            <strong>Número de Documento</strong>
+                                            <input type="text" wire:model.lazy="nro_documento" class="form-control" placeholder="Introduzca el numero de factura">
+                                            @error('nro_documento')
+                                                <span class="text-danger er">{{ $message }}</span>
+                                            @enderror
+                                          </div>
+                                    </div>
+
+                                </div>
+                             
+
+                                <div class="col-12 col-md-3 col-lg-4" style="border-left: thick solid #b4b4b1;" >
+
+                                    <div class="col-lg-12">
+                                        <div class="form-group">
+                                            <strong>Pago parcial:</strong>
+                                           <input  wire:model='pago_parcial' type="text" class="form-control" placeholder="Bs. 0">
+                                           @error('pago_parcial')
+                                           <span class="text-danger er">{{ $message }}</span>
+                                           @enderror
+                                       </div>
+                                    </div>
+
+                                    <div class="col-lg-12">
+                                        <div class="form-group">
+                                               <strong>Observacion: </strong>
+                                            <textarea  wire:model='observacion' class="form-control" aria-label="With textarea"></textarea>
+                                            @error('observacion')
+                                            <span class="text-danger er">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                </div>
+                             </div>
+                       
 
                    </div>
-                   <ul class="tabs tab-pills" >
+                 {{--<ul class="tabs tab-pills" >
                        <a href="javascript:void(0)" class="tabs btn btn-dark m-2
                        " data-toggle="modal"
-                           data-target="#theModal">Asignar Proveedor</a>
+                           data-target="#modal_prov">Asignar Proveedor</a>
                
                        <a href="javascript:void(0)" class="btn btn-dark m-2" data-toggle="modal"
                            data-target="#theModal">Crear Producto
                        </a>
-                   </ul>
+                   </ul>--}}  
                </div>
+               <hr style="height:3px;border:none;color:rgb(189, 188, 188);background-color:rgb(230, 152, 64);" />
 
                <div class="widget-content">
                    <div class="row">
@@ -214,13 +259,49 @@
                                
                            </div>
                        </div>
-
-               
-
                    </div>
                 </div>
-
-    </div>
+            </div>
        </div>
-
+       @include('livewire.compras.provider_info')
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    
+          
+            window.livewire.on('show-modal', msg => {
+                $('#modal_prov').modal('show')
+            });
+            window.livewire.on('modal-hide', msg => {
+                $('#modal_prov').modal('hide')
+            });
+        });
+    
+        function Confirm(id, name, cantRelacionados ) {
+            if (cantRelacionados > 0) {
+                swal.fire({
+                    title: 'PRECAUCION',
+                    icon: 'warning',
+                    text: 'No se puede eliminar la empresa "' + name + '" porque tiene ' 
+                    + cantRelacionados + ' sucursales.'
+                })
+                return;
+            }
+            swal.fire({
+                title: 'CONFIRMAR',
+                icon: 'warning',
+                text: '¿Confirmar eliminar la empresa ' + '"' + name + '"?.',
+                showCancelButton: true,
+                cancelButtonText: 'Cerrar',
+                cancelButtonColor: '#383838',
+                confirmButtonColor: '#3B3F5C',
+                confirmButtonText: 'Aceptar'
+            }).then(function(result) {
+                if (result.value) {
+                    window.livewire.emit('deleteRow', id)
+                    Swal.close()
+                }
+            })
+        }
+    </script>
+    
