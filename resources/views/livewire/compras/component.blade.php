@@ -249,7 +249,7 @@
                                                                 <h5 class="text-white">TOTAL.-</h5>
                                                            </td>
                                                            <td>
-                                                               <h5 class="text-white" >500</h5>
+                                                               <h5 class="text-white" >{{$total}}</h5>
                                                            </td>
                                                        </tr>
                                                </tfoot>

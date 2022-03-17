@@ -8,13 +8,14 @@ use Carbon\Carbon;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
+use Darryldecode\Cart\Facades\CartFacade as Cart;
 
 class ComprasController extends Component
 {
     use WithPagination;
     use WithFileUploads;
     public  $nro_compra,$search,$provider,$fecha,
-    $usuario,$metodo_pago,$pago_parcial,$tipo_documento,$nro_documento,$observacion,$selected_id;
+    $usuario,$metodo_pago,$pago_parcial,$tipo_documento,$nro_documento,$observacion,$selected_id,$total;
 
     private $pagination = 5;
     public function mount()
@@ -25,6 +26,9 @@ class ComprasController extends Component
         $this->usuario = Auth()->user()->name;
         $this->impuestos = false;
         $this->selected_id = 0;
+        $this->total=Cart::getTotal();
+        
+
        
 
 
