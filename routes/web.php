@@ -145,6 +145,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('orderservice', OrderServiceController::class)->name('os')->middleware('permission:Orden_Servicio_Index');
     Route::get('inicio', InicioController::class)->name('in')->middleware('permission:Inicio_Index');
     Route::get('idorderservice/{id}', [OrderServiceController::class, 'buscarid'])->name('buscarid')->middleware('permission:Orden_Servicio_Index');
+    Route::get('abrirnuevo', [OrderServiceController::class, 'abrirventana'])->name('abrirventana')->middleware('permission:Orden_Servicio_Index');
     Route::get('reporte/pdf/{id}', [ImprimirController::class, 'print'])->middleware('permission:Imprimir_Orden_Servicio_Index');
     Route::get('reporteservices', ReporteServiceController::class)->name('tw')->middleware('permission:Reporte_Servicios_Index');    
     Route::group(['middleware' => ['permission:Reporte_Servicios_Export']], function () {

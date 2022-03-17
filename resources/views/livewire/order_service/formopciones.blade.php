@@ -18,7 +18,7 @@
                                         target="_blank">Imprimir</a>
                                 </div>
                             </div>
-                            {{-- @if(@Auth::user()->hasPermissionTo('Ver_Modificar_Eliminar_Servicio')) --}}
+                            @if(@Auth::user()->hasPermissionTo('Ver_Modificar_Eliminar_Servicio'))
                             <div class="col-lg-12 col-sm-12 col-md-6">
                                 <div class="form-group">
                                     <span data-dismiss="modal" wire:click.prevent="EditService({{$orderservice}})" 
@@ -42,7 +42,7 @@
                                 </div>
                             </div>
                             @endif
-                            {{-- @endif --}}
+                            @endif
                         </div>
                     </div>
                 </div>

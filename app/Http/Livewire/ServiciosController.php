@@ -42,7 +42,7 @@ class ServiciosController extends Component
         $this->categoryid = 'Elegir';
         $this->typeworkid = 'Elegir';
         $this->catprodservid = 'Elegir';
-
+        $this->celular = 00000000;
         $this->selected_id = 0;
         $this->marc = '';
         $this->typeservice = 'NORMAL';
@@ -112,8 +112,7 @@ class ServiciosController extends Component
             $this->saldo = $this->import;
         elseif ((strlen($this->import) == 0))
             $this->saldo = 0;
-        /* $us=User::find(2);
-        dd($us->getAllPermissions()); */
+        
 
         return view('livewire.servicio.component', [
             'data' => $services,
@@ -148,24 +147,45 @@ class ServiciosController extends Component
 
     public function StoreClient()
     {
-        $rules = [
-            'nombre' => 'required|min:1',
-            'cedula' => 'required',
-            'celular' => 'required|numeric',
-            'nit' => 'required|numeric',
-            'nit' => 'max:9'
-        ];
-        $messages = [
-            'nombre.required' => 'Nombre es requerido',
-            'nombre.min' => 'El nombre debe ser contener al menos 1 caracter',
-            'cedula.required' => 'La cédula es requerida',
-            'celular.required' => 'El celular es requerido',
-            'celular.numeric' => 'No puede ingresar letras',
-            'nit.required' => 'Ingrese 0 si no quiere ingresar ningún nit',
-            'nit.numeric' => 'El nit debe ser un número',
-            'nit.max' => 'El nit no puede tener más de 9 digitos'
-        ];
-
+        if($this->celular==0){
+            $rules = [
+                'nombre' => 'required|min:1',
+                'cedula' => 'required',
+                'celular' => 'numeric',
+                'nit' => 'required|numeric',
+                'nit' => 'max:9'
+            ];
+            $messages = [
+                'nombre.required' => 'Nombre es requerido',
+                'nombre.min' => 'El nombre debe ser contener al menos 1 caracter',
+                'cedula.required' => 'La cédula es requerida',
+                'celular.numeric' => 'No puede ingresar letras',
+                'nit.required' => 'Ingrese 0 si no quiere ingresar ningún nit',
+                'nit.numeric' => 'El nit debe ser un número',
+                'nit.max' => 'El nit no puede tener más de 9 digitos'
+            ];
+    
+        }else{
+            $rules = [
+                'nombre' => 'required|min:1',
+                'cedula' => 'required',
+                'celular' => 'required|numeric|digits:8',
+                'nit' => 'required|numeric',
+                'nit' => 'max:9'
+            ];
+            $messages = [
+                'nombre.required' => 'Nombre es requerido',
+                'nombre.min' => 'El nombre debe ser contener al menos 1 caracter',
+                'cedula.required' => 'La cédula es requerida',
+                'celular.required' => 'El celular es requerido',
+                'celular.numeric' => 'No puede ingresar letras',
+                'celular.digits' => 'Debe ingresar 8 digitos',
+                'nit.required' => 'Ingrese 0 si no quiere ingresar ningún nit',
+                'nit.numeric' => 'El nit debe ser un número',
+                'nit.max' => 'El nit no puede tener más de 9 digitos'
+            ];
+        }
+        
         $this->validate($rules, $messages);
         if ($this->procedencia == 'Nuevo') {
             $procd = ProcedenciaCliente::where('procedencia', 'Nuevo')->get()->first();
@@ -459,7 +479,7 @@ class ServiciosController extends Component
         $this->buscarCliente = '';
         $this->nombre = '';
         $this->cedula = '';
-        $this->celular = '';
+        $this->celular = 00000000;
         $this->email = '';
         $this->nit = '';
         $this->razon_social = '';

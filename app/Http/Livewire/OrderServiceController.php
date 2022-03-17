@@ -388,6 +388,11 @@ class OrderServiceController extends Component
         return redirect()->intended("orderservice");
     }
 
+    public function abrirventana()
+    {
+        $this->opciones='PROCESO';
+    }
+
     public function Imprimir($id)
     {
         $this->orderservice = OrderService::find($id);

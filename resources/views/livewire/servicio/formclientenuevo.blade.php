@@ -30,7 +30,7 @@
                         <div class="form-group">
                             <label>Celular</label>
                             <input type="text" wire:model.lazy="celular" class="form-control"
-                                placeholder="ej: 79564859" maxlength="8">
+                                maxlength="8">
                             @error('celular') <span class="text-danger er">{{ $message }}</span>@enderror
                         </div>
                     </div>

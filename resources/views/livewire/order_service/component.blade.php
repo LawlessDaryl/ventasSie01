@@ -32,6 +32,7 @@
                             <option value="PROCESO" >PROCESO</option>
                             <option value="TERMINADO" >TERMINADO</option>
                             <option value="ENTREGADO" >ENTREGADO</option>
+                            <option value="ABANDONADO" >ABANDONADO</option>
                     </select>
                     @error('opciones') <span class="text-danger er">{{ $message }}</span>@enderror
                 </div>
