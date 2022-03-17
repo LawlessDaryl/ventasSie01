@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Redirect;
 class PosController extends Component
 {
     public $total, $itemsQuantity, $efectivo, $change, 
-    $nit, $clienteanonimo="true", $tipopago ,$anonimo, $factura, $facturasino;
+    $nit, $clienteanonimo="true", $tipopago ,$anonimo, $factura, $facturasino, $nombreproducto;
 
     //Variables para la venta desde almacen, moviendo productos de almacen a la tienda
     public  $stockalmacen, $nombrestockproducto, $cantidadToTienda = 1, $idproductoalmacen;
@@ -38,6 +38,7 @@ class PosController extends Component
         $this->total = Cart::getTotal();
         $this->itemsQuantity = Cart::getTotalQuantity();
         $this->ClienteSelectnit = 1;
+        $this->ProductSelectNombre = 1;
         $this->tipopago = 'EFECTIVO';
         $this->anonimo = 0;
         $this->facturasino = 'No';
@@ -45,7 +46,7 @@ class PosController extends Component
     }
     public function render()
     {
-        /* BUSCAR CLIENTE POR NIT EN EL INPUT DEL MODAL */
+        /* BUSCAR CLIENTE POR NIT*/
         $datosnit = [];
         if (strlen($this->nit) > 0)
         {
@@ -75,10 +76,50 @@ class PosController extends Component
         }
 
 
+        /* Buscar Productos por el Nombre*/
+        $datosnombreproducto = [];
+        if (strlen($this->nombreproducto) > 0)
+        {
+            $datosnombreproducto = ProductosDestino::join("products as p", "p.id", "productos_destinos.product-id")
+            ->join('locations as d', 'd.id', 'productos_destinos.destino-id')
+            ->select("p.id as id","p.nombre as nombre", "p.image as image", "p.precio_venta as precio_venta",
+            "productos_destinos.stock as stock")
+            ->where("d.ubicacion", 'TIENDA')
+            ->where('nombre', 'like', '%' . $this->nombreproducto . '%')->orderBy('nombre', 'desc')->get();
+            if ($datosnombreproducto->count() > 0)
+            {
+                $this->BuscarProductoNombre = 1;
+            }
+            else
+            {
+                $this->BuscarProductoNombre = 0;
+            }
+            if ($this->ProductSelectNombre == 0)
+            {
+                $this->BuscarProductoNombre = 0;
+            }
+            
+        }
+        else
+        {
+            //Para cerrar la tabla de Productos encontrados por Nombre cuando se borre todos los caracteres del input
+            $this->BuscarProductoNombre = 0;
+            //---------------------------------------------------------------------------------------------------
+            if ($this->ProductSelectNombre == 0)
+            {
+                $this->ProductSelectNombre = 1;
+            }
+        }
+
+
+
+
+
         return view('livewire.pos.component', [
             'denominations' => Denomination::orderBy('value', 'desc')->get(),
             'cart' => Cart::getContent()->sortBy('name'),
-            'datosnit' => $datosnit
+            'datosnit' => $datosnit,
+            'datosnombreproducto' => $datosnombreproducto
         ])
             ->extends('layouts.theme.app')
             ->section('content');
@@ -209,6 +250,7 @@ class PosController extends Component
         {
             if ($product->stock < ($cant + $exist->quantity))
             {
+                //Buscar Productos en Almacen
                 $productoalmacen = Product::join("productos_destinos as pd", "pd.product-id", "products.id")
                 ->join('locations as d', 'd.id', 'pd.destino-id')
                 ->select("products.id as id","products.image as image","products.nombre as name",
@@ -228,7 +270,7 @@ class PosController extends Component
                 }
                 else
                 {
-                    $this->emit('no-stock', 'stock insuficiente');
+                    $this->emit('no-stock', 'stock insuficiente en TIENDA y ALMACEN');
                     return;
                 }
             }

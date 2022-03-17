@@ -4,16 +4,26 @@
         <div class="col-sm-12 col-md-12">
             @include('livewire.pos.partials.client')
         </div>
+        {{-- Datos Venta --}}
+        <div class="col-sm-12 col-md-12">
+            @include('livewire.pos.partials.total')
+        </div>
+
+        <!-- Tabla Productos Encontrados -->
+        <div class="col-sm-12 col-md-6">
+            @include('livewire.pos.partials.product')
+        </div>
+
         <!-- Tabla Productos (Shopping Cart) -->
-        <div class="col-sm-12 col-md-8">
+        <div class="col-sm-12 col-md-6">
             @include('livewire.pos.partials.detail')
         </div>
-        <!-- Cuadro Total Bs y Monedas -->
+        <!-- Cuadro Total Bs y Monedas 
         <div class="col-sm-12 col-md-4">
-            @include('livewire.pos.partials.total')
             {{-- denominaciones --}}
-            @include('livewire.pos.partials.coins')
+            {{-- @include('livewire.pos.partials.coins') --}}
         </div>
+        -->
     </div>
     
 {{-- Ventana Modal para Avisar que ya no hay Stock en Tienda--}}
