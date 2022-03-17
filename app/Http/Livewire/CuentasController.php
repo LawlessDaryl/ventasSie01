@@ -10,7 +10,6 @@ use App\Models\CarteraMov;
 use App\Models\ClienteMov;
 use App\Models\Email;
 use App\Models\Movimiento;
-use App\Models\MovPlan;
 use App\Models\Plan;
 use App\Models\PlanAccount;
 use App\Models\Platform;
@@ -31,7 +30,7 @@ class CuentasController extends Component
         $search, $selected_id, $pageTitle, $componentName, $proveedor, $nameP, $PIN, $estado,
         $availability, $Observaciones, $perfiles, $correos, $selected,
         $expiration_account, $password_account, $price, $mostrarCampos, $condicional,
-        $meses, $expirationActual, $expirationNueva, $observations;
+        $meses, $expirationActual, $expirationNueva, $observations, $selected_plan;
     private $pagination = 10;
     public function paginationView()
     {
@@ -42,6 +41,7 @@ class CuentasController extends Component
         $this->componentName = 'Cuentas';
         $this->pageTitle = 'Listado';
         $this->selected_id = 0;
+        $this->selected_plan = 0;
         $this->selected = 0;
         $this->email_id = 'Elegir';
         $this->platform_id = 'Elegir';
@@ -73,13 +73,15 @@ class CuentasController extends Component
                     ->select(
                         'accounts.id as id',
                         'accounts.expiration_account as expiration_account',
-                        'accounts.status',
                         'accounts.number_profiles',
                         'accounts.whole_account',
+                        'accounts.password_account',
                         'p.nombre as nombre',
                         'e.content as content',
                         'e.pass as pass',
                         'strsp.name as name',
+                        DB::raw('0 as perfActivos'),
+                        DB::raw('0 as perfLibres')
                     )
                     ->where('accounts.status', 'like', '%' . $this->search . '%')
                     ->orWhere('accounts.number_profiles', 'like', '%' . $this->search . '%')
@@ -97,6 +99,7 @@ class CuentasController extends Component
                         'accounts.expiration_account as expiration_account',
                         'accounts.number_profiles',
                         'accounts.whole_account',
+                        'accounts.password_account',
                         'p.nombre as nombre',
                         'e.content as content',
                         'e.pass as pass',
@@ -132,6 +135,9 @@ class CuentasController extends Component
                 ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
                 ->join('plan_accounts as pa', 'pa.account_id', 'accounts.id')
                 ->join('plans as pl', 'pa.plan_id', 'pl.id')
+                ->join('movimientos as m', 'm.id', 'pl.movimiento_id')
+                ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
+                ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
                 ->select(
                     'pl.id as planid',
                     'accounts.id as id',
@@ -139,13 +145,16 @@ class CuentasController extends Component
                     'accounts.number_profiles',
                     'accounts.whole_account',
                     'accounts.status',
+                    'accounts.password_account',
                     'p.nombre as nombre',
                     'e.content as content',
                     'e.pass as pass',
                     'strsp.name as name',
                     'pl.expiration_plan as expiration_plan',
                     'pl.plan_start as plan_start',
-                    'pl.status as plan_status'
+                    'pl.status as plan_status',
+                    'c.nombre as clienteNombre',
+                    'c.celular as clienteCelular',
                 )
                 ->where('pa.status', 'ACTIVO')
                 ->where('accounts.availability', 'OCUPADO')
@@ -158,6 +167,9 @@ class CuentasController extends Component
                 ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
                 ->join('plan_accounts as pa', 'pa.account_id', 'accounts.id')
                 ->join('plans as pl', 'pa.plan_id', 'pl.id')
+                ->join('movimientos as m', 'm.id', 'pl.movimiento_id')
+                ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
+                ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
                 ->select(
                     'pl.id as planid',
                     'accounts.id as id',
@@ -165,13 +177,16 @@ class CuentasController extends Component
                     'accounts.number_profiles',
                     'accounts.whole_account',
                     'accounts.status',
+                    'accounts.password_account',
                     'p.nombre as nombre',
                     'e.content as content',
                     'e.pass as pass',
                     'strsp.name as name',
                     'pl.expiration_plan as expiration_plan',
                     'pl.plan_start as plan_start',
-                    'pl.status as plan_status'
+                    'pl.status as plan_status',
+                    'c.nombre as clienteNombre',
+                    'c.celular as clienteCelular',
                 )
                 ->where('pl.status', 'VENCIDO')
                 ->orderBy('accounts.id', 'desc')
@@ -200,7 +215,6 @@ class CuentasController extends Component
             $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                 ->join('profiles as p', 'ap.profile_id', 'p.id')
                 ->where('accounts.id', $this->selected_id)
-                ->where('p.availability', 'LIBRE')
                 ->where('ap.status', 'ACTIVO')
                 ->where('p.status', 'ACTIVO')->get();
             /* SI LA CUENTA TIENE LA CANTIDAD DE PERFILES MAXIMO DE ESA CUENTA - NO MOSTRAR CAMPOS */
@@ -409,9 +423,9 @@ class CuentasController extends Component
     public function Acciones(Plan $plan)
     {
         $this->meses = 0;
-        $this->selected_id = $plan->id;
+        $this->selected_plan = $plan->id;
         /* OBTENER FECHA DE EXPIRACION DEL PLAN */
-        $this->expirationActual = Plan::where('plans.id', $plan->id)            
+        $this->expirationActual = Plan::where('plans.id', $plan->id)
             ->get()->first()->expiration_plan;
 
         $this->expirationActual = substr($this->expirationActual, 0, 10);
@@ -453,8 +467,7 @@ class CuentasController extends Component
                 ->where('caja_id', $CajaActual->id)->get()->first();
         }
         /* OBTENER IDS PARA HACER LOS CAMBIOS */
-        $datos = Plan::join('mov_plans as mp', 'plans.id', 'mp.plan_id')
-            ->join('movimientos as m', 'm.id', 'mp.movimiento_id')
+        $datos = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
             ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
             ->join('accounts as acc', 'acc.id', 'pa.account_id')
             ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
@@ -465,14 +478,21 @@ class CuentasController extends Component
                 'plans.id as planid',
                 'pa.id as planAccountid',
             )
-            ->where('plans.id', $this->selected_id)
+            ->where('plans.id', $this->selected_plan)
             ->get()->first();
-            /* CALCULAR IMPORTE SEGUN LA PLATAFORMA DE LA CUENTA */
+        /* CALCULAR IMPORTE SEGUN LA PLATAFORMA DE LA CUENTA */
         $cuenta = Account::find($datos->cuentaid);
         $this->importe += $cuenta->Plataforma->precioEntera;
         $this->importe *= $this->meses;
         DB::beginTransaction();
         try {
+            $mv = Movimiento::create([
+                'type' => 'TERMINADO',
+                'status' => 'ACTIVO',
+                'import' => $this->importe,
+                'user_id' => Auth()->user()->id,
+            ]);
+
             $plan = Plan::create([
                 'importe' => $this->importe,
                 'plan_start' => $this->expirationActual,
@@ -480,19 +500,13 @@ class CuentasController extends Component
                 'ready' => 'NO',
                 'status' => 'VIGENTE',
                 'type_pay' => $this->tipopago,
-                'observations' => $this->observations
+                'observations' => $this->observations,
+                'movimiento_id' => $mv->id
             ]);
 
             PlanAccount::create([
                 'plan_id' => $plan->id,
                 'account_id' => $cuenta->id,
-            ]);
-
-            $mv = Movimiento::create([
-                'type' => 'TERMINADO',
-                'status' => 'ACTIVO',
-                'import' => $this->importe,
-                'user_id' => Auth()->user()->id,
             ]);
 
             CarteraMov::create([
@@ -505,11 +519,6 @@ class CuentasController extends Component
             ClienteMov::create([
                 'movimiento_id' => $mv->id,
                 'cliente_id' => $datos->id
-            ]);
-
-            MovPlan::create([
-                'movimiento_id' => $mv->id,
-                'plan_id' => $plan->id
             ]);
 
             /* PONER EN VENCIDO EL PLAN ANTIGUO */
@@ -539,7 +548,7 @@ class CuentasController extends Component
                 'acc.id as cuentaid',
                 'pa.id as paid'
             )
-            ->where('plans.id', $this->selected_id)
+            ->where('plans.id', $this->selected_plan)
             ->get()->first();
         /* PONER LA CUENTA EN LIBRE */
         $cuenta = Account::find($datos->cuentaid);
@@ -557,6 +566,7 @@ class CuentasController extends Component
     public function resetUI()
     {
         $this->selected_id = 0;
+        $this->selected_plan = 0;
         $this->selected = 0;
         $this->email_id = 'Elegir';
         $this->platform_id = 'Elegir';

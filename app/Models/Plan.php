@@ -9,7 +9,7 @@ class Plan extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['importe', 'plan_start', 'expiration_plan', 'ready', 'status', 'type', 'type_pay', 'observations'];
+    protected $fillable = ['importe', 'plan_start', 'expiration_plan', 'ready', 'status', 'type', 'type_pay', 'observations', 'movimiento_id'];
 
     public function MovPlan()
     {

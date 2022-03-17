@@ -22,6 +22,8 @@ class CreatePlansTable extends Migration
             $table->enum('status', ['VIGENTE', 'VENCIDO','ANULADO'])->default('VIGENTE');
             $table->enum('type_pay', ['EFECTIVO', 'Banco', 'TigoStreaming']);
             $table->string('observations')->nullable();
+            $table->unsignedBigInteger('movimiento_id');
+            $table->foreign('movimiento_id')->references('id')->on('movimientos');
             $table->timestamps();
         });
     }

@@ -10,7 +10,6 @@ use App\Models\CarteraMov;
 use App\Models\Cliente;
 use App\Models\ClienteMov;
 use App\Models\Movimiento;
-use App\Models\MovPlan;
 use App\Models\Plan;
 use App\Models\PlanAccount;
 use App\Models\Platform;
@@ -103,8 +102,7 @@ class PlanesController extends Component
             if (strlen($this->search) > 0) {
                 /*  */
             } else {
-                $data = Plan::join('mov_plans as mp', 'plans.id', 'mp.plan_id')
-                    ->join('movimientos as m', 'm.id', 'mp.movimiento_id')
+                $data = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
                     ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
                     ->join('accounts as acc', 'acc.id', 'pa.account_id')
                     ->join('account_profiles as ap', 'acc.id', 'ap.account_id')
@@ -122,6 +120,7 @@ class PlanesController extends Component
                         'c.nombre as cliente',
                         'c.celular as celular',
                         'e.content as correo',
+                        'e.pass as passCorreo',
                         'acc.password_account as password_account',
                         'prof.nameprofile as nameprofile',
                         'prof.pin as pin',
@@ -147,8 +146,7 @@ class PlanesController extends Component
             if (strlen($this->search) > 0) {
                 /*  */
             } else {
-                $data = Plan::join('mov_plans as mp', 'plans.id', 'mp.plan_id')
-                    ->join('movimientos as m', 'm.id', 'mp.movimiento_id')
+                $data = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
                     ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
                     ->join('accounts as acc', 'acc.id', 'pa.account_id')
                     ->join('emails as e', 'e.id', 'acc.email_id')
@@ -164,6 +162,7 @@ class PlanesController extends Component
                         'c.nombre as cliente',
                         'c.celular as celular',
                         'e.content as correo',
+                        'e.pass as passCorreo',
                         'plans.importe as importe',
                         'acc.password_account as password_account',
                         'acc.status as accstatus',
@@ -233,8 +232,7 @@ class PlanesController extends Component
                     ->select(
                         'profiles.id as id',
                         'a.id as cuentaid',
-                        'e.content as email',
-                        'e.pass as contraseña',
+                        'e.content as email',                        
                         'profiles.nameprofile as nombre_perfil',
                         'profiles.pin as pin',
                         'a.password_account as password_account',
@@ -340,14 +338,22 @@ class PlanesController extends Component
             if ($this->cuentaperfil == 'ENTERA') {
                 /* SI SE SELECCIONÓ CUENTA ENTERA */
                 foreach ($this->accounts as $accp) {
+                    /* CALCULAR EL IMPORTE SEGUN LA PLATAFORMA Y SI ES ENTERA O PERFIL */
+                    $this->importe += $accp->Plataforma->precioEntera;
+                    $this->importe *= $this->meses;
+                    /* CREAR EL MOVIMIENTO */
+                    $mv = Movimiento::create([
+                        'type' => 'TERMINADO',
+                        'status' => 'ACTIVO',
+                        'import' => $this->importe,
+                        'user_id' => Auth()->user()->id,
+                    ]);
                     /* PONER LA CUENTA EN OCUPADO */
                     $accp->availability = 'OCUPADO';
                     $accp->save();
                     /* OBTENER FECHA ACTUAL */
                     $DateAndTime = date('Y-m-d h:i:s', time());
-                    /* CALCULAR EL IMPORTE SEGUN LA PLATAFORMA Y SI ES ENTERA O PERFIL */
-                    $this->importe += $accp->Plataforma->precioEntera;
-
+                    /* CREAR EL PLAN */
                     $plan = Plan::create([
                         'importe' => $this->importe,
                         'plan_start' => $DateAndTime,
@@ -355,19 +361,12 @@ class PlanesController extends Component
                         'ready' => 'NO',
                         'status' => 'VIGENTE',
                         'type_pay' => $this->tipopago,
-                        'observations' => $this->observaciones
+                        'observations' => $this->observaciones,
+                        'movimiento_id' => $mv->id,
                     ]);
-
                     PlanAccount::create([
                         'plan_id' => $plan->id,
                         'account_id' => $accp->id
-                    ]);
-
-                    $mv = Movimiento::create([
-                        'type' => 'TERMINADO',
-                        'status' => 'ACTIVO',
-                        'import' => $this->importe,
-                        'user_id' => Auth()->user()->id,
                     ]);
 
                     CarteraMov::create([
@@ -381,24 +380,27 @@ class PlanesController extends Component
                         'movimiento_id' => $mv->id,
                         'cliente_id' => $listaCL->id
                     ]);
-
-                    MovPlan::create([
-                        'movimiento_id' => $mv->id,
-                        'plan_id' => $plan->id
-                    ]);
                     $this->importe = 0;
                 }
             } elseif ($this->cuentaperfil == 'PERFIL') {
                 /* SI SE SELECCIONÓ PERFIL */
                 foreach ($this->profiles as $accp) {
+                    /* CALCULAR EL IMPORTE SEGUN LA PLATAFORMA Y SI ES ENTERA O PERFIL */
+                    $this->importe += $accp->CuentaPerfil->Cuenta->Plataforma->precioPerfil;
+                    $this->importe *= $this->meses;
+                    /* CREAR EL MOVIMIENTO */
+                    $mv = Movimiento::create([
+                        'type' => 'TERMINADO',
+                        'status' => 'ACTIVO',
+                        'import' => $this->importe,
+                        'user_id' => Auth()->user()->id,
+                    ]);
                     /* PONER EL PERFIL EN OCUPADO */
                     $accp->availability = 'OCUPADO';
                     $accp->save();
                     /* OBTENER FECHA ACTUAL */
                     $DateAndTime = date('Y-m-d h:i:s', time());
-                    /* CALCULAR EL IMPORTE SEGUN LA PLATAFORMA Y SI ES ENTERA O PERFIL */
-                    $this->importe += $accp->CuentaPerfil->Cuenta->Plataforma->precioPerfil;
-
+                    /* CREAR EL PLAN */
                     $plan = Plan::create([
                         'importe' => $this->importe,
                         'plan_start' => $DateAndTime,
@@ -406,7 +408,8 @@ class PlanesController extends Component
                         'ready' => 'NO',
                         'status' => 'VIGENTE',
                         'type_pay' => $this->tipopago,
-                        'observations' => $this->observaciones
+                        'observations' => $this->observaciones,
+                        'movimiento_id' => $mv->id
                     ]);
 
                     PlanAccount::create([
@@ -431,13 +434,6 @@ class PlanesController extends Component
                         $cuenta->save();
                     } */
 
-                    $mv = Movimiento::create([
-                        'type' => 'TERMINADO',
-                        'status' => 'ACTIVO',
-                        'import' => $this->importe,
-                        'user_id' => Auth()->user()->id,
-                    ]);
-
                     CarteraMov::create([
                         'type' => 'INGRESO',
                         'comentario' => '',
@@ -450,10 +446,6 @@ class PlanesController extends Component
                         'cliente_id' => $listaCL->id
                     ]);
 
-                    MovPlan::create([
-                        'movimiento_id' => $mv->id,
-                        'plan_id' => $plan->id
-                    ]);
                     $this->importe = 0;
                 }
             }
@@ -477,8 +469,7 @@ class PlanesController extends Component
         try {
             if ($cuentaPerf->count() > 0) {  /* CUANDO ES UN PERFIL */
                 /* OBTENER IDS */
-                $anular = Plan::join('mov_plans as mp', 'mp.plan_id', 'plans.id')
-                    ->join('movimientos as m', 'mp.movimiento_id', 'm.id')
+                $anular = Plan::join('movimientos as m', 'plans.movimiento_id', 'm.id')
                     ->join('plan_accounts as pa', 'pa.plan_id', 'plans.id')
                     ->join('accounts as a', 'pa.account_id', 'a.id')
                     ->join('account_profiles as ap', 'ap.account_id', 'a.id')
@@ -509,7 +500,7 @@ class PlanesController extends Component
                 $perf->availability = 'LIBRE';
                 $perf->pin = $perf->pin . rand(100, 999);
                 $perf->save();
-                
+
                 /* CONTAR LOS PERFILES ACTIVOS DE ESA CUENTA */
                 /* $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                     ->join('profiles as p', 'ap.profile_id', 'p.id')
@@ -523,8 +514,7 @@ class PlanesController extends Component
                 } */
             } else {  /* CUANDO ES UNA CUENTA */
                 /* OBTENER IDS */
-                $anular = Plan::join('mov_plans as mp', 'mp.plan_id', 'plans.id')
-                    ->join('movimientos as m', 'mp.movimiento_id', 'm.id')
+                $anular = Plan::join('movimientos as m', 'plans.movimiento_id', 'm.id')
                     ->join('plan_accounts as pa', 'pa.plan_id', 'plans.id')
                     ->join('accounts as a', 'pa.account_id', 'a.id')
                     ->select('m.*', 'pa.id as paid', 'a.id as cuentaid')

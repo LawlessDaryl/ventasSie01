@@ -53,11 +53,9 @@
                             <thead class="text-white" style="background: #3B3F5C">
                                 <tr>
                                     <th class="table-th text-withe">PLATAFORMA</th>
-                                    <th class="table-th text-withe text-center">CORREO</th>
-                                    <th class="table-th text-withe text-center">CONTRASEÑA EMAIL</th>
+                                    <th class="table-th text-withe text-center">GMAIL</th>
                                     <th class="table-th text-withe text-center">CONTRASEÑA CUENTA</th>
-                                    <th class="table-th text-withe text-center">NOMBRE PERFIL</th>
-                                    <th class="table-th text-withe text-center">PIN</th>
+                                    <th class="table-th text-withe text-center">PERFIL</th>
                                     <th class="table-th text-withe text-center">EXPIRACION CUENTA</th>
                                     <th class="table-th text-withe text-center">OBSERV</th>
                                     <th class="table-th text-withe text-center">ACCIONES</th>
@@ -70,19 +68,14 @@
                                             <h6 class="text-center">{{ $p->nombre }}</h6>
                                         </td>
                                         <td>
-                                            <h6 class="text-center">{{ $p->content }}</h6>
-                                        </td>
-                                        <td>
-                                            <h6 class="text-center">{{ $p->pass }}</h6>
+                                            <h6 class="text-center">{{ $p->content }} <br> {{ $p->pass }}</h6>
                                         </td>
                                         <td>
                                             <h6 class="text-center">{{ $p->passAccount }}</h6>
                                         </td>
                                         <td>
-                                            <h6 class="text-center">{{ $p->namep }}</h6>
-                                        </td>
-                                        <td>
-                                            <h6 class=" text-center">{{ $p->pin }}</h6>
+                                            <h6 class="text-center"><strong> Nombre: </strong>{{ $p->namep }}
+                                                <strong>PIN: </strong>{{ $p->pin }}</h6>
                                         </td>
                                         <td>
                                             <h6 class="text-center">{{ $p->expiration }}</h6>
@@ -114,12 +107,11 @@
                         <table class="table table-unbordered table-hover mt-2">
                             <thead class="text-white" style="background: #3B3F5C">
                                 <tr>
-                                    <th class="table-th text-withe">PLATAFORMA</th>
-                                    <th class="table-th text-withe text-center">CORREO</th>
-                                    <th class="table-th text-withe text-center">CONTRASEÑA EMAIL</th>
+                                    <th class="table-th text-withe text-center">PLATAFORMA</th>
+                                    <th class="table-th text-withe text-center">CLIENTE</th>
+                                    <th class="table-th text-withe text-center">GMAIL</th>
                                     <th class="table-th text-withe text-center">CONTRASEÑA CUENTA</th>
-                                    <th class="table-th text-withe text-center">NOMBRE PERFIL</th>
-                                    <th class="table-th text-withe text-center">PIN</th>
+                                    <th class="table-th text-withe text-center">PERFIL</th>
                                     <th class="table-th text-withe text-center">EXPIRACION CUENTA</th>
                                     <th class="table-th text-withe text-center">INICIO PLAN</th>
                                     <th class="table-th text-withe text-center">EXPIRACION PLAN</th>
@@ -135,19 +127,18 @@
                                             <h6 class="text-center">{{ $p->nombre }}</h6>
                                         </td>
                                         <td>
-                                            <h6 class="text-center">{{ $p->content }}</h6>
+                                            <h6 class="text-center"><strong> N: </strong>{{ $p->clienteNombre }} <strong>TELF: </strong> {{ $p->clienteCelular }}</h6>
                                         </td>
                                         <td>
-                                            <h6 class="text-center">{{ $p->pass }}</h6>
+                                            <h6 class="text-center">{{ $p->content }} <br> {{ $p->pass }}
+                                            </h6>
                                         </td>
                                         <td>
                                             <h6 class="text-center">{{ $p->passAccount }}</h6>
                                         </td>
                                         <td>
-                                            <h6 class="text-center">{{ $p->namep }}</h6>
-                                        </td>
-                                        <td>
-                                            <h6 class=" text-center">{{ $p->pin }}</h6>
+                                            <h6 class="text-center"><strong> N: </strong>{{ $p->namep }}
+                                                <strong>PIN: </strong>{{ $p->pin }}</h6>
                                         </td>
                                         <td>
                                             <h6 class="text-center">{{ $p->expiration }}</h6>
@@ -162,18 +153,20 @@
                                             <h6 class="text-center">{{ $p->observations }}</h6>
                                         </td>
                                         <td class="text-center">
-                                            @if($p->estadoCuentaPerfil=='ACTIVO')
-                                            <a href="javascript:void(0)" wire:click="Acciones({{ $p->planid}})"
-                                                class="btn btn-dark mtmobile" title="Renovación">
-                                                <i class="fa-regular fa-calendar-check"></i>
-                                            </a>
+                                            @if ($p->estadoCuentaPerfil == 'ACTIVO')
+                                                <a href="javascript:void(0)" wire:click="Acciones({{ $p->planid }})"
+                                                    class="btn btn-dark mtmobile" title="Renovación">
+                                                    <i class="fa-regular fa-calendar-check"></i>
+                                                </a>
                                             @endif
                                         </td>
                                         <td>
-                                            <a href="javascript:void(0)" wire:click="Edit({{ $p->id }})"
-                                                class="btn btn-dark mtmobile" title="Edit">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
+                                            @if ($p->estadoCuentaPerfil == 'ACTIVO')
+                                                <a href="javascript:void(0)" wire:click="Edit({{ $p->id }})"
+                                                    class="btn btn-dark mtmobile" title="Edit">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach
@@ -188,8 +181,8 @@
     </div>
     @include('livewire.perfiles.form')
     @include('livewire.perfiles.modalDetails')
-    
-    
+
+
 </div>
 
 <script>

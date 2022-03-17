@@ -127,7 +127,7 @@
                                 <tr>
                                     <th class="table-th text-withe text-center">Email</th>
                                     {{-- <th class="table-th text-withe">Contraseña Email</th> --}}
-                                    <th class="table-th text-withe text-center">Contraseña Cuenta</th>
+                                    <th class="table-th text-withe text-center">Contraseña</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -163,11 +163,10 @@
                         <table class="table table-hover table-sm" style="width:100%">
                             <thead class="text-white" style="background: #3B3F5C">
                                 <tr>
-                                    <th class="table-th text-withe text-center">Email</th>
-                                    <th class="table-th text-withe">Contraseña Email</th>
-                                    <th class="table-th text-withe">Contraseña Cuenta</th>
-                                    <th class="table-th text-withe">Nombre Perfil</th>
-                                    <th class="table-th text-withe">Pin</th>
+                                    <th class="table-th text-withe text-center">Email</th>                                    
+                                    <th class="table-th text-withe text-center">Contraseña</th>
+                                    <th class="table-th text-withe text-center">Nombre Perfil</th>
+                                    <th class="table-th text-withe text-center">Pin</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -182,9 +181,6 @@
                                     <tr>
                                         <td class="text-center">
                                             <h6 class="text-center">{{ $ap->email }}</h6>
-                                        </td>
-                                        <td class="text-center">
-                                            <h6 class="text-center">{{ $ap->contraseña }}</h6>
                                         </td>
                                         <td class="text-center">
                                             <h6 class="text-center">{{ $ap->password_account }}</h6>

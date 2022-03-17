@@ -54,10 +54,9 @@
                         <table class="table table-unbordered table-hover mt-2">
                             <thead class="text-white" style="background: #3B3F5C">
                                 <tr>
-                                    <th class="table-th text-withe">PLATAFORMA</th>
-                                    <th class="table-th text-withe">PROVEEDOR</th>
-                                    <th class="table-th text-withe text-center">CORREO</th>
-                                    <th class="table-th text-withe text-center">CONTRASEÑA</th>
+                                    <th class="table-th text-withe">PLATAFORMA Y PROVEEDOR</th>
+                                    <th class="table-th text-withe text-center">GMAIL</th>
+                                    <th class="table-th text-withe text-center">PASS CUENTA</th>
                                     <th class="table-th text-withe text-center">EXPIRA</th>
                                     <th class="table-th text-withe text-center">TIPO</th>
                                     <th class="table-th text-withe text-center">MAX PERF</th>
@@ -70,16 +69,13 @@
                                 @foreach ($cuentas as $acounts)
                                     <tr>
                                         <td>
-                                            <h6>{{ $acounts->nombre }}</h6>
+                                            <h6 class="text-center">{{ $acounts->nombre }} <br> {{ $acounts->name }}</h6>
                                         </td>
                                         <td>
-                                            <h6>{{ $acounts->name }}</h6>
+                                            <h6 class="text-center">{{ $acounts->content }} <br> {{ $acounts->pass }}</h6>
                                         </td>
                                         <td>
-                                            <h6 class="text-center">{{ $acounts->content }}</h6>
-                                        </td>
-                                        <td>
-                                            <h6 class="text-center">{{ $acounts->pass }}</h6>
+                                            <h6 class="text-center">{{ $acounts->password_account }}</h6>
                                         </td>
                                         <td>
                                             <h6 class="text-center">{{ $acounts->expiration_account }}</h6>
@@ -119,10 +115,10 @@
                         <table class="table table-unbordered table-hover mt-2">
                             <thead class="text-white" style="background: #3B3F5C">
                                 <tr>
-                                    <th class="table-th text-withe">PLATAFORMA</th>
-                                    <th class="table-th text-withe">PROVEEDOR</th>
-                                    <th class="table-th text-withe text-center">CORREO</th>
-                                    <th class="table-th text-withe text-center">CONTRASEÑA</th>
+                                    <th class="table-th text-withe text-center">PLATAFORMA Y PROVEEDOR</th>
+                                    <th class="table-th text-withe text-center">CLIENTE</th>
+                                    <th class="table-th text-withe text-center">GMAIL</th>
+                                    <th class="table-th text-withe text-center">PASS CUENTA</th>
                                     <th class="table-th text-withe text-center">EXPIRA</th>
                                     <th class="table-th text-withe text-center">TIPO</th>
                                     <th class="table-th text-withe text-center">MAX PERF</th>
@@ -136,18 +132,17 @@
                                 @foreach ($cuentas as $acounts)
                                     <tr>
                                         <td>
-                                            <h6>{{ $acounts->nombre }}</h6>
+                                            <h6 class="text-center">{{ $acounts->nombre }} <br> {{ $acounts->name }}</h6>
                                         </td>
                                         <td>
-                                            <h6>{{ $acounts->name }}</h6>
+                                            <h6 class="text-center"><strong> N: </strong>{{ $acounts->clienteNombre }} <strong>TELF: </strong> {{ $acounts->clienteCelular }}</h6>
                                         </td>
                                         <td>
-                                            <h6 class="text-center">{{ $acounts->content }}</h6>
+                                            <h6 class="text-center">{{ $acounts->content }} <br> {{ $acounts->pass }}</h6>
                                         </td>
                                         <td>
-                                            <h6 class="text-center">{{ $acounts->pass }}</h6>
+                                            <h6 class="text-center">{{ $acounts->password_account }}</h6>
                                         </td>
-                                        
                                         <td>
                                             <h6 class="text-center">{{ $acounts->expiration_account }}</h6>
                                         </td>
@@ -162,8 +157,7 @@
                                         </td>
                                         <td>
                                             <h6 class="text-center">{{ $acounts->expiration_plan }}</h6>
-                                        </td>
-                                       
+                                        </td>                                       
                                         <td class="text-center">
                                             @if($acounts->plan_status=='VIGENTE')
                                             <a href="javascript:void(0)"
@@ -173,12 +167,13 @@
                                             </a>
                                             @endif
                                         </td>
-                                        
                                         <td>
+                                            @if($acounts->plan_status=='VIGENTE')
                                             <a href="javascript:void(0)" wire:click="Edit({{ $acounts->id }})"
                                                 class="btn btn-dark mtmobile" title="Edit">
                                                 <i class="fas fa-edit"></i>
                                             </a>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach

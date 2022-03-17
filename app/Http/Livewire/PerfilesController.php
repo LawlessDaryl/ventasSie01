@@ -9,7 +9,6 @@ use App\Models\Cartera;
 use App\Models\CarteraMov;
 use App\Models\ClienteMov;
 use App\Models\Movimiento;
-use App\Models\MovPlan;
 use App\Models\Plan;
 use App\Models\PlanAccount;
 use App\Models\Profile;
@@ -130,8 +129,7 @@ class PerfilesController extends Component
                     ->orderBy('pl.expiration_plan', 'desc')
                     ->paginate($this->pagination); */
             } else {
-                $prof = Plan::join('mov_plans as mp', 'plans.id', 'mp.plan_id')
-                    ->join('movimientos as m', 'm.id', 'mp.movimiento_id')
+                $prof = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
                     ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
                     ->join('accounts as acc', 'acc.id', 'pa.account_id')
                     ->join('account_profiles as ap', 'acc.id', 'ap.account_id')
@@ -139,10 +137,7 @@ class PerfilesController extends Component
                     ->join('emails as e', 'e.id', 'acc.email_id')
                     ->join('platforms as plat', 'plat.id', 'acc.platform_id')
                     ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
-                    ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
-                    ->join('cartera_movs as cmvs', 'm.id', 'cmvs.movimiento_id')
-                    ->join('carteras as cart', 'cart.id', 'cmvs.cartera_id')
-                    ->join('cajas as ca', 'ca.id', 'cart.caja_id')
+                    ->join('clientes as c', 'c.id', 'cmovs.cliente_id')                    
                     ->select(
                         'prof.*',
                         'prof.nameprofile as namep',
@@ -156,6 +151,8 @@ class PerfilesController extends Component
                         'e.pass',
                         'ap.status as estadoCuentaPerfil',
                         'plans.id as planid',
+                        'c.nombre as clienteNombre',
+                        'c.celular as clienteCelular',
                     )
                     ->where('acc.whole_account', 'DIVIDIDA')
                     ->where('prof.availability', 'OCUPADO')
@@ -168,8 +165,7 @@ class PerfilesController extends Component
                     ->paginate($this->pagination);
             }
         } else {
-            $prof = Plan::join('mov_plans as mp', 'plans.id', 'mp.plan_id')
-                ->join('movimientos as m', 'm.id', 'mp.movimiento_id')
+            $prof = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
                 ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
                 ->join('accounts as acc', 'acc.id', 'pa.account_id')
                 ->join('account_profiles as ap', 'acc.id', 'ap.account_id')
@@ -191,6 +187,8 @@ class PerfilesController extends Component
                     'e.pass',
                     'ap.status as estadoCuentaPerfil',
                     'plans.id as planid',
+                    'c.nombre as clienteNombre',
+                    'c.celular as clienteCelular',
                 )
                 ->whereColumn('plans.id', '=', 'ap.plan_id')
                 ->where('ap.status', 'INACTIVO')
@@ -331,8 +329,7 @@ class PerfilesController extends Component
                 ->where('caja_id', $CajaActual->id)->get()->first();
         }
         /* OBTENER IDS PARA HACER LAS MODIFICACIONES */
-        $datos = Plan::join('mov_plans as mp', 'plans.id', 'mp.plan_id')
-            ->join('movimientos as m', 'm.id', 'mp.movimiento_id')
+        $datos = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
             ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
             ->join('accounts as acc', 'acc.id', 'pa.account_id')
             ->join('account_profiles as ap', 'acc.id', 'ap.account_id')
@@ -358,6 +355,13 @@ class PerfilesController extends Component
 
         DB::beginTransaction();
         try {
+            $mv = Movimiento::create([
+                'type' => 'TERMINADO',
+                'status' => 'ACTIVO',
+                'import' => $this->importe,
+                'user_id' => Auth()->user()->id,
+            ]);
+
             $plan = Plan::create([
                 'importe' => $this->importe,
                 'plan_start' => $this->expirationActual,
@@ -365,7 +369,8 @@ class PerfilesController extends Component
                 'ready' => 'NO',
                 'status' => 'VIGENTE',
                 'type_pay' => $this->tipopago,
-                'observations' => $this->observations
+                'observations' => $this->observations,
+                'movimiento_id' => $mv->id
             ]);
 
             PlanAccount::create([
@@ -407,13 +412,6 @@ class PerfilesController extends Component
                 $cuenta->save();
             } */
 
-            $mv = Movimiento::create([
-                'type' => 'TERMINADO',
-                'status' => 'ACTIVO',
-                'import' => $this->importe,
-                'user_id' => Auth()->user()->id,
-            ]);
-
             CarteraMov::create([
                 'type' => 'INGRESO',
                 'comentario' => '',
@@ -424,11 +422,6 @@ class PerfilesController extends Component
             ClienteMov::create([
                 'movimiento_id' => $mv->id,
                 'cliente_id' => $datos->id
-            ]);
-
-            MovPlan::create([
-                'movimiento_id' => $mv->id,
-                'plan_id' => $plan->id
             ]);
 
             DB::commit();
@@ -443,14 +436,10 @@ class PerfilesController extends Component
     }
     public function Vencer()
     {   /* OBTENER EL ID DEL PERFIL Y LA CUENTA */
-        $datos = Plan::join('mov_plans as mp', 'plans.id', 'mp.plan_id')
-            ->join('movimientos as m', 'm.id', 'mp.movimiento_id')
-            ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
+        $datos = Plan::join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
             ->join('accounts as acc', 'acc.id', 'pa.account_id')
             ->join('account_profiles as ap', 'acc.id', 'ap.account_id')
             ->join('profiles as prof', 'prof.id', 'ap.profile_id')
-            ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
-            ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
             ->select(
                 'prof.id as Profileid',
                 'acc.id as cuentaid'

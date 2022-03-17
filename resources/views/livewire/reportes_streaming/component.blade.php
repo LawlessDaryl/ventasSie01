@@ -11,7 +11,7 @@
                         <h6>Elige el usuario</h6>
                         <div class="form-group">
                             <select wire:model="userId" class="form-control">
-                                <option value="">Todos</option>
+                                <option value="0">Todos</option>
                                 @foreach ($users as $user)
                                     <option value="{{ $user->id }}">{{ $user->name }}</option>
                                 @endforeach

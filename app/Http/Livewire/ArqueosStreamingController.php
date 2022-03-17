@@ -42,8 +42,7 @@ class ArqueosStreamingController extends Component
         $to = Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59';
 
         if ($this->condicional == 0) {
-            $this->data = Plan::join('mov_plans as mp', 'plans.id', 'mp.plan_id')
-                ->join('movimientos as m', 'm.id', 'mp.movimiento_id')
+            $this->data = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
                 ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
                 ->join('accounts as acc', 'acc.id', 'pa.account_id')
                 ->join('account_profiles as ap', 'acc.id', 'ap.account_id')
@@ -80,8 +79,7 @@ class ArqueosStreamingController extends Component
                 ->orderBy('plans.created_at', 'desc')
                 ->get();
         } else {
-            $this->data = Plan::join('mov_plans as mp', 'plans.id', 'mp.plan_id')
-                ->join('movimientos as m', 'm.id', 'mp.movimiento_id')
+            $this->data = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
                 ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
                 ->join('accounts as acc', 'acc.id', 'pa.account_id')
                 ->join('emails as e', 'e.id', 'acc.email_id')

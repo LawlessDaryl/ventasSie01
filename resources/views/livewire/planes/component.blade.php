@@ -56,12 +56,10 @@
                                 <tr>
                                     <th class="table-th text-withe text-center">PLATAFORMA</th>
                                     <th class="table-th text-withe text-center">CLIENTE</th>
-                                    <th class="table-th text-withe text-center">CELULAR</th>
                                     <th class="table-th text-withe text-center">CORREO</th>
                                     <th class="table-th text-withe text-center">CONTRASEÑA CUENTA</th>
                                     <th class="table-th text-withe text-center">VENCIMIENTO CUENTA</th>
-                                    <th class="table-th text-withe text-center">NOMBRE PERFIL</th>
-                                    <th class="table-th text-withe text-center">PIN</th>
+                                    <th class="table-th text-withe text-center">PERFIL</th>
                                     <th class="table-th text-withe text-center">IMPORTE</th>
                                     <th class="table-th text-withe text-center">PLAN INICIO</th>
                                     <th class="table-th text-withe text-center">PLAN FIN</th>
@@ -75,13 +73,10 @@
                                             <h6 class="text-center">{{ $p->plataforma }}</h6>
                                         </td>
                                         <td class="text-center">
-                                            <h6 class="text-center">{{ $p->cliente }}</h6>
+                                            <h6 class="text-center">{{ $p->cliente }} {{ $p->celular }}</h6>
                                         </td>
                                         <td class="text-center">
-                                            <h6 class="text-center">{{ $p->celular }}</h6>
-                                        </td>
-                                        <td class="text-center">
-                                            <h6 class="text-center">{{ $p->correo }}</h6>
+                                            <h6 class="text-center">{{ $p->correo }} {{ $p->passCorreo }}</h6>
                                         </td>
                                         <td class="text-center">
                                             <h6 class="text-center">{{ $p->password_account }}</h6>
@@ -90,11 +85,8 @@
                                             <h6 class="text-center">{{ $p->accexp }}</h6>
                                         </td>
                                         <td class="text-center">
-                                            <h6 class="text-center">{{ $p->nameprofile }}</h6>
-                                        </td>
-                                        <td class="text-center">
-                                            <h6 class="text-center">{{ $p->pin }}</h6>
-                                        </td>
+                                            <h6 class="text-center">{{ $p->nameprofile }} {{ $p->pin }}</h6>
+                                        </td>                                        
                                         <td class="text-center">
                                             <h6 class="text-center">{{ $p->importe }}</h6>
                                         </td>
@@ -108,19 +100,18 @@
                                         </td>
                                         <td class="text-center"
                                             style="{{ $p->ready == 'NO' ? 'background-color: #d97171 !important' : 'background-color: #09ed3d !important' }}">
-                                            @if ($p->estado != 'ANULADO')
-                                                <a href="javascript:void(0)" onclick="Confirm({{ $p->id }})"
-                                                    class="btn btn-dark mtmobile" title="Anular">
-                                                    <i class="fas fa-trash"></i>
-                                                </a>
-                                            @endif
                                             <a href="javascript:void(0)"
                                                 wire:click="VerObservaciones({{ $p->id }})"
                                                 class="btn btn-dark mtmobile" title="Observaciones">
                                                 <i class="fa-solid fa-file-signature"></i>
                                             </a>
+                                            @if ($p->estado != 'ANULADO')
+                                                <a href="javascript:void(0)" onclick="Confirm({{ $p->id }})"
+                                                    class="btn btn-dark mtmobile" title="Anular">
+                                                    <i class="fas fa-trash"></i>
+                                                </a>
+                                            @endif                                            
                                         </td>
-
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -136,7 +127,6 @@
                                 <tr>
                                     <th class="table-th text-withe text-center">PLATAFORMA</th>
                                     <th class="table-th text-withe text-center">CLIENTE</th>
-                                    <th class="table-th text-withe text-center">CELULAR</th>
                                     <th class="table-th text-withe text-center">CORREO</th>
                                     <th class="table-th text-withe text-center">CONTRASEÑA CUENTA</th>
                                     <th class="table-th text-withe text-center">VENCIMIENTO CUENTA</th>
@@ -154,13 +144,10 @@
                                             <h6 class="text-center">{{ $p->plataforma }}</h6>
                                         </td>
                                         <td class="text-center">
-                                            <h6 class="text-center">{{ $p->cliente }}</h6>
+                                            <h6 class="text-center">{{ $p->cliente }} {{ $p->celular }}</h6>
                                         </td>
                                         <td class="text-center">
-                                            <h6 class="text-center">{{ $p->celular }}</h6>
-                                        </td>
-                                        <td class="text-center">
-                                            <h6 class="text-center">{{ $p->correo }}</h6>
+                                            <h6 class="text-center">{{ $p->correo }} {{ $p->passCorreo }}</h6>
                                         </td>
                                         <td class="text-center">
                                             <h6 class="text-center">{{ $p->password_account }}</h6>
@@ -181,17 +168,18 @@
                                         </td>
                                         <td class="text-center"
                                             style="{{ $p->ready == 'NO' ? 'background-color: #d97171 !important' : 'background-color: #09ed3d !important' }}">
+                                            <a href="javascript:void(0)"
+                                                wire:click="VerObservaciones({{ $p->id }})"
+                                                class="btn btn-dark mtmobile" title="Observaciones">
+                                                <i class="fa-solid fa-file-signature"></i>
+                                            </a>
                                             @if ($p->estado != 'ANULADO')
                                                 <a href="javascript:void(0)" onclick="Confirm({{ $p->id }})"
                                                     class="btn btn-dark mtmobile" title="Anular">
                                                     <i class="fas fa-trash"></i>
                                                 </a>
                                             @endif
-                                            <a href="javascript:void(0)"
-                                                wire:click="VerObservaciones({{ $p->id }})"
-                                                class="btn btn-dark mtmobile" title="Observaciones">
-                                                <i class="fa-solid fa-file-signature"></i>
-                                            </a>
+                                            
                                         </td>
                                     </tr>
                                 @endforeach
