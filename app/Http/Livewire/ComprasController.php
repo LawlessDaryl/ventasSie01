@@ -8,13 +8,15 @@ use Carbon\Carbon;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
+use Darryldecode\Cart\Facades\CartFacade as Cart;
 
 class ComprasController extends Component
 {
     use WithPagination;
     use WithFileUploads;
     public  $nro_compra,$search,$provider,$fecha,
-    $usuario,$metodo_pago,$pago_parcial,$tipo_documento,$nro_documento,$observacion,$selected_id;
+    $usuario,$metodo_pago,$pago_parcial,$tipo_documento,$nro_documento,$observacion
+    ,$selected_id,$total_compra;
 
     private $pagination = 5;
     public function mount()
@@ -25,13 +27,8 @@ class ComprasController extends Component
         $this->usuario = Auth()->user()->name;
         $this->impuestos = false;
         $this->selected_id = 0;
-       
-
-
-
-       
-
-     
+        $this->total_compra = Cart::getTotal();
+  
     }
     public function render()
     {
@@ -48,9 +45,38 @@ class ComprasController extends Component
         $prod1 = Product::select('products.*')
         ->paginate($this->pagination);
     
-        return view('livewire.compras.component',['data_prod' => $prod,'data_p'])
+        return view('livewire.compras.component',['data_prod' => $prod,'data_p', 
+        'cart' => Cart::getContent()->sortBy('name')
+        ])
         ->extends('layouts.theme.app')
         ->section('content');
     }
+    public function Store()
+    {
+        $rules = [
+            'nombre' => 'required|unique:unidads'
+        ];
+        $messages = [
+            'nombre.required' => 'El nombre de la unidad es requerido.',
+            'nombre.unique' => 'Ya existe una unidad con ese nombre.',
+        ];
+        $this->validate($rules, $messages);
+
+        Unidad::create([
+            'nombre' => $this->nombre
+        ]);
+
+        $this->resetUI();
+        $this->emit('unidad-added', 'Unidad Registrada');
+    }
+
+    public function resetUI()
+    {
+        $this->nombre = '';
+        $this->selected_id=0;
+       
+    }
+
+  
 
 }

@@ -21,8 +21,6 @@ class PosController extends Component
 {
     public $total, $itemsQuantity, $efectivo, $change, $nit;
 
-
-
     public function mount()
     {
         $this->efectivo = 0;
