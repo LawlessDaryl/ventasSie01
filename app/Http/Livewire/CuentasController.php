@@ -189,6 +189,7 @@ class CuentasController extends Component
                     'c.celular as clienteCelular',
                 )
                 ->where('pl.status', 'VENCIDO')
+                ->where('pa.status', 'VENCIDO')
                 ->orderBy('accounts.id', 'desc')
                 ->get();
         }
@@ -380,6 +381,7 @@ class CuentasController extends Component
             'entity' => 'PERFIL'
         ]);
         AccountProfile::create([
+            'status' => 'SinAsignar',
             'account_id' => $this->selected_id,
             'profile_id' => $perfil->id,
         ]);
@@ -399,7 +401,7 @@ class CuentasController extends Component
     public function BorrarPerfil(Profile $perf)
     {   /* PONER EN INACTIVO AccountProfile */
         $CuentaPerf = $perf->CuentaPerfil;
-        $CuentaPerf->status = 'INACTIVO';
+        $CuentaPerf->status = 'SinAsignar';
         $CuentaPerf->save();
         /* PONER EN INACTIVO EL PERFIL */
         $perf->status = 'INACTIVO';
@@ -505,6 +507,7 @@ class CuentasController extends Component
             ]);
 
             PlanAccount::create([
+                'status' => 'ACTIVO',
                 'plan_id' => $plan->id,
                 'account_id' => $cuenta->id,
             ]);
@@ -528,7 +531,7 @@ class CuentasController extends Component
 
             /* PONER EN INACTIVO EL PLAN ACCOUNT */
             $planCuenta = PlanAccount::find($datos->planAccountid);
-            $planCuenta->status = 'INACTIVO';
+            $planCuenta->status = 'VENCIDO';
             $planCuenta->save();
 
             DB::commit();
@@ -556,7 +559,7 @@ class CuentasController extends Component
         $cuenta->save();
         /* PONER EL PLANACCOUNT EN INACTIVO */
         $plancuenta = PlanAccount::find($datos->paid);
-        $plancuenta->status = 'INACTIVO';
+        $plancuenta->status = 'VENCIDO';
         $plancuenta->save();
 
         $this->resetUI();
