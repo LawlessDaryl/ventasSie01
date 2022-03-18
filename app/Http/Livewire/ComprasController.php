@@ -15,12 +15,8 @@ class ComprasController extends Component
     use WithPagination;
     use WithFileUploads;
     public  $nro_compra,$search,$provider,$fecha,
-<<<<<<< HEAD
-    $usuario,$metodo_pago,$pago_parcial,$tipo_documento,$nro_documento,$observacion,$selected_id,$total;
-=======
     $usuario,$metodo_pago,$pago_parcial,$tipo_documento,$nro_documento,$observacion
     ,$selected_id,$total_compra;
->>>>>>> 03c9f08cad82694829a88b97b7e306ec8f841cf2
 
     private $pagination = 5;
     public function mount()
@@ -31,21 +27,8 @@ class ComprasController extends Component
         $this->usuario = Auth()->user()->name;
         $this->impuestos = false;
         $this->selected_id = 0;
-<<<<<<< HEAD
-        $this->total=Cart::getTotal();
-        
-
-       
-
-
-
-       
-
-     
-=======
         $this->total_compra = Cart::getTotal();
   
->>>>>>> 03c9f08cad82694829a88b97b7e306ec8f841cf2
     }
     public function render()
     {
