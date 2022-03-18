@@ -1,10 +1,10 @@
-
 @if($BuscarProductoNombre != 0)
     <div class="connect-sorting">
         <div class="connect-sorting-content">
             <div class="card simple-title-task ui-sortable-handle">
                 <div class="card-body">
-                    <div class="table-responsive tblscroll" style="overflow: hidden">
+                    <div class="table-responsive table-wrapper-scroll-y my-custom-scrollbar">
+
                         <table class="table table-bordered table-striped mt-1">
                             <thead class="text-white" style="background: #3b3f5c ">
                                 <tr>
@@ -48,6 +48,7 @@
                                 @endforeach
                             </tbody>
                         </table>
+
                     </div>
                 </div>
             </div>
@@ -60,7 +61,7 @@
     <div class="connect-sorting-content">
         <div class="card simple-title-task ui-sortable-handle">
             <div class="card-body">
-                <h5 class="text-center text-muted">Para Buscar Manualmente el Producto Inserte una Palabra en el Cuadro: Buscar Productos...</h5>
+                <h5 class="text-center text-muted">Para Buscar un Producto use el Cuadro: Buscar Productos...</h5>
             </div>
         </div>
     </div>

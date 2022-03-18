@@ -116,7 +116,7 @@ class PosController extends Component
 
 
         return view('livewire.pos.component', [
-            'denominations' => Denomination::orderBy('value', 'desc')->get(),
+            'denominations' => Denomination::orderBy('id', 'asc')->get(),
             'cart' => Cart::getContent()->sortBy('name'),
             'datosnit' => $datosnit,
             'datosnombreproducto' => $datosnombreproducto
@@ -128,7 +128,6 @@ class PosController extends Component
 
     public function ventafactura()
     {
-        //dd($this->clienteanonimo);
         if($this->factura == 'true')
         {
             $this->facturasino = 'Si';
@@ -142,7 +141,6 @@ class PosController extends Component
 
     public function clienteanonimo()
     {
-        //dd($this->clienteanonimo);
         if($this->clienteanonimo == 'true')
         {
             $this->anonimo = 0;
@@ -213,7 +211,6 @@ class PosController extends Component
             );
             $this->total = Cart::getTotal();
             $this->itemsQuantity = Cart::getTotalQuantity();
-            //dd($this->itemsQuantity);
             $this->emit('scan-ok', 'Producto agregado');
         }
     }
@@ -275,7 +272,6 @@ class PosController extends Component
                 }
             }
         }
-        //dd($product->price);
         Cart::add($product->id, $product->name, $product->price, $cant, $product->image);
 
         $this->total = Cart::getTotal();
@@ -449,7 +445,7 @@ class PosController extends Component
             if ($sale)
             {
                 $items = Cart::getContent();
-                dd($items);
+                //dd($items);
                 foreach ($items as $item) {
                     SaleDetail::create([
                         'price' => $item->price,
@@ -540,6 +536,12 @@ class PosController extends Component
         $this->increaseQty($this->idproductoalmacen, $this->cantidadToTienda);
     }
 
+    // Llamar al Modal de Monedas Para Finalizar las Ventas
+    public function FinalizarVenta()
+    {
+        $this->emit('finalizarventa');
+    }
+
     
     // Quitar los valores de la ventana Modal
     public function resetUI()
@@ -557,4 +559,9 @@ class PosController extends Component
 
         $this->resetValidation();
     }
+    public function hola()
+    {
+        dd("Hola");
+    }
+
 }

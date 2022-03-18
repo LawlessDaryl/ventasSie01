@@ -18,8 +18,18 @@
         
 
 
+
+
+        // Mètodo JavaScript para llamar al modal cuando se acben los Productos
         window.livewire.on('no-stocktienda', Msg => {
             $("#exampleModalCenter").modal("show");
+        });
+
+
+
+        // Mètodo JavaScript para llamar al modal par Finalizar la Venta
+        window.livewire.on('finalizarventa', Msg => {
+            $("#ModalCenterFinalizarVenta").modal("show");
         });
 
 
