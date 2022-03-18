@@ -42,9 +42,11 @@ class ServiciosController extends Component
         $this->categoryid = 'Elegir';
         $this->typeworkid = 'Elegir';
         $this->catprodservid = 'Elegir';
-        $this->celular = 00000000;
+        $this->celular = '';
         $this->selected_id = 0;
         $this->marc = '';
+        $this->diagnostico='Revisión';
+        $this->solucion ='Revisión';
         $this->typeservice = 'NORMAL';
         $this->saldo = 0;
         $this->on_account = 0;
@@ -146,11 +148,13 @@ class ServiciosController extends Component
     }
 
     public function StoreClient()
-    {
-        if($this->celular==0){
+    {   if($this->nit==''){
+        $this->nit=0;}
+        if($this->celular==''){
+            $this->celular=0;
             $rules = [
                 'nombre' => 'required|min:1',
-                'cedula' => 'required',
+                'cedula' => 'required|max:10',
                 'celular' => 'numeric',
                 'nit' => 'required|numeric',
                 'nit' => 'max:9'
@@ -159,6 +163,7 @@ class ServiciosController extends Component
                 'nombre.required' => 'Nombre es requerido',
                 'nombre.min' => 'El nombre debe ser contener al menos 1 caracter',
                 'cedula.required' => 'La cédula es requerida',
+                'cedula.max' => 'La cédula debe tener máximo 10 digitos',
                 'celular.numeric' => 'No puede ingresar letras',
                 'nit.required' => 'Ingrese 0 si no quiere ingresar ningún nit',
                 'nit.numeric' => 'El nit debe ser un número',
@@ -168,7 +173,7 @@ class ServiciosController extends Component
         }else{
             $rules = [
                 'nombre' => 'required|min:1',
-                'cedula' => 'required',
+                'cedula' => 'required|max:10',
                 'celular' => 'required|numeric|digits:8',
                 'nit' => 'required|numeric',
                 'nit' => 'max:9'
@@ -177,6 +182,7 @@ class ServiciosController extends Component
                 'nombre.required' => 'Nombre es requerido',
                 'nombre.min' => 'El nombre debe ser contener al menos 1 caracter',
                 'cedula.required' => 'La cédula es requerida',
+                'cedula.max' => 'La cédula debe tener máximo 10 digitos',
                 'celular.required' => 'El celular es requerido',
                 'celular.numeric' => 'No puede ingresar letras',
                 'celular.digits' => 'Debe ingresar 8 digitos',
@@ -479,15 +485,16 @@ class ServiciosController extends Component
         $this->buscarCliente = '';
         $this->nombre = '';
         $this->cedula = '';
-        $this->celular = 00000000;
+        $this->celular = '';
         $this->email = '';
         $this->nit = '';
         $this->razon_social = '';
         $this->detalle = '';
         $this->falla_segun_cliente = '';
-        $this->diagnostico = '';
-        $this->solucion = '';
+      
         $this->marc = '';
         $this->resetValidation();
+        $this->diagnostico='Revisión';
+        $this->solucion ='Revisión';
     }
 }

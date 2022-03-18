@@ -40,8 +40,9 @@
             <div class="modal-footer" style="background: #f0ecec">
                 <button type="button" wire:click.prevent="resetUI()" class="btn btn-dark close-btn text-info"
                     data-dismiss="modal" style="background: #3b3f5c">CANCELAR</button>
-                <a type="button" href="{{ url('orderservice') }}" target="_blank" 
-                    wire:click.prevent="Cambio({{$service1}})" 
+                <a type="button" href="{{ url('abrirnuevo' . '/' . 'PROCESO') }}"
+                 target="_blank" 
+                    wire:click="Cambio({{$service1}})" 
                     class="btn btn-dark close-btn text-info">REGISTRAR PROCESO</a>
 
 

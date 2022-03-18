@@ -59,12 +59,26 @@ class OrderServiceController extends Component
         $this->costo = 0;
         $this->detalle_costo = '';
         $this->nombreUsuario = '';
-        $this->opciones = 'PENDIENTE';
+        
         $this->tipopago = 'EFECTIVO';
+       
+      
+      
      
     }
     public function render()
     {
+        
+        if (!empty(session('opcio'))) {
+            
+            $this->opciones = session('opcio');
+            session(['opcio' => null]);
+            
+        }else{
+            session(['opcio' => 'PENDIENTE']);
+        }
+        
+     
         if (!empty(session('orderserv'))) {
             $this->search = session('orderserv');
         session(['orderserv' => null]);
@@ -388,10 +402,7 @@ class OrderServiceController extends Component
         return redirect()->intended("orderservice");
     }
 
-    public function abrirventana()
-    {
-        $this->opciones='PROCESO';
-    }
+    
 
     public function Imprimir($id)
     {
@@ -467,6 +478,15 @@ class OrderServiceController extends Component
 
         $this->resetUI();
         $this->emit('detail-hide-msg', 'Servicio Actualizado');
+    }
+
+    public function abrirventana($status)
+    {
+        
+        session(['opcio' => $status]);
+       
+       
+        return redirect()->intended("orderservice");
     }
 
     public function Cambio(Service $service)

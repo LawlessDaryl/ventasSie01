@@ -21,7 +21,7 @@
                     <div class="col-sm-12 col-md-6">
                         <div class="form-group">
                             <label>Cédula</label>
-                            <input type="text" wire:model.lazy="cedula" class="form-control" placeholder="12121212" maxlength="10">
+                            <input type="number" wire:model.lazy="cedula" class="form-control" placeholder="12121212" maxlength="10">
                             @error('cedula') <span class="text-danger er">{{ $message }}</span>@enderror
                         </div>
                     </div>
@@ -29,8 +29,8 @@
                     <div class="col-sm-12 col-md-6">
                         <div class="form-group">
                             <label>Celular</label>
-                            <input type="text" wire:model.lazy="celular" class="form-control"
-                                maxlength="8">
+                            <input type="number" wire:model.lazy="celular" class="form-control" 
+                            placeholder="ej: 77889911" maxlength="8">
                             @error('celular') <span class="text-danger er">{{ $message }}</span>@enderror
                         </div>
                     </div>
