@@ -16,7 +16,7 @@ class ComprasController extends Component
     use WithFileUploads;
     public  $nro_compra,$search,$provider,$fecha,
     $usuario,$metodo_pago,$pago_parcial,$tipo_documento,$nro_documento,$observacion
-    ,$selected_id,$total_compra;
+    ,$selected_id,$total_compra,$itemsQuantity;
 
     private $pagination = 5;
     public function mount()
@@ -28,6 +28,7 @@ class ComprasController extends Component
         $this->impuestos = false;
         $this->selected_id = 0;
         $this->total_compra = Cart::getTotal();
+        $this->itemsQuantity = Cart::getTotalQuantity();
   
     }
     public function render()
@@ -45,30 +46,63 @@ class ComprasController extends Component
         $prod1 = Product::select('products.*')
         ->paginate($this->pagination);
     
-        return view('livewire.compras.component',['data_prod' => $prod,'data_p', 
+        return view('livewire.compras.component',['data_prod' => $prod,
         'cart' => Cart::getContent()->sortBy('name')
         ])
         ->extends('layouts.theme.app')
         ->section('content');
     }
-    public function Store()
+  
+
+    public function increaseQty($productId, $cant = 1,$precio_compra = 0)
     {
-        $rules = [
-            'nombre' => 'required|unique:unidads'
-        ];
-        $messages = [
-            'nombre.required' => 'El nombre de la unidad es requerido.',
-            'nombre.unique' => 'Ya existe una unidad con ese nombre.',
-        ];
-        $this->validate($rules, $messages);
+       
+        $title = 'aaa';
+        $product = Product::select('products.id','products.nombre as name')
+        ->where('products.id',$productId)->first();
+       
+        $exist = Cart::get($product->id);
+        if ($exist) {
+            $title = 'Cantidad actualizada';
+        } else {
+            $title = "Producto agregado";
+        }
 
-        Unidad::create([
-            'nombre' => $this->nombre
-        ]);
+        Cart::add($product->id, $product->name, $precio_compra, $cant);
 
-        $this->resetUI();
-        $this->emit('unidad-added', 'Unidad Registrada');
+        
+        $this->total = Cart::getTotal();
+        $this->itemsQuantity = Cart::getTotalQuantity();
+        $this->emit('scan-ok', $title);
     }
+
+    public function UpdateQty($productId, $cant = 1)
+    {
+        $title = '';
+        $product = Product::find($productId);
+        $exist = Cart::get($productId);
+        if ($exist) {
+            $title = "cantidad actualizada";
+        } else {
+            $title = "producto agregado";
+        }
+        if ($exist) {
+            if ($product->stock < $cant) {
+                $this->emit('no-stock', 'stock insuficiente :/');
+                return;
+            }
+        }
+        $this->removeItem($productId);
+        if ($cant > 0) {
+            Cart::add($product->id, $product->name, $product->price, $cant);
+            $this->total = Cart::getTotal();
+            $this->itemsQuantity = Cart::getTotalQuantity();
+            $this->emit('scan-ok', $title);
+        }
+
+        
+    }
+
 
     public function resetUI()
     {

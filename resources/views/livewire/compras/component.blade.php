@@ -177,8 +177,8 @@
                                                      
                                                        
                                                        <td class="text-center">
-                                                           <a href="#"
-                                                               class="btn btn-dark mtmobile" title="Edit">
+                                                           <a href="javascript:void(0)" wire:click="increaseQty({{ $prod->id }})"
+                                                               class="btn btn-dark mtmobile">
                                                                <i class="fas fa-plus"></i>
                                                            </a>
                                                           
@@ -209,16 +209,21 @@
                                                </tr>
                                            </thead>
                                            <tbody>
-                                               @foreach ($data_prod as $prod)
+                                               @foreach ($cart as $prod)
                                                    <tr>
                                                        <td>
-                                                           <h6> {{$prod->nombre}}</h6>
+                                                           <h6> {{$prod->name}}</h6>
                                                        </td>
                                                        <td>
-                                                           <h6>{{$prod->precio}}</h6> 
+                                                        <input type="number" 
+                                                        id="r{{$prod->id}}" 
+                                                        wire:change="UpdateQty({{$prod->id}}, $('#r' + {{$prod->id}}).val() )" 
+                                                        style="font-size: 1rem!important;" 
+                                                        class="form-control text-center" 
+                                                        value="{{$prod->quantity}}">
                                                        </td>
                                                        <td>
-                                                           <h6>{{$prod->costo}}</h6>
+                                                           <h6>{{$prod->quantity}}</h6>
                                                        </td>
 
                                                        <td>
@@ -249,11 +254,7 @@
                                                                 <h5 class="text-white">TOTAL.-</h5>
                                                            </td>
                                                            <td>
-<<<<<<< HEAD
-                                                               <h5 class="text-white" >{{$total}}</h5>
-=======
                                                                <h5 class="text-white" >{{$total_compra}}</h5>
->>>>>>> 03c9f08cad82694829a88b97b7e306ec8f841cf2
                                                            </td>
                                                        </tr>
                                                </tfoot>
