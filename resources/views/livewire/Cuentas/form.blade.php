@@ -1,7 +1,6 @@
 @include('common.modalHead')
 <div class="row">
     <div class="col-sm-12 col-md-6">
-
         <div class="col-sm-12 col-md-12">
             <div class="form-group">
                 <label>Plataforma</label>
@@ -47,7 +46,6 @@
             <div class="form-group">
                 <label>Estado</label>
                 <select wire:model='estado' class="form-control">
-                    <option value="Elegir" selected>Elegir</option>
                     <option value="ACTIVO">ACTIVO</option>
                     <option value="INACTIVO">INACTIVO</option>
                 </select>
@@ -60,7 +58,6 @@
     </div>
 
     <div class="col-sm-12 col-md-6">
-
         <div class="col-sm-12 col-md-12">
             <div class="form-group">
                 <label>Correo</label>
@@ -89,7 +86,7 @@
         <div class="col-sm-12 col-md-12">
             <div class="form-group">
                 <label>Precio Compra Cuenta</label>
-                <input type="number" wire:model.lazy="price" class="form-control" placeholder="ej: 0.0">
+                <input type="number" wire:model.lazy="price" class="form-control" placeholder="ej: 90.0">
                 @error('price')
                     <span class="text-danger er">{{ $message }}</span>
                 @enderror
@@ -99,7 +96,7 @@
         <div class="col-sm-12 col-md-12">
             <div class="form-group">
                 <label>Contraseña cuenta Plataforma</label>
-                <input type="text" wire:model.lazy="password_account" class="form-control" placeholder="ej: 0.0">
+                <input type="text" wire:model.lazy="password_account" class="form-control" placeholder="ej: ntlxEmanuel">
                 @error('password_account')
                     <span class="text-danger er">{{ $message }}</span>
                 @enderror

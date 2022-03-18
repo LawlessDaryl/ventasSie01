@@ -97,7 +97,7 @@
         </div>
     </div>
 
-    <div class="col-sm-12 col-md-12">
+    <div class="col-sm-12 col-md-9">
         <div class="form-group">
             <label>Observaciones</label>
             <input wire:model.lazy="observaciones" class="form-control" name="" rows="5">
@@ -126,8 +126,8 @@
                             <thead class="text-white" style="background: #3B3F5C">
                                 <tr>
                                     <th class="table-th text-withe text-center">Email</th>
-                                    {{-- <th class="table-th text-withe">Contraseña Email</th> --}}
                                     <th class="table-th text-withe text-center">Contraseña</th>
+                                    <th class="table-th text-withe text-center">Precio</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -146,10 +146,25 @@
                                         <td class="text-center">
                                             <h6 class="text-center">{{ $ap->password_account }}</h6>
                                         </td>
+                                        <td class="text-center">
+                                            <h6 class="text-center">{{ $ap->precioEntera }}</h6>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
+                        <tfoot>
+                            <tr>
+                                <td colspan="1" class="text-left">
+                                    <span><b>TOTAL: </b></span>
+                                </td>
+                                <td class="text-right " colspan="2">
+                                    <span><strong>
+                                            Bs. {{ number_format($accounts->sum('precioEntera'), 2) }}                
+                                        </strong></span>
+                                </td>                                    
+                            </tr>
+                        </tfoot>
                     </div>
                 </div>
             </div>
@@ -163,10 +178,12 @@
                         <table class="table table-hover table-sm" style="width:100%">
                             <thead class="text-white" style="background: #3B3F5C">
                                 <tr>
-                                    <th class="table-th text-withe text-center">Email</th>                                    
+                                    <th class="table-th text-withe text-center">Email</th>
                                     <th class="table-th text-withe text-center">Contraseña</th>
                                     <th class="table-th text-withe text-center">Nombre Perfil</th>
                                     <th class="table-th text-withe text-center">Pin</th>
+                                    <th class="table-th text-withe text-center">Precio</th>
+                                    <th class="table-th text-withe text-center">EDITAR</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -191,9 +208,31 @@
                                         <td class="text-center">
                                             <h6 class="text-center">{{ $ap->pin }}</h6>
                                         </td>
+                                        <td class="text-center">
+                                            <h6 class="text-center">{{ $ap->precioPerfil }}</h6>
+                                        </td>
+                                        <td>
+                                            <a href="javascript:void(0)"
+                                                wire:click="EditarPerf({{ $ap->id }})"
+                                                class="btn btn-dark mtmobile" title="EDITAR">
+                                                <i class="fa-solid fa-file-signature"></i>
+                                            </a>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="1" class="text-left">
+                                        <span><b>TOTAL: </b></span>
+                                    </td>
+                                    <td class="text-right " colspan="4">
+                                        <span><strong>
+                                                Bs. {{ number_format($profiles->sum('precioPerfil'), 2) }}                
+                                            </strong></span>
+                                    </td>                                    
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </div>

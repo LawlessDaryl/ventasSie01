@@ -27,7 +27,7 @@
     <div class="col-sm-12 col-md-6">
         <div class="form-group">
             <label>Dirección</label>
-            <input type="text" wire:model.lazy="address" class="form-control" placeholder="ej: correo@correo.com">
+            <input type="text" wire:model.lazy="address" class="form-control" placeholder="ej: Cochabamba">
             @error('address') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>
     </div>
@@ -36,9 +36,8 @@
         <div class="form-group">
             <label>Estado</label>
             <select wire:model.lazy="status" class="form-control">
-                <option value="Elegir" selected>Elegir</option>
-                <option value="ACTIVO">Activo</option>
-                <option value="INACTIVO">Inactivo</option>
+                <option value="ACTIVO">ACTIVO</option>
+                <option value="INACTIVO">INACTIVO</option>
             </select>
             @error('status') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>

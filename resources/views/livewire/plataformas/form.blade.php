@@ -24,7 +24,7 @@
                         <div class="form-group">
                             <label>Descripción</label>
                             <input type="text" wire:model="description" class="form-control"
-                                placeholder="Deportes, Cultura, Cine, Series">
+                                placeholder="ej: Deportes, Cultura, Cine, Series">
                             @error('description')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror
@@ -34,9 +34,9 @@
                     <div class="col-sm-12 col-md-4">
                         <div class="form-group">
                             <label>Precio Entera</label>
-                            <input type="text" wire:model="precioEntera" class="form-control" placeholder="ej: Magis">
+                            <input type="text" wire:model="precioEntera" class="form-control" placeholder="ej: 100">
                             @error('precioEntera')
-                                <span class="text-danger er">{{ $message }}</span>
+                            <span class=" text-danger er">{{ $message }}</span>
                             @enderror
                         </div>
                     </div>
@@ -44,7 +44,7 @@
                     <div class="col-sm-12 col-md-4">
                         <div class="form-group">
                             <label>Precio Perfil</label>
-                            <input type="text" wire:model="precioPerfil" class="form-control" placeholder="ej: Magis">
+                            <input type="text" wire:model="precioPerfil" class="form-control" placeholder="ej: 30">
                             @error('precioPerfil')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror
@@ -71,7 +71,7 @@
                             <label class="custom-file-label">Imagen {{ $image }}</label>
                         </div>
                     </div>
-                   {{--  <a href="javascript:void(0)" wire:click="$set('status','Elegir')"
+                    {{-- <a href="javascript:void(0)" wire:click="$set('status','Elegir')"
                         class="btn btn-dark mtmobile" title="Edit">
                         <i class="fas fa-edit"></i>
                     </a> --}}
@@ -82,8 +82,8 @@
                 <button type="button" wire:click.prevent="resetUI()" class="btn btn-dark close-btn text-info"
                     data-dismiss="modal" style="background: #3b3f5c">CANCELAR</button>
                 @if ($selected_id < 1)
-                    <button type="button" wire:click.prevent="Store()" wire:loading.attr="disabled" wire:target="image, Store"
-                        class="btn btn-dark close-btn text-info">GUARDAR</button>
+                    <button type="button" wire:click.prevent="Store()" wire:loading.attr="disabled"
+                        wire:target="image, Store" class="btn btn-dark close-btn text-info">GUARDAR</button>
                 @else
                     <button type="button" wire:click.prevent="Update()"
                         class="btn btn-dark close-btn text-info">ACTUALIZAR</button>
@@ -92,5 +92,3 @@
         </div>
     </div>
 </div>
-
-

@@ -17,7 +17,7 @@
                             <div class="form-group">
                                 <label>Nombre Perfil</label>
                                 <input type="text" wire:model.lazy="nameP" class="form-control"
-                                    placeholder="PerfilNetflix1">
+                                    placeholder="ej: PerfilNetflix1">
                                 @error('nameP')
                                     <span class="text-danger er">{{ $message }}</span>
                                 @enderror
@@ -27,7 +27,7 @@
                         <div class="col-sm-12 col-md-6">
                             <div class="form-group">
                                 <label>PIN</label>
-                                <input type="text" wire:model.lazy="PIN" class="form-control" placeholder="0110">
+                                <input type="text" wire:model.lazy="PIN" class="form-control" placeholder="ej: 0110">
                                 @error('PIN')
                                     <span class="text-danger er">{{ $message }}</span>
                                 @enderror
@@ -38,9 +38,8 @@
                             <div class="form-group">
                                 <label>Estado</label>
                                 <select wire:model='estado' class="form-control">
-                                    <option value="Elegir" disabled>Elegir</option>
-                                    <option>ACTIVO</option>
-                                    <option>INACTIVO</option>
+                                    <option value="ACTIVO">ACTIVO</option>
+                                    <option value="INACTIVO">INACTIVO</option>
                                 </select>
                                 @error('estado')
                                     <span class="text-danger er">{{ $message }}</span>
@@ -52,9 +51,8 @@
                             <div class="form-group">
                                 <label>Disponibilidad</label>
                                 <select wire:model='availability' class="form-control">
-                                    <option value="Elegir" disabled>Elegir</option>
-                                    <option>LIBRE</option>
-                                    <option>OCUPADO</option>
+                                    <option value="LIBRE">LIBRE</option>
+                                    <option value="OCUPADO">OCUPADO</option>
                                 </select>
                                 @error('availability')
                                     <span class="text-danger er">{{ $message }}</span>
@@ -66,7 +64,7 @@
                             <div class="form-group">
                                 <label>Observaciones</label>
                                 <input type="text" wire:model.lazy="Observaciones" class="form-control"
-                                    placeholder="Perfil para ..">
+                                    placeholder="Perfil para ...">
                                 @error('Observaciones')
                                     <span class="text-danger er">{{ $message }}</span>
                                 @enderror
@@ -136,7 +134,6 @@
                                 </tr>
                             @endforeach
                         </tbody>
-
                     </table>
                 </div>
             </div>

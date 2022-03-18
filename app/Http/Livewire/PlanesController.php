@@ -28,7 +28,7 @@ class PlanesController extends Component
         $pageTitle, $componentName, $selected_id, $hora, $search, $condicion, $type, $cartera_id,
         $nombre, $cedula, $celular, $direccion, $email, $fecha_nacim, $razon, $nit, $plataforma,
         $cuentaperfil, $accounts, $profiles, $cantidaperf, $mostrartabla, $tipopago, $condicional,
-        $meses, $observaciones, $ready;
+        $meses, $observaciones, $ready, $selected_perf, $totalCobrar;
 
     private $pagination = 10;
     public function paginationView()
@@ -59,6 +59,7 @@ class PlanesController extends Component
         $this->meses = 1;
         $this->observaciones = '';
         $this->ready = 'NINGUNA';
+        $this->totalCobrar = 0;
     }
 
     public function render()
@@ -215,7 +216,10 @@ class PlanesController extends Component
                 $this->mostrartabla = 0;
                 $this->accounts = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                     ->join('emails as e', 'accounts.email_id', 'e.id')
-                    ->select('accounts.*')
+                    ->select(
+                        'accounts.*',
+                        'p.precioEntera'
+                    )
                     ->where('accounts.whole_account', 'ENTERA')
                     ->where('accounts.availability', 'LIBRE')
                     ->where('accounts.status', 'ACTIVO')
@@ -231,11 +235,12 @@ class PlanesController extends Component
                     ->join('emails as e', 'a.email_id', 'e.id')
                     ->select(
                         'profiles.id as id',
+                        'p.precioPerfil as precioPerfil',
                         'a.id as cuentaid',
-                        'e.content as email',                        
+                        'e.content as email',
                         'profiles.nameprofile as nombre_perfil',
                         'profiles.pin as pin',
-                        'a.password_account as password_account',
+                        'a.password_account as password_account'
                     )
                     ->where('profiles.availability', 'LIBRE')
                     ->where('profiles.status', 'ACTIVO')
@@ -365,6 +370,7 @@ class PlanesController extends Component
                         'movimiento_id' => $mv->id,
                     ]);
                     PlanAccount::create([
+                        'status' => 'ACTIVO',
                         'plan_id' => $plan->id,
                         'account_id' => $accp->id
                     ]);
@@ -413,6 +419,7 @@ class PlanesController extends Component
                     ]);
 
                     PlanAccount::create([
+                        'status' => 'ACTIVO',
                         'plan_id' => $plan->id,
                         'account_id' => $accp->CuentaPerfil->account_id,
                     ]);
@@ -420,6 +427,7 @@ class PlanesController extends Component
                     /* MODIFICAR REGISTRO ACCONNTPROFILE Y DARLE EL ID DEL PLAN*/
                     $cuentaPerfil = $accp->CuentaPerfil;
                     $cuentaPerfil->plan_id = $plan->id;
+                    $cuentaPerfil->status = 'ACTIVO';
                     $cuentaPerfil->save();
                     /* CONTAR PERFILES OCUPADOS */
                     /* $perfilesOcupados = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
@@ -487,7 +495,7 @@ class PlanesController extends Component
                 $plan->save();
                 /* PONER EN INACTIVO PLANACCOUNT */
                 $planCuenta = PlanAccount::find($anular->paid);
-                $planCuenta->status = 'INACTIVO';
+                $planCuenta->status = 'ANULADO';
                 $planCuenta->save();
 
                 $cuenta = Account::find($anular->cuentaid);
@@ -529,7 +537,7 @@ class PlanesController extends Component
                 $plan->save();
                 /* PONER EN INACTIVO EL PLANACCOUNT */
                 $planCuenta = PlanAccount::find($anular->paid);
-                $planCuenta->status = 'INACTIVO';
+                $planCuenta->status = 'ANULADO';
                 $planCuenta->save();
                 /* PONER LA CUENTA EN LIBRE Y PONER NUEVA CONTRASEÑA */
                 $cuenta = Account::find($anular->cuentaid);
@@ -567,6 +575,25 @@ class PlanesController extends Component
         $plan->save();
         $this->resetUI();
         $this->emit('item-actualizado', 'Se actulizó la información');
+    }
+
+    public function EditarPerf(Profile $perf)
+    {
+        $this->selected_perf = $perf->id;
+        $this->nombrePerfil = $perf->nameprofile;
+        $this->pinPerfil = $perf->pin;
+        $this->emit('show-modalPerf', 'open modal');
+    }
+
+    public function ModificarPerfil()
+    {
+        $perfil = Profile::find($this->selected_perf);
+        $perfil->nameprofile = $this->nombrePerfil;
+        $perfil->pin = $this->pinPerfil;
+        $perfil->save();
+        $this->nombrePerfil = '';
+        $this->pinPerfil = '';
+        $this->emit('perf-actualizado', 'Se actulizó el perfil');
     }
 
     public function resetUI()

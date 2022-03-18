@@ -194,6 +194,7 @@
 
     @include('livewire.planes.form')
     @include('livewire.planes.modalObservaciones')
+    @include('livewire.planes.modalPerfil')
 </div>
 
 <script>
@@ -228,6 +229,14 @@
         })
         window.livewire.on('show-modal3', Msg => {
             $('#Modal_Observaciones').modal('show')
+        })
+        
+        window.livewire.on('show-modalPerf', Msg => {
+            $('#Modal_perfil').modal('show')
+        })
+        window.livewire.on('perf-actualizado', Msg => {
+            $('#Modal_perfil').modal('hide')
+            noty(Msg)
         })
         flatpickr(document.getElementsByClassName('flatpickr'), {
             enableTime: false,

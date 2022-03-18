@@ -25,7 +25,7 @@ class PerfilesController extends Component
     use WithFileUploads;
     public $nameperfil, $pin, $status, $availability, $observations,
         $search, $selected_id, $pageTitle, $componentName, $condicional,
-        $meses, $expirationNueva, $expirationActual, $tipopago, $importe;
+        $meses, $expirationNueva, $expirationActual, $tipopago, $importe, $mostrartabla2, $perfil;
     private $pagination = 10;
     public function paginationView()
     {
@@ -43,6 +43,8 @@ class PerfilesController extends Component
         $this->expirationNueva = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->tipopago = 'EFECTIVO';
         $this->importe = 0;
+        $this->mostrartabla2 = 0;
+        $this->perfil = [];
     }
     public function render()
     {
@@ -137,7 +139,7 @@ class PerfilesController extends Component
                     ->join('emails as e', 'e.id', 'acc.email_id')
                     ->join('platforms as plat', 'plat.id', 'acc.platform_id')
                     ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
-                    ->join('clientes as c', 'c.id', 'cmovs.cliente_id')                    
+                    ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
                     ->select(
                         'prof.*',
                         'prof.nameprofile as namep',
@@ -166,36 +168,36 @@ class PerfilesController extends Component
             }
         } else {
             $prof = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
-                ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
-                ->join('accounts as acc', 'acc.id', 'pa.account_id')
-                ->join('account_profiles as ap', 'acc.id', 'ap.account_id')
-                ->join('profiles as prof', 'prof.id', 'ap.profile_id')
-                ->join('emails as e', 'e.id', 'acc.email_id')
-                ->join('platforms as plat', 'plat.id', 'acc.platform_id')
-                ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
-                ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
-                ->select(
-                    'prof.*',
-                    'prof.nameprofile as namep',
-                    'plans.expiration_plan as expiration_plan',
-                    'plans.plan_start as plan_start',
-                    'acc.expiration_account as expiration',
-                    'acc.password_account as passAccount',
-                    'plat.nombre',
-                    'plat.image',
-                    'e.content',
-                    'e.pass',
-                    'ap.status as estadoCuentaPerfil',
-                    'plans.id as planid',
-                    'c.nombre as clienteNombre',
-                    'c.celular as clienteCelular',
-                )
-                ->whereColumn('plans.id', '=', 'ap.plan_id')
-                ->where('ap.status', 'INACTIVO')
-                ->where('pa.status', 'INACTIVO')
-                ->where('plans.status', 'VENCIDO')
-                ->orderBy('plans.created_at', 'desc')
-                ->paginate($this->pagination);
+                    ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
+                    ->join('accounts as acc', 'acc.id', 'pa.account_id')
+                    ->join('account_profiles as ap', 'acc.id', 'ap.account_id')
+                    ->join('profiles as prof', 'prof.id', 'ap.profile_id')
+                    ->join('emails as e', 'e.id', 'acc.email_id')
+                    ->join('platforms as plat', 'plat.id', 'acc.platform_id')
+                    ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
+                    ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
+                    ->select(
+                        'prof.*',
+                        'prof.nameprofile as namep',
+                        'plans.expiration_plan as expiration_plan',
+                        'plans.plan_start as plan_start',
+                        'acc.expiration_account as expiration',
+                        'acc.password_account as passAccount',
+                        'plat.nombre',
+                        'plat.image',
+                        'e.content',
+                        'e.pass',
+                        'ap.status as estadoCuentaPerfil',
+                        'plans.id as planid',
+                        'c.nombre as clienteNombre',
+                        'c.celular as clienteCelular',
+                    )
+                    ->where('prof.status', 'INACTIVO')
+                    ->where('plans.status', 'VENCIDO')
+                    ->whereColumn('plans.id', '=', 'ap.plan_id')
+                    ->where('ap.status', 'VENCIDO')
+                    ->orderBy('plans.expiration_plan', 'desc')
+                    ->paginate($this->pagination);
         }
         /* CALCULAR LA FECHA DE EXPIRACION NUEVA SEGUN LA CANTIDAD DE MESES A RENOVAR */
         if ($this->meses > 0) {
@@ -374,6 +376,7 @@ class PerfilesController extends Component
             ]);
 
             PlanAccount::create([
+                'status' => 'ACTIVO',
                 'plan_id' => $plan->id,
                 'account_id' => $perfil->CuentaPerfil->account_id,
             ]);
@@ -382,6 +385,7 @@ class PerfilesController extends Component
                 'account_id' => $perfil->CuentaPerfil->Cuenta->id,
                 'profile_id' => $perfil->id,
                 'plan_id' => $plan->id,
+                'status' => 'ACTIVO',
             ]);
             /* PONER EN VENCIDO EL PLAN ANTERIOR */
             $planviejo = Plan::find($datos->planid);
@@ -445,6 +449,7 @@ class PerfilesController extends Component
                 'acc.id as cuentaid'
             )
             ->where('plans.id', $this->selected_id)
+            ->where('prof.status', 'ACTIVO')
             ->whereColumn('plans.id', '=', 'ap.plan_id')
             ->orderby('plans.id', 'desc')
             ->get()->first();
@@ -467,12 +472,143 @@ class PerfilesController extends Component
             ->where('ap.status', 'ACTIVO')
             ->where('p.status', 'ACTIVO')->get();
         /* SI LA CUENTA NO TIENE PERFILES ACTIVOS REGRESA A SER ENTERA */
-        if ($perfilesActivos->count() == 0) {            
+        if ($perfilesActivos->count() == 0) {
             $Cuenta->whole_account = 'ENTERA';
             $Cuenta->save();
         }
         $this->resetUI();
         $this->emit('item-accion', 'No se renovó este perfil y ahora esta inactivo');
+    }
+    public function CambiarCuenta()
+    {
+        $this->mostrartabla2 = 1;
+        /* OBTENER EL ID DEL PERFIL Y LA CUENTA */
+        $datos = Plan::join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
+            ->join('accounts as acc', 'acc.id', 'pa.account_id')
+            ->join('platforms as p', 'p.id', 'acc.platform_id')
+            ->select(
+                'p.id as platfid',
+            )
+            ->where('plans.id', $this->selected_id)
+            ->orderby('plans.id', 'desc')
+            ->get()->first();
+
+        $this->perfil = Profile::join('account_profiles as ap', 'ap.profile_id', 'profiles.id')
+            ->join('accounts as a', 'ap.account_id', 'a.id')
+            ->join('platforms as p', 'a.platform_id', 'p.id')
+            ->join('emails as e', 'a.email_id', 'e.id')
+            ->select(
+                'profiles.id as id',
+                'p.precioPerfil as precioPerfil',
+                'a.id as cuentaid',
+                'e.content as email',
+                'profiles.nameprofile as nombre_perfil',
+                'profiles.pin as pin',
+                'a.password_account as password_account'
+            )
+            ->where('profiles.availability', 'LIBRE')
+            ->where('profiles.status', 'ACTIVO')
+            ->where('a.status', 'ACTIVO')
+            ->orderBy('a.expiration_account', 'desc')
+            ->where('p.id', $datos->platfid)
+            ->get()->first();
+        /* dd($this->perfil); */
+    }
+    public function CambiarAccount(Profile $perf)
+    {
+        /* Datos del anterior */
+        $datos = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
+            ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
+            ->join('accounts as acc', 'acc.id', 'pa.account_id')
+            ->join('account_profiles as ap', 'acc.id', 'ap.account_id')
+            ->join('profiles as prof', 'prof.id', 'ap.profile_id')
+            ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
+            ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
+            ->select(
+                'c.*',
+                'plans.id as planid',
+                'pa.id as planAccountid',
+                'ap.id as accountProfileid',
+                'prof.id as Profileid',
+                'acc.id as cuentaid',
+            )
+            ->where('plans.id', $this->selected_id)
+            ->whereColumn('plans.id', '=', 'ap.plan_id')
+            ->orderby('plans.id', 'desc')
+            ->get()->first();
+        DB::beginTransaction();
+        try {
+            /* PONER EN INACTIVO EL PERFIL */
+            $perfilViejo = Profile::find($datos->Profileid);
+            $perfilViejo->status = 'INACTIVO';
+            $perfilViejo->availability = 'LIBRE';
+            $perfilViejo->save();
+
+            /* PONER DATOS DEL ANTERIOR PERFIL AL NUEVO PERFIL */
+            $perf->update([
+                'nameprofile' => $perfilViejo->nameprofile,
+                'pin' => $perfilViejo->pin,
+                'availability' => 'OCUPADO',
+            ]);
+            /* OBTENER LA CUENTA DEL NUEVO PERFIL */
+            $CuentaNueva = Account::find($perf->CuentaPerfil->Cuenta->id);
+
+            $planAccount = PlanAccount::find($datos->planAccountid);
+            /* ACTULIZAR EL PLAN ACCOUNT PONIENDO LA NUEVA CUENTA */
+            /* $planAccount->update([
+                'account_id' => $CuentaNueva->id,
+            ]); */
+            $planAccount->update([
+                'status' => 'INACTIVO',
+            ]);
+            PlanAccount::create([
+                'plan_id' => $datos->planid,
+                'account_id' => $CuentaNueva->id,
+            ]);
+
+            /* ACTUALIZAR EL ACCOUNT PROFILE PONIENDO NUEVA CUENTA Y NUEVO PERFIL */
+            $cuentaPerfil = AccountProfile::find($datos->accountProfileid);
+            /* $cuentaPerfil->update([
+                'account_id' => $CuentaNueva->id,
+                'profile_id' => $perf->id,
+            ]); */
+            $cuentaPerfil->update([
+                'status' => 'INACTIVO',
+            ]);
+            AccountProfile::create([
+                'account_id' => $CuentaNueva->id,
+                'profile_id' => $perf->id,
+                'plan_id' => $datos->planid,
+            ]);
+
+            /* CONTAR LOS PERFILES ACTIVOS OCUPADOS */
+            $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
+                ->join('profiles as p', 'ap.profile_id', 'p.id')
+                ->where('accounts.id', $datos->cuentaid)
+                ->where('ap.status', 'ACTIVO')
+                ->where('p.status', 'ACTIVO')->get();
+
+            /* SI LA CUENTA NO TIENE PERFILES ACTIVOS REGRESA A SER ENTERA */
+            if ($perfilesActivos->count() == 0) {
+                $cuenta = Account::find($datos->cuentaid);
+                $cuenta->whole_account = 'ENTERA';
+                $cuenta->save();
+            }
+
+            $accountProfilesD = AccountProfile::where('account_id', $CuentaNueva->id)
+                ->where('profile_id', $perf->id)->get();
+            foreach ($accountProfilesD as $acc) {
+                if ($acc->plan_id == null) {
+                    $acc->delete();
+                }
+            }
+            DB::commit();
+            $this->resetUI();
+            $this->emit('item-accion', 'Se renovó este perfil');
+        } catch (Exception $e) {
+            DB::rollback();
+            $this->emit('item-error', 'ERROR' . $e->getMessage());
+        }
     }
     public function resetUI()
     {

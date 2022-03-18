@@ -46,8 +46,8 @@ class CuentasController extends Component
         $this->email_id = 'Elegir';
         $this->platform_id = 'Elegir';
         $this->proveedor = 'Elegir';
-        $this->estado = 'Elegir';
-        $this->availability = 'Elegir';
+        $this->estado = 'ACTIVO';
+        $this->availability = 'LIBRE';
         $this->number_profiles = 5;
         $this->nameP = '';
         $this->PIN = '';
@@ -67,7 +67,7 @@ class CuentasController extends Component
     {
         if ($this->condicional == 'cuentas') {
             if (strlen($this->search) > 0) {
-                $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
+                /* $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                     ->join('emails as e', 'accounts.email_id', 'e.id')
                     ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
                     ->select(
@@ -89,7 +89,7 @@ class CuentasController extends Component
                     ->orWhere('e.content', 'like', '%' . $this->search . '%')
                     ->orWhere('strsp.name', 'like', '%' . $this->search . '%')
                     ->orderBy('accounts.id', 'desc')
-                    ->get();
+                    ->get(); */
             } else {
                 $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                     ->join('emails as e', 'accounts.email_id', 'e.id')
@@ -571,8 +571,8 @@ class CuentasController extends Component
         $this->email_id = 'Elegir';
         $this->platform_id = 'Elegir';
         $this->proveedor = 'Elegir';
-        $this->estado = 'Elegir';
-        $this->availability = 'Elegir';
+        $this->estado = 'ACTIVO';
+        $this->availability = 'LIBRE';
         $this->number_profiles = 5;
         $this->nameP = '';
         $this->PIN = '';
