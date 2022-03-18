@@ -249,7 +249,11 @@
                                                                 <h5 class="text-white">TOTAL.-</h5>
                                                            </td>
                                                            <td>
+<<<<<<< HEAD
                                                                <h5 class="text-white" >{{$total}}</h5>
+=======
+                                                               <h5 class="text-white" >{{$total_compra}}</h5>
+>>>>>>> 03c9f08cad82694829a88b97b7e306ec8f841cf2
                                                            </td>
                                                        </tr>
                                                </tfoot>
