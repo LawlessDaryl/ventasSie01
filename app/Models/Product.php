@@ -23,6 +23,12 @@ class Product extends Model
         return $this->belongsTo(Provider::class);
     }
 
+    public function location()
+    {
+        return $this->belongsToMany(Location::class);
+    }
+
+
     public function getImagenAttribute()
     {
         if ($this->image == null)

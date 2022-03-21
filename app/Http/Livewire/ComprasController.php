@@ -16,7 +16,7 @@ class ComprasController extends Component
     use WithFileUploads;
     public  $nro_compra,$search,$provider,$fecha,
     $usuario,$metodo_pago,$pago_parcial,$tipo_documento,$nro_documento,$observacion
-    ,$selected_id,$total_compra,$itemsQuantity;
+    ,$selected_id,$total_compra,$itemsQuantity,$price;
 
     private $pagination = 5;
     public function mount()
@@ -27,6 +27,8 @@ class ComprasController extends Component
         $this->usuario = Auth()->user()->name;
         $this->impuestos = false;
         $this->selected_id = 0;
+        $this->price = 9;
+
         $this->total_compra = Cart::getTotal();
         $this->itemsQuantity = Cart::getTotalQuantity();
   
@@ -41,10 +43,10 @@ class ComprasController extends Component
         ->orWhere('id','like','%'.$this->search.'%')
         ->paginate($this->pagination);
         else
-        $prod = Product::select('products.*')
-        ->paginate($this->pagination);
-        $prod1 = Product::select('products.*')
-        ->paginate($this->pagination);
+        $prod = "cero";
+
+        
+       
     
         return view('livewire.compras.component',['data_prod' => $prod,
         'cart' => Cart::getContent()->sortBy('name')
@@ -54,7 +56,7 @@ class ComprasController extends Component
     }
   
 
-    public function increaseQty($productId, $cant = 1,$precio_compra = 0)
+    public function increaseQty($productId, $cant = 1,$precio_compra = 2)
     {
        
         $title = 'aaa';
@@ -74,35 +76,87 @@ class ComprasController extends Component
         $this->total = Cart::getTotal();
         $this->itemsQuantity = Cart::getTotalQuantity();
         $this->emit('scan-ok', $title);
+         $this->total_compra = Cart::getTotal();
+
     }
 
-    public function UpdateQty($productId, $cant = 1)
+    public function UpdateQty($productId, $cant = 3)
     {
         $title = '';
-        $product = Product::find($productId);
+        $product = Product::select('products.id','products.nombre as name')
+        ->where('products.id',$productId)->first();
+       
         $exist = Cart::get($productId);
+        $prices=$exist->price;
+       
         if ($exist) {
             $title = "cantidad actualizada";
         } else {
             $title = "producto agregado";
         }
-        if ($exist) {
-            if ($product->stock < $cant) {
-                $this->emit('no-stock', 'stock insuficiente :/');
-                return;
-            }
-        }
+       
         $this->removeItem($productId);
+       
         if ($cant > 0) {
-            Cart::add($product->id, $product->name, $product->price, $cant);
+
+          
+            Cart::add($product->id, $product->name,$prices, $cant);
+          
             $this->total = Cart::getTotal();
             $this->itemsQuantity = Cart::getTotalQuantity();
             $this->emit('scan-ok', $title);
-        }
+            $this->total_compra = Cart::getTotal();
 
-        
+
+
+        }
     }
 
+    public function UpdatePrice($productId, $price = 20)
+    {
+        $title = '';
+        $product = Product::select('products.id','products.nombre as name')
+        ->where('products.id',$productId)->first();
+       
+        $exist = Cart::get($productId);
+        $quantitys=$exist->quantity;
+       
+        if ($exist) {
+            $title = "cantidad actualizada";
+        } else {
+            $title = "producto agregado";
+        }
+
+     
+       
+        $this->removeItem($productId);
+       
+        if ($price > 0) {
+
+
+          
+            Cart::add($product->id, $product->name, $price, $quantitys);
+          
+            $this->total = Cart::getTotal();
+            $this->itemsQuantity = Cart::getTotalQuantity();
+            $this->emit('scan-ok', $title);
+            $this->total_compra = Cart::getTotal();
+
+
+
+        }
+        
+    
+    }
+    public function removeItem($productId)
+    {
+        Cart::remove($productId);
+
+        $this->total = Cart::getTotal();
+        $this->itemsQuantity = Cart::getTotalQuantity();
+        $this->emit('scan-ok', 'Producto eliminado');
+        $this->total_compra = Cart::getTotal();
+    }
 
     public function resetUI()
     {

@@ -147,47 +147,49 @@
                                        </h6>
                                    </div>
                             
-                                      
-                                   <div class="table-responsive">
-                                       <table class="table table-unbordered table-hover">
-                                           <thead class="text-white" style="background: #3B3F5C">
-                                               <tr>
-                                                   <th class="table-th text-withe text-center">Producto</th>                              
-                                                   <th class="table-th text-withe text-center">Accion</th>
-                                               </tr>
-                                           </thead>
-                                           <tbody>
-                                               @foreach ($data_prod as $prod)
-                                                   <tr>
-                                                       <td>
-                                                           <div class="card-body">
-                                                               <h5 class="card-title">{{$prod->nombre}}</h5>
-                                                               <div>
-                                                                   <b>Caracteristicas</b>
-                                                                   <b>Stock</b>
-                                                                   <b>Marca</b>
-                                                                   <b>Garantia</b> <br>
-                                                                   <b class="card-text"> {{$prod->caracteristicas}}</b>
-                                                                   <b class="card-text">{{$prod->stock}}</b>
-                                                                   <b class="card-text">{{$prod->marca}}</b>
-                                                                   <b class="card-text">{{$prod->garantia}}</b>
-                                                                  
-                                                               </div>
-                                                       </td>
-                                                     
-                                                       
-                                                       <td class="text-center">
-                                                           <a href="javascript:void(0)" wire:click="increaseQty({{ $prod->id }})"
-                                                               class="btn btn-dark mtmobile">
-                                                               <i class="fas fa-plus"></i>
-                                                           </a>
-                                                          
-                                                       </td>
-                                                   </tr>
-                                               @endforeach
-                                           </tbody>
-                                       </table>
-                                   </div>
+                                      @if(strlen($search) > 0)
+                                      <div class="table-responsive">
+                                        <table class="table table-unbordered table-hover">
+                                            <thead class="text-white" style="background: #3B3F5C">
+                                                <tr>
+                                                    <th class="table-th text-withe text-center">Producto</th>                              
+                                                    <th class="table-th text-withe text-center">Accion</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($data_prod as $prod)
+                                                    <tr>
+                                                        <td>
+                                                            <div class="card-body">
+                                                                <h5 class="card-title">{{$prod->nombre}}</h5>
+                                                                <div>
+                                                                    <b>Caracteristicas</b>
+                                                                    <b>Stock</b>
+                                                                    <b>Marca</b>
+                                                                    <b>Garantia</b> <br>
+                                                                    <b class="card-text"> {{$prod->caracteristicas}}</b>
+                                                                    <b class="card-text">{{$prod->stock}}</b>
+                                                                    <b class="card-text">{{$prod->marca}}</b>
+                                                                    <b class="card-text">{{$prod->garantia}}</b>
+                                                                   
+                                                                </div>
+                                                        </td>
+                                                      
+                                                        
+                                                        <td class="text-center">
+                                                            <a href="javascript:void(0)" wire:click="increaseQty({{ $prod->id }})"
+                                                                class="btn btn-dark mtmobile">
+                                                                <i class="fas fa-plus"></i>
+                                                            </a>
+                                                           
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                @endif
+                                   
                                </div>
                            
                            
@@ -215,19 +217,25 @@
                                                            <h6> {{$prod->name}}</h6>
                                                        </td>
                                                        <td>
-                                                        <input type="number" 
-                                                        id="r{{$prod->id}}" 
-                                                        wire:change="UpdateQty({{$prod->id}}, $('#r' + {{$prod->id}}).val() )" 
-                                                        style="font-size: 1rem!important;" 
-                                                        class="form-control text-center" 
-                                                        value="{{$prod->quantity}}">
-                                                       </td>
-                                                       <td>
-                                                           <h6>{{$prod->quantity}}</h6>
+                                                            <input type="number" 
+                                                            id="r{{$prod->id}}" 
+                                                            wire:change="UpdatePrice({{$prod->id}}, $('#r' + {{$prod->id}}).val() )" 
+                                                            style="font-size: 1rem!important;" 
+                                                            class="form-control text-center" 
+                                                            value="{{$prod->price}}">
                                                        </td>
 
                                                        <td>
-                                                           <h6>500</h6>
+                                                            <input type="number" 
+                                                            id="rr{{$prod->id}}" 
+                                                            wire:change="UpdateQty({{$prod->id}}, $('#rr' + {{$prod->id}}).val() )" 
+                                                            style="font-size: 1rem!important;" 
+                                                            class="form-control text-center" 
+                                                            value="{{$prod->quantity}}">
+                                                       </td>
+                                                      
+                                                       <td>
+                                                           <h6>{{$prod->getPriceSum()}}</h6>
                                                        </td>
                                                        <td>
                                                            <div class="form-group">
@@ -240,7 +248,8 @@
                                                            </div>
                                                        </td>
                                                        <td class="text-center">
-                                                           <a href="#"
+                                                           <a href="javascript:void(0)"
+                                                           wire:click="removeItem({{ $prod->id }})"
                                                                class="btn btn-dark mtmobile" title="Edit">
                                                                <i class="fas fa-trash"></i>
                                                            </a>

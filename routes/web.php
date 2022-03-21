@@ -55,6 +55,7 @@ use App\Http\Livewire\ReporteServiceController;
 use App\Http\Livewire\TransaccionesController;
 use App\Http\Livewire\TypeWorkController;
 use App\Http\Livewire\UnidadesController;
+use App\Http\Livewire\DestinoController;
 use Illuminate\Support\Facades\Auth;
 
 Auth::routes();
@@ -136,6 +137,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('proveedores', ProvidersController::class)->name('supliers');
     Route::get('compras', ComprasController::class)->name('compras');
     Route::get('transacciones', TransaccionesController::class)->name('transactions');
+    Route::get('destino', DestinoController::class)->name('destination');
 
     /* VENTAS */
     Route::get('coins', CoinsController::class)->name('monedas')->middleware('permission:Coins_Index');
