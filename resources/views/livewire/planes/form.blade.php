@@ -160,9 +160,9 @@
                                 </td>
                                 <td class="text-right " colspan="2">
                                     <span><strong>
-                                            Bs. {{ number_format($accounts->sum('precioEntera'), 2) }}                
+                                            Bs. {{ number_format($accounts->sum('precioEntera'), 2) * $meses }}
                                         </strong></span>
-                                </td>                                    
+                                </td>
                             </tr>
                         </tfoot>
                     </div>
@@ -212,8 +212,7 @@
                                             <h6 class="text-center">{{ $ap->precioPerfil }}</h6>
                                         </td>
                                         <td>
-                                            <a href="javascript:void(0)"
-                                                wire:click="EditarPerf({{ $ap->id }})"
+                                            <a href="javascript:void(0)" wire:click="EditarPerf({{ $ap->id }})"
                                                 class="btn btn-dark mtmobile" title="EDITAR">
                                                 <i class="fa-solid fa-file-signature"></i>
                                             </a>
@@ -228,9 +227,9 @@
                                     </td>
                                     <td class="text-right " colspan="4">
                                         <span><strong>
-                                                Bs. {{ number_format($profiles->sum('precioPerfil'), 2) }}                
+                                                Bs. {{ number_format($profiles->sum('precioPerfil'), 2)* $meses }}
                                             </strong></span>
-                                    </td>                                    
+                                    </td>
                                 </tr>
                             </tfoot>
                         </table>

@@ -22,7 +22,7 @@
                 <select wire:model='proveedor' class="form-control">
                     <option value="Elegir" disabled>Elegir</option>
                     @foreach ($proveedores as $p)
-                            <option value="{{ $p->id }}">{{ $p->name }}</option>                        
+                        <option value="{{ $p->id }}">{{ $p->name }}</option>
                     @endforeach
                 </select>
                 @error('proveedor')
@@ -41,19 +41,21 @@
                 @enderror
             </div>
         </div>
-
-        <div class="col-sm-12 col-md-12">
-            <div class="form-group">
-                <label>Estado</label>
-                <select wire:model='estado' class="form-control">
-                    <option value="ACTIVO">ACTIVO</option>
-                    <option value="INACTIVO">INACTIVO</option>
-                </select>
-                @error('status')
-                    <span class="text-danger er">{{ $message }}</span>
-                @enderror
+        @if ($condicional != 'ocupados')
+            <div class="col-sm-12 col-md-12">
+                <div class="form-group">
+                    <label>Estado</label>
+                    <select wire:model='estado' class="form-control">
+                        <option value="ACTIVO">ACTIVO</option>
+                        <option value="INACTIVO">INACTIVO</option>
+                    </select>
+                    @error('status')
+                        <span class="text-danger er">{{ $message }}</span>
+                    @enderror
+                </div>
             </div>
-        </div>
+        @endif
+
 
     </div>
 
@@ -96,7 +98,8 @@
         <div class="col-sm-12 col-md-12">
             <div class="form-group">
                 <label>Contraseña cuenta Plataforma</label>
-                <input type="text" wire:model.lazy="password_account" class="form-control" placeholder="ej: ntlxEmanuel">
+                <input type="text" wire:model.lazy="password_account" class="form-control"
+                    placeholder="ej: ntlxEmanuel">
                 @error('password_account')
                     <span class="text-danger er">{{ $message }}</span>
                 @enderror

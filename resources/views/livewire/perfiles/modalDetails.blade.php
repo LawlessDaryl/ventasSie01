@@ -72,35 +72,36 @@
                     <div class="col-sm-12 col-md-4">
                         <div class="form-group text-center mt-4">
                             <a href="javascript:void(0)" class="btn btn-dark"
-                            wire:click.prevent="CambiarCuenta()">Cambiar
+                                wire:click.prevent="CambiarCuenta()">Cambiar
                                 a otra cuenta</a>
                         </div>
                     </div>
                     @if ($mostrartabla2 == 1)
-                        <div class="col-sm-12 col-md-12">
-                            <div class="statbox widget box box-shadow">
-                                <div class="widget-content widget-content-area row">
-                                    <div class="table-responsive table-wrapper-scroll-y my-custom-scrollbar">
-                                        <table class="table table-hover table-sm" style="width:100%">
-                                            <thead class="text-white" style="background: #3B3F5C">
-                                                <tr>
-                                                    <th class="table-th text-withe text-center">Email</th>
-                                                    <th class="table-th text-withe text-center">Contraseña</th>
-                                                    <th class="table-th text-withe text-center">Nombre Perfil</th>
-                                                    <th class="table-th text-withe text-center">Pin</th>
-                                                    <th class="table-th text-withe text-center">Precio</th>
-                                                    <th class="table-th text-withe text-center">EDITAR</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @if ($profiles->count() == 0)
+                        @if ($profiles->count() != 0)
+                            <div class="col-sm-12 col-md-12">
+                                <div class="statbox widget box box-shadow">
+                                    <div class="widget-content widget-content-area row">
+                                        <div class="table-responsive table-wrapper-scroll-y my-custom-scrollbar">
+                                            <table class="table table-hover table-sm" style="width:100%">
+                                                <thead class="text-white" style="background: #3B3F5C">
                                                     <tr>
-                                                        <td colspan="5">
-                                                            <h6 class="text-center">No tienes perfiles de esa
-                                                                plataforma</h6>
-                                                        </td>
+                                                        <th class="table-th text-withe text-center">Email</th>
+                                                        <th class="table-th text-withe text-center">Contraseña</th>
+                                                        <th class="table-th text-withe text-center">Nombre Perfil</th>
+                                                        <th class="table-th text-withe text-center">Pin</th>
+                                                        <th class="table-th text-withe text-center">Precio</th>
+                                                        <th class="table-th text-withe text-center">EDITAR</th>
                                                     </tr>
-                                                @endif
+                                                </thead>
+                                                <tbody>
+                                                    @if ($profiles->count() == 0)
+                                                        <tr>
+                                                            <td colspan="5">
+                                                                <h6 class="text-center">No tienes perfiles de esa
+                                                                    plataforma</h6>
+                                                            </td>
+                                                        </tr>
+                                                    @endif
                                                     <tr>
                                                         <td class="text-center">
                                                             <h6 class="text-center">{{ $perfil->email }}</h6>
@@ -110,25 +111,35 @@
                                                             </h6>
                                                         </td>
                                                         <td class="text-center">
-                                                            <h6 class="text-center">{{ $perfil->nombre_perfil }}</h6>
+                                                            <h6 class="text-center">{{ $perfil->nombre_perfil }}
+                                                            </h6>
                                                         </td>
                                                         <td class="text-center">
                                                             <h6 class="text-center">{{ $perfil->pin }}</h6>
                                                         </td>
                                                         <td class="text-center">
-                                                            <h6 class="text-center">{{ $perfil->precioPerfil }}</h6>
-                                                        </td>                                                        
+                                                            <h6 class="text-center">{{ $perfil->precioPerfil }}
+                                                            </h6>
+                                                        </td>
                                                     </tr>
-                                            </tbody>                                         
-                                        </table>
-                                        
-                                    </div>
-                                    <div>
-                                        <a href="javascript:void(0)" class="btn btn-dark" wire:click.prevent="CambiarAccount({{$perfil->id}})">CAMBIAR</a>
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                        <div>
+                                            <a href="javascript:void(0)" class="btn btn-dark"
+                                                wire:click.prevent="CambiarAccount({{ $perfil->id }})">CAMBIAR</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                            @else
+                            <div class="col-sm-12 col-md-4">
+                                <div class="form-group text-center mt-4">
+                                    <h6>No hay perfiles creados o libres para hacer el cambio</h6>
+                                </div>
+                            </div>
+                        @endif
                     @endif
 
                 </div>

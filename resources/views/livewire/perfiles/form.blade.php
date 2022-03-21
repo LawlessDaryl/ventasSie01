@@ -1,7 +1,7 @@
 @include('common.modalHead')
 <div class="row">
     <div class="col-sm-12 col-md-7">
-        
+
         <div class="col-sm-12 col-md-12">
             <div class="form-group">
                 <label>Nombre Perfil</label>
@@ -16,7 +16,7 @@
                 <input type="text" wire:model.lazy="pin" class="form-control" placeholder="ej: 125145">
                 @error('pin') <span class="text-danger er">{{ $message }}</span>@enderror
             </div>
-        </div>       
+        </div>
 
         <div class="col-sm-12 col-md-12">
             <div class="form-group">
@@ -24,10 +24,10 @@
                 <input type="text" wire:model.lazy="observations" class="form-control" placeholder="ej: cliente ">
                 @error('observations') <span class="text-danger er">{{ $message }}</span>@enderror
             </div>
-        </div> 
+        </div>
     </div>
 
-    <div class="col-sm-12 col-md-5">
+    {{-- <div class="col-sm-12 col-md-5">
         <div class="col-sm-12 col-md-12">
             <div class="form-group">
                 <label>Estado</label>
@@ -50,10 +50,10 @@
                 </select>
                 @error('availability') <span class="text-danger er">{{ $message }}</span>@enderror
             </div>
-        </div> 
-              
-    </div>
+        </div>
+
+    </div> --}}
 </div>
-   
+
 
 @include('common.modalFooter')

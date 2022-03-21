@@ -387,6 +387,7 @@ class PlanesController extends Component
                         'cliente_id' => $listaCL->id
                     ]);
                     $this->importe = 0;
+                    $this->condicional = 'cuentas';
                 }
             } elseif ($this->cuentaperfil == 'PERFIL') {
                 /* SI SE SELECCIONÓ PERFIL */
@@ -455,6 +456,7 @@ class PlanesController extends Component
                     ]);
 
                     $this->importe = 0;
+                    $this->condicional = 'perfiles';
                 }
             }
             DB::commit();

@@ -115,13 +115,11 @@ class CuentasController extends Component
                     $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                         ->join('profiles as p', 'ap.profile_id', 'p.id')
                         ->where('accounts.id', $c->id)
-                        ->where('ap.status', 'ACTIVO')
                         ->where('p.status', 'ACTIVO')->get();
                     $perfilesLibres = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                         ->join('profiles as p', 'ap.profile_id', 'p.id')
                         ->where('accounts.id', $c->id)
                         ->where('p.availability', 'LIBRE')
-                        ->where('ap.status', 'ACTIVO')
                         ->where('p.status', 'ACTIVO')->get();
                     $cantidadActivos = $perfilesActivos->count();
                     $c->perfActivos = $cantidadActivos;
@@ -206,9 +204,8 @@ class CuentasController extends Component
                     'profiles.availability as availability',
                     'profiles.observations as Observaciones'
                 )
-                ->where('ap.status', 'ACTIVO')
                 ->where('profiles.status', 'ACTIVO')
-                ->where('ap.account_id', $this->selected_id)
+                ->where('a.id', $this->selected_id)
                 ->get();
 
             $cuenta = Account::find($this->selected_id);
@@ -216,7 +213,6 @@ class CuentasController extends Component
             $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                 ->join('profiles as p', 'ap.profile_id', 'p.id')
                 ->where('accounts.id', $this->selected_id)
-                ->where('ap.status', 'ACTIVO')
                 ->where('p.status', 'ACTIVO')->get();
             /* SI LA CUENTA TIENE LA CANTIDAD DE PERFILES MAXIMO DE ESA CUENTA - NO MOSTRAR CAMPOS */
             if ($perfilesActivos->count() == $cuenta->number_profiles) {
@@ -378,7 +374,6 @@ class CuentasController extends Component
             'status' => $this->estado,
             'availability' => $this->availability,
             'observations' => $this->Observaciones,
-            'entity' => 'PERFIL'
         ]);
         AccountProfile::create([
             'status' => 'SinAsignar',
@@ -391,8 +386,8 @@ class CuentasController extends Component
 
         $this->nameP = '';
         $this->PIN = '';
-        $this->estado = 'Elegir';
-        $this->availability = 'Elegir';
+        $this->estado = 'ACTIVO';
+        $this->availability = 'LIBRE';
         $this->Observaciones = '';
 
         $this->emit('item-deleted', 'Perfil Registrado');
@@ -401,10 +396,11 @@ class CuentasController extends Component
     public function BorrarPerfil(Profile $perf)
     {   /* PONER EN INACTIVO AccountProfile */
         $CuentaPerf = $perf->CuentaPerfil;
-        $CuentaPerf->status = 'SinAsignar';
+        $CuentaPerf->status = 'INACTIVO';
         $CuentaPerf->save();
         /* PONER EN INACTIVO EL PERFIL */
         $perf->status = 'INACTIVO';
+        $perf->availability = 'VENCIDO';
         $perf->save();
         /* CONTAR LOS PERFILES ACTIVOS OCUPADOS */
         $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
@@ -482,8 +478,9 @@ class CuentasController extends Component
             )
             ->where('plans.id', $this->selected_plan)
             ->get()->first();
-        /* CALCULAR IMPORTE SEGUN LA PLATAFORMA DE LA CUENTA */
+
         $cuenta = Account::find($datos->cuentaid);
+        /* CALCULAR IMPORTE SEGUN LA PLATAFORMA DE LA CUENTA */
         $this->importe += $cuenta->Plataforma->precioEntera;
         $this->importe *= $this->meses;
         DB::beginTransaction();
@@ -549,21 +546,25 @@ class CuentasController extends Component
             ->join('accounts as acc', 'acc.id', 'pa.account_id')
             ->select(
                 'acc.id as cuentaid',
-                'pa.id as paid'
+                'pa.id as paid',
             )
             ->where('plans.id', $this->selected_plan)
             ->get()->first();
+        /* PONER EN VENCIDO EL PLAN */
+        $plan = Plan::find($this->selected_plan);
+        $plan->status = 'VENCIDO';
+        $plan->save();
         /* PONER LA CUENTA EN LIBRE */
         $cuenta = Account::find($datos->cuentaid);
         $cuenta->availability = 'LIBRE';
         $cuenta->save();
-        /* PONER EL PLANACCOUNT EN INACTIVO */
+        /* PONER EL PLANACCOUNT EN VENCIDO */
         $plancuenta = PlanAccount::find($datos->paid);
         $plancuenta->status = 'VENCIDO';
         $plancuenta->save();
 
         $this->resetUI();
-        $this->emit('cuenta-renovado-vencida', 'No se renovó este perfil y ahora esta inactivo');
+        $this->emit('cuenta-renovado-vencida', 'No se renovó esta cuenta y ahora esta libre');
     }
 
     public function resetUI()

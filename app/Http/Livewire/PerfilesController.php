@@ -50,34 +50,6 @@ class PerfilesController extends Component
     {
         if ($this->condicional == 'libres') {
             if (strlen($this->search) > 0) {
-                /* $prof = Profile::join('account_profiles as ap', 'ap.profile_id', 'profiles.id')
-                    ->join('accounts as a', 'ap.account_id', 'a.id')
-                    ->join('emails as e', 'e.id', 'a.email_id')
-                    ->join('platforms as p', 'p.id', 'a.platform_id')
-                    ->select(
-                        'profiles.*',
-                        'pl.expiration_plan as expiration',
-                        'a.expiration_account as expiration',
-                        'profiles.nameprofile as namep',
-                        'a.password_account as passAccount',
-                        'p.nombre',
-                        'p.image',
-                        'e.content',
-                        'e.pass',
-                        'a.expiration_account as exp',
-                    )
-                    ->where('profiles.availability', 'LIBRE')
-                    ->where('profiles.status', 'ACTIVO')
-                    ->where('a.expiration_account', 'like', '%' . $this->search . '%')
-                    ->orWhere('profiles.pin', 'like', '%' . $this->search . '%')
-                    ->orWhere('profiles.status', 'like', '%' . $this->search . '%')
-                    ->orWhere('profiles.availability', 'like', '%' . $this->search . '%')
-                    ->orWhere('profiles.observations', 'like', '%' . $this->search . '%')
-                    ->orWhere('p.nombre', 'like', '%' . $this->search . '%')
-                    ->orWhere('e.content', 'like', '%' . $this->search . '%')
-                    ->orWhere('e.pass', 'like', '%' . $this->search . '%')
-                    ->orderBy('profiles.id', 'desc')
-                    ->paginate($this->pagination); */
             } else {
                 $prof = Profile::join('account_profiles as ap', 'ap.profile_id', 'profiles.id')
                     ->join('accounts as a', 'ap.account_id', 'a.id')
@@ -101,35 +73,6 @@ class PerfilesController extends Component
             }
         } elseif ($this->condicional == 'ocupados') {
             if (strlen($this->search) > 0) {
-                /* $prof = Profile::join('account_profiles as ap', 'ap.profile_id', 'profiles.id')
-                    ->join('accounts as a', 'ap.account_id', 'a.id')
-                    ->join('emails as e', 'e.id', 'a.email_id')
-                    ->join('platforms as p', 'p.id', 'a.platform_id')
-                    ->join('plan_accounts as pa', 'pa.account_id', 'a.id')
-                    ->join('plans as pl', 'pa.plan_id', 'pl.id')
-                    ->select(
-                        'profiles.*',
-                        'pl.expiration_plan as expiration_plan',
-                        'a.expiration_account as expiration',
-                        'profiles.nameprofile as namep',
-                        'a.password_account as passAccount',
-                        'p.nombre',
-                        'p.image',
-                        'e.content',
-                        'e.pass',
-                    )
-                    ->where('profiles.availability', 'OCUPADO')
-                    ->where('profiles.status', 'ACTIVO')
-                    ->where('a.expiration_account', 'like', '%' . $this->search . '%')
-                    ->orWhere('profiles.pin', 'like', '%' . $this->search . '%')
-                    ->orWhere('profiles.status', 'like', '%' . $this->search . '%')
-                    ->orWhere('profiles.availability', 'like', '%' . $this->search . '%')
-                    ->orWhere('profiles.observations', 'like', '%' . $this->search . '%')
-                    ->orWhere('p.nombre', 'like', '%' . $this->search . '%')
-                    ->orWhere('e.content', 'like', '%' . $this->search . '%')
-                    ->orWhere('e.pass', 'like', '%' . $this->search . '%')
-                    ->orderBy('pl.expiration_plan', 'desc')
-                    ->paginate($this->pagination); */
             } else {
                 $prof = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
                     ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
@@ -268,6 +211,7 @@ class PerfilesController extends Component
         $CuentaPerf->save();
         /* PONER EN INACTIVO EL PERFIL */
         $perf->status = 'INACTIVO';
+        $perf->availability = 'VENCIDO';
         $perf->save();
         $Cuenta = Account::find($perf->CuentaPerfil->Cuenta->id);
         /* CONTAR LOS PERFILES ACTIVOS */
@@ -352,7 +296,7 @@ class PerfilesController extends Component
         $perfil = Profile::find($datos->Profileid);
         /* CALCULAR EL IMPORTE SEGUN EL PRECIO DEL PERFIL Y LA CANTIDAD DE MESES A RENOVAR */
         $this->importe += $perfil->CuentaPerfil->Cuenta->Plataforma->precioPerfil;
-        $this->importe = $this->importe * $this->meses;
+        $this->importe *= $this->meses;
 
         DB::beginTransaction();
         try {
@@ -390,30 +334,17 @@ class PerfilesController extends Component
             $planviejo = Plan::find($datos->planid);
             $planviejo->status = 'VENCIDO';
             $planviejo->save();
-            /* PONER EN VENCIDO ACCOUNTPROFILE */
-            $cuentaPerfil = AccountProfile::find($datos->accountProfileid);
-            $cuentaPerfil->status = 'VENCIDO';
-            $cuentaPerfil->save();
-            /* PONER EN VENCIDO PLANACCOUNT */
+            /* PONER EN VENCIDO PLANACCOUNT ANTERIOR */
             $planCuenta = PlanAccount::find($datos->planAccountid);
             $planCuenta->status = 'VENCIDO';
             $planCuenta->save();
+            /* PONER EN VENCIDO ACCOUNTPROFILE ANTERIOR*/
+            $cuentaPerfil = AccountProfile::find($datos->accountProfileid);
+            $cuentaPerfil->status = 'VENCIDO';
+            $cuentaPerfil->save();
             /* PONER EN OCUPADO EL PERFIL */
             $perfil->availability = 'OCUPADO';
             $perfil->save();
-            /* CONTAR PERFILES OCUPADOS */
-            /* $perfilesOcupados = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
-                ->join('profiles as p', 'ap.profile_id', 'p.id')
-                ->where('accounts.id', $perfil->CuentaPerfil->Cuenta->id)
-                ->where('p.availability', 'OCUPADO')
-                ->where('p.status', 'ACTIVO')->get(); */
-
-            /* SI LA CUENTA TIENE TODOS SUS PERFILES OCUPADOS LA CUENTA PASA A OCUPADA */
-            /* if (($perfilesOcupados->count() / 2) == $perfil->CuentaPerfil->Cuenta->number_profiles) {
-                $cuenta = $perfil->CuentaPerfil->Cuenta;
-                $cuenta->availability = 'OCUPADO';
-                $cuenta->save();
-            } */
 
             CarteraMov::create([
                 'type' => 'INGRESO',
@@ -470,7 +401,7 @@ class PerfilesController extends Component
         $CuentaPerf->status = 'VENCIDO';
         $CuentaPerf->save();
         /* PONER EN INACTIVO EL PERFIL */
-        $perf->availability = 'LIBRE';
+        $perf->availability = 'VENCIDO';
         $perf->status = 'INACTIVO';
         $perf->save();
 
@@ -479,7 +410,6 @@ class PerfilesController extends Component
         $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
             ->join('profiles as p', 'ap.profile_id', 'p.id')
             ->where('accounts.id', $Cuenta->id)
-            ->where('ap.status', 'ACTIVO')
             ->where('p.status', 'ACTIVO')->get();
         /* SI LA CUENTA NO TIENE PERFILES ACTIVOS REGRESA A SER ENTERA */
         if ($perfilesActivos->count() == 0) {
@@ -492,7 +422,7 @@ class PerfilesController extends Component
     public function CambiarCuenta()
     {
         $this->mostrartabla2 = 1;
-        /* OBTENER EL ID DEL PERFIL Y LA CUENTA */
+        /* OBTENER LA PLATAFORMA DEL PERFIL */
         $datos = Plan::join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
             ->join('accounts as acc', 'acc.id', 'pa.account_id')
             ->join('platforms as p', 'p.id', 'acc.platform_id')
@@ -502,7 +432,7 @@ class PerfilesController extends Component
             ->where('plans.id', $this->selected_id)
             ->orderby('plans.id', 'desc')
             ->get()->first();
-
+        /* MOSTRAR UN PERFIL DE LA MISMA PLATAFORMA PARA HACER EL CAMBIO */
         $this->perfil = Profile::join('account_profiles as ap', 'ap.profile_id', 'profiles.id')
             ->join('accounts as a', 'ap.account_id', 'a.id')
             ->join('platforms as p', 'a.platform_id', 'p.id')
@@ -522,7 +452,6 @@ class PerfilesController extends Component
             ->orderBy('a.expiration_account', 'desc')
             ->where('p.id', $datos->platfid)
             ->get()->first();
-        /* dd($this->perfil); */
     }
     public function CambiarAccount(Profile $perf)
     {
@@ -548,10 +477,10 @@ class PerfilesController extends Component
             ->get()->first();
         DB::beginTransaction();
         try {
-            /* PONER EN INACTIVO EL PERFIL */
+            /* PONER EN VENCIDO EL PERFIL */
             $perfilViejo = Profile::find($datos->Profileid);
             $perfilViejo->status = 'INACTIVO';
-            $perfilViejo->availability = 'LIBRE';
+            $perfilViejo->availability = 'VENCIDO';
             $perfilViejo->save();
 
             /* PONER DATOS DEL ANTERIOR PERFIL AL NUEVO PERFIL */
@@ -569,7 +498,7 @@ class PerfilesController extends Component
                 'account_id' => $CuentaNueva->id,
             ]); */
             $planAccountVIEJO->update([
-                'status' => 'VENCIDO',
+                'status' => 'CAMBIADO',
             ]);
             PlanAccount::create([
                 'plan_id' => $datos->planid,
@@ -577,13 +506,15 @@ class PerfilesController extends Component
             ]);
 
             /* ACTUALIZAR EL ACCOUNT PROFILE PONIENDO NUEVA CUENTA Y NUEVO PERFIL */
-            $cuentaPerfil = AccountProfile::find($datos->accountProfileid);
+
             /* $cuentaPerfil->update([
                 'account_id' => $CuentaNueva->id,
                 'profile_id' => $perf->id,
             ]); */
-            $cuentaPerfil->update([
-                'status' => 'VENCIDO',
+
+            $cuentaPerfilViejo = AccountProfile::find($datos->accountProfileid);
+            $cuentaPerfilViejo->update([
+                'status' => 'CAMBIADO',
             ]);
             AccountProfile::create([
                 'status' => 'ACTIVO',
@@ -596,7 +527,6 @@ class PerfilesController extends Component
             $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                 ->join('profiles as p', 'ap.profile_id', 'p.id')
                 ->where('accounts.id', $datos->cuentaid)
-                ->where('ap.status', 'ACTIVO')
                 ->where('p.status', 'ACTIVO')->get();
 
             /* SI LA CUENTA NO TIENE PERFILES ACTIVOS REGRESA A SER ENTERA */
@@ -615,7 +545,7 @@ class PerfilesController extends Component
             }
             DB::commit();
             $this->resetUI();
-            $this->emit('item-accion', 'Se renovó este perfil');
+            $this->emit('item-accion', 'Se cambio de cuenta el perfil');
         } catch (Exception $e) {
             DB::rollback();
             $this->emit('item-error', 'ERROR' . $e->getMessage());
