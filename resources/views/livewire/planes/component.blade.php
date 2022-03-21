@@ -64,6 +64,7 @@
                                     <th class="table-th text-withe text-center">PLAN INICIO</th>
                                     <th class="table-th text-withe text-center">PLAN FIN</th>
                                     <th class="table-th text-withe text-center">ACCIONES</th>
+                                    <th class="table-th text-withe text-center">REALIZADO</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -98,8 +99,7 @@
                                             <h6 class="text-center">
                                                 {{ \Carbon\Carbon::parse($p->planfin)->format('d:m:Y') }} </h6>
                                         </td>
-                                        <td class="text-center"
-                                            style="{{ $p->ready == 'NO' ? 'background-color: #d97171 !important' : 'background-color: #09ed3d !important' }}">
+                                        <td class="text-center">                                            
                                             <a href="javascript:void(0)"
                                                 wire:click="VerObservaciones({{ $p->id }})"
                                                 class="btn btn-dark mtmobile" title="Observaciones">
@@ -111,6 +111,17 @@
                                                     <i class="fas fa-trash"></i>
                                                 </a>
                                             @endif                                            
+                                        </td>
+                                        <td class="text-center"
+                                            style="{{ $p->ready == 'NO' ? 'background-color: #d97171 !important' : 'background-color: #09ed3d !important' }}">
+                                            @if ($p->ready == 'NO')
+                                                <a href="javascript:void(0)" class="btn btn-dark"
+                                                    onclick="ConfirmHecho('{{ $p->id }}')">
+                                                    <i class="fa-regular fa-circle-exclamation"></i>
+                                                </a>
+                                            @else
+                                                <h6 class="text-center"><strong>Hecho</strong></h6>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach
@@ -134,6 +145,7 @@
                                     <th class="table-th text-withe text-center">PLAN INICIO</th>
                                     <th class="table-th text-withe text-center">PLAN FIN</th>
                                     <th class="table-th text-withe text-center">ACCIONES</th>
+                                    <th class="table-th text-withe text-center">REALIZADO</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -166,8 +178,7 @@
                                             <h6 class="text-center">
                                                 {{ \Carbon\Carbon::parse($p->planfin)->format('d:m:Y') }} </h6>
                                         </td>
-                                        <td class="text-center"
-                                            style="{{ $p->ready == 'NO' ? 'background-color: #d97171 !important' : 'background-color: #09ed3d !important' }}">
+                                        <td class="text-center">
                                             <a href="javascript:void(0)"
                                                 wire:click="VerObservaciones({{ $p->id }})"
                                                 class="btn btn-dark mtmobile" title="Observaciones">
@@ -178,8 +189,18 @@
                                                     class="btn btn-dark mtmobile" title="Anular">
                                                     <i class="fas fa-trash"></i>
                                                 </a>
+                                            @endif                                     
+                                        </td>
+                                        <td class="text-center"
+                                            style="{{ $p->ready == 'NO' ? 'background-color: #d97171 !important' : 'background-color: #09ed3d !important' }}">
+                                            @if ($p->ready == 'NO')
+                                                <a href="javascript:void(0)" class="btn btn-dark"
+                                                    onclick="ConfirmHecho('{{ $p->id }}')">
+                                                    <i class="fa-regular fa-circle-exclamation"></i>
+                                                </a>
+                                            @else
+                                                <h6 class="text-center"><strong>Hecho</strong></h6>
                                             @endif
-                                            
                                         </td>
                                     </tr>
                                 @endforeach
@@ -289,6 +310,26 @@
         })
 
     });
+
+    function ConfirmHecho(id) {
+        swal.fire({
+            title: 'CONFIRMAR',
+            icon: 'warning',
+            text: '¿Ya realizó las acciones correspondientes y desea ponerlo en realizado?',
+            showCancelButton: true,
+            cancelButtonText: 'Cerrar',
+            cancelButtonColor: '#383838',
+            confirmButtonColor: '#3B3F5C',
+            confirmButtonText: 'Aceptar'
+        }).then(function(result) {
+            if (result.value) {
+                window.livewire.emit('Realizado', id)
+                swal.fire(
+                    'Se cambió a realizado'
+                )
+            }
+        })
+    }
 
     function Confirm(id) {
         swal.fire({

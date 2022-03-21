@@ -176,8 +176,14 @@
                                         @endif
                                         <td
                                             style="{{ $p->done == 'NO' ? 'background-color: #d97171 !important' : 'background-color: #09ed3d !important' }}">
-                                            <a href="javascript:void(0)" class="btn btn-dark"
-                                                onclick="ConfirmHecho('{{ $p->planid }}')">Realizado</a>
+                                            @if ($p->done == 'NO')
+                                                <a href="javascript:void(0)" class="btn btn-dark"
+                                                    onclick="ConfirmHecho('{{ $p->planid }}')">
+                                                    <i class="fa-regular fa-circle-exclamation"></i>
+                                                </a>
+                                            @else
+                                                <h6 class="text-center"><strong>Hecho</strong></h6>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach

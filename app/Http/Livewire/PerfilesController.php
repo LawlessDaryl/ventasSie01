@@ -107,6 +107,7 @@ class PerfilesController extends Component
                         'plans.done as done'
                     )
                     ->where('acc.whole_account', 'DIVIDIDA')
+                    ->where('plans.type_plan', 'PERFIL')
                     ->where('prof.availability', 'OCUPADO')
                     ->where('prof.status', 'ACTIVO')
                     ->where('plans.status', 'VIGENTE')
@@ -114,7 +115,7 @@ class PerfilesController extends Component
                     ->where('pa.status', 'ACTIVO')
                     ->where('ap.status', 'ACTIVO')
                     ->where('plans.ready', 'SI')
-                    ->orderBy('plans.expiration_plan', 'desc')
+                    ->orderBy('plans.expiration_plan', 'asc')
                     ->paginate($this->pagination);
             }
         } else {
@@ -145,10 +146,11 @@ class PerfilesController extends Component
                     'plans.done as done'
                 )
                 ->where('plans.status', 'VENCIDO')
+                ->where('plans.type_plan', 'PERFIL')
                 ->where('plans.ready', 'SI')
                 ->whereColumn('plans.id', '=', 'ap.plan_id')
                 ->where('ap.status', 'VENCIDO')
-                ->orderBy('plans.expiration_plan', 'desc')
+                ->orderBy('plans.expiration_plan', 'asc')
                 ->paginate($this->pagination);
         }
         /* CALCULAR LA FECHA DE EXPIRACION NUEVA SEGUN LA CANTIDAD DE MESES A RENOVAR */
@@ -346,6 +348,7 @@ class PerfilesController extends Component
                 'expiration_plan' => $this->expirationNueva,
                 'ready' => 'SI',
                 'done' => 'NO',
+                'type_plan' => 'PERFIL',
                 'status' => 'VIGENTE',
                 'type_pay' => $this->tipopago,
                 'observations' => $this->observations,
@@ -463,6 +466,7 @@ class PerfilesController extends Component
             ->join('platforms as p', 'p.id', 'acc.platform_id')
             ->select(
                 'p.id as platfid',
+                'acc.id as cuentaid'
             )
             ->where('plans.id', $this->selected_plan)
             ->orderby('plans.id', 'desc')
@@ -486,6 +490,7 @@ class PerfilesController extends Component
             ->where('a.status', 'ACTIVO')
             ->orderBy('a.expiration_account', 'desc')
             ->where('p.id', $datos->platfid)
+            ->where('a.id', '!=', $datos->cuentaid)
             ->get()->first();
     }
 

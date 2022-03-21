@@ -365,6 +365,7 @@ class PlanesController extends Component
                         'expiration_plan' => $this->expiration_plan,
                         'ready' => 'NO',
                         'status' => 'VIGENTE',
+                        'type_plan' => 'CUENTA',
                         'type_pay' => $this->tipopago,
                         'observations' => $this->observaciones,
                         'movimiento_id' => $mv->id,
@@ -414,6 +415,7 @@ class PlanesController extends Component
                         'expiration_plan' => $this->expiration_plan,
                         'ready' => 'NO',
                         'status' => 'VIGENTE',
+                        'type_plan' => 'PERFIL',
                         'type_pay' => $this->tipopago,
                         'observations' => $this->observaciones,
                         'movimiento_id' => $mv->id
@@ -468,7 +470,6 @@ class PlanesController extends Component
         }
     }
 
-    protected $listeners = ['deleteRow' => 'Anular'];
     /* Anular una transacción */
     public function Anular(Plan $plan)
     {
@@ -597,6 +598,16 @@ class PlanesController extends Component
         $this->nombrePerfil = '';
         $this->pinPerfil = '';
         $this->emit('perf-actualizado', 'Se actulizó el perfil');
+    }
+
+    protected $listeners = ['deleteRow' => 'Anular', 'Realizado' => 'Realizado'];
+
+    public function Realizado(Plan $plan)
+    {
+        $plan->ready = 'SI';
+        $plan->save();
+        $this->resetUI();
+        $this->emit('perf-actualizado', 'Se cambió a realizado');
     }
 
     public function resetUI()

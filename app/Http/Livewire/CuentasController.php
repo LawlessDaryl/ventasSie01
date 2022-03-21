@@ -161,6 +161,7 @@ class CuentasController extends Component
                     'c.celular as clienteCelular',
                 )
                 ->where('pa.status', 'ACTIVO')
+                ->where('pl.type_plan', 'CUENTA')
                 ->where('accounts.availability', 'OCUPADO')
                 ->where('accounts.status', 'ACTIVO')
                 ->where('pl.ready', 'SI')
@@ -195,6 +196,7 @@ class CuentasController extends Component
                     'c.celular as clienteCelular',
                 )
                 ->where('pl.status', 'VENCIDO')
+                ->where('pl.type_plan', 'CUENTA')
                 ->where('pa.status', 'VENCIDO')
                 ->where('pl.ready', 'SI')
                 ->orderBy('accounts.id', 'desc')
@@ -521,6 +523,7 @@ class CuentasController extends Component
                 'expiration_plan' => $this->expirationNueva,
                 'ready' => 'SI',
                 'done' => 'NO',
+                'type_plan' => 'CUENTA',
                 'status' => 'VIGENTE',
                 'type_pay' => $this->tipopago,
                 'observations' => $this->observations,
@@ -593,7 +596,7 @@ class CuentasController extends Component
     }
 
     protected $listeners = ['deleteRow' => 'Destroy', 'borrarPerfil' => 'BorrarPerfil', 'Renovar' => 'Renovar', 'Vencer' => 'Vencer', 'Realizado' => 'Realizado'];
-
+    
     public function Realizado(Plan $plan)
     {
         $plan->done = 'SI';
