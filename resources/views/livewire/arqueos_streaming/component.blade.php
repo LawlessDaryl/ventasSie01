@@ -2,7 +2,7 @@
     <div class="col-sm-12">
         <div class="widget widget-chart-one">
             <div class="widget-heading">
-                <h4 class="card-title text-center"><b>Arqueos Tigo Money</b></h4>
+                <h4 class="card-title text-center"><b>Arqueos Streaming</b></h4>
             </div>
 
             <div class="widget-content">

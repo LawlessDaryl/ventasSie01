@@ -10,7 +10,6 @@ use App\Models\CarteraMov;
 use App\Models\Cliente;
 use App\Models\ClienteMov;
 use App\Models\Movimiento;
-use App\Models\MovPlan;
 use App\Models\Plan;
 use App\Models\PlanAccount;
 use App\Models\Platform;
@@ -29,7 +28,7 @@ class PlanesController extends Component
         $pageTitle, $componentName, $selected_id, $hora, $search, $condicion, $type, $cartera_id,
         $nombre, $cedula, $celular, $direccion, $email, $fecha_nacim, $razon, $nit, $plataforma,
         $cuentaperfil, $accounts, $profiles, $cantidaperf, $mostrartabla, $tipopago, $condicional,
-        $meses, $observaciones;
+        $meses, $observaciones, $ready, $selected_perf, $totalCobrar;
 
     private $pagination = 10;
     public function paginationView()
@@ -59,6 +58,8 @@ class PlanesController extends Component
         $this->condicional = 'perfiles';
         $this->meses = 1;
         $this->observaciones = '';
+        $this->ready = 'NINGUNA';
+        $this->totalCobrar = 0;
     }
 
     public function render()
@@ -78,115 +79,6 @@ class PlanesController extends Component
             ->where('mov.type', 'APERTURA')
             ->select('cajas.id as id')
             ->get()->first();
-        if ($this->condicional == 'perfiles') {
-            if (strlen($this->search) > 0) {
-                /*  */
-            } else {
-                $data = Plan::join('mov_plans as mp', 'plans.id', 'mp.plan_id')
-                    ->join('movimientos as m', 'm.id', 'mp.movimiento_id')
-                    ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
-                    ->join('accounts as acc', 'acc.id', 'pa.account_id')
-                    ->join('account_profiles as ap', 'acc.id', 'ap.account_id')
-                    ->join('profiles as prof', 'prof.id', 'ap.profile_id')
-                    ->join('emails as e', 'e.id', 'acc.email_id')
-                    ->join('platforms as plat', 'plat.id', 'acc.platform_id')
-                    ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
-                    ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
-                    ->join('cartera_movs as cmvs', 'm.id', 'cmvs.movimiento_id')
-                    ->join('carteras as cart', 'cart.id', 'cmvs.cartera_id')
-                    ->join('cajas as ca', 'ca.id', 'cart.caja_id')
-                    ->select(
-                        'plat.nombre as plataforma',
-                        'acc.expiration_account as accexp',
-                        'c.nombre as cliente',
-                        'c.celular as celular',
-                        'e.content as correo',
-                        'acc.password_account as password_account',
-                        'prof.nameprofile as nameprofile',
-                        'prof.pin as pin',
-                        'plans.id as id',
-                        'plans.created_at as planinicio',
-                        'plans.expiration_plan as planfin',
-                        'plans.observations as obs',
-                        'plans.importe as importe',
-                        'plans.status as estado'
-                    )
-                    ->whereBetween('plans.created_at', [$from, $to])
-                    ->where('m.user_id', $user_id)
-                    ->where('acc.whole_account', 'DIVIDIDA')
-                    ->where('prof.availability', 'OCUPADO')
-                    ->where('prof.status', 'ACTIVO')
-                    ->whereColumn('pa.id', '=', 'ap.plan_account_id')
-                    ->where('ca.id', $cajausuario->id)
-                    ->orderBy('plans.created_at', 'desc')
-                    ->get();
-            }
-        } else {
-            if (strlen($this->search) > 0) {
-                /*  */
-            } else {
-                $data = Plan::join('mov_plans as mp', 'plans.id', 'mp.plan_id')
-                    ->join('movimientos as m', 'm.id', 'mp.movimiento_id')
-                    ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
-                    ->join('accounts as acc', 'acc.id', 'pa.account_id')
-                    ->join('emails as e', 'e.id', 'acc.email_id')
-                    ->join('platforms as plat', 'plat.id', 'acc.platform_id')
-                    ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
-                    ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
-                    ->join('cartera_movs as cmvs', 'm.id', 'cmvs.movimiento_id')
-                    ->join('carteras as cart', 'cart.id', 'cmvs.cartera_id')
-                    ->join('cajas as ca', 'ca.id', 'cart.caja_id')
-                    ->select(
-                        'plat.nombre as plataforma',
-                        'acc.expiration_account as accexp',
-                        'c.nombre as cliente',
-                        'c.celular as celular',
-                        'e.content as correo',
-                        'plans.importe as importe',
-                        'acc.password_account as password_account',
-                        'acc.status as accstatus',
-                        'plans.id as id',
-                        'plans.created_at as planinicio',
-                        'plans.expiration_plan as planfin',
-                        'plans.observations as obs',
-                        'plans.status as estado'
-                    )
-                    ->whereBetween('plans.created_at', [$from, $to])
-                    ->where('m.user_id', $user_id)
-                    ->where('acc.whole_account', 'ENTERA')
-                    ->where('acc.availability', 'OCUPADO')
-                    ->where('ca.id', $cajausuario->id)
-                    ->orderBy('plans.created_at', 'desc')
-                    ->get();
-            }
-        }
-
-        if ($this->meses > 0) {
-            $date_now = date("Y-m-d");
-            $dias = $this->meses * 30;
-            $this->expiration_plan = strtotime('+' . $dias . ' day', strtotime($date_now));
-            $this->expiration_plan = date('Y-m-d', $this->expiration_plan);
-        } else {
-            $this->meses = 1;
-        }
-
-        $datos = [];
-        if (strlen($this->cedula) > 0) {
-            $datos = Cliente::where('nombre', 'like', '%' . $this->nombre . '%')
-                ->orWhere('celular', 'like', '%' . $this->celular . '%')
-                ->orderBy('id', 'desc')->get();
-            if ($datos->count() > 0) {
-                $this->condicion = 1;
-            } else {
-                $this->condicion = 0;
-            }
-            if ($this->select == 0) {
-                $this->condicion = 0;
-            }
-        } else {
-            if ($this->select == 0)
-                $this->select = 1;
-        }
 
         /* MOSTRAR CARTERAS DE LA CAJA EN LA QUE SE ENCUENTRA */
         $carterasCaja = Cartera::where('caja_id', $cajausuario->id)
@@ -207,23 +99,135 @@ class PlanesController extends Component
             /* REALIZAR CALCULO DE INGRESOS - EGRESOS */
             $c->monto = $INGRESOS - $EGRESOS;
         }
+        if ($this->condicional == 'perfiles') {
+            if (strlen($this->search) > 0) {
+                /*  */
+            } else {
+                $data = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
+                    ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
+                    ->join('accounts as acc', 'acc.id', 'pa.account_id')
+                    ->join('account_profiles as ap', 'acc.id', 'ap.account_id')
+                    ->join('profiles as prof', 'prof.id', 'ap.profile_id')
+                    ->join('emails as e', 'e.id', 'acc.email_id')
+                    ->join('platforms as plat', 'plat.id', 'acc.platform_id')
+                    ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
+                    ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
+                    ->join('cartera_movs as cmvs', 'm.id', 'cmvs.movimiento_id')
+                    ->join('carteras as cart', 'cart.id', 'cmvs.cartera_id')
+                    ->join('cajas as ca', 'ca.id', 'cart.caja_id')
+                    ->select(
+                        'plat.nombre as plataforma',
+                        'acc.expiration_account as accexp',
+                        'c.nombre as cliente',
+                        'c.celular as celular',
+                        'e.content as correo',
+                        'e.pass as passCorreo',
+                        'acc.password_account as password_account',
+                        'prof.nameprofile as nameprofile',
+                        'prof.pin as pin',
+                        'plans.id as id',
+                        'plans.created_at as planinicio',
+                        'plans.expiration_plan as planfin',
+                        'plans.observations as obs',
+                        'plans.importe as importe',
+                        'plans.status as estado',
+                        'plans.ready as ready',
+                    )
+                    ->whereBetween('plans.created_at', [$from, $to])
+                    ->where('m.user_id', $user_id)
+                    ->where('acc.whole_account', 'DIVIDIDA')
+                    ->where('prof.availability', 'OCUPADO')
+                    ->where('prof.status', 'ACTIVO')
+                    ->whereColumn('plans.id', '=', 'ap.plan_id')
+                    ->where('ca.id', $cajausuario->id)
+                    ->orderBy('plans.created_at', 'desc')
+                    ->get();
+            }
+        } else {
+            if (strlen($this->search) > 0) {
+                /*  */
+            } else {
+                $data = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
+                    ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
+                    ->join('accounts as acc', 'acc.id', 'pa.account_id')
+                    ->join('emails as e', 'e.id', 'acc.email_id')
+                    ->join('platforms as plat', 'plat.id', 'acc.platform_id')
+                    ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
+                    ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
+                    ->join('cartera_movs as cmvs', 'm.id', 'cmvs.movimiento_id')
+                    ->join('carteras as cart', 'cart.id', 'cmvs.cartera_id')
+                    ->join('cajas as ca', 'ca.id', 'cart.caja_id')
+                    ->select(
+                        'plat.nombre as plataforma',
+                        'acc.expiration_account as accexp',
+                        'c.nombre as cliente',
+                        'c.celular as celular',
+                        'e.content as correo',
+                        'e.pass as passCorreo',
+                        'plans.importe as importe',
+                        'acc.password_account as password_account',
+                        'acc.status as accstatus',
+                        'plans.id as id',
+                        'plans.created_at as planinicio',
+                        'plans.expiration_plan as planfin',
+                        'plans.observations as obs',
+                        'plans.status as estado',
+                        'plans.ready as ready',
+                    )
+                    ->whereBetween('plans.created_at', [$from, $to])
+                    ->where('m.user_id', $user_id)
+                    ->where('acc.whole_account', 'ENTERA')
+                    ->where('acc.availability', 'OCUPADO')
+                    ->where('ca.id', $cajausuario->id)
+                    ->orderBy('plans.created_at', 'desc')
+                    ->get();
+            }
+        }
+        /* CALCULAR LA FECHA DE EXPIRACION SEGUN LA CANTIDAD DE MESES */
+        if ($this->meses > 0) {
+            $date_now = date('Y-m-d h:i:s', time());
+            $dias = $this->meses * 30;
+            $this->expiration_plan = strtotime('+' . $dias . ' day', strtotime($date_now));
+            $this->expiration_plan = date('Y-m-d', $this->expiration_plan);
+        } else {
+            $this->meses = 1;
+        }
+
+        $datos = [];
+        /* if (strlen($this->cedula) > 0) {
+            $datos = Cliente::where('nombre', 'like', '%' . $this->nombre . '%')
+                ->orWhere('celular', 'like', '%' . $this->celular . '%')
+                ->orderBy('id', 'desc')->get();
+            if ($datos->count() > 0) {
+                $this->condicion = 1;
+            } else {
+                $this->condicion = 0;
+            }
+            if ($this->select == 0) {
+                $this->condicion = 0;
+            }
+        } else {
+            if ($this->select == 0)
+                $this->select = 1;
+        } */
 
         if ($this->plataforma != 'Elegir') {
-            if ($this->cuentaperfil == 'ENTERA') {
+            if ($this->cuentaperfil == 'ENTERA') {  /* MOSTRAR TODAS LAS CUENTAS ENTERAS LIBRES */
                 $this->mostrartabla = 0;
-
                 $this->accounts = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                     ->join('emails as e', 'accounts.email_id', 'e.id')
-                    ->select('accounts.*')
+                    ->select(
+                        'accounts.*',
+                        'p.precioEntera'
+                    )
                     ->where('accounts.whole_account', 'ENTERA')
                     ->where('accounts.availability', 'LIBRE')
                     ->where('accounts.status', 'ACTIVO')
                     ->where('p.id', $this->plataforma)
                     ->orderBy('accounts.expiration_account', 'desc')
                     ->get()->take($this->cantidaperf);
-
                 $this->mostrartabla = 1;
-            } elseif ($this->cuentaperfil == 'PERFIL') {
+            } elseif ($this->cuentaperfil == 'PERFIL') {  /* MOSTRAR LOS PERFILES LIBRES */
                 $this->mostrartabla = 0;
                 $this->profiles = Profile::join('account_profiles as ap', 'ap.profile_id', 'profiles.id')
                     ->join('accounts as a', 'ap.account_id', 'a.id')
@@ -231,18 +235,19 @@ class PlanesController extends Component
                     ->join('emails as e', 'a.email_id', 'e.id')
                     ->select(
                         'profiles.id as id',
+                        'p.precioPerfil as precioPerfil',
                         'a.id as cuentaid',
                         'e.content as email',
-                        'e.pass as contraseña',
                         'profiles.nameprofile as nombre_perfil',
                         'profiles.pin as pin',
-                        'a.password_account as password_account',
+                        'a.password_account as password_account'
                     )
                     ->where('profiles.availability', 'LIBRE')
                     ->where('profiles.status', 'ACTIVO')
-                    ->where('a.availability', 'LIBRE')
+                    ->where('a.status', 'ACTIVO')
                     ->orderBy('a.expiration_account', 'desc')
-                    ->where('p.id', $this->plataforma)->get()->take($this->cantidaperf);
+                    ->where('p.id', $this->plataforma)
+                    ->get()->take($this->cantidaperf);
                 $this->mostrartabla = 2;
             } else {
                 $this->accounts = [];
@@ -336,31 +341,39 @@ class PlanesController extends Component
                 'procedencia_cliente_id' => 1,
             ]);
             if ($this->cuentaperfil == 'ENTERA') {
-
+                /* SI SE SELECCIONÓ CUENTA ENTERA */
                 foreach ($this->accounts as $accp) {
-
+                    /* CALCULAR EL IMPORTE SEGUN LA PLATAFORMA Y SI ES ENTERA O PERFIL */
                     $this->importe += $accp->Plataforma->precioEntera;
-                    $plan = Plan::create([
-                        'importe' => $this->importe,
-                        'expiration_plan' => $this->expiration_plan,
-                        'status' => 'VIGENTE',
-                        'type_pay' => $this->tipopago,
-                        'observations' => $this->observaciones
-                    ]);
-
-                    PlanAccount::create([
-                        'plan_id' => $plan->id,
-                        'account_id' => $accp->id
-                    ]);
-
-                    $accp->availability = 'OCUPADO';
-                    $accp->save();
-
+                    $this->importe *= $this->meses;
+                    /* CREAR EL MOVIMIENTO */
                     $mv = Movimiento::create([
                         'type' => 'TERMINADO',
                         'status' => 'ACTIVO',
                         'import' => $this->importe,
                         'user_id' => Auth()->user()->id,
+                    ]);
+                    /* PONER LA CUENTA EN OCUPADO */
+                    $accp->availability = 'OCUPADO';
+                    $accp->save();
+                    /* OBTENER FECHA ACTUAL */
+                    $DateAndTime = date('Y-m-d h:i:s', time());
+                    /* CREAR EL PLAN */
+                    $plan = Plan::create([
+                        'importe' => $this->importe,
+                        'plan_start' => $DateAndTime,
+                        'expiration_plan' => $this->expiration_plan,
+                        'ready' => 'NO',
+                        'status' => 'VIGENTE',
+                        'type_plan' => 'CUENTA',
+                        'type_pay' => $this->tipopago,
+                        'observations' => $this->observaciones,
+                        'movimiento_id' => $mv->id,
+                    ]);
+                    PlanAccount::create([
+                        'status' => 'ACTIVO',
+                        'plan_id' => $plan->id,
+                        'account_id' => $accp->id
                     ]);
 
                     CarteraMov::create([
@@ -374,79 +387,79 @@ class PlanesController extends Component
                         'movimiento_id' => $mv->id,
                         'cliente_id' => $listaCL->id
                     ]);
-
-                    MovPlan::create([
-                        'movimiento_id' => $mv->id,
-                        'plan_id' => $plan->id
-                    ]);
                     $this->importe = 0;
+                    $this->condicional = 'cuentas';
                 }
             } elseif ($this->cuentaperfil == 'PERFIL') {
-
-                $plan = Plan::create([
-                    'importe' => $this->importe,
-                    'expiration_plan' => $this->expiration_plan,
-                    'status' => 'VIGENTE',
-                    'type_pay' => $this->tipopago,
-                    'observations' => $this->observaciones
-                ]);
-
+                /* SI SE SELECCIONÓ PERFIL */
                 foreach ($this->profiles as $accp) {
-
+                    /* CALCULAR EL IMPORTE SEGUN LA PLATAFORMA Y SI ES ENTERA O PERFIL */
                     $this->importe += $accp->CuentaPerfil->Cuenta->Plataforma->precioPerfil;
+                    $this->importe *= $this->meses;
+                    /* CREAR EL MOVIMIENTO */
+                    $mv = Movimiento::create([
+                        'type' => 'TERMINADO',
+                        'status' => 'ACTIVO',
+                        'import' => $this->importe,
+                        'user_id' => Auth()->user()->id,
+                    ]);
+                    /* PONER EL PERFIL EN OCUPADO */
+                    $accp->availability = 'OCUPADO';
+                    $accp->save();
+                    /* OBTENER FECHA ACTUAL */
+                    $DateAndTime = date('Y-m-d h:i:s', time());
+                    /* CREAR EL PLAN */
+                    $plan = Plan::create([
+                        'importe' => $this->importe,
+                        'plan_start' => $DateAndTime,
+                        'expiration_plan' => $this->expiration_plan,
+                        'ready' => 'NO',
+                        'status' => 'VIGENTE',
+                        'type_plan' => 'PERFIL',
+                        'type_pay' => $this->tipopago,
+                        'observations' => $this->observaciones,
+                        'movimiento_id' => $mv->id
+                    ]);
 
-                    $pa = PlanAccount::create([
+                    PlanAccount::create([
+                        'status' => 'ACTIVO',
                         'plan_id' => $plan->id,
                         'account_id' => $accp->CuentaPerfil->account_id,
                     ]);
 
-                    $accp->availability = 'OCUPADO';
-                    $accp->save();
-
+                    /* MODIFICAR REGISTRO ACCONNTPROFILE Y DARLE EL ID DEL PLAN*/
                     $cuentaPerfil = $accp->CuentaPerfil;
-                    $cuentaPerfil->plan_account_id = $pa->id;
+                    $cuentaPerfil->plan_id = $plan->id;
+                    $cuentaPerfil->status = 'ACTIVO';
                     $cuentaPerfil->save();
-
-                    $perfilesOcupados = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
+                    /* CONTAR PERFILES OCUPADOS */
+                    /* $perfilesOcupados = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                         ->join('profiles as p', 'ap.profile_id', 'p.id')
                         ->where('accounts.id', $accp->CuentaPerfil->Cuenta->id)
                         ->where('p.availability', 'OCUPADO')
-                        ->where('p.status', 'ACTIVO')->get();
-
-                    if (($perfilesOcupados->count() / 2) == $accp->CuentaPerfil->Cuenta->number_profiles) {
-
+                        ->where('p.status', 'ACTIVO')->get(); */
+                    /* SI LA CUENTA TIENE TODOS LOS PERFILES DISPONIBLES OCUPADOS LA CUENTA PASA A ESTAR OCUPADA */
+                    /* if (($perfilesOcupados->count() / 2) == $accp->CuentaPerfil->Cuenta->number_profiles) {
                         $cuenta = $accp->CuentaPerfil->Cuenta;
                         $cuenta->availability = 'OCUPADO';
                         $cuenta->save();
-                    }
+                    } */
+
+                    CarteraMov::create([
+                        'type' => 'INGRESO',
+                        'comentario' => '',
+                        'cartera_id' => $cartera->id,
+                        'movimiento_id' => $mv->id
+                    ]);
+
+                    ClienteMov::create([
+                        'movimiento_id' => $mv->id,
+                        'cliente_id' => $listaCL->id
+                    ]);
+
+                    $this->importe = 0;
+                    $this->condicional = 'perfiles';
                 }
-
-                $plan->importe = $this->importe;
-                $plan->save();
-
-                $mv = Movimiento::create([
-                    'type' => 'TERMINADO',
-                    'status' => 'ACTIVO',
-                    'import' => $this->importe,
-                    'user_id' => Auth()->user()->id,
-                ]);
-
-                CarteraMov::create([
-                    'type' => 'INGRESO',
-                    'comentario' => '',
-                    'cartera_id' => $cartera->id,
-                    'movimiento_id' => $mv->id
-                ]);
-
-                ClienteMov::create([
-                    'movimiento_id' => $mv->id,
-                    'cliente_id' => $listaCL->id
-                ]);
-
-                MovPlan::create([
-                    'movimiento_id' => $mv->id,
-                    'plan_id' => $plan->id
-                ]);
             }
             DB::commit();
             $this->resetUI();
@@ -457,66 +470,91 @@ class PlanesController extends Component
         }
     }
 
-    protected $listeners = ['deleteRow' => 'Anular'];
     /* Anular una transacción */
     public function Anular(Plan $plan)
     {
-        $anular = Plan::join('mov_plans as mp', 'mp.plan_id', 'plans.id')
-            ->join('movimientos as m', 'mp.movimiento_id', 'm.id')
-            ->join('plan_accounts as pa', 'pa.plan_id', 'plans.id')
-            ->join('accounts as a', 'pa.account_id', 'a.id')
-            ->join('account_profiles as ap', 'ap.account_id', 'a.id')
-            ->join('profiles as p', 'ap.profile_id', 'p.id')
-            ->select('m.*', 'pa.id as paid', 'a.id as cuentaid', 'p.id as perfilid', 'ap.id as apid')
-            ->whereColumn('pa.id', '=', 'ap.plan_account_id')
-            ->where('plans.id', $plan->id)
-            ->get()->first();
-        $movimiento = Movimiento::find($anular->id);
-        $movimiento->status = 'INACTIVO';
-        $movimiento->save();
+        /* SABER SI ES UN PERFIL O UNA CUENTA */
+        $cuentaPerf = AccountProfile::where('plan_id', $plan->id)->get();
 
-        $planCuenta = PlanAccount::find($anular->paid);
-        $planCuenta->status = 'INACTIVO';
-        $planCuenta->save();
+        DB::beginTransaction();
+        try {
+            if ($cuentaPerf->count() > 0) {  /* CUANDO ES UN PERFIL */
+                /* OBTENER IDS */
+                $anular = Plan::join('movimientos as m', 'plans.movimiento_id', 'm.id')
+                    ->join('plan_accounts as pa', 'pa.plan_id', 'plans.id')
+                    ->join('accounts as a', 'pa.account_id', 'a.id')
+                    ->join('account_profiles as ap', 'ap.account_id', 'a.id')
+                    ->join('profiles as p', 'ap.profile_id', 'p.id')
+                    ->select('m.*', 'pa.id as paid', 'a.id as cuentaid', 'p.id as perfilid', 'ap.id as apid')
+                    ->whereColumn('plans.id', '=', 'ap.plan_id')
+                    ->where('plans.id', $plan->id)
+                    ->get()->first();
+                /* PONER EN INACTIVO EL MOVIMIENTO */
+                $movimiento = Movimiento::find($anular->id);
+                $movimiento->status = 'INACTIVO';
+                $movimiento->save();
+                /* ANULAR PLAN */
+                $plan->status = 'ANULADO';
+                $plan->save();
+                /* PONER EN INACTIVO PLANACCOUNT */
+                $planCuenta = PlanAccount::find($anular->paid);
+                $planCuenta->status = 'ANULADO';
+                $planCuenta->save();
 
-        $cuenta = Account::find($anular->cuentaid);
-        $cuenta->availability = 'LIBRE';
-        $cuenta->save();
+                $cuenta = Account::find($anular->cuentaid);
+                /* PONER EN NULL PLAN_ID DE ACCOUNTPROFILE */
+                $CuentaPerf = AccountProfile::find($anular->apid);
+                $CuentaPerf->plan_id = null;
+                $CuentaPerf->save();
+                /* PONER EN LIBRE EL PERFIL Y PONER NUEVA CONTRASEÑA */
+                $perf = Profile::find($anular->perfilid);
+                $perf->availability = 'LIBRE';
+                $perf->pin = $perf->pin . rand(100, 999);
+                $perf->save();
 
-        $plan->status = 'ANULADO';
-        $plan->save();
-
-        $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
-            ->join('profiles as p', 'ap.profile_id', 'p.id')
-            ->where('accounts.id', $anular->cuentaid)
-            ->where('p.availability', 'LIBRE')
-            ->where('ap.status', 'ACTIVO')
-            ->where('p.status', 'ACTIVO')->get();
-        /* PONER EN INACTIVO AccountProfile */
-        if ($perfilesActivos->count() > 0) {
-            $CuentaPerf = AccountProfile::find($anular->apid);
-            $CuentaPerf->status = 'INACTIVO';
-            $CuentaPerf->save();
-            /* PONER EN INACTIVO EL PERFIL */
-            $perf = Profile::find($anular->perfilid);
-            $perf->availability = 'LIBRE';
-            $perf->status = 'INACTIVO';
-            $perf->save();
-            /* CONTAR LOS PERFILES ACTIVOS */
-            $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
-                ->join('profiles as p', 'ap.profile_id', 'p.id')
-                ->where('accounts.id', $cuenta->id)
-                ->where('p.availability', 'LIBRE')
-                ->where('ap.status', 'ACTIVO')
-                ->where('p.status', 'ACTIVO')->get();
-            /* SI LA CUENTA NO TIENE PERFILES REGRESA A SER ENTERA */
-            if ($perfilesActivos->count() == 0) {
-                $cuenta->whole_account = 'ENTERA';
+                /* CONTAR LOS PERFILES ACTIVOS DE ESA CUENTA */
+                /* $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
+                    ->join('profiles as p', 'ap.profile_id', 'p.id')
+                    ->where('accounts.id', $anular->cuentaid)
+                    ->where('ap.status', 'ACTIVO')
+                    ->where('p.status', 'ACTIVO')->get(); */
+                /* SI LA CUENTA NO TIENE PERFILES REGRESA A SER ENTERA */
+                /* if ($perfilesActivos->count() == 0) {
+                    $cuenta->whole_account = 'ENTERA';
+                    $cuenta->save();
+                } */
+            } else {  /* CUANDO ES UNA CUENTA */
+                /* OBTENER IDS */
+                $anular = Plan::join('movimientos as m', 'plans.movimiento_id', 'm.id')
+                    ->join('plan_accounts as pa', 'pa.plan_id', 'plans.id')
+                    ->join('accounts as a', 'pa.account_id', 'a.id')
+                    ->select('m.*', 'pa.id as paid', 'a.id as cuentaid')
+                    ->where('plans.id', $plan->id)
+                    ->get()->first();
+                /* PONER EN INACTIVO EL MOVIMIENTO */
+                $movimiento = Movimiento::find($anular->id);
+                $movimiento->status = 'INACTIVO';
+                $movimiento->save();
+                /* PONER EN ANULADO EL PLAN */
+                $plan->status = 'ANULADO';
+                $plan->save();
+                /* PONER EN INACTIVO EL PLANACCOUNT */
+                $planCuenta = PlanAccount::find($anular->paid);
+                $planCuenta->status = 'ANULADO';
+                $planCuenta->save();
+                /* PONER LA CUENTA EN LIBRE Y PONER NUEVA CONTRASEÑA */
+                $cuenta = Account::find($anular->cuentaid);
+                $cuenta->availability = 'LIBRE';
+                $cuenta->password_account = $cuenta->password_account . rand(100, 999);
                 $cuenta->save();
             }
+            DB::commit();
+            $this->resetUI();
+            $this->emit('item-anulado', 'Se anuló el plan');
+        } catch (Exception $e) {
+            DB::rollback();
+            $this->emit('item-error', 'ERROR' . $e->getMessage());
         }
-
-        $this->emit('item-anulado', 'Se anuló el plan');
     }
 
     public function viewDetails()
@@ -527,6 +565,7 @@ class PlanesController extends Component
     public function VerObservaciones(Plan $plan)
     {
         $this->selected_id = $plan->id;
+        $this->ready = $plan->ready;
         $this->observaciones = $plan->observations;
         $this->emit('show-modal3', 'open modal');
     }
@@ -535,9 +574,41 @@ class PlanesController extends Component
     {
         $plan = Plan::find($this->selected_id);
         $plan->observations = $this->observaciones;
+        $plan->ready = $this->ready;
+        $plan->done = $this->ready;
         $plan->save();
         $this->resetUI();
-        $this->emit('item-actualizado', 'Se actulizaron las observaciones');
+        $this->emit('item-actualizado', 'Se actulizó la información');
+    }
+
+    public function EditarPerf(Profile $perf)
+    {
+        $this->selected_perf = $perf->id;
+        $this->nombrePerfil = $perf->nameprofile;
+        $this->pinPerfil = $perf->pin;
+        $this->emit('show-modalPerf', 'open modal');
+    }
+
+    public function ModificarPerfil()
+    {
+        $perfil = Profile::find($this->selected_perf);
+        $perfil->nameprofile = $this->nombrePerfil;
+        $perfil->pin = $this->pinPerfil;
+        $perfil->save();
+        $this->nombrePerfil = '';
+        $this->pinPerfil = '';
+        $this->emit('perf-actualizado', 'Se actulizó el perfil');
+    }
+
+    protected $listeners = ['deleteRow' => 'Anular', 'Realizado' => 'Realizado'];
+
+    public function Realizado(Plan $plan)
+    {
+        $plan->ready = 'SI';
+        $plan->done = 'SI';
+        $plan->save();
+        $this->resetUI();
+        $this->emit('perf-actualizado', 'Se cambió a realizado');
     }
 
     public function resetUI()
@@ -556,8 +627,7 @@ class PlanesController extends Component
         $this->condicion = 0;
         $this->select = 1;
         $this->mostrartabla = 0;
-        $this->tipopago = 'Elegir';
-        $this->condicional = 'perfiles';
+        $this->tipopago = 'EFECTIVO';
         $this->meses = 1;
         $this->observaciones = '';
         $this->resetValidation();

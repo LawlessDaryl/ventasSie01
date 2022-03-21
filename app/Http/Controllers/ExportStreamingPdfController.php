@@ -30,8 +30,7 @@ class ExportStreamingPdfController extends Controller
 
         if ($tipo == 0) {
             if ($userId == 0) {
-                $data = Plan::join('mov_plans as mp', 'plans.id', 'mp.plan_id')
-                    ->join('movimientos as m', 'm.id', 'mp.movimiento_id')
+                $data = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
                     ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
                     ->join('accounts as acc', 'acc.id', 'pa.account_id')
                     ->join('account_profiles as ap', 'acc.id', 'ap.account_id')
@@ -63,12 +62,11 @@ class ExportStreamingPdfController extends Controller
                     ->where('acc.whole_account', 'DIVIDIDA')
                     ->where('prof.availability', 'OCUPADO')
                     ->where('prof.status', 'ACTIVO')
-                    ->whereColumn('pa.id', '=', 'ap.plan_account_id')
+                    ->whereColumn('plans.id', '=', 'ap.plan_id')
                     ->orderBy('plans.created_at', 'desc')
                     ->get();
             } else {
-                $data = Plan::join('mov_plans as mp', 'plans.id', 'mp.plan_id')
-                    ->join('movimientos as m', 'm.id', 'mp.movimiento_id')
+                $data = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
                     ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
                     ->join('accounts as acc', 'acc.id', 'pa.account_id')
                     ->join('account_profiles as ap', 'acc.id', 'ap.account_id')
@@ -101,14 +99,13 @@ class ExportStreamingPdfController extends Controller
                     ->where('acc.whole_account', 'DIVIDIDA')
                     ->where('prof.availability', 'OCUPADO')
                     ->where('prof.status', 'ACTIVO')
-                    ->whereColumn('pa.id', '=', 'ap.plan_account_id')
+                    ->whereColumn('plans.id', '=', 'ap.plan_id')
                     ->orderBy('plans.created_at', 'desc')
                     ->get();
             }
         } else {
             if ($userId == 0) {
-                $data = Plan::join('mov_plans as mp', 'plans.id', 'mp.plan_id')
-                    ->join('movimientos as m', 'm.id', 'mp.movimiento_id')
+                $data = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
                     ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
                     ->join('accounts as acc', 'acc.id', 'pa.account_id')
                     ->join('emails as e', 'e.id', 'acc.email_id')
@@ -139,8 +136,7 @@ class ExportStreamingPdfController extends Controller
                     ->orderBy('plans.created_at', 'desc')
                     ->get();
             } else {
-                $data = Plan::join('mov_plans as mp', 'plans.id', 'mp.plan_id')
-                    ->join('movimientos as m', 'm.id', 'mp.movimiento_id')
+                $data = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
                     ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
                     ->join('accounts as acc', 'acc.id', 'pa.account_id')
                     ->join('emails as e', 'e.id', 'acc.email_id')

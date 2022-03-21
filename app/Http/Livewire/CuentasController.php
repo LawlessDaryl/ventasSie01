@@ -10,7 +10,6 @@ use App\Models\CarteraMov;
 use App\Models\ClienteMov;
 use App\Models\Email;
 use App\Models\Movimiento;
-use App\Models\MovPlan;
 use App\Models\Plan;
 use App\Models\PlanAccount;
 use App\Models\Platform;
@@ -31,7 +30,8 @@ class CuentasController extends Component
         $search, $selected_id, $pageTitle, $componentName, $proveedor, $nameP, $PIN, $estado,
         $availability, $Observaciones, $perfiles, $correos, $selected,
         $expiration_account, $password_account, $price, $mostrarCampos, $condicional,
-        $meses, $expirationActual, $expirationNueva, $observations;
+        $meses, $expirationActual, $expirationNueva, $observations, $selected_plan,
+        $correoCuenta, $passCuenta, $nombreCliente, $celular;
     private $pagination = 10;
     public function paginationView()
     {
@@ -42,12 +42,13 @@ class CuentasController extends Component
         $this->componentName = 'Cuentas';
         $this->pageTitle = 'Listado';
         $this->selected_id = 0;
+        $this->selected_plan = 0;
         $this->selected = 0;
         $this->email_id = 'Elegir';
         $this->platform_id = 'Elegir';
         $this->proveedor = 'Elegir';
-        $this->estado = 'Elegir';
-        $this->availability = 'Elegir';
+        $this->estado = 'ACTIVO';
+        $this->availability = 'LIBRE';
         $this->number_profiles = 5;
         $this->nameP = '';
         $this->PIN = '';
@@ -62,24 +63,30 @@ class CuentasController extends Component
         $this->expirationNueva = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->tipopago = 'EFECTIVO';
         $this->importe = 0;
+        $this->correoCuenta = '';
+        $this->passCuenta = '';
+        $this->nombreCliente = '';
+        $this->celular = '';
     }
     public function render()
     {
         if ($this->condicional == 'cuentas') {
             if (strlen($this->search) > 0) {
-                $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
+                /* $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                     ->join('emails as e', 'accounts.email_id', 'e.id')
                     ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
                     ->select(
                         'accounts.id as id',
                         'accounts.expiration_account as expiration_account',
-                        'accounts.status',
                         'accounts.number_profiles',
                         'accounts.whole_account',
+                        'accounts.password_account',
                         'p.nombre as nombre',
                         'e.content as content',
                         'e.pass as pass',
                         'strsp.name as name',
+                        DB::raw('0 as perfActivos'),
+                        DB::raw('0 as perfLibres')
                     )
                     ->where('accounts.status', 'like', '%' . $this->search . '%')
                     ->orWhere('accounts.number_profiles', 'like', '%' . $this->search . '%')
@@ -87,7 +94,7 @@ class CuentasController extends Component
                     ->orWhere('e.content', 'like', '%' . $this->search . '%')
                     ->orWhere('strsp.name', 'like', '%' . $this->search . '%')
                     ->orderBy('accounts.id', 'desc')
-                    ->get();
+                    ->get(); */
             } else {
                 $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                     ->join('emails as e', 'accounts.email_id', 'e.id')
@@ -97,6 +104,7 @@ class CuentasController extends Component
                         'accounts.expiration_account as expiration_account',
                         'accounts.number_profiles',
                         'accounts.whole_account',
+                        'accounts.password_account',
                         'p.nombre as nombre',
                         'e.content as content',
                         'e.pass as pass',
@@ -112,13 +120,11 @@ class CuentasController extends Component
                     $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                         ->join('profiles as p', 'ap.profile_id', 'p.id')
                         ->where('accounts.id', $c->id)
-                        ->where('ap.status', 'ACTIVO')
                         ->where('p.status', 'ACTIVO')->get();
                     $perfilesLibres = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                         ->join('profiles as p', 'ap.profile_id', 'p.id')
                         ->where('accounts.id', $c->id)
                         ->where('p.availability', 'LIBRE')
-                        ->where('ap.status', 'ACTIVO')
                         ->where('p.status', 'ACTIVO')->get();
                     $cantidadActivos = $perfilesActivos->count();
                     $c->perfActivos = $cantidadActivos;
@@ -132,38 +138,67 @@ class CuentasController extends Component
                 ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
                 ->join('plan_accounts as pa', 'pa.account_id', 'accounts.id')
                 ->join('plans as pl', 'pa.plan_id', 'pl.id')
+                ->join('movimientos as m', 'm.id', 'pl.movimiento_id')
+                ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
+                ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
                 ->select(
                     'pl.id as planid',
+                    'pl.done as done',
                     'accounts.id as id',
                     'accounts.expiration_account as expiration_account',
                     'accounts.number_profiles',
                     'accounts.whole_account',
+                    'accounts.status',
+                    'accounts.password_account',
                     'p.nombre as nombre',
                     'e.content as content',
                     'e.pass as pass',
                     'strsp.name as name',
-                    'pl.expiration_plan as expiration_plan'
+                    'pl.expiration_plan as expiration_plan',
+                    'pl.plan_start as plan_start',
+                    'pl.status as plan_status',
+                    'c.nombre as clienteNombre',
+                    'c.celular as clienteCelular',
                 )
                 ->where('pa.status', 'ACTIVO')
+                ->where('pl.type_plan', 'CUENTA')
                 ->where('accounts.availability', 'OCUPADO')
                 ->where('accounts.status', 'ACTIVO')
+                ->where('pl.ready', 'SI')
                 ->orderBy('accounts.id', 'desc')
                 ->get();
         } else {
             $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                 ->join('emails as e', 'accounts.email_id', 'e.id')
                 ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
+                ->join('plan_accounts as pa', 'pa.account_id', 'accounts.id')
+                ->join('plans as pl', 'pa.plan_id', 'pl.id')
+                ->join('movimientos as m', 'm.id', 'pl.movimiento_id')
+                ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
+                ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
                 ->select(
+                    'pl.id as planid',
+                    'pl.done as done',
                     'accounts.id as id',
                     'accounts.expiration_account as expiration_account',
                     'accounts.number_profiles',
                     'accounts.whole_account',
+                    'accounts.status',
+                    'accounts.password_account',
                     'p.nombre as nombre',
                     'e.content as content',
                     'e.pass as pass',
-                    'strsp.name as name'
+                    'strsp.name as name',
+                    'pl.expiration_plan as expiration_plan',
+                    'pl.plan_start as plan_start',
+                    'pl.status as plan_status',
+                    'c.nombre as clienteNombre',
+                    'c.celular as clienteCelular',
                 )
-                ->where('accounts.status', 'INACTIVO')
+                ->where('pl.status', 'VENCIDO')
+                ->where('pl.type_plan', 'CUENTA')
+                ->where('pa.status', 'VENCIDO')
+                ->where('pl.ready', 'SI')
                 ->orderBy('accounts.id', 'desc')
                 ->get();
         }
@@ -180,9 +215,8 @@ class CuentasController extends Component
                     'profiles.availability as availability',
                     'profiles.observations as Observaciones'
                 )
-                ->where('ap.status', 'ACTIVO')
                 ->where('profiles.status', 'ACTIVO')
-                ->where('ap.account_id', $this->selected_id)
+                ->where('a.id', $this->selected_id)
                 ->get();
 
             $cuenta = Account::find($this->selected_id);
@@ -190,8 +224,6 @@ class CuentasController extends Component
             $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                 ->join('profiles as p', 'ap.profile_id', 'p.id')
                 ->where('accounts.id', $this->selected_id)
-                ->where('p.availability', 'LIBRE')
-                ->where('ap.status', 'ACTIVO')
                 ->where('p.status', 'ACTIVO')->get();
             /* SI LA CUENTA TIENE LA CANTIDAD DE PERFILES MAXIMO DE ESA CUENTA - NO MOSTRAR CAMPOS */
             if ($perfilesActivos->count() == $cuenta->number_profiles) {
@@ -334,8 +366,6 @@ class CuentasController extends Component
         $this->emit('item-updated', 'Cuenta Actualizada');
     }
 
-    protected $listeners = ['deleteRow' => 'Destroy', 'borrarPerfil' => 'BorrarPerfil'];
-
     public function Crear(Account $acc)
     {
         $this->selected_id = $acc->id;
@@ -353,30 +383,23 @@ class CuentasController extends Component
             'status' => $this->estado,
             'availability' => $this->availability,
             'observations' => $this->Observaciones,
-            'entity' => 'PERFIL'
         ]);
         AccountProfile::create([
+            'status' => 'SinAsignar',
             'account_id' => $this->selected_id,
             'profile_id' => $perfil->id,
         ]);
-
+        /* LA CUENTA PASA A DIVIDIDA */
         $cuenta->whole_account = 'DIVIDIDA';
         $cuenta->save();
 
         $this->nameP = '';
         $this->PIN = '';
-        $this->estado = 'Elegir';
-        $this->availability = 'Elegir';
+        $this->estado = 'ACTIVO';
+        $this->availability = 'LIBRE';
         $this->Observaciones = '';
 
         $this->emit('item-deleted', 'Perfil Registrado');
-    }
-
-    public function Destroy(Account $acc)
-    {
-        $acc->delete();
-        $this->resetUI();
-        $this->emit('item-deleted', 'Cuenta Eliminada');
     }
 
     public function BorrarPerfil(Profile $perf)
@@ -386,15 +409,15 @@ class CuentasController extends Component
         $CuentaPerf->save();
         /* PONER EN INACTIVO EL PERFIL */
         $perf->status = 'INACTIVO';
+        $perf->availability = 'VENCIDO';
         $perf->save();
-        /* CONTAR LOS PERFILES ACTIVOS */
+        /* CONTAR LOS PERFILES ACTIVOS OCUPADOS */
         $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
             ->join('profiles as p', 'ap.profile_id', 'p.id')
             ->where('accounts.id', $this->selected_id)
-            ->where('p.availability', 'LIBRE')
             ->where('ap.status', 'ACTIVO')
             ->where('p.status', 'ACTIVO')->get();
-        /* SI LA CUENTA NO TIENE PERFILES REGRESA A SER ENTERA */
+        /* SI LA CUENTA NO TIENE PERFILES ACTIVOS REGRESA A SER ENTERA */
         if ($perfilesActivos->count() == 0) {
             $cuenta = Account::find($this->selected_id);
             $cuenta->whole_account = 'ENTERA';
@@ -406,15 +429,29 @@ class CuentasController extends Component
 
     public function Acciones(Plan $plan)
     {
-        $this->selected_id = $plan->id;
-
-        $this->expirationActual = Plan::join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
+        $this->selected_plan = $plan->id;
+        /* OBTENER FECHA DE EXPIRACION DEL PLAN PARA CALCULAR LA FECHA DE EXPIRACION NUEVA */
+        $this->data = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
+            ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
             ->join('accounts as acc', 'acc.id', 'pa.account_id')
+            ->join('emails as e', 'e.id', 'acc.email_id')
+            ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
+            ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
             ->select(
-                'plans.expiration_plan'
+                'c.nombre as nombreCliente',
+                'c.celular as celular',
+                'e.content as correoCuenta',
+                'acc.password_account as password_account',
+                'plans.expiration_plan as expiration_plan'
             )
-            ->where('plans.id', $plan->id)
-            ->get()->first()->expiration_plan;
+            ->where('plans.id', $this->selected_plan)
+            ->orderby('plans.id', 'desc')
+            ->get()->first();
+        $this->nombreCliente = $this->data->nombreCliente;
+        $this->celular = $this->data->celular;
+        $this->correoCuenta = $this->data->correoCuenta;
+        $this->passCuenta = $this->data->password_account;
+        $this->expirationActual = substr($this->data->expiration_plan, 0, 10);
 
         $this->emit('details2-show', 'show modal!');
     }
@@ -432,8 +469,8 @@ class CuentasController extends Component
         ];
 
         $this->validate($rules, $messages);
-
-        $cccc = Caja::join('sucursals as s', 's.id', 'cajas.sucursal_id')
+        /* CAJA EN LA QUE ESTA EL USUARIO */
+        $CajaActual = Caja::join('sucursals as s', 's.id', 'cajas.sucursal_id')
             ->join('sucursal_users as su', 'su.sucursal_id', 's.id')
             ->join('carteras as car', 'cajas.id', 'car.caja_id')
             ->join('cartera_movs as cartmovs', 'car.id', 'cartmovs.cartera_id')
@@ -444,16 +481,16 @@ class CuentasController extends Component
             ->select('cajas.id as id')
             ->get()->first();
 
-        if ($this->tipopago == 'EFECTIVO') {
+        if ($this->tipopago == 'EFECTIVO') {    /* SI PAGA EN EFECTIVO */
             $cartera = Cartera::where('tipo', 'cajafisica')
-                ->where('caja_id', $cccc->id)
+                ->where('caja_id', $CajaActual->id)
                 ->get()->first();
-        } else {
+        } else {        /* SI PAGA POR TIGO MNY O BANCO */
             $cartera = Cartera::where('tipo', $this->tipopago)
-                ->where('caja_id', $cccc->id)->get()->first();
+                ->where('caja_id', $CajaActual->id)->get()->first();
         }
-        $datos = Plan::join('mov_plans as mp', 'plans.id', 'mp.plan_id')
-            ->join('movimientos as m', 'm.id', 'mp.movimiento_id')
+        /* OBTENER IDS PARA HACER LOS CAMBIOS */
+        $datos = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
             ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
             ->join('accounts as acc', 'acc.id', 'pa.account_id')
             ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
@@ -464,31 +501,39 @@ class CuentasController extends Component
                 'plans.id as planid',
                 'pa.id as planAccountid',
             )
-            ->where('plans.id', $this->selected_id)
+            ->where('plans.id', $this->selected_plan)
             ->get()->first();
+
         $cuenta = Account::find($datos->cuentaid);
+        /* CALCULAR IMPORTE SEGUN LA PLATAFORMA DE LA CUENTA */
         $this->importe += $cuenta->Plataforma->precioEntera;
         $this->importe *= $this->meses;
         DB::beginTransaction();
         try {
-            $plan = Plan::create([
-                'importe' => $this->importe,
-                'expiration_plan' => $this->expirationNueva,
-                'status' => 'VIGENTE',
-                'type_pay' => $this->tipopago,
-                'observations' => $this->observations
-            ]);
-
-            PlanAccount::create([
-                'plan_id' => $plan->id,
-                'account_id' => $cuenta->id,
-            ]);
-
             $mv = Movimiento::create([
                 'type' => 'TERMINADO',
                 'status' => 'ACTIVO',
                 'import' => $this->importe,
                 'user_id' => Auth()->user()->id,
+            ]);
+
+            $plan = Plan::create([
+                'importe' => $this->importe,
+                'plan_start' => $this->expirationActual,
+                'expiration_plan' => $this->expirationNueva,
+                'ready' => 'SI',
+                'done' => 'NO',
+                'type_plan' => 'CUENTA',
+                'status' => 'VIGENTE',
+                'type_pay' => $this->tipopago,
+                'observations' => $this->observations,
+                'movimiento_id' => $mv->id
+            ]);
+
+            PlanAccount::create([
+                'status' => 'ACTIVO',
+                'plan_id' => $plan->id,
+                'account_id' => $cuenta->id,
             ]);
 
             CarteraMov::create([
@@ -503,17 +548,14 @@ class CuentasController extends Component
                 'cliente_id' => $datos->id
             ]);
 
-            MovPlan::create([
-                'movimiento_id' => $mv->id,
-                'plan_id' => $plan->id
-            ]);
-
+            /* PONER EN VENCIDO EL PLAN ANTIGUO */
             $planviejo = Plan::find($datos->planid);
             $planviejo->status = 'VENCIDO';
             $planviejo->save();
 
+            /* PONER EN INACTIVO EL PLAN ACCOUNT */
             $planCuenta = PlanAccount::find($datos->planAccountid);
-            $planCuenta->status = 'INACTIVO';
+            $planCuenta->status = 'VENCIDO';
             $planCuenta->save();
 
             DB::commit();
@@ -526,34 +568,53 @@ class CuentasController extends Component
     }
     public function Vencer()
     {
+        /* OBTENER IDS */
         $datos = Plan::join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
             ->join('accounts as acc', 'acc.id', 'pa.account_id')
             ->select(
                 'acc.id as cuentaid',
-                'pa.id as paid'
+                'pa.id as paid',
             )
-            ->where('plans.id', $this->selected_id)
-            ->where('pa.status', 'ACTIVO')
+            ->where('plans.id', $this->selected_plan)
             ->get()->first();
+        /* PONER EN VENCIDO EL PLAN */
+        $plan = Plan::find($this->selected_plan);
+        $plan->status = 'VENCIDO';
+        $plan->done = 'NO';
+        $plan->save();
+        /* PONER LA CUENTA EN LIBRE */
         $cuenta = Account::find($datos->cuentaid);
         $cuenta->availability = 'LIBRE';
         $cuenta->save();
+        /* PONER EL PLANACCOUNT EN VENCIDO */
         $plancuenta = PlanAccount::find($datos->paid);
-        $plancuenta->status = 'INACTIVO';
+        $plancuenta->status = 'VENCIDO';
         $plancuenta->save();
+
         $this->resetUI();
-        $this->emit('cuenta-renovado-vencida', 'No se renovó este perfil y ahora esta inactivo');
+        $this->emit('cuenta-renovado-vencida', 'No se renovó esta cuenta y ahora esta libre');
+    }
+
+    protected $listeners = ['deleteRow' => 'Destroy', 'borrarPerfil' => 'BorrarPerfil', 'Renovar' => 'Renovar', 'Vencer' => 'Vencer', 'Realizado' => 'Realizado'];
+    
+    public function Realizado(Plan $plan)
+    {
+        $plan->done = 'SI';
+        $plan->save();
+        $this->resetUI();
+        $this->emit('item-accion', 'Se cambio a realizado');
     }
 
     public function resetUI()
     {
         $this->selected_id = 0;
+        $this->selected_plan = 0;
         $this->selected = 0;
         $this->email_id = 'Elegir';
         $this->platform_id = 'Elegir';
         $this->proveedor = 'Elegir';
-        $this->estado = 'Elegir';
-        $this->availability = 'Elegir';
+        $this->estado = 'ACTIVO';
+        $this->availability = 'LIBRE';
         $this->number_profiles = 5;
         $this->nameP = '';
         $this->PIN = '';

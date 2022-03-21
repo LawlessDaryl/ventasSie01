@@ -47,26 +47,24 @@
                         </div>
                     </div>
                 </div>
-
             </div>
             @if ($condicional == 'perfiles')
                 <div class="widget-content">
                     <div class="table-responsive">
-                        <table class="table table-unbordered table-striped mt-2">
+                        <table class="table table-unbordered table-hover mt-2">
                             <thead class="text-white" style="background: #3B3F5C">
                                 <tr>
                                     <th class="table-th text-withe text-center">PLATAFORMA</th>
                                     <th class="table-th text-withe text-center">CLIENTE</th>
-                                    <th class="table-th text-withe text-center">CELULAR</th>
                                     <th class="table-th text-withe text-center">CORREO</th>
                                     <th class="table-th text-withe text-center">CONTRASEÑA CUENTA</th>
                                     <th class="table-th text-withe text-center">VENCIMIENTO CUENTA</th>
-                                    <th class="table-th text-withe text-center">NOMBRE PERFIL</th>
-                                    <th class="table-th text-withe text-center">PIN</th>
+                                    <th class="table-th text-withe text-center">PERFIL</th>
                                     <th class="table-th text-withe text-center">IMPORTE</th>
                                     <th class="table-th text-withe text-center">PLAN INICIO</th>
                                     <th class="table-th text-withe text-center">PLAN FIN</th>
                                     <th class="table-th text-withe text-center">ACCIONES</th>
+                                    <th class="table-th text-withe text-center">REALIZADO</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -76,13 +74,10 @@
                                             <h6 class="text-center">{{ $p->plataforma }}</h6>
                                         </td>
                                         <td class="text-center">
-                                            <h6 class="text-center">{{ $p->cliente }}</h6>
+                                            <h6 class="text-center">{{ $p->cliente }} {{ $p->celular }}</h6>
                                         </td>
                                         <td class="text-center">
-                                            <h6 class="text-center">{{ $p->celular }}</h6>
-                                        </td>
-                                        <td class="text-center">
-                                            <h6 class="text-center">{{ $p->correo }}</h6>
+                                            <h6 class="text-center">{{ $p->correo }} {{ $p->passCorreo }}</h6>
                                         </td>
                                         <td class="text-center">
                                             <h6 class="text-center">{{ $p->password_account }}</h6>
@@ -91,11 +86,8 @@
                                             <h6 class="text-center">{{ $p->accexp }}</h6>
                                         </td>
                                         <td class="text-center">
-                                            <h6 class="text-center">{{ $p->nameprofile }}</h6>
-                                        </td>
-                                        <td class="text-center">
-                                            <h6 class="text-center">{{ $p->pin }}</h6>
-                                        </td>
+                                            <h6 class="text-center">{{ $p->nameprofile }} {{ $p->pin }}</h6>
+                                        </td>                                        
                                         <td class="text-center">
                                             <h6 class="text-center">{{ $p->importe }}</h6>
                                         </td>
@@ -107,36 +99,30 @@
                                             <h6 class="text-center">
                                                 {{ \Carbon\Carbon::parse($p->planfin)->format('d:m:Y') }} </h6>
                                         </td>
-                                        <td class="text-center">
+                                        <td class="text-center">                                            
+                                            <a href="javascript:void(0)"
+                                                wire:click="VerObservaciones({{ $p->id }})"
+                                                class="btn btn-dark mtmobile" title="Observaciones">
+                                                <i class="fa-solid fa-file-signature"></i>
+                                            </a>
                                             @if ($p->estado != 'ANULADO')
                                                 <a href="javascript:void(0)" onclick="Confirm({{ $p->id }})"
                                                     class="btn btn-dark mtmobile" title="Anular">
                                                     <i class="fas fa-trash"></i>
                                                 </a>
-                                            @endif
-                                            <a href="javascript:void(0)"
-                                                wire:click="VerObservaciones({{ $p->id }})"
-                                                class="btn btn-dark mtmobile" title="Observaciones">
-                                                <svg xmlns="http://www.w3.org/2000/svg"
-                                                    xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
-                                                    id="Layer_1" x="0px" y="0px" viewBox="0 0 512 512"
-                                                    style="enable-background:new 0 0 512 512;" xml:space="preserve">
-                                                    <circle style="fill:#88C5CC;" cx="256" cy="256" r="256" />
-                                                    <path style="fill:#F5F5F5;"
-                                                        d="M192,72h176c4.4,0,8,3.6,8,8v328c0,4.4-3.6,8-8,8H120c-4.4,0-8-3.6-8-8V156L192,72z" />
-                                                    <path style="fill:#E6E6E6;"
-                                                        d="M184,156c4.4,0,8-3.6,8-8V72l-80,84H184z" />
-                                                    <circle style="fill:#2179A6;" cx="352" cy="392" r="52" />
-                                                    <g>
-                                                        <path style="fill:#F5F5F5;"
-                                                            d="M352,424c-2.212,0-4-1.788-4-4v-56c0-2.212,1.788-4,4-4s4,1.788,4,4v56   C356,422.212,354.212,424,352,424z" />
-                                                        <path style="fill:#F5F5F5;"
-                                                            d="M380,396h-56c-2.212,0-4-1.788-4-4s1.788-4,4-4h56c2.212,0,4,1.788,4,4S382.212,396,380,396z" />
-                                                    </g>
-                                                </svg>
-                                            </a>
+                                            @endif                                            
                                         </td>
-
+                                        <td class="text-center"
+                                            style="{{ $p->ready == 'NO' ? 'background-color: #d97171 !important' : 'background-color: #09ed3d !important' }}">
+                                            @if ($p->ready == 'NO')
+                                                <a href="javascript:void(0)" class="btn btn-dark"
+                                                    onclick="ConfirmHecho('{{ $p->id }}')">
+                                                    <i class="fa-regular fa-circle-exclamation"></i>
+                                                </a>
+                                            @else
+                                                <h6 class="text-center"><strong>Hecho</strong></h6>
+                                            @endif
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -152,7 +138,6 @@
                                 <tr>
                                     <th class="table-th text-withe text-center">PLATAFORMA</th>
                                     <th class="table-th text-withe text-center">CLIENTE</th>
-                                    <th class="table-th text-withe text-center">CELULAR</th>
                                     <th class="table-th text-withe text-center">CORREO</th>
                                     <th class="table-th text-withe text-center">CONTRASEÑA CUENTA</th>
                                     <th class="table-th text-withe text-center">VENCIMIENTO CUENTA</th>
@@ -160,6 +145,7 @@
                                     <th class="table-th text-withe text-center">PLAN INICIO</th>
                                     <th class="table-th text-withe text-center">PLAN FIN</th>
                                     <th class="table-th text-withe text-center">ACCIONES</th>
+                                    <th class="table-th text-withe text-center">REALIZADO</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -170,13 +156,10 @@
                                             <h6 class="text-center">{{ $p->plataforma }}</h6>
                                         </td>
                                         <td class="text-center">
-                                            <h6 class="text-center">{{ $p->cliente }}</h6>
+                                            <h6 class="text-center">{{ $p->cliente }} {{ $p->celular }}</h6>
                                         </td>
                                         <td class="text-center">
-                                            <h6 class="text-center">{{ $p->celular }}</h6>
-                                        </td>
-                                        <td class="text-center">
-                                            <h6 class="text-center">{{ $p->correo }}</h6>
+                                            <h6 class="text-center">{{ $p->correo }} {{ $p->passCorreo }}</h6>
                                         </td>
                                         <td class="text-center">
                                             <h6 class="text-center">{{ $p->password_account }}</h6>
@@ -196,33 +179,28 @@
                                                 {{ \Carbon\Carbon::parse($p->planfin)->format('d:m:Y') }} </h6>
                                         </td>
                                         <td class="text-center">
+                                            <a href="javascript:void(0)"
+                                                wire:click="VerObservaciones({{ $p->id }})"
+                                                class="btn btn-dark mtmobile" title="Observaciones">
+                                                <i class="fa-solid fa-file-signature"></i>
+                                            </a>
                                             @if ($p->estado != 'ANULADO')
                                                 <a href="javascript:void(0)" onclick="Confirm({{ $p->id }})"
                                                     class="btn btn-dark mtmobile" title="Anular">
                                                     <i class="fas fa-trash"></i>
                                                 </a>
+                                            @endif                                     
+                                        </td>
+                                        <td class="text-center"
+                                            style="{{ $p->ready == 'NO' ? 'background-color: #d97171 !important' : 'background-color: #09ed3d !important' }}">
+                                            @if ($p->ready == 'NO')
+                                                <a href="javascript:void(0)" class="btn btn-dark"
+                                                    onclick="ConfirmHecho('{{ $p->id }}')">
+                                                    <i class="fa-regular fa-circle-exclamation"></i>
+                                                </a>
+                                            @else
+                                                <h6 class="text-center"><strong>Hecho</strong></h6>
                                             @endif
-                                            <a href="javascript:void(0)"
-                                                wire:click="VerObservaciones({{ $p->id }})"
-                                                class="btn btn-dark mtmobile" title="Observaciones">
-                                                <svg xmlns="http://www.w3.org/2000/svg"
-                                                    xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
-                                                    id="Layer_1" x="0px" y="0px" viewBox="0 0 512 512"
-                                                    style="enable-background:new 0 0 512 512;" xml:space="preserve">
-                                                    <circle style="fill:#88C5CC;" cx="256" cy="256" r="256" />
-                                                    <path style="fill:#F5F5F5;"
-                                                        d="M192,72h176c4.4,0,8,3.6,8,8v328c0,4.4-3.6,8-8,8H120c-4.4,0-8-3.6-8-8V156L192,72z" />
-                                                    <path style="fill:#E6E6E6;"
-                                                        d="M184,156c4.4,0,8-3.6,8-8V72l-80,84H184z" />
-                                                    <circle style="fill:#2179A6;" cx="352" cy="392" r="52" />
-                                                    <g>
-                                                        <path style="fill:#F5F5F5;"
-                                                            d="M352,424c-2.212,0-4-1.788-4-4v-56c0-2.212,1.788-4,4-4s4,1.788,4,4v56   C356,422.212,354.212,424,352,424z" />
-                                                        <path style="fill:#F5F5F5;"
-                                                            d="M380,396h-56c-2.212,0-4-1.788-4-4s1.788-4,4-4h56c2.212,0,4,1.788,4,4S382.212,396,380,396z" />
-                                                    </g>
-                                                </svg>
-                                            </a>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -234,8 +212,10 @@
             @endif
         </div>
     </div>
+
     @include('livewire.planes.form')
     @include('livewire.planes.modalObservaciones')
+    @include('livewire.planes.modalPerfil')
 </div>
 
 <script>
@@ -270,6 +250,14 @@
         })
         window.livewire.on('show-modal3', Msg => {
             $('#Modal_Observaciones').modal('show')
+        })
+        
+        window.livewire.on('show-modalPerf', Msg => {
+            $('#Modal_perfil').modal('show')
+        })
+        window.livewire.on('perf-actualizado', Msg => {
+            $('#Modal_perfil').modal('hide')
+            noty(Msg)
         })
         flatpickr(document.getElementsByClassName('flatpickr'), {
             enableTime: false,
@@ -322,6 +310,26 @@
         })
 
     });
+
+    function ConfirmHecho(id) {
+        swal.fire({
+            title: 'CONFIRMAR',
+            icon: 'warning',
+            text: '¿Ya realizó las acciones correspondientes y desea ponerlo en realizado?',
+            showCancelButton: true,
+            cancelButtonText: 'Cerrar',
+            cancelButtonColor: '#383838',
+            confirmButtonColor: '#3B3F5C',
+            confirmButtonText: 'Aceptar'
+        }).then(function(result) {
+            if (result.value) {
+                window.livewire.emit('Realizado', id)
+                swal.fire(
+                    'Se cambió a realizado'
+                )
+            }
+        })
+    }
 
     function Confirm(id) {
         swal.fire({

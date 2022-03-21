@@ -15,14 +15,14 @@ class ReportStreamingController extends Component
 
     public function mount()
     {
-        $this->componentName = 'Reportes Streamings';
+        $this->componentName = 'Reportes Streaming';
         $this->data = [];
         $this->details = [];
         $this->sumDetails = 0;
         $this->countDetails = 0;
         $this->reportType = 0;
         $this->userId = 0;
-        $this->transaccionId = 0;        
+        $this->transaccionId = 0; 
         $this->condicional = 0;
         $this->dateFrom = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->dateTo = Carbon::parse(Carbon::now())->format('Y-m-d');
@@ -60,8 +60,7 @@ class ReportStreamingController extends Component
         }
         if ($this->condicional == 0) {
             if ($this->userId == 0) {
-                $this->data = Plan::join('mov_plans as mp', 'plans.id', 'mp.plan_id')
-                    ->join('movimientos as m', 'm.id', 'mp.movimiento_id')
+                $this->data = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
                     ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
                     ->join('accounts as acc', 'acc.id', 'pa.account_id')
                     ->join('account_profiles as ap', 'acc.id', 'ap.account_id')
@@ -93,12 +92,11 @@ class ReportStreamingController extends Component
                     ->where('acc.whole_account', 'DIVIDIDA')
                     ->where('prof.availability', 'OCUPADO')
                     ->where('prof.status', 'ACTIVO')
-                    ->whereColumn('pa.id', '=', 'ap.plan_account_id')
+                    ->whereColumn('plans.id', '=', 'ap.plan_id')
                     ->orderBy('plans.created_at', 'desc')
                     ->get();
             } else {
-                $this->data = Plan::join('mov_plans as mp', 'plans.id', 'mp.plan_id')
-                    ->join('movimientos as m', 'm.id', 'mp.movimiento_id')
+                $this->data = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
                     ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
                     ->join('accounts as acc', 'acc.id', 'pa.account_id')
                     ->join('account_profiles as ap', 'acc.id', 'ap.account_id')
@@ -131,14 +129,13 @@ class ReportStreamingController extends Component
                     ->where('acc.whole_account', 'DIVIDIDA')
                     ->where('prof.availability', 'OCUPADO')
                     ->where('prof.status', 'ACTIVO')
-                    ->whereColumn('pa.id', '=', 'ap.plan_account_id')
+                    ->whereColumn('plans.id', '=', 'ap.plan_id')
                     ->orderBy('plans.created_at', 'desc')
                     ->get();
             }
         } else {
             if ($this->userId == 0) {
-                $this->data = Plan::join('mov_plans as mp', 'plans.id', 'mp.plan_id')
-                    ->join('movimientos as m', 'm.id', 'mp.movimiento_id')
+                $this->data = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
                     ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
                     ->join('accounts as acc', 'acc.id', 'pa.account_id')
                     ->join('emails as e', 'e.id', 'acc.email_id')
@@ -169,8 +166,7 @@ class ReportStreamingController extends Component
                     ->orderBy('plans.created_at', 'desc')
                     ->get();
             } else {
-                $this->data = Plan::join('mov_plans as mp', 'plans.id', 'mp.plan_id')
-                    ->join('movimientos as m', 'm.id', 'mp.movimiento_id')
+                $this->data = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
                     ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
                     ->join('accounts as acc', 'acc.id', 'pa.account_id')
                     ->join('emails as e', 'e.id', 'acc.email_id')

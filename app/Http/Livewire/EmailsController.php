@@ -23,12 +23,13 @@ class EmailsController extends Component
 
     public function mount()
     {
+        $this->pass = '';
         $this->checkN = false;
         $this->checkS = false;
         $this->name = 'emanuel';
         $this->dominio = '@gmail.com';
-        $this->availability = 'Elegir';
-        $this->status = 'Elegir';
+        $this->availability = 'LIBRE';
+        $this->status = 'ACTIVO';
         $this->pageTitle = 'Listado';
         $this->componentName = 'Correos';
         $this->letras = 'abcdefghijklmnopqrstuvwxyz';
@@ -146,22 +147,18 @@ class EmailsController extends Component
     {
         $rules = [
             'content' => "required|min:11|unique:emails",
-            'pass' => "required|min:8|unique:emails",
-            'status' => 'required|not_in:Elegir',
-            'availability' => 'required|not_in:Elegir'
+            'pass' => "unique:emails",
+            'status' => 'required',
+            'availability' => 'required'
         ];
 
         $messages = [
             'content.required' => 'Ingresa el nombre del correo',
             'content.min' => 'El nombre del correo debe tener al menos 11 caracteres',
-            'content.unique' => 'El nombre del correo ya se encuentra registrado',
-            'pass.required' => 'Es requerida una contraseña para el correo',
-            'pass.min' => 'La contraseña de tener almenos 8 caracteres',
+            'content.unique' => 'El nombre del correo ya se encuentra registrado',            
             'pass.unique' => 'Esta contraseña ya se encuentra registrada',
             'status.required' => 'Selecciona el estado del correo',
-            'status.not_in' => 'Seleccione un estado distinto a Elegir',
             'availability.required' => 'Selecciona la disponibilidad del correo',
-            'availability.not_in' => 'Seleccione una disponibilidad distinta a Elegir',
         ];
 
         $this->validate($rules, $messages);
@@ -190,22 +187,18 @@ class EmailsController extends Component
     {
         $rules = [
             'content' => "required|min:11|unique:emails,content,{$this->selected_id}",
-            'pass' => "required|min:8|unique:emails,pass,{$this->selected_id}",
-            'status' => 'required|not_in:Elegir',
-            'availability' => 'required|not_in:Elegir'
+            'pass' => "unique:emails,pass,{$this->selected_id}",
+            'status' => 'required',
+            'availability' => 'required'
         ];
 
         $messages = [
             'content.required' => 'Ingresa el nombre del correo',
             'content.min' => 'El nombre del correo debe tener al menos 11 caracteres',
             'content.unique' => 'El nombre del correo ya se encuentra registrado',
-            'pass.required' => 'Es requerida una contraseña para el correo',
-            'pass.min' => 'La contraseña de tener almenos 8 caracteres',
             'pass.unique' => 'Esta contraseña ya se encuentra registrada',
             'status.required' => 'Selecciona el estado del correo',
-            'status.not_in' => 'Seleccine un estado distinto a Elegir',
             'availability.required' => 'Selecciona la disponibilidad del correo',
-            'availability.not_in' => 'Seleccine una disponibilidad distinta a Elegir',
         ];
 
         $this->validate($rules, $messages);
@@ -244,8 +237,8 @@ class EmailsController extends Component
     {
         $this->content = '';
         $this->pass = '';
-        $this->availability = 'Elegir';
-        $this->status = 'Elegir';
+        $this->availability = 'LIBRE';
+        $this->status = 'ACTIVO';
         $this->observations = '';
         $this->longitud = 6;
         $this->selected_id = 0;

@@ -47,7 +47,6 @@
                                         <span
                                             class="badge {{ $s->status == 'ACTIVO' ? 'badge-success' : 'badge-danger' }} text-uppercase">{{ $s->status }}</span>
                                     </td>
-
                                     <td class="text-center">
                                         <span>
                                             <img src="{{ asset('storage/proveedores/' . $s->imagen) }}" alt="imagen"
@@ -60,16 +59,11 @@
                                             class="btn btn-dark mtmobile" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
-
                                         <a href="javascript:void(0)"
                                             onclick="Confirm('{{ $s->id }}')"
                                             class="btn btn-dark" title="Delete">
                                             <i class="fas fa-trash"></i>
                                         </a>
-
-                                        <button wire:click.prevent="viewDetails({{$s}})" class="btn btn-dark">
-                                            <i class="fas fa-list"></i>
-                                        </button>
                                     </td>
                                 </tr>
                             @endforeach
@@ -81,7 +75,6 @@
         </div>
     </div>
     @include('livewire.str_proveedor.form')
-    {{-- @include('livewire.str_proveedor.modalDetails') --}}
 </div>
 
 <script>

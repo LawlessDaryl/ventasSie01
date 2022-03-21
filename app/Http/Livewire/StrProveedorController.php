@@ -30,7 +30,7 @@ class StrProveedorController extends Component
         $this->phone = '';
         $this->mail = '';
         $this->address = '';
-        $this->status = 'Elegir';
+        $this->status = 'ACTIVO';
     }
 
     public function render()
@@ -59,7 +59,7 @@ class StrProveedorController extends Component
             'name' => 'required|min:3',
             'phone' => 'required|min:3',
             'mail' => 'required|unique:str_suppliers|email',
-            'status' => 'required|not_in:Elegir'
+            'status' => 'required'
         ];
 
         $messages = [
@@ -71,7 +71,6 @@ class StrProveedorController extends Component
             'mail.email' => 'Ingresa una dirección de correo válida',
             'mail.unique' => 'El email ya existe en el sistema',
             'status.required' => 'Selecciona el estado del proveedor',
-            'status.not_in' => 'Seleccine un estado distinto a Elegir',
         ];
 
         $this->validate($rules, $messages);
@@ -116,7 +115,7 @@ class StrProveedorController extends Component
             'name' => 'required|min:3',
             'phone' => 'required|min:3',
             'mail' => "required|email|unique:str_suppliers,mail,{$this->selected_id}",
-            'status' => 'required|not_in:Elegir'
+            'status' => 'required'
         ];
 
         $messages = [
@@ -128,7 +127,6 @@ class StrProveedorController extends Component
             'mail.email' => 'Ingresa una dirección de correo válida',
             'mail.unique' => 'El email ya existe en el sistema',
             'status.required' => 'Selecciona el estado del proveedor',
-            'status.not_in' => 'Seleccine un estado distinto a Elegir',
         ];
 
         $this->validate($rules, $messages);
@@ -207,7 +205,7 @@ class StrProveedorController extends Component
         $this->phone = '';
         $this->mail = '';
         $this->address = '';
-        $this->status = 'Elegir';
+        $this->status = 'ACTIVO';
         $this->image = '';
         $this->selected_id = 0;
         $this->search = '';

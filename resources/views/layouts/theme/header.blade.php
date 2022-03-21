@@ -28,18 +28,16 @@
             <a href="{{ url('cortecajas') }}" class="btn btn-warning btn-lg active" role="button" aria-pressed="true">CORTE DE CAJA</a>            
         </ul>
 
-        <ul>
+        <ul class="tabs tab-pills text-center mt-4">
             @if (empty(session('sesionCaja')))
-                <h5 style="background-color: white">No tienes ninguna caja abierta</h5>
+                <h5 style="background-color: #ff7600; color:#ffffff">No tienes ninguna caja abierta</h5>
             @else
                 <marquee behavior="" direction="">
-                    <h5 style="background-color: white">Usted tiene la {{ session('sesionCaja') }} abierta</h5>
+                    <h5 style="background-color: #ff7600; color:#ffffff;font-size:24px">Usted tiene la {{ session('sesionCaja') }} abierta</h5>
                 </marquee>
             @endif
         </ul>
         <ul class="navbar-item flex-row navbar-dropdown">
-
-
             <li class="nav-item dropdown message-dropdown">
                 <a href="javascript:void(0);" class="nav-link dropdown-toggle" id="messageDropdown"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

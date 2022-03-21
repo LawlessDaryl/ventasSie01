@@ -16,7 +16,8 @@
                                 <label class="new-control new-radio radio-classic-primary">
                                     <input type="radio" class="new-control-input" name="custom-radio-4" id="libres"
                                         value="libres" wire:model="condicional">
-                                    <span class="new-control-indicator"></span>LIBRES
+                                    <span class="new-control-indicator"></span>
+                                    <h6>LIBRES</h6>
                                 </label>
                             </div>
                         </div>
@@ -27,7 +28,8 @@
                                 <label class="new-control new-radio radio-classic-primary">
                                     <input type="radio" class="new-control-input" name="custom-radio-4" id="ocupados"
                                         value="ocupados" wire:model="condicional" checked>
-                                    <span class="new-control-indicator"></span>OCUPADOS
+                                    <span class="new-control-indicator"></span>
+                                    <h6>OCUPADOS</h6>
                                 </label>
                             </div>
                         </div>
@@ -38,7 +40,8 @@
                                 <label class="new-control new-radio radio-classic-primary">
                                     <input type="radio" class="new-control-input" name="custom-radio-4" id="ocupados"
                                         value="vencidos" wire:model="condicional" checked>
-                                    <span class="new-control-indicator"></span>VENCIDOS
+                                    <span class="new-control-indicator"></span>
+                                    <h6>VENCIDOS</h6>
                                 </label>
                             </div>
                         </div>
@@ -53,13 +56,11 @@
                             <thead class="text-white" style="background: #3B3F5C">
                                 <tr>
                                     <th class="table-th text-withe">PLATAFORMA</th>
-                                    <th class="table-th text-withe text-center">CORREO</th>
-                                    <th class="table-th text-withe text-center">CONTRASEÑA EMAIL</th>
+                                    <th class="table-th text-withe text-center">GMAIL</th>
                                     <th class="table-th text-withe text-center">CONTRASEÑA CUENTA</th>
-                                    <th class="table-th text-withe text-center">NOMBRE PERFIL</th>
-                                    <th class="table-th text-withe text-center">PIN</th>
+                                    <th class="table-th text-withe text-center">PERFIL</th>
                                     <th class="table-th text-withe text-center">EXPIRACION CUENTA</th>
-                                    <th class="table-th text-withe text-center">OBSERV</th>
+
                                     <th class="table-th text-withe text-center">ACCIONES</th>
                                 </tr>
                             </thead>
@@ -70,25 +71,18 @@
                                             <h6 class="text-center">{{ $p->nombre }}</h6>
                                         </td>
                                         <td>
-                                            <h6 class="text-center">{{ $p->content }}</h6>
-                                        </td>
-                                        <td>
-                                            <h6 class="text-center">{{ $p->pass }}</h6>
+                                            <h6 class="text-center">{{ $p->content }} <br> {{ $p->pass }}</h6>
                                         </td>
                                         <td>
                                             <h6 class="text-center">{{ $p->passAccount }}</h6>
                                         </td>
                                         <td>
-                                            <h6 class="text-center">{{ $p->namep }}</h6>
-                                        </td>
-                                        <td>
-                                            <h6 class=" text-center">{{ $p->pin }}</h6>
+                                            <h6 class="text-center"><strong> Nombre: </strong>{{ $p->namep }}
+                                                <strong>PIN: </strong>{{ $p->pin }}
+                                            </h6>
                                         </td>
                                         <td>
                                             <h6 class="text-center">{{ $p->expiration }}</h6>
-                                        </td>
-                                        <td>
-                                            <h6 class="text-center">{{ $p->observations }}</h6>
                                         </td>
                                         <td class="text-center">
                                             <a href="javascript:void(0)" wire:click="Edit({{ $p->id }})"
@@ -114,17 +108,19 @@
                         <table class="table table-unbordered table-hover mt-2">
                             <thead class="text-white" style="background: #3B3F5C">
                                 <tr>
-                                    <th class="table-th text-withe">PLATAFORMA</th>
-                                    <th class="table-th text-withe text-center">CORREO</th>
-                                    <th class="table-th text-withe text-center">CONTRASEÑA EMAIL</th>
+                                    <th class="table-th text-withe text-center">PLATAFORMA</th>
+                                    <th class="table-th text-withe text-center">CLIENTE</th>
+                                    <th class="table-th text-withe text-center">GMAIL</th>
                                     <th class="table-th text-withe text-center">CONTRASEÑA CUENTA</th>
-                                    <th class="table-th text-withe text-center">NOMBRE PERFIL</th>
-                                    <th class="table-th text-withe text-center">PIN</th>
+                                    <th class="table-th text-withe text-center">PERFIL</th>
                                     <th class="table-th text-withe text-center">EXPIRACION CUENTA</th>
+                                    <th class="table-th text-withe text-center">INICIO PLAN</th>
                                     <th class="table-th text-withe text-center">EXPIRACION PLAN</th>
-                                    <th class="table-th text-withe text-center">OBSERV</th>
-                                    <th class="table-th text-withe text-center">RENOVAR</th>
-                                    <th class="table-th text-withe text-center">EDITAR</th>
+                                    @if ($condicional != 'vencidos')
+                                        <th class="table-th text-withe text-center">RENOVAR</th>
+                                        <th class="table-th text-withe text-center">EDITAR</th>
+                                    @endif
+                                    <th class="table-th text-withe text-center">REALIZADO</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -134,52 +130,60 @@
                                             <h6 class="text-center">{{ $p->nombre }}</h6>
                                         </td>
                                         <td>
-                                            <h6 class="text-center">{{ $p->content }}</h6>
+                                            <h6 class="text-center"><strong> N: </strong>{{ $p->clienteNombre }}
+                                                <strong>TELF: </strong> {{ $p->clienteCelular }}
+                                            </h6>
                                         </td>
                                         <td>
-                                            <h6 class="text-center">{{ $p->pass }}</h6>
+                                            <h6 class="text-center">{{ $p->content }} <br> {{ $p->pass }}
+                                            </h6>
                                         </td>
                                         <td>
                                             <h6 class="text-center">{{ $p->passAccount }}</h6>
                                         </td>
                                         <td>
-                                            <h6 class="text-center">{{ $p->namep }}</h6>
-                                        </td>
-                                        <td>
-                                            <h6 class=" text-center">{{ $p->pin }}</h6>
+                                            <h6 class="text-center"><strong> N: </strong>{{ $p->namep }}
+                                                <strong>PIN: </strong>{{ $p->pin }}
+                                            </h6>
                                         </td>
                                         <td>
                                             <h6 class="text-center">{{ $p->expiration }}</h6>
                                         </td>
                                         <td>
+                                            <h6 class="text-center">{{ $p->plan_start }}</h6>
+                                        </td>
+                                        <td>
                                             <h6 class="text-center">{{ $p->expiration_plan }}</h6>
                                         </td>
-                                        <td>
-                                            <h6 class="text-center">{{ $p->observations }}</h6>
-                                        </td>
-                                        <td class="text-center">
-                                            
-                                            <a href="javascript:void(0)" wire:click="Acciones({{ $p->id }})"
-                                                class="btn btn-dark mtmobile" title="Renovación">
-                                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
-                                                    <path style="fill:#E9EBEF;" d="M256,499.2C121.899,499.2,12.8,390.101,12.8,256S121.899,12.8,256,12.8S499.2,121.899,499.2,256  S390.101,499.2,256,499.2z"/>
-                                                    <g>
-                                                        <path style="fill:#573A32;" d="M256,0C114.62,0,0,114.62,0,256s114.62,256,256,256c141.389,0,256-114.62,256-256S397.389,0,256,0z    M256,486.4C128.956,486.4,25.6,383.044,25.6,256S128.956,25.6,256,25.6S486.4,128.956,486.4,256S383.044,486.4,256,486.4z"/>
-                                                        <path style="fill:#573A32;" d="M371.2,243.2H268.8v-128c0-7.074-5.726-12.8-12.8-12.8c-7.074,0-12.8,5.726-12.8,12.8V256   c0,7.074,5.726,12.8,12.8,12.8h115.2c7.074,0,12.8-5.726,12.8-12.8C384,248.926,378.274,243.2,371.2,243.2z"/>
-                                                        <rect x="243.2" y="51.2" style="fill:#573A32;" width="25.6" height="25.6"/>
-                                                        <rect x="243.2" y="435.2" style="fill:#573A32;" width="25.6" height="25.6"/>
-                                                        <rect x="51.2" y="243.2" style="fill:#573A32;" width="25.6" height="25.6"/>
-                                                        <rect x="435.2" y="243.2" style="fill:#573A32;" width="25.6" height="25.6"/>
-                                                    </g>                                                    
-                                                    </svg>
-                                            </a>
-                                            
-                                        </td>
-                                        <td>
-                                            <a href="javascript:void(0)" wire:click="Edit({{ $p->id }})"
-                                                class="btn btn-dark mtmobile" title="Edit">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
+                                        @if ($condicional != 'vencidos')
+                                            <td class="text-center">
+                                                @if ($p->estadoCuentaPerfil == 'ACTIVO')
+                                                    <a href="javascript:void(0)"
+                                                        wire:click="Acciones({{ $p->planid }})"
+                                                        class="btn btn-dark mtmobile" title="Renovación">
+                                                        <i class="fa-regular fa-calendar-check"></i>
+                                                    </a>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if ($p->estadoCuentaPerfil == 'ACTIVO')
+                                                    <a href="javascript:void(0)" wire:click="Edit({{ $p->id }})"
+                                                        class="btn btn-dark mtmobile" title="Edit">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                @endif
+                                            </td>
+                                        @endif
+                                        <td
+                                            style="{{ $p->done == 'NO' ? 'background-color: #d97171 !important' : 'background-color: #09ed3d !important' }}">
+                                            @if ($p->done == 'NO')
+                                                <a href="javascript:void(0)" class="btn btn-dark"
+                                                    onclick="ConfirmHecho('{{ $p->planid }}')">
+                                                    <i class="fa-regular fa-circle-exclamation"></i>
+                                                </a>
+                                            @else
+                                                <h6 class="text-center"><strong>Hecho</strong></h6>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach
@@ -194,8 +198,8 @@
     </div>
     @include('livewire.perfiles.form')
     @include('livewire.perfiles.modalDetails')
-    
-    
+
+
 </div>
 
 <script>
@@ -284,16 +288,90 @@
         })
     });
 
+    function ConfirmVencer(nameperfil) {
+        swal.fire({
+            title: 'CONFIRMAR',
+            icon: 'warning',
+            text: '¿Esta seguro de vencer el perfil ' + nameperfil + ' ?',
+            showCancelButton: true,
+            cancelButtonText: 'Cerrar',
+            cancelButtonColor: '#383838',
+            confirmButtonColor: '#3B3F5C',
+            confirmButtonText: 'Aceptar'
+        }).then(function(result) {
+            if (result.value) {
+                window.livewire.emit('Vencer')
+                swal.fire(
+                    'Se venció el perfil ' + nameperfil,
+                    'El perfil a pasado a vencido.'
+                )
+            }
+        })
+    }
+
+    function ConfirmRenovar(nameperfil, meses) {
+        swal.fire({
+            title: 'CONFIRMAR',
+            icon: 'warning',
+            text: '¿Esta seguro de renovar el perfil ' + nameperfil + ' por ' + meses + ' meses?',
+            showCancelButton: true,
+            cancelButtonText: 'Cerrar',
+            cancelButtonColor: '#383838',
+            confirmButtonColor: '#3B3F5C',
+            confirmButtonText: 'Aceptar'
+        }).then(function(result) {
+            if (result.value) {
+                window.livewire.emit('Renovar')
+                swal.fire(
+                    'Se renovó el perfil ' + nameperfil + ' por ' + meses + ' meses.'
+                )
+            }
+        })
+    }
+
+    function ConfirmCambiar(id, nameperfil, pin, email, password) {
+        swal.fire({
+            title: 'CONFIRMAR',
+            icon: 'warning',
+            text: '¿Esta seguro de cambiar el perfil ' + nameperfil + ' a la cuenta ' + email + ' ?',
+            showCancelButton: true,
+            cancelButtonText: 'Cerrar',
+            cancelButtonColor: '#383838',
+            confirmButtonColor: '#3B3F5C',
+            confirmButtonText: 'Aceptar'
+        }).then(function(result) {
+            if (result.value) {
+                window.livewire.emit('CambiarAccount', id)
+                swal.fire(
+                    'Los datos del perfil actual se cambiaran por los del nuevo automaticamente',
+                    'Se cambio de cuenta el perfil ' + nameperfil + ' de pin ' +
+                    pin + ' a la cuenta ' + email + ' de contraseña ' + password
+                )
+            }
+        })
+    }
+
+    function ConfirmHecho(id) {
+        swal.fire({
+            title: 'CONFIRMAR',
+            icon: 'warning',
+            text: '¿Ya realizó las acciones correspondientes para este perfil y desea ponerlo en realizado?',
+            showCancelButton: true,
+            cancelButtonText: 'Cerrar',
+            cancelButtonColor: '#383838',
+            confirmButtonColor: '#3B3F5C',
+            confirmButtonText: 'Aceptar'
+        }).then(function(result) {
+            if (result.value) {
+                window.livewire.emit('Realizado', id)
+                swal.fire(
+                    'Se cambió a realizado'
+                )
+            }
+        })
+    }
+
     function Confirm(id, name) {
-        /* if (cuentas > 0) {
-            swal.fire({
-                title: 'PRECAUCION',
-                icon: 'warning',
-                text: 'No se puede eliminar la cuenta, ' + name + ' porque tiene ' +
-                    cuentas + ' perfiles relacionadas'
-            })
-            return;
-        } */
         swal.fire({
             title: 'CONFIRMAR',
             icon: 'warning',

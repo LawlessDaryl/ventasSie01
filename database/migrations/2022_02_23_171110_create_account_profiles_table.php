@@ -15,12 +15,12 @@ class CreateAccountProfilesTable extends Migration
     {
         Schema::create('account_profiles', function (Blueprint $table) {
             $table->id();
-            $table->enum('status',['ACTIVO','INACTIVO'])->default('ACTIVO');
+            $table->enum('status', ['ACTIVO','INACTIVO','SinAsignar', 'VENCIDO','CAMBIADO'])->default('SinAsignar');
             $table->unsignedBigInteger('account_id');
             $table->foreign('account_id')->references('id')->on('accounts');
             $table->unsignedBigInteger('profile_id');
             $table->foreign('profile_id')->references('id')->on('profiles');
-            $table->string('plan_account_id')->nullable();
+            $table->string('plan_id')->nullable();
             $table->timestamps();
         });
     }

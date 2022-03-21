@@ -1,18 +1,18 @@
 <div wire:ignore.self class="modal fade" id="theModal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header" style="background: #414141">
+            <div class="modal-header bg-dark">
                 <h5 class="modal-title text-white">
                     <b>{{ $componentName }}</b> | {{ $selected_id > 0 ? 'EDITAR' : 'CREAR' }}
                 </h5>
                 <h6 class="text-center text-warning" wire:loading wire:target="Store, image">POR FAVOR ESPERE</h6>
             </div>
-            <div class="modal-body" style="background: #f0ecec">
+            <div class="modal-body">
 
                 <div class="row">
                     <div class="col-sm-12 col-md-6">
                         <div class="form-group">
-                            <label>Nombre</label>
+                            <label><h6>Nombre</h6></label>
                             <input type="text" wire:model="nombre" class="form-control" placeholder="ej: Magis">
                             @error('nombre')
                                 <span class="text-danger er">{{ $message }}</span>
@@ -22,9 +22,9 @@
 
                     <div class="col-sm-12 col-md-6">
                         <div class="form-group">
-                            <label>Descripción</label>
+                            <label><h6>Descripción</h6></label>
                             <input type="text" wire:model="description" class="form-control"
-                                placeholder="Deportes, Cultura, Cine, Series">
+                                placeholder="ej: Deportes, Cultura, Cine, Series">
                             @error('description')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror
@@ -33,18 +33,18 @@
 
                     <div class="col-sm-12 col-md-4">
                         <div class="form-group">
-                            <label>Precio Entera</label>
-                            <input type="text" wire:model="precioEntera" class="form-control" placeholder="ej: Magis">
+                            <label><h6>Precio Entera</h6></label>
+                            <input type="text" wire:model="precioEntera" class="form-control" placeholder="ej: 100">
                             @error('precioEntera')
-                                <span class="text-danger er">{{ $message }}</span>
+                            <span class=" text-danger er">{{ $message }}</span>
                             @enderror
                         </div>
                     </div>
 
                     <div class="col-sm-12 col-md-4">
                         <div class="form-group">
-                            <label>Precio Perfil</label>
-                            <input type="text" wire:model="precioPerfil" class="form-control" placeholder="ej: Magis">
+                            <label><h6>Precio Perfil</h6></label>
+                            <input type="text" wire:model="precioPerfil" class="form-control" placeholder="ej: 30">
                             @error('precioPerfil')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror
@@ -53,7 +53,7 @@
 
                     <div class="col-sm-12 col-md-4">
                         <div class="form-group">
-                            <label>Estado</label>
+                            <label><h6>Estado</h6></label>
                             <select wire:model='status' class="form-control">
                                 <option value="ACTIVO">ACTIVO</option>
                                 <option value="BLOQUEADO">BLOQUEADO</option>
@@ -71,19 +71,19 @@
                             <label class="custom-file-label">Imagen {{ $image }}</label>
                         </div>
                     </div>
-                   {{--  <a href="javascript:void(0)" wire:click="$set('status','Elegir')"
+                    {{-- <a href="javascript:void(0)" wire:click="$set('status','Elegir')"
                         class="btn btn-dark mtmobile" title="Edit">
                         <i class="fas fa-edit"></i>
                     </a> --}}
                 </div>
 
             </div>
-            <div class="modal-footer" style="background: #f0ecec">
+            <div class="modal-footer">
                 <button type="button" wire:click.prevent="resetUI()" class="btn btn-dark close-btn text-info"
                     data-dismiss="modal" style="background: #3b3f5c">CANCELAR</button>
                 @if ($selected_id < 1)
-                    <button type="button" wire:click.prevent="Store()" wire:loading.attr="disabled" wire:target="image, Store"
-                        class="btn btn-dark close-btn text-info">GUARDAR</button>
+                    <button type="button" wire:click.prevent="Store()" wire:loading.attr="disabled"
+                        wire:target="image, Store" class="btn btn-dark close-btn text-info">GUARDAR</button>
                 @else
                     <button type="button" wire:click.prevent="Update()"
                         class="btn btn-dark close-btn text-info">ACTUALIZAR</button>
@@ -92,5 +92,3 @@
         </div>
     </div>
 </div>
-
-

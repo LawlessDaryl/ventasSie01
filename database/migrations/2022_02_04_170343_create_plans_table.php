@@ -16,10 +16,16 @@ class CreatePlansTable extends Migration
         Schema::create('plans', function (Blueprint $table) {
             $table->id();
             $table->integer('importe');
-            $table->date('expiration_plan');
-            $table->enum('status', ['VIGENTE', 'VENCIDO','ANULADO'])->default('VIGENTE');
+            $table->dateTime('plan_start');
+            $table->dateTime('expiration_plan');
+            $table->enum('ready', ['SI', 'NO'])->default('NO');
+            $table->enum('done', ['SI', 'NO'])->default('NO');
+            $table->enum('type_plan', ['CUENTA', 'PERFIL']);
+            $table->enum('status', ['VIGENTE', 'VENCIDO', 'ANULADO'])->default('VIGENTE');
             $table->enum('type_pay', ['EFECTIVO', 'Banco', 'TigoStreaming']);
             $table->string('observations')->nullable();
+            $table->unsignedBigInteger('movimiento_id');
+            $table->foreign('movimiento_id')->references('id')->on('movimientos');
             $table->timestamps();
         });
     }
