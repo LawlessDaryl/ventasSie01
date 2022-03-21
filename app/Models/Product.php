@@ -25,7 +25,7 @@ class Product extends Model
 
     public function location()
     {
-        return $this->belongsToMany(Location::class);
+        return $this->belongsToMany(Location::class,'productos_destinos');
     }
 
 

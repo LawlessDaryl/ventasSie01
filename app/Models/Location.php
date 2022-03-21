@@ -12,6 +12,6 @@ class Location extends Model
     protected $fillable = ['sucursal_id', 'codigo','descripcion','ubicacion','tipo'];
 
     public function product(){
-        return $this->belongsToMany(Product::class);
+        return $this->belongsToMany(Product::class,'productos_destinos');
     }
 }

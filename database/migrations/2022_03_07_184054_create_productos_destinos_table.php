@@ -14,7 +14,7 @@ class CreateProductosDestinosTable extends Migration
     public function up()
     {
         Schema::create('productos_destinos', function (Blueprint $table) {
-            $table->id();
+      
 
             $table->unsignedBigInteger('product-id');
             $table->foreign('product-id')->references('id')->on('products');
@@ -23,7 +23,7 @@ class CreateProductosDestinosTable extends Migration
             $table->foreign('destino-id')->references('id')->on('locations');
             
             $table->integer('stock');
-            $table->integer('cantidad_minima');
+            
             $table->string('alertas');
 
             $table->timestamps();

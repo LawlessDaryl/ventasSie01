@@ -25,6 +25,7 @@ class CreateProductsTable extends Migration
             $table->string('marca')->nullable();
             $table->integer('garantia')->nullable();
             $table->integer('stock')->nullable()->default(0);
+            $table->integer('cantidad_minima');
             $table->string('industria')->nullable();
             $table->decimal('precio_venta',10,2);
             $table->enum('status', ['ACTIVO','INACTIVO'])->default('ACTIVO');

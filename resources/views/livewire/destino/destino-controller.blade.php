@@ -20,15 +20,16 @@
                     <div class="col-12 col-lg-6 col-md-4 border rounded">
                       <h3>Almacen</h3>
                       @foreach($destinos_almacen as $destino)
-                        
+                      
+                        <div>
+                            {{$destino->id}}
+                        </div>
                       @endforeach
 
                     </div>
                     <div class="col-12 col-lg-6 col-md-4 border rounded">
                         <h3>Tienda</h3>
-                        @foreach($destinos_tienda as $destino)
-
-                        @endforeach
+                       
 
                   </div>
                 </div>
