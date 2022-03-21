@@ -61,7 +61,7 @@
     <div class="connect-sorting-content">
         <div class="card simple-title-task ui-sortable-handle">
             <div class="card-body">
-                <h5 class="text-center text-muted">Para Buscar un Producto use el Cuadro: Buscar Productos...</h5>
+                <h5 class="text-center text-muted">Para Buscar use el Cuadro: Buscar Productos...</h5>
             </div>
         </div>
     </div>

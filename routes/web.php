@@ -55,6 +55,7 @@ use App\Http\Livewire\ReporteServiceController;
 use App\Http\Livewire\TransaccionesController;
 use App\Http\Livewire\TypeWorkController;
 use App\Http\Livewire\UnidadesController;
+use App\Http\Livewire\SaleListController;
 use Illuminate\Support\Facades\Auth;
 
 Auth::routes();
@@ -146,6 +147,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('report/pdf/{user}/{type}/{f1}/{f2}', [ExportController::class, 'reportPDF']);
         Route::get('report/pdf/{user}/{type}', [ExportController::class, 'reportPDF']);
     });
+
+    Route::get('salelist', SaleListController::class)->name('salelist');
+
 });
 
 

@@ -490,7 +490,7 @@ class PosController extends Component
             $this->facturasino = 'No';
             $this->emit('save-ok', 'venta registrada con exito');
 
-            //$this->emit('print-ticket', $sale->id);
+            return Redirect::to('salelist');
         } catch (Exception $e) {
             DB::rollback();
             $this->emit('sale-error', $e->getMessage());
