@@ -25,7 +25,8 @@ class PerfilesController extends Component
     use WithFileUploads;
     public $nameperfil, $pin, $status, $availability, $observations,
         $search, $selected_id, $pageTitle, $componentName, $condicional,
-        $meses, $expirationNueva, $expirationActual, $tipopago, $importe, $mostrartabla2, $perfil;
+        $meses, $expirationNueva, $expirationActual, $tipopago, $importe,
+        $mostrartabla2, $perfil, $selected_plan, $nombreCliente, $celular;
     private $pagination = 10;
     public function paginationView()
     {
@@ -35,6 +36,7 @@ class PerfilesController extends Component
     {
         $this->status = 'Elegir';
         $this->nameperfil = '';
+        $this->pin = '';
         $this->availability = 'Elegir';
         $this->pageTitle = 'Listado';
         $this->componentName = 'Perfiles';
@@ -45,6 +47,10 @@ class PerfilesController extends Component
         $this->importe = 0;
         $this->mostrartabla2 = 0;
         $this->perfil = [];
+        $this->selected_id = 0;
+        $this->selected_plan = 0;
+        $this->nombreCliente = '';
+        $this->celular = '';
     }
     public function render()
     {
@@ -98,6 +104,7 @@ class PerfilesController extends Component
                         'plans.id as planid',
                         'c.nombre as clienteNombre',
                         'c.celular as clienteCelular',
+                        'plans.done as done'
                     )
                     ->where('acc.whole_account', 'DIVIDIDA')
                     ->where('prof.availability', 'OCUPADO')
@@ -106,6 +113,7 @@ class PerfilesController extends Component
                     ->whereColumn('plans.id', '=', 'ap.plan_id')
                     ->where('pa.status', 'ACTIVO')
                     ->where('ap.status', 'ACTIVO')
+                    ->where('plans.ready', 'SI')
                     ->orderBy('plans.expiration_plan', 'desc')
                     ->paginate($this->pagination);
             }
@@ -134,8 +142,10 @@ class PerfilesController extends Component
                     'plans.id as planid',
                     'c.nombre as clienteNombre',
                     'c.celular as clienteCelular',
+                    'plans.done as done'
                 )
                 ->where('plans.status', 'VENCIDO')
+                ->where('plans.ready', 'SI')
                 ->whereColumn('plans.id', '=', 'ap.plan_id')
                 ->where('ap.status', 'VENCIDO')
                 ->orderBy('plans.expiration_plan', 'desc')
@@ -201,7 +211,6 @@ class PerfilesController extends Component
         $this->resetUI();
         $this->emit('item-updated', 'Perfil Actualizado');
     }
-    protected $listeners = ['deleteRow' => 'Destroy'];
 
     public function Destroy(Profile $perf)
     {
@@ -232,13 +241,37 @@ class PerfilesController extends Component
 
     public function Acciones(Plan $plan)
     {
-        $this->selected_id = $plan->id;
+        $this->selected_plan = $plan->id;
         /* OBTENER FECHA DE EXPIRACION DEL PLAN PARA CALCULAR LA FECHA DE EXPIRACION NUEVA */
-        $this->expirationActual = Plan::where('plans.id', $plan->id)
-            ->get()->first()->expiration_plan;
-        $this->expirationActual = substr($this->expirationActual, 0, 10);
+        $this->data = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
+            ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
+            ->join('accounts as acc', 'acc.id', 'pa.account_id')
+            ->join('account_profiles as ap', 'acc.id', 'ap.account_id')
+            ->join('profiles as prof', 'prof.id', 'ap.profile_id')
+            ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
+            ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
+            ->select(
+                'prof.nameprofile as nameprofile',
+                'prof.pin as pin',
+                'prof.nameprofile as nameprofile',
+                'c.nombre as nombreCliente',
+                'c.celular as celular',
+                'plans.expiration_plan as expiration_plan'
+            )
+            ->where('plans.id', $this->selected_plan)
+            ->whereColumn('plans.id', '=', 'ap.plan_id')
+            ->orderby('plans.id', 'desc')
+            ->get()->first();
+
+        $this->nameperfil = $this->data->nameprofile;
+        $this->pin = $this->data->pin;
+        $this->nombreCliente = $this->data->nombreCliente;
+        $this->celular = $this->data->celular;
+        $this->expirationActual = substr($this->data->expiration_plan, 0, 10);
         $this->emit('details-show', 'show modal!');
     }
+
+
     public function Renovar()
     {
         $rules = [
@@ -288,7 +321,7 @@ class PerfilesController extends Component
                 'ap.id as accountProfileid',
                 'prof.id as Profileid'
             )
-            ->where('plans.id', $this->selected_id)
+            ->where('plans.id', $this->selected_plan)
             ->whereColumn('plans.id', '=', 'ap.plan_id')
             ->orderby('plans.id', 'desc')
             ->get()->first();
@@ -311,7 +344,8 @@ class PerfilesController extends Component
                 'importe' => $this->importe,
                 'plan_start' => $this->expirationActual,
                 'expiration_plan' => $this->expirationNueva,
-                'ready' => 'NO',
+                'ready' => 'SI',
+                'done' => 'NO',
                 'status' => 'VIGENTE',
                 'type_pay' => $this->tipopago,
                 'observations' => $this->observations,
@@ -381,7 +415,7 @@ class PerfilesController extends Component
                 'ap.id as accproid',
                 'plans.id as planid',
             )
-            ->where('plans.id', $this->selected_id)
+            ->where('plans.id', $this->selected_plan)
             ->where('prof.status', 'ACTIVO')
             ->whereColumn('plans.id', '=', 'ap.plan_id')
             ->orderby('plans.id', 'desc')
@@ -389,6 +423,7 @@ class PerfilesController extends Component
 
         $planAntiguo = Plan::find($datos->planid);
         $planAntiguo->status = 'VENCIDO';
+        $planAntiguo->done = 'NO';
         $planAntiguo->save();
 
         $plaAcount = PlanAccount::find($datos->plAccountid);
@@ -429,7 +464,7 @@ class PerfilesController extends Component
             ->select(
                 'p.id as platfid',
             )
-            ->where('plans.id', $this->selected_id)
+            ->where('plans.id', $this->selected_plan)
             ->orderby('plans.id', 'desc')
             ->get()->first();
         /* MOSTRAR UN PERFIL DE LA MISMA PLATAFORMA PARA HACER EL CAMBIO */
@@ -453,9 +488,12 @@ class PerfilesController extends Component
             ->where('p.id', $datos->platfid)
             ->get()->first();
     }
+
+    protected $listeners = ['deleteRow' => 'Destroy', 'Vencer' => 'Vencer', 'Renovar' => 'Renovar', 'CambiarAccount' => 'CambiarAccount', 'Realizado' => 'Realizado'];
+
     public function CambiarAccount(Profile $perf)
     {
-        /* Datos del anterior */
+        /* DATOS DEL ANTERIOR PLAN */
         $datos = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
             ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
             ->join('accounts as acc', 'acc.id', 'pa.account_id')
@@ -471,12 +509,16 @@ class PerfilesController extends Component
                 'prof.id as Profileid',
                 'acc.id as cuentaid',
             )
-            ->where('plans.id', $this->selected_id)
+            ->where('plans.id', $this->selected_plan)
             ->whereColumn('plans.id', '=', 'ap.plan_id')
             ->orderby('plans.id', 'desc')
             ->get()->first();
         DB::beginTransaction();
         try {
+            /* PONER EN NO LISTO LA ACCION */
+            $plan = Plan::find($datos->planid);
+            $plan->done = 'NO';
+            $plan->save();
             /* PONER EN VENCIDO EL PERFIL */
             $perfilViejo = Profile::find($datos->Profileid);
             $perfilViejo->status = 'INACTIVO';
@@ -492,14 +534,16 @@ class PerfilesController extends Component
             /* OBTENER LA CUENTA DEL NUEVO PERFIL */
             $CuentaNueva = Account::find($perf->CuentaPerfil->Cuenta->id);
 
-            $planAccountVIEJO = PlanAccount::find($datos->planAccountid);
             /* ACTULIZAR EL PLAN ACCOUNT PONIENDO LA NUEVA CUENTA */
             /* $planAccount->update([
                 'account_id' => $CuentaNueva->id,
             ]); */
+            /* PONER EN CAMBIADO EL PLAN-ACCOUNT */
+            $planAccountVIEJO = PlanAccount::find($datos->planAccountid);
             $planAccountVIEJO->update([
                 'status' => 'CAMBIADO',
             ]);
+            /* CREAR NUEVO PLAN-ACCOUNT */
             PlanAccount::create([
                 'plan_id' => $datos->planid,
                 'account_id' => $CuentaNueva->id,
@@ -511,7 +555,7 @@ class PerfilesController extends Component
                 'account_id' => $CuentaNueva->id,
                 'profile_id' => $perf->id,
             ]); */
-
+            /* PONER EN CAMBIADO EL ACCOUNT-PROFILE */
             $cuentaPerfilViejo = AccountProfile::find($datos->accountProfileid);
             $cuentaPerfilViejo->update([
                 'status' => 'CAMBIADO',
@@ -551,6 +595,13 @@ class PerfilesController extends Component
             $this->emit('item-error', 'ERROR' . $e->getMessage());
         }
     }
+    public function Realizado(Plan $plan)
+    {
+        $plan->done = 'SI';
+        $plan->save();
+        $this->resetUI();
+        $this->emit('item-accion', 'Se cambio a realizado');
+    }
     public function resetUI()
     {
         $this->status = 'Elegir';
@@ -560,6 +611,8 @@ class PerfilesController extends Component
         $this->expirationNueva = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->tipopago = 'EFECTIVO';
         $this->importe = 0;
+        $this->selected_id = 0;
+        $this->selected_plan = 0;
         $this->resetValidation();
     }
 }

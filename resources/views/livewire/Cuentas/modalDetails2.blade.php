@@ -13,6 +13,46 @@
                 <div class="row">
                     <div class="col-sm-12 col-md-6">
                         <div class="form-group">
+                            <h6>Nombre Cliente</h6>
+                            <input type="text" disabled wire:model="nombreCliente" class="form-control">
+                            @error('nombreCliente')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <h6>Celular</h6>
+                            <input type="text" disabled wire:model="celular" class="form-control">
+                            @error('celular')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <h6>Correo Cuenta</h6>
+                            <input type="text" disabled wire:model="correoCuenta" class="form-control">
+                            @error('correoCuenta')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <h6>Contraseña Cuenta</h6>
+                            <input type="text" disabled wire:model="passCuenta" class="form-control">
+                            @error('passCuenta')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
                             <label>Meses a renovar</label>
                             <input type="number" wire:model="meses" class="form-control" placeholder="PerfilNetflix1">
                             @error('meses')
@@ -57,14 +97,17 @@
 
                     <div class="col-sm-12 col-md-6">
                         <div class="form-group text-center mt-4">
-                            <a href="javascript:void(0)" class="btn btn-dark" wire:click.prevent="Renovar()">Renovar
+                            <a href="javascript:void(0)" @if ($meses == 0) disabled @endif
+                                class="btn btn-dark"
+                                onclick="ConfirmRenovar('{{ $correoCuenta }}','{{ $meses }}')">Renovar
                                 Cuenta</a>
                         </div>
                     </div>
 
                     <div class="col-sm-12 col-md-6">
                         <div class="form-group text-center mt-4">
-                            <a href="javascript:void(0)" class="btn btn-dark" wire:click.prevent="Vencer()">Vencer
+                            <a href="javascript:void(0)" class="btn btn-dark"
+                                onclick="ConfirmVencer('{{ $correoCuenta }}')">Vencer
                                 Cuenta</a>
                         </div>
                     </div>

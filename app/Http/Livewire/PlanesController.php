@@ -574,6 +574,7 @@ class PlanesController extends Component
         $plan = Plan::find($this->selected_id);
         $plan->observations = $this->observaciones;
         $plan->ready = $this->ready;
+        $plan->done = $this->ready;
         $plan->save();
         $this->resetUI();
         $this->emit('item-actualizado', 'Se actulizó la información');

@@ -69,10 +69,12 @@
                                 @foreach ($cuentas as $acounts)
                                     <tr>
                                         <td>
-                                            <h6 class="text-center">{{ $acounts->nombre }} <br> {{ $acounts->name }}</h6>
+                                            <h6 class="text-center">{{ $acounts->nombre }} <br>
+                                                {{ $acounts->name }}</h6>
                                         </td>
                                         <td>
-                                            <h6 class="text-center">{{ $acounts->content }} <br> {{ $acounts->pass }}</h6>
+                                            <h6 class="text-center">{{ $acounts->content }} <br>
+                                                {{ $acounts->pass }}</h6>
                                         </td>
                                         <td>
                                             <h6 class="text-center">{{ $acounts->password_account }}</h6>
@@ -100,7 +102,7 @@
                                             <a href="javascript:void(0)" wire:click="Edit({{ $acounts->id }})"
                                                 class="btn btn-dark mtmobile" title="Edit">
                                                 <i class="fas fa-edit"></i>
-                                            </a>                                            
+                                            </a>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -124,21 +126,28 @@
                                     <th class="table-th text-withe text-center">MAX PERF</th>
                                     <th class="table-th text-withe text-center">INICIO PLAN</th>
                                     <th class="table-th text-withe text-center">EXPIRACION PLAN</th>
-                                    <th class="table-th text-withe text-center">RENOVAR</th>
-                                    <th class="table-th text-withe text-center">EDITAR</th>
+                                    @if ($condicional != 'vencidos')
+                                        <th class="table-th text-withe text-center">RENOVAR</th>
+                                        <th class="table-th text-withe text-center">EDITAR</th>
+                                    @endif
+                                    <th class="table-th text-withe text-center">REALIZADO</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($cuentas as $acounts)
                                     <tr>
                                         <td>
-                                            <h6 class="text-center">{{ $acounts->nombre }} <br> {{ $acounts->name }}</h6>
+                                            <h6 class="text-center">{{ $acounts->nombre }} <br>
+                                                {{ $acounts->name }}</h6>
                                         </td>
                                         <td>
-                                            <h6 class="text-center"><strong> N: </strong>{{ $acounts->clienteNombre }} <strong>TELF: </strong> {{ $acounts->clienteCelular }}</h6>
+                                            <h6 class="text-center"><strong> N:
+                                                </strong>{{ $acounts->clienteNombre }} <strong>TELF: </strong>
+                                                {{ $acounts->clienteCelular }}</h6>
                                         </td>
                                         <td>
-                                            <h6 class="text-center">{{ $acounts->content }} <br> {{ $acounts->pass }}</h6>
+                                            <h6 class="text-center">{{ $acounts->content }} <br>
+                                                {{ $acounts->pass }}</h6>
                                         </td>
                                         <td>
                                             <h6 class="text-center">{{ $acounts->password_account }}</h6>
@@ -157,23 +166,31 @@
                                         </td>
                                         <td>
                                             <h6 class="text-center">{{ $acounts->expiration_plan }}</h6>
-                                        </td>                                       
-                                        <td class="text-center">
-                                            @if($acounts->plan_status=='VIGENTE')
-                                            <a href="javascript:void(0)"
-                                                wire:click="Acciones({{ $acounts->planid }})"
-                                                class="btn btn-dark mtmobile" title="Renovación">
-                                                <i class="fa-regular fa-calendar-check"></i>
-                                            </a>
-                                            @endif
                                         </td>
-                                        <td>
-                                            @if($acounts->plan_status=='VIGENTE')
-                                            <a href="javascript:void(0)" wire:click="Edit({{ $acounts->id }})"
-                                                class="btn btn-dark mtmobile" title="Edit">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            @endif
+                                        @if ($condicional != 'vencidos')
+                                            <td class="text-center">
+                                                @if ($acounts->plan_status == 'VIGENTE')
+                                                    <a href="javascript:void(0)"
+                                                        wire:click="Acciones({{ $acounts->planid }})"
+                                                        class="btn btn-dark mtmobile" title="Renovación">
+                                                        <i class="fa-regular fa-calendar-check"></i>
+                                                    </a>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if ($acounts->plan_status == 'VIGENTE')
+                                                    <a href="javascript:void(0)"
+                                                        wire:click="Edit({{ $acounts->id }})"
+                                                        class="btn btn-dark mtmobile" title="Edit">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                @endif
+                                            </td>
+                                        @endif
+                                        <td
+                                            style="{{ $acounts->done == 'NO' ? 'background-color: #d97171 !important' : 'background-color: #09ed3d !important' }}">
+                                            <a href="javascript:void(0)" class="btn btn-dark"
+                                                onclick="ConfirmHecho('{{ $acounts->planid }}')">Realizado</a>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -285,12 +302,11 @@
         })
     });
 
-    /* function Confirm(id, name) {
-        
+    function ConfirmVencer(cuenta) {
         swal.fire({
             title: 'CONFIRMAR',
             icon: 'warning',
-            text: 'Confirmar eliminar la cuenta ' + '"' + name + '"',
+            text: '¿Esta seguro de vencer la cuenta ' + cuenta + ' ?',
             showCancelButton: true,
             cancelButtonText: 'Cerrar',
             cancelButtonColor: '#383838',
@@ -298,11 +314,54 @@
             confirmButtonText: 'Aceptar'
         }).then(function(result) {
             if (result.value) {
-                window.livewire.emit('deleteRow', id)
-                Swal.close()
+                window.livewire.emit('Vencer')
+                swal.fire(
+                    'Se venció la cuenta ' + cuenta,
+                    'La cuenta a pasado a vencida.'
+                )
             }
         })
-    } */
+    }
+
+    function ConfirmRenovar(cuenta, meses) {
+        swal.fire({
+            title: 'CONFIRMAR',
+            icon: 'warning',
+            text: '¿Esta seguro de renovar la cuenta ' + cuenta + ' por ' + meses + ' meses?',
+            showCancelButton: true,
+            cancelButtonText: 'Cerrar',
+            cancelButtonColor: '#383838',
+            confirmButtonColor: '#3B3F5C',
+            confirmButtonText: 'Aceptar'
+        }).then(function(result) {
+            if (result.value) {
+                window.livewire.emit('Renovar')
+                swal.fire(
+                    'Se renovó la cuenta ' + cuenta + ' por ' + meses + ' meses.'
+                )
+            }
+        })
+    }
+
+    function ConfirmHecho(id) {
+        swal.fire({
+            title: 'CONFIRMAR',
+            icon: 'warning',
+            text: '¿Ya realizó las acciones correspondientes para la cuenta y desea ponerlo en realizado?',
+            showCancelButton: true,
+            cancelButtonText: 'Cerrar',
+            cancelButtonColor: '#383838',
+            confirmButtonColor: '#3B3F5C',
+            confirmButtonText: 'Aceptar'
+        }).then(function(result) {
+            if (result.value) {
+                window.livewire.emit('Realizado', id)
+                swal.fire(
+                    'Se cambió a realizado'
+                )
+            }
+        })
+    }
 
     function Confirmar(id, name) {
         swal.fire({

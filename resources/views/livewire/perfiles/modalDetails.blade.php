@@ -13,6 +13,46 @@
                 <div class="row">
                     <div class="col-sm-12 col-md-6">
                         <div class="form-group">
+                            <h6>Nombre Cliente</h6>
+                            <input type="text" disabled wire:model="nombreCliente" class="form-control">
+                            @error('nombreCliente')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <h6>Celular</h6>
+                            <input type="text" disabled wire:model="celular" class="form-control">
+                            @error('celular')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <h6>Nombre del perfil</h6>
+                            <input type="text" disabled wire:model="nameperfil" class="form-control">
+                            @error('nameperfil')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <h6>Pin</h6>
+                            <input type="text" disabled wire:model="pin" class="form-control">
+                            @error('pin')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
                             <h6>Meses a renovar</h6>
                             <input type="number" wire:model="meses" class="form-control" placeholder="PerfilNetflix1">
                             @error('meses')
@@ -57,14 +97,17 @@
 
                     <div class="col-sm-12 col-md-4">
                         <div class="form-group text-center mt-4">
-                            <a href="javascript:void(0)" class="btn btn-dark" wire:click.prevent="Renovar()">Renovar
+                            <a @if ($meses == 0) disabled @endif href="javascript:void(0)"
+                                class="btn btn-dark"
+                                onclick="ConfirmRenovar('{{ $nameperfil }}','{{ $meses }}')">Renovar
                                 Perfil</a>
                         </div>
                     </div>
 
                     <div class="col-sm-12 col-md-4">
                         <div class="form-group text-center mt-4">
-                            <a href="javascript:void(0)" class="btn btn-dark" wire:click.prevent="Vencer()">Vencer
+                            <a href="javascript:void(0)" class="btn btn-dark"
+                                onclick="ConfirmVencer('{{ $nameperfil }}')">Vencer
                                 Perfil</a>
                         </div>
                     </div>
@@ -76,6 +119,7 @@
                                 a otra cuenta</a>
                         </div>
                     </div>
+
                     @if ($mostrartabla2 == 1)
                         @if ($profiles->count() != 0)
                             <div class="col-sm-12 col-md-12">
@@ -89,8 +133,6 @@
                                                         <th class="table-th text-withe text-center">Contraseña</th>
                                                         <th class="table-th text-withe text-center">Nombre Perfil</th>
                                                         <th class="table-th text-withe text-center">Pin</th>
-                                                        <th class="table-th text-withe text-center">Precio</th>
-                                                        <th class="table-th text-withe text-center">EDITAR</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -107,7 +149,8 @@
                                                             <h6 class="text-center">{{ $perfil->email }}</h6>
                                                         </td>
                                                         <td class="text-center">
-                                                            <h6 class="text-center">{{ $perfil->password_account }}
+                                                            <h6 class="text-center">
+                                                                {{ $perfil->password_account }}
                                                             </h6>
                                                         </td>
                                                         <td class="text-center">
@@ -117,23 +160,18 @@
                                                         <td class="text-center">
                                                             <h6 class="text-center">{{ $perfil->pin }}</h6>
                                                         </td>
-                                                        <td class="text-center">
-                                                            <h6 class="text-center">{{ $perfil->precioPerfil }}
-                                                            </h6>
-                                                        </td>
                                                     </tr>
                                                 </tbody>
                                             </table>
-
                                         </div>
                                         <div>
                                             <a href="javascript:void(0)" class="btn btn-dark"
-                                                wire:click.prevent="CambiarAccount({{ $perfil->id }})">CAMBIAR</a>
+                                            onclick="ConfirmCambiar('{{ $perfil->id }}','{{ $nameperfil }}','{{ $pin }}','{{ $perfil->email }}','{{ $perfil->password_account }}')">CAMBIAR</a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            @else
+                        @else
                             <div class="col-sm-12 col-md-4">
                                 <div class="form-group text-center mt-4">
                                     <h6>No hay perfiles creados o libres para hacer el cambio</h6>
@@ -141,7 +179,6 @@
                             </div>
                         @endif
                     @endif
-
                 </div>
             </div>
         </div>

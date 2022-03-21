@@ -16,7 +16,8 @@
                                 <label class="new-control new-radio radio-classic-primary">
                                     <input type="radio" class="new-control-input" name="custom-radio-4" id="libres"
                                         value="libres" wire:model="condicional">
-                                    <span class="new-control-indicator"></span>LIBRES
+                                    <span class="new-control-indicator"></span>
+                                    <h6>LIBRES</h6>
                                 </label>
                             </div>
                         </div>
@@ -27,7 +28,8 @@
                                 <label class="new-control new-radio radio-classic-primary">
                                     <input type="radio" class="new-control-input" name="custom-radio-4" id="ocupados"
                                         value="ocupados" wire:model="condicional" checked>
-                                    <span class="new-control-indicator"></span>OCUPADOS
+                                    <span class="new-control-indicator"></span>
+                                    <h6>OCUPADOS</h6>
                                 </label>
                             </div>
                         </div>
@@ -38,7 +40,8 @@
                                 <label class="new-control new-radio radio-classic-primary">
                                     <input type="radio" class="new-control-input" name="custom-radio-4" id="ocupados"
                                         value="vencidos" wire:model="condicional" checked>
-                                    <span class="new-control-indicator"></span>VENCIDOS
+                                    <span class="new-control-indicator"></span>
+                                    <h6>VENCIDOS</h6>
                                 </label>
                             </div>
                         </div>
@@ -57,7 +60,7 @@
                                     <th class="table-th text-withe text-center">CONTRASEÑA CUENTA</th>
                                     <th class="table-th text-withe text-center">PERFIL</th>
                                     <th class="table-th text-withe text-center">EXPIRACION CUENTA</th>
-                                    <th class="table-th text-withe text-center">OBSERV</th>
+
                                     <th class="table-th text-withe text-center">ACCIONES</th>
                                 </tr>
                             </thead>
@@ -75,13 +78,11 @@
                                         </td>
                                         <td>
                                             <h6 class="text-center"><strong> Nombre: </strong>{{ $p->namep }}
-                                                <strong>PIN: </strong>{{ $p->pin }}</h6>
+                                                <strong>PIN: </strong>{{ $p->pin }}
+                                            </h6>
                                         </td>
                                         <td>
                                             <h6 class="text-center">{{ $p->expiration }}</h6>
-                                        </td>
-                                        <td>
-                                            <h6 class="text-center">{{ $p->observations }}</h6>
                                         </td>
                                         <td class="text-center">
                                             <a href="javascript:void(0)" wire:click="Edit({{ $p->id }})"
@@ -115,9 +116,11 @@
                                     <th class="table-th text-withe text-center">EXPIRACION CUENTA</th>
                                     <th class="table-th text-withe text-center">INICIO PLAN</th>
                                     <th class="table-th text-withe text-center">EXPIRACION PLAN</th>
-                                    <th class="table-th text-withe text-center">OBSERV</th>
-                                    <th class="table-th text-withe text-center">RENOVAR</th>
-                                    <th class="table-th text-withe text-center">EDITAR</th>
+                                    @if ($condicional != 'vencidos')
+                                        <th class="table-th text-withe text-center">RENOVAR</th>
+                                        <th class="table-th text-withe text-center">EDITAR</th>
+                                    @endif
+                                    <th class="table-th text-withe text-center">REALIZADO</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -127,7 +130,9 @@
                                             <h6 class="text-center">{{ $p->nombre }}</h6>
                                         </td>
                                         <td>
-                                            <h6 class="text-center"><strong> N: </strong>{{ $p->clienteNombre }} <strong>TELF: </strong> {{ $p->clienteCelular }}</h6>
+                                            <h6 class="text-center"><strong> N: </strong>{{ $p->clienteNombre }}
+                                                <strong>TELF: </strong> {{ $p->clienteCelular }}
+                                            </h6>
                                         </td>
                                         <td>
                                             <h6 class="text-center">{{ $p->content }} <br> {{ $p->pass }}
@@ -138,7 +143,8 @@
                                         </td>
                                         <td>
                                             <h6 class="text-center"><strong> N: </strong>{{ $p->namep }}
-                                                <strong>PIN: </strong>{{ $p->pin }}</h6>
+                                                <strong>PIN: </strong>{{ $p->pin }}
+                                            </h6>
                                         </td>
                                         <td>
                                             <h6 class="text-center">{{ $p->expiration }}</h6>
@@ -149,24 +155,29 @@
                                         <td>
                                             <h6 class="text-center">{{ $p->expiration_plan }}</h6>
                                         </td>
-                                        <td>
-                                            <h6 class="text-center">{{ $p->observations }}</h6>
-                                        </td>
-                                        <td class="text-center">
-                                            @if ($p->estadoCuentaPerfil == 'ACTIVO')
-                                                <a href="javascript:void(0)" wire:click="Acciones({{ $p->planid }})"
-                                                    class="btn btn-dark mtmobile" title="Renovación">
-                                                    <i class="fa-regular fa-calendar-check"></i>
-                                                </a>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if ($p->estadoCuentaPerfil == 'ACTIVO')
-                                                <a href="javascript:void(0)" wire:click="Edit({{ $p->id }})"
-                                                    class="btn btn-dark mtmobile" title="Edit">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                            @endif
+                                        @if ($condicional != 'vencidos')
+                                            <td class="text-center">
+                                                @if ($p->estadoCuentaPerfil == 'ACTIVO')
+                                                    <a href="javascript:void(0)"
+                                                        wire:click="Acciones({{ $p->planid }})"
+                                                        class="btn btn-dark mtmobile" title="Renovación">
+                                                        <i class="fa-regular fa-calendar-check"></i>
+                                                    </a>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if ($p->estadoCuentaPerfil == 'ACTIVO')
+                                                    <a href="javascript:void(0)" wire:click="Edit({{ $p->id }})"
+                                                        class="btn btn-dark mtmobile" title="Edit">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                @endif
+                                            </td>
+                                        @endif
+                                        <td
+                                            style="{{ $p->done == 'NO' ? 'background-color: #d97171 !important' : 'background-color: #09ed3d !important' }}">
+                                            <a href="javascript:void(0)" class="btn btn-dark"
+                                                onclick="ConfirmHecho('{{ $p->planid }}')">Realizado</a>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -271,16 +282,90 @@
         })
     });
 
+    function ConfirmVencer(nameperfil) {
+        swal.fire({
+            title: 'CONFIRMAR',
+            icon: 'warning',
+            text: '¿Esta seguro de vencer el perfil ' + nameperfil + ' ?',
+            showCancelButton: true,
+            cancelButtonText: 'Cerrar',
+            cancelButtonColor: '#383838',
+            confirmButtonColor: '#3B3F5C',
+            confirmButtonText: 'Aceptar'
+        }).then(function(result) {
+            if (result.value) {
+                window.livewire.emit('Vencer')
+                swal.fire(
+                    'Se venció el perfil ' + nameperfil,
+                    'El perfil a pasado a vencido.'
+                )
+            }
+        })
+    }
+
+    function ConfirmRenovar(nameperfil, meses) {
+        swal.fire({
+            title: 'CONFIRMAR',
+            icon: 'warning',
+            text: '¿Esta seguro de renovar el perfil ' + nameperfil + ' por ' + meses + ' meses?',
+            showCancelButton: true,
+            cancelButtonText: 'Cerrar',
+            cancelButtonColor: '#383838',
+            confirmButtonColor: '#3B3F5C',
+            confirmButtonText: 'Aceptar'
+        }).then(function(result) {
+            if (result.value) {
+                window.livewire.emit('Renovar')
+                swal.fire(
+                    'Se renovó el perfil ' + nameperfil + ' por ' + meses + ' meses.'
+                )
+            }
+        })
+    }
+
+    function ConfirmCambiar(id, nameperfil, pin, email, password) {
+        swal.fire({
+            title: 'CONFIRMAR',
+            icon: 'warning',
+            text: '¿Esta seguro de cambiar el perfil ' + nameperfil + ' a la cuenta ' + email + ' ?',
+            showCancelButton: true,
+            cancelButtonText: 'Cerrar',
+            cancelButtonColor: '#383838',
+            confirmButtonColor: '#3B3F5C',
+            confirmButtonText: 'Aceptar'
+        }).then(function(result) {
+            if (result.value) {
+                window.livewire.emit('CambiarAccount', id)
+                swal.fire(
+                    'Los datos del perfil actual se cambiaran por los del nuevo automaticamente',
+                    'Se cambio de cuenta el perfil ' + nameperfil + ' de pin ' +
+                    pin + ' a la cuenta ' + email + ' de contraseña ' + password
+                )
+            }
+        })
+    }
+
+    function ConfirmHecho(id) {
+        swal.fire({
+            title: 'CONFIRMAR',
+            icon: 'warning',
+            text: '¿Ya realizó las acciones correspondientes para este perfil y desea ponerlo en realizado?',
+            showCancelButton: true,
+            cancelButtonText: 'Cerrar',
+            cancelButtonColor: '#383838',
+            confirmButtonColor: '#3B3F5C',
+            confirmButtonText: 'Aceptar'
+        }).then(function(result) {
+            if (result.value) {
+                window.livewire.emit('Realizado', id)
+                swal.fire(
+                    'Se cambió a realizado'
+                )
+            }
+        })
+    }
+
     function Confirm(id, name) {
-        /* if (cuentas > 0) {
-            swal.fire({
-                title: 'PRECAUCION',
-                icon: 'warning',
-                text: 'No se puede eliminar la cuenta, ' + name + ' porque tiene ' +
-                    cuentas + ' perfiles relacionadas'
-            })
-            return;
-        } */
         swal.fire({
             title: 'CONFIRMAR',
             icon: 'warning',
