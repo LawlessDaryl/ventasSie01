@@ -15,7 +15,7 @@
                 <div class="row">
                     <div class="col-sm-12 col-md-12">
                         <div class="form-group">
-                            <label>Observaciones</label>
+                            <label><h6>Observaciones</h6></label>
                             <textarea wire:model.lazy="observaciones" class="form-control" name="" rows="5"></textarea>
                             @error('observaciones')
                                 <span class="text-danger er">{{ $message }}</span>

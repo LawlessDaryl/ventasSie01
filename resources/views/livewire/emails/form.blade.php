@@ -1,11 +1,11 @@
 @include('common.modalHead')
 
 <div class="row">
-    <div class="col-sm-6 col-md-8" style="background: #f0ecec">
+    <div class="col-sm-6 col-md-8">
 
         <div class="col-sm-12 col-md-12">
             <div class="form-group">
-                <label>Correo</label>
+                <label><h6>Correo</h6></label>
                 <div class="input-group">
                     <input type="text" id="c" wire:model.lazy="content" class="form-control" placeholder="ej: emanuel@gmail.com">
                     <a onclick="copia();" class="btn btn-dark">
@@ -18,7 +18,7 @@
 
         <div class="col-sm-12 col-md-12">
             <div class="form-group">
-                <label>Contraseña</label>
+                <label><h6>Contraseña</h6></label>
                 <div class="input-group">
                     <input type="text" id="p" wire:model.lazy="pass" class="form-control" placeholder="ej: emanuelsie">
                     <a onclick="copiap();" class="btn btn-dark">
@@ -32,7 +32,7 @@
         <div class="row align-items-start ml-1 mr-1">
             <div class="col-sm-12 col-md-6">
                 <div class="form-group">
-                    <label>Estado</label>
+                    <label><h6>Estado</h6></label>
                     <select wire:model='status' class="form-control">
                         <option value="ACTIVO">ACTIVO</option>
                         <option value="INACTIVO">INACTIVO</option>
@@ -43,7 +43,7 @@
     
             <div class="col-sm-12 col-md-6">
                 <div class="form-group">
-                    <label>Disponibilidad</label>
+                    <label><h6>Disponibilidad</h6></label>
                     <select wire:model='availability' class="form-control">
                         <option value="LIBRE">LIBRE</option>
                         <option value="OCUPADO">OCUPADO</option>
@@ -55,7 +55,7 @@
 
         <div class="col-sm-12 col-md-12">
             <div class="form-group">
-                <label>Observaciones</label>
+                <label><h6>Observaciones</h6></label>
                 <textarea wire:model.lazy="observations" class="form-control" placeholder="Cuenta para ....... plataforma"></textarea>
                 @error('observations') <span class="text-danger er">{{ $message }}</span>@enderror
             </div>
@@ -63,7 +63,7 @@
     </div>
 
     
-    <div class="col-sm-12 col-md-4" style="background: #f0ecec">        
+    <div class="col-sm-12 col-md-4">        
 
         <br>
         <div class="col-sm-12 col-md-12 mt-2">
@@ -79,7 +79,7 @@
         </div>        
 
         <div class="col-sm-6 col-md-12 mt-2">
-            <label class="form-label ">Longitud</label>
+            <label class="form-label "><h6>Longitud</h6></label>
             <input type="number" wire:model.lazy="longitud" class="form-control text-center" min="1" max="10" value="6" />
         </div>
 

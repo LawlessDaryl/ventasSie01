@@ -15,7 +15,7 @@
                     <div class="row">
                         <div class="col-sm-12 col-md-6">
                             <div class="form-group">
-                                <label>Nombre Perfil</label>
+                                <label><h6>Nombre Perfil</h6></label>
                                 <input type="text" wire:model.lazy="nameP" class="form-control"
                                     placeholder="ej: PerfilNetflix1">
                                 @error('nameP')
@@ -26,7 +26,7 @@
 
                         <div class="col-sm-12 col-md-6">
                             <div class="form-group">
-                                <label>PIN</label>
+                                <label><h6>PIN</h6></label>
                                 <input type="text" wire:model.lazy="PIN" class="form-control" placeholder="ej: 0110">
                                 @error('PIN')
                                     <span class="text-danger er">{{ $message }}</span>
@@ -36,7 +36,7 @@
 
                         <div class="col-sm-12 col-md-6">
                             <div class="form-group">
-                                <label>Estado</label>
+                                <label><h6>Estado</h6></label>
                                 <select wire:model='estado' class="form-control">
                                     <option value="ACTIVO">ACTIVO</option>
                                     <option value="INACTIVO">INACTIVO</option>
@@ -49,7 +49,7 @@
 
                         <div class="col-sm-12 col-md-6">
                             <div class="form-group">
-                                <label>Disponibilidad</label>
+                                <label><h6>Disponibilidad</h6></label>
                                 <select wire:model='availability' class="form-control">
                                     <option value="LIBRE">LIBRE</option>
                                     <option value="OCUPADO">OCUPADO</option>
@@ -62,7 +62,7 @@
 
                         <div class="col-sm-12 col-md-12">
                             <div class="form-group">
-                                <label>Observaciones</label>
+                                <label><h6>Observaciones</h6></label>
                                 <input type="text" wire:model.lazy="Observaciones" class="form-control"
                                     placeholder="Perfil para ...">
                                 @error('Observaciones')

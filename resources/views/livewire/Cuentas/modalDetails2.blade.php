@@ -53,7 +53,7 @@
 
                     <div class="col-sm-12 col-md-6">
                         <div class="form-group">
-                            <label>Meses a renovar</label>
+                            <label><h6>Meses a renovar</h6></label>
                             <input type="number" wire:model="meses" class="form-control" placeholder="PerfilNetflix1">
                             @error('meses')
                                 <span class="text-danger er">{{ $message }}</span>
@@ -83,7 +83,7 @@
 
                     <div class="col-sm-12 col-md-6">
                         <div class="form-group">
-                            <label>Tipo de pago</label>
+                            <label><h6>Tipo de pago</h6></label>
                             <select wire:model="tipopago" class="form-control">
                                 <option value="EFECTIVO" selected>EFECTIVO</option>
                                 <option value="Banco">CUENTA BANCARIA</option>

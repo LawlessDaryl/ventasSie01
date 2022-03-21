@@ -605,6 +605,7 @@ class PlanesController extends Component
     public function Realizado(Plan $plan)
     {
         $plan->ready = 'SI';
+        $plan->done = 'SI';
         $plan->save();
         $this->resetUI();
         $this->emit('perf-actualizado', 'Se cambió a realizado');

@@ -1,9 +1,9 @@
 @include('common.modalHead')
-<div class='row' style="background: #f0ecec">
+<div class='row'>
 
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
-            <label>Plataforma</label>
+            <label><h6>Plataforma</h6></label>
             <select wire:model.lazy="plataforma" class="form-control">
                 <option value="Elegir" disabled selected>Elegir</option>
 
@@ -19,7 +19,7 @@
 
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
-            <label>TIPO</label>
+            <label><h6>TIPO</h6></label>
             <select wire:model.lazy="cuentaperfil" class="form-control">
                 <option value="Elegir" disabled selected>Elegir</option>
                 <option value="ENTERA">ENTERA</option>
@@ -34,7 +34,7 @@
 
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
-            <label>Cantidad</label>
+            <label><h6>Cantidad</h6></label>
             <input type="number" wire:model.lazy="cantidaperf" class="form-control">
             @error('cantidaperf')
                 <span class="text-danger er">{{ $message }}</span>
@@ -45,7 +45,7 @@
 
     <div class="col-sm-12 col-md-6">
         <div class="form-group">
-            <label>Nombre Cliente</label>
+            <label><h6>Nombre Cliente</h6></label>
             <input type="text" wire:model="nombre" class="form-control" placeholder="Juan Perez">
             @error('nombre')
                 <span class="text-danger er">{{ $message }}</span>
@@ -55,7 +55,7 @@
 
     <div class="col-sm-12 col-md-6">
         <div class="form-group">
-            <label>Telefono Cliente</label>
+            <label><h6>Telefono Cliente</h6></label>
             <input type="text" wire:model="celular" class="form-control" placeholder="67786522">
             @error('celular')
                 <span class="text-danger er">{{ $message }}</span>
@@ -65,7 +65,7 @@
 
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
-            <label>Tipo de pago</label>
+            <label><h6>Tipo de pago</h6></label>
             <select wire:model="tipopago" class="form-control">
                 <option value="EFECTIVO" selected>EFECTIVO</option>
                 <option value="Banco">CUENTA BANCARIA</option>
@@ -79,7 +79,7 @@
 
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
-            <label>Meses para el plan</label>
+            <label><h6>Meses para el plan</h6></label>
             <input type="number" wire:model="meses" class="form-control" placeholder="PerfilNetflix1">
             @error('meses')
                 <span class="text-danger er">{{ $message }}</span>
@@ -99,7 +99,7 @@
 
     <div class="col-sm-12 col-md-9">
         <div class="form-group">
-            <label>Observaciones</label>
+            <label><h6>Observaciones</h6></label>
             <input wire:model.lazy="observaciones" class="form-control" name="" rows="5">
             @error('observaciones')
                 <span class="text-danger er">{{ $message }}</span>

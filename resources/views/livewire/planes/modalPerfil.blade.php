@@ -13,7 +13,9 @@
                 <div class="row">
                     <div class="col-sm-12 col-md-6">
                         <div class="form-group">
-                            <label>NOMBRE PERFIL</label>
+                            <label>
+                                <h6>NOMBRE PERFIL</h6>
+                            </label>
                             <input wire:model.lazy="nombrePerfil" class="form-control">
                             @error('observaciones')
                                 <span class="text-danger er">{{ $message }}</span>
@@ -24,7 +26,9 @@
                 <div class="row">
                     <div class="col-sm-12 col-md-6">
                         <div class="form-group">
-                            <label>PIN</label>
+                            <label>
+                                <h6>PIN</h6>
+                            </label>
                             <input wire:model.lazy="pinPerfil" class="form-control">
                             @error('observaciones')
                                 <span class="text-danger er">{{ $message }}</span>
