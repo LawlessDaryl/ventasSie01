@@ -15,6 +15,7 @@ use App\Models\SubCatProdService;
 use App\Models\TypeWork;
 use App\Models\User;
 use Carbon\Carbon;
+use DateTime;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
@@ -27,7 +28,8 @@ class OrderServiceController extends Component
     use WithFileUploads;
     public $search, $selected_id, $pageTitle, $componentName,
         $cliente, $fecha_estimada_entrega, $detalle, $status, $saldo, $on_account, $import,
-        $serviceid, $movtype, $orderservice, $users1, $service1, $categoria, $marca, $numeroOrden, $detalle1, $falla_segun_cliente, $nombreCliente, $celular, $usuarioId,
+        $serviceid, $movtype, $orderservice, $users1, $service1, $categoria, $marca, $numeroOrden, 
+        $detalle1, $falla_segun_cliente, $nombreCliente, $celular, $usuarioId,
         $typew, $typeworkid, $catprodservid, $diagnostico, $solucion, $hora_entrega, $proceso,
         $terminado, $costo, $detalle_costo, $nombreUsuario, $modificar, $type_service, $movimiento,
         $opciones, $tipopago;
@@ -59,7 +61,7 @@ class OrderServiceController extends Component
         $this->costo = 0;
         $this->detalle_costo = '';
         $this->nombreUsuario = '';
-        
+        $this->opciones = 'PENDIENTE';
         $this->tipopago = 'EFECTIVO';
        
       
@@ -69,14 +71,14 @@ class OrderServiceController extends Component
     public function render()
     {
         
-        if (!empty(session('opcio'))) {
+        /* if (!empty(session('opcio'))) {
             
             $this->opciones = session('opcio');
             session(['opcio' => null]);
             
         }else{
             session(['opcio' => 'PENDIENTE']);
-        }
+        } */
         
      
         if (!empty(session('orderserv'))) {
@@ -155,6 +157,80 @@ class OrderServiceController extends Component
                 ->paginate($this->pagination);
         }
     }
+
+    $orderser = OrderService::join(
+        'services as s',
+        'order_services.id',
+        's.order_service_id'
+    )
+        ->join('mov_services as ms', 's.id', 'ms.service_id')
+        ->join('cat_prod_services as cat', 'cat.id', 's.cat_prod_service_id')
+        ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+        ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
+        ->join('clientes as c', 'c.id', 'cliemov.cliente_id')                
+        ->where('mov.status', 'like', 'ACTIVO')
+        ->select('order_services.*')
+        ->orderBy('order_services.id', 'desc')
+        ->distinct()
+        ->paginate($this->pagination);
+
+    foreach($orderser as $os)
+    {
+        foreach($os->services as $serv)
+        {
+            foreach($serv->movservices as $ms)
+            {
+                if($ms->movs->type != 'ABANDONADO' && $ms->movs->status == 'ACTIVO')
+                {
+                    $date1 = new DateTime($serv->fecha_estimada_entrega);
+                    $date2 = new DateTime("now");
+                    $diff = $date1->diff($date2);
+                    
+                    if ($diff->invert != 1) 
+                    {
+                        $serv->dias = (($diff->days)) + ($diff->d);
+                        if($serv->dias >= 30)
+                        {
+                            $movimiento = $ms->movs;
+
+                            DB::beginTransaction();
+                            try {
+                                $mv = Movimiento::create([
+                                    'type' => 'ABANDONADO',
+                                    'status' => 'ACTIVO',
+                                    'import' => $movimiento->import,
+                                    'on_account' => $movimiento->on_account,
+                                    'saldo' => $movimiento->saldo,
+                                    'user_id' => Auth()->user()->id,
+                                ]);
+                                MovService::create([
+                                    'movimiento_id' => $mv->id,
+                                    'service_id' => $serv->id
+                                ]);
+                                ClienteMov::create([
+                                    'movimiento_id' => $mv->id,
+                                    'cliente_id' => $movimiento->climov->cliente_id,
+                                ]);
+
+                                DB::commit();
+                                $movimiento->update([
+                                    'status' => 'INACTIVO'
+
+                                ]);
+
+                                /* $this->resetUI(); */
+                                /* $this->emit('product-added', 'Servicio en Proceso'); */
+                            } catch (Exception $e) {
+                                DB::rollback();
+                                $this->emit('item-error', 'ERROR' . $e->getMessage());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
         $users = User::all();
         $typew = TypeWork::orderBy('name', 'asc')->get();
         $dato1 = CatProdService::orderBy('nombre', 'asc')->get();
@@ -172,6 +248,8 @@ class OrderServiceController extends Component
         elseif ((strlen($this->import) == 0))
             $this->saldo = 0;
 
+
+            
 
         return view('livewire.order_service.component', [
             'data' => $orderservices,
