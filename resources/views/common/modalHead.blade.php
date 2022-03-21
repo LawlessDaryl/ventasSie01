@@ -7,4 +7,4 @@
           </h5>
           <h6 class="text-center text-warning" wire:loading>POR FAVOR ESPERE</h6>
         </div>
-        <div class="modal-body" style="background: #f0ecec">
+        <div class="modal-body">

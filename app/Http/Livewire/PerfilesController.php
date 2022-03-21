@@ -56,6 +56,7 @@ class PerfilesController extends Component
     {
         if ($this->condicional == 'libres') {
             if (strlen($this->search) > 0) {
+                /*  */
             } else {
                 $prof = Profile::join('account_profiles as ap', 'ap.profile_id', 'profiles.id')
                     ->join('accounts as a', 'ap.account_id', 'a.id')
@@ -299,15 +300,7 @@ class PerfilesController extends Component
             ->where('mov.type', 'APERTURA')
             ->select('cajas.id as id')
             ->get()->first();
-        /* SI PAGA EN EFECTIVO */
-        if ($this->tipopago == 'EFECTIVO') {
-            $cartera = Cartera::where('tipo', 'cajafisica')
-                ->where('caja_id', $CajaActual->id)
-                ->get()->first();
-        } else {    /* SI PAGA POR TIGO MONEY O BANCO */
-            $cartera = Cartera::where('tipo', $this->tipopago)
-                ->where('caja_id', $CajaActual->id)->get()->first();
-        }
+        
         /* OBTENER IDS PARA HACER LAS MODIFICACIONES */
         $datos = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
             ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
@@ -383,12 +376,33 @@ class PerfilesController extends Component
             $perfil->availability = 'OCUPADO';
             $perfil->save();
 
-            CarteraMov::create([
-                'type' => 'INGRESO',
-                'comentario' => '',
-                'cartera_id' => $cartera->id,
-                'movimiento_id' => $mv->id
-            ]);
+            if ($this->tipopago == 'EFECTIVO') {
+                $carteraTigo = Cartera::where('tipo', 'TigoStreaming')
+                    ->where('caja_id', $CajaActual->id)->get()->first();
+                CarteraMov::create([
+                    'type' => 'INGRESO',
+                    'comentario' => '',
+                    'cartera_id' => $carteraTigo->id,
+                    'movimiento_id' => $mv->id
+                ]);
+                $carteraTelefono = Cartera::where('tipo', 'Telefono')
+                    ->where('caja_id', $CajaActual->id)->get()->first();
+                CarteraMov::create([
+                    'type' => 'EGRESO',
+                    'comentario' => '',
+                    'cartera_id' => $carteraTelefono->id,
+                    'movimiento_id' => $mv->id
+                ]);
+            } else {
+                $cartera = Cartera::where('tipo', $this->tipopago)
+                    ->where('caja_id', $CajaActual->id)->get()->first();
+                CarteraMov::create([
+                    'type' => 'INGRESO',
+                    'comentario' => '',
+                    'cartera_id' => $cartera->id,
+                    'movimiento_id' => $mv->id
+                ]);
+            }
 
             ClienteMov::create([
                 'movimiento_id' => $mv->id,

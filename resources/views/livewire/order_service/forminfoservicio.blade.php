@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             
-            <div class="modal-body" style="background: #f0ecec">
+            <div class="modal-body bg-dark">
 
               
                         <div class="col-xl-12 col-lg-6 col-md-5 col-sm-12 layout-top-spacing">

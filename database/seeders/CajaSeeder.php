@@ -25,7 +25,7 @@ class CajaSeeder extends Seeder
             'sucursal_id' => '1',
         ]);
         Caja::create([
-            'nombre' => 'Caja Sur',
+            'nombre' => 'Caja Ferrufino',
             'estado' => 'Cerrado',
             'sucursal_id' => '2',
         ]);

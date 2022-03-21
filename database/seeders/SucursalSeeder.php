@@ -23,7 +23,7 @@ class SucursalSeeder extends Seeder
             'company_id' => '1'
         ]);
         Sucursal::create([
-            'name' => 'Sucursal Oeste',
+            'name' => 'Sucursal Ferrufino',
             'adress' => 'Av. America casi Billing',
             'telefono' => '470080',
             'celular' => '7108080',

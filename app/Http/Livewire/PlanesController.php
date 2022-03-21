@@ -140,6 +140,7 @@ class PlanesController extends Component
                     ->where('prof.status', 'ACTIVO')
                     ->whereColumn('plans.id', '=', 'ap.plan_id')
                     ->where('ca.id', $cajausuario->id)
+                    ->where('cmvs.type', 'INGRESO')
                     ->orderBy('plans.created_at', 'desc')
                     ->get();
             }
@@ -179,6 +180,7 @@ class PlanesController extends Component
                     ->where('acc.whole_account', 'ENTERA')
                     ->where('acc.availability', 'OCUPADO')
                     ->where('ca.id', $cajausuario->id)
+                    ->where('cmvs.type', 'INGRESO')
                     ->orderBy('plans.created_at', 'desc')
                     ->get();
             }
@@ -318,14 +320,14 @@ class PlanesController extends Component
             ->select('cajas.id as id')
             ->get()->first();
 
-        if ($this->tipopago == 'EFECTIVO') {
+        /* if ($this->tipopago == 'EFECTIVO') {            
             $cartera = Cartera::where('tipo', 'cajafisica')
                 ->where('caja_id', $cccc->id)
                 ->get()->first();
         } else {
             $cartera = Cartera::where('tipo', $this->tipopago)
                 ->where('caja_id', $cccc->id)->get()->first();
-        }
+        } */
         DB::beginTransaction();
         try {
             /* Registrar un nuevo cliente */
@@ -375,14 +377,33 @@ class PlanesController extends Component
                         'plan_id' => $plan->id,
                         'account_id' => $accp->id
                     ]);
-
-                    CarteraMov::create([
-                        'type' => 'INGRESO',
-                        'comentario' => '',
-                        'cartera_id' => $cartera->id,
-                        'movimiento_id' => $mv->id
-                    ]);
-
+                    if ($this->tipopago == 'EFECTIVO') {
+                        $carteraTigo = Cartera::where('tipo', 'TigoStreaming')
+                            ->where('caja_id', $cccc->id)->get()->first();
+                        CarteraMov::create([
+                            'type' => 'INGRESO',
+                            'comentario' => '',
+                            'cartera_id' => $carteraTigo->id,
+                            'movimiento_id' => $mv->id
+                        ]);
+                        $carteraTelefono = Cartera::where('tipo', 'Telefono')
+                            ->where('caja_id', $cccc->id)->get()->first();
+                        CarteraMov::create([
+                            'type' => 'EGRESO',
+                            'comentario' => '',
+                            'cartera_id' => $carteraTelefono->id,
+                            'movimiento_id' => $mv->id
+                        ]);
+                    } else {
+                        $cartera = Cartera::where('tipo', $this->tipopago)
+                            ->where('caja_id', $cccc->id)->get()->first();
+                        CarteraMov::create([
+                            'type' => 'INGRESO',
+                            'comentario' => '',
+                            'cartera_id' => $cartera->id,
+                            'movimiento_id' => $mv->id
+                        ]);
+                    }
                     ClienteMov::create([
                         'movimiento_id' => $mv->id,
                         'cliente_id' => $listaCL->id

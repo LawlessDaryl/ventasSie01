@@ -1,6 +1,5 @@
 @include('common.modalHead')
 <div class='row'>
-
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
             <label><h6>Plataforma</h6></label>
@@ -116,7 +115,7 @@
     <span class="text-danger er">{{ $message }}</span>
 @enderror
 
-<div class='row' style="background: #f0ecec">
+<div class='row'>
     @if ($mostrartabla == 1)
         <div class="col-sm-12 col-md-12">
             <div class="statbox widget box box-shadow">
