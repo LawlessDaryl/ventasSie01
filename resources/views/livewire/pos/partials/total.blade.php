@@ -34,7 +34,7 @@
                                     <strong>Factura</strong>
                                     <br>
                                         <label class="switch s-icons s-outline  s-outline-primary  mb-4 mr-2">
-                                            <input type="checkbox" wire:model="factura">
+                                            <input id="factura" type="checkbox" wire:model="factura">
                                             <span class="slider round"></span>
                                         </label>
                                 </div>
@@ -61,6 +61,7 @@
 
 
                                 <div class="col-lg-12">
+                                   
                                     <div class="form-group">
                                         <strong>Total Artìculos:</strong>
                                         <br>
@@ -92,7 +93,7 @@
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                         <strong>Observacion: </strong>
-                                        <textarea  class="form-control" aria-label="With textarea"></textarea>
+                                        <textarea class="form-control" aria-label="With textarea" wire:model="observacion"></textarea>
                                     </div>
                                 </div>
 

@@ -27,7 +27,7 @@ class CreateSalesTable extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->unsignedBigInteger('movimiento_id');
             $table->foreign('movimiento_id')->references('id')->on('movimientos');
-
+            $table->string('observacion',500)->default('Ninguna');
 
             // $table->unsignedBigInteger('destinoproducto_id');
             // $table->foreign('destinoproducto_id')->references('id')->on('destinoproducto');

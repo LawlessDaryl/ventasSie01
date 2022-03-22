@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Redirect;
 class PosController extends Component
 {
     public $total, $itemsQuantity, $efectivo, $change, 
-    $nit, $clienteanonimo="true", $tipopago ,$anonimo, $factura, $facturasino, $nombreproducto;
+    $nit, $clienteanonimo="true", $tipopago ,$anonimo, $factura, $observacion, $facturasino, $nombreproducto;
 
     //Variables para la venta desde almacen, moviendo productos de almacen a la tienda
     public  $stockalmacen, $nombrestockproducto, $cantidadToTienda = 1, $idproductoalmacen;
@@ -125,7 +125,7 @@ class PosController extends Component
             ->section('content');
     }
 
-
+    //Para Cambiar el valor de facturasino segùn el usuario lo requiera
     public function ventafactura()
     {
         if($this->factura == 'true')
@@ -138,7 +138,7 @@ class PosController extends Component
         }
     }
 
-
+    //Pra Saber si se registrara la venta con un Clinete Anònimo
     public function clienteanonimo()
     {
         if($this->clienteanonimo == 'true')
@@ -185,7 +185,7 @@ class PosController extends Component
         ->where("products.barcode", $barcode)
         ->where("d.ubicacion", 'TIENDA')
         ->get()->first();
-        //$product = Product::where('barcode', $barcode)->first();
+        
         if ($product == null || empty($product))
         {
             $this->emit('scan-notfound', 'El producto no esta registrado');
@@ -199,8 +199,29 @@ class PosController extends Component
             }
             if ($product->stock < 1)
             {
-                $this->emit('no-stock', 'stock insuficiente :/');
-                return;
+                //Buscar Productos en Almacen
+                $productoalmacen = Product::join("productos_destinos as pd", "pd.product-id", "products.id")
+                ->join('locations as d', 'd.id', 'pd.destino-id')
+                ->select("products.id as id","products.image as image","products.nombre as name",
+                "products.precio_venta as price","products.barcode", "pd.stock as stock")
+                ->where("products.id", $product->id)
+                ->where("d.ubicacion", 'ALMACEN')
+                ->get()->first();
+                if($productoalmacen->stock > 0)
+                {
+                    $this->stockalmacen = $productoalmacen->stock;
+                    $this->nombrestockproducto = $productoalmacen->name;
+                    $this->idproductoalmacen = $productoalmacen->id;
+                    //$this->mostrarmodal = 1;
+                    //$this->emit('no-stock', 'Stock Insuficiente en Tienda, Se encontraro Productos Disponibles en Almacen');
+                    $this->emit('no-stocktienda');
+                    return;
+                }
+                else
+                {
+                    $this->emit('no-stock', 'stock insuficiente en TIENDA y ALMACEN');
+                    return;
+                }
             }
             Cart::add(
                 $product->id,
@@ -224,9 +245,10 @@ class PosController extends Component
     }
 
 
+
     public function increaseQty($productId, $cant = 1)
     {
-        $title = 'aaaaaaaaaaa';
+        //Consulta para saber el Stock de los Productos en Tienda
         $product = Product::join("productos_destinos as pd", "pd.product-id", "products.id")
         ->join('locations as d', 'd.id', 'pd.destino-id')
         ->select("products.id as id","products.image as image","products.nombre as name",
@@ -234,6 +256,8 @@ class PosController extends Component
         ->where("products.id", $productId)
         ->where("d.ubicacion", 'TIENDA')
         ->get()->first();
+        //---------------------------------------------------------
+        //Pra saber si el Producto ya esta en carrrito para cambiar el mensaje de Producto Agregado a Cantdad Actualizada
         $exist = Cart::get($productId);
         if ($exist)
         {
@@ -272,6 +296,7 @@ class PosController extends Component
                 }
             }
         }
+
         Cart::add($product->id, $product->name, $product->price, $cant, $product->image);
 
         $this->total = Cart::getTotal();
@@ -409,13 +434,7 @@ class PosController extends Component
             ->select('cajas.id as id')
             ->get()->first();
 
-
-
-            // $cajafisica = Cartera::
-            // where('caja_id',$cajausuario->id)
-            // ->where('tipo','CajaFisica')->get()->first();
-
-            //Topo de Pago en la Venta
+            //Tipo de Pago en la Venta
             if ($this->tipopago == 'EFECTIVO')
             {
                 $cartera = Cartera::where('tipo', 'cajafisica')
@@ -427,26 +446,42 @@ class PosController extends Component
                 $cartera = Cartera::where('tipo', $this->tipopago)
                     ->where('caja_id', $cajausuario->id)->get()->first();
             }
+            //Cambiando valor de $facturasino dependiendo del valor de $factura
+            $this->ventafactura();
             //Creando Venta
-            $sale = Sale::create([
-                'total' => $this->total,
-                'items' => $this->itemsQuantity,
-                'cash' => $this->efectivo,
-                'change' => $this->change,
-
-                'tipopago' => $this->tipopago,
-                'factura' => $this->facturasino,
-
-
-                'movimiento_id' => $Movimiento->id,
-                'user_id' => Auth()->user()->id
-            ]);
+            if($this->observacion=="")
+            {
+                $sale = Sale::create([
+                    'total' => $this->total,
+                    'items' => $this->itemsQuantity,
+                    'cash' => $this->efectivo,
+                    'change' => $this->change,
+                    'tipopago' => $this->tipopago,
+                    'factura' => $this->facturasino,
+                    'movimiento_id' => $Movimiento->id,
+                    'user_id' => Auth()->user()->id
+                ]);
+            }
+            else
+            {
+                $sale = Sale::create([
+                    'total' => $this->total,
+                    'items' => $this->itemsQuantity,
+                    'cash' => $this->efectivo,
+                    'change' => $this->change,
+                    'tipopago' => $this->tipopago,
+                    'factura' => $this->facturasino,
+                    'movimiento_id' => $Movimiento->id,
+                    'observacion' => $this->observacion,
+                    'user_id' => Auth()->user()->id
+                ]);
+            }
             //Creando Detalle de Venta
             if ($sale)
             {
                 $items = Cart::getContent();
-                //dd($items);
                 foreach ($items as $item) {
+
                     SaleDetail::create([
                         'price' => $item->price,
                         'quantity' => $item->quantity,
@@ -454,9 +489,20 @@ class PosController extends Component
                         'sale_id' => $sale->id,
                     ]);
 
-                    $product = ProductosDestino::find($item->id);
-                    $product->stock = $product->stock - $item->quantity;
-                    $product->save();
+
+                    //Decrementando el stock en tienda
+                    $tiendaproducto = ProductosDestino::join("products as p", "p.id", "productos_destinos.product-id")
+                    ->join('locations as d', 'd.id', 'productos_destinos.destino-id')
+                    ->select("productos_destinos.id as id","p.nombre as name",
+                    "productos_destinos.stock as stock")
+                    ->where("p.id", $item->id)
+                    ->where("d.ubicacion", 'TIENDA')
+                    ->get()->first();
+
+
+                    $tiendaproducto->update([
+                        'stock' => $tiendaproducto->stock - $item->quantity
+                    ]);
                 }
             }
 
@@ -486,11 +532,13 @@ class PosController extends Component
             //Dejando la variable Cliente Anònimo ($anonimo) en True=0
             $this->anonimo = 0;
             //Dejando la variable Factura en False
-            $this->factura = 'false';
-            $this->facturasino = 'No';
+            // $this->factura = "false";
+            // $this->facturasino="No";
+
+
             $this->emit('save-ok', 'venta registrada con exito');
 
-            return Redirect::to('salelist');
+            return Redirect::to('pos');
         } catch (Exception $e) {
             DB::rollback();
             $this->emit('sale-error', $e->getMessage());
