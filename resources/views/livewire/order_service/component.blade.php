@@ -149,10 +149,28 @@
                                         </div>
                                         @endforeach
                                     </td>
+                                    
                                     {{-- CODIGO --}}
+                                    @if($item->id < 10)
+                                    <td class="text-center" width="7%">
+                                        <h6 class="table-th text-withe text-center">000{{ $item->id }}</h6>
+                                    </td>
+                                    @endif
+                                    @if($item->id < 100 && $item->id >=10)
+                                    <td class="text-center" width="7%">
+                                        <h6 class="table-th text-withe text-center">00{{ $item->id }}</h6>
+                                    </td>
+                                    @endif
+                                    @if($item->id < 1000 && $item->id >=100)
+                                    <td class="text-center" width="7%">
+                                        <h6 class="table-th text-withe text-center">0{{ $item->id }}</h6>
+                                    </td>
+                                    @endif
+                                    @if($item->id < 10000 && $item->id >=1000)
                                     <td class="text-center" width="7%">
                                         <h6 class="table-th text-withe text-center">{{ $item->id }}</h6>
                                     </td>
+                                    @endif
                                     {{-- TOTAL --}}
                                     <td class="text-center" width="7%">
                                         <h6 class="text-info">

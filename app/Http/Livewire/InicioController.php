@@ -34,7 +34,7 @@ class InicioController extends Component
         $opciones, $tipopago, $condicional, $fechahoy, $horaActual;
 
 
-    private $pagination = 5;
+    private $pagination = 10;
     public function paginationView()
     {
         return 'vendor.livewire.bootstrap';

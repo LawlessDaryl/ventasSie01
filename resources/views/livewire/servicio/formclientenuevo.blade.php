@@ -12,7 +12,7 @@
                 <div class="row">
                     <div class="col-sm-12 col-md-6">
                         <div class="form-group">
-                            <label>Nombre</label>
+                            <label>Nombre *</label>
                             <input type="text" wire:model.lazy="nombre" class="form-control" placeholder="ej: Fenris">
                             @error('nombre') <span class="text-danger er">{{ $message }}</span>@enderror
                         </div>
@@ -20,7 +20,7 @@
 
                     <div class="col-sm-12 col-md-6">
                         <div class="form-group">
-                            <label>Cédula</label>
+                            <label>Cédula *</label>
                             <input type="number" wire:model.lazy="cedula" class="form-control" placeholder="12121212" maxlength="10">
                             @error('cedula') <span class="text-danger er">{{ $message }}</span>@enderror
                         </div>

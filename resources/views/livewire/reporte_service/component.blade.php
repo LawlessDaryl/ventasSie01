@@ -30,6 +30,7 @@
                                 <option value="PROCESO">Proceso</option>
                                 <option value="TERMINADO">Terminado</option>
                                 <option value="ENTREGADO">Entregado</option>
+                                <option value="ABANDONADO">Abandonado</option>
                             </select>
                         </div>
                     </div>
@@ -64,7 +65,7 @@
 
                         <a class="btn btn-dark btn-block {{ count($data) < 1 ? 'disabled' : '' }}"
                             href="{{ url('reporteServicio/pdf' . '/' . $userId . '/' . $estado . '/' . $reportType . '/' . $dateFrom . '/' . $dateTo) }}"
-                            style='font-size:18px'>Generar PDF</a>
+                            target="_blank" style='font-size:18px'>Generar PDF</a>
 
                     </div>
 
@@ -150,6 +151,21 @@
                                                         <h6>{{ $mv->movs->created_at }}</h6>
                                                     </td>
                                                 @endif
+
+                                                @if ($mv->movs->type == 'ABANDONADO')
+                                                    @if ($mv->movs->status == 'ACTIVO')
+                                                        <td class="text-center">
+                                                            <h6>Abandonado</h6>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <h6>Abandonado</h6>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <h6>Abandonado</h6>
+                                                        </td>
+                                                    @endif
+                                                @endif
+
                                             @endforeach
                                             <td class="text-center">
                                                 <h6>{{ number_format($d->costo, 2) }}</h6>
@@ -203,12 +219,53 @@
                                                         <h6>{{ $d->movservices[2]->movs->usermov->name }}</h6>
                                                     </td>
                                                 @endif
+                                                @if ($mv->movs->type == 'ABANDONADO' && $mv->movs->status == 'ACTIVO')
+                                                    <td class="text-center">
+                                                        <h6>{{ $mv->movs->type }}</h6>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <h6>{{ $mv->movs->usermov->name }}</h6>
+                                                    </td>
+                                                @endif
                                             @endforeach
 
 
                                         </tr>
                                     @endforeach
                                 </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="2" class="text-left">
+                                            <span><b>TOTALES</b></span>
+                                        </td>
+                                        <td class="text-right" colspan="4">
+                                            <span><strong>
+                                                    
+                                                ${{ number_format($data->sum('costo'), 2) }}
+                    
+                                                </strong></span>
+                                        </td>
+                                        <td class="text-right" colspan="1">
+                                            <span><strong>
+                                                    @php
+                                                        $mytotal = 0;                                     
+                                                    @endphp
+                                                    @foreach ($data as $d)
+                                                        @foreach ($d->movservices as $mv)
+                                                            @if ($mv->movs->status == 'ACTIVO')
+                                                                @php
+                                                                $mytotal += $mv->movs->import;
+                                                                @endphp                                    
+                                                            @endif
+                                                        @endforeach
+                                                    @endforeach
+                                                    ${{ number_format($mytotal, 2) }}
+                    
+                                                </strong></span>
+                                        </td>
+                                        
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
                     </div>

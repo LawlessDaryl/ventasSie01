@@ -153,7 +153,7 @@ class ServiciosController extends Component
         if($this->celular==''){
             $this->celular=0;
             $rules = [
-                'nombre' => 'required|min:1',
+                'nombre' => 'required|min:1|unique:clientes',
                 'cedula' => 'required|max:10',
                 'celular' => 'numeric',
                 'nit' => 'required|numeric',
@@ -162,6 +162,7 @@ class ServiciosController extends Component
             $messages = [
                 'nombre.required' => 'Nombre es requerido',
                 'nombre.min' => 'El nombre debe ser contener al menos 1 caracter',
+                'nombre.unique' => 'Ya existe el mismo Nombre registrado',
                 'cedula.required' => 'La cédula es requerida',
                 'cedula.max' => 'La cédula debe tener máximo 10 digitos',
                 'celular.numeric' => 'No puede ingresar letras',
@@ -172,7 +173,7 @@ class ServiciosController extends Component
     
         }else{
             $rules = [
-                'nombre' => 'required|min:1',
+                'nombre' => 'required|min:1|unique:clientes',
                 'cedula' => 'required|max:10',
                 'celular' => 'required|numeric|digits:8',
                 'nit' => 'required|numeric',
@@ -181,6 +182,7 @@ class ServiciosController extends Component
             $messages = [
                 'nombre.required' => 'Nombre es requerido',
                 'nombre.min' => 'El nombre debe ser contener al menos 1 caracter',
+                'nombre.unique' => 'Ya existe el mismo Nombre registrado',
                 'cedula.required' => 'La cédula es requerida',
                 'cedula.max' => 'La cédula debe tener máximo 10 digitos',
                 'celular.required' => 'El celular es requerido',

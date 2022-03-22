@@ -11,7 +11,7 @@
                                 <div class="widget-content widget-content-area">
                                     <div class="d-flex justify-content-between">
                                         <h3 class="">Información del Servicio</h3>
-                                        <a href="user_account_setting.html" class="mt-2 edit-profile"> 
+                                        <a class="mt-2 edit-profile"> 
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" 
                                             height="24" viewBox="0 0 24 24" fill="none" 
                                             stroke="currentColor" stroke-width="2" stroke-linecap="round" 

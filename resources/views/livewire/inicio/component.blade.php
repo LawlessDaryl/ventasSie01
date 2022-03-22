@@ -210,6 +210,7 @@
                         </tbody>
                         @endif
                     </table>
+                    {{ $data->links() }}
                 </div>
             </div>
 

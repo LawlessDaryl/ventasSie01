@@ -126,6 +126,21 @@
                                     <FONT FACE="times new roman" SIZE=1>{{ $mv->movs->created_at }}</FONT>
                                 </td>
                             @endif
+
+                            @if ($mv->movs->type == 'ABANDONADO')
+                                @if ($mv->movs->status == 'ACTIVO')
+                                    <td align="center">
+                                        <FONT FACE="times new roman" SIZE=1>Abandonado</FONT>
+                                    </td>
+                                    <td align="center">
+                                        <FONT FACE="times new roman" SIZE=1>Abandonado</FONT>
+                                    </td>
+                                    <td align="center">
+                                        <FONT FACE="times new roman" SIZE=1>Abandonado</FONT>
+                                    </td>
+                                @endif
+                            @endif
+
                         @endforeach
                         <td align="center">
                             <FONT FACE="times new roman" SIZE=1>{{ number_format($d->costo, 2) }}</FONT>
@@ -182,6 +197,14 @@
                                 <td align="center">
                                     <FONT FACE="times new roman" SIZE=1>{{ $d->movservices[2]->movs->usermov->name }}
                                     </FONT>
+                                </td>
+                            @endif
+                            @if ($mv->movs->type == 'ABANDONADO' && $mv->movs->status == 'ACTIVO')
+                                <td align="center">
+                                    <FONT FACE="times new roman" SIZE=1>{{ $mv->movs->type }}</FONT>
+                                </td>
+                                <td align="center">
+                                    <FONT FACE="times new roman" SIZE=1>{{ $mv->movs->usermov->name }}</FONT>
                                 </td>
                             @endif
                         @endforeach

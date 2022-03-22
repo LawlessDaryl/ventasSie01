@@ -67,14 +67,15 @@ class OrderServiceController extends Component
     }
     public function render()
     {
-
-        /* if (!empty(session('opcio'))) {
+        /* session(['opcio' => null]);
+        if (!empty(session('opcio'))) {
             
             $this->opciones = session('opcio');
             session(['opcio' => null]);
             
         }else{
             session(['opcio' => 'PENDIENTE']);
+            
         } */
 
 
@@ -179,7 +180,7 @@ class OrderServiceController extends Component
 
                         if ($diff->invert != 1) {
                             $serv->dias = (($diff->days)) + ($diff->d);
-                            if ($serv->dias >= 30) {
+                            if ($serv->dias >= 90) {
                                 $movimiento = $ms->movs;
 
                                 DB::beginTransaction();
