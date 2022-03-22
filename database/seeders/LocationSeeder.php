@@ -16,19 +16,31 @@ class LocationSeeder extends Seeder
     {
         Location::create([
             'sucursal_id' => '1',
-            'codigo' => '41213',
-            'descripcion' => 'ESTANTE DE MADERA',
+            'codigo' => '0001',
+            'descripcion' => 'Almacen de todos los Productos',
             'ubicacion' => 'ALMACEN',
             'tipo' => 'ESTANTE'
-          
         ]);
         Location::create([
             'sucursal_id' => '1',
-            'codigo' => '41214',
-            'descripcion' => 'VITRINA NUEVA METALICA',
+            'codigo' => '0002',
+            'descripcion' => 'Tv Box, Cables, Dispositivos de Almacenamiento',
             'ubicacion' => 'TIENDA',
             'tipo' => 'VITRINA'
-          
+        ]);
+        Location::create([
+            'sucursal_id' => '1',
+            'codigo' => '0003',
+            'descripcion' => 'Vidrios Templados y Fundas',
+            'ubicacion' => 'TIENDA',
+            'tipo' => 'Mostrador'
+        ]);
+        Location::create([
+            'sucursal_id' => '2',
+            'codigo' => '0004',
+            'descripcion' => 'Repuestos varios',
+            'ubicacion' => 'ALMACEN',
+            'tipo' => 'ESTANTE'
         ]);
     }
 }

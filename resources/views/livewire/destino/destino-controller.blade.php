@@ -36,6 +36,7 @@
                           @foreach ($data_suc as $data)
                           <option value="{{ $data->name }}">{{ $data->name }}</option>
                           @endforeach
+                          <option value="General">Almacen General</option>
                         </select>
                       </div>
                 </div>
@@ -56,24 +57,25 @@
           
 
             <div class="widget-content">
-                <div class="d-flex row">
+               
 
-                    <div class="col-12 col-lg-12 col-md-4">
+                    <div class="col-12 col-lg-12 col-md-4 d-flex flex-wrap">
                     
                       @foreach($destinos_almacen as $destino)
                       
                         <div class="card border-success m-2" style="max-width: 18rem;">
-                            <div class="card-header"><h3> {{$destino->suc_id}}</h3></div>
+                            <div class="card-header"><h3> {{$destino->name}}</h3></div>
                             <div class="card-body text-success">
-                              <h5 class="card-title">{{$destino->tipo}}-{{$destino->codigo}}</h5>
-                              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                             {{--<h5 class="card-title">{{$destino->tipo}}-{{$destino->codigo}}</h5>--}} 
+                              <p class="card-text"> <strong> Stock Disponible:</strong> {{$destino->stock}}</p>
+                              <p class="card-text"> <strong></strong> {{$destino->tipo}}-{{$destino->codigo}}</p>
                             </div>
                           </div>
                       @endforeach
 
                     </div>
                   
-                </div>
+                
             </div>
         </div>
     </div>
