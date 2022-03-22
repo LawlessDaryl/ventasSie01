@@ -216,6 +216,7 @@
     @include('livewire.planes.form')
     @include('livewire.planes.modalObservaciones')
     @include('livewire.planes.modalPerfil')
+    @include('livewire.planes.modalCrearPerfil')
 </div>
 
 <script>
@@ -259,6 +260,15 @@
             $('#Modal_perfil').modal('hide')
             noty(Msg)
         })
+
+        window.livewire.on('show-crearPerfil', Msg => {
+            $('#Modal_crear_perfil').modal('show')
+        })
+        window.livewire.on('crearperfil-cerrar', Msg => {
+            $('#Modal_crear_perfil').modal('hide')
+            noty(Msg)
+        })
+
         flatpickr(document.getElementsByClassName('flatpickr'), {
             enableTime: false,
             dateFormat: 'Y-m-d',

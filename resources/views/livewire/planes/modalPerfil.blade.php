@@ -17,7 +17,7 @@
                                 <h6>NOMBRE PERFIL</h6>
                             </label>
                             <input wire:model.lazy="nombrePerfil" class="form-control">
-                            @error('observaciones')
+                            @error('nombrePerfil')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror
                         </div>
@@ -30,7 +30,7 @@
                                 <h6>PIN</h6>
                             </label>
                             <input wire:model.lazy="pinPerfil" class="form-control">
-                            @error('observaciones')
+                            @error('pinPerfil')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror
                         </div>

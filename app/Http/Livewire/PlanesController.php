@@ -28,7 +28,8 @@ class PlanesController extends Component
         $pageTitle, $componentName, $selected_id, $hora, $search, $condicion, $type, $cartera_id,
         $nombre, $cedula, $celular, $direccion, $email, $fecha_nacim, $razon, $nit, $plataforma,
         $cuentaperfil, $accounts, $profiles, $cantidaperf, $mostrartabla, $tipopago, $condicional,
-        $meses, $observaciones, $ready, $selected_perf, $totalCobrar;
+        $meses, $observaciones, $ready, $selected_perf, $totalCobrar, $BuscarCliente, $ClienteSelect,
+        $cuentasEnteras, $nombrePerfil, $pinPerfil;
 
     private $pagination = 10;
     public function paginationView()
@@ -60,6 +61,11 @@ class PlanesController extends Component
         $this->observaciones = '';
         $this->ready = 'NINGUNA';
         $this->totalCobrar = 0;
+        $this->BuscarCliente = 0;
+        $this->ClienteSelect = 0;
+        $this->nombrePerfil = '';
+        $this->pinPerfil = '';
+        $this->cuentasEnteras = [];
     }
 
     public function render()
@@ -195,23 +201,23 @@ class PlanesController extends Component
             $this->meses = 1;
         }
 
+        /* BUSCAR CLIENTE POR CEDULA EN EL INPUT DEL MODAL */
         $datos = [];
-        /* if (strlen($this->cedula) > 0) {
-            $datos = Cliente::where('nombre', 'like', '%' . $this->nombre . '%')
-                ->orWhere('celular', 'like', '%' . $this->celular . '%')
-                ->orderBy('id', 'desc')->get();
+        if (strlen($this->celular) > 0) {
+            $datos = Cliente::where('celular', 'like', '%' . $this->celular . '%')->orderBy('celular', 'desc')->get();
             if ($datos->count() > 0) {
-                $this->condicion = 1;
+                $this->BuscarCliente = 1;
             } else {
-                $this->condicion = 0;
+                $this->BuscarCliente = 0;
             }
-            if ($this->select == 0) {
-                $this->condicion = 0;
+            if ($this->ClienteSelect == 0) {
+                $this->BuscarCliente = 0;
             }
         } else {
-            if ($this->select == 0)
-                $this->select = 1;
-        } */
+            if ($this->ClienteSelect == 0) {
+                $this->ClienteSelect = 1;
+            }
+        }
 
         if ($this->plataforma != 'Elegir') {
             if ($this->cuentaperfil == 'ENTERA') {  /* MOSTRAR TODAS LAS CUENTAS ENTERAS LIBRES */
@@ -251,6 +257,18 @@ class PlanesController extends Component
                     ->where('p.id', $this->plataforma)
                     ->get()->take($this->cantidaperf);
                 $this->mostrartabla = 2;
+                $this->cuentasEnteras = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
+                    ->join('emails as e', 'accounts.email_id', 'e.id')
+                    ->select(
+                        'accounts.*',
+                        'e.content',
+                    )
+                    ->where('accounts.whole_account', 'ENTERA')
+                    ->where('accounts.availability', 'LIBRE')
+                    ->where('accounts.status', 'ACTIVO')
+                    ->where('p.id', $this->plataforma)
+                    ->orderBy('accounts.expiration_account', 'desc')
+                    ->get();
             } else {
                 $this->accounts = [];
                 $this->profiles = [];
@@ -267,12 +285,80 @@ class PlanesController extends Component
             ->section('content');
     }
 
+    public function VerCuentas()
+    {
+        $this->emit('show-crearPerfil', 'show modal!');
+    }
+
+    public function SeleccionarCuenta(Account $cuenta)
+    {
+        $rules = [
+            'nombrePerfil' => 'required',
+            'pinPerfil' => 'required',
+
+        ];
+        $messages = [
+            'nombrePerfil.required' => 'El nombre del perfil es requerido',
+            'pinPerfil.required' => 'El pin es requerido',
+        ];
+
+        $this->validate($rules, $messages);
+
+        $perfil = Profile::create([
+            'nameprofile' => $this->nombrePerfil,
+            'pin' => $this->pinPerfil,
+            'status' => 'ACTIVO',
+            'availability' => 'LIBRE',
+            'observations' => '',
+        ]);
+        AccountProfile::create([
+            'status' => 'SinAsignar',
+            'account_id' => $cuenta->id,
+            'profile_id' => $perfil->id,
+        ]);
+        /* LA CUENTA PASA A DIVIDIDA */
+        $cuenta->whole_account = 'DIVIDIDA';
+        $cuenta->save();
+
+        $this->nombrePerfil = '';
+        $this->pinPerfil = '';
+
+        $this->profiles = Profile::join('account_profiles as ap', 'ap.profile_id', 'profiles.id')
+            ->join('accounts as a', 'ap.account_id', 'a.id')
+            ->join('platforms as p', 'a.platform_id', 'p.id')
+            ->join('emails as e', 'a.email_id', 'e.id')
+            ->select(
+                'profiles.id as id',
+                'p.precioPerfil as precioPerfil',
+                'a.id as cuentaid',
+                'e.content as email',
+                'profiles.nameprofile as nombre_perfil',
+                'profiles.pin as pin',
+                'a.password_account as password_account'
+            )
+            ->where('profiles.availability', 'LIBRE')
+            ->where('profiles.status', 'ACTIVO')
+            ->where('a.status', 'ACTIVO')
+            ->orderBy('a.expiration_account', 'desc')
+            ->where('p.id', $this->plataforma)
+            ->get()->take($this->cantidaperf);
+
+        $this->emit('crearperfil-cerrar', 'Se creó el perfil en la cuenta seleccionada');
+    }
+
     public function Agregar()
     {
         if ($this->selected_id != 0) {
             $this->resetUI();
         }
         $this->emit('show-modal', 'show modal!');
+    }
+    /* Cargar los datos seleccionados de la tabla a los label */
+    public function Seleccionar($celular, $nombre)
+    {
+        $this->celular = $celular;
+        $this->nombre = $nombre;
+        $this->ClienteSelect = 0;
     }
 
     /* Registrar una transaccion */
@@ -281,7 +367,7 @@ class PlanesController extends Component
         $rules = [
             'plataforma' => 'required|not_in:Elegir',
             'cuentaperfil' => 'required|not_in:Elegir',
-            'nombre' => 'required|min:4|unique:clientes',
+            'nombre' => 'required|min:4',
             'celular' => 'required|integer|min:8',
             'tipopago' => 'required|not_in:Elegir',
             'expiration_plan' => 'required|not_in:0000-00-00',
@@ -295,7 +381,6 @@ class PlanesController extends Component
             'cuentaperfil.not_in' => 'Seleccione un valor distinto a Elegir',
             'nombre.required' => 'El nombre del cliente es requerido',
             'nombre.min' => 'El nombre debe tener al menos 4 caracteres',
-            'nombre.unique' => 'El nombre ya se encuentra registrado',
             'celular.required' => 'El numero de celular del cliente es requerido',
             'celular.integer' => 'El celular debe ser un número',
             'celular.min' => 'El celular debe tener 8 dígitos',
@@ -328,20 +413,31 @@ class PlanesController extends Component
             $cartera = Cartera::where('tipo', $this->tipopago)
                 ->where('caja_id', $cccc->id)->get()->first();
         } */
+        /* Obtener al cliente con la cedula */
+        $cliente = Cliente::where('celular', $this->celular)
+            ->get()
+            ->first();
+
         DB::beginTransaction();
         try {
-            /* Registrar un nuevo cliente */
-            $listaCL = Cliente::create([
-                'nombre' => $this->nombre,
-                'cedula' => null,
-                'celular' => $this->celular,
-                'direccion' => null,
-                'email' => null,
-                'fecha_nacim' => null,
-                'razon_social' => null,
-                'nit' => null,
-                'procedencia_cliente_id' => 1,
-            ]);
+            if ($cliente) { /* Actualizar nombre del cliente por el telefono */
+                if ($cliente->celular != $this->celular) {
+                    $cliente->celular = $this->celular;
+                    $cliente->save();
+                }
+            } else { /* Registrar un nuevo cliente */
+                $cliente = Cliente::create([
+                    'nombre' => $this->nombre,
+                    'cedula' => null,
+                    'celular' => $this->celular,
+                    'direccion' => null,
+                    'email' => null,
+                    'fecha_nacim' => null,
+                    'razon_social' => null,
+                    'nit' => null,
+                    'procedencia_cliente_id' => 1,
+                ]);
+            }
             if ($this->cuentaperfil == 'ENTERA') {
                 /* SI SE SELECCIONÓ CUENTA ENTERA */
                 foreach ($this->accounts as $accp) {
@@ -406,7 +502,7 @@ class PlanesController extends Component
                     }
                     ClienteMov::create([
                         'movimiento_id' => $mv->id,
-                        'cliente_id' => $listaCL->id
+                        'cliente_id' => $cliente->id
                     ]);
                     $this->importe = 0;
                     $this->condicional = 'cuentas';
@@ -466,16 +562,37 @@ class PlanesController extends Component
                         $cuenta->save();
                     } */
 
-                    CarteraMov::create([
-                        'type' => 'INGRESO',
-                        'comentario' => '',
-                        'cartera_id' => $cartera->id,
-                        'movimiento_id' => $mv->id
-                    ]);
+                    if ($this->tipopago == 'EFECTIVO') {
+                        $carteraTigo = Cartera::where('tipo', 'TigoStreaming')
+                            ->where('caja_id', $cccc->id)->get()->first();
+                        CarteraMov::create([
+                            'type' => 'INGRESO',
+                            'comentario' => '',
+                            'cartera_id' => $carteraTigo->id,
+                            'movimiento_id' => $mv->id
+                        ]);
+                        $carteraTelefono = Cartera::where('tipo', 'Telefono')
+                            ->where('caja_id', $cccc->id)->get()->first();
+                        CarteraMov::create([
+                            'type' => 'EGRESO',
+                            'comentario' => '',
+                            'cartera_id' => $carteraTelefono->id,
+                            'movimiento_id' => $mv->id
+                        ]);
+                    } else {
+                        $cartera = Cartera::where('tipo', $this->tipopago)
+                            ->where('caja_id', $cccc->id)->get()->first();
+                        CarteraMov::create([
+                            'type' => 'INGRESO',
+                            'comentario' => '',
+                            'cartera_id' => $cartera->id,
+                            'movimiento_id' => $mv->id
+                        ]);
+                    }
 
                     ClienteMov::create([
                         'movimiento_id' => $mv->id,
-                        'cliente_id' => $listaCL->id
+                        'cliente_id' => $cliente->id
                     ]);
 
                     $this->importe = 0;
@@ -593,6 +710,7 @@ class PlanesController extends Component
 
     public function Modificar()
     {
+
         $plan = Plan::find($this->selected_id);
         $plan->observations = $this->observaciones;
         $plan->ready = $this->ready;
@@ -612,6 +730,17 @@ class PlanesController extends Component
 
     public function ModificarPerfil()
     {
+        $rules = [
+            'nombrePerfil' => 'required',
+            'pinPerfil' => 'required',
+
+        ];
+        $messages = [
+            'nombrePerfil.required' => 'El nombre del perfil es requerido',
+            'pinPerfil.required' => 'El pin es requerido',
+        ];
+
+        $this->validate($rules, $messages);
         $perfil = Profile::find($this->selected_perf);
         $perfil->nameprofile = $this->nombrePerfil;
         $perfil->pin = $this->pinPerfil;
@@ -651,6 +780,13 @@ class PlanesController extends Component
         $this->tipopago = 'EFECTIVO';
         $this->meses = 1;
         $this->observaciones = '';
+        $this->ready = 'NINGUNA';
+        $this->totalCobrar = 0;
+        $this->BuscarCliente = 0;
+        $this->ClienteSelect = 0;
+        $this->nombrePerfil = '';
+        $this->pinPerfil = '';
+        $this->cuentasEnteras = [];
         $this->resetValidation();
     }
 }

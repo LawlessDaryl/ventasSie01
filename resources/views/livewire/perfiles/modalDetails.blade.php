@@ -3,14 +3,19 @@
         <div class="modal-content">
             <div class="modal-header bg-dark">
                 <h5 class="modal-title text-white">
-                    <b>RENOVACION Y VENCIMIENTO DE PERFILES</b>
+                    @if ($condicional != 'vencidos')
+                        <b>RENOVACION Y VENCIMIENTO DE PERFILES</b>
+                    @else
+                        <b>OBSERVACIONES</b>
+                    @endif
                 </h5>
                 <button class="close" data-dismiss="modal" type="button" aria-label="Close">
                     <span class="text-white">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <div class="row">
+                @if ($condicional != 'vencidos')
+                <div class="row">                    
                     <div class="col-sm-12 col-md-6">
                         <div class="form-group">
                             <h6>Nombre Cliente</h6>
@@ -95,6 +100,16 @@
                         </div>
                     </div>
 
+                    <div class="col-sm-12 col-md-12">
+                        <div class="form-group">
+                            <h6>Observaciones del plan // Escriba un nuevo comentario si va a renovar, vencer o cambiar de cuenta</h6>
+                            <input type="text" wire:model.lazy="observations" class="form-control">
+                            @error('observations')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
                     <div class="col-sm-12 col-md-4">
                         <div class="form-group text-center mt-4">
                             <a @if ($meses == 0) disabled @endif href="javascript:void(0)"
@@ -158,6 +173,17 @@
                                                         <td colspan="5">
                                                             <h6 class="text-center">No tienes perfiles de esa
                                                                 plataforma</h6>
+                                                            @if (count($this->cuentasEnteras) > 0)
+                                                                <h6 class="text-center">Pero tienes una o mas cuentas
+                                                                    enteras libres
+                                                                </h6>
+                                                                <h6 class="text-center">
+                                                                    <a wire:click="VerCuentas()"
+                                                                        class="btn btn-warning btn-lg active"
+                                                                        role="button" aria-pressed="true">VER CUENTAS Y
+                                                                        CREAR PERFIL</a>
+                                                                </h6>
+                                                            @endif
                                                         </td>
                                                     </tr>
                                                 @endif
@@ -175,6 +201,19 @@
                         </div>
                     @endif
                 </div>
+                @else
+                <div class="row">
+                    <div class="col-sm-12 col-md-12">
+                        <div class="form-group">
+                            <h6>Observaciones de la transacción</h6>
+                            <input type="text" wire:model.lazy="observations" class="form-control">
+                            @error('observations')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+                @endif
             </div>
         </div>
     </div>

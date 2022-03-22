@@ -16,6 +16,7 @@ use App\Models\Platform;
 use App\Models\Profile;
 use App\Models\StrSupplier;
 use Carbon\Carbon;
+use DateTime;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
@@ -31,7 +32,7 @@ class CuentasController extends Component
         $availability, $Observaciones, $perfiles, $correos, $selected,
         $expiration_account, $password_account, $price, $mostrarCampos, $condicional,
         $meses, $expirationActual, $expirationNueva, $observations, $selected_plan,
-        $correoCuenta, $passCuenta, $nombreCliente, $celular;
+        $correoCuenta, $passCuenta, $nombreCliente, $celular,$observacionesTrans;
     private $pagination = 10;
     public function paginationView()
     {
@@ -67,6 +68,7 @@ class CuentasController extends Component
         $this->passCuenta = '';
         $this->nombreCliente = '';
         $this->celular = '';
+        $this->observacionesTrans = '';
     }
     public function render()
     {
@@ -159,14 +161,26 @@ class CuentasController extends Component
                     'pl.status as plan_status',
                     'c.nombre as clienteNombre',
                     'c.celular as clienteCelular',
+                    DB::raw('0 as horas')
                 )
                 ->where('pa.status', 'ACTIVO')
                 ->where('pl.type_plan', 'CUENTA')
                 ->where('accounts.availability', 'OCUPADO')
                 ->where('accounts.status', 'ACTIVO')
                 ->where('pl.ready', 'SI')
-                ->orderBy('accounts.id', 'desc')
+                ->orderBy('pl.done', 'desc')
+                ->orderBy('pl.expiration_plan', 'asc')
                 ->get();
+                foreach ($cuentas as $c) {
+                    $date1 = new DateTime($c->expiration_plan);
+                    $date2 = new DateTime("now");
+                    $diff = $date2->diff($date1);
+                    if ($diff->invert != 1) {
+                        $c->horas = (($diff->days * 24)) + ($diff->h);
+                    } else {
+                        $c->horas = '0';
+                    }
+                }
         } else {
             $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                 ->join('emails as e', 'accounts.email_id', 'e.id')
@@ -199,7 +213,8 @@ class CuentasController extends Component
                 ->where('pl.type_plan', 'CUENTA')
                 ->where('pa.status', 'VENCIDO')
                 ->where('pl.ready', 'SI')
-                ->orderBy('accounts.id', 'desc')
+                ->orderBy('pl.done', 'desc')
+                ->orderBy('pl.expiration_plan', 'desc')
                 ->get();
         }
         $this->correos = Email::where('availability', 'LIBRE')->orWhere('id', $this->selected)->orderBy('id', 'desc')->get();
@@ -442,7 +457,8 @@ class CuentasController extends Component
                 'c.celular as celular',
                 'e.content as correoCuenta',
                 'acc.password_account as password_account',
-                'plans.expiration_plan as expiration_plan'
+                'plans.expiration_plan as expiration_plan',
+                'plans.observations as observations'
             )
             ->where('plans.id', $this->selected_plan)
             ->orderby('plans.id', 'desc')
@@ -451,6 +467,7 @@ class CuentasController extends Component
         $this->celular = $this->data->celular;
         $this->correoCuenta = $this->data->correoCuenta;
         $this->passCuenta = $this->data->password_account;
+        $this->observacionesTrans = $this->data->observations;
         $this->expirationActual = substr($this->data->expiration_plan, 0, 10);
 
         $this->emit('details2-show', 'show modal!');
@@ -518,7 +535,7 @@ class CuentasController extends Component
                 'type_plan' => 'CUENTA',
                 'status' => 'VIGENTE',
                 'type_pay' => $this->tipopago,
-                'observations' => $this->observations,
+                'observations' => $this->observacionesTrans,
                 'movimiento_id' => $mv->id
             ]);
 
@@ -594,6 +611,7 @@ class CuentasController extends Component
         $plan = Plan::find($this->selected_plan);
         $plan->status = 'VENCIDO';
         $plan->done = 'NO';
+        $plan->observations = $this->observacionesTrans;
         $plan->save();
         /* PONER LA CUENTA EN LIBRE */
         $cuenta = Account::find($datos->cuentaid);
