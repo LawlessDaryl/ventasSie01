@@ -6,18 +6,21 @@ use App\Models\Sale;
 use App\Models\User;
 use Carbon\Carbon;
 use Livewire\Component;
+use App\Models\Product;
+use App\Models\SaleDetail;
 
 class CashoutController extends Component
 {
 
-    public $fromDate, $toDate, $userid, $total, $items, $sales, $details;
+    public $fromDate, $toDate, $userid, $total, $totalneto, $tn, $items, $sales, $details;
 
     public function mount()
     {
         $this->fromDate = null;
         $this->toDate = null;
         $this->userid = 0;
-        $this->total =0;
+        $this->total = 0;
+        $this->tn = 0;
         $this->sales = [];
         $this->details = [];
     }
@@ -41,6 +44,34 @@ class CashoutController extends Component
         ->get();
   
         $this->total = $this->sales ? $this->sales->sum('total'):0;
+
+
+        $totalprecio = Sale::join('sale_details as sd', 'sd.sale_id','sales.id')
+        ->join('products as p', 'p.id', 'sd.product_id')
+        ->where('sales.status', 'Paid')
+        ->where('sales.user_id', $this->userid)
+        ->where('sales.updated_at', '>', $fi)
+        ->where('sales.updated_at', '<', $ff)
+        ->sum('p.precio_venta');
+        
+        
+        
+        $totalcosto = Sale::join('sale_details as sd', 'sd.sale_id','sales.id')
+        ->join('products as p', 'p.id', 'sd.product_id')
+        ->where('sales.status', 'Paid')
+        ->where('sales.user_id', $this->userid)
+        ->where('sales.updated_at', '>', $fi)
+        ->where('sales.updated_at', '<', $ff)
+        ->sum('p.costo');
+        
+        
+
+
+
+        $this->totalneto = $totalprecio - $totalcosto;
+
+
+
         $this->items = $this->sales ? $this->sales->sum('items'):0;
     }
 
@@ -51,7 +82,7 @@ class CashoutController extends Component
 
         $this->details = Sale::join('sale_details as d', 'd.sale_id', 'sales.id')
         ->join('products as p', 'p.id', 'd.product_id')
-        ->select('d.sale_id', 'p.name as product', 'd.quantity', 'd.price')
+        ->select('d.sale_id', 'p.nombre as product', 'd.quantity', 'd.price')
         ->whereBetween('sales.created_at', [$fi, $ff])
         ->where('sales.status', 'Paid')
         ->where('sales.user_id', $this->userid)

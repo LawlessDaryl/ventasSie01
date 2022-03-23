@@ -34,7 +34,7 @@
                     <td class="text-center">${{ number_format($item->price, 2) }}</td>
                     {{-- Cantidad --}}
                     <td>
-                        <input type="number" maxlength="{{$item->stock}}"
+                        <input type="number" maxlength="{{$item->stock}}" max="{{$item->stock}}"
                         id="r{{$item->id}}" 
                         wire:change="UpdateQty({{$item->id}}, $('#r' + {{$item->id}}).val() )" 
                         style="font-size: 1rem!important;" 

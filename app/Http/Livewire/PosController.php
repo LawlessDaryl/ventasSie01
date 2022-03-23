@@ -24,7 +24,8 @@ use Illuminate\Support\Facades\Redirect;
 class PosController extends Component
 {
     public $total, $itemsQuantity, $efectivo, $change, 
-    $nit, $clienteanonimo="true", $tipopago ,$anonimo, $factura, $observacion, $facturasino, $nombreproducto;
+    $nit, $clienteanonimo="true", $tipopago ,$anonimo, $factura, $observacion, $facturasino, $nombreproducto, $clienteseleccionado;
+    public $razonsocial, $celular;
 
     //Variables para la venta desde almacen, moviendo productos de almacen a la tienda
     public  $stockalmacen, $nombrestockproducto, $cantidadToTienda = 1, $idproductoalmacen;
@@ -119,7 +120,11 @@ class PosController extends Component
             'denominations' => Denomination::orderBy('id', 'asc')->get(),
             'cart' => Cart::getContent()->sortBy('name'),
             'datosnit' => $datosnit,
-            'datosnombreproducto' => $datosnombreproducto
+            'datosnombreproducto' => $datosnombreproducto,
+
+            'nit' =>$this->nit,
+            'razonsocial' =>$this->razonsocial,
+            'celular' =>$this->celular
         ])
             ->extends('layouts.theme.app')
             ->section('content');
@@ -138,7 +143,7 @@ class PosController extends Component
         }
     }
 
-    //Pra Saber si se registrara la venta con un Clinete Anònimo
+    //PAra Saber si se registrara la venta con un Clinete Anònimo
     public function clienteanonimo()
     {
         if($this->clienteanonimo == 'true')
@@ -155,6 +160,10 @@ class PosController extends Component
     /* Cargar los datos seleccionados de la tabla a los label */
     public function llenardatoscliente($id)
     {
+        //Para saber si se selecciono un cliente existente
+        //Y crear un nuevo cliente al realizar la venta si el valor de $clienteseleccionado es null
+        $this->clienteseleccionado = 1;
+        //-------------------------------------------------
         $dcliente = Cliente::where('id', $id)->first();
         
         $this->nit = $dcliente->nit;
@@ -212,8 +221,6 @@ class PosController extends Component
                     $this->stockalmacen = $productoalmacen->stock;
                     $this->nombrestockproducto = $productoalmacen->name;
                     $this->idproductoalmacen = $productoalmacen->id;
-                    //$this->mostrarmodal = 1;
-                    //$this->emit('no-stock', 'Stock Insuficiente en Tienda, Se encontraro Productos Disponibles en Almacen');
                     $this->emit('no-stocktienda');
                     return;
                 }
@@ -244,6 +251,56 @@ class PosController extends Component
             return false;
     }
 
+    //Pasar los productos encontrados de la busqueda por palabras a l carrito de compras
+    public function pasaralcarrito($idproducto,$cant=1)
+    {
+        $product = Product::join("productos_destinos as pd", "pd.product-id", "products.id")
+        ->join('locations as d', 'd.id', 'pd.destino-id')
+        ->select("products.id as id","products.image as image","products.nombre as name",
+        "products.precio_venta as price","products.barcode", "pd.stock as stock")
+        ->where("products.id", $idproducto)
+        ->where("d.ubicacion", 'TIENDA')
+        ->get()->first();
+        if ($this->inCart($product->id))
+            {
+                $this->increaseQty($product->id);
+                return;
+            }
+            if ($product->stock < 1)
+            {
+                //Buscar Productos en Almacen
+                $productoalmacen = Product::join("productos_destinos as pd", "pd.product-id", "products.id")
+                ->join('locations as d', 'd.id', 'pd.destino-id')
+                ->select("products.id as id","products.image as image","products.nombre as name",
+                "products.precio_venta as price","products.barcode", "pd.stock as stock")
+                ->where("products.id", $product->id)
+                ->where("d.ubicacion", 'ALMACEN')
+                ->get()->first();
+                if($productoalmacen->stock > 0)
+                {
+                    $this->stockalmacen = $productoalmacen->stock;
+                    $this->nombrestockproducto = $productoalmacen->name;
+                    $this->idproductoalmacen = $productoalmacen->id;
+                    $this->emit('no-stocktienda');
+                    return;
+                }
+                else
+                {
+                    $this->emit('no-stock', 'stock insuficiente en TIENDA y ALMACEN');
+                    return;
+                }
+            }
+            Cart::add(
+                $product->id,
+                $product->name,
+                $product->price,
+                $cant,
+                $product->image
+            );
+            $this->total = Cart::getTotal();
+            $this->itemsQuantity = Cart::getTotalQuantity();
+            $this->emit('scan-ok', 'Producto agregado');
+    }
 
 
     public function increaseQty($productId, $cant = 1)
@@ -284,8 +341,6 @@ class PosController extends Component
                     $this->stockalmacen = $productoalmacen->stock;
                     $this->nombrestockproducto = $productoalmacen->name;
                     $this->idproductoalmacen = $productoalmacen->id;
-                    //$this->mostrarmodal = 1;
-                    //$this->emit('no-stock', 'Stock Insuficiente en Tienda, Se encontraro Productos Disponibles en Almacen');
                     $this->emit('no-stocktienda');
                     return;
                 }
@@ -307,6 +362,7 @@ class PosController extends Component
     public function UpdateQty($productId, $cant = 1)
     {
         $title = '';
+        //Consulta para saber el Stock de los Productos en Tienda
         $product = Product::join("productos_destinos as pd", "pd.product-id", "products.id")
         ->join('locations as d', 'd.id', 'pd.destino-id')
         ->select("products.id as id","products.image as image","products.nombre as name",
@@ -314,17 +370,45 @@ class PosController extends Component
         ->where("products.id", $productId)
         ->where("d.ubicacion", 'TIENDA')
         ->get()->first();
-        //$product = Product::find($productId);
+        //------------------------------------------------------
+        
         $exist = Cart::get($productId);
-        if ($exist) {
+        if ($exist)
+        {
             $title = "cantidad actualizada";
-        } else {
+        }
+        else
+        {
             $title = "producto agregado";
         }
-        if ($exist) {
-            if ($product->stock < $cant) {
-                $this->emit('no-stock', 'stock insuficiente :/');
-                return;
+        if ($exist)
+        {
+            if ($product->stock < $cant)
+            {
+                //Buscar Productos en Almacen
+                $productoalmacen = Product::join("productos_destinos as pd", "pd.product-id", "products.id")
+                ->join('locations as d', 'd.id', 'pd.destino-id')
+                ->select("products.id as id","products.image as image","products.nombre as name",
+                "products.precio_venta as price","products.barcode", "pd.stock as stock")
+                ->where("products.id", $productId)
+                ->where("d.ubicacion", 'ALMACEN')
+                ->get()->first();
+                if($productoalmacen->stock > 0)
+                {
+                    $this->stockalmacen = $productoalmacen->stock;
+                    $this->nombrestockproducto = $productoalmacen->name;
+                    $this->idproductoalmacen = $productoalmacen->id;
+                    $this->emit('no-stocktienda');
+                    return;
+                }
+                else
+                {
+                    $this->emit('no-stock', 'stock insuficiente en TIENDA y ALMACEN');
+                    return;
+                }
+
+
+
             }
         }
         $this->removeItem($productId);
@@ -416,10 +500,31 @@ class PosController extends Component
             }
             else
             {
-                ClienteMov::create([
-                    'movimiento_id' => $Movimiento->id,
-                    'cliente_id' => $this->idcliente,
-                ]);
+                if($this->clienteseleccionado == 1)
+                {
+                    ClienteMov::create([
+                        'movimiento_id' => $Movimiento->id,
+                        'cliente_id' => $this->idcliente,
+                    ]);
+                }
+                else
+                {
+                   // Creando Cliente
+                    $clientenuevo = Cliente::create([
+                        'nit' => $this->nit,
+                        'razon_social' => $this->razonsocial,
+                        'celular' => $this->celular,
+                        'procedencia_cliente_id'=> 1,
+                    ]);
+
+
+                    ClienteMov::create([
+                        'movimiento_id' => $Movimiento->id,
+                        'cliente_id' => $clientenuevo->id,
+                    ]);
+
+                }
+                
             }
 
             /* Caja en la cual se encuentra el usuario */
