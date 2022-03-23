@@ -48,7 +48,7 @@ class DestinoController extends Component
                                             ->paginate($this->pagination);
 
             }
-            $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product-id')
+                 $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product-id')
                                         ->join('locations as loc','loc.id','productos_destinos.destino-id')
                                         ->join('sucursals as suc','suc.id','loc.sucursal_id')
                                         ->select('productos_destinos.*','loc.*','p.nombre as name','loc.ubicacion as ubi','suc.name as suc_id','loc.codigo as codigo')
