@@ -127,7 +127,7 @@
                                 @endforeach
                             </tbody>
                         </table>
-                        {{-- {{ $planes->links() }} --}}
+                        {{ $planes->links() }}
                     </div>
                 </div>
             @else
@@ -206,7 +206,7 @@
                                 @endforeach
                             </tbody>
                         </table>
-                        {{-- {{ $planes->links() }} --}}
+                        {{ $planes->links() }}
                     </div>
                 </div>
             @endif

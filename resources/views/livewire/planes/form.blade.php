@@ -248,11 +248,12 @@
                                     <tr>
                                         <td colspan="5">
                                             <h6 class="text-center">No tienes perfiles creados de esa plataforma</h6>
-                                            @if ($this->cuentasEnteras)
+                                            @if (count($this->cuentasEnteras) > 0)
                                                 <h6 class="text-center">Pero tienes una o mas cuentas enteras libres
-                                                </h6>    
+                                                </h6>
                                                 <h6 class="text-center">
-                                                    <a wire:click="VerCuentas()" class="btn btn-warning btn-lg active" role="button" aria-pressed="true">VER CUENTAS Y CREAR PERFIL</a>            
+                                                    <a wire:click="VerCuentas()" class="btn btn-warning btn-lg active"
+                                                        role="button" aria-pressed="true">VER CUENTAS Y CREAR PERFIL</a>
                                                 </h6>
                                             @endif
                                         </td>

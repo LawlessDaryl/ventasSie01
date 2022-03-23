@@ -32,7 +32,7 @@ class CuentasController extends Component
         $availability, $Observaciones, $perfiles, $correos, $selected,
         $expiration_account, $password_account, $price, $mostrarCampos, $condicional,
         $meses, $expirationActual, $expirationNueva, $observations, $selected_plan,
-        $correoCuenta, $passCuenta, $nombreCliente, $celular,$observacionesTrans;
+        $correoCuenta, $passCuenta, $nombreCliente, $celular, $observacionesTrans;
     private $pagination = 10;
     public function paginationView()
     {
@@ -74,7 +74,7 @@ class CuentasController extends Component
     {
         if ($this->condicional == 'cuentas') {
             if (strlen($this->search) > 0) {
-                /* $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
+                $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                     ->join('emails as e', 'accounts.email_id', 'e.id')
                     ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
                     ->select(
@@ -90,13 +90,35 @@ class CuentasController extends Component
                         DB::raw('0 as perfActivos'),
                         DB::raw('0 as perfLibres')
                     )
-                    ->where('accounts.status', 'like', '%' . $this->search . '%')
-                    ->orWhere('accounts.number_profiles', 'like', '%' . $this->search . '%')
-                    ->orWhere('p.nombre', 'like', '%' . $this->search . '%')
+                    ->where('p.nombre', 'like', '%' . $this->search . '%')
+                    ->where('accounts.status', 'ACTIVO')
+                    ->where('accounts.availability', 'LIBRE')
+
                     ->orWhere('e.content', 'like', '%' . $this->search . '%')
-                    ->orWhere('strsp.name', 'like', '%' . $this->search . '%')
+                    ->where('accounts.status', 'ACTIVO')
+                    ->where('accounts.availability', 'LIBRE')
+
+                    ->orWhere('accounts.whole_account', 'like', '%' . $this->search . '%')
+                    ->where('accounts.status', 'ACTIVO')
+                    ->where('accounts.availability', 'LIBRE')
+
                     ->orderBy('accounts.id', 'desc')
-                    ->get(); */
+                    ->paginate($this->pagination);
+                foreach ($cuentas as $c) {
+                    $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
+                        ->join('profiles as p', 'ap.profile_id', 'p.id')
+                        ->where('accounts.id', $c->id)
+                        ->where('p.status', 'ACTIVO')->get();
+                    $perfilesLibres = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
+                        ->join('profiles as p', 'ap.profile_id', 'p.id')
+                        ->where('accounts.id', $c->id)
+                        ->where('p.availability', 'LIBRE')
+                        ->where('p.status', 'ACTIVO')->get();
+                    $cantidadActivos = $perfilesActivos->count();
+                    $c->perfActivos = $cantidadActivos;
+                    $cantidadLibres = $perfilesLibres->count();
+                    $c->perfLibres = $cantidadLibres;
+                }
             } else {
                 $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                     ->join('emails as e', 'accounts.email_id', 'e.id')
@@ -117,7 +139,7 @@ class CuentasController extends Component
                     ->where('accounts.status', 'ACTIVO')
                     ->where('accounts.availability', 'LIBRE')
                     ->orderBy('accounts.id', 'desc')
-                    ->get();
+                    ->paginate($this->pagination);
                 foreach ($cuentas as $c) {
                     $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                         ->join('profiles as p', 'ap.profile_id', 'p.id')
@@ -135,42 +157,66 @@ class CuentasController extends Component
                 }
             }
         } elseif ($this->condicional == 'ocupados') {
-            $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
-                ->join('emails as e', 'accounts.email_id', 'e.id')
-                ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
-                ->join('plan_accounts as pa', 'pa.account_id', 'accounts.id')
-                ->join('plans as pl', 'pa.plan_id', 'pl.id')
-                ->join('movimientos as m', 'm.id', 'pl.movimiento_id')
-                ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
-                ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
-                ->select(
-                    'pl.id as planid',
-                    'pl.done as done',
-                    'accounts.id as id',
-                    'accounts.expiration_account as expiration_account',
-                    'accounts.number_profiles',
-                    'accounts.whole_account',
-                    'accounts.status',
-                    'accounts.password_account',
-                    'p.nombre as nombre',
-                    'e.content as content',
-                    'e.pass as pass',
-                    'strsp.name as name',
-                    'pl.expiration_plan as expiration_plan',
-                    'pl.plan_start as plan_start',
-                    'pl.status as plan_status',
-                    'c.nombre as clienteNombre',
-                    'c.celular as clienteCelular',
-                    DB::raw('0 as horas')
-                )
-                ->where('pa.status', 'ACTIVO')
-                ->where('pl.type_plan', 'CUENTA')
-                ->where('accounts.availability', 'OCUPADO')
-                ->where('accounts.status', 'ACTIVO')
-                ->where('pl.ready', 'SI')
-                ->orderBy('pl.done', 'desc')
-                ->orderBy('pl.expiration_plan', 'asc')
-                ->get();
+            if (strlen($this->search) > 0) {
+                $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
+                    ->join('emails as e', 'accounts.email_id', 'e.id')
+                    ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
+                    ->join('plan_accounts as pa', 'pa.account_id', 'accounts.id')
+                    ->join('plans as pl', 'pa.plan_id', 'pl.id')
+                    ->join('movimientos as m', 'm.id', 'pl.movimiento_id')
+                    ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
+                    ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
+                    ->select(
+                        'pl.id as planid',
+                        'pl.done as done',
+                        'accounts.id as id',
+                        'accounts.expiration_account as expiration_account',
+                        'accounts.number_profiles',
+                        'accounts.whole_account',
+                        'accounts.status',
+                        'accounts.password_account',
+                        'p.nombre as nombre',
+                        'e.content as content',
+                        'e.pass as pass',
+                        'strsp.name as name',
+                        'pl.expiration_plan as expiration_plan',
+                        'pl.plan_start as plan_start',
+                        'pl.status as plan_status',
+                        'c.nombre as clienteNombre',
+                        'c.celular as clienteCelular',
+                        DB::raw('0 as horas')
+                    )
+                    ->where('p.nombre', 'like', '%' . $this->search . '%')
+                    ->where('pa.status', 'ACTIVO')
+                    ->where('pl.type_plan', 'CUENTA')
+                    ->where('accounts.availability', 'OCUPADO')
+                    ->where('accounts.status', 'ACTIVO')
+                    ->where('pl.ready', 'SI')
+
+                    ->orWhere('c.nombre', 'like', '%' . $this->search . '%')
+                    ->where('pa.status', 'ACTIVO')
+                    ->where('pl.type_plan', 'CUENTA')
+                    ->where('accounts.availability', 'OCUPADO')
+                    ->where('accounts.status', 'ACTIVO')
+                    ->where('pl.ready', 'SI')
+
+                    ->orWhere('c.celular', 'like', '%' . $this->search . '%')
+                    ->where('pa.status', 'ACTIVO')
+                    ->where('pl.type_plan', 'CUENTA')
+                    ->where('accounts.availability', 'OCUPADO')
+                    ->where('accounts.status', 'ACTIVO')
+                    ->where('pl.ready', 'SI')
+
+                    ->orWhere('e.content', 'like', '%' . $this->search . '%')
+                    ->where('pa.status', 'ACTIVO')
+                    ->where('pl.type_plan', 'CUENTA')
+                    ->where('accounts.availability', 'OCUPADO')
+                    ->where('accounts.status', 'ACTIVO')
+                    ->where('pl.ready', 'SI')
+
+                    ->orderBy('pl.done', 'desc')
+                    ->orderBy('pl.expiration_plan', 'asc')
+                    ->paginate($this->pagination);
                 foreach ($cuentas as $c) {
                     $date1 = new DateTime($c->expiration_plan);
                     $date2 = new DateTime("now");
@@ -181,41 +227,146 @@ class CuentasController extends Component
                         $c->horas = '0';
                     }
                 }
+            } else {
+                $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
+                    ->join('emails as e', 'accounts.email_id', 'e.id')
+                    ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
+                    ->join('plan_accounts as pa', 'pa.account_id', 'accounts.id')
+                    ->join('plans as pl', 'pa.plan_id', 'pl.id')
+                    ->join('movimientos as m', 'm.id', 'pl.movimiento_id')
+                    ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
+                    ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
+                    ->select(
+                        'pl.id as planid',
+                        'pl.done as done',
+                        'accounts.id as id',
+                        'accounts.expiration_account as expiration_account',
+                        'accounts.number_profiles',
+                        'accounts.whole_account',
+                        'accounts.status',
+                        'accounts.password_account',
+                        'p.nombre as nombre',
+                        'e.content as content',
+                        'e.pass as pass',
+                        'strsp.name as name',
+                        'pl.expiration_plan as expiration_plan',
+                        'pl.plan_start as plan_start',
+                        'pl.status as plan_status',
+                        'c.nombre as clienteNombre',
+                        'c.celular as clienteCelular',
+                        DB::raw('0 as horas')
+                    )
+                    ->where('pa.status', 'ACTIVO')
+                    ->where('pl.type_plan', 'CUENTA')
+                    ->where('accounts.availability', 'OCUPADO')
+                    ->where('accounts.status', 'ACTIVO')
+                    ->where('pl.ready', 'SI')
+                    ->orderBy('pl.done', 'desc')
+                    ->orderBy('pl.expiration_plan', 'asc')
+                    ->paginate($this->pagination);
+                foreach ($cuentas as $c) {
+                    $date1 = new DateTime($c->expiration_plan);
+                    $date2 = new DateTime("now");
+                    $diff = $date2->diff($date1);
+                    if ($diff->invert != 1) {
+                        $c->horas = (($diff->days * 24)) + ($diff->h);
+                    } else {
+                        $c->horas = '0';
+                    }
+                }
+            }
         } else {
-            $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
-                ->join('emails as e', 'accounts.email_id', 'e.id')
-                ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
-                ->join('plan_accounts as pa', 'pa.account_id', 'accounts.id')
-                ->join('plans as pl', 'pa.plan_id', 'pl.id')
-                ->join('movimientos as m', 'm.id', 'pl.movimiento_id')
-                ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
-                ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
-                ->select(
-                    'pl.id as planid',
-                    'pl.done as done',
-                    'accounts.id as id',
-                    'accounts.expiration_account as expiration_account',
-                    'accounts.number_profiles',
-                    'accounts.whole_account',
-                    'accounts.status',
-                    'accounts.password_account',
-                    'p.nombre as nombre',
-                    'e.content as content',
-                    'e.pass as pass',
-                    'strsp.name as name',
-                    'pl.expiration_plan as expiration_plan',
-                    'pl.plan_start as plan_start',
-                    'pl.status as plan_status',
-                    'c.nombre as clienteNombre',
-                    'c.celular as clienteCelular',
-                )
-                ->where('pl.status', 'VENCIDO')
-                ->where('pl.type_plan', 'CUENTA')
-                ->where('pa.status', 'VENCIDO')
-                ->where('pl.ready', 'SI')
-                ->orderBy('pl.done', 'desc')
-                ->orderBy('pl.expiration_plan', 'desc')
-                ->get();
+            if (strlen($this->search) > 0) {
+                $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
+                    ->join('emails as e', 'accounts.email_id', 'e.id')
+                    ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
+                    ->join('plan_accounts as pa', 'pa.account_id', 'accounts.id')
+                    ->join('plans as pl', 'pa.plan_id', 'pl.id')
+                    ->join('movimientos as m', 'm.id', 'pl.movimiento_id')
+                    ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
+                    ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
+                    ->select(
+                        'pl.id as planid',
+                        'pl.done as done',
+                        'accounts.id as id',
+                        'accounts.expiration_account as expiration_account',
+                        'accounts.number_profiles',
+                        'accounts.whole_account',
+                        'accounts.status',
+                        'accounts.password_account',
+                        'p.nombre as nombre',
+                        'e.content as content',
+                        'e.pass as pass',
+                        'strsp.name as name',
+                        'pl.expiration_plan as expiration_plan',
+                        'pl.plan_start as plan_start',
+                        'pl.status as plan_status',
+                        'c.nombre as clienteNombre',
+                        'c.celular as clienteCelular',
+                    )
+                    ->where('p.nombre', 'like', '%' . $this->search . '%')
+                    ->where('pl.status', 'VENCIDO')
+                    ->where('pl.type_plan', 'CUENTA')
+                    ->where('pa.status', 'VENCIDO')
+                    ->where('pl.ready', 'SI')
+
+                    ->orWhere('c.nombre', 'like', '%' . $this->search . '%')
+                    ->where('pl.status', 'VENCIDO')
+                    ->where('pl.type_plan', 'CUENTA')
+                    ->where('pa.status', 'VENCIDO')
+                    ->where('pl.ready', 'SI')
+
+                    ->orWhere('c.celular', 'like', '%' . $this->search . '%')
+                    ->where('pl.status', 'VENCIDO')
+                    ->where('pl.type_plan', 'CUENTA')
+                    ->where('pa.status', 'VENCIDO')
+                    ->where('pl.ready', 'SI')
+
+                    ->orWhere('e.content', 'like', '%' . $this->search . '%')
+                    ->where('pl.status', 'VENCIDO')
+                    ->where('pl.type_plan', 'CUENTA')
+                    ->where('pa.status', 'VENCIDO')
+                    ->where('pl.ready', 'SI')
+
+                    ->orderBy('pl.done', 'desc')
+                    ->orderBy('pl.expiration_plan', 'desc')
+                    ->paginate($this->pagination);
+            } else {
+                $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
+                    ->join('emails as e', 'accounts.email_id', 'e.id')
+                    ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
+                    ->join('plan_accounts as pa', 'pa.account_id', 'accounts.id')
+                    ->join('plans as pl', 'pa.plan_id', 'pl.id')
+                    ->join('movimientos as m', 'm.id', 'pl.movimiento_id')
+                    ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
+                    ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
+                    ->select(
+                        'pl.id as planid',
+                        'pl.done as done',
+                        'accounts.id as id',
+                        'accounts.expiration_account as expiration_account',
+                        'accounts.number_profiles',
+                        'accounts.whole_account',
+                        'accounts.status',
+                        'accounts.password_account',
+                        'p.nombre as nombre',
+                        'e.content as content',
+                        'e.pass as pass',
+                        'strsp.name as name',
+                        'pl.expiration_plan as expiration_plan',
+                        'pl.plan_start as plan_start',
+                        'pl.status as plan_status',
+                        'c.nombre as clienteNombre',
+                        'c.celular as clienteCelular',
+                    )
+                    ->where('pl.status', 'VENCIDO')
+                    ->where('pl.type_plan', 'CUENTA')
+                    ->where('pa.status', 'VENCIDO')
+                    ->where('pl.ready', 'SI')
+                    ->orderBy('pl.done', 'desc')
+                    ->orderBy('pl.expiration_plan', 'desc')
+                    ->paginate($this->pagination);
+            }
         }
         $this->correos = Email::where('availability', 'LIBRE')->orWhere('id', $this->selected)->orderBy('id', 'desc')->get();
         if ($this->selected_id != 0) {
@@ -627,7 +778,7 @@ class CuentasController extends Component
     }
 
     protected $listeners = ['deleteRow' => 'Destroy', 'borrarPerfil' => 'BorrarPerfil', 'Renovar' => 'Renovar', 'Vencer' => 'Vencer', 'Realizado' => 'Realizado'];
-    
+
     public function Realizado(Plan $plan)
     {
         $plan->done = 'SI';

@@ -111,7 +111,7 @@
                                 @endforeach
                             </tbody>
                         </table>
-
+                        {{ $cuentas->links() }}
                     </div>
                 </div>
             @else
@@ -218,7 +218,7 @@
                                 @endforeach
                             </tbody>
                         </table>
-
+                        {{ $cuentas->links() }}
                     </div>
                 </div>
             @endif
