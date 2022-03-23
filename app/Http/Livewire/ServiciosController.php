@@ -25,7 +25,7 @@ class ServiciosController extends Component
 {
     use WithPagination;
     use WithFileUploads;
-    public $user, $cliente, $nombre, $cedula, $celular, $email, $nit, $razon_social, $orderservice, $hora_entrega,
+    public $user, $cliente, $nombre, $cedula, $celular, $telefono, $email, $nit, $razon_social, $orderservice, $hora_entrega,
         $movimiento, $typeworkid, $detalle, $categoryid, $from, $usuariolog, $catprodservid, $marc, $typeservice,
         $falla_segun_cliente, $diagnostico, $solucion, $saldo, $on_account, $import, $fecha_estimada_entrega,
         $search,  $condicion, $selected_id, $pageTitle, $buscarCliente, $service, $type_service, $procedencia,
@@ -89,6 +89,7 @@ class ServiciosController extends Component
         if (strlen($this->buscarCliente) > 0) {
             $datos = Cliente::where('nombre', 'like', '%' . $this->buscarCliente . '%')
                 ->orWhere('celular', 'like', '%' . $this->buscarCliente . '%')
+                ->orWhere('telefono', 'like', '%' . $this->buscarCliente . '%')
                 ->orWhere('cedula', 'like', '%' . $this->buscarCliente . '%')
                 ->orderBy('cedula', 'desc')->get();
             if ($datos->count() > 0) {
@@ -103,7 +104,9 @@ class ServiciosController extends Component
         $dato1 = CatProdService::orderBy('nombre', 'asc')->get();
 
         if ($this->catprodservid != 'Elegir') {
-            $marca = SubCatProdService::where('cat_prod_service_id', $this->catprodservid)->orderBy('name', 'asc')->get();
+            $marca = SubCatProdService::where('cat_prod_service_id', $this->catprodservid)
+                ->orderBy('name', 'asc')
+                ->get();
         } else {
             $marca = [];
         }
@@ -149,10 +152,59 @@ class ServiciosController extends Component
 
     public function StoreClient()
     {   if($this->nit==''){
-        $this->nit=0;}
+            $this->nit=0;
+        }
         if($this->celular==''){
             $this->celular=0;
-            $rules = [
+            
+            if($this->telefono == ''){
+                $this->telefono=0;
+
+                $rules = [
+                    'nombre' => 'required|min:1|unique:clientes',
+                    'cedula' => 'required|max:10',
+                    'celular' => 'numeric',
+                    'telefono' => 'numeric',
+                    'nit' => 'required|numeric',
+                    'nit' => 'max:9'
+                ];
+                $messages = [
+                    'nombre.required' => 'Nombre es requerido',
+                    'nombre.min' => 'El nombre debe ser contener al menos 1 caracter',
+                    'nombre.unique' => 'Ya existe el mismo Nombre registrado',
+                    'cedula.required' => 'La cédula es requerida',
+                    'cedula.max' => 'La cédula debe tener máximo 10 digitos',
+                    'celular.numeric' => 'No puede ingresar letras',
+                    'telefono.numeric' => 'No puede ingresar letras',
+                    'nit.required' => 'Ingrese 0 si no quiere ingresar ningún nit',
+                    'nit.numeric' => 'El nit debe ser un número',
+                    'nit.max' => 'El nit no puede tener más de 9 digitos'
+                ];
+            }else{
+                $rules = [
+                    'nombre' => 'required|min:1|unique:clientes',
+                    'cedula' => 'required|max:10',
+                    'celular' => 'numeric',
+                    'telefono' => 'numeric|digits:7',
+                    'nit' => 'required|numeric',
+                    'nit' => 'max:9'
+                ];
+                $messages = [
+                    'nombre.required' => 'Nombre es requerido',
+                    'nombre.min' => 'El nombre debe ser contener al menos 1 caracter',
+                    'nombre.unique' => 'Ya existe el mismo Nombre registrado',
+                    'cedula.required' => 'La cédula es requerida',
+                    'cedula.max' => 'La cédula debe tener máximo 10 digitos',
+                    'celular.numeric' => 'No puede ingresar letras',
+                    'telefono.numeric' => 'No puede ingresar letras',
+                    'telefono.digits' => 'Debe ingresar 7 digitos',
+                    'nit.required' => 'Ingrese 0 si no quiere ingresar ningún nit',
+                    'nit.numeric' => 'El nit debe ser un número',
+                    'nit.max' => 'El nit no puede tener más de 9 digitos'
+                ];
+            }
+
+            /* $rules = [
                 'nombre' => 'required|min:1|unique:clientes',
                 'cedula' => 'required|max:10',
                 'celular' => 'numeric',
@@ -169,10 +221,61 @@ class ServiciosController extends Component
                 'nit.required' => 'Ingrese 0 si no quiere ingresar ningún nit',
                 'nit.numeric' => 'El nit debe ser un número',
                 'nit.max' => 'El nit no puede tener más de 9 digitos'
-            ];
+            ]; */
     
         }else{
-            $rules = [
+            if($this->telefono == ''){
+                $this->telefono=0;
+
+                $rules = [
+                    'nombre' => 'required|min:1|unique:clientes',
+                    'cedula' => 'required|max:10',
+                    'celular' => 'required|numeric|digits:8',
+                    'telefono' => 'numeric',
+                    'nit' => 'required|numeric',
+                    'nit' => 'max:9'
+                ];
+                $messages = [
+                    'nombre.required' => 'Nombre es requerido',
+                    'nombre.min' => 'El nombre debe ser contener al menos 1 caracter',
+                    'nombre.unique' => 'Ya existe el mismo Nombre registrado',
+                    'cedula.required' => 'La cédula es requerida',
+                    'cedula.max' => 'La cédula debe tener máximo 10 digitos',
+                    'celular.required' => 'El celular es requerido',
+                    'celular.numeric' => 'No puede ingresar letras',
+                    'celular.digits' => 'Debe ingresar 8 digitos',
+                    'telefono.numeric' => 'No puede ingresar letras',
+                    'nit.required' => 'Ingrese 0 si no quiere ingresar ningún nit',
+                    'nit.numeric' => 'El nit debe ser un número',
+                    'nit.max' => 'El nit no puede tener más de 9 digitos'
+                ];
+            }else{
+                $rules = [
+                    'nombre' => 'required|min:1|unique:clientes',
+                    'cedula' => 'required|max:10',
+                    'celular' => 'required|numeric|digits:8',
+                    'telefono' => 'numeric|digits:7',
+                    'nit' => 'required|numeric',
+                    'nit' => 'max:9'
+                ];
+                $messages = [
+                    'nombre.required' => 'Nombre es requerido',
+                    'nombre.min' => 'El nombre debe ser contener al menos 1 caracter',
+                    'nombre.unique' => 'Ya existe el mismo Nombre registrado',
+                    'cedula.required' => 'La cédula es requerida',
+                    'cedula.max' => 'La cédula debe tener máximo 10 digitos',
+                    'celular.required' => 'El celular es requerido',
+                    'celular.numeric' => 'No puede ingresar letras',
+                    'celular.digits' => 'Debe ingresar 8 digitos',
+                    'telefono.numeric' => 'No puede ingresar letras',
+                    'telefono.digits' => 'Debe ingresar 7 digitos',
+                    'nit.required' => 'Ingrese 0 si no quiere ingresar ningún nit',
+                    'nit.numeric' => 'El nit debe ser un número',
+                    'nit.max' => 'El nit no puede tener más de 9 digitos'
+                ];
+            }
+
+            /* $rules = [
                 'nombre' => 'required|min:1|unique:clientes',
                 'cedula' => 'required|max:10',
                 'celular' => 'required|numeric|digits:8',
@@ -191,7 +294,7 @@ class ServiciosController extends Component
                 'nit.required' => 'Ingrese 0 si no quiere ingresar ningún nit',
                 'nit.numeric' => 'El nit debe ser un número',
                 'nit.max' => 'El nit no puede tener más de 9 digitos'
-            ];
+            ]; */
         }
         
         $this->validate($rules, $messages);
@@ -201,6 +304,7 @@ class ServiciosController extends Component
                 'nombre' => $this->nombre,
                 'cedula' => $this->cedula,
                 'celular' => $this->celular,
+                'telefono' => $this->telefono,
                 'email' => $this->email,
                 'nit' => $this->nit,
                 'razon_social' => $this->razon_social,
@@ -211,6 +315,7 @@ class ServiciosController extends Component
                 'nombre' => $this->nombre,
                 'cedula' => $this->cedula,
                 'celular' => $this->celular,
+                'telefono' => $this->telefono,
                 'email' => $this->email,
                 'razon_social' => $this->razon_social,
                 'nit' => $this->nit,
@@ -488,6 +593,7 @@ class ServiciosController extends Component
         $this->nombre = '';
         $this->cedula = '';
         $this->celular = '';
+        $this->telefono = '';
         $this->email = '';
         $this->nit = '';
         $this->razon_social = '';

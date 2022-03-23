@@ -32,7 +32,7 @@
     
                                         <div class="col-xl-8">
                                             <ul class="contacts-block list-unstyled">
-                                                <li class="contacts-block__item">
+                                                <li class="contacts-block__item" style="color:rgb(26, 25, 25)">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" 
                                                     height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" 
                                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
@@ -42,9 +42,9 @@
                                                     <line x1="6" y1="1" x2="6" y2="4"></line>
                                                     <line x1="10" y1="1" x2="10" y2="4"></line>
                                                     <line x1="14" y1="1" x2="14" y2="4"></line>
-                                                    </svg>Tipo de Trabajo: {{$typeworkid}} 
+                                                    </svg><b>Tipo de Trabajo: </b>{{$typeworkid}} 
                                                 </li>
-                                                <li class="contacts-block__item">
+                                                <li class="contacts-block__item" style="color:rgb(26, 25, 25)">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" 
                                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" 
                                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
@@ -53,34 +53,34 @@
                                                     <line x1="16" y1="2" x2="16" y2="6"></line>
                                                     <line x1="8" y1="2" x2="8" y2="6"></line>
                                                     <line x1="3" y1="10" x2="21" y2="10"></line>
-                                                </svg>Detalle: {{$catprodservid}} {{$marca}} {{$detalle}} {{$falla_segun_cliente}}
+                                                </svg><b>Detalle: </b>{{$catprodservid}} {{$marca}} {{$detalle}} {{$falla_segun_cliente}}
                                                 </li>
-                                                <li class="contacts-block__item">
+                                                <li class="contacts-block__item" style="color:rgb(26, 25, 25)">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" 
                                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" 
                                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
                                                     class="feather feather-map-pin">
                                                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                                                     <circle cx="12" cy="10" r="3"></circle>
-                                                    </svg>Diagnostico: {{$diagnostico}}
+                                                    </svg><b>Diagnostico: </b>{{$diagnostico}}
                                                 </li>
-                                                <li class="contacts-block__item">
+                                                <li class="contacts-block__item" style="color:rgb(26, 25, 25)">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" 
                                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" 
                                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
                                                     class="feather feather-map-pin">
                                                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                                                     <circle cx="12" cy="10" r="3"></circle>
-                                                    </svg>Solución: {{$solucion}}
+                                                    </svg><b>Solución: </b>{{$solucion}}
                                                 </li>
-                                                <li class="contacts-block__item">
+                                                <li class="contacts-block__item" style="color:rgb(26, 25, 25)">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" 
                                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" 
                                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
                                                     class="feather feather-map-pin">
                                                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                                                     <circle cx="12" cy="10" r="3"></circle>
-                                                    </svg>Detalle Costo: {{$detalle_costo}}
+                                                    </svg><b>Detalle Costo: </b>{{$detalle_costo}}
                                                 </li>
                                                 {{--
                                                 <li class="contacts-block__item">
@@ -147,41 +147,41 @@
                                             <ul class="contacts-block list-unstyled">
                                                 
                                                 
-                                                <li class="contacts-block__item">
+                                                <li class="contacts-block__item" style="color:rgb(26, 25, 25)">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" 
                                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" 
                                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
                                                     class="feather feather-map-pin">
                                                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                                                     <circle cx="12" cy="10" r="3"></circle>
-                                                    </svg>Total: {{$import}}
+                                                    </svg><b>Total: </b>{{$import}}
                                                 </li>
-                                                <li class="contacts-block__item">
+                                                <li class="contacts-block__item" style="color:rgb(26, 25, 25)">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" 
                                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" 
                                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
                                                     class="feather feather-map-pin">
                                                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                                                     <circle cx="12" cy="10" r="3"></circle>
-                                                    </svg>A Cuenta: {{$on_account}}
+                                                    </svg><b>A Cuenta: </b>{{$on_account}}
                                                 </li>
-                                                <li class="contacts-block__item">
+                                                <li class="contacts-block__item" style="color:rgb(26, 25, 25)">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" 
                                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" 
                                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
                                                     class="feather feather-map-pin">
                                                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                                                     <circle cx="12" cy="10" r="3"></circle>
-                                                    </svg>Saldo: {{$saldo}}
+                                                    </svg><b>Saldo: </b>{{$saldo}}
                                                 </li>
-                                                <li class="contacts-block__item">
+                                                <li class="contacts-block__item" style="color:rgb(26, 25, 25)">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" 
                                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" 
                                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
                                                     class="feather feather-map-pin">
                                                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                                                     <circle cx="12" cy="10" r="3"></circle>
-                                                    </svg>Costo: {{$costo}}
+                                                    </svg><b>Costo: </b>{{$costo}}
                                                 </li>
 
                                             </ul>

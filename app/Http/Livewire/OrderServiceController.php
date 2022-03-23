@@ -46,7 +46,7 @@ class OrderServiceController extends Component
         $this->pageTitle = 'Listado';
         $this->componentName = 'Ordenes de Servicio';
         $this->usuarioId = -1;
-
+        /* $this->search = ''; */
         $this->typeworkid = '';
         $this->catprodservid = '';
         $this->diagnostico = '';
@@ -78,16 +78,17 @@ class OrderServiceController extends Component
             
         } */
 
-
         if (!empty(session('orderserv'))) {
             $this->search = session('orderserv');
             session(['orderserv' => null]);
-            $orderservices = OrderService::where('id', $this->search)->orderBy('order_services.id', 'desc')->paginate($this->pagination);
+            $orderservices = OrderService::where('id', $this->search)
+                ->orderBy('order_services.id', 'desc')
+                ->paginate($this->pagination);
         } else {
             if (strlen($this->search) > 0) {
+                
                 //$orderservices = OrderService::orderBy('id','desc')
                 //->paginate($this->pagination);
-
 
                 $orderservices = OrderService::join(
                     'services as s',
@@ -100,9 +101,9 @@ class OrderServiceController extends Component
                     ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
                     ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
                     ->join('users as u', 'u.id', 'mov.user_id')
-                    ->select('order_services.*')
-                    ->where('mov.type', $this->opciones)
-                    ->where('mov.status', 'ACTIVO')
+                    
+                    ->where('mov.type','like', $this->opciones)
+                    ->where('mov.status','like', 'ACTIVO')
                     ->orWhere('c.nombre', 'like', '%' . $this->search . '%')
                     ->orWhere('order_services.id', 'like', '%' . $this->search . '%')
                     ->orWhere('order_services.type_service', 'like', '%' . $this->search . '%')
@@ -114,10 +115,12 @@ class OrderServiceController extends Component
                     ->orWhere('mov.import', 'like', '%' . $this->search . '%')
 
                     ->distinct()
+                    ->select('order_services.*')
                     //->where('services.order_service_id',  $this->orderservice)
                     //->where('mov.status',  'ACTIVO')
                     ->orderBy('order_services.id', 'desc')
                     ->paginate($this->pagination);
+                    
             } elseif ($this->opciones == 'TODOS') {
                 $orderservices = OrderService::join(
                     'services as s',
@@ -134,6 +137,7 @@ class OrderServiceController extends Component
                     ->orderBy('order_services.id', 'desc')
                     ->distinct()
                     ->paginate($this->pagination);
+                    
             } else {
                 $orderservices = OrderService::join(
                     'services as s',
@@ -151,6 +155,7 @@ class OrderServiceController extends Component
                     ->orderBy('order_services.id', 'desc')
                     ->distinct()
                     ->paginate($this->pagination);
+                    
             }
         }
 
@@ -744,7 +749,7 @@ class OrderServiceController extends Component
         $this->price = '';
         $this->stock = '';
         $this->alerts = '';
-        $this->search = '';
+        /* $this->search = ''; */
         $this->categoryid = 'Elegir';
         $this->image = null;
         $this->selected_id = 0;
