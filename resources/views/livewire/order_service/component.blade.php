@@ -33,6 +33,7 @@
                         <option value="TERMINADO">TERMINADO</option>
                         <option value="ENTREGADO">ENTREGADO</option>
                         <option value="ABANDONADO">ABANDONADO</option>
+                        <option value="TODOS">TODOS</option>
                         <option value="fechas">POR FECHA</option>
                     </select>
                     @error('opciones')
@@ -40,9 +41,61 @@
                     @enderror
                 </div>
             </div>
+            @if ($opciones == 'fechas')
+                <div class="row">
+                    <div class="col-sm-2">
+                        <h6>Elige el usuario</h6>
+                        <div class="form-group">
+                            <select wire:model="userId" class="form-control">
+                                <option value="0">Todos</option>
+                                @foreach ($users as $user)
+                                <option value="{{ $user->id }}">{{ $user->name }}</option>
+                            @endforeach
+                            </select>
+                        </div>
+                    </div>
 
-            
+                    <div class="col-sm-2">
+                        <h6>Elige el estado</h6>
+                        <div class="form-group">
+                            <select wire:model="estado" class="form-control">
+                                <option value="Todos">Todos</option>
+                                <option value="PENDIENTE">Pendiente</option>
+                                <option value="PROCESO">Proceso</option>
+                                <option value="TERMINADO">Terminado</option>
+                                <option value="ENTREGADO">Entregado</option>
+                                <option value="ABANDONADO">Abandonado</option>
+                            </select>
+                        </div>
+                    </div>
 
+                    <div class="col-sm-2">
+                        <h6>Elige el tipo de reporte</h6>
+                        <div class="form-group">
+                            <select wire:model="reportType" class="form-control">
+                                <option value="0">Transacciones del día</option>
+                                <option value="1">Transacciones por fecha</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2 ">
+                        <h6>Fecha desde</h6>
+                        <div class="form-group">
+                            <input @if ($reportType == 0) disabled @endif type="text" wire:model="dateFrom"
+                                class="form-control flatpickr" placeholder="Click para elegir">
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2 ">
+                        <h6>Fecha hasta</h6>
+                        <div class="form-group">
+                            <input @if ($reportType == 0) disabled @endif type="text" wire:model="dateTo" class="form-control flatpickr"
+                                placeholder="Click para elegir">
+                        </div>
+                    </div>
+                </div>
+            @endif
 
             <div class="widget-content">
                 <div class="table-responsive">
@@ -121,7 +174,8 @@
                                                         <div class="col-sm-5">
                                                             <div class="col-2 col-xl-6 col-lg-1 mb-xl-1 mb-1 ">
                                                                 <h6 class="table-th text-withe text-center">
-                                                                    <b>{{ $mm->movs->type }}</b></h6>
+                                                                    <b>{{ $mm->movs->type }}</b>
+                                                                </h6>
                                                                 Serv: {{ $item->type_service }}
                                                             </div>
                                                             @if ($mm->movs->type == 'PENDIENTE')
@@ -238,7 +292,55 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-
+        flatpickr(document.getElementsByClassName('flatpickr'), {
+            enableTime: false,
+            dateFormat: 'Y-m-d',
+            locale: {
+                firstDayofweek: 1,
+                weekdays: {
+                    shorthand: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
+                    longhand: [
+                        "Domingo",
+                        "Lunes",
+                        "Martes",
+                        "Miércoles",
+                        "Jueves",
+                        "Viernes",
+                        "Sábado",
+                    ],
+                },
+                months: {
+                    shorthand: [
+                        "Ene",
+                        "Feb",
+                        "Mar",
+                        "Abr",
+                        "May",
+                        "Jun",
+                        "Jul",
+                        "Ago",
+                        "Sep",
+                        "Oct",
+                        "Nov",
+                        "Dic",
+                    ],
+                    longhand: [
+                        "Enero",
+                        "Febrero",
+                        "Marzo",
+                        "Abril",
+                        "Mayo",
+                        "Junio",
+                        "Julio",
+                        "Agosto",
+                        "Septiembre",
+                        "Octubre",
+                        "Noviembre",
+                        "Diciembre",
+                    ],
+                },
+            }
+        })
 
         window.livewire.on('product-added', msg => {
             $('#theModal').modal('hide'),
@@ -370,4 +472,6 @@
     function ChangeStates() {
 
     }
+
+    
 </script>

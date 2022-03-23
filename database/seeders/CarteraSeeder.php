@@ -78,10 +78,10 @@ class CarteraSeeder extends Seeder
             'caja_id' => '3',
         ]);
         Cartera::create([
-            'nombre' => 'Telefono 62229011',
+            'nombre' => 'Telefono 76444657',
             'descripcion' => 'Telefono tigo money',
             'tipo' => 'Telefono',
-            'telefonoNum' => '62229011',
+            'telefonoNum' => '76444657',
             'caja_id' => '3',
         ]);
         Cartera::create([
@@ -102,7 +102,7 @@ class CarteraSeeder extends Seeder
             'nombre' => 'CUENTA TIGO MONEY',
             'descripcion' => 'TIGO MONEY STREAMING',
             'tipo' => 'TigoStreaming',
-            'telefonoNum' => null,
+            'telefonoNum' => '72794633',
             'caja_id' => '3',
         ]);
     }
