@@ -22,8 +22,8 @@
                                         <p class="">{{$nombreCliente}}</p>
                                         <h6>{{$celular}}</h6>
                                     </div>
+
                                     <div class="user-info-list row">
-    
                                         <div class="col-xl-8">
                                             <ul class="contacts-block list-unstyled">
                                                 <li class="contacts-block__item" style="color:rgb(26, 25, 25)">

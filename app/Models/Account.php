@@ -15,6 +15,7 @@ class Account extends Model
     {
         return $this->hasOne(AccountProfile::class);
     }
+
     public function PlanCuenta()
     {
         return $this->hasOne(PlanAccount::class);
@@ -32,5 +33,4 @@ class Account extends Model
     {
         return $this->belongsTo(Platform::class, 'platform_id', 'id');
     }
-    
 }

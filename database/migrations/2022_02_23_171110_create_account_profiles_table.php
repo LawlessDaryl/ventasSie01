@@ -20,7 +20,8 @@ class CreateAccountProfilesTable extends Migration
             $table->foreign('account_id')->references('id')->on('accounts');
             $table->unsignedBigInteger('profile_id');
             $table->foreign('profile_id')->references('id')->on('profiles');
-            $table->string('plan_id')->nullable();
+            $table->unsignedBigInteger('plan_id')->nullable();
+            $table->foreign('plan_id')->references('id')->on('plans');
             $table->timestamps();
         });
     }

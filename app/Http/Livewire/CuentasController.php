@@ -72,7 +72,7 @@ class CuentasController extends Component
     }
     public function render()
     {
-        if ($this->condicional == 'cuentas') {
+        if ($this->condicional == 'cuentas') {  /* cuentas libres y ocupadas */
             if (strlen($this->search) > 0) {
                 $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                     ->join('emails as e', 'accounts.email_id', 'e.id')
@@ -156,7 +156,7 @@ class CuentasController extends Component
                     $c->perfLibres = $cantidadLibres;
                 }
             }
-        } elseif ($this->condicional == 'ocupados') {
+        } elseif ($this->condicional == 'ocupados') {   /* cuentas ocupadas enteras */
             if (strlen($this->search) > 0) {
                 $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                     ->join('emails as e', 'accounts.email_id', 'e.id')
@@ -187,31 +187,27 @@ class CuentasController extends Component
                         DB::raw('0 as horas')
                     )
                     ->where('p.nombre', 'like', '%' . $this->search . '%')
+                    ->where('pl.status', 'VIGENTE')
                     ->where('pa.status', 'ACTIVO')
-                    ->where('pl.type_plan', 'CUENTA')
-                    ->where('accounts.availability', 'OCUPADO')
-                    ->where('accounts.status', 'ACTIVO')
+                    ->where('pl.type_plan', 'CUENTA')                    
                     ->where('pl.ready', 'SI')
 
                     ->orWhere('c.nombre', 'like', '%' . $this->search . '%')
+                    ->where('pl.status', 'VIGENTE')
                     ->where('pa.status', 'ACTIVO')
                     ->where('pl.type_plan', 'CUENTA')
-                    ->where('accounts.availability', 'OCUPADO')
-                    ->where('accounts.status', 'ACTIVO')
                     ->where('pl.ready', 'SI')
 
                     ->orWhere('c.celular', 'like', '%' . $this->search . '%')
+                    ->where('pl.status', 'VIGENTE')
                     ->where('pa.status', 'ACTIVO')
                     ->where('pl.type_plan', 'CUENTA')
-                    ->where('accounts.availability', 'OCUPADO')
-                    ->where('accounts.status', 'ACTIVO')
                     ->where('pl.ready', 'SI')
 
                     ->orWhere('e.content', 'like', '%' . $this->search . '%')
+                    ->where('pl.status', 'VIGENTE')
                     ->where('pa.status', 'ACTIVO')
                     ->where('pl.type_plan', 'CUENTA')
-                    ->where('accounts.availability', 'OCUPADO')
-                    ->where('accounts.status', 'ACTIVO')
                     ->where('pl.ready', 'SI')
 
                     ->orderBy('pl.done', 'desc')
@@ -256,10 +252,9 @@ class CuentasController extends Component
                         'c.celular as clienteCelular',
                         DB::raw('0 as horas')
                     )
-                    ->where('pa.status', 'ACTIVO')
+                    ->where('pl.status', 'VIGENTE')
                     ->where('pl.type_plan', 'CUENTA')
-                    ->where('accounts.availability', 'OCUPADO')
-                    ->where('accounts.status', 'ACTIVO')
+                    ->where('pa.status', 'ACTIVO')
                     ->where('pl.ready', 'SI')
                     ->orderBy('pl.done', 'desc')
                     ->orderBy('pl.expiration_plan', 'asc')
@@ -275,7 +270,7 @@ class CuentasController extends Component
                     }
                 }
             }
-        } else {
+        } else {    /* CUENTAS VENCIDAS */
             if (strlen($this->search) > 0) {
                 $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                     ->join('emails as e', 'accounts.email_id', 'e.id')
@@ -306,26 +301,26 @@ class CuentasController extends Component
                     )
                     ->where('p.nombre', 'like', '%' . $this->search . '%')
                     ->where('pl.status', 'VENCIDO')
-                    ->where('pl.type_plan', 'CUENTA')
                     ->where('pa.status', 'VENCIDO')
+                    ->where('pl.type_plan', 'CUENTA')
                     ->where('pl.ready', 'SI')
 
                     ->orWhere('c.nombre', 'like', '%' . $this->search . '%')
                     ->where('pl.status', 'VENCIDO')
-                    ->where('pl.type_plan', 'CUENTA')
                     ->where('pa.status', 'VENCIDO')
+                    ->where('pl.type_plan', 'CUENTA')
                     ->where('pl.ready', 'SI')
 
                     ->orWhere('c.celular', 'like', '%' . $this->search . '%')
                     ->where('pl.status', 'VENCIDO')
-                    ->where('pl.type_plan', 'CUENTA')
                     ->where('pa.status', 'VENCIDO')
+                    ->where('pl.type_plan', 'CUENTA')
                     ->where('pl.ready', 'SI')
 
                     ->orWhere('e.content', 'like', '%' . $this->search . '%')
                     ->where('pl.status', 'VENCIDO')
-                    ->where('pl.type_plan', 'CUENTA')
                     ->where('pa.status', 'VENCIDO')
+                    ->where('pl.type_plan', 'CUENTA')
                     ->where('pl.ready', 'SI')
 
                     ->orderBy('pl.done', 'desc')
@@ -360,8 +355,8 @@ class CuentasController extends Component
                         'c.celular as clienteCelular',
                     )
                     ->where('pl.status', 'VENCIDO')
-                    ->where('pl.type_plan', 'CUENTA')
                     ->where('pa.status', 'VENCIDO')
+                    ->where('pl.type_plan', 'CUENTA')
                     ->where('pl.ready', 'SI')
                     ->orderBy('pl.done', 'desc')
                     ->orderBy('pl.expiration_plan', 'desc')

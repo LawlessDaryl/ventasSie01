@@ -125,7 +125,6 @@
                                     <th class="table-th text-withe text-center">GMAIL</th>
                                     <th class="table-th text-withe text-center">PASS CUENTA</th>
                                     <th class="table-th text-withe text-center">EXPIRA</th>
-                                    <th class="table-th text-withe text-center">TIPO</th>
                                     <th class="table-th text-withe text-center">MAX PERF</th>
                                     <th class="table-th text-withe text-center">INICIO PLAN</th>
                                     <th class="table-th text-withe text-center">EXPIRACION PLAN</th>
@@ -161,9 +160,6 @@
                                         </td>
                                         <td>
                                             <h6 class="text-center">{{ $acounts->expiration_account }}</h6>
-                                        </td>
-                                        <td>
-                                            <h6 class="text-center">{{ $acounts->whole_account }}</h6>
                                         </td>
                                         <td>
                                             <h6 class="text-center">{{ $acounts->number_profiles }}</h6>

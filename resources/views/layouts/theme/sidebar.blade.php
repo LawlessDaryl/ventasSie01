@@ -351,7 +351,7 @@
                                 </svg>
                                 Arqueos Streaming </a>
                         </li>
-                    @endcan
+                    @endcan --}}
                     @can('Reportes_Streaming_Index')
                         <li>
                             <a href="{{ url('reportStreaming') }}">
@@ -363,7 +363,7 @@
                                 </svg>
                                 Reportes Streaming </a>
                         </li>
-                    @endcan --}}
+                    @endcan
                 </ul>
             </div>
         @endif

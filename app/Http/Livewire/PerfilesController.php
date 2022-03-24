@@ -141,58 +141,38 @@ class PerfilesController extends Component
                         'plans.done as done',
                         DB::raw('0 as horas')
                     )
-                    ->where('plat.nombre', 'like', '%' . $this->search . '%')
-                    ->where('acc.whole_account', 'DIVIDIDA')
+                    ->where('plat.nombre', 'like', '%' . $this->search . '%')                    
                     ->where('plans.type_plan', 'PERFIL')
-                    ->where('prof.availability', 'OCUPADO')
-                    ->where('prof.status', 'ACTIVO')
                     ->where('plans.status', 'VIGENTE')
                     ->where('pa.status', 'ACTIVO')
-                    ->where('ap.status', 'ACTIVO')
                     ->where('plans.ready', 'SI')
                     ->whereColumn('plans.id', '=', 'ap.plan_id')
 
                     ->orWhere('c.nombre', 'like', '%' . $this->search . '%')
-                    ->where('acc.whole_account', 'DIVIDIDA')
                     ->where('plans.type_plan', 'PERFIL')
-                    ->where('prof.availability', 'OCUPADO')
-                    ->where('prof.status', 'ACTIVO')
                     ->where('plans.status', 'VIGENTE')
                     ->where('pa.status', 'ACTIVO')
-                    ->where('ap.status', 'ACTIVO')
                     ->where('plans.ready', 'SI')
                     ->whereColumn('plans.id', '=', 'ap.plan_id')
 
                     ->orWhere('c.celular', 'like', '%' . $this->search . '%')
-                    ->where('acc.whole_account', 'DIVIDIDA')
                     ->where('plans.type_plan', 'PERFIL')
-                    ->where('prof.availability', 'OCUPADO')
-                    ->where('prof.status', 'ACTIVO')
                     ->where('plans.status', 'VIGENTE')
                     ->where('pa.status', 'ACTIVO')
-                    ->where('ap.status', 'ACTIVO')
                     ->where('plans.ready', 'SI')
                     ->whereColumn('plans.id', '=', 'ap.plan_id')
 
                     ->orWhere('e.content', 'like', '%' . $this->search . '%')
-                    ->where('acc.whole_account', 'DIVIDIDA')
                     ->where('plans.type_plan', 'PERFIL')
-                    ->where('prof.availability', 'OCUPADO')
-                    ->where('prof.status', 'ACTIVO')
                     ->where('plans.status', 'VIGENTE')
                     ->where('pa.status', 'ACTIVO')
-                    ->where('ap.status', 'ACTIVO')
                     ->where('plans.ready', 'SI')
                     ->whereColumn('plans.id', '=', 'ap.plan_id')
 
                     ->orWhere('prof.nameprofile', 'like', '%' . $this->search . '%')
-                    ->where('acc.whole_account', 'DIVIDIDA')
                     ->where('plans.type_plan', 'PERFIL')
-                    ->where('prof.availability', 'OCUPADO')
-                    ->where('prof.status', 'ACTIVO')
                     ->where('plans.status', 'VIGENTE')
                     ->where('pa.status', 'ACTIVO')
-                    ->where('ap.status', 'ACTIVO')
                     ->where('plans.ready', 'SI')
                     ->whereColumn('plans.id', '=', 'ap.plan_id')
 
@@ -237,15 +217,11 @@ class PerfilesController extends Component
                         'plans.done as done',
                         DB::raw('0 as horas')
                     )
-                    ->where('acc.whole_account', 'DIVIDIDA')
                     ->where('plans.type_plan', 'PERFIL')
-                    ->where('prof.availability', 'OCUPADO')
-                    ->where('prof.status', 'ACTIVO')
                     ->where('plans.status', 'VIGENTE')
-                    ->whereColumn('plans.id', '=', 'ap.plan_id')
                     ->where('pa.status', 'ACTIVO')
-                    ->where('ap.status', 'ACTIVO')
                     ->where('plans.ready', 'SI')
+                    ->whereColumn('plans.id', '=', 'ap.plan_id')                    
                     ->orderBy('plans.done', 'desc')
                     ->orderBy('plans.expiration_plan', 'asc')
                     ->paginate($this->pagination);
@@ -260,7 +236,7 @@ class PerfilesController extends Component
                     }
                 }
             }
-        } else {
+        } else {    /* VENCIDOS */
             if (strlen($this->search) > 0) {
                 $prof = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
                     ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')

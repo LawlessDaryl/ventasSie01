@@ -107,8 +107,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('arqueosStreaming', ArqueosStreamingController::class)->name('arqueosStreaming')->middleware('permission:Arqueos_Streaming_Index');
     Route::get('reportStreaming', ReportStreamingController::class)->name('reportStreaming')->middleware('permission:Reportes_Streaming_Index');
     Route::group(['middleware' => ['permission:Reportes_Streaming_Export']], function () {
-        Route::get('reporteStreaming/pdf/{user}/{tipo}/{type}/{f1}/{f2}', [ExportStreamingPdfController::class, 'reporteStrPDF']);
-        Route::get('reporteStreaming/pdf/{user}/{tipo}/{type}', [ExportStreamingPdfController::class, 'reporteStrPDF']);
+        Route::get('reporteStreaming/pdf/{user}/{cuePerf}/{vencVig}/{fechas}/{f1}/{f2}', [ExportStreamingPdfController::class, 'reporteStrPDF']);
+        Route::get('reporteStreaming/pdf/{user}/{cuePerf}/{vencVig}/{fechas}', [ExportStreamingPdfController::class, 'reporteStrPDF']);
     });
 
     /* NOTIFICACIONES */
