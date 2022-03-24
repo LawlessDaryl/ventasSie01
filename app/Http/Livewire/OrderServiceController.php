@@ -92,6 +92,9 @@ class OrderServiceController extends Component
                 DB::rollback();
                 $this->emit('', 'Datos no Validos', $e->getMessage());
             }
+            if ($this->reportType == 1 && ($this->dateFrom == '' || $this->dateTo == '')) {
+                return;
+            }
         }
 
         if (!empty(session('orderserv'))) {
