@@ -3,81 +3,107 @@
         <div class="widget widget-chart-one">
             <div class="widget-heading">
                 <h4 class="card-title">
-                    <b>Destino Producto</b>
+                    <b>{{ $componentName }} | {{ $pageTitle }}</b>
                 </h4>
                 <ul class="tabs tab-pills">
                     
                         <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
-                        data-target="#theModal">Transferir <br/>Productos</a>
+                        data-target="#theModal">Agregar Estancia</a>
                     
                 </ul>
             </div>
-          
-
-            {{--SELECT DE LAS SUCURSALES--}}
-            <div class="row">
-                <div class="col-12 col-lg-4 col-md-6">
-                            <div class="input-group mb-4">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text input-gp">
-                                        <i class="fas fa-search"></i>
-                                    </span>
-                                </div>
-                                <input type="text" wire:model="search" placeholder="Buscar" class="form-control">
-                            </div>
-                      
-                   
-                </div>
-                <div class="col-12 col-lg-3 col-md-3">
-
-                    <div class="form-group">
-                        <select wire:model='selected_id' class="form-control">
-                          <option value="null">Elegir Sucursal</option>
-                          @foreach ($data_suc as $data)
-                          <option value="{{ $data->name }}">{{ $data->name }}</option>
-                          @endforeach
-                          <option value="General">Almacen General</option>
-                        </select>
-                      </div>
-                </div>
-                <div class="col-12 col-lg-3 col-md-3">
-
-                    <div class="form-group">
-                        <select wire:model='selected_ubicacion' class="form-control">
-                          <option value="null">Elegir Ubicacion</option>
-                    
-                          <option value="TIENDA">TIENDA</option>
-                          <option value="ALMACEN">ALMACEN</option>
-                      
-                        </select>
-                      </div>
-                </div>
-
-            </div>
-          
+            @include('common.searchbox')
 
             <div class="widget-content">
-               
-
-                    <div class="col-12 col-lg-12 col-md-4 d-flex flex-wrap">
-                    
-                      @foreach($destinos_almacen as $destino)
-                      
-                        <div class="card border-success m-2" style="max-width: 18rem;">
-                            <div class="card-header"><h3> {{$destino->name}}</h3></div>
-                            <div class="card-body text-success">
-                             {{--<h5 class="card-title">{{$destino->tipo}}-{{$destino->codigo}}</h5>--}} 
-                              <p class="card-text"> <strong> Stock Disponible:</strong> {{$destino->stock}}</p>
-                              <p class="card-text"> <strong></strong> {{$destino->tipo}}-{{$destino->codigo}}</p>
-                            </div>
-                          </div>
-                      @endforeach
-
-                    </div>
-                  
-                
+                <div class="table-responsive">
+                    <table class="table table-unbordered table-hover mt-2">
+                        <thead class="text-white" style="background: #3B3F5C">
+                            <tr>
+                                <th class="table-th text-withe text-center">ITEM</th>
+                                <th class="table-th text-withe text-center">NOMBRE</th>                                
+                                <th class="table-th text-withe text-center">OBSERVACION</th>
+                                <th class="table-th text-withe text-center">SUCURSAL</th>
+                                <th class="table-th text-withe text-center">ACCIONES</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($datas as $data)
+                                <tr>
+                                    <td>
+                                        <h6 class="text-center">{{ $data->id }}</h6>
+                                    </td>
+                                    <td>
+                                        <h6 class="text-center">{{ $data->nombre }}</h6>
+                                    </td>
+                                    <td>
+                                        <h6 class="text-center">{{ $data->observacion }}</h6>
+                                    </td>
+                                    <td>
+                                        <h6 class="text-center">{{ $data->name }}</h6>
+                                    </td>
+                                    
+                                    <td class="text-center">
+                                        <a href="javascript:void(0)" wire:click="Edit({{ $data->id }})"
+                                            class="btn btn-dark mtmobile" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="javascript:void(0)" onclick="Confirm('{{ $data->id }}','{{ $data->nombre }}')" 
+                                            class="btn btn-dark" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    {{ $datas->links() }}
+                </div>
             </div>
         </div>
     </div>
-  
+    @include('livewire.destino.form')
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        window.livewire.on('unidad-added', msg => {
+            $('#theModal').modal('hide')
+        });
+        window.livewire.on('unidad-updated', msg => {
+            $('#theModal').modal('hide')
+        });
+        window.livewire.on('unidad-deleted', msg => {
+            ///
+        });
+        window.livewire.on('show-modal', msg => {
+            $('#theModal').modal('show')
+        });
+        window.livewire.on('modal-hide', msg => {
+            $('#theModal').modal('hide')
+        });        
+        $('theModal').on('hidden.bs.modal',function(e) {
+            $('.er').css('display','none')
+        })
+
+    });
+
+    function Confirm(id,nombre) {
+     
+        swal.fire({
+            title: 'CONFIRMAR',
+            icon: 'warning',
+            text: 'Confirmar eliminar la unidad ' + '"' + nombre + '"',
+            showCancelButton: true,
+            cancelButtonText: 'Cerrar',
+            cancelButtonColor: '#383838',
+            confirmButtonColor: '#3B3F5C',
+            confirmButtonText: 'Aceptar'
+        }).then(function(result) {
+            if (result.value) {
+                window.livewire.emit('deleteRow', id)
+                Swal.close()
+            }
+        })
+    }
+</script>

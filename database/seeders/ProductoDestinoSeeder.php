@@ -14,35 +14,35 @@ class ProductoDestinoSeeder extends Seeder
     public function run()
     {
         ProductosDestino::create([
-            'product-id'=> 1,
-            'destino-id' => 1,
+            'product_id'=> 1,
+            'location_id' => 1,
             'stock' => '50',
             
-            'alertas' => 2
+        
         ]);
         ProductosDestino::create([
-            'product-id'=> 1,
-            'destino-id' => 2,
+            'product_id'=> 1,
+            'location_id' => 2,
             'stock' => '5',
-            'alertas' => 2
+        
         ]);
 
 
 
 
         ProductosDestino::create([
-            'product-id'=> 2,
-            'destino-id' => 1,
+            'product_id'=> 2,
+            'location_id' => 1,
             'stock' => '10',
             
-            'alertas' => 2
+        
         ]);
         ProductosDestino::create([
-            'product-id'=> 2,
-            'destino-id' => 2,
+            'product_id'=> 2,
+            'location_id' => 2,
             'stock' => '3',
             
-            'alertas' => 2
+        
         ]);
 
 
@@ -50,17 +50,17 @@ class ProductoDestinoSeeder extends Seeder
 
 
         ProductosDestino::create([
-            'product-id'=> 3,
-            'destino-id' => 1,
+            'product_id'=> 3,
+            'location_id' => 1,
             'stock' => '1',
             
-            'alertas' => 2
+        
         ]);
         ProductosDestino::create([
-            'product-id'=> 3,
-            'destino-id' => 2,
+            'product_id'=> 3,
+            'location_id' => 2,
             'stock' => '3',
-            'alertas' => 2
+        
         ]);
 
 
@@ -71,16 +71,16 @@ class ProductoDestinoSeeder extends Seeder
 
 
         ProductosDestino::create([
-            'product-id'=> 4,
-            'destino-id' => 1,
+            'product_id'=> 4,
+            'location_id' => 1,
             'stock' => '1',
-            'alertas' => 2
+        
         ]);
         ProductosDestino::create([
-            'product-id'=> 4,
-            'destino-id' => 2,
+            'product_id'=> 4,
+            'location_id' => 2,
             'stock' => '2',
-            'alertas' => 2
+        
         ]);
 
 
@@ -88,10 +88,10 @@ class ProductoDestinoSeeder extends Seeder
 
 
         ProductosDestino::create([
-            'product-id'=> 5,
-            'destino-id' => 1,
+            'product_id'=> 5,
+            'location_id' => 1,
             'stock' => '50',
-            'alertas' => 2
+        
         ]);
      
 
@@ -99,16 +99,16 @@ class ProductoDestinoSeeder extends Seeder
 
 
         ProductosDestino::create([
-            'product-id'=> 6,
-            'destino-id' => 1,
+            'product_id'=> 6,
+            'location_id' => 1,
             'stock' => '20',
-            'alertas' => 2
+        
         ]);
         ProductosDestino::create([
-            'product-id'=> 6,
-            'destino-id' => 2,
+            'product_id'=> 6,
+            'location_id' => 2,
             'stock' => '4',
-            'alertas' => 2
+        
         ]);
 
 
@@ -117,18 +117,18 @@ class ProductoDestinoSeeder extends Seeder
 
 
         ProductosDestino::create([
-            'product-id'=> 7,
-            'destino-id' => 1,
+            'product_id'=> 7,
+            'location_id' => 1,
             'stock' => '50',
            
-            'alertas' => 2
+        
         ]);
         ProductosDestino::create([
-            'product-id'=> 7,
-            'destino-id' => 2,
+            'product_id'=> 7,
+            'location_id' => 2,
             'stock' => '10',
           
-            'alertas' => 2
+        
         ]);
 
 
@@ -136,33 +136,33 @@ class ProductoDestinoSeeder extends Seeder
 
 
         ProductosDestino::create([
-            'product-id'=> 8,
-            'destino-id' => 1,
+            'product_id'=> 8,
+            'location_id' => 1,
             'stock' => '100',
            
-            'alertas' => 2
+        
         ]);
         ProductosDestino::create([
-            'product-id'=> 8,
-            'destino-id' => 2,
+            'product_id'=> 8,
+            'location_id' => 2,
             'stock' => '2',
            
-            'alertas' => 2
+        
         ]);
 
         ProductosDestino::create([
-            'product-id'=> 9,
-            'destino-id' => 1,
+            'product_id'=> 9,
+            'location_id' => 1,
             'stock' => '5',
         
-            'alertas' => 2
+        
         ]);
         ProductosDestino::create([
-            'product-id'=> 9,
-            'destino-id' => 2,
+            'product_id'=> 9,
+            'location_id' => 4,
             'stock' => '1',
            
-            'alertas' => 2
+        
         ]);
     }
 }

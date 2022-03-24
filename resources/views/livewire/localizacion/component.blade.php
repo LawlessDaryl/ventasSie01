@@ -21,7 +21,8 @@
                                 <th class="table-th text-withe text-center">CODIGO</th>
                                 <th class="table-th text-withe text-center">DESCRIPCION</th>
                                 <th class="table-th text-withe text-center">UBICACION</th>
-                                <th class="table-th text-withe">SUCURSAL</th>
+                                <th class="table-th text-withe text-center">SUCURSAL</th>
+                                
                                 <th class="table-th text-withe text-center">ACCIONES</th>
                                
                             </tr>
@@ -39,11 +40,12 @@
                                         <h6 class="text-center">{{ $location->descripcion }}</h6>
                                     </td>
                                     <td>
-                                        <h6 class="text-center">{{ $location->ubicacion }}</h6>
+                                        <h6 class="text-center">{{ $location->destino }}</h6>
                                     </td>
                                     <td>
-                                        <h6>{{ $location->sucursal }}</h6>
+                                        <h6 class="text-center">{{ $location->sucursal}}</h6>
                                     </td>
+                                    
             
 
                                 

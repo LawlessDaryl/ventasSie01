@@ -32,26 +32,15 @@
             @error('cost') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>
     </div>
-    <div class="col-sm-12 col-md-4">
-        <div class="form-group">
-            <label>Ubicacion</label>
-            <select  wire:model='ubicacion' class="form-control">
-                <option value="Elegir">Elegir</option>
-               
-                    <option value="TIENDA">TIENDA</option>
-                    <option value="ALMACEN">ALMACEN</option>
-                
-            </select>
-        </div>
-    </div>
+    
     <div class="col-sm-12 col-md-8">
         <div class="form-group">
             <label>Sucursal</label>
-            <select wire:model='sucursal' class="form-control">
+            <select wire:model='destino' class="form-control">
                 <option value="Elegir">Elegir</option>
                 @foreach ($data_suc as $data)
                 
-                    <option value="{{$data->id}}">{{ $data->name }}</option>
+                    <option value="{{$data->id}}">{{ $data->destino}}-{{$data->sucursal}}</option>
                 @endforeach
               
             </select>
