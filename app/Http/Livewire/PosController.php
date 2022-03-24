@@ -25,10 +25,12 @@ class PosController extends Component
 {
     public $total, $itemsQuantity, $efectivo, $change, 
     $nit, $clienteanonimo="true", $tipopago ,$anonimo, $factura, $observacion, $facturasino, $nombreproducto, $clienteseleccionado;
-    public $razonsocial, $celular;
+    public $razonsocial, $celular="";
 
     //Variables para la venta desde almacen, moviendo productos de almacen a la tienda
     public  $stockalmacen, $nombrestockproducto, $cantidadToTienda = 1, $idproductoalmacen;
+
+    public $idventa=4;
 
 
 
@@ -464,6 +466,18 @@ class PosController extends Component
 
     public function saveSale()
     {
+        if($this->anonimo == 1)
+        {
+            
+            $rules = [ /* Reglas de validacion */
+                'nit' => 'required',
+            ];
+            $messages = [ /* mensajes de validaciones */
+                'nit.required' => 'Ingrese el Nit de un Cliente'
+            ];
+
+            $this->validate($rules, $messages);
+        }
 
         if ($this->total <= 0) {
             $this->emit('sale-error', 'Agrega productos a la venta');
@@ -612,6 +626,13 @@ class PosController extends Component
             }
 
             DB::commit();
+
+
+
+
+            $this->idventa = $sale->id;
+
+
 
             Cart::clear();
             $this->efectivo = 0;

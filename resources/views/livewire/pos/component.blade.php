@@ -190,12 +190,20 @@
                                                     <div class="row justify-content-between mt-5">
                                                         <div class="col-sm-12 col-md-12 col-lg-6">
                                                             @if ($total > 0)
-                                                                <button onclick="Confirm('','clearCart','¿Seguro de eliminar el carrito?')"
+                                                                <button  data-dismiss="modal" onclick="Confirm('','clearCart','¿Seguro de eliminar el carrito?')"
                                                                     class="btn btn-dark mtmobile">
                                                                     CANCELAR F4
                                                                 </button>
                                                             @endif
                                                         </div>
+
+
+
+                                                        <a class="btn btn-dark btn-block {{count($denominations) < 1 ? 'disabled' : ''}}" href="{{ url('report/pdf' . '/' . $total. '/' . $idventa . '/' . Auth()->user()->id)}}">Generar Comprobante</a>
+
+
+
+
                                                         <div class="col-sm-12 col-md-12 col-lg-6">
                                                             @if($efectivo>=$total&&$total>0)
                                                             <button wire:click.prevent="saveSale" data-dismiss="modal" class="btn btn-dark btn-md btn-block">GUARDAR

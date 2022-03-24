@@ -6,23 +6,19 @@
         <div class="col-sm-12 col-md-4">
             <div class="form-group">
                 <input type="text" wire:model="nit" class="form-control" placeholder="NIT">
-                @error('nombre') <span class="text-danger er">{{ $message }}</span>@enderror
+                @error('nit')
+                    <span class="text-danger er">{{ $message }}</span>
+                @enderror
             </div>
         </div>
         <div class="col-sm-12 col-md-4">
             <div class="form-group">
                 <input type="text" wire:model="razonsocial" class="form-control" placeholder="RAZON SOCIAL">
-                @error('cedula')
-                    <span class="text-danger er">{{ $message }}</span>
-                @enderror
             </div>
         </div>
         <div class="col-sm-12 col-md-4">
             <div class="form-group">
                 <input type="text" wire:model="celular" class="form-control" placeholder="CELULAR">
-                @error('cedula')
-                    <span class="text-danger er">{{ $message }}</span>
-                @enderror
             </div>
         </div>
         
