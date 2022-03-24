@@ -31,12 +31,62 @@ public function mount()
 
     public function render()
     {
+<<<<<<< HEAD
 
         $destino= Destino::join('sucursals as suc','suc.id','destinos.sucursal_id')
         ->select('destinos.*','suc.name')->orderBy('suc.name','desc')->paginate($this->pagination);
 
        
         return view('livewire.destino.destino-controller',['datas'=>$destino,'data_suc'=>Sucursal::all()])
+=======
+        if($this->selected_id !== null && $this->selected_ubicacion !== null )
+
+            $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product-id')
+                                        ->join('locations as loc','loc.id','productos_destinos.destino-id')
+                                        ->join('sucursals as suc','suc.id','loc.sucursal_id')
+                                        ->select('productos_destinos.*','loc.*','p.nombre as name','loc.ubicacion as ubi','suc.name as suc_id','loc.codigo as codigo')
+                                        ->where('loc.ubicacion',$this->selected_ubicacion)
+                                        ->where('suc.name',$this->selected_id)
+                                        ->orderBy('p.nombre','desc')
+                                        ->paginate($this->pagination);
+        else
+
+            if($this->selected_id == 'General')
+            {
+                $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product-id')
+                                            ->join('locations as loc','loc.id','productos_destinos.destino-id')
+                                            ->join('sucursals as suc','suc.id','loc.sucursal_id')
+                                            ->select(DB::raw('sum(product-id)'),'productos_destinos.*','loc.*','p.nombre as name','loc.ubicacion as ubi','suc.name as suc_id','loc.codigo as codigo')
+                                            ->groupBy('productos_destinos.product-id')
+                                          
+                                            ->paginate($this->pagination);
+
+            }
+                 $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product-id')
+                                        ->join('locations as loc','loc.id','productos_destinos.destino-id')
+                                        ->join('sucursals as suc','suc.id','loc.sucursal_id')
+                                        ->select('productos_destinos.*','loc.*','p.nombre as name','loc.ubicacion as ubi','suc.name as suc_id','loc.codigo as codigo')
+                                        ->where('loc.ubicacion','ALMACEN')
+                                        ->where('suc.id',1)
+                                        ->orderBy('p.nombre','desc')
+                                        ->paginate($this->pagination);
+
+      
+        /*$products = Product::join('categories as c', 'c.id', 'products.category_id')
+                ->select('products.*', 'c.name as category')
+                ->where('products.name', 'like', '%' . $this->search . '%')
+                ->orWhere('products.barcode', 'like', '%' . $this->search . '%')
+                ->orWhere('c.name', 'like', '%' . $this->search . '%')
+                ->orderBy('products.id', 'desc')
+                ->paginate($this->pagination);
+        */
+            $suc_data=Sucursal::select('sucursals.*')
+                                    ->orderBy('sucursals.id','asc');
+
+                                    
+
+        return view('livewire.destino.destino-controller',['destinos_almacen'=>$almacen,'data_suc' => $suc_data->get()])  
+>>>>>>> c4564dec6882f117ac73a1d26fd2897b6f21f006
         ->extends('layouts.theme.app')
         ->section('content');
     }
