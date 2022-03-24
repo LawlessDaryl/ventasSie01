@@ -9,7 +9,7 @@
                     
                         <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
                         data-target="#theModal">Transferir <br/>Productos</a>
-                        <button wire:click="selected"class="btn btn-dark">Almacen <br/>General</button>
+                      
                     
                 </ul>
             </div>
@@ -33,10 +33,11 @@
 
                     <div class="form-group">
                         <select wire:model='selected_id' class="form-control">
-                          <option value="null">Elegir Sucursal</option>
+                          <option value="null">Elegir almacen</option>
                           @foreach ($data_suc as $data)
-                          <option value="{{ $data->nombre }}|{{$data->loc}}">{{ $data->nombre }}-{{$data->loc}}</option>
+                          <option value="{{ $data->id }}">{{ $data->sucursal }}-{{$data->destino}}</option>
                           @endforeach
+                          <option value="General">Almacen Total</option>
                          
                         </select>
                       </div>
@@ -50,16 +51,21 @@
                       @foreach($destinos_almacen as $destino)
                       
                         <div class="card border-success m-2" style="max-width: 18rem;">
+                        
                             <div class="card-header"><h3> {{$destino->name}}</h3></div>
                             <div class="card-body text-success">
                              {{--<h5 class="card-title">{{$destino->tipo}}-{{$destino->codigo}}</h5>--}} 
-                             @if($selected_id == 'General')
-                             <h1>hola</h1>
-                            @endif
-                              <p class="card-text"> <strong> Stock Disponible:</strong> {{$destino->stock}}</p>
-                              <p class="card-text"> <strong></strong> {{$destino->tipo}}-{{$destino->codigo}}</p>
-                            </div>
-                          </div>
+                             @if($selected_id == 'General' || $selected_id == null)
+                             <p class="card-text"> <strong> Stock total Disponible:</strong> {{$destino->stock_s }}</p>
+                             <p class="card-text"> <strong>Cantida minima</strong> {{$destino->cant_min}}</p>
+                             @else
+                               <p class="card-text"> <strong> Stock Disponible:</strong> {{$destino->stock}}</p>
+                               <p class="card-text"> <strong>Mobilirio ubicacion</strong> {{$destino->tipo}}-{{$destino->codigo}}</p>
+                               @endif
+                             </div>
+                           </div>
+                           
+                          
                       @endforeach
 
                     </div>
@@ -68,5 +74,5 @@
             </div>
         </div>
     </div>
-  
+    @include('livewire.destino_producto.form')
 </div>

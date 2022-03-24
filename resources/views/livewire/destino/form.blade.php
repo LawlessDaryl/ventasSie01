@@ -20,7 +20,7 @@
         </div>
         <div class="form-group">
             <label>Observacion</label>
-            <input type="text" wire:model.lazy="nombre" class="form-control" placeholder="Describa alguna observacion"
+            <input type="text" wire:model.lazy="observacion" class="form-control" placeholder="Describa alguna observacion"
             maxlenght="25">
             @error('name') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>

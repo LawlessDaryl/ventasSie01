@@ -15,7 +15,7 @@ class DestinoController extends Component
     public  $pageTitle, $componentName;
     private $pagination = 5;
 
-public $nombre,$sucursal,$observacion,$selected_id;
+public $nombre,$sucursal,$observacion,$selected_id,$search;
     
 public function paginationView()
 {
@@ -31,7 +31,7 @@ public function mount()
 
     public function render()
     {
-
+        
         $destino= Destino::join('sucursals as suc','suc.id','destinos.sucursal_id')
         ->select('destinos.*','suc.name')->orderBy('suc.name','desc')->paginate($this->pagination);
 
