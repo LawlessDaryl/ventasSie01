@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Destino;
 use App\Models\Location;
 use App\Models\ProductosDestino;
 use App\Models\Sucursal;
@@ -83,9 +84,8 @@ class DestinoProductoController extends Component
                 ->orderBy('products.id', 'desc')
                 ->paginate($this->pagination);
         */
-            $sucursal_ubicacion=Location::join('destinos as dest','dest.id','locations.destino_id')
-                                        ->join('sucursals as suc','suc.id','dest.sucursal_id')
-                                        ->select ('suc.name as sucursal','dest.nombre as destino','dest.id')
+            $sucursal_ubicacion=Destino::join('sucursals as suc','suc.id','destinos.sucursal_id')
+                                        ->select ('suc.name as sucursal','destinos.nombre as destino','destinos.id')
                                        
                                         ->orderBy('suc.name','asc');
 

@@ -29,7 +29,7 @@
                       
                    
                 </div>
-                <div class="col-12 col-lg-3 col-md-3">
+                <div class="col-12 col-lg-2 col-md-3">
 
                     <div class="form-group">
                         <select wire:model='selected_id' class="form-control">
@@ -42,17 +42,28 @@
                         </select>
                       </div>
                 </div>
+                <div class="col-12 col-lg-2 col-md-3">
+
+                    <div class="form-group">
+                        <button class="btn btn-warning" style="padding: 10px">Reset Transferencia</button>
+                    </div>
+                </div>
+
+                
 
             </div>
           
+            <div class="row" >
 
-            <div class="widget-content">
-                    <div class="col-12 col-lg-12 col-md-4 d-flex flex-wrap">                    
+         
+
+                    <div class="col-12 col-lg-8 col-md-4 d-flex flex-wrap">
+
                       @foreach($destinos_almacen as $destino)
                       
-                        <div class="card border-success m-2" style="max-width: 18rem;">
+                        <div class="card border-success m-2" style="width: 18rem;">
                         
-                            <div class="card-header"><h3> {{$destino->name}}</h3></div>
+                            <div class="card-header"><h5> {{$destino->name}}</h5></div>
                             <div class="card-body text-success">
                              {{--<h5 class="card-title">{{$destino->tipo}}-{{$destino->codigo}}</h5>--}} 
                              @if($selected_id == 'General' || $selected_id == null)
@@ -69,9 +80,83 @@
                       @endforeach
 
                     </div>
+
+                    {{--AREA DE TRANSFERENCIAS DE PRODUCTOS--}}
+
+
+                    <div class="col-12 col-lg-4 col-md 3">
+                        <div class="widget mr-2 mb-2 mt-2">
+                              
+                            <div class="table-responsive p-1">
+                                <table class="table table-unbordered table-hover mt-2">
+                                    <thead class="text-white" style="background: #3B3F5C">
+                                        <tr>
+                                            <th class="table-th text-withe text-center">Producto</th>
+                                          
+                                            <th class="table-th text-withe text-center">Cantidad</th>
+                                          
+                                            <th class="table-th text-withe text-center">Destino <br>Producto </th>
+                                            <th class="table-th text-withe text-center">Acc.</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($cart as $prod)
+                                            <tr>
+                                                <td>
+                                                    <h6> {{$prod->name}}</h6>
+                                                </td>
+                                                <td>
+                                                     <input type="number" 
+                                                     id="rr{{$prod->id}}" 
+                                                     wire:change="UpdateQty({{$prod->id}}, $('#rr' + {{$prod->id}}).val() )" 
+                                                     style="font-size: 1rem!important;" 
+                                                     class="form-control text-center" 
+                                                     value="{{$prod->quantity}}">
+                                                </td>
+                                               
+                                               
+                                                <td>
+                                                    <div class="form-group">
+                                                      <select value="Elegir" class="form-control" name="" id="">
+                                                        <option value="Elegir Destino">Elegir Destino</option>
+                                                        <option>Destino 1</option>
+                                                        <option>Destino 2</option>
+                                                        <option>Destino 3</option>
+                                                      </select>
+                                                    </div>
+                                                </td>
+                                                <td class="text-center">
+                                                    <a href="javascript:void(0)"
+                                                    wire:click="removeItem({{ $prod->id }})"
+                                                        class="btn btn-dark mtmobile" title="Edit">
+                                                        <i class="fas fa-trash"></i>
+                                                    </a>
+
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                        <tfoot class="text-white text-center" style="background: #a5a19e"  >
+                                                <tr>
+                                                    <td colspan="5">
+                                                         <h5 class="text-white">TOTAL.-</h5>
+                                                    </td>
+                                                    <td>
+                                                        <h5 class="text-white" >{{$total_compra}}</h5>
+                                                    </td>
+                                                </tr>
+                                        </tfoot>
+                                    </tbody>
+                                </table>
+                            </div>
+                        
+                    </div>
+                    </div>
                   
                 
+            
             </div>
+
+         
         </div>
     </div>
     @include('livewire.destino_producto.form')
