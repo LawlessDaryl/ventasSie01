@@ -9,6 +9,7 @@ use App\Models\Cartera;
 use App\Models\CarteraMov;
 use App\Models\Cliente;
 use App\Models\ClienteMov;
+use App\Models\CuentaInversion;
 use App\Models\Movimiento;
 use App\Models\Plan;
 use App\Models\PlanAccount;
@@ -369,6 +370,7 @@ class PlanesController extends Component
                     ->where('p.id', $this->plataforma)
                     ->get()->take($this->cantidaperf);
                 $this->mostrartabla = 2;
+                /* CUENTAS ENTERAS PARA CREAR UN PERFIL SI ES QUE NO TIENE CREADOS */
                 $this->cuentasEnteras = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                     ->join('emails as e', 'accounts.email_id', 'e.id')
                     ->select(
@@ -434,7 +436,7 @@ class PlanesController extends Component
 
         $this->nombrePerfil = '';
         $this->pinPerfil = '';
-
+        /* ACTUALIZAR LISTADO PERFILES Y MOSTAR EL CREADO */
         $this->profiles = Profile::join('account_profiles as ap', 'ap.profile_id', 'profiles.id')
             ->join('accounts as a', 'ap.account_id', 'a.id')
             ->join('platforms as p', 'a.platform_id', 'p.id')
@@ -525,7 +527,8 @@ class PlanesController extends Component
             $cartera = Cartera::where('tipo', $this->tipopago)
                 ->where('caja_id', $cccc->id)->get()->first();
         } */
-        /* Obtener al cliente con la cedula */
+
+        /* Obtener al cliente con EL CELULAR */
         $cliente = Cliente::where('celular', $this->celular)
             ->get()
             ->first();
@@ -566,6 +569,17 @@ class PlanesController extends Component
                     /* PONER LA CUENTA EN OCUPADO */
                     $accp->availability = 'OCUPADO';
                     $accp->save();
+                    /* ENCONTRAR INVERSION */
+                    $inversioncuenta = CuentaInversion::where('start_date', '<=', $mv->created_at)
+                        ->where('expiration_date', '>=', $mv->created_at)
+                        ->where('account_id', $accp->id)
+                        ->get()->first();
+                    
+                    $inversioncuenta->type = 'CUENTA';
+                    $inversioncuenta->imports = $this->importe;
+                    $inversioncuenta->ganancia = $this->importe - $inversioncuenta->price;
+                    $inversioncuenta->save();
+
                     /* OBTENER FECHA ACTUAL */
                     $DateAndTime = date('Y-m-d h:i:s', time());
                     /* CREAR EL PLAN */
@@ -635,6 +649,18 @@ class PlanesController extends Component
                     /* PONER EL PERFIL EN OCUPADO */
                     $accp->availability = 'OCUPADO';
                     $accp->save();
+                    /* ENCONTRAR INVERSION */
+                    $inversioncuenta = CuentaInversion::where('start_date', '<=', $mv->created_at)
+                        ->where('expiration_date', '>=', $mv->created_at)
+                        ->where('account_id', $accp->CuentaPerfil->account_id)
+                        ->get()->first();
+
+                    $inversioncuenta->type = 'PERFILES';
+                    $inversioncuenta->sale_profiles += 1;
+                    $inversioncuenta->imports += $this->importe;
+                    $inversioncuenta->ganancia = $inversioncuenta->imports - $inversioncuenta->price;
+                    $inversioncuenta->save();
+
                     /* OBTENER FECHA ACTUAL */
                     $DateAndTime = date('Y-m-d h:i:s', time());
                     /* CREAR EL PLAN */

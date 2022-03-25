@@ -82,8 +82,12 @@
                                         <td>
                                             <h6 class="text-center">{{ $acounts->password_account }}</h6>
                                         </td>
-                                        <td>
-                                            <h6 class="text-center">{{ $acounts->expiration_account }}</h6>
+                                        <td
+                                            style="{{ $acounts->dias <= 5 ? 'background-color: #FF0000 !important' : 'background-color: #09ed3d !important' }}">
+                                            <a href="javascript:void(0)" wire:click="AccionesCuenta({{ $acounts->id }})"
+                                                class="btn btn-primary" title="Renovar">
+                                                {{ $acounts->expiration_account }}
+                                            </a>
                                         </td>
                                         <td>
                                             <h6 class="text-center">{{ $acounts->whole_account }}</h6>
@@ -223,6 +227,7 @@
     @include('livewire.cuentas.form')
     @include('livewire.cuentas.modalDetails')
     @include('livewire.cuentas.modalDetails2')
+    @include('livewire.cuentas.modalDetails3')
 
 </div>
 
@@ -268,6 +273,18 @@
             $('#modal-details2').modal('hide')
             noty(msg)
         });
+
+        window.livewire.on('details3-show', msg => {
+            $('#modal-details3').modal('show')
+        });
+        window.livewire.on('modal-hide3', msg => {
+            $('#modal-details3').modal('hide')
+            noty(msg)
+        });
+        /* window.livewire.on('cuenta-renovado-vencida', msg => {
+            $('#modal-details2').modal('hide')
+            noty(msg)
+        }); */
 
         flatpickr(document.getElementsByClassName('flatpickr'), {
             enableTime: false,

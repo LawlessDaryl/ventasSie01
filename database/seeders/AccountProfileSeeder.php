@@ -33,14 +33,20 @@ class AccountProfileSeeder extends Seeder
             'profile_id' => '3',
             'plan_id' => null,
         ]);
-
-
-        AccountProfile::create([   /* Perfil disney */
+        AccountProfile::create([   /* Perfil netflix */
             'status' => 'SinAsignar',
-            'account_id' => '2',
+            'account_id' => '1',
+            'profile_id' => '3',
+            'plan_id' => null,
+        ]);
+        AccountProfile::create([   /* Perfil netflix */
+            'status' => 'SinAsignar',
+            'account_id' => '1',
             'profile_id' => '4',
             'plan_id' => null,
         ]);
+
+
         AccountProfile::create([   /* Perfil disney */
             'status' => 'SinAsignar',
             'account_id' => '2',
@@ -53,14 +59,14 @@ class AccountProfileSeeder extends Seeder
             'profile_id' => '6',
             'plan_id' => null,
         ]);
-
-
-        AccountProfile::create([   /* Perfil prime */
+        AccountProfile::create([   /* Perfil disney */
             'status' => 'SinAsignar',
-            'account_id' => '3',
+            'account_id' => '2',
             'profile_id' => '7',
             'plan_id' => null,
         ]);
+
+
         AccountProfile::create([   /* Perfil prime */
             'status' => 'SinAsignar',
             'account_id' => '3',
@@ -73,14 +79,14 @@ class AccountProfileSeeder extends Seeder
             'profile_id' => '9',
             'plan_id' => null,
         ]);
-
-
-        AccountProfile::create([   /* Perfil star */
+        AccountProfile::create([   /* Perfil prime */
             'status' => 'SinAsignar',
-            'account_id' => '4',
+            'account_id' => '3',
             'profile_id' => '10',
             'plan_id' => null,
         ]);
+
+
         AccountProfile::create([   /* Perfil star */
             'status' => 'SinAsignar',
             'account_id' => '4',
@@ -93,14 +99,14 @@ class AccountProfileSeeder extends Seeder
             'profile_id' => '12',
             'plan_id' => null,
         ]);
-
-
-        AccountProfile::create([   /* Perfil hbo */
+        AccountProfile::create([   /* Perfil star */
             'status' => 'SinAsignar',
-            'account_id' => '5',
+            'account_id' => '4',
             'profile_id' => '13',
             'plan_id' => null,
         ]);
+
+
         AccountProfile::create([   /* Perfil hbo */
             'status' => 'SinAsignar',
             'account_id' => '5',
@@ -111,6 +117,12 @@ class AccountProfileSeeder extends Seeder
             'status' => 'SinAsignar',
             'account_id' => '5',
             'profile_id' => '15',
+            'plan_id' => null,
+        ]);
+        AccountProfile::create([   /* Perfil hbo */
+            'status' => 'SinAsignar',
+            'account_id' => '5',
+            'profile_id' => '16',
             'plan_id' => null,
         ]);
         

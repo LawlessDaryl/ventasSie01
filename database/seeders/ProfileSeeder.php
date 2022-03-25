@@ -35,6 +35,13 @@ class ProfileSeeder extends Seeder
             'availability' => 'LIBRE',
             'observations' => 'Ninguna',
         ]);
+        Profile::create([
+            'nameprofile' => 'netflixDividida4',
+            'pin' => 'ntd3',
+            'status' => 'ACTIVO',
+            'availability' => 'LIBRE',
+            'observations' => 'Ninguna',
+        ]);
 
         Profile::create([
             'nameprofile' => 'disneyDividida1',
@@ -123,6 +130,5 @@ class ProfileSeeder extends Seeder
             'availability' => 'LIBRE',
             'observations' => 'Ninguna',
         ]);
-        
     }
 }

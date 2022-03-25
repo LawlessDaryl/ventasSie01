@@ -4,7 +4,7 @@
             <div class="modal-header bg-dark">
                 <h5 class="modal-title text-white">
                     @if ($condicional != 'vencidos')
-                        <b>RENOVACION Y VENCIMIENTO DE CUENTAS</b>
+                        <b>RENOVACION Y VENCIMIENTO DE PLANES DE CUENTA</b>
                     @else
                         <b>OBSERVACIONES</b>
                     @endif

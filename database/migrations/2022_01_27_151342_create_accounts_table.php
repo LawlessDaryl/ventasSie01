@@ -15,6 +15,7 @@ class CreateAccountsTable extends Migration
     {
         Schema::create('accounts', function (Blueprint $table) {
             $table->id();
+            $table->date('start_account');
             $table->date('expiration_account');
             $table->enum('status', ['ACTIVO', 'INACTIVO'])->default('ACTIVO');
             $table->enum('whole_account', ['ENTERA', 'DIVIDIDA'])->default('ENTERA');

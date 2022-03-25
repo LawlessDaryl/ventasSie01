@@ -8,6 +8,7 @@ use App\Models\Caja;
 use App\Models\Cartera;
 use App\Models\CarteraMov;
 use App\Models\ClienteMov;
+use App\Models\CuentaInversion;
 use App\Models\Email;
 use App\Models\Movimiento;
 use App\Models\Plan;
@@ -29,10 +30,10 @@ class CuentasController extends Component
     use WithFileUploads;
     public $platform_id, $email_id, $expiration, $status, $number_profiles,
         $search, $selected_id, $pageTitle, $componentName, $proveedor, $nameP, $PIN, $estado,
-        $availability, $Observaciones, $perfiles, $correos, $selected,
+        $availability, $Observaciones, $perfiles, $correos, $selected, $start_account,
         $expiration_account, $password_account, $price, $mostrarCampos, $condicional,
         $meses, $expirationActual, $expirationNueva, $observations, $selected_plan,
-        $correoCuenta, $passCuenta, $nombreCliente, $celular, $observacionesTrans;
+        $correoCuenta, $passCuenta, $nombreCliente, $celular, $observacionesTrans, $mostrarRenovar;
     private $pagination = 10;
     public function paginationView()
     {
@@ -69,6 +70,7 @@ class CuentasController extends Component
         $this->nombreCliente = '';
         $this->celular = '';
         $this->observacionesTrans = '';
+        $this->mostrarRenovar = 0;
     }
     public function render()
     {
@@ -88,7 +90,8 @@ class CuentasController extends Component
                         'e.pass as pass',
                         'strsp.name as name',
                         DB::raw('0 as perfActivos'),
-                        DB::raw('0 as perfLibres')
+                        DB::raw('0 as perfLibres'),
+                        DB::raw('0 as dias')
                     )
                     ->where('p.nombre', 'like', '%' . $this->search . '%')
                     ->where('accounts.status', 'ACTIVO')
@@ -102,7 +105,7 @@ class CuentasController extends Component
                     ->where('accounts.status', 'ACTIVO')
                     ->where('accounts.availability', 'LIBRE')
 
-                    ->orderBy('accounts.id', 'desc')
+                    ->orderBy('accounts.expiration_account', 'asc')
                     ->paginate($this->pagination);
                 foreach ($cuentas as $c) {
                     $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
@@ -118,6 +121,11 @@ class CuentasController extends Component
                     $c->perfActivos = $cantidadActivos;
                     $cantidadLibres = $perfilesLibres->count();
                     $c->perfLibres = $cantidadLibres;
+
+                    $fecha_actual = date("Y-m-d");
+                    $s = strtotime($c->expiration_account) - strtotime($fecha_actual);
+                    $d = intval($s / 86400);
+                    $c->dias = $d;
                 }
             } else {
                 $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
@@ -134,11 +142,12 @@ class CuentasController extends Component
                         'e.pass as pass',
                         'strsp.name as name',
                         DB::raw('0 as perfActivos'),
-                        DB::raw('0 as perfLibres')
+                        DB::raw('0 as perfLibres'),
+                        DB::raw('0 as dias')
                     )
                     ->where('accounts.status', 'ACTIVO')
                     ->where('accounts.availability', 'LIBRE')
-                    ->orderBy('accounts.id', 'desc')
+                    ->orderBy('accounts.expiration_account', 'asc')
                     ->paginate($this->pagination);
                 foreach ($cuentas as $c) {
                     $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
@@ -154,9 +163,14 @@ class CuentasController extends Component
                     $c->perfActivos = $cantidadActivos;
                     $cantidadLibres = $perfilesLibres->count();
                     $c->perfLibres = $cantidadLibres;
+
+                    $fecha_actual = date("Y-m-d");
+                    $s = strtotime($c->expiration_account) - strtotime($fecha_actual);
+                    $d = intval($s / 86400);
+                    $c->dias = $d;
                 }
             }
-        } elseif ($this->condicional == 'ocupados') {   /* cuentas ocupadas enteras */
+        } elseif ($this->condicional == 'ocupados') { /* cuentas ocupadas enteras */
             if (strlen($this->search) > 0) {
                 $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                     ->join('emails as e', 'accounts.email_id', 'e.id')
@@ -189,7 +203,7 @@ class CuentasController extends Component
                     ->where('p.nombre', 'like', '%' . $this->search . '%')
                     ->where('pl.status', 'VIGENTE')
                     ->where('pa.status', 'ACTIVO')
-                    ->where('pl.type_plan', 'CUENTA')                    
+                    ->where('pl.type_plan', 'CUENTA')
                     ->where('pl.ready', 'SI')
 
                     ->orWhere('c.nombre', 'like', '%' . $this->search . '%')
@@ -414,6 +428,68 @@ class CuentasController extends Component
             ->extends('layouts.theme.app')
             ->section('content');
     }
+    public function AccionesCuenta(Account $cuenta)
+    {
+        $this->selected_id = $cuenta->id;
+        $this->emit('details3-show', 'show modal!');
+    }
+    public function mostrarRenovar()
+    {
+        $this->mostrarRenovar = 1;
+        $cuenta = Account::find($this->selected_id);
+        $this->start_account = $cuenta->start_account;
+        $this->expiration_account = $cuenta->expiration_account;
+        $this->meses = 1;
+        $this->email_id = $cuenta->Correo->content;
+        $this->number_profiles = $cuenta->number_profiles;
+        $this->price = $cuenta->price;
+        $this->password_account = $cuenta->password_account;
+    }
+    public function RenovarCuenta()
+    {
+        $cuenta = Account::find($this->selected_id);
+
+        $cuenta->update([
+            'start_account' => $this->start_account,
+            'expiration_account' => $this->expiration_account,
+            'number_profiles' => $this->number_profiles,
+            'password_account' => $this->password_account,
+            'price' => $this->price,
+        ]);
+        $fechaInicio = $this->start_account;
+        $fechaFin = $this->expiration_account;
+
+        for ($i = 0; $i < $this->meses; $i++) {
+            
+            if ($i == 0) {
+                $dias = 30;
+            } else {
+                $dias = 30 * ($i + 1);
+            }
+
+            $this->start_account = strtotime('+' . $dias . ' day', strtotime($fechaInicio));
+            $this->start_account = date('Y-m-d', $this->start_account);
+
+            $this->expiration_account = strtotime('+' . $dias . ' day', strtotime($fechaFin));
+            $this->expiration_account = date('Y-m-d', $this->expiration_account);
+            
+
+            CuentaInversion::create([
+                'start_date' => $this->start_account,
+                'expiration_date' => $this->expiration_account,
+                'price' => $this->price,
+                'number_profiles' => $this->number_profiles,
+                'sale_profiles' => 0,
+                'imports' => 0,
+                'ganancia' => 0,
+                'account_id' => $cuenta->id,
+            ]);
+        }
+
+        $this->resetUI();
+        $this->emit('modal-hide3', 'Cuenta Actualizada');
+    }
+
     public function Store()
     {
         $rules = [
@@ -439,7 +515,8 @@ class CuentasController extends Component
 
         DB::beginTransaction();
         try {
-            Account::create([
+            $acc = Account::create([
+                'start_account' => $this->start_account,
                 'expiration_account' => $this->expiration_account,
                 'status' => $this->estado,
                 'whole_account' => 'ENTERA',
@@ -449,6 +526,17 @@ class CuentasController extends Component
                 'str_supplier_id' => $this->proveedor,
                 'platform_id' => $this->platform_id,
                 'email_id' => $this->email_id,
+            ]);
+
+            CuentaInversion::create([
+                'start_date' => $this->start_account,
+                'expiration_date' => $this->expiration_account,
+                'price' => $this->price,
+                'number_profiles' => $this->number_profiles,
+                'sale_profiles' => 0,
+                'imports' => 0,
+                'ganancia' => 0,
+                'account_id' => $acc->id,
             ]);
 
             $correo = Email::find($this->email_id);
