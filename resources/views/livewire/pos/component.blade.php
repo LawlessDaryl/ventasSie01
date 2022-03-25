@@ -199,15 +199,18 @@
 
 
 
-                                                        <a class="btn btn-dark btn-block {{count($denominations) < 1 ? 'disabled' : ''}}" href="{{ url('report/pdf' . '/' . $total. '/' . $idventa . '/' . Auth()->user()->id)}}">Generar Comprobante</a>
+                                                        {{-- <a class="btn btn-dark btn-block {{count($denominations) < 1 ? 'disabled' : ''}}" 
+                                                        href="{{ url('report/pdf' . '/' . $total. '/' . $idventa . '/' . Auth()->user()->id)}}">Generar Comprobante</a> --}}
 
 
 
 
                                                         <div class="col-sm-12 col-md-12 col-lg-6">
                                                             @if($efectivo>=$total&&$total>0)
-                                                            <button wire:click.prevent="saveSale" data-dismiss="modal" class="btn btn-dark btn-md btn-block">GUARDAR
-                                                                F9</button>
+                                                            <button wire:click.prevent="saveSale" data-dismiss="modal" class="btn btn-dark btn-md btn-block" 
+                                                            href="{{ url('report/pdf' . '/' . $total. '/' . $idventa . '/' . Auth()->user()->id)}}">
+                                                                FINALIZAR VENTA
+                                                            </button>
                                                                 @endif
                                                         </div>
                                                     </div>

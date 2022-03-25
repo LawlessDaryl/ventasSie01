@@ -30,7 +30,8 @@ class PosController extends Component
     //Variables para la venta desde almacen, moviendo productos de almacen a la tienda
     public  $stockalmacen, $nombrestockproducto, $cantidadToTienda = 1, $idproductoalmacen;
 
-    public $idventa=4;
+    //Variable para mandar ...
+    public $idventa;
 
 
 
@@ -664,7 +665,9 @@ class PosController extends Component
 
             $this->emit('save-ok', 'venta registrada con exito');
 
-            return Redirect::to('pos');
+            return redirect::to('report/pdf' . '/' . $this->total. '/' . $this->idventa . '/' . Auth()->user()->id);
+
+            //return Redirect::to('pos');
         } catch (Exception $e) {
             DB::rollback();
             $this->emit('sale-error', $e->getMessage());
