@@ -108,7 +108,7 @@
                                                 <td>
                                                      <input type="number" 
                                                      id="rr{{$prod->id}}" 
-                                                     wire:change="UpdateQty({{$prod->id}}, $('#rr' + {{$prod->id}}).val() )" 
+                                                     wire:change="UpdateQty({{$prod->id}}, $('#rr' + {{$prod->id}}).val())" 
                                                      style="font-size: 1rem!important;" 
                                                      class="form-control text-center" 
                                                      value="{{$prod->quantity}}">

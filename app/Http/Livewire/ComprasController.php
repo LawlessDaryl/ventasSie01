@@ -45,9 +45,7 @@ class ComprasController extends Component
         else
         $prod = "cero";
 
-        
-       
-    
+
         return view('livewire.compras.component',['data_prod' => $prod,
         'cart' => Cart::getContent()->sortBy('name')
         ])

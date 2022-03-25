@@ -7,6 +7,8 @@ use App\Models\Sucursal;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
+use Darryldecode\Cart\Facades\CartFacade as Cart;
+use Illuminate\Support\Carbon;
 
 class DestinoController extends Component
 {
@@ -26,7 +28,14 @@ public function mount()
     $this->pageTitle = 'Listado';
     $this->componentName = 'Estancias';
     $this->selected_id = 0;
+    
+
+    $this->fecha = Carbon::now();
+
+
 }
+
+
 
 
     public function render()
