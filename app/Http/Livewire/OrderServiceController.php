@@ -598,6 +598,8 @@ class OrderServiceController extends Component
             'falla_segun_cliente' => $this->falla_segun_cliente,
             'diagnostico' => $this->diagnostico,
             'solucion' => $this->solucion,
+            'costo' => $this->costo,
+            'detalle_costo' => $this->detalle_costo,
             'fecha_estimada_entrega' => $from,
 
         ]);
@@ -686,7 +688,7 @@ class OrderServiceController extends Component
 
                 DB::beginTransaction();
                 try {
-                    if (Auth::user()->hasPermissionTo('Asignar_Tecnico_Servicio')) {
+                    if (Auth::user()->hasPermissionTo('Orden_Servicio_Index')) {
                         $mv = Movimiento::create([
                             'type' => 'TERMINADO',
                             'status' => 'ACTIVO',

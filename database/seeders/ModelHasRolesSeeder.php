@@ -39,5 +39,15 @@ class ModelHasRolesSeeder extends Seeder
             'model_type' => 'App\Models\User',
             'model_id' => 5,
         ]);
+        ModelHasRoles::create([     /* PEDRO - ROL TECNICO */
+            'role_id' => 3,
+            'model_type' => 'App\Models\User',
+            'model_id' => 6,
+        ]);
+        ModelHasRoles::create([     /* ANDRES - ROL SUPERVISOR */
+            'role_id' => 4,
+            'model_type' => 'App\Models\User',
+            'model_id' => 7,
+        ]);
     }
 }
