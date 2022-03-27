@@ -9,12 +9,13 @@ use App\Models\Sucursal;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
+use Darryldecode\Cart\Facades\CartFacade as Cart;
 
 class DestinoProductoController extends Component
 {
     use WithPagination;
 
-    public $selected_id,$selected_ubicacion,$componentName,$title;
+    public $selected_id,$selected_ubicacion,$componentName,$title,$itemsQuantity;
     private $pagination = 10;
     public function paginationView()
     {
@@ -25,6 +26,8 @@ class DestinoProductoController extends Component
         $this->selected_id=0;
         $this->componentName='crear';
         $this->title='ssss';
+
+        $this->itemsQuantity = Cart::getTotalQuantity();
 
 
 
@@ -73,17 +76,6 @@ class DestinoProductoController extends Component
               
                 ->paginate($this->pagination);
             }
-            
-
-      
-        /*$products = Product::join('categories as c', 'c.id', 'products.category_id')
-                ->select('products.*', 'c.name as category')
-                ->where('products.name', 'like', '%' . $this->search . '%')
-                ->orWhere('products.barcode', 'like', '%' . $this->search . '%')
-                ->orWhere('c.name', 'like', '%' . $this->search . '%')
-                ->orderBy('products.id', 'desc')
-                ->paginate($this->pagination);
-        */
             $sucursal_ubicacion=Destino::join('sucursals as suc','suc.id','destinos.sucursal_id')
                                         ->select ('suc.name as sucursal','destinos.nombre as destino','destinos.id')
                                        
@@ -91,8 +83,80 @@ class DestinoProductoController extends Component
 
                                     
 
-        return view('livewire.destino_producto.destino-controller',['destinos_almacen'=>$almacen,'data_suc' =>  $sucursal_ubicacion->get()])  
+        return view('livewire.destino_producto.destino-controller',['destinos_almacen'=>$almacen,'data_suc' =>  $sucursal_ubicacion->get(),'cart' => Cart::getContent()])  
         ->extends('layouts.theme.app')
         ->section('content');
     }
+    public function increaseQty($productId, $cant = 1,$precio_compra = 2)
+    {
+       
+        $title = 'aaa';
+        $product = Product::select('products.id','products.nombre as name')
+        ->where('products.id',$productId)->first();
+       
+        $exist = Cart::get($product->id);
+        if ($exist) {
+            $title = 'Cantidad actualizada';
+        } else {
+            $title = "Producto agregado";
+        }
+
+        Cart::add($product->id, $product->name, $precio_compra, $cant);
+
+        
+        $this->total = Cart::getTotal();
+        $this->itemsQuantity = Cart::getTotalQuantity();
+        $this->emit('scan-ok', $title);
+         $this->total_compra = Cart::getTotal();
+
+    }
+
+    public function UpdateQty($productId, $cant = 3)
+    {
+        $title = '';
+        $product = Product::select('products.id','products.nombre as name')
+        ->where('products.id',$productId)->first();
+       
+        $exist = Cart::get($productId);
+        $prices=$exist->price;
+       
+        if ($exist) {
+            $title = "cantidad actualizada";
+        } else {
+            $title = "producto agregado";
+        }
+       
+        $this->removeItem($productId);
+       
+        if ($cant > 0) {
+
+          
+            Cart::add($product->id, $product->name,$prices, $cant);
+          
+            $this->total = Cart::getTotal();
+            $this->itemsQuantity = Cart::getTotalQuantity();
+            $this->emit('scan-ok', $title);
+            $this->total_compra = Cart::getTotal();
+
+
+
+        }
+    }
+    public function removeItem($productId)
+    {
+        Cart::remove($productId);
+
+        $this->total = Cart::getTotal();
+        $this->itemsQuantity = Cart::getTotalQuantity();
+        $this->emit('scan-ok', 'Producto eliminado');
+        $this->total_compra = Cart::getTotal();
+    }
+
+    public function resetUI()
+    {
+        $this->nombre = '';
+        $this->selected_id=0;
+       
+    }
+
 }

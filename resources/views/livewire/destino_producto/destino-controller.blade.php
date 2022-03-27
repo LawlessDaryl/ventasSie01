@@ -26,8 +26,7 @@
                                 </div>
                                 <input type="text" wire:model="search" placeholder="Buscar" class="form-control">
                             </div>
-                      
-                   
+
                 </div>
                 <div class="col-12 col-lg-2 col-md-3">
 
@@ -57,14 +56,15 @@
 
          
 
-                    <div class="col-12 col-lg-8 col-md-4 d-flex flex-wrap">
+                    <div class="col-12 col-lg-5 col-md-4 d-flex flex-wrap">
 
                       @foreach($destinos_almacen as $destino)
                       
-                        <div class="card border-success m-2" style="width: 18rem;">
+                        <div class="card border-success m-1" style="width: 12rem;">
                         
                             <div class="card-header"><h5> {{$destino->name}}</h5></div>
                             <div class="card-body text-success">
+
                              {{--<h5 class="card-title">{{$destino->tipo}}-{{$destino->codigo}}</h5>--}} 
                              @if($selected_id == 'General' || $selected_id == null)
                              <p class="card-text"> <strong> Stock total Disponible:</strong> {{$destino->stock_s }}</p>
@@ -82,10 +82,8 @@
                     </div>
 
                     {{--AREA DE TRANSFERENCIAS DE PRODUCTOS--}}
-
-
-                    <div class="col-12 col-lg-4 col-md 3">
-                        <div class="widget mr-2 mb-2 mt-2">
+                    <div class="col-12 col-lg-7 col-md-3 m-0 p-0">
+                        <div class="widget mb-2 mt-2">
                               
                             <div class="table-responsive p-1">
                                 <table class="table table-unbordered table-hover mt-2">
@@ -135,16 +133,7 @@
                                                 </td>
                                             </tr>
                                         @endforeach
-                                        <tfoot class="text-white text-center" style="background: #a5a19e"  >
-                                                <tr>
-                                                    <td colspan="5">
-                                                         <h5 class="text-white">TOTAL.-</h5>
-                                                    </td>
-                                                    <td>
-                                                        <h5 class="text-white" >{{$total_compra}}</h5>
-                                                    </td>
-                                                </tr>
-                                        </tfoot>
+                                       
                                     </tbody>
                                 </table>
                             </div>
