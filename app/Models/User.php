@@ -59,4 +59,9 @@ class User extends Authenticatable
             return 'noimagen.png';
         }
     }
+
+    public function sucursalusers()
+    {
+        return $this->hasMany(SucursalUser::class);
+    }
 }

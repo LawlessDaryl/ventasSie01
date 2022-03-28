@@ -62,11 +62,7 @@
                 <a href="#servicio" data-active="false" class="menu-toggle">
                     <div class="base-menu">
                         <div class="base-icons">
-                            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2"
-                                fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="12" cy="7" r="4"></circle>
-                            </svg>
+                            <i class="fa-solid fa-user-clock"></i>
 
                         </div>
                         <span>SERVICIO</span>
@@ -402,39 +398,21 @@
                 @can('Cat_Prod_Service_Index')
                     <li>
                         <a href="{{ url('catprodservice') }}">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                class="feather feather-shopping-cart">
-                                <circle cx="9" cy="21" r="1"></circle>
-                                <circle cx="20" cy="21" r="1"></circle>
-                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                            </svg>
+                            <i class="fa-solid fa-laptop"></i>
                             Categoria Producto Servicio </a>
                     </li>
                 @endcan
                 @can('SubCat_Prod_Service_Index')
                     <li>
                         <a href="{{ url('subcatprodservice') }}">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                class="feather feather-shopping-cart">
-                                <circle cx="9" cy="21" r="1"></circle>
-                                <circle cx="20" cy="21" r="1"></circle>
-                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                            </svg>
+                            <i class="fa-solid fa-mobile-screen-button"></i>
                             Sub Categoria Producto Servicio </a>
                     </li>
                 @endcan
                 @can('Type_Work_Index')
                     <li>
                         <a href="{{ url('typework') }}">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                class="feather feather-shopping-cart">
-                                <circle cx="9" cy="21" r="1"></circle>
-                                <circle cx="20" cy="21" r="1"></circle>
-                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                            </svg>
+                            <i class="fa-regular fa-file-lines"></i>
                             Tipo de Trabajo </a>
                     </li>
                 @endcan

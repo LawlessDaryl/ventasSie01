@@ -81,6 +81,10 @@ class OrderServiceController extends Component
             session(['opcio' => 'PENDIENTE']);
             
         } */
+
+        
+       
+        
         if ($this->reportType == 0) {
             $from = Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00';
             $to = Carbon::parse(Carbon::now())->format('Y-m-d')   . ' 23:59:59';
@@ -289,7 +293,21 @@ class OrderServiceController extends Component
 
 
 
-        $users = User::all();
+        //$users = User::all();
+        $users = User::join('model_has_roles as mr', 'users.id', 'mr.model_id')
+        ->join('roles as r', 'r.id', 'mr.role_id')
+        ->join('role_has_permissions as rp', 'r.id', 'rp.role_id')
+        ->join('permissions as p', 'p.id', 'rp.permission_id')
+        ->where('p.name','Orden_Servicio_Index')
+        ->where('r.name','TECNICO')
+        ->orWhere('r.name', 'SUPERVISOR')
+        ->where('p.name','Orden_Servicio_Index')
+        ->orWhere('r.name', 'ADMIN')
+        ->where('p.name','Orden_Servicio_Index')
+        ->select('users.*')
+        ->orderBy('name', 'asc')
+        ->distinct()
+        ->get();
         $typew = TypeWork::orderBy('name', 'asc')->get();
         $dato1 = CatProdService::orderBy('nombre', 'asc')->get();
 
@@ -315,7 +333,7 @@ class OrderServiceController extends Component
             'work' => $typew,
             'cate' => $dato1,
             'marcas' => $marca,
-            'users' => User::orderBy('name', 'asc')->get(),
+            //'users' => User::orderBy('name', 'asc')->get(),
             'ordserv' => OrderService::orderBy('order_services.id', 'asc')
                 ->get()
         ])
@@ -732,14 +750,15 @@ class OrderServiceController extends Component
 
                 DB::beginTransaction();
                 try {
-                    if (Auth::user()->hasPermissionTo('Asignar_Tecnico_Servicio')) {
+                    if (Auth::user()->hasPermissionTo('Boton_Entregar_Servicio')) {
+                        
                         $mv = Movimiento::create([
                             'type' => 'ENTREGADO',
                             'status' => 'ACTIVO',
                             'import' => $movimiento->import,
                             'on_account' => $movimiento->on_account,
                             'saldo' => $movimiento->saldo,
-                            'user_id' => Auth()->user()->id,
+                            'user_id' => $movimiento->user_id
                         ]);
                     }
                     $cajaActual = Caja::join('sucursals as s', 's.id', 'cajas.sucursal_id')

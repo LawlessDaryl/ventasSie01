@@ -186,7 +186,7 @@
                                                                     title="Cambiar Estado">{{ $mm->movs->type }}</a>
                                                             @endif
 
-                                                            @if (!empty(session('sesionCaja')))
+                                                            @if (!empty(session('sesionCaja')) && @Auth::user()->hasPermissionTo('Boton_Entregar_Servicio'))
                                                                 @if ($mm->movs->type == 'TERMINADO')
                                                                     <a href="javascript:void(0)"
                                                                         class="btn btn-dark mtmobile"

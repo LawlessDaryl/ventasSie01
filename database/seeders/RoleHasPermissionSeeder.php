@@ -62,6 +62,20 @@ class RoleHasPermissionSeeder extends Seeder
                 ]);
             }
         }
+        for ($x = 35; $x <= 43; $x++) {     /* PERMISOS SERVICIOS ROL CAJERO*/
+            if($x != 39 && $x != 40 && $x != 41 && $x != 43){
+                RoleHasPermissions::create([
+                    'permission_id' => $x,
+                    'role_id' => 5,
+                ]);
+            }
+        }
+        for ($x = 9; $x <= 11; $x++) {     /* PERMISOS SERVICIOS ROL CAJERO*/
+            RoleHasPermissions::create([
+                'permission_id' => $x,
+                'role_id' => 5,
+            ]);
+        }
         /* RoleHasPermissions::create([
             'permission_id' =>Permission::where('name','Inicio_Index')->get()->id
             ,

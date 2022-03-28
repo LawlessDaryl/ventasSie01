@@ -61,11 +61,11 @@
                             </div>
                         </div>
                     </div>
-
+                    @if (@Auth::user()->hasPermissionTo('Orden_Servicio_Index'))
                     <ul class="tabs tab-pills">
                         <a href="javascript:void(0)" class="btn btn-dark" wire:click="GoOrderservice">Ir a Ordenes de Servicio</a>
                     </ul>
-
+                    @endif
                 </div>
             </div>
             <div class="row">

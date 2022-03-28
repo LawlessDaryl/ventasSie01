@@ -37,9 +37,15 @@ class ImprimirController extends Controller
         /* DATOS ORDEN DE SERVICIO */
         $datos = OrderService::find($idServicio);
         
-        $user = Auth()->user()->id;
-        $usuario = User::find($user);
-        $pdf = PDF::loadView('livewire.pdf.ImprimirOrden', compact('data', 'datos', 'usuario'));
+        
+        $usuario = User::find(Auth()->user()->id);
+        foreach($usuario->sucursalusers as $su){
+            if($su->estado == 'ACTIVO'){
+                $sucursal=$su->sucursal;
+            }
+        }
+        
+        $pdf = PDF::loadView('livewire.pdf.ImprimirOrden', compact('data', 'datos', 'usuario','sucursal'));
         /* $pdf->setPaper("A4", "landscape"); //orientacion y tamaño */
 
         return $pdf->stream('OrdenTrServicio.pdf');  //visualizar

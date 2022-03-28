@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\ModelHasRoles;
 use App\Models\OrderService;
 use App\Models\Service;
 use App\Models\Transaccion;
@@ -47,8 +48,29 @@ class ReporteServiceController extends Component
         ];
 
         $this->validate($rules, $messages); */
+        
+        $users = User::join('model_has_roles as mr', 'users.id', 'mr.model_id')
+        ->join('roles as r', 'r.id', 'mr.role_id')
+        ->join('role_has_permissions as rp', 'r.id', 'rp.role_id')
+        ->join('permissions as p', 'p.id', 'rp.permission_id')
+        ->where('p.name','Orden_Servicio_Index')
+        ->where('r.name','TECNICO')
+        ->orWhere('r.name', 'SUPERVISOR')
+        ->where('p.name','Orden_Servicio_Index')
+        ->orWhere('r.name', 'ADMIN')
+        ->where('p.name','Orden_Servicio_Index')
+        ->select('users.*')
+        ->orderBy('name', 'asc')
+        ->distinct()
+        ->get();
+        
+        /* foreach($users as $us){
+            if($us->hasPermissionTo('Orden_Servicio_Index')){
+                $usuario = 
+            }
+        } */
         return view('livewire.reporte_service.component', [
-            'users' => User::orderBy('name', 'asc')->get()
+            'users'=>$users
         ])->extends('layouts.theme.app')
             ->section('content');
     }

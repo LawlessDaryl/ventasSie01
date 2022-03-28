@@ -70,5 +70,13 @@ class UserSeeder extends Seeder
             'status' => 'ACTIVE',
             'password' => bcrypt('123')
         ]);
+        User::create([  /* usuario 8 */
+            'name' => 'Sergio',
+            'phone' => '77331122',
+            'email' => 'sergio@gmail.com',
+            'profile' => 'CAJERO',
+            'status' => 'ACTIVE',
+            'password' => bcrypt('123')
+        ]);
     }
 }
