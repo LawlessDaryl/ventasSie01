@@ -56,7 +56,7 @@
 
          
 
-                    <div class="col-12 col-lg-5 col-md-4 d-flex flex-wrap">
+                    <div class="col-12 col-lg-7 col-md-4 d-flex flex-wrap">
 
                       @foreach($destinos_almacen as $destino)
                       
@@ -73,6 +73,7 @@
                                <p class="card-text"> <strong> Stock Disponible:</strong> {{$destino->stock}}</p>
                                <p class="card-text"> <strong>Mobilirio ubicacion</strong> {{$destino->tipo}}-{{$destino->codigo}}</p>
                                @endif
+                               <button class="btn btn-success" style="padding: 10px">Transferir</button>
                              </div>
                            </div>
                            
@@ -82,10 +83,12 @@
                     </div>
 
                     {{--AREA DE TRANSFERENCIAS DE PRODUCTOS--}}
-                    <div class="col-12 col-lg-7 col-md-3 m-0 p-0">
-                        <div class="widget mb-2 mt-2">
+
+
+                    <div class="col-12 col-lg-5 col-md 3">
+                        <div class="widget mr-2 mb-2 mt-2">
                               
-                            <div class="table-responsive p-1">
+                            <div class="table-responsive ml-0 p-1">
                                 <table class="table table-unbordered table-hover mt-2">
                                     <thead class="text-white" style="background: #3B3F5C">
                                         <tr>
@@ -133,7 +136,7 @@
                                                 </td>
                                             </tr>
                                         @endforeach
-                                       
+                                        
                                     </tbody>
                                 </table>
                             </div>
