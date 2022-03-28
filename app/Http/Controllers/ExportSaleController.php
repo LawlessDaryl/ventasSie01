@@ -38,13 +38,18 @@ class ExportSaleController extends Controller
         ->first();
 
         //Obtener datos de la sucursal
-        $datossucursal = Sucursal::join("sucursal_users as su", "su.sucursal_id", "su.id")
-        ->select("sucursals.name as nombresucursal","sucursals.adress as direccionsucursal" )
-        ->where("su.id", Auth()->user()->id)
+        $datossucursal = Sucursal::join("sucursal_users as su", "su.sucursal_id", "sucursals.id")
+        ->select("sucursals.name as nombresucursal","sucursals.adress as direccionsucursal", "su.user_id")
+        ->where("su.user_id", Auth()->user()->id)
         ->get()
         ->first();
 
+        // SELECT s.name as nombresucursal,s.adress as direccionsucursal, su.user_id
+        // FROM sucursals s
+        // INNER JOIN sucursal_users su ON su.sucursal_id = s.id
+        // where su.user_id=2
 
+        //dd($datossucursal);
 
 
         $fecha = Carbon::parse(Carbon::now());
