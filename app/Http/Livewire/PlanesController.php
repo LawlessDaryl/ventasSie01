@@ -316,8 +316,8 @@ class PlanesController extends Component
 
         /* BUSCAR CLIENTE POR CEDULA EN EL INPUT DEL MODAL */
         $datos = [];
-        if (strlen($this->celular) > 0) {
-            $datos = Cliente::where('celular', 'like', '%' . $this->celular . '%')->orderBy('celular', 'desc')->get();
+        if ($this->celular != '') {
+            $datos = Cliente::where('celular', 'like', $this->celular . '%')->orderBy('celular', 'desc')->get();
             if ($datos->count() > 0) {
                 $this->BuscarCliente = 1;
             } else {
@@ -327,6 +327,7 @@ class PlanesController extends Component
                 $this->BuscarCliente = 0;
             }
         } else {
+            $this->BuscarCliente = 0;
             if ($this->ClienteSelect == 0) {
                 $this->ClienteSelect = 1;
             }
@@ -574,7 +575,7 @@ class PlanesController extends Component
                         ->where('expiration_date', '>=', $mv->created_at)
                         ->where('account_id', $accp->id)
                         ->get()->first();
-                    
+
                     $inversioncuenta->type = 'CUENTA';
                     $inversioncuenta->imports = $this->importe;
                     $inversioncuenta->ganancia = $this->importe - $inversioncuenta->price;

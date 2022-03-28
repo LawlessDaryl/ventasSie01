@@ -22,7 +22,7 @@
 
                     <div class="col-sm-12 col-md-6">
                         <div class="form-group text-center mt-4">
-                            <a href="javascript:void(0)" class="btn btn-dark" wire:click="Acciones()">Vencer
+                            <a href="javascript:void(0)" class="btn btn-dark" wire:click="VencerCuenta()">Vencer
                                 Cuenta</a>
                         </div>
                     </div>
@@ -48,9 +48,6 @@
                                 @enderror
                             </div>
                         </div>
-
-                        
-
 
                         <div class="col-sm-12 col-md-6">
                             <div class="form-group">
@@ -106,7 +103,7 @@
                         <div class="col-sm-12 col-md-6">
                             <div class="form-group">
                                 <label>
-                                    <h6>Meses a renovar</h6>
+                                    <h6>Meses a renovar // Si va renovar la cuenta puede cambiar los datos</h6>
                                 </label>
                                 <input type="number" wire:model="meses" class="form-control"
                                     placeholder="PerfilNetflix1">
@@ -116,7 +113,7 @@
                             </div>
                         </div>
 
-                        <div class="col-sm-12 col-md-6">
+                        <div class="col-sm-12 col-md-12">
                             <div class="form-group text-center mt-4">
                                 <a href="javascript:void(0)" class="btn btn-dark" wire:click="RenovarCuenta()">Renovar
                                     Cuenta</a>

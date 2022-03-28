@@ -74,7 +74,6 @@
             </div>
         @endif
 
-
     </div>
 
     <div class="col-sm-12 col-md-6">
@@ -103,7 +102,7 @@
                 <input type="number" wire:model.lazy="number_profiles" class="form-control" placeholder="ej: 0.0">
                 @error('number_profiles')
                     <span class="text-danger er">{{ $message }}</span>
-                @enderror
+                @enderror                
             </div>
         </div>
 

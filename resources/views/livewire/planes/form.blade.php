@@ -44,6 +44,15 @@
             @error('cantidaperf')
                 <span class="text-danger er">{{ $message }}</span>
             @enderror
+            @if ($profiles)
+                @if ($cantidaperf > $profiles->count())
+                    <span class="text-danger er">No tiene esa cantidad de perfiles</span>
+                @endif
+            @elseif ($accounts)
+                @if ($cantidaperf > $accounts->count())
+                    <span class="text-danger er">No tiene esa cantidad de cuentas</span>
+                @endif
+            @endif
         </div>
     </div>
 

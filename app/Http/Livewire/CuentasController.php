@@ -264,7 +264,8 @@ class CuentasController extends Component
                         'pl.status as plan_status',
                         'c.nombre as clienteNombre',
                         'c.celular as clienteCelular',
-                        DB::raw('0 as horas')
+                        DB::raw('0 as horas'),
+                        DB::raw('0 as dias')
                     )
                     ->where('pl.status', 'VIGENTE')
                     ->where('pl.type_plan', 'CUENTA')
@@ -282,6 +283,10 @@ class CuentasController extends Component
                     } else {
                         $c->horas = '0';
                     }
+                    $fecha_actual = date("Y-m-d");
+                    $s = strtotime($c->expiration_account) - strtotime($fecha_actual);
+                    $d = intval($s / 86400);
+                    $c->dias = $d;
                 }
             }
         } else {    /* CUENTAS VENCIDAS */
@@ -448,6 +453,23 @@ class CuentasController extends Component
     }
     public function RenovarCuenta()
     {
+        $rules = [
+            'start_account' => 'required',
+            'expiration_account' => 'required',
+            'number_profiles' => 'required',
+            'price' => 'required',
+            'password_account' => 'required',
+        ];
+        $messages = [
+            'start_account.required' => 'La fecha de inicio es requerida',
+            'expiration_account.required' => 'La fecha de expiración es requerida',
+            'number_profiles.required' => 'La cantidad de perfiles es requerida',
+            'price.required' => 'El precio de la cuenta es requerida',
+            'password_account.required' => 'La contraseña de la cuenta es requerida',
+        ];
+
+        $this->validate($rules, $messages);
+        $this->price /= $this->meses;
         $cuenta = Account::find($this->selected_id);
 
         $cuenta->update([
@@ -457,35 +479,51 @@ class CuentasController extends Component
             'password_account' => $this->password_account,
             'price' => $this->price,
         ]);
-        $fechaInicio = $this->start_account;
-        $fechaFin = $this->expiration_account;
 
         for ($i = 0; $i < $this->meses; $i++) {
-
             if ($i == 0) {
-                $dias = 30;
+                CuentaInversion::create([
+                    'start_date' => $this->start_account,
+                    'expiration_date' => $this->expiration_account,
+                    'price' => $this->price,
+                    'number_profiles' => $this->number_profiles,
+                    'sale_profiles' => 0,
+                    'imports' => 0,
+                    'ganancia' => 0,
+                    'account_id' => $cuenta->id,
+                ]);
             } else {
-                $dias = 30 * ($i + 1);
+                $this->start_account = strtotime('+' . 1 . ' day', strtotime($this->expiration_account));
+                $this->start_account = date('Y-m-d', $this->start_account);
+
+                $dias = 30;
+
+                $this->expiration_account = strtotime('+' . $dias . ' day', strtotime($this->start_account));
+                $this->expiration_account = date('Y-m-d', $this->expiration_account);
+                CuentaInversion::create([
+                    'start_date' => $this->start_account,
+                    'expiration_date' => $this->expiration_account,
+                    'price' => $this->price,
+                    'number_profiles' => $this->number_profiles,
+                    'sale_profiles' => 0,
+                    'imports' => 0,
+                    'ganancia' => 0,
+                    'account_id' => $cuenta->id,
+                ]);
             }
-
-            $this->start_account = strtotime('+' . $dias . ' day', strtotime($fechaInicio));
-            $this->start_account = date('Y-m-d', $this->start_account);
-
-            $this->expiration_account = strtotime('+' . $dias . ' day', strtotime($fechaFin));
-            $this->expiration_account = date('Y-m-d', $this->expiration_account);
-
-
-            CuentaInversion::create([
-                'start_date' => $this->start_account,
-                'expiration_date' => $this->expiration_account,
-                'price' => $this->price,
-                'number_profiles' => $this->number_profiles,
-                'sale_profiles' => 0,
-                'imports' => 0,
-                'ganancia' => 0,
-                'account_id' => $cuenta->id,
-            ]);
         }
+
+        $this->resetUI();
+        $this->emit('modal-hide3', 'Cuenta Actualizada');
+    }
+
+    public function VencerCuenta()
+    {
+        $cuenta = Account::find($this->selected_id);
+
+        $cuenta->update([
+            'status' => 'INACTIVO',
+        ]);
 
         $this->resetUI();
         $this->emit('modal-hide3', 'Cuenta Actualizada');
@@ -494,15 +532,21 @@ class CuentasController extends Component
     public function Store()
     {
         $rules = [
+            'start_account' => 'required',
             'expiration_account' => 'required',
             'number_profiles' => 'required',
+            'price' => 'required',
+            'password_account' => 'required',
             'platform_id' => 'required|not_in:Elegir',
             'proveedor' => 'required|not_in:Elegir',
             'email_id' => 'required|not_in:Elegir|unique:accounts'
         ];
         $messages = [
+            'start_account.required' => 'La fecha de inicio es requerida',
             'expiration_account.required' => 'La fecha de expiración es requerida',
             'number_profiles.required' => 'La cantidad de perfiles es requerida',
+            'price.required' => 'El precio de la cuenta es requerida',
+            'password_account.required' => 'La contraseña de la cuenta es requerida',
             'platform_id.required' => 'La plataforma es requerida',
             'platform_id.not_in' => 'Elija una plataforma distinta a Elegir',
             'email_id.required' => 'El correo es requerido',
@@ -576,16 +620,22 @@ class CuentasController extends Component
     public function Update()
     {
         $rules = [
+            'start_account' => 'required',
             'expiration_account' => 'required',
             'number_profiles' => 'required',
+            'price' => 'required',
+            'password_account' => 'required',
             'platform_id' => 'required|not_in:Elegir',
             'proveedor' => 'required|not_in:Elegir',
             'email_id' => "required|not_in:Elegir|unique:accounts,email_id,{$this->selected_id}"
         ];
 
         $messages = [
+            'start_account.required' => 'La fecha de inicio es requerida',
             'expiration_account.required' => 'La fecha de expiración es requerida',
             'number_profiles.required' => 'La cantidad de perfiles es requerida',
+            'price.required' => 'El precio de la cuenta es requerida',
+            'password_account.required' => 'La contraseña de la cuenta es requerida',
             'platform_id.required' => 'La plataforma es requerida',
             'platform_id.not_in' => 'Elija una plataforma distinta a Elegir',
             'email_id.required' => 'El correo es requerido',
@@ -625,6 +675,17 @@ class CuentasController extends Component
 
     public function CrearPerfil()
     {
+
+        $rules = [
+            'nameP' => 'required',
+            'PIN' => 'required',
+        ];
+        $messages = [
+            'nameP.required' => 'El nombre del perfil es requerido',
+            'PIN.required' => 'El PIN es requerido',
+        ];
+
+        $this->validate($rules, $messages);
         $cuenta = Account::find($this->selected_id);
 
         $perfil = Profile::create([
@@ -703,7 +764,7 @@ class CuentasController extends Component
         $this->correoCuenta = $this->data->correoCuenta;
         $this->passCuenta = $this->data->password_account;
         $this->observacionesTrans = $this->data->observations;
-        $this->expirationActual = substr($this->data->expiration_plan, 0, 10);
+        $this->expirationActual = $this->data->expiration_plan;
 
         $this->emit('details2-show', 'show modal!');
     }
