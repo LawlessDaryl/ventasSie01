@@ -5,9 +5,10 @@ namespace App\Http\Livewire;
 use App\Models\Compra as ModelsCompra;
 use App\Models\Destino;
 use App\Models\Location;
+use App\Models\Product;
 use App\Models\ProductosDestino;
 use App\Models\Sucursal;
-use Darryldecode\Cart\Facades\ComprasFacade as Comp;
+
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
@@ -31,7 +32,7 @@ class DestinoProductoController extends Component
         $this->selected_id=0;
         $this->componentName='crear';
         $this->title='ssss';
-        $this->total_compra = Comp::getTotal();
+      
 
         //$this->itemsQuantity = Cart::getTotalQuantity();
         $quantity= Compra::getTotalQuantity();
@@ -95,13 +96,9 @@ class DestinoProductoController extends Component
 
                                     
 
-<<<<<<< HEAD
-        return view('livewire.destino_producto.destino-controller',['destinos_almacen'=>$almacen,'data_suc' =>  $sucursal_ubicacion->get(),'cart' => Cart::getContent()])  
-=======
         return view('livewire.destino_producto.destino-controller',['destinos_almacen'=>$almacen,'data_suc' =>  $sucursal_ubicacion->get(),
-        'cart' => Comp::getContent()
+        'cart' => Compra::getContent()
         ])  
->>>>>>> b1c9f393c44eee1084930df269192acace9175bb
         ->extends('layouts.theme.app')
         ->section('content');
     }
@@ -112,20 +109,20 @@ class DestinoProductoController extends Component
         $product = Product::select('products.id','products.nombre as name')
         ->where('products.id',$productId)->first();
        
-        $exist = Cart::get($product->id);
+        $exist = Compra::get($product->id);
         if ($exist) {
             $title = 'Cantidad actualizada';
         } else {
             $title = "Producto agregado";
         }
 
-        Cart::add($product->id, $product->name, $precio_compra, $cant);
+        Compra::add($product->id, $product->name, $precio_compra, $cant);
 
         
-        $this->total = Cart::getTotal();
-        $this->itemsQuantity = Cart::getTotalQuantity();
+        $this->total = Compra::getTotal();
+        $this->itemsQuantity = Compra::getTotalQuantity();
         $this->emit('scan-ok', $title);
-         $this->total_compra = Cart::getTotal();
+         $this->total_compra = Compra::getTotal();
 
     }
 
@@ -135,7 +132,7 @@ class DestinoProductoController extends Component
         $product = Product::select('products.id','products.nombre as name')
         ->where('products.id',$productId)->first();
        
-        $exist = Cart::get($productId);
+        $exist = Compra::get($productId);
         $prices=$exist->price;
        
         if ($exist) {
@@ -149,12 +146,12 @@ class DestinoProductoController extends Component
         if ($cant > 0) {
 
           
-            Cart::add($product->id, $product->name,$prices, $cant);
+            Compra::add($product->id, $product->name,$prices, $cant);
           
-            $this->total = Cart::getTotal();
-            $this->itemsQuantity = Cart::getTotalQuantity();
+            $this->total = Compra::getTotal();
+            $this->itemsQuantity = Compra::getTotalQuantity();
             $this->emit('scan-ok', $title);
-            $this->total_compra = Cart::getTotal();
+            $this->total_compra = Compra::getTotal();
 
 
 
@@ -162,12 +159,12 @@ class DestinoProductoController extends Component
     }
     public function removeItem($productId)
     {
-        Cart::remove($productId);
+        Compra::remove($productId);
 
-        $this->total = Cart::getTotal();
-        $this->itemsQuantity = Cart::getTotalQuantity();
+        $this->total = Compra::getTotal();
+        $this->itemsQuantity = Compra::getTotalQuantity();
         $this->emit('scan-ok', 'Producto eliminado');
-        $this->total_compra = Cart::getTotal();
+        $this->total_compra = Compra::getTotal();
     }
 
     public function resetUI()
