@@ -4,25 +4,37 @@
 
         <div class="col-sm-12 col-md-12">
             <div class="form-group">
-                <label><h6>Nombre Perfil</h6></label>
+                <label>
+                    <h6>Nombre Perfil</h6>
+                </label>
                 <input type="text" wire:model.lazy="nameperfil" class="form-control" placeholder="ej: 125145">
-                @error('nameperfil') <span class="text-danger er">{{ $message }}</span>@enderror
+                @error('nameperfil')
+                    <span class="text-danger er">{{ $message }}</span>
+                @enderror
             </div>
         </div>
 
         <div class="col-sm-12 col-md-12">
             <div class="form-group">
-                <label><h6>Pin</h6></label>
+                <label>
+                    <h6>Pin</h6>
+                </label>
                 <input type="text" wire:model.lazy="pin" class="form-control" placeholder="ej: 125145">
-                @error('pin') <span class="text-danger er">{{ $message }}</span>@enderror
+                @error('pin')
+                    <span class="text-danger er">{{ $message }}</span>
+                @enderror
             </div>
         </div>
 
         <div class="col-sm-12 col-md-12">
             <div class="form-group">
-                <label><h6>Observaciones</h6></label>
+                <label>
+                    <h6>Observaciones del perfil</h6>
+                </label>
                 <input type="text" wire:model.lazy="observations" class="form-control" placeholder="ej: cliente ">
-                @error('observations') <span class="text-danger er">{{ $message }}</span>@enderror
+                @error('observations')
+                    <span class="text-danger er">{{ $message }}</span>
+                @enderror
             </div>
         </div>
     </div>

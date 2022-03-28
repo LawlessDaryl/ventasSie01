@@ -107,8 +107,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('arqueosStreaming', ArqueosStreamingController::class)->name('arqueosStreaming')->middleware('permission:Arqueos_Streaming_Index');
     Route::get('reportStreaming', ReportStreamingController::class)->name('reportStreaming')->middleware('permission:Reportes_Streaming_Index');
     Route::group(['middleware' => ['permission:Reportes_Streaming_Export']], function () {
-        Route::get('reporteStreaming/pdf/{user}/{tipo}/{type}/{f1}/{f2}', [ExportStreamingPdfController::class, 'reporteStrPDF']);
-        Route::get('reporteStreaming/pdf/{user}/{tipo}/{type}', [ExportStreamingPdfController::class, 'reporteStrPDF']);
+        Route::get('reporteStreaming/pdf/{user}/{cuePerf}/{vencVig}/{fechas}/{f1}/{f2}', [ExportStreamingPdfController::class, 'reporteStrPDF']);
+        Route::get('reporteStreaming/pdf/{user}/{cuePerf}/{vencVig}/{fechas}', [ExportStreamingPdfController::class, 'reporteStrPDF']);
     });
 
     /* NOTIFICACIONES */
@@ -145,7 +145,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('orderservice', OrderServiceController::class)->name('os')->middleware('permission:Orden_Servicio_Index');
     Route::get('inicio', InicioController::class)->name('in')->middleware('permission:Inicio_Index');
     Route::get('idorderservice/{id}', [OrderServiceController::class, 'buscarid'])->name('buscarid')->middleware('permission:Orden_Servicio_Index');
-    Route::get('abrirnuevo', [OrderServiceController::class, 'abrirventana'])->name('abrirventana')->middleware('permission:Orden_Servicio_Index');
+    Route::get('abrirnuevo/{id}', [OrderServiceController::class, 'abrirventana'])->name('abrirventana')->middleware('permission:Orden_Servicio_Index');
     Route::get('reporte/pdf/{id}', [ImprimirController::class, 'print'])->middleware('permission:Imprimir_Orden_Servicio_Index');
     Route::get('reporteservices', ReporteServiceController::class)->name('tw')->middleware('permission:Reporte_Servicios_Index');    
     Route::group(['middleware' => ['permission:Reporte_Servicios_Export']], function () {

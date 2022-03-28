@@ -119,6 +119,8 @@
                                     @if ($condicional != 'vencidos')
                                         <th class="table-th text-withe text-center">RENOVAR</th>
                                         <th class="table-th text-withe text-center">EDITAR</th>
+                                    @else
+                                        <th class="table-th text-withe text-center">OBSERV</th>
                                     @endif
                                     <th class="table-th text-withe text-center">REALIZADO</th>
                                 </tr>
@@ -152,7 +154,8 @@
                                         <td>
                                             <h6 class="text-center">{{ $p->plan_start }}</h6>
                                         </td>
-                                        <td>
+                                        <td
+                                            @if ($condicional == 'ocupados') style="{{ $p->horas <= 24 ? 'background-color: #FF0000 !important' : 'background-color: #09ed3d !important' }}" @endif>
                                             <h6 class="text-center">{{ $p->expiration_plan }}</h6>
                                         </td>
                                         @if ($condicional != 'vencidos')
@@ -173,7 +176,16 @@
                                                     </a>
                                                 @endif
                                             </td>
+                                        @else
+                                            <td class="text-center">                                                
+                                                    <a href="javascript:void(0)"
+                                                        wire:click="Acciones({{ $p->planid }})"
+                                                        class="btn btn-dark mtmobile" title="Observaciones">
+                                                        <i class="fa-solid fa-file-signature"></i>
+                                                    </a>
+                                            </td>
                                         @endif
+
                                         <td
                                             style="{{ $p->done == 'NO' ? 'background-color: #d97171 !important' : 'background-color: #09ed3d !important' }}">
                                             @if ($p->done == 'NO')
@@ -198,6 +210,7 @@
     </div>
     @include('livewire.perfiles.form')
     @include('livewire.perfiles.modalDetails')
+    @include('livewire.perfiles.modalCrearPerfil')
 
 
 </div>
@@ -236,6 +249,14 @@
         window.livewire.on('modal-hide', msg => {
             $('#modal-details').modal('hide')
         });
+
+        window.livewire.on('show-crearPerfil', Msg => {
+            $('#Modal_crear_perfil').modal('show')
+        })
+        window.livewire.on('crearperfil-cerrar', Msg => {
+            $('#Modal_crear_perfil').modal('hide')
+            noty(Msg)
+        })
 
         flatpickr(document.getElementsByClassName('flatpickr'), {
             enableTime: false,

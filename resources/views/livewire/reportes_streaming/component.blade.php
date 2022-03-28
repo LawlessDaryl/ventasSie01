@@ -20,11 +20,21 @@
                     </div>
 
                     <div class="col-sm-2">
-                        <h6>Perfiles /Cuentas</h6>
+                        <h6>Perfiles / Cuentas</h6>
                         <div class="form-group">
-                            <select wire:model="condicional" class="form-control">
+                            <select wire:model="Perf_Cuenta" class="form-control">
                                 <option value="0">Perfiles</option>
                                 <option value="1">Cuentas</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2">
+                        <h6>Vigentes / Vencidos</h6>
+                        <div class="form-group">
+                            <select wire:model="Vencid_Vigent" class="form-control">
+                                <option value="0">Vigente</option>
+                                <option value="1">Vencido</option>
                             </select>
                         </div>
                     </div>
@@ -39,36 +49,36 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-2 mt-2">
+                    <div class="col-sm-2">
                         <h6>Fecha desde</h6>
                         <div class="form-group">
-
                             <input @if ($reportType == 0) disabled @endif type="date" wire:model="dateFrom"
                                 class="form-control">
-
-
                         </div>
                     </div>
 
-                    <div class="col-sm-2 mt-2">
+                    <div class="col-sm-2">
                         <h6>Fecha hasta</h6>
                         <div class="form-group">
-
                             <input @if ($reportType == 0) disabled @endif type="date" wire:model="dateTo"
                                 class="form-control">
-
                         </div>
                     </div>
 
                     <div class="col-sm-2 mt-4">
                         <a class="btn btn-dark btn-block {{ count($data) < 1 ? 'disabled' : '' }}"
-                            href="{{ url('reporteStreaming/pdf' . '/' . $userId . '/' . $condicional . '/' . $reportType . '/' . $dateFrom . '/' . $dateTo) }}">Generar
+                            href="{{ url('reporteStreaming/pdf' .'/' .$userId .'/' .$Perf_Cuenta .'/' .$Vencid_Vigent .'/' .$reportType .'/' .$dateFrom .'/' .$dateTo) }}">Generar
                             PDF</a>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <h6>La ganancia solo es afectada por los filtros de fecha</h6>
+                        <h6>Importe - invertido: </h6>
                     </div>
 
                 </div>
                 <div class="row">
-                    @if ($condicional == 0)
+                    @if ($Perf_Cuenta == 0)
                         <div class="table-responsive">
                             <table class="table table-unbordered table-hover mt-1">
                                 <thead class="text-white" style="background: #3B3F5C">
@@ -221,7 +231,7 @@
             </div>
         </div>
     </div>
-    {{-- @include('livewire.reportes_tigo.sales-detail') --}}
+    @include('livewire.reportes_streaming.str_details')
 </div>
 
 <script>

@@ -1,14 +1,14 @@
 <div wire:ignore.self class="modal fade" id="theModal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header" style="background: #b3a8a8">
+            <div class="modal-header bg-dark">
                 <h5 class="modal-title text-white">
                     <b>Nuevo servicio de la Orden Nº {{ $orderservice == '0' ? 'NO DEFINIDO' : $orderservice }} </b>
                     | {{ $selected_id > 0 ? 'EDITAR' : 'CREAR' }}
                 </h5>
                 <h6 class="text-center text-warning" wire:loading>POR FAVOR ESPERE</h6>
             </div>
-            <div class="modal-body" style="background: #f0ecec">
+            <div class="modal-body">
 
                 <div class="row">
                     <div class="col-lg-4 col-sm-12 col-md-6">
@@ -18,7 +18,9 @@
                                 <option value="Elegir" disabled selected>Elegir</option>
 
                                 @foreach ($work as $wor)
-                                    <option value="{{ $wor->id }}" selected>{{ $wor->name }}</option>
+                                    @if($wor->status=='ACTIVE')
+                                        <option value="{{ $wor->id }}" selected>{{ $wor->name }}</option>
+                                    @endif
                                 @endforeach
 
                             </select>
@@ -33,7 +35,9 @@
                                 <option value="Elegir" disabled selected>Elegir</option>
 
                                 @foreach ($cate as $cat)
-                                    <option value="{{ $cat->id }}" selected>{{ $cat->nombre }}</option>
+                                    @if($cat->estado == 'ACTIVO')
+                                        <option value="{{ $cat->id }}" selected>{{ $cat->nombre }}</option>
+                                    @endif
                                 @endforeach
 
                             </select>
@@ -45,7 +49,9 @@
                         <label>Marca/Modelo</label>
                         <datalist id="colores">
                             @foreach ($marcas as $cat)
-                                <option value="{{ $cat->name }}" selected>{{ $cat->name }}</option>
+                                @if($cat->status=='ACTIVE')
+                                    <option value="{{ $cat->name }}" selected>{{ $cat->name }}</option>
+                                @endif
                             @endforeach
                         </datalist>
                         <input list="colores" wire:model.lazy="marc" name="colores" type="text" class="form-control">
@@ -159,7 +165,7 @@
                         </div>
                     @endif
                 </div>
-                <div class="modal-footer" style="background: #f0ecec">
+                <div class="modal-footer">
                     <button type="button" wire:click.prevent="resetUI()" class="btn btn-dark close-btn text-info"
                         data-dismiss="modal" style="background: #3b3f5c">CANCELAR</button>
                     @if ($selected_id < 1)

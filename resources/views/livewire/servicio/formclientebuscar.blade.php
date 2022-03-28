@@ -1,13 +1,13 @@
 <div wire:ignore.self class="modal fade" id="theClient" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header" style="background: #b3a8a8">
+            <div class="modal-header bg-dark">
                 <h5 class="modal-title text-white">
                     <b>Buscar</b> | Cliente
                 </h5>
                 <h6 class="text-center text-warning" wire:loading>POR FAVOR ESPERE</h6>
             </div>
-            <div class="modal-body" style="background: #f0ecec">
+            <div class="modal-body">
                 <div class="row justify-content-between">
                     <div class="col-lg-8 col-md-4 col-sm-12">
                         <div class="input-group mb-4">
@@ -86,7 +86,7 @@
                 </div>
 
             </div>
-            <div class="modal-footer" style="background: #f0ecec">
+            <div class="modal-footer">
                 <button type="button" wire:click.prevent="resetUI()" class="btn btn-dark close-btn text-info"
                     data-dismiss="modal" style="background: #3b3f5c">CANCELAR</button>
             </div>

@@ -13,35 +13,38 @@
 
             <div class="form-group">
                 <div class="row">
-                    <div class="col-sm-12 col-md-2">
+                    <div class="col-sm-12 col-md-3">
                         <div class="form-group">
                             <div class="n-chk">
                                 <label class="new-control new-radio radio-classic-primary">
                                     <input type="radio" class="new-control-input" name="custom-radio-4" id="libres"
                                         value="cuentas" wire:model="condicional">
-                                    <span class="new-control-indicator"></span>CUENTAS ENTERAS Y DIVIDIDAS
+                                    <span class="new-control-indicator"></span>
+                                    <h6>CUENTAS ENTERAS Y DIVIDIDAS</h6>
                                 </label>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-12 col-md-2">
+                    <div class="col-sm-12 col-md-3">
                         <div class="form-group">
                             <div class="n-chk">
                                 <label class="new-control new-radio radio-classic-primary">
                                     <input type="radio" class="new-control-input" name="custom-radio-4" id="ocupados"
-                                        value="ocupados" wire:model="condicional" checked>
-                                    <span class="new-control-indicator"></span>CUENTAS ENTERAS OCUPADAS
+                                        value="ocupados" wire:model="condicional">
+                                    <span class="new-control-indicator"></span>
+                                    <h6>CUENTAS ENTERAS OCUPADAS</h6>
                                 </label>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-12 col-md-2">
+                    <div class="col-sm-12 col-md-3">
                         <div class="form-group">
                             <div class="n-chk">
                                 <label class="new-control new-radio radio-classic-primary">
                                     <input type="radio" class="new-control-input" name="custom-radio-4" id="ocupados"
-                                        value="vencidos" wire:model="condicional" checked>
-                                    <span class="new-control-indicator"></span>VENCIDOS
+                                        value="vencidos" wire:model="condicional">
+                                    <span class="new-control-indicator"></span>
+                                    <h6>VENCIDOS</h6>
                                 </label>
                             </div>
                         </div>
@@ -79,8 +82,12 @@
                                         <td>
                                             <h6 class="text-center">{{ $acounts->password_account }}</h6>
                                         </td>
-                                        <td>
-                                            <h6 class="text-center">{{ $acounts->expiration_account }}</h6>
+                                        <td
+                                            style="{{ $acounts->dias <= 5 ? 'background-color: #FF0000 !important' : 'background-color: #09ed3d !important' }}">
+                                            <a href="javascript:void(0)" wire:click="AccionesCuenta({{ $acounts->id }})"
+                                                class="btn btn-primary" title="Renovar">
+                                                {{ $acounts->expiration_account }}
+                                            </a>
                                         </td>
                                         <td>
                                             <h6 class="text-center">{{ $acounts->whole_account }}</h6>
@@ -108,7 +115,7 @@
                                 @endforeach
                             </tbody>
                         </table>
-
+                        {{ $cuentas->links() }}
                     </div>
                 </div>
             @else
@@ -122,13 +129,14 @@
                                     <th class="table-th text-withe text-center">GMAIL</th>
                                     <th class="table-th text-withe text-center">PASS CUENTA</th>
                                     <th class="table-th text-withe text-center">EXPIRA</th>
-                                    <th class="table-th text-withe text-center">TIPO</th>
                                     <th class="table-th text-withe text-center">MAX PERF</th>
                                     <th class="table-th text-withe text-center">INICIO PLAN</th>
                                     <th class="table-th text-withe text-center">EXPIRACION PLAN</th>
                                     @if ($condicional != 'vencidos')
                                         <th class="table-th text-withe text-center">RENOVAR</th>
                                         <th class="table-th text-withe text-center">EDITAR</th>
+                                    @else
+                                        <th class="table-th text-withe text-center">OBSERV</th>
                                     @endif
                                     <th class="table-th text-withe text-center">REALIZADO</th>
                                 </tr>
@@ -141,9 +149,11 @@
                                                 {{ $acounts->name }}</h6>
                                         </td>
                                         <td>
-                                            <h6 class="text-center"><strong> N:
+                                            <h6 class="text-center">
+                                                <strong> N:
                                                 </strong>{{ $acounts->clienteNombre }} <strong>TELF: </strong>
-                                                {{ $acounts->clienteCelular }}</h6>
+                                                {{ $acounts->clienteCelular }}
+                                            </h6>
                                         </td>
                                         <td>
                                             <h6 class="text-center">{{ $acounts->content }} <br>
@@ -156,15 +166,13 @@
                                             <h6 class="text-center">{{ $acounts->expiration_account }}</h6>
                                         </td>
                                         <td>
-                                            <h6 class="text-center">{{ $acounts->whole_account }}</h6>
-                                        </td>
-                                        <td>
                                             <h6 class="text-center">{{ $acounts->number_profiles }}</h6>
                                         </td>
                                         <td>
                                             <h6 class="text-center">{{ $acounts->plan_start }}</h6>
                                         </td>
-                                        <td>
+                                        <td
+                                            @if ($condicional == 'ocupados') style="{{ $acounts->horas <= 24 ? 'background-color: #FF0000 !important' : 'background-color: #09ed3d !important' }}" @endif>
                                             <h6 class="text-center">{{ $acounts->expiration_plan }}</h6>
                                         </td>
                                         @if ($condicional != 'vencidos')
@@ -186,6 +194,14 @@
                                                     </a>
                                                 @endif
                                             </td>
+                                        @else
+                                            <td class="text-center">
+                                                <a href="javascript:void(0)"
+                                                    wire:click="Acciones({{ $acounts->planid }})"
+                                                    class="btn btn-dark mtmobile" title="Observaciones">
+                                                    <i class="fa-solid fa-file-signature"></i>
+                                                </a>
+                                            </td>
                                         @endif
                                         <td
                                             style="{{ $acounts->done == 'NO' ? 'background-color: #d97171 !important' : 'background-color: #09ed3d !important' }}">
@@ -202,7 +218,7 @@
                                 @endforeach
                             </tbody>
                         </table>
-
+                        {{ $cuentas->links() }}
                     </div>
                 </div>
             @endif
@@ -211,6 +227,7 @@
     @include('livewire.cuentas.form')
     @include('livewire.cuentas.modalDetails')
     @include('livewire.cuentas.modalDetails2')
+    @include('livewire.cuentas.modalDetails3')
 
 </div>
 
@@ -256,6 +273,18 @@
             $('#modal-details2').modal('hide')
             noty(msg)
         });
+
+        window.livewire.on('details3-show', msg => {
+            $('#modal-details3').modal('show')
+        });
+        window.livewire.on('modal-hide3', msg => {
+            $('#modal-details3').modal('hide')
+            noty(msg)
+        });
+        /* window.livewire.on('cuenta-renovado-vencida', msg => {
+            $('#modal-details2').modal('hide')
+            noty(msg)
+        }); */
 
         flatpickr(document.getElementsByClassName('flatpickr'), {
             enableTime: false,

@@ -1,13 +1,13 @@
 <div wire:ignore.self class="modal fade" id="theDetalleEntrega" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header" style="background: #b3a8a8">
+            <div class="modal-header bg-dark">
                 <h5 class="modal-title text-white">
-                    <b>REGISTRAR SERVICIO TÉCNICO</b>
+                    <b>REGISTRAR SERVICIO TÉCNICO Nº {{$numeroOrden}}</b>
                 </h5>
                 <h6 class="text-center text-warning" wire:loading>POR FAVOR ESPERE</h6>
             </div>
-            <div class="modal-body" style="background: #f0ecec">
+            <div class="modal-body">
                 <div class = "row">
                 <div class ="col-sm-12 col-md-6">
                     <div class="text-center">
@@ -35,22 +35,41 @@
                     <table cellpadding="2" cellspacing="2" width="100%">
                         
                         <tr>
-                            <td class="text-right" >
-                                <label><h6>Total</h6></label>
-                            </td>
-                            <td class="text-left" >
-                                <input type="number" wire:model="import" class="form-control" placeholder="ej: 0.0">
-                                    @error('import') <span class="text-danger er">{{ $message }}</span>@enderror
-                            </td>
-                        
-                            <td class="text-right" >
-                                <label><h6>A Cuenta</h6></label>
-                            </td>
-                            <td class="text-left" >
-                                <input type="number" wire:model="on_account" class="form-control"
-                                placeholder="ej: 0.0">
-                                @error('on_account') <span class="text-danger er">{{ $message }}</span>@enderror
-                            </td>
+                            @if(@Auth::user()->hasPermissionTo('Asignar_Tecnico_Servicio'))
+                                <td class="text-right" >
+                                    <label><h6>Total</h6></label>
+                                </td>
+                                <td class="text-left" >
+                                    <input type="number" wire:model="import" class="form-control" placeholder="ej: 0.0">
+                                        @error('import') <span class="text-danger er">{{ $message }}</span>@enderror
+                                </td>
+                            
+                                <td class="text-right" >
+                                    <label><h6>A Cuenta</h6></label>
+                                </td>
+                                <td class="text-left" >
+                                    <input type="number" wire:model="on_account" class="form-control"
+                                    placeholder="ej: 0.0">
+                                    @error('on_account') <span class="text-danger er">{{ $message }}</span>@enderror
+                                </td>
+                            @else
+                                <td class="text-right" >
+                                    <label><h6>Total</h6></label>
+                                </td>
+                                <td class="text-left" >
+                                    <input disabled type="number" wire:model="import" class="form-control" placeholder="ej: 0.0">
+                                        @error('import') <span class="text-danger er">{{ $message }}</span>@enderror
+                                </td>
+                            
+                                <td class="text-right" >
+                                    <label><h6>A Cuenta</h6></label>
+                                </td>
+                                <td class="text-left" >
+                                    <input disabled type="number" wire:model="on_account" class="form-control"
+                                    placeholder="ej: 0.0">
+                                    @error('on_account') <span class="text-danger er">{{ $message }}</span>@enderror
+                                </td>
+                            @endif
 
                             <td class="text-right" >
                                 <label><h6>Saldo</h6></label>
@@ -91,7 +110,7 @@
 
             </div>
 
-            <div class="modal-footer" style="background: #f0ecec">
+            <div class="modal-footer">
                
                
                         <button type="button" wire:click.prevent="CambioTerminado({{$service1}})" class="btn btn-dark close-btn text-info"

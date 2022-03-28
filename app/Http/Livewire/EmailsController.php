@@ -55,7 +55,6 @@ class EmailsController extends Component
         else
             $data = Email::orderBy('id', 'desc')->paginate($this->pagination);
 
-
         return view('livewire.emails.component', ['emails' => $data])
             ->extends('layouts.theme.app')
             ->section('content');

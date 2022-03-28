@@ -41,7 +41,7 @@ class HomeController extends Controller
         } else{
             session(['sesionCaja' => $data[0]->nombre]);
         }
-        if (Auth::user()->hasPermissionTo('Asignar_Tecnico_Servicio')) {
+        if (Auth::user()->hasPermissionTo('Inicio_Index')) {
             return redirect()->intended("inicio");
         }else{
             return redirect()->intended("cortecajas");

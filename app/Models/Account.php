@@ -9,12 +9,13 @@ class Account extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['expiration_account', 'status', 'whole_account', 'number_profiles', 'password_account', 'price', 'availability', 'str_supplier_id', 'platform_id', 'email_id'];
+    protected $fillable = ['start_account', 'expiration_account', 'status', 'whole_account', 'number_profiles', 'password_account', 'price', 'availability', 'str_supplier_id', 'platform_id', 'email_id'];
 
     public function CuentaPerfiles()
     {
         return $this->hasOne(AccountProfile::class);
     }
+
     public function PlanCuenta()
     {
         return $this->hasOne(PlanAccount::class);
@@ -32,5 +33,4 @@ class Account extends Model
     {
         return $this->belongsTo(Platform::class, 'platform_id', 'id');
     }
-    
 }

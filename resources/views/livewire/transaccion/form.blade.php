@@ -1,6 +1,6 @@
 @include('common.modalHead')
-<div class='row' style="background: #f0ecec">
-    <div class="col-sm-6 col-md-6" style="background: #f0ecec">
+<div class='row'>
+    <div class="col-sm-6 col-md-6">
 
         <div class="col-sm-12 col-md-12">
             <div class="form-group">
@@ -85,7 +85,7 @@
 
     </div>
 
-    <div class="col-sm-6 col-md-6" style="background: #f0ecec">
+    <div class="col-sm-6 col-md-6">
         
         @if ($mostrarCI == 1)
             <div class="col-sm-12 col-md-12">

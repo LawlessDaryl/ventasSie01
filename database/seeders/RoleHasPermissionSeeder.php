@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Permission;
 use App\Models\RoleHasPermissions;
 use Illuminate\Database\Seeder;
 
@@ -45,7 +46,29 @@ class RoleHasPermissionSeeder extends Seeder
                 'role_id' => 2,
             ]);
         }
-        
-        
+        for ($x = 32; $x <= 43; $x++) {     /* PERMISOS SERVICIOS ROL SUPERVISOR*/
+            if($x != 39 && $x != 40){
+                RoleHasPermissions::create([
+                    'permission_id' => $x,
+                    'role_id' => 4,
+                ]);
+            }
+        }
+        for ($x = 35; $x <= 43; $x++) {     /* PERMISOS SERVICIOS ROL TECNICO*/
+            if($x != 39 && $x != 40 && $x != 41 && $x != 42 && $x != 43){
+                RoleHasPermissions::create([
+                    'permission_id' => $x,
+                    'role_id' => 3,
+                ]);
+            }
+        }
+        /* RoleHasPermissions::create([
+            'permission_id' =>Permission::where('name','Inicio_Index')->get()->id
+            ,
+            'role_id' => 3,
+        ]); */
+       
+
+
     }
 }

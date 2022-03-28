@@ -1,0 +1,130 @@
+<div wire:ignore.self id="modal-details3" class="modal fade" tabindex="1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-dark">
+                <h5 class="modal-title text-white">
+                    <b>RENOVACION Y VENCIMIENTO DE CUENTAS</b>
+                </h5>
+                <button class="close" data-dismiss="modal" type="button" aria-label="Close">
+                    <span class="text-white">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group text-center mt-4">
+                            <a href="javascript:void(0)" class="btn btn-dark" wire:click="mostrarRenovar()">Ver datos
+                                Cuenta</a>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group text-center mt-4">
+                            <a href="javascript:void(0)" class="btn btn-dark" wire:click="Acciones()">Vencer
+                                Cuenta</a>
+                        </div>
+                    </div>
+                    @if ($mostrarRenovar == 1)
+                        <div class="col-sm-12 col-md-6">
+                            <h6>Fecha de inicio</h6>
+                            <div class="form-group">
+                                <input wire:model="start_account" type="date" min="" max="" class="form-control"
+                                    placeholder="Click para elegir">
+                                @error('start_account')
+                                    <span class="text-danger er">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-6">
+                            <h6>Fecha de expiración</h6>
+                            <div class="form-group">
+                                <input wire:model="expiration_account" type="date" min="" max="" class="form-control"
+                                    placeholder="Click para elegir">
+                                @error('expiration_account')
+                                    <span class="text-danger er">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        
+
+
+                        <div class="col-sm-12 col-md-6">
+                            <div class="form-group">
+                                <label>
+                                    <h6>Correo</h6>
+                                </label>
+                                <input type="text" wire:model="email_id" class="form-control" disabled>
+                                @error('email_id')
+                                    <span class="text-danger er">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-6">
+                            <div class="form-group">
+                                <label>
+                                    <h6>Número de Perfiles</h6>
+                                </label>
+                                <input type="number" wire:model.lazy="number_profiles" class="form-control"
+                                    placeholder="ej: 0.0">
+                                @error('number_profiles')
+                                    <span class="text-danger er">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-6">
+                            <div class="form-group">
+                                <label>
+                                    <h6>Precio Compra Cuenta</h6>
+                                </label>
+                                <input type="number" wire:model.lazy="price" class="form-control"
+                                    placeholder="ej: 90.0">
+                                @error('price')
+                                    <span class="text-danger er">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-6">
+                            <div class="form-group">
+                                <label>
+                                    <h6>Contraseña cuenta Plataforma</h6>
+                                </label>
+                                <input type="text" wire:model.lazy="password_account" class="form-control"
+                                    placeholder="ej: ntlxEmanuel">
+                                @error('password_account')
+                                    <span class="text-danger er">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-6">
+                            <div class="form-group">
+                                <label>
+                                    <h6>Meses a renovar</h6>
+                                </label>
+                                <input type="number" wire:model="meses" class="form-control"
+                                    placeholder="PerfilNetflix1">
+                                @error('meses')
+                                    <span class="text-danger er">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-6">
+                            <div class="form-group text-center mt-4">
+                                <a href="javascript:void(0)" class="btn btn-dark" wire:click="RenovarCuenta()">Renovar
+                                    Cuenta</a>
+                            </div>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

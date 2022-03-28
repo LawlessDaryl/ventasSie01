@@ -9,7 +9,7 @@
             <div class="form-group">
                 <div class="row">
 
-                    <div class="col-lg-4 col-sm-12 col-md-6">
+                    <div class="col-lg-2 col-sm-12 col-md-6">
                         <div class="form-group">
                             <label>Tipo de equipo</label>
                             <select wire:model.lazy="catprodservid" class="form-control">
@@ -27,28 +27,45 @@
                     </div>
 
 
-                    <div class="col-sm-12 col-md-3 mt-4">
+                    <div class="col-sm-2 col-md-3 mt-4">
                         <div class="form-group">
                             <div class="n-chk">
                                 <label class="new-control new-radio radio-classic-primary">
                                     <input type="radio" class="new-control-input" name="custom-radio-4" id="libres"
                                         value="Pendientes" wire:model="condicional">
-                                    <span class="new-control-indicator"></span>SERVICIOS PENDIENTES
+                                    <span class="new-control-indicator"></span><h6>SERVICIOS PENDIENTES</h6>
                                 </label>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-12 col-md-3 mt-4">
+                    <div class="col-sm-2 col-md-3 mt-4">
                         <div class="form-group">
                             <div class="n-chk">
                                 <label class="new-control new-radio radio-classic-primary">
                                     <input type="radio" class="new-control-input" name="custom-radio-4" id="ocupados"
                                         value="Propios" wire:model="condicional" checked>
-                                    <span class="new-control-indicator"></span>SERVICIOS PROPIOS
+                                    <span class="new-control-indicator"></span><h6>SERVICIOS PROPIOS EN PROCESO</h6>
                                 </label>
                             </div>
                         </div>
                     </div>
+
+                    <div class="col-sm-2 col-md-3 mt-4">
+                        <div class="form-group">
+                            <div class="n-chk">
+                                <label class="new-control new-radio radio-classic-primary">
+                                    <input type="radio" class="new-control-input" name="custom-radio-4" id="abandono"
+                                        value="Abandonados" wire:model="condicional" checked>
+                                    <span class="new-control-indicator"></span><h6>SERVICIOS ABANDONADOS</h6>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <ul class="tabs tab-pills">
+                        <a href="javascript:void(0)" class="btn btn-dark" wire:click="GoOrderservice">Ir a Ordenes de Servicio</a>
+                    </ul>
+
                 </div>
             </div>
             <div class="row">
@@ -109,7 +126,7 @@
                                     </tr>
                                 @endforeach
                             </tbody>
-                        @else
+                        @elseif($condicional == 'Propios')
                             <tbody>
                                 @foreach ($data as $d2)
                                     <tr>
@@ -119,7 +136,7 @@
                                         @foreach ($d2->movservices as $mv2)
                                             @if ($mv2->movs->type == 'PROCESO')
                                                 <td class="text-center">
-                                                    <h6>{{ $mv2->movs->created_at }}</h6>
+                                                    <h6>{{ $d2->fecha_estimada_entrega }}</h6>
                                                 </td>
                                                 <td class="text-center">
                                                     <h6>{{ $d2->horas }}</h6>
@@ -150,8 +167,50 @@
                                     </tr>
                                 @endforeach
                             </tbody>
+                        @elseif($condicional == 'Abandonados')
+                        <tbody>
+                            @foreach ($data as $d3)
+                                <tr>
+                                    <td class="text-center" style="{{ substr($d3->horas, 0, 3)<=24 ? 'background-color: #FF0000 !important' : 'background-color: #ff851b !important' }}">
+                                        <h6>{{ $loop->iteration }}</h6>
+                                    </td>
+                                    @foreach ($d3->movservices as $mv3)
+                                        @if ($mv3->movs->type == 'ABANDONADO')
+                                            <td class="text-center">
+                                                <h6>{{ $d3->fecha_estimada_entrega }}</h6>
+                                            </td>
+                                            <td class="text-center">
+                                                <h6>Pasaron {{ $d3->dias }}</h6>
+                                            </td>
+                                        @endif
+                                    @endforeach
+                                    <td class="text-center">
+                                        <h6>{{ $d3->marca }} {{ $d3->categoria->nombre }}</h6>
+                                    </td>
+                                    @foreach ($d3->movservices as $mv3)
+                                        @if ($mv3->movs->type == 'ABANDONADO' && $mv3->movs->status == 'ACTIVO')
+                                            <td class="text-center">
+                                                <h6>{{ $mv3->movs->type }}</h6>
+                                            </td>
+                                            <td class="text-center">
+                                                <a class="badge badge-pill badge-light"
+                                                    href="{{ url('idorderservice' . '/' . $d3->OrderServicio->id) }}"
+                                                    style='font-size:18px'>Seleccionar</a>
+                                            </td>
+                                            <td class="text-center">
+                                                <h6>{{ $mv3->movs->usermov->name }}</h6>
+                                            </td>
+                                        @endif
+                                    @endforeach
+                                    <td class="text-center">
+                                        <h6>{{ $d3->OrderServicio->id }}</h6>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
                         @endif
                     </table>
+                    {{ $data->links() }}
                 </div>
             </div>
 

@@ -27,16 +27,11 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <ul class="tabs tab-pills text-center mt-2">                                    
-                                        <a href="#" wire:click.prevent="getDetails({{ $item->id }})"
-                                            class="btn btn-{{ $item->estado == 'Cerrado' ? 'success' : 'danger' }} btn-lg active {{ $item->estado == 'Inactivo' ? 'disabled' : '' }}"
-                                            role="button" aria-pressed="true">
-                                            @if (empty(session('sesionCaja')))
-                                                ABRIR CAJA
-                                            @else
-                                                CERRAR CAJA
-                                            @endif
-                                        </a>
+                                    <ul class="tabs tab-pills text-center mt-2">
+                                        <a href="javascript:void(0)"
+                                            class="btn btn-dark {{ $item->estado == 'Inactivo' ? 'disabled' : '' }}"
+                                            wire:click.prevent="getDetails({{ $item->id }})"
+                                            style="{{ $item->estado == 'Inactivo' ? 'background-color: #fd1111;' : '' }} {{ $item->estado == 'Cerrado' ? 'background-color: #d923c2;' : '' }}">INGRESAR</a>
                                     </ul>
                                 </div>
                             </div>

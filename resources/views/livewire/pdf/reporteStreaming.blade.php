@@ -25,9 +25,45 @@
 
                 <td width="70%" class="text-left text-company" style="vertical-align: top; padding-top:10px;">
                     @if ($reportType == 0)
-                        <span style="font-size: 16px;"><strong>Reporte de Streaming del día</strong></span>
+                        @if ($cuenPerf == 0)
+                            @if ($vigVenc == 0)
+                                <span style="font-size: 16px;"><strong>Reporte de perfiles vigentes de Streaming del
+                                        día</strong></span>
+                            @else
+                                <span style="font-size: 16px;"><strong>Reporte de perfiles vencidos de Streaming del
+                                        día</strong></span>
+                            @endif
+                        @else
+                            @if ($vigVenc == 0)
+                                <span style="font-size: 16px;"><strong>Reporte de cuentas vigentes de Streaming del
+                                        día</strong></span>
+                            @else
+                                <span style="font-size: 16px;"><strong>Reporte de cuentas vencidos de Streaming del
+                                        día</strong></span>
+                            @endif
+                        @endif
                     @else
-                        <span style="font-size: 16px;"><strong>Reporte de Streaming por fecha</strong></span>
+                        @if ($cuenPerf == 0)
+                            @if ($vigVenc == 0)
+                                <span style="font-size: 16px;"><strong>Reporte de perfiles vigentes de Streaming por
+                                        fechas
+                                    </strong></span>
+                            @else
+                                <span style="font-size: 16px;"><strong>Reporte de perfiles vencidos de Streaming por
+                                        fechas
+                                    </strong></span>
+                            @endif
+                        @else
+                            @if ($vigVenc == 0)
+                                <span style="font-size: 16px;"><strong>Reporte de cuentas vigentes de Streaming por
+                                        fechas
+                                    </strong></span>
+                            @else
+                                <span style="font-size: 16px;"><strong>Reporte de cuentas vencidos de Streaming por
+                                        fechas
+                                    </strong></span>
+                            @endif
+                        @endif
                     @endif
                     <br>
                     @if ($reportType != 0)
@@ -48,7 +84,7 @@
 
     <section style="margin-top: -110px;">
         <table cellpadding="0" cellspacing="-1" class="table-items" width="100%" height="50%">
-            @if ($tipo == 0)
+            @if ($cuenPerf == 0)
                 <thead>
                     <tr>
                         <th width='8%'>PLATAFORMA</th>
@@ -62,7 +98,6 @@
                         <th width='8%'>IMPORTE</th>
                         <th width='8%'>PLAN INICIO</th>
                         <th width='8%'>PLAN FIN</th>
-
                     </tr>
                 </thead>
             @else
@@ -80,7 +115,7 @@
                     </tr>
                 </thead>
             @endif
-            @if ($tipo == 0)
+            @if ($cuenPerf == 0)
                 <tbody>
                     @foreach ($data as $p)
                         <tr height="10px">
@@ -156,7 +191,7 @@
                             <td align="center">
                                 <FONT FACE="times new roman" SIZE=1>
                                     {{ \Carbon\Carbon::parse($p->planfin)->format('d:m:Y') }} </FONT>
-                            </td>                            
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -168,22 +203,18 @@
                     <td colspan="2" class="text-left">
                         <span><b>TOTALES</b></span>
                     </td>
-                    @if ($tipo == 0)
-                    <td class="text-right " colspan="7">
-                        <span><strong >
-
-                                ${{ number_format($data->sum('importe'), 2) }}
-
-                            </strong></span>
-                    </td>
+                    @if ($cuenPerf == 0)
+                        <td class="text-right " colspan="7">
+                            <span><strong>
+                                    ${{ number_format($data->sum('importe'), 2) }}
+                                </strong></span>
+                        </td>
                     @else
-                    <td class="text-right " colspan="5">
-                        <span><strong >
-
-                                ${{ number_format($data->sum('importe'), 2) }}
-
-                            </strong></span>
-                    </td>
+                        <td class="text-right " colspan="5">
+                            <span><strong>
+                                    ${{ number_format($data->sum('importe'), 2) }}
+                                </strong></span>
+                        </td>
                     @endif
                 </tr>
             </tfoot>
