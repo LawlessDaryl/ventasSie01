@@ -6,6 +6,7 @@ use App\Models\Destino;
 use App\Models\Location;
 use App\Models\ProductosDestino;
 use App\Models\Sucursal;
+use Darryldecode\Cart\Facades\ComprasFacade as Comp;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
@@ -20,11 +21,13 @@ class DestinoProductoController extends Component
     {
         return 'vendor.livewire.bootstrap';
     }
+    
     public function mount()
     {
         $this->selected_id=0;
         $this->componentName='crear';
         $this->title='ssss';
+        $this->total_compra = Comp::getTotal();
 
 
 
@@ -91,7 +94,9 @@ class DestinoProductoController extends Component
 
                                     
 
-        return view('livewire.destino_producto.destino-controller',['destinos_almacen'=>$almacen,'data_suc' =>  $sucursal_ubicacion->get()])  
+        return view('livewire.destino_producto.destino-controller',['destinos_almacen'=>$almacen,'data_suc' =>  $sucursal_ubicacion->get(),
+        'cart' => Comp::getContent()
+        ])  
         ->extends('layouts.theme.app')
         ->section('content');
     }
