@@ -166,7 +166,7 @@ return [
          * Package Service Providers...
          */
 
-  
+        \App\Providers\ComprasServiceProvider::class,
 
         /*
          * Application Service Providers...

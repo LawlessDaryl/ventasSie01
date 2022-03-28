@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Compra as ModelsCompra;
 use App\Models\Destino;
 use App\Models\Location;
 use App\Models\ProductosDestino;
@@ -9,10 +10,12 @@ use App\Models\Sucursal;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
-use Darryldecode\Cart\Facades\CartFacade as Cart;
+
+use Darryldecode\Cart\Facades\ComprasFacade as Compra;
 
 class DestinoProductoController extends Component
 {
+    
     use WithPagination;
 
     public $selected_id,$selected_ubicacion,$componentName,$title,$itemsQuantity;
@@ -27,7 +30,13 @@ class DestinoProductoController extends Component
         $this->componentName='crear';
         $this->title='ssss';
 
-        $this->itemsQuantity = Cart::getTotalQuantity();
+        //$this->itemsQuantity = Cart::getTotalQuantity();
+        $quantity= Compra::getTotalQuantity();
+        $compras = app('compras');
+        $compras->getContent();
+        dd($quantity);
+
+    
 
 
 

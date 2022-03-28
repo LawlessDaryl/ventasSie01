@@ -8,7 +8,8 @@ use Carbon\Carbon;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
-use Darryldecode\Cart\Facades\CartFacade as Cart;
+
+use Darryldecode\Cart\Facades\ComprasFacade as Compras;
 
 class ComprasController extends Component
 {
@@ -29,8 +30,8 @@ class ComprasController extends Component
         $this->selected_id = 0;
         $this->price = 9;
 
-        $this->total_compra = Cart::getTotal();
-        $this->itemsQuantity = Cart::getTotalQuantity();
+        $this->total_compra = Compras::getTotal();
+        $this->itemsQuantity = Compras::getTotalQuantity();
   
     }
     public function render()
@@ -47,7 +48,7 @@ class ComprasController extends Component
 
 
         return view('livewire.compras.component',['data_prod' => $prod,
-        'cart' => Cart::getContent()->sortBy('name')
+        'cart' => Compras::getContent()->sortBy('name')
         ])
         ->extends('layouts.theme.app')
         ->section('content');
@@ -61,20 +62,20 @@ class ComprasController extends Component
         $product = Product::select('products.id','products.nombre as name')
         ->where('products.id',$productId)->first();
        
-        $exist = Cart::get($product->id);
+        $exist = Compras::get($product->id);
         if ($exist) {
             $title = 'Cantidad actualizada';
         } else {
             $title = "Producto agregado";
         }
 
-        Cart::add($product->id, $product->name, $precio_compra, $cant);
+        Compras::add($product->id, $product->name, $precio_compra, $cant);
 
         
-        $this->total = Cart::getTotal();
-        $this->itemsQuantity = Cart::getTotalQuantity();
+        $this->total = Compras::getTotal();
+        $this->itemsQuantity = Compras::getTotalQuantity();
         $this->emit('scan-ok', $title);
-         $this->total_compra = Cart::getTotal();
+         $this->total_compra = Compras::getTotal();
 
     }
 
@@ -84,7 +85,7 @@ class ComprasController extends Component
         $product = Product::select('products.id','products.nombre as name')
         ->where('products.id',$productId)->first();
        
-        $exist = Cart::get($productId);
+        $exist = Compras::get($productId);
         $prices=$exist->price;
        
         if ($exist) {
@@ -98,12 +99,12 @@ class ComprasController extends Component
         if ($cant > 0) {
 
           
-            Cart::add($product->id, $product->name,$prices, $cant);
+            Compras::add($product->id, $product->name,$prices, $cant);
           
-            $this->total = Cart::getTotal();
-            $this->itemsQuantity = Cart::getTotalQuantity();
+            $this->total = Compras::getTotal();
+            $this->itemsQuantity = Compras::getTotalQuantity();
             $this->emit('scan-ok', $title);
-            $this->total_compra = Cart::getTotal();
+            $this->total_compra = Compras::getTotal();
 
 
 
@@ -116,7 +117,7 @@ class ComprasController extends Component
         $product = Product::select('products.id','products.nombre as name')
         ->where('products.id',$productId)->first();
        
-        $exist = Cart::get($productId);
+        $exist = Compras::get($productId);
         $quantitys=$exist->quantity;
        
         if ($exist) {
@@ -133,12 +134,12 @@ class ComprasController extends Component
 
 
           
-            Cart::add($product->id, $product->name, $price, $quantitys);
+            Compras::add($product->id, $product->name, $price, $quantitys);
           
-            $this->total = Cart::getTotal();
-            $this->itemsQuantity = Cart::getTotalQuantity();
+            $this->total = Compras::getTotal();
+            $this->itemsQuantity = Compras::getTotalQuantity();
             $this->emit('scan-ok', $title);
-            $this->total_compra = Cart::getTotal();
+            $this->total_compra = Compras::getTotal();
 
 
 
@@ -148,12 +149,12 @@ class ComprasController extends Component
     }
     public function removeItem($productId)
     {
-        Cart::remove($productId);
+        Compras::remove($productId);
 
-        $this->total = Cart::getTotal();
-        $this->itemsQuantity = Cart::getTotalQuantity();
+        $this->total = Compras::getTotal();
+        $this->itemsQuantity = Compras::getTotalQuantity();
         $this->emit('scan-ok', 'Producto eliminado');
-        $this->total_compra = Cart::getTotal();
+        $this->total_compra = Compras::getTotal();
     }
 
     public function resetUI()
