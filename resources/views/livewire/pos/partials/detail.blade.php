@@ -1,7 +1,8 @@
 <div class="col-lg-6">
     @if ($total > 0)
 
-    <div class="table-responsive table-wrapper-scroll-y my-custom-scrollbar">
+    <div class="table-responsive table-wrapper-scroll-y">
+        {{-- <div class="table-responsive table-wrapper-scroll-y my-custom-scrollbar"> --}}
 
         <table class="table table-bordered table-striped mt-1">
             <thead class="text-white" style="background: #3b3f5c ">
@@ -71,9 +72,13 @@
             <br>
             <br>
             <br>
+            <br>
+            <br>
             
         <h5 class="text-center text-muted">Agregar productos a la venta</h5>
 
+            <br>
+            <br>
             <br>
             <br>
             <br>

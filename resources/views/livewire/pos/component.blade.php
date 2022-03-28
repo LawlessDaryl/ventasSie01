@@ -83,8 +83,6 @@
 
 
             </div>
-
-                  
             
             <!-- Ventana Modal para Avisar que ya no hay Stock en Tienda -->
             <div class="text-center">

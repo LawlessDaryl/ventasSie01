@@ -1,7 +1,8 @@
 <div class="col-lg-6">
     @if($BuscarProductoNombre != 0)
     
-            <div class="table-responsive table-wrapper-scroll-y my-custom-scrollbar">
+    <div class="table-responsive table-wrapper-scroll-y">
+        {{-- <div class="table-responsive table-wrapper-scroll-y my-custom-scrollbar"> --}}
 
                 <table class="table table-bordered table-striped mt-1">
                     <thead class="text-white" style="background: #3b3f5c ">
@@ -56,9 +57,13 @@
     <br>
     <br>
     <br>
+    <br>
+    <br>
 
     <h5 class="text-center text-muted">Para Buscar use el Cuadro: Buscar Productos...</h5>
 
+    <br>
+    <br>
     <br>
     <br>
     <br>
