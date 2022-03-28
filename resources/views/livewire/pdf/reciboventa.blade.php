@@ -37,7 +37,7 @@
     
 </head>
 
-<body>
+<body style="background-color: rgb(255, 255, 255)">
 
     
     <section class="header" style="top: -287px">
@@ -51,21 +51,22 @@
                     <p style="font-size: 20px; font-weight:bold;">Soluciones Informáticas Emanuel</p>
                 </td>
                 <td class="text-right">
-                    <p style="font-size: 9px; color: black">Av. Perú casi Plazuela Vicuna 4289157-75910755</p>
+                    <p style="font-size: 9px; color: black">{{$datossucursal->nombresucursal}} <br>{{$datossucursal->direccionsucursal}}</p>
                 </td>
             </tr>
             <tr style="color: rgb(75, 75, 75)">
                 
-                <td style="vertical-align: top; padding-top:5px; position:relative;">
-                    Nombre Cliente:{{$nombreusuario->name}}
-                    NIT:{{$nombreusuario->name}}
-                    Celular:{{$nombreusuario->name}}
-                </td>
-                <td style="vertical-align: top; padding-top:5px; position:relative;">
-                   
+                <td colspan="2" style="vertical-align: top; padding-top:5px; position:relative;">
+                        Nombre Cliente:{{$datoscliente->razonsocial}}
+                        <br>
+                        NIT:{{$datoscliente->nit}}
+                        <br>
+                        Celular:{{$datoscliente->celular}}
                 </td>
                 <td style="vertical-align: top; padding-top:5px; position:relative;" colspan="2">
                     Fecha Emisión:{{$fecha}}
+                    <br>
+                    Cajero: {{$nombreusuario->name}}
                 </td>
             </tr>
         </table>
@@ -83,7 +84,7 @@
                     <th class="table-th text-center text-dark">IMPORTE (Bs)</th>
                 </tr>
             </thead>
-            <tbody style="background-color: rgb(238, 237, 237)">
+            <tbody style="background-color: rgb(255, 255, 255)">
                 @foreach ($venta as $item)
                 <tr>
                     <td style="padding: 0%" colspan="2">
@@ -96,7 +97,7 @@
                         {{ $item->cantidad }}
                     </td>
                     <td style="padding: 0%" class="text-right">
-                        {{ number_format($item->precio *  $item->cantidad, 2) }}
+                        {{ number_format($item->precio *  $item->cantidad, 2) }} Bs
                     </td>
                 </tr>
                 @endforeach
@@ -111,10 +112,10 @@
                         
                     </td>
                     <td class="text-center">
-                        <b>Cantidad Total</b>
+                        <b>{{$totalitems}}</b>
                     </td>
-                    <td class="text-right">
-                        <b>Total Bs</b>
+                    <td style="padding: 0%" class="text-right">
+                        <b>{{ number_format($total,2) }} Bs</b>
                     </td>
                 </tr>
             </tbody>
@@ -122,7 +123,7 @@
 
     </div>
 
-    <section class="footer">
+    {{-- <section class="footer">
         <table cellpadding="0" cellspacing="0" width="100%">
             <tr>
                 <td width="20%">
@@ -134,7 +135,7 @@
                 </td>
             </tr>
         </table>
-    </section>
+    </section> --}}
 
 </body>
 

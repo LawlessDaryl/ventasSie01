@@ -31,7 +31,7 @@
                         <h6>{{ $item->name }}</h6>
                     </td>
                     {{-- Precio --}}
-                    <td class="text-center">${{ number_format($item->price, 2) }}</td>
+                    <td class="text-center">Bs{{ number_format($item->price, 2) }}</td>
                     {{-- Cantidad --}}
                     <td>
                         <input type="number" maxlength="{{$item->stock}}" max="{{$item->stock}}"
@@ -79,7 +79,7 @@
             <br>
             <br>
             <br>
-            <br>}
+            <br>
         @endif
         <div wire:loading.inline wire:target="saveSale">
             <h4 class="text-danger text-center">Guardando venta...</h4>

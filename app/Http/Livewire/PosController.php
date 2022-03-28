@@ -30,8 +30,8 @@ class PosController extends Component
     //Variables para la venta desde almacen, moviendo productos de almacen a la tienda
     public  $stockalmacen, $nombrestockproducto, $cantidadToTienda = 1, $idproductoalmacen;
 
-    //Variable para mandar ...
-    public $idventa;
+    //Variables para el conprobantes...
+    public $idventa, $totalbs, $totalitems;
 
 
 
@@ -515,6 +515,7 @@ class PosController extends Component
             }
             else
             {
+                //Si selecciono un cliente de la lista
                 if($this->clienteseleccionado == 1)
                 {
                     ClienteMov::create([
@@ -568,6 +569,9 @@ class PosController extends Component
             }
             //Cambiando valor de $facturasino dependiendo del valor de $factura
             $this->ventafactura();
+            //Guardando total Bs para crear comprobante en PDF
+            $this->totalbs = $this->total;
+            $this->totalitems = $this->itemsQuantity;
             //Creando Venta
             if($this->observacion=="")
             {
@@ -665,7 +669,8 @@ class PosController extends Component
 
             $this->emit('save-ok', 'venta registrada con exito');
 
-            return redirect::to('report/pdf' . '/' . $this->total. '/' . $this->idventa . '/' . Auth()->user()->id);
+            //Redireccionando para crear el comprobante con sus respectvas variables
+            return redirect::to('report/pdf' . '/' . $this->totalbs. '/' . $this->idventa . '/' . $this->totalitems);
 
             //return Redirect::to('pos');
         } catch (Exception $e) {
@@ -735,10 +740,6 @@ class PosController extends Component
         $this->selected_id = 0;
 
         $this->resetValidation();
-    }
-    public function hola()
-    {
-        dd("Hola");
     }
 
 }

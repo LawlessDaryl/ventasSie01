@@ -18,7 +18,7 @@ class ClientSeeder extends Seeder
             'nombre'=> 'Cliente Anónimo',
             'cedula' => '',
             'celular' => '',
-            'razon_social' => '',
+            'razon_social' => 'Cliente Anónimo',
             'nit' => '0',
             'procedencia_cliente_id' => 1
         ]);
