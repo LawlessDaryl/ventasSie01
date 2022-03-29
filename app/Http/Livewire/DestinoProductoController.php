@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Category;
 use App\Models\Compra as ModelsCompra;
 use App\Models\Destino;
 use App\Models\Location;
@@ -100,7 +101,7 @@ class DestinoProductoController extends Component
                                     
 
         return view('livewire.destino_producto.destino-controller',['destinos_almacen'=>$almacen,'data_suc' =>  $sucursal_ubicacion->get(),
-        'cart' => Transferencia::getContent()
+        'cart' => Transferencia::getContent(),'data_cat'=>Category::get()
         ])  
         ->extends('layouts.theme.app')
         ->section('content');

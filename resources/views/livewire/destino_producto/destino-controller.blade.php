@@ -32,15 +32,29 @@
 
                     <div class="form-group">
                         <select wire:model='selected_id' class="form-control">
-                          <option value="null">Elegir almacen</option>
+                            <option value="General">Almacen Total</option>
                           @foreach ($data_suc as $data)
                           <option value="{{ $data->id }}">{{ $data->sucursal }}-{{$data->destino}}</option>
                           @endforeach
-                          <option value="General">Almacen Total</option>
+                         
                          
                         </select>
                       </div>
                 </div>
+                <div class="col-12 col-lg-2 col-md-3">
+
+                    <div class="form-group">
+                        <select wire:model='selected_categoria' class="form-control">
+                          <option value="null">Elegir Categoria</option>
+                          @foreach ($data_cat as $data)
+                          <option value="{{ $data->id }}">{{ $data->name}}</option>
+                          @endforeach
+                       
+                         
+                        </select>
+                      </div>
+                </div>
+                
                 <div class="col-12 col-lg-2 col-md-3">
 
                     <div class="form-group">
@@ -56,11 +70,11 @@
 
          
 
-                    <div class="col-12 col-lg-7 col-md-4 d-flex flex-wrap">
+                    <div class="col-12 col-lg-5 col-md-4 d-flex flex-lg-wrap flex-wrap flex-md-wrap flex-xl-wrap flex-sm-wrap">
 
                       @foreach($destinos_almacen as $destino)
                       
-                        <div class="card border-success m-1" style="width: 12rem;">
+                        <div class="card border-success" style="width: 13rem; margin:0.1rem">
                         
                             <div class="card-header"><h5> {{$destino->name}}</h5></div>
                             <div class="card-body text-success">
@@ -85,10 +99,10 @@
                     {{--AREA DE TRANSFERENCIAS DE PRODUCTOS--}}
 
 
-                    <div class="col-12 col-lg-5 col-md 3">
+                    <div class="col-12 col-lg-7 col-md-3">
                         <div class="widget mr-2 mb-2 mt-2">
                               
-                            <div class="table-responsive ml-0 p-1">
+                            <div class="table-responsive p-1">
                                 <table class="table table-unbordered table-hover mt-2">
                                     <thead class="text-white" style="background: #3B3F5C">
                                         <tr>
