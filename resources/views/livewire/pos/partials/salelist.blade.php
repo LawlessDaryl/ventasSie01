@@ -16,9 +16,9 @@
                                         <th class="table-th text-withe text-center">No</th>
                                         <th class="table-th text-withe text-right">TOTAL</th>
                                         <th class="table-th text-withe text-center">CANTIDAD</th>
-                                        <th class="table-th text-withe text-center">ESTADO</th>
                                         <th class="table-th text-withe text-center">USUARIO</th>
                                         <th class="table-th text-withe text-center">CLIENTE</th>
+                                        <th class="table-th text-withe text-center">TIPO PAGO</th>
                                         <th class="table-th text-withe text-center">FECHA</th>
                                         <th class="table-th text-withe text-center" width="50px"> Acciòn</th>
                                     </tr>
@@ -43,17 +43,13 @@
                                                 <h6>{{ $d->items }}</h6>
                                             </td>
                                             <td class="table-th text-withe text-center">
-                                                @if($d->status == "PAID")
-                                                <h6>PAGADO</h6>
-                                                @else
-                                                <h6>{{ $d->status }}</h6>
-                                                @endif
-                                            </td>
-                                            <td class="table-th text-withe text-center">
                                                 <h6>{{ $d->user }}</h6>
                                             </td>
                                             <td class="table-th text-withe text-center">
-                                                <h6>{{ $d->movimiento_id }}</h6>
+                                                <h6>{{ $d->rz }}</h6>
+                                            </td>
+                                            <td class="table-th text-withe text-center">
+                                                <h6>{{ $d->tipopago }}</h6>
                                             </td>
                                             <td class="table-th text-withe text-center">
                                                 <h6>

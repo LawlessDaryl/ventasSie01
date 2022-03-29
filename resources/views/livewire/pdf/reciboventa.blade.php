@@ -57,7 +57,7 @@
             <tr style="color: rgb(75, 75, 75)">
                 
                 <td colspan="2" style="vertical-align: top; padding-top:5px; position:relative;">
-                        Nombre Cliente:{{$datoscliente->razonsocial}}
+                        Razón Social:{{$datoscliente->razonsocial}}
                         <br>
                         NIT:{{$datoscliente->nit}}
                         <br>

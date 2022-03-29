@@ -33,9 +33,15 @@ class SaleListController extends Component
     public function listarventas()
     {
         $this->data = Sale::join('users as u', 'u.id', 'sales.user_id')
-        ->select('sales.*', 'u.name as user')
+        ->join("movimientos as m", "m.id", "sales.movimiento_id")
+        ->join("cliente_movs as cm", "cm.movimiento_id", "m.id")
+        ->join("clientes as c", "c.id", "cm.cliente_id")
+        ->select('sales.*', 'u.name as user','c.razon_social as rz')
+        ->where('u.id',Auth()->user()->id)
         ->orderBy('sales.id', 'desc')
         ->get();
+
+
     }
 
     public function devolucionventa($idventa)
