@@ -23,6 +23,7 @@ class CreateAccountsTable extends Migration
             $table->string('password_account', 20);
             $table->decimal('price', 10, 2);
             $table->enum('availability',['LIBRE','OCUPADO'])->default('LIBRE');
+            $table->integer('meses_comprados');
             $table->unsignedBigInteger('str_supplier_id');
             $table->foreign('str_supplier_id')->references('id')->on('str_suppliers');
             $table->unsignedBigInteger('platform_id');

@@ -28,28 +28,6 @@
                     </div>
                     @if ($mostrarRenovar == 1)
                         <div class="col-sm-12 col-md-6">
-                            <h6>Fecha de inicio</h6>
-                            <div class="form-group">
-                                <input wire:model="start_account" type="date" min="" max="" class="form-control"
-                                    placeholder="Click para elegir">
-                                @error('start_account')
-                                    <span class="text-danger er">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="col-sm-12 col-md-6">
-                            <h6>Fecha de expiración</h6>
-                            <div class="form-group">
-                                <input wire:model="expiration_account" type="date" min="" max="" class="form-control"
-                                    placeholder="Click para elegir">
-                                @error('expiration_account')
-                                    <span class="text-danger er">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="col-sm-12 col-md-6">
                             <div class="form-group">
                                 <label>
                                     <h6>Correo</h6>
@@ -99,14 +77,68 @@
                                 @enderror
                             </div>
                         </div>
+                        <div class="col-sm-12 col-md-6">
+                            <h6>Fecha de inicio Cuenta</h6>
+                            <div class="form-group">
+                                <input disabled wire:model.lazy="start_account" type="date" min="" max=""
+                                    class="form-control" placeholder="Click para elegir">
+                                @error('start_account')
+                                    <span class="text-danger er">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-6">
+                            <h6>Fecha de expiración Cuenta</h6>
+                            <div class="form-group">
+                                <input disabled wire:model="expiration_account" type="date" min="" max=""
+                                    class="form-control" placeholder="Click para elegir">
+                                @error('expiration_account')
+                                    <span class="text-danger er">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-6">
+                            <h6>Fecha de inicio Nueva</h6>
+                            <div class="form-group">
+                                <input wire:model.lazy="start_account_new" type="date" min="" max=""
+                                    class="form-control" placeholder="Click para elegir">
+                                @error('start_account')
+                                    <span class="text-danger er">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-6">
+                            <h6>Fecha de expiración Nueva</h6>
+                            <div class="form-group">
+                                <input disabled wire:model="expiration_account_new" type="date" min="" max=""
+                                    class="form-control" placeholder="Click para elegir">
+                                @error('expiration_account')
+                                    <span class="text-danger er">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
 
                         <div class="col-sm-12 col-md-6">
                             <div class="form-group">
                                 <label>
-                                    <h6>Meses a renovar // Si va renovar la cuenta puede cambiar los datos</h6>
+                                    <h6>Meses comprados</h6>
                                 </label>
-                                <input type="number" wire:model="meses" class="form-control"
-                                    placeholder="PerfilNetflix1">
+                                <input disabled type="number" wire:model="meses_comprados" class="form-control">
+                                @error('meses_comprados')
+                                    <span class="text-danger er">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-6">
+                            <div class="form-group">
+                                <label>
+                                    <h6>Meses a renovar // Si va renovar la cuenta actualice los datos de la cuenta</h6>
+                                </label>
+                                <input type="number" wire:model="meses" class="form-control">
                                 @error('meses')
                                     <span class="text-danger er">{{ $message }}</span>
                                 @enderror

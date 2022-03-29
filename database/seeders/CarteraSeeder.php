@@ -14,6 +14,7 @@ class CarteraSeeder extends Seeder
      */
     public function run()
     {
+        /* CAJA PRINCIPAL */
         Cartera::create([
             'nombre' => 'Sistema',
             'descripcion' => 'Sistema tigo Money',
@@ -23,7 +24,7 @@ class CarteraSeeder extends Seeder
         ]);
         Cartera::create([
             'nombre' => 'Caja fisica',
-            'descripcion' => 'Caja fisica de caja Este',
+            'descripcion' => 'Caja fisica de caja Principal',
             'tipo' => 'CajaFisica',
             'telefonoNum' => null,
             'caja_id' => '1',
@@ -36,8 +37,24 @@ class CarteraSeeder extends Seeder
             'caja_id' => '1',
         ]);
         Cartera::create([
+            'nombre' => 'BANCO',
+            'descripcion' => 'CUENTA BANCARIA',
+            'tipo' => 'Banco',
+            'telefonoNum' => null,
+            'caja_id' => '1',
+        ]);
+        Cartera::create([
+            'nombre' => 'CUENTA TIGO MONEY',
+            'descripcion' => 'TIGO MONEY STREAMING',
+            'tipo' => 'TigoStreaming',
+            'telefonoNum' => null,
+            'caja_id' => '1',
+        ]);
+
+        /* CAJA SECUNDARIA */
+        Cartera::create([
             'nombre' => 'Caja fisica',
-            'descripcion' => 'Caja fisica de caja Oeste',
+            'descripcion' => 'Caja fisica de caja Secundaria',
             'tipo' => 'CajaFisica',
             'telefonoNum' => null,
             'caja_id' => '2',
@@ -55,24 +72,26 @@ class CarteraSeeder extends Seeder
             'tipo' => 'Sistema',
             'telefonoNum' => null,
             'caja_id' => '2',
-        ]);        
+        ]);
         Cartera::create([
             'nombre' => 'BANCO',
             'descripcion' => 'CUENTA BANCARIA',
             'tipo' => 'Banco',
             'telefonoNum' => null,
-            'caja_id' => '1',
+            'caja_id' => '2',
         ]);
         Cartera::create([
             'nombre' => 'CUENTA TIGO MONEY',
             'descripcion' => 'TIGO MONEY STREAMING',
             'tipo' => 'TigoStreaming',
             'telefonoNum' => null,
-            'caja_id' => '1',
+            'caja_id' => '2',
         ]);
+
+        /* CAJA FERRUFINO */
         Cartera::create([
             'nombre' => 'Caja fisica',
-            'descripcion' => 'Caja fisica de caja Oeste',
+            'descripcion' => 'Caja fisica de caja Ferrufino',
             'tipo' => 'CajaFisica',
             'telefonoNum' => null,
             'caja_id' => '3',

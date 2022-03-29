@@ -153,7 +153,7 @@
     <div class="col-sm-12 col-md-4">
         <h6>Fecha de expiración del plan</h6>
         <div class="form-group">
-            <input type="date" wire:model="expiration_plan" class="form-control">
+            <input disabled type="date" wire:model="expiration_plan" class="form-control">
             @error('expiration_plan')
                 <span class="text-danger er">{{ $message }}</span>
             @enderror

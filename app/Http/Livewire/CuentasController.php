@@ -28,12 +28,12 @@ class CuentasController extends Component
 {
     use WithPagination;
     use WithFileUploads;
-    public $platform_id, $email_id, $expiration, $status, $number_profiles,
-        $search, $selected_id, $pageTitle, $componentName, $proveedor, $nameP, $PIN, $estado,
-        $availability, $Observaciones, $perfiles, $correos, $selected, $start_account,
-        $expiration_account, $password_account, $price, $mostrarCampos, $condicional,
-        $meses, $expirationActual, $expirationNueva, $observations, $selected_plan,
-        $correoCuenta, $passCuenta, $nombreCliente, $celular, $observacionesTrans, $mostrarRenovar;
+    public $platform_id, $email_id, $expiration, $status, $number_profiles, $search, $selected_id,
+        $pageTitle, $componentName, $proveedor, $nameP, $PIN, $estado, $availability, $Observaciones,
+        $perfiles, $correos, $selected, $start_account, $start_account_new, $expiration_account,
+        $expiration_account_new, $password_account, $price, $mostrarCampos, $condicional, $meses,
+        $expirationActual, $expirationNueva, $observations, $selected_plan, $correoCuenta, $passCuenta,
+        $nombreCliente, $celular, $observacionesTrans, $mostrarRenovar, $meses_comprados, $mesesComprar;
     private $pagination = 10;
     public function paginationView()
     {
@@ -63,6 +63,7 @@ class CuentasController extends Component
         $this->condicional = 'cuentas';
         $this->meses = 0;
         $this->expirationNueva = Carbon::parse(Carbon::now())->format('Y-m-d');
+        $this->start_account = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->tipopago = 'EFECTIVO';
         $this->importe = 0;
         $this->correoCuenta = '';
@@ -71,6 +72,11 @@ class CuentasController extends Component
         $this->celular = '';
         $this->observacionesTrans = '';
         $this->mostrarRenovar = 0;
+        $this->mesesComprar = 1;
+        $this->start_account = null;
+        $this->start_account_new = null;
+        $this->expiration_account = null;
+        $this->expiration_account_new = null;
     }
     public function render()
     {
@@ -418,6 +424,17 @@ class CuentasController extends Component
                 $this->mostrarCampos = 0;
             }
         }
+
+        if ($this->start_account) {
+            if ($this->mesesComprar > 0) {
+                $dias = $this->mesesComprar * 30;
+                $this->expiration_account = strtotime('+' . $dias . ' day', strtotime($this->start_account));
+                $this->expiration_account = date('Y-m-d', $this->expiration_account);
+            } else {
+                $this->expiration_account = $this->start_account;
+            }
+        }
+
         if ($this->meses > 0) {
             $dias = $this->meses * 30;
             $this->expirationNueva = strtotime('+' . $dias . ' day', strtotime($this->expirationActual));
@@ -425,6 +442,17 @@ class CuentasController extends Component
         } else {
             $this->expirationNueva = $this->expirationActual;
         }
+
+        if ($this->start_account_new) {
+            if ($this->meses > 0) {
+                $dias = $this->meses * 30;
+                $this->expiration_account_new = strtotime('+' . $dias . ' day', strtotime($this->start_account_new));
+                $this->expiration_account_new = date('Y-m-d', $this->expiration_account_new);
+            } else {
+                $this->expiration_account_new = $this->start_account_new;
+            }
+        }
+
         return view('livewire.cuentas.component', [
             'cuentas' => $cuentas,
             'plataformas' => Platform::where('estado', 'ACTIVO')->orderBy('nombre', 'asc')->get(),
@@ -433,12 +461,14 @@ class CuentasController extends Component
             ->extends('layouts.theme.app')
             ->section('content');
     }
+    
     public function AccionesCuenta(Account $cuenta)
     {
+        $this->resetUI();
         $this->selected_id = $cuenta->id;
-        $this->mostrarRenovar = 0;
         $this->emit('details3-show', 'show modal!');
     }
+
     public function mostrarRenovar()
     {
         $this->mostrarRenovar = 1;
@@ -450,7 +480,9 @@ class CuentasController extends Component
         $this->number_profiles = $cuenta->number_profiles;
         $this->price = $cuenta->price;
         $this->password_account = $cuenta->password_account;
+        $this->meses_comprados = $cuenta->meses_comprados;
     }
+
     public function RenovarCuenta()
     {
         $rules = [
@@ -468,23 +500,28 @@ class CuentasController extends Component
             'password_account.required' => 'La contraseña de la cuenta es requerida',
         ];
 
+        $dias = 30;
+        $fecha30diasdespues = strtotime('+' . $dias . ' day', strtotime($this->start_account_new));
+        $fecha30diasdespues = date('Y-m-d', $fecha30diasdespues);
+
         $this->validate($rules, $messages);
         $this->price /= $this->meses;
         $cuenta = Account::find($this->selected_id);
 
         $cuenta->update([
-            'start_account' => $this->start_account,
-            'expiration_account' => $this->expiration_account,
+            'start_account' => $this->start_account_new,
+            'expiration_account' => $this->expiration_account_new,
             'number_profiles' => $this->number_profiles,
             'password_account' => $this->password_account,
             'price' => $this->price,
+            'meses_comprados' => $this->meses,
         ]);
 
         for ($i = 0; $i < $this->meses; $i++) {
             if ($i == 0) {
                 CuentaInversion::create([
-                    'start_date' => $this->start_account,
-                    'expiration_date' => $this->expiration_account,
+                    'start_date' => $this->start_account_new,
+                    'expiration_date' => $fecha30diasdespues,
                     'price' => $this->price,
                     'number_profiles' => $this->number_profiles,
                     'sale_profiles' => 0,
@@ -493,16 +530,21 @@ class CuentasController extends Component
                     'account_id' => $cuenta->id,
                 ]);
             } else {
-                $this->start_account = strtotime('+' . 1 . ' day', strtotime($this->expiration_account));
-                $this->start_account = date('Y-m-d', $this->start_account);
-
+                if ($i == 1) {
+                    $this->start_account_new = strtotime('+' . 1 . ' day', strtotime($fecha30diasdespues));
+                    $this->start_account_new = date('Y-m-d', $this->start_account_new);
+                } else {
+                    $this->start_account_new = strtotime('+' . 1 . ' day', strtotime($this->expiration_account_new));
+                    $this->start_account_new = date('Y-m-d', $this->start_account_new);
+                }
                 $dias = 30;
 
-                $this->expiration_account = strtotime('+' . $dias . ' day', strtotime($this->start_account));
-                $this->expiration_account = date('Y-m-d', $this->expiration_account);
+                $this->expiration_account_new = strtotime('+' . $dias . ' day', strtotime($this->start_account_new));
+                $this->expiration_account_new = date('Y-m-d', $this->expiration_account_new);
+
                 CuentaInversion::create([
-                    'start_date' => $this->start_account,
-                    'expiration_date' => $this->expiration_account,
+                    'start_date' => $this->start_account_new,
+                    'expiration_date' => $this->expiration_account_new,
                     'price' => $this->price,
                     'number_profiles' => $this->number_profiles,
                     'sale_profiles' => 0,
@@ -572,7 +614,7 @@ class CuentasController extends Component
                 'platform_id' => $this->platform_id,
                 'email_id' => $this->email_id,
             ]);
-
+            
             CuentaInversion::create([
                 'start_date' => $this->start_account,
                 'expiration_date' => $this->expiration_account,
@@ -955,6 +997,17 @@ class CuentasController extends Component
         $this->expirationNueva = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->tipopago = 'EFECTIVO';
         $this->importe = 0;
+        $this->correoCuenta = '';
+        $this->passCuenta = '';
+        $this->nombreCliente = '';
+        $this->celular = '';
+        $this->observacionesTrans = '';
+        $this->mostrarRenovar = 0;
+        $this->mesesComprar = 1;
+        $this->start_account = null;
+        $this->start_account_new = null;
+        $this->expiration_account = null;
+        $this->expiration_account_new = null;
         $this->resetValidation();
     }
 }

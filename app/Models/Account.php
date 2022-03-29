@@ -9,7 +9,7 @@ class Account extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['start_account', 'expiration_account', 'status', 'whole_account', 'number_profiles', 'password_account', 'price', 'availability', 'str_supplier_id', 'platform_id', 'email_id'];
+    protected $fillable = ['start_account', 'expiration_account', 'status', 'whole_account', 'number_profiles', 'password_account', 'price', 'availability', 'meses_comprados', 'str_supplier_id', 'platform_id', 'email_id'];
 
     public function CuentaPerfiles()
     {

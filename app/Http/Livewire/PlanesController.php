@@ -214,7 +214,7 @@ class PlanesController extends Component
                     ->orderBy('plans.created_at', 'desc')
                     ->paginate($this->pagination);
             }
-        } else {
+        } else {    /* cuentas */
             if (strlen($this->search) > 0) {
                 $data = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
                     ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')

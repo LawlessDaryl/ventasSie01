@@ -31,7 +31,8 @@
                                         <a href="javascript:void(0)"
                                             class="btn btn-dark {{ $item->estado == 'Inactivo' ? 'disabled' : '' }}"
                                             wire:click.prevent="getDetails({{ $item->id }})"
-                                            style="{{ $item->estado == 'Inactivo' ? 'background-color: #fd1111;' : '' }} {{ $item->estado == 'Cerrado' ? 'background-color: #d923c2;' : '' }}">INGRESAR</a>
+                                            style="{{ $item->estado == 'Inactivo' ? 'background-color: #fd1111;' : '' }}">VER
+                                            CAJA</a>
                                     </ul>
                                 </div>
                             </div>
