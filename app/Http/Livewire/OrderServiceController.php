@@ -35,7 +35,7 @@ class OrderServiceController extends Component
         $terminado, $costo, $detalle_costo, $nombreUsuario, $modificar, $type_service, $movimiento,
         $opciones, $tipopago, $dateFrom, $dateTo, $reportType, $userId, $estado;
 
-    private $pagination = 5;
+    private $pagination = null;
     public function paginationView()
     {
         return 'vendor.livewire.bootstrap';
@@ -83,22 +83,21 @@ class OrderServiceController extends Component
         } */
 
         
-       
-        
         if ($this->reportType == 0) {
             $from = Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00';
             $to = Carbon::parse(Carbon::now())->format('Y-m-d')   . ' 23:59:59';
         } else {
-            try {
-                $from = Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00';
-                $to = Carbon::parse($this->dateTo)->format('Y-m-d')     . ' 23:59:59';
-            } catch (Exception $e) {
-                DB::rollback();
-                $this->emit('', 'Datos no Validos', $e->getMessage());
-            }
-            if ($this->reportType == 1 && ($this->dateFrom == '' || $this->dateTo == '')) {
-                return;
-            }
+            $from = Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00';
+            $to = Carbon::parse($this->dateTo)->format('Y-m-d')     . ' 23:59:59';
+        }
+        if ($this->reportType == 1 && ($this->dateFrom == '' || $this->dateTo == '')) {
+            $this->dateFrom = Carbon::parse(Carbon::now())->format('Y-m-d');
+            $this->dateTo = Carbon::parse(Carbon::now())->format('Y-m-d');
+            $this->emit('item', 'Hiciste algo incorrecto, la fecha se actualizó');
+        }
+
+        if ($this->dateFrom == "" || $this->dateTo == "") {
+            $this->reportType = 0;
         }
 
         if (!empty(session('orderserv'))) {
@@ -143,7 +142,19 @@ class OrderServiceController extends Component
                     ->orderBy('order_services.id', 'desc')
                     ->distinct()
                     ->paginate($this->pagination);
-            } elseif ($this->opciones != 'fechas') { 
+            }elseif ($this->opciones == 'ANULADO') { 
+               
+                $orderservices = OrderService::join('services as s', 'order_services.id', 's.order_service_id')
+                    ->join('mov_services as ms', 's.id', 'ms.service_id')
+                    ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+                    ->where('mov.type', 'ANULADO')
+                    ->select('order_services.*')
+                    ->orderBy('order_services.id', 'desc')
+                    ->distinct()
+                    ->paginate($this->pagination);
+                    dd($orderservices);
+            } 
+            elseif ($this->opciones != 'fechas') { 
                 $orderservices = OrderService::join('services as s', 'order_services.id', 's.order_service_id')
                     ->join('mov_services as ms', 's.id', 'ms.service_id')
                     ->join('cat_prod_services as cat', 'cat.id', 's.cat_prod_service_id')
@@ -156,7 +167,8 @@ class OrderServiceController extends Component
                     ->orderBy('order_services.id', 'desc')
                     ->distinct()
                     ->paginate($this->pagination);
-            } elseif ($this->opciones == 'fechas') {
+            }
+             elseif ($this->opciones == 'fechas') {
                 if ($this->estado == 'Todos') {
                     if ($this->userId == 0) {
                         $orderservices = OrderService::join('services as s', 'order_services.id', 's.order_service_id')
@@ -388,6 +400,7 @@ class OrderServiceController extends Component
                 if ($mm->movs->status == 'ACTIVO') {
                     $mv = $mm->movs;
                     $mv->update([
+                        'type' => 'ANULADO',
                         'status' => 'INACTIVO'
                     ]);
                 }

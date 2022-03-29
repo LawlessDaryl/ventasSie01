@@ -54,9 +54,9 @@
                         <div class="form-group">
                             <div class="n-chk">
                                 <label class="new-control new-radio radio-classic-primary">
-                                    <input type="radio" class="new-control-input" name="custom-radio-4" id="abandono"
-                                        value="Abandonados" wire:model="condicional" checked>
-                                    <span class="new-control-indicator"></span><h6>SERVICIOS ABANDONADOS</h6>
+                                    <input type="radio" class="new-control-input" name="custom-radio-4" id="terminado"
+                                        value="Terminados" wire:model="condicional" checked>
+                                    <span class="new-control-indicator"></span><h6>SERVICIOS PROPIOS TERMINADOS</h6>
                                 </label>
                             </div>
                         </div>
@@ -167,7 +167,7 @@
                                     </tr>
                                 @endforeach
                             </tbody>
-                        @elseif($condicional == 'Abandonados')
+                        @elseif($condicional == 'Terminados')
                         <tbody>
                             @foreach ($data as $d3)
                                 <tr>
@@ -175,12 +175,12 @@
                                         <h6>{{ $loop->iteration }}</h6>
                                     </td>
                                     @foreach ($d3->movservices as $mv3)
-                                        @if ($mv3->movs->type == 'ABANDONADO')
+                                        @if ($mv3->movs->type == 'TERMINADO')
                                             <td class="text-center">
                                                 <h6>{{ $d3->fecha_estimada_entrega }}</h6>
                                             </td>
                                             <td class="text-center">
-                                                <h6>Pasaron {{ $d3->dias }}</h6>
+                                                <h6>Pasaron {{ $d3->dias }} días</h6>
                                             </td>
                                         @endif
                                     @endforeach
@@ -188,7 +188,7 @@
                                         <h6>{{ $d3->marca }} {{ $d3->categoria->nombre }}</h6>
                                     </td>
                                     @foreach ($d3->movservices as $mv3)
-                                        @if ($mv3->movs->type == 'ABANDONADO' && $mv3->movs->status == 'ACTIVO')
+                                        @if ($mv3->movs->type == 'TERMINADO' && $mv3->movs->status == 'ACTIVO')
                                             <td class="text-center">
                                                 <h6>{{ $mv3->movs->type }}</h6>
                                             </td>

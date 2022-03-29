@@ -33,6 +33,7 @@
                         <option value="TERMINADO">TERMINADO</option>
                         <option value="ENTREGADO">ENTREGADO</option>
                         <option value="ABANDONADO">ABANDONADO</option>
+                        <option value="ANULADO">ANULADO</option>
                         <option value="TODOS">TODOS</option>
                         <option value="fechas">POR FECHA</option>
                     </select>
@@ -73,8 +74,8 @@
                         <h6>Elige el tipo de reporte</h6>
                         <div class="form-group">
                             <select wire:model="reportType" class="form-control">
-                                <option value="0">Transacciones del día</option>
-                                <option value="1">Transacciones por fecha</option>
+                                <option value="0">Servicios del día</option>
+                                <option value="1">Servicios por fecha</option>
                             </select>
                         </div>
                     </div>
@@ -472,6 +473,11 @@
             $('#ModalAnular').modal('hide')
             noty(msg)
         });
+
+        window.livewire.on('item', msg => {
+            noty(msg)
+        });
+
 
         window.livewire.on('hidden.bs.modal', function(e) {
             $('.er').css('display', 'none')
