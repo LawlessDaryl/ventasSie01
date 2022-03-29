@@ -13,7 +13,8 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
 
-use Darryldecode\Cart\Facades\ComprasFacade as Compra;
+
+use Darryldecode\Cart\Facades\TransferenciasFacade as Transferencia;
 
 class DestinoProductoController extends Component
 {
@@ -35,10 +36,12 @@ class DestinoProductoController extends Component
       
 
         //$this->itemsQuantity = Cart::getTotalQuantity();
-        $quantity= Compra::getTotalQuantity();
-        $compras = app('compras');
+        $quantity= Transferencia::getTotalQuantity();
+        $compras = app('transferencias');
         $compras->getContent();
-        dd($quantity);
+
+ 
+     
 
     
 
@@ -97,7 +100,7 @@ class DestinoProductoController extends Component
                                     
 
         return view('livewire.destino_producto.destino-controller',['destinos_almacen'=>$almacen,'data_suc' =>  $sucursal_ubicacion->get(),
-        'cart' => Compra::getContent()
+        'cart' => Transferencia::getContent()
         ])  
         ->extends('layouts.theme.app')
         ->section('content');
@@ -109,20 +112,20 @@ class DestinoProductoController extends Component
         $product = Product::select('products.id','products.nombre as name')
         ->where('products.id',$productId)->first();
        
-        $exist = Compra::get($product->id);
+        $exist = Transferencia::get($product->id);
         if ($exist) {
             $title = 'Cantidad actualizada';
         } else {
             $title = "Producto agregado";
         }
 
-        Compra::add($product->id, $product->name, $precio_compra, $cant);
+        Transferencia::add($product->id, $product->name, $precio_compra, $cant);
 
         
-        $this->total = Compra::getTotal();
-        $this->itemsQuantity = Compra::getTotalQuantity();
+        $this->total = Transferencia::getTotal();
+        $this->itemsQuantity = Transferencia::getTotalQuantity();
         $this->emit('scan-ok', $title);
-         $this->total_compra = Compra::getTotal();
+         $this->total_compra = Transferencia::getTotal();
 
     }
 
@@ -132,7 +135,7 @@ class DestinoProductoController extends Component
         $product = Product::select('products.id','products.nombre as name')
         ->where('products.id',$productId)->first();
        
-        $exist = Compra::get($productId);
+        $exist = Transferencia::get($productId);
         $prices=$exist->price;
        
         if ($exist) {
@@ -146,12 +149,12 @@ class DestinoProductoController extends Component
         if ($cant > 0) {
 
           
-            Compra::add($product->id, $product->name,$prices, $cant);
+            Transferencia::add($product->id, $product->name,$prices, $cant);
           
-            $this->total = Compra::getTotal();
-            $this->itemsQuantity = Compra::getTotalQuantity();
+            $this->total = Transferencia::getTotal();
+            $this->itemsQuantity = Transferencia::getTotalQuantity();
             $this->emit('scan-ok', $title);
-            $this->total_compra = Compra::getTotal();
+            $this->total_compra = Transferencia::getTotal();
 
 
 
@@ -159,12 +162,12 @@ class DestinoProductoController extends Component
     }
     public function removeItem($productId)
     {
-        Compra::remove($productId);
+        Transferencia::remove($productId);
 
-        $this->total = Compra::getTotal();
-        $this->itemsQuantity = Compra::getTotalQuantity();
+        $this->total = Transferencia::getTotal();
+        $this->itemsQuantity = Transferencia::getTotalQuantity();
         $this->emit('scan-ok', 'Producto eliminado');
-        $this->total_compra = Compra::getTotal();
+        $this->total_compra = Transferencia::getTotal();
     }
 
     public function resetUI()

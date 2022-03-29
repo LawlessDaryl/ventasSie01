@@ -167,6 +167,7 @@ return [
          */
 
         \App\Providers\ComprasServiceProvider::class,
+        \App\Providers\TransferenciaServiceProvider::class,
 
         /*
          * Application Service Providers...
