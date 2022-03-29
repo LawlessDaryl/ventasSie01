@@ -57,6 +57,7 @@ use App\Http\Livewire\TransaccionesController;
 use App\Http\Livewire\TypeWorkController;
 use App\Http\Livewire\UnidadesController;
 use App\Http\Livewire\SaleListController;
+use App\Http\Livewire\NotificacionController;
 use Illuminate\Support\Facades\Auth;
 
 Auth::routes();
@@ -151,6 +152,7 @@ Route::middleware(['auth'])->group(function () {
     });
     //Lista de Ventas
     Route::get('salelist', SaleListController::class)->name('salelist');
+    Route::get('notificaciones', NotificacionController::class)->name('notificaciones');
 
 });
 
