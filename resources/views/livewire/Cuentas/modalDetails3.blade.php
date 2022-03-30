@@ -138,7 +138,7 @@
                                 <label>
                                     <h6>Meses a renovar // Si va renovar la cuenta actualice los datos de la cuenta</h6>
                                 </label>
-                                <input type="number" wire:model="meses" class="form-control">
+                                <input type="number" wire:model="meseRenovarProv" class="form-control">
                                 @error('meses')
                                     <span class="text-danger er">{{ $message }}</span>
                                 @enderror

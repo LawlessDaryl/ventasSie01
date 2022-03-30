@@ -141,7 +141,7 @@ class PerfilesController extends Component
                         'plans.done as done',
                         DB::raw('0 as horas')
                     )
-                    ->where('plat.nombre', 'like', '%' . $this->search . '%')                    
+                    ->where('plat.nombre', 'like', '%' . $this->search . '%')
                     ->where('plans.type_plan', 'PERFIL')
                     ->where('plans.status', 'VIGENTE')
                     ->where('pa.status', 'ACTIVO')
@@ -221,7 +221,7 @@ class PerfilesController extends Component
                     ->where('plans.status', 'VIGENTE')
                     ->where('pa.status', 'ACTIVO')
                     ->where('plans.ready', 'SI')
-                    ->whereColumn('plans.id', '=', 'ap.plan_id')                    
+                    ->whereColumn('plans.id', '=', 'ap.plan_id')
                     ->orderBy('plans.done', 'desc')
                     ->orderBy('plans.expiration_plan', 'asc')
                     ->paginate($this->pagination);
@@ -267,35 +267,35 @@ class PerfilesController extends Component
                     ->where('plat.nombre', 'like', '%' . $this->search . '%')
                     ->where('plans.status', 'VENCIDO')
                     ->where('plans.type_plan', 'PERFIL')
-                    ->where('plans.ready', 'SI')                    
+                    ->where('plans.ready', 'SI')
                     ->where('ap.status', 'VENCIDO')
                     ->whereColumn('plans.id', '=', 'ap.plan_id')
 
                     ->orWhere('c.nombre', 'like', '%' . $this->search . '%')
                     ->where('plans.status', 'VENCIDO')
                     ->where('plans.type_plan', 'PERFIL')
-                    ->where('plans.ready', 'SI')                    
+                    ->where('plans.ready', 'SI')
                     ->where('ap.status', 'VENCIDO')
                     ->whereColumn('plans.id', '=', 'ap.plan_id')
 
                     ->orWhere('c.celular', 'like', '%' . $this->search . '%')
                     ->where('plans.status', 'VENCIDO')
                     ->where('plans.type_plan', 'PERFIL')
-                    ->where('plans.ready', 'SI')                    
+                    ->where('plans.ready', 'SI')
                     ->where('ap.status', 'VENCIDO')
                     ->whereColumn('plans.id', '=', 'ap.plan_id')
 
                     ->orWhere('e.content', 'like', '%' . $this->search . '%')
                     ->where('plans.status', 'VENCIDO')
                     ->where('plans.type_plan', 'PERFIL')
-                    ->where('plans.ready', 'SI')                    
+                    ->where('plans.ready', 'SI')
                     ->where('ap.status', 'VENCIDO')
                     ->whereColumn('plans.id', '=', 'ap.plan_id')
 
                     ->orWhere('prof.nameprofile', 'like', '%' . $this->search . '%')
                     ->where('plans.status', 'VENCIDO')
                     ->where('plans.type_plan', 'PERFIL')
-                    ->where('plans.ready', 'SI')                    
+                    ->where('plans.ready', 'SI')
                     ->where('ap.status', 'VENCIDO')
                     ->whereColumn('plans.id', '=', 'ap.plan_id')
 
@@ -564,14 +564,25 @@ class PerfilesController extends Component
             $perfil->save();
 
             if ($this->tipopago == 'EFECTIVO') {
-                $carteraTigo = Cartera::where('tipo', 'TigoStreaming')
+
+                $cajaFisica = Cartera::where('tipo', 'CajaFisica')
                     ->where('caja_id', $CajaActual->id)->get()->first();
                 CarteraMov::create([
                     'type' => 'INGRESO',
                     'comentario' => '',
-                    'cartera_id' => $carteraTigo->id,
+                    'cartera_id' => $cajaFisica->id,
                     'movimiento_id' => $mv->id
                 ]);
+
+                $tigoStreaming = Cartera::where('tipo', 'TigoStreaming')
+                    ->where('caja_id', '1')->get()->first();
+                CarteraMov::create([
+                    'type' => 'INGRESO',
+                    'comentario' => '',
+                    'cartera_id' => $tigoStreaming->id,
+                    'movimiento_id' => $mv->id
+                ]);
+
                 $carteraTelefono = Cartera::where('tipo', 'Telefono')
                     ->where('caja_id', $CajaActual->id)->get()->first();
                 CarteraMov::create([
@@ -580,13 +591,22 @@ class PerfilesController extends Component
                     'cartera_id' => $carteraTelefono->id,
                     'movimiento_id' => $mv->id
                 ]);
+            } elseif ($this->tipopago == 'Banco') {
+                $banco = Cartera::where('tipo', 'Banco')
+                    ->where('caja_id', '1')->get()->first();
+                CarteraMov::create([
+                    'type' => 'INGRESO',
+                    'comentario' => '',
+                    'cartera_id' => $banco->id,
+                    'movimiento_id' => $mv->id
+                ]);
             } else {
-                $cartera = Cartera::where('tipo', $this->tipopago)
+                $tigomoneyCaja = Cartera::where('tipo', 'Telefono')
                     ->where('caja_id', $CajaActual->id)->get()->first();
                 CarteraMov::create([
                     'type' => 'INGRESO',
                     'comentario' => '',
-                    'cartera_id' => $cartera->id,
+                    'cartera_id' => $tigomoneyCaja->id,
                     'movimiento_id' => $mv->id
                 ]);
             }

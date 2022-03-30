@@ -15,6 +15,11 @@ class CajaSeeder extends Seeder
     public function run()
     {
         Caja::create([
+            'nombre' => 'Caja General',
+            'estado' => 'Abierto',
+            'sucursal_id' => '1',
+        ]);
+        Caja::create([
             'nombre' => 'Caja Principal',
             'estado' => 'Cerrado',
             'sucursal_id' => '1',

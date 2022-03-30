@@ -113,6 +113,19 @@
     <div class="col-sm-12 col-md-6">
         <div class="form-group">
             <label>
+                <h6>Nombre de la cuenta en Plataforma</h6>
+            </label>
+            <input type="text" wire:model.lazy="nombre_cuenta" class="form-control"
+                placeholder="Dejar en blanco si se usa correo">
+            @error('nombre_cuenta')
+                <span class="text-danger er">{{ $message }}</span>
+            @enderror
+        </div>
+    </div>
+
+    <div class="col-sm-12 col-md-6">
+        <div class="form-group">
+            <label>
                 <h6>Contraseña cuenta Plataforma</h6>
             </label>
             <input type="text" wire:model.lazy="password_account" class="form-control" placeholder="ej: ntlxEmanuel">
@@ -123,20 +136,22 @@
     </div>
 
     @if ($condicional != 'ocupados')
-        <div class="col-sm-12 col-md-6">
-            <div class="form-group">
-                <label>
-                    <h6>Estado</h6>
-                </label>
-                <select wire:model='estado' class="form-control">
-                    <option value="ACTIVO">ACTIVO</option>
-                    <option value="INACTIVO">INACTIVO</option>
-                </select>
-                @error('status')
-                    <span class="text-danger er">{{ $message }}</span>
-                @enderror
+        @if ($selected_id > 0)
+            <div class="col-sm-12 col-md-6">
+                <div class="form-group">
+                    <label>
+                        <h6>Estado</h6>
+                    </label>
+                    <select wire:model='estado' class="form-control">
+                        <option value="ACTIVO">ACTIVO</option>
+                        <option value="INACTIVO">INACTIVO</option>
+                    </select>
+                    @error('status')
+                        <span class="text-danger er">{{ $message }}</span>
+                    @enderror
+                </div>
             </div>
-        </div>
+        @endif
     @endif
 
 </div>

@@ -85,6 +85,7 @@ class CorteCajaController extends Component
 
         $this->selected_id = $caja->id;
         $this->carteras = Cartera::where('caja_id', $caja->id)
+            ->orWhere('caja_id', '1')
             ->select('id', 'nombre', 'descripcion', DB::raw('0 as monto'))->get();
         if ($this->carteras->count()) {
 

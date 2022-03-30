@@ -31,9 +31,9 @@ class CuentasController extends Component
     public $platform_id, $email_id, $expiration, $status, $number_profiles, $search, $selected_id,
         $pageTitle, $componentName, $proveedor, $nameP, $PIN, $estado, $availability, $Observaciones,
         $perfiles, $correos, $selected, $start_account, $start_account_new, $expiration_account,
-        $expiration_account_new, $password_account, $price, $mostrarCampos, $condicional, $meses,
+        $expiration_account_new, $password_account, $price, $mostrarCampos, $condicional, $meses, $meseRenovarProv,
         $expirationActual, $expirationNueva, $observations, $selected_plan, $correoCuenta, $passCuenta,
-        $nombreCliente, $celular, $observacionesTrans, $mostrarRenovar, $meses_comprados, $mesesComprar;
+        $nombreCliente, $celular, $observacionesTrans, $mostrarRenovar, $meses_comprados, $mesesComprar, $nombre_cuenta;
     private $pagination = 10;
     public function paginationView()
     {
@@ -57,11 +57,13 @@ class CuentasController extends Component
         $this->Observaciones = '';
         $this->perfiles = [];
         $this->correos = [];
+        $this->nombre_cuenta = '';
         $this->password_account = '';
         $this->price = '';
         $this->mostrarCampos = 0;
         $this->condicional = 'cuentas';
         $this->meses = 0;
+        $this->meseRenovarProv = 0;
         $this->expirationNueva = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->start_account = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->tipopago = 'EFECTIVO';
@@ -424,7 +426,7 @@ class CuentasController extends Component
                 $this->mostrarCampos = 0;
             }
         }
-
+        /* CALCULAR FECHA DE FINALIZACION AL CREAR UNA NUEVA CUENTA */
         if ($this->start_account) {
             if ($this->mesesComprar > 0) {
                 $dias = $this->mesesComprar * 30;
@@ -434,7 +436,7 @@ class CuentasController extends Component
                 $this->expiration_account = $this->start_account;
             }
         }
-
+        /* MOSTRAR UNA NUEVA FECHA DE EXPIRACION SEGUN EL NUMERO DE MESES QUE ESCRIBA EL USUARIO EN RENOVAR PLAN*/
         if ($this->meses > 0) {
             $dias = $this->meses * 30;
             $this->expirationNueva = strtotime('+' . $dias . ' day', strtotime($this->expirationActual));
@@ -442,10 +444,10 @@ class CuentasController extends Component
         } else {
             $this->expirationNueva = $this->expirationActual;
         }
-
+        /* CALCULAR LOS DIAS SEGUN LOS MESES QUE PONGA EL USUARIO PARA RENOVAR CON EL PROVEEDOR */
         if ($this->start_account_new) {
-            if ($this->meses > 0) {
-                $dias = $this->meses * 30;
+            if ($this->meseRenovarProv > 0) {
+                $dias = $this->meseRenovarProv * 30;
                 $this->expiration_account_new = strtotime('+' . $dias . ' day', strtotime($this->start_account_new));
                 $this->expiration_account_new = date('Y-m-d', $this->expiration_account_new);
             } else {
@@ -461,7 +463,7 @@ class CuentasController extends Component
             ->extends('layouts.theme.app')
             ->section('content');
     }
-    
+
     public function AccionesCuenta(Account $cuenta)
     {
         $this->resetUI();
@@ -475,7 +477,7 @@ class CuentasController extends Component
         $cuenta = Account::find($this->selected_id);
         $this->start_account = $cuenta->start_account;
         $this->expiration_account = $cuenta->expiration_account;
-        $this->meses = 1;
+        $this->meseRenovarProv = 1;
         $this->email_id = $cuenta->Correo->content;
         $this->number_profiles = $cuenta->number_profiles;
         $this->price = $cuenta->price;
@@ -505,7 +507,7 @@ class CuentasController extends Component
         $fecha30diasdespues = date('Y-m-d', $fecha30diasdespues);
 
         $this->validate($rules, $messages);
-        $this->price /= $this->meses;
+        $this->price /= $this->meseRenovarProv;
         $cuenta = Account::find($this->selected_id);
 
         $cuenta->update([
@@ -514,10 +516,10 @@ class CuentasController extends Component
             'number_profiles' => $this->number_profiles,
             'password_account' => $this->password_account,
             'price' => $this->price,
-            'meses_comprados' => $this->meses,
+            'meses_comprados' => $this->meseRenovarProv,
         ]);
 
-        for ($i = 0; $i < $this->meses; $i++) {
+        for ($i = 0; $i < $this->meseRenovarProv; $i++) {
             if ($i == 0) {
                 CuentaInversion::create([
                     'start_date' => $this->start_account_new,
@@ -608,23 +610,57 @@ class CuentasController extends Component
                 'status' => $this->estado,
                 'whole_account' => 'ENTERA',
                 'number_profiles' => $this->number_profiles,
+                'account_name' => $this->nombre_cuenta,
                 'password_account' => $this->password_account,
                 'price' => $this->price,
+                'meses_comprados' => $this->mesesComprar,
                 'str_supplier_id' => $this->proveedor,
                 'platform_id' => $this->platform_id,
                 'email_id' => $this->email_id,
             ]);
             
-            CuentaInversion::create([
-                'start_date' => $this->start_account,
-                'expiration_date' => $this->expiration_account,
-                'price' => $this->price,
-                'number_profiles' => $this->number_profiles,
-                'sale_profiles' => 0,
-                'imports' => 0,
-                'ganancia' => 0,
-                'account_id' => $acc->id,
-            ]);
+            $this->price /= $this->mesesComprar;
+            $dias = 30;
+            $fecha30diasdespues = strtotime('+' . $dias . ' day', strtotime($this->start_account));
+            $fecha30diasdespues = date('Y-m-d', $fecha30diasdespues);
+            for ($i = 0; $i < $this->mesesComprar; $i++) {
+                if ($i == 0) {
+                    CuentaInversion::create([
+                        'start_date' => $this->start_account,
+                        'expiration_date' => $fecha30diasdespues,
+                        'price' => $this->price,
+                        'number_profiles' => $this->number_profiles,
+                        'sale_profiles' => 0,
+                        'imports' => 0,
+                        'ganancia' => 0,
+                        'account_id' => $acc->id,
+                    ]);
+                } else {
+                    if ($i == 1) {
+                        $this->start_account = strtotime('+' . 1 . ' day', strtotime($fecha30diasdespues));
+                        $this->start_account = date('Y-m-d', $this->start_account);
+                    } else {
+                        $this->start_account = strtotime('+' . 1 . ' day', strtotime($this->expiration_account));
+                        $this->start_account = date('Y-m-d', $this->start_account);
+                    }
+                    $dias = 30;
+
+                    $this->expiration_account = strtotime('+' . $dias . ' day', strtotime($this->start_account));
+                    $this->expiration_account = date('Y-m-d', $this->expiration_account);
+
+                    CuentaInversion::create([
+                        'start_date' => $this->start_account,
+                        'expiration_date' => $this->expiration_account,
+                        'price' => $this->price,
+                        'number_profiles' => $this->number_profiles,
+                        'sale_profiles' => 0,
+                        'imports' => 0,
+                        'ganancia' => 0,
+                        'account_id' => $acc->id,
+                    ]);
+                }
+            }
+
 
             $correo = Email::find($this->email_id);
             $correo->availability = 'OCUPADO';
@@ -884,14 +920,25 @@ class CuentasController extends Component
             ]);
 
             if ($this->tipopago == 'EFECTIVO') {
-                $carteraTigo = Cartera::where('tipo', 'TigoStreaming')
+
+                $cajaFisica = Cartera::where('tipo', 'CajaFisica')
                     ->where('caja_id', $CajaActual->id)->get()->first();
                 CarteraMov::create([
                     'type' => 'INGRESO',
                     'comentario' => '',
-                    'cartera_id' => $carteraTigo->id,
+                    'cartera_id' => $cajaFisica->id,
                     'movimiento_id' => $mv->id
                 ]);
+
+                $tigoStreaming = Cartera::where('tipo', 'TigoStreaming')
+                    ->where('caja_id', '1')->get()->first();
+                CarteraMov::create([
+                    'type' => 'INGRESO',
+                    'comentario' => '',
+                    'cartera_id' => $tigoStreaming->id,
+                    'movimiento_id' => $mv->id
+                ]);
+
                 $carteraTelefono = Cartera::where('tipo', 'Telefono')
                     ->where('caja_id', $CajaActual->id)->get()->first();
                 CarteraMov::create([
@@ -900,13 +947,22 @@ class CuentasController extends Component
                     'cartera_id' => $carteraTelefono->id,
                     'movimiento_id' => $mv->id
                 ]);
+            } elseif ($this->tipopago == 'Banco') {
+                $banco = Cartera::where('tipo', 'Banco')
+                    ->where('caja_id', '1')->get()->first();
+                CarteraMov::create([
+                    'type' => 'INGRESO',
+                    'comentario' => '',
+                    'cartera_id' => $banco->id,
+                    'movimiento_id' => $mv->id
+                ]);
             } else {
-                $cartera = Cartera::where('tipo', $this->tipopago)
+                $tigomoneyCaja = Cartera::where('tipo', 'Telefono')
                     ->where('caja_id', $CajaActual->id)->get()->first();
                 CarteraMov::create([
                     'type' => 'INGRESO',
                     'comentario' => '',
-                    'cartera_id' => $cartera->id,
+                    'cartera_id' => $tigomoneyCaja->id,
                     'movimiento_id' => $mv->id
                 ]);
             }
