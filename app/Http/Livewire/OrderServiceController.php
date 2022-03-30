@@ -33,7 +33,8 @@ class OrderServiceController extends Component
         $detalle1, $falla_segun_cliente, $nombreCliente, $celular, $usuarioId,
         $typew, $typeworkid, $catprodservid, $diagnostico, $solucion, $hora_entrega, $proceso,
         $terminado, $costo, $detalle_costo, $nombreUsuario, $modificar, $type_service, $movimiento,
-        $opciones, $tipopago, $dateFrom, $dateTo, $reportType, $userId, $estado;
+        $opciones, $tipopago, $dateFrom, $dateTo, $reportType, $userId, $estado, $mostrar,
+        $mostrarEliminar;
 
     private $pagination = null;
     public function paginationView()
@@ -138,6 +139,8 @@ class OrderServiceController extends Component
                     ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
                     ->join('clientes as c', 'c.id', 'cliemov.cliente_id')                    
                     ->where('mov.status', 'ACTIVO')
+                    ->orWhere('mov.status', 'INACTIVO')
+                    ->where('mov.type', 'ANULADO')
                     ->select('order_services.*')
                     ->orderBy('order_services.id', 'desc')
                     ->distinct()
@@ -152,7 +155,7 @@ class OrderServiceController extends Component
                     ->orderBy('order_services.id', 'desc')
                     ->distinct()
                     ->paginate($this->pagination);
-                    dd($orderservices);
+                
             } 
             elseif ($this->opciones != 'fechas') { 
                 $orderservices = OrderService::join('services as s', 'order_services.id', 's.order_service_id')
@@ -612,7 +615,21 @@ class OrderServiceController extends Component
     public function VerOpciones($id)
     {
         $this->orderservice = $id;
-
+        $orders=OrderService::find($id);
+        $this->mostrar =0;
+        $this->mostrarEliminar = 0;
+        
+        foreach($orders->services as $servic)
+        foreach($servic->movservices as $mms)
+        if(($mms->movs->type == 'PENDIENTE'  && $mms->movs->status == 'ACTIVO') || ($mms->movs->type == 'PROCESO' && $mms->movs->status == 'ACTIVO'))
+        {
+            $this->mostrar =1;
+            $this->mostrarEliminar = 1;
+        }
+        elseif($mms->movs->type == 'ANULADO'){
+            $this->mostrarEliminar = 1;
+        }
+        
         $this->emit('show-options', 'show modal!');
     }
 
@@ -643,7 +660,7 @@ class OrderServiceController extends Component
                 ]);
             }
         }
-
+        
         $this->resetUI();
         $this->emit('detail-hide-msg', 'Servicio Actualizado');
     }
@@ -711,12 +728,12 @@ class OrderServiceController extends Component
 
     public function CambioProceso(Service $service)
     {
-
+        $this->GuardarCambio($service);
         foreach ($service->movservices as $servmov) {
 
             if ($servmov->movs->status == 'ACTIVO' && $servmov->movs->type == 'PROCESO') {
                 $movimiento = $servmov->movs;
-
+                
                 DB::beginTransaction();
                 try {
                     if (Auth::user()->hasPermissionTo('Orden_Servicio_Index')) {
@@ -742,7 +759,8 @@ class OrderServiceController extends Component
                     $movimiento->update([
                         'status' => 'INACTIVO'
                     ]);
-                    $this->GuardarCambio($service);
+                    
+                    
                     $this->resetUI();
                     $this->emit('product-added', 'Servicio Terminado');
                 } catch (Exception $e) {
@@ -755,7 +773,7 @@ class OrderServiceController extends Component
 
     public function CambioTerminado(Service $service)
     {
-
+        $this->GuardarCambio($service);
         foreach ($service->movservices as $servmov) {
 
             if ($servmov->movs->status == 'ACTIVO' && $servmov->movs->type == 'TERMINADO') {

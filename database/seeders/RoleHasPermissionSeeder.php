@@ -15,7 +15,7 @@ class RoleHasPermissionSeeder extends Seeder
      */
     public function run()
     {
-        for ($x = 1; $x <= 44; $x++) {
+        for ($x = 1; $x <= 46; $x++) {
             RoleHasPermissions::create([
                 'permission_id' => $x,
                 'role_id' => 1,
@@ -46,7 +46,7 @@ class RoleHasPermissionSeeder extends Seeder
                 'role_id' => 2,
             ]);
         }
-        for ($x = 32; $x <= 43; $x++) {     /* PERMISOS SERVICIOS ROL SUPERVISOR*/
+        for ($x = 32; $x <= 44; $x++) {     /* PERMISOS SERVICIOS ROL SUPERVISOR*/
             if($x != 39 && $x != 40){
                 RoleHasPermissions::create([
                     'permission_id' => $x,

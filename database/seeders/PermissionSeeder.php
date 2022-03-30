@@ -192,8 +192,16 @@ class PermissionSeeder extends Seeder
             'name' => 'Boton_Entregar_Servicio',
             'guard_name' => 'web'
         ]);
-        Permission::create([    /* PERMITIR MODIFICAR Y ELIMINAR EL SERVICIO */
+        Permission::create([    /* PERMITIR VER BOTONES MODIFICAR ANULAR Y ELIMINAR EL SERVICIO */
             'name' => 'Ver_Modificar_Eliminar_Servicio',
+            'guard_name' => 'web'
+        ]);
+        Permission::create([    /* PERMITIR ANULAR EL SERVICIO */
+            'name' => 'Anular_Servicio',
+            'guard_name' => 'web'
+        ]);
+        Permission::create([    /* PERMITIR ELIMINAR EL SERVICIO */
+            'name' => 'Eliminar_Servicio',
             'guard_name' => 'web'
         ]);
 

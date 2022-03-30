@@ -19,29 +19,35 @@
                                 </div>
                             </div>
                             @if(@Auth::user()->hasPermissionTo('Ver_Modificar_Eliminar_Servicio'))
-                            <div class="col-lg-12 col-sm-12 col-md-6">
-                                <div class="form-group">
-                                    <span data-dismiss="modal" wire:click.prevent="EditService({{$orderservice}})" 
-                                    class="badge badge-success" style="font-size: 115%"
-                                    data-dismiss="modal">Modificar Servicio</span>
+                                <div class="col-lg-12 col-sm-12 col-md-6">
+                                    <div class="form-group">
+                                        <span data-dismiss="modal" wire:click.prevent="EditService({{$orderservice}})" 
+                                        class="badge badge-success" style="font-size: 115%"
+                                        data-dismiss="modal">Modificar Servicio</span>
+                                    </div>
                                 </div>
-                            </div>
-                            
-                            @if($opciones == 'PENDIENTE'||$opciones == 'PROCESO')
-                            <div class="col-lg-12 col-sm-12 col-md-6">
-                                <div class="form-group">
-                                    <span data-dismiss="modal" wire:click.prevent="VerAnular({{$orderservice}})" 
-                                    class="badge badge-warning" style="font-size: 115%">Anular Servicio</span>
-                                </div>
-                            </div>
-        
-                            <div class="col-lg-12 col-sm-12 col-md-6">
-                                <div class="form-group">
-                                    <span data-dismiss="modal" wire:click.prevent="VerEliminar({{$orderservice}})" 
-                                    class="badge badge-danger" style="font-size: 115%">Eliminar Servicio</span>
-                                </div>
-                            </div>
-                            @endif
+                                    {{-- Este $mostrar es del controlador en el método VerOpciones --}}
+                                    @if($mostrar)
+                                        @if(@Auth::user()->hasPermissionTo('Anular_Servicio'))
+                                            <div class="col-lg-12 col-sm-12 col-md-6">
+                                                <div class="form-group">
+                                                    <span data-dismiss="modal" wire:click.prevent="VerAnular({{$orderservice}})" 
+                                                    class="badge badge-warning" style="font-size: 115%">Anular Servicio</span>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    @endif
+                                    {{-- Este $mostrarEliminar es del controlador en el método VerOpciones --}}
+                                    @if($mostrarEliminar)
+                                        @if(@Auth::user()->hasPermissionTo('Eliminar_Servicio'))
+                                            <div class="col-lg-12 col-sm-12 col-md-6">
+                                                <div class="form-group">
+                                                    <span data-dismiss="modal" wire:click.prevent="VerEliminar({{$orderservice}})" 
+                                                    class="badge badge-danger" style="font-size: 115%">Eliminar Servicio</span>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    @endif
                             @endif
                         </div>
                     </div>
