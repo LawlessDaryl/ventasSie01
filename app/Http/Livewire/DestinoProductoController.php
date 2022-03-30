@@ -101,7 +101,7 @@ class DestinoProductoController extends Component
                                     
 
         return view('livewire.destino_producto.destino-controller',['destinos_almacen'=>$almacen,'data_suc' =>  $sucursal_ubicacion->get(),
-        'cart' => Transferencia::getContent(),'data_cat'=>Category::get()
+        'cart' => Transferencia::getContent(),'data_cat'=>Category::select('categories.name')->where('categories.categoria_padre','0')->get()
         ])  
         ->extends('layouts.theme.app')
         ->section('content');
