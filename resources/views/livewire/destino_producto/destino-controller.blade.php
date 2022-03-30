@@ -86,8 +86,8 @@
                              @else
                                <p class="card-text"> <strong> Stock Disponible:</strong> {{$destino->stock}}</p>
                                <p class="card-text"> <strong>Mobilirio ubicacion</strong> {{$destino->tipo}}-{{$destino->codigo}}</p>
-                               @endif
-                               <button class="btn btn-success" style="padding: 10px">Transferir</button>
+                             @endif
+                               <button wire:click="increaseQty({{$destino->id_prod}})" class="btn btn-success" style="padding: 10px">Transferir</button>
                              </div>
                            </div>
                            
@@ -156,14 +156,19 @@
                             </div>
                         
                     </div>
+                    <div class="col-12 col-lg-8 col-md-3">
+        
+                        <div class="form-group">
+                            <button class="btn btn-danger" style="padding: 10px">Registrar Transferencia</button>
+                        </div>
+                    </div>
                     </div>
                   
-                
-            
             </div>
-
          
         </div>
+      
     </div>
     @include('livewire.destino_producto.form')
+  
 </div>

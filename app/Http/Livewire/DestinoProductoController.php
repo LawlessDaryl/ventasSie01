@@ -22,7 +22,7 @@ class DestinoProductoController extends Component
     
     use WithPagination;
 
-    public $selected_id,$selected_ubicacion,$componentName,$title,$itemsQuantity;
+    public $selected_id,$search,$selected_p,$selected_ubicacion,$componentName,$title,$itemsQuantity;
     private $pagination = 10;
     public function paginationView()
     {
@@ -38,20 +38,8 @@ class DestinoProductoController extends Component
 
         //$this->itemsQuantity = Cart::getTotalQuantity();
         $quantity= Transferencia::getTotalQuantity();
-        $compras = app('transferencias');
-        $compras->getContent();
-
- 
-     
-
-    
-
-
-
+      
     }
-
-
-  
 
     public function render()
     {
@@ -74,7 +62,7 @@ class DestinoProductoController extends Component
                                         ->join('locations as loc','loc.id','productos_destinos.location_id')
                                         ->join('destinos as dest','dest.id','loc.destino_id')
                                         
-                                        ->select('productos_destinos.*','loc.*','p.nombre as name','loc.tipo as type','dest.nombre as nombre_destino')
+                                        ->select('productos_destinos.*','loc.*','p.nombre as name','loc.tipo as type','dest.nombre as nombre_destino','p.id as id_prod')
                                     
                                         ->where('dest.id',$this->selected_id)
                                         ->orderBy('p.nombre','desc')
@@ -106,9 +94,8 @@ class DestinoProductoController extends Component
         ->extends('layouts.theme.app')
         ->section('content');
     }
-    public function increaseQty($productId, $cant = 1,$precio_compra = 2)
+    public function increaseQty($productId, $cant = 1,$precio_compra = 0)
     {
-       
         $title = 'aaa';
         $product = Product::select('products.id','products.nombre as name')
         ->where('products.id',$productId)->first();
@@ -123,14 +110,14 @@ class DestinoProductoController extends Component
         Transferencia::add($product->id, $product->name, $precio_compra, $cant);
 
         
-        $this->total = Transferencia::getTotal();
+      
         $this->itemsQuantity = Transferencia::getTotalQuantity();
         $this->emit('scan-ok', $title);
-         $this->total_compra = Transferencia::getTotal();
+       
 
     }
 
-    public function UpdateQty($productId, $cant = 3)
+    public function UpdateQty($productId, $cant =1)
     {
         $title = '';
         $product = Product::select('products.id','products.nombre as name')
@@ -152,10 +139,10 @@ class DestinoProductoController extends Component
           
             Transferencia::add($product->id, $product->name,$prices, $cant);
           
-            $this->total = Transferencia::getTotal();
+          
             $this->itemsQuantity = Transferencia::getTotalQuantity();
             $this->emit('scan-ok', $title);
-            $this->total_compra = Transferencia::getTotal();
+          
 
 
 
@@ -165,10 +152,10 @@ class DestinoProductoController extends Component
     {
         Transferencia::remove($productId);
 
-        $this->total = Transferencia::getTotal();
+        
         $this->itemsQuantity = Transferencia::getTotalQuantity();
         $this->emit('scan-ok', 'Producto eliminado');
-        $this->total_compra = Transferencia::getTotal();
+  
     }
 
     public function resetUI()
