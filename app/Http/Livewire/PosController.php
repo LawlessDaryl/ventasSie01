@@ -16,7 +16,9 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 //Modulo para buscar clientes en las ventas
 use App\Models\Cliente;
-
+use App\Models\Notificacion;
+use App\Models\NotificacionUsuario;
+use App\Models\User;
 use Darryldecode\Cart\Facades\CartFacade as Cart;
 use Exception;
 use Illuminate\Support\Facades\Redirect;
@@ -712,6 +714,33 @@ class PosController extends Component
         $productotiendaid->update([
             'stock' => $productotiendaid->stock + $this->cantidadToTienda
         ]);
+
+
+
+
+
+        //Notificando al Administrador el Movimiento del Inventario
+
+        //Creando Notificacion
+        $idNotificacion = Notificacion::create([
+            'nombrenotificacion' => "MOVIMIENTO DE INVENTARIO",
+            'mensaje' => 'Usuario: Emanuel',
+        ]);
+        //Obteniendo los Ids de los Administradores
+        $idUsuarios[] = User::select("users.id as id","users.name as nombre","users.profile as rol")
+        ->where("users.profile", 'ADMIN')->get()->first();
+        
+        //Notificando a todos los Administradores
+        foreach ($idUsuarios as $item)
+        {
+            NotificacionUsuario::create([
+                'user_id' => $item->id,
+                'notificacion_id' => $idNotificacion->id
+            ]);
+        }
+
+
+
 
 
         //Añadimos al Carrito
