@@ -2,7 +2,7 @@
     <header class="header navbar navbar-expand-sm 3838" style="background: #383838;">
         <ul class="navbar-item flex-row">
             <li class="nav-item theme-logo">
-                <a href="inicio">
+                <a href="{{url('inicio')}}">
                     <img src="assets/img/sie.png" class="navbar-logo" alt="logo">
                 </a>
             </li>
