@@ -643,6 +643,7 @@ class CuentasController extends Component
                         $this->start_account = strtotime('+' . 1 . ' day', strtotime($this->expiration_account));
                         $this->start_account = date('Y-m-d', $this->start_account);
                     }
+                    
                     $dias = 30;
 
                     $this->expiration_account = strtotime('+' . $dias . ' day', strtotime($this->start_account));
