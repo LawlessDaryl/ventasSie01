@@ -1,22 +1,28 @@
 <?php
 
 namespace App\Http\Livewire;
+
 use App\Models\Category;
+use App\Models\Compra as ModelsCompra;
 use App\Models\Destino;
+use App\Models\Location;
 use App\Models\Product;
 use App\Models\ProductosDestino;
+use App\Models\Sucursal;
+
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
 
 
+use Darryldecode\Cart\Facades\TransferenciasFacade as Transferencia;
 
-class DestinoProductoController extends Component
+class TransferirProductoController extends Component
 {
     
     use WithPagination;
 
-    public $selected_id,$search,$selected_ubicacion,$componentName,$title;
+    public $selected_id,$search,$selected_p,$selected_ubicacion,$componentName,$title,$itemsQuantity;
     private $pagination = 10;
     public function paginationView()
     {
@@ -30,7 +36,8 @@ class DestinoProductoController extends Component
         $this->title='ssss';
       
 
-     
+        //$this->itemsQuantity = Cart::getTotalQuantity();
+        $quantity= Transferencia::getTotalQuantity();
       
     }
 
@@ -81,12 +88,81 @@ class DestinoProductoController extends Component
 
                                     
 
-        return view('livewire.destino_producto.almacen_productos',['destinos_almacen'=>$almacen,'data_suc' =>  $sucursal_ubicacion->get(),
-        'data_cat'=>Category::select('categories.name')->where('categories.categoria_padre','0')->get()
+        return view('livewire.destino_producto.destino-controller',['destinos_almacen'=>$almacen,'data_suc' =>  $sucursal_ubicacion->get(),
+        'cart' => Transferencia::getContent(),'data_cat'=>Category::select('categories.name')->where('categories.categoria_padre','0')->get()
         ])  
         ->extends('layouts.theme.app')
         ->section('content');
     }
-    
+    public function increaseQty($productId, $cant = 1,$precio_compra = 0)
+    {
+        $title = 'aaa';
+        $product = Product::select('products.id','products.nombre as name')
+        ->where('products.id',$productId)->first();
+       
+        $exist = Transferencia::get($product->id);
+        if ($exist) {
+            $title = 'Cantidad actualizada';
+        } else {
+            $title = "Producto agregado";
+        }
+
+        Transferencia::add($product->id, $product->name, $precio_compra, $cant);
+
+        
+      
+        $this->itemsQuantity = Transferencia::getTotalQuantity();
+        $this->emit('scan-ok', $title);
+       
+
+    }
+
+    public function UpdateQty($productId, $cant =1)
+    {
+        $title = '';
+        $product = Product::select('products.id','products.nombre as name')
+        ->where('products.id',$productId)->first();
+       
+        $exist = Transferencia::get($productId);
+        $prices=$exist->price;
+       
+        if ($exist) {
+            $title = "cantidad actualizada";
+        } else {
+            $title = "producto agregado";
+        }
+       
+        $this->removeItem($productId);
+       
+        if ($cant > 0) {
+
+          
+            Transferencia::add($product->id, $product->name,$prices, $cant);
+          
+          
+            $this->itemsQuantity = Transferencia::getTotalQuantity();
+            $this->emit('scan-ok', $title);
+          
+
+
+
+        }
+    }
+    public function removeItem($productId)
+    {
+        Transferencia::remove($productId);
+
+        
+        $this->itemsQuantity = Transferencia::getTotalQuantity();
+        $this->emit('scan-ok', 'Producto eliminado');
+  
+    }
+
+    public function resetUI()
+    {
+        $this->nombre = '';
+        $this->selected_id=0;
+       
+    }
 
 }

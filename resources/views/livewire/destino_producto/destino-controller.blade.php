@@ -3,15 +3,9 @@
         <div class="widget widget-chart-one">
             <div class="widget-heading">
                 <h4 class="card-title">
-                    <b>Destino Producto</b>
+                    <b>Transferir Producto</b>
                 </h4>
-                <ul class="tabs tab-pills">
-                    
-                        <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
-                        data-target="#theModal">Transferir <br/>Productos</a>
-                      
-                    
-                </ul>
+              
             </div>
           
 
@@ -37,19 +31,6 @@
                           <option value="{{ $data->id }}">{{ $data->sucursal }}-{{$data->destino}}</option>
                           @endforeach
                          
-                         
-                        </select>
-                      </div>
-                </div>
-                <div class="col-12 col-lg-2 col-md-3">
-
-                    <div class="form-group">
-                        <select wire:model='selected_categoria' class="form-control">
-                          <option value="null">Elegir Categoria</option>
-                          @foreach ($data_cat as $data)
-                          <option value="{{ $data->id }}">{{ $data->name}}</option>
-                          @endforeach
-                       
                          
                         </select>
                       </div>
@@ -159,7 +140,13 @@
                     <div class="col-12 col-lg-8 col-md-3">
         
                         <div class="form-group">
-                            <button class="btn btn-danger" style="padding: 10px">Registrar Transferencia</button>
+                            <button class="btn btn-primary" style="padding:4px">Finalizar<br/>Transferencia</button>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-8 col-md-3">
+        
+                        <div class="form-group">
+                            <button class="btn btn-danger" style="padding:4px">Cancelar</button>
                         </div>
                     </div>
                     </div>

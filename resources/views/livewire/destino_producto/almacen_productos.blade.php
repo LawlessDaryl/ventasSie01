@@ -7,8 +7,7 @@
                 </h4>
                 <ul class="tabs tab-pills">
                     
-                        <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
-                        data-target="#theModal">Transferir <br/>Productos</a>
+                        <a href="transferencia" class="btn btn-dark" >Transferir <br/>Productos</a>
                       
                     
                 </ul>
@@ -63,7 +62,7 @@
                       
                         <div class="card border-success" style="width: 13rem; margin:0.1rem">
                         
-                            <div class="card-header"><h5> {{$destino->name}}</h5></div>
+                            <div class="card-header"><h6> {{$destino->name}}</h6></div>
                             <div class="card-body text-success">
 
                              {{--<h5 class="card-title">{{$destino->tipo}}-{{$destino->codigo}}</h5>--}} 
@@ -74,7 +73,6 @@
                                <p class="card-text"> <strong> Stock Disponible:</strong> {{$destino->stock}}</p>
                                <p class="card-text"> <strong>Mobilirio ubicacion</strong> {{$destino->tipo}}-{{$destino->codigo}}</p>
                              @endif
-                               <button wire:click="increaseQty({{$destino->id_prod}})" class="btn btn-success" style="padding: 10px">Transferir</button>
                              </div>
                            </div>
                            
@@ -82,11 +80,6 @@
                       @endforeach
 
                     </div>
-
-                    {{--AREA DE TRANSFERENCIAS DE PRODUCTOS--}}
-
-
-                
                     </div>
                   
             </div>

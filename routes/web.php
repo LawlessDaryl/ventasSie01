@@ -56,6 +56,7 @@ use App\Http\Livewire\TransaccionesController;
 use App\Http\Livewire\TypeWorkController;
 use App\Http\Livewire\UnidadesController;
 use App\Http\Livewire\DestinoProductoController;
+use App\Http\Livewire\TransferirProductoController;
 use App\Http\Livewire\DestinoController;
 
 use Illuminate\Support\Facades\Auth;
@@ -140,6 +141,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('compras', ComprasController::class)->name('compras');
     Route::get('transacciones', TransaccionesController::class)->name('transactions');
     Route::get('destino_prod', DestinoProductoController::class)->name('destination');
+    Route::get('transferencia', TransferirProductoController::class)->name('destination');
     Route::get('destino', DestinoController::class)->name('dest');
 
     /* VENTAS */
