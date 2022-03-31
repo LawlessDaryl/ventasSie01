@@ -718,13 +718,17 @@ class PosController extends Component
 
 
 
-
+        //Obteniendo el nombre del Usuario
+        $nombreusuario = User::select("users.id as id","users.name as nombre","users.profile as rol")
+        ->where("users.id", Auth()->user()->id)
+        ->get()
+        ->first();
         //Notificando al Administrador el Movimiento del Inventario
-
+        
         //Creando Notificacion
         $idNotificacion = Notificacion::create([
             'nombrenotificacion' => "MOVIMIENTO DE INVENTARIO",
-            'mensaje' => 'Usuario: Emanuel',
+            'mensaje' => 'Usuario: '.$nombreusuario->nombre.' movio '.$this->cantidadToTienda.' unidade(s) del producto '.$productotiendaid->name,
         ]);
         //Obteniendo los Ids de los Administradores
         $idUsuarios[] = User::select("users.id as id","users.name as nombre","users.profile as rol")
