@@ -33,7 +33,8 @@ class CuentasController extends Component
         $perfiles, $correos, $selected, $start_account, $start_account_new, $expiration_account,
         $expiration_account_new, $password_account, $price, $mostrarCampos, $condicional, $meses, $meseRenovarProv,
         $expirationActual, $expirationNueva, $observations, $selected_plan, $correoCuenta, $passCuenta,
-        $nombreCliente, $celular, $observacionesTrans, $mostrarRenovar, $meses_comprados, $mesesComprar, $nombre_cuenta;
+        $nombreCliente, $celular, $observacionesTrans, $mostrarRenovar, $meses_comprados, $mesesComprar,
+        $nombre_cuenta, $mostrartabla2;
     private $pagination = 10;
     public function paginationView()
     {
@@ -79,6 +80,7 @@ class CuentasController extends Component
         $this->start_account_new = null;
         $this->expiration_account = null;
         $this->expiration_account_new = null;
+        $this->mostrartabla2 = 0;
     }
     public function render()
     {
@@ -618,7 +620,7 @@ class CuentasController extends Component
                 'platform_id' => $this->platform_id,
                 'email_id' => $this->email_id,
             ]);
-            
+
             $this->price /= $this->mesesComprar;
             $dias = 30;
             $fecha30diasdespues = strtotime('+' . $dias . ' day', strtotime($this->start_account));
@@ -643,7 +645,7 @@ class CuentasController extends Component
                         $this->start_account = strtotime('+' . 1 . ' day', strtotime($this->expiration_account));
                         $this->start_account = date('Y-m-d', $this->start_account);
                     }
-                    
+
                     $dias = 30;
 
                     $this->expiration_account = strtotime('+' . $dias . ' day', strtotime($this->start_account));
@@ -847,6 +849,7 @@ class CuentasController extends Component
 
         $this->emit('details2-show', 'show modal!');
     }
+
     public function Renovar()
     {
         $rules = [
@@ -991,6 +994,7 @@ class CuentasController extends Component
             $this->emit('item-error', 'ERROR' . $e->getMessage());
         }
     }
+
     public function Vencer()
     {
         /* OBTENER IDS */
@@ -1021,8 +1025,163 @@ class CuentasController extends Component
         $this->emit('cuenta-renovado-vencida', 'No se renovó esta cuenta y ahora esta libre');
     }
 
-    protected $listeners = ['deleteRow' => 'Destroy', 'borrarPerfil' => 'BorrarPerfil', 'Renovar' => 'Renovar', 'Vencer' => 'Vencer', 'Realizado' => 'Realizado'];
+    public function CambiarCuenta()
+    {
+        $this->mostrartabla2 = 1;
+        /* OBTENER LA PLATAFORMA DEL PERFIL */
+        $datos = Plan::join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
+            ->join('accounts as acc', 'acc.id', 'pa.account_id')
+            ->join('platforms as p', 'p.id', 'acc.platform_id')
+            ->select(
+                'p.id as platfid',
+                'acc.id as cuentaid'
+            )
+            ->where('plans.id', $this->selected_plan)
+            ->orderby('plans.id', 'desc')
+            ->get()->first();
+        $this->cuentasEnteras = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
+            ->join('emails as e', 'accounts.email_id', 'e.id')
+            ->select(
+                'accounts.*'
+            )
+            ->where('accounts.status', 'ACTIVO')
+            ->where('accounts.availability', 'LIBRE')
+            ->where('accounts.whole_account', 'ENTERA')
+            ->where('p.id', $datos->platfid)
+            ->get();
+        /* dd($this->cuentasEnteras); */
+    }
+    public function VerCuentas()
+    {
+        $this->emit('show-crearPerfil', 'show modal!');
+    }
 
+    public function SeleccionarCuenta(Account $cuenta)
+    {
+        $rules = [
+            'nombrePerfil' => 'required',
+            'pinPerfil' => 'required',
+
+        ];
+        $messages = [
+            'nombrePerfil.required' => 'El nombre del perfil es requerido',
+            'pinPerfil.required' => 'El pin es requerido',
+        ];
+
+        $this->validate($rules, $messages);
+
+        $perfil = Profile::create([
+            'nameprofile' => $this->nombrePerfil,
+            'pin' => $this->pinPerfil,
+            'status' => 'ACTIVO',
+            'availability' => 'LIBRE',
+            'observations' => '',
+        ]);
+        AccountProfile::create([
+            'status' => 'SinAsignar',
+            'account_id' => $cuenta->id,
+            'profile_id' => $perfil->id,
+        ]);
+        /* LA CUENTA PASA A DIVIDIDA */
+        $cuenta->whole_account = 'DIVIDIDA';
+        $cuenta->save();
+
+        $this->nombrePerfil = '';
+        $this->pinPerfil = '';
+
+        $plataforma = $perfil->CuentaPerfil->Cuenta->Plataforma->id;
+
+        $cuentaVieja = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
+            ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
+            ->join('accounts as acc', 'acc.id', 'pa.account_id')
+            ->select(
+                'acc.id as cuentaid',
+            )
+            ->where('plans.id', $this->selected_plan)
+            ->orderby('plans.id', 'desc')
+            ->get()->first();
+
+        $this->perfil = Profile::join('account_profiles as ap', 'ap.profile_id', 'profiles.id')
+            ->join('accounts as a', 'ap.account_id', 'a.id')
+            ->join('platforms as p', 'a.platform_id', 'p.id')
+            ->join('emails as e', 'a.email_id', 'e.id')
+            ->select(
+                'profiles.id as id',
+                'p.precioPerfil as precioPerfil',
+                'a.id as cuentaid',
+                'e.content as email',
+                'profiles.nameprofile as nombre_perfil',
+                'profiles.pin as pin',
+                'a.password_account as password_account'
+            )
+            ->where('profiles.availability', 'LIBRE')
+            ->where('profiles.status', 'ACTIVO')
+            ->where('a.status', 'ACTIVO')
+            ->orderBy('a.expiration_account', 'desc')
+            ->where('p.id', $plataforma)
+            ->where('a.id', '!=', $cuentaVieja->cuentaid)
+            ->get()->first();
+
+        $this->emit('crearperfil-cerrar', 'Se creó el perfil en la cuenta seleccionada');
+    }
+
+    protected $listeners = ['deleteRow' => 'Destroy', 'borrarPerfil' => 'BorrarPerfil', 'Renovar' => 'Renovar', 'Vencer' => 'Vencer', 'Realizado' => 'Realizado', 'CambiarAccount' => 'CambiarAccount'];
+
+    public function CambiarAccount(Account $cuenta)
+    {
+        /* DATOS DEL ANTERIOR PLAN */
+        $datos = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
+            ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
+            ->join('accounts as acc', 'acc.id', 'pa.account_id')
+            ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
+            ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
+            ->select(
+                'c.*',
+                'plans.id as planid',
+                'pa.id as planAccountid',
+                'acc.id as cuentaid',
+            )
+            ->where('plans.id', $this->selected_plan)
+            ->where('pa.status', 'ACTIVO')
+            ->orderby('pa.id', 'desc')
+            ->get()->first();
+        DB::beginTransaction();
+        try {
+            /* PONER EN NO LISTO LA ACCION */
+            $plan = Plan::find($datos->planid);
+            $plan->done = 'NO';
+            $plan->observations = $this->observations;
+            $plan->save();
+
+            /* OBTENER LA CUENTA NUEVA */
+            $CuentaNueva = Account::find($cuenta->id);
+            $CuentaNueva->availability = 'OCUPADO';
+            $CuentaNueva->save();
+
+            /* CAMBIAR A LIBRE LA CUENTA ANTERIOR */
+            $cuentaAnterior = Account::find($datos->cuentaid);
+            $cuentaAnterior->availability = 'LIBRE';
+            $cuentaAnterior->save();
+
+            /* PONER EN CAMBIADO EL PLAN-ACCOUNT */
+            $planAccountVIEJO = PlanAccount::find($datos->planAccountid);
+            $planAccountVIEJO->update([
+                'status' => 'CAMBIADO',
+            ]);
+            /* CREAR NUEVO PLAN-ACCOUNT */
+            PlanAccount::create([
+                'plan_id' => $datos->planid,
+                'account_id' => $CuentaNueva->id,
+            ]);
+
+            DB::commit();
+            $this->resetUI();
+            $this->emit('item-accion', 'Se cambio de cuenta');
+        } catch (Exception $e) {
+            DB::rollback();
+            $this->emit('item-error', 'ERROR' . $e->getMessage());
+        }
+    }
     public function Realizado(Plan $plan)
     {
         $plan->done = 'SI';

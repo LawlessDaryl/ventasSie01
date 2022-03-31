@@ -28,7 +28,7 @@ class PerfilesController extends Component
         $search, $selected_id, $pageTitle, $componentName, $condicional,
         $meses, $expirationNueva, $expirationActual, $tipopago, $importe,
         $mostrartabla2, $perfil, $selected_plan, $nombreCliente, $celular, $cuentasEnteras,
-        $nombrePerfil, $pinPerfil;
+        $nombrePerfil, $pinPerfil, $datos;
     private $pagination = 10;
     public function paginationView()
     {
@@ -679,6 +679,7 @@ class PerfilesController extends Component
         $this->resetUI();
         $this->emit('item-accion', 'No se renovó este perfil y ahora esta inactivo');
     }
+
     public function CambiarCuenta()
     {
         $this->mostrartabla2 = 1;
@@ -715,16 +716,36 @@ class PerfilesController extends Component
             ->where('a.id', '!=', $datos->cuentaid)
             ->get()->first();
         $this->cuentasEnteras = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
+            ->join('emails as e', 'accounts.email_id', 'e.id')
             ->select(
-                'accounts.*',
+                'accounts.id as id',
+                'accounts.expiration_account as expiration_account',
+                'accounts.number_profiles',
+                'p.nombre as nombre',
+                'e.content as content',
+                'e.pass as pass',
+                DB::raw('0 as perfActivos'),
+                DB::raw('0 as cantiadadQueSePuedeCrear'),
             )
-            ->where('accounts.whole_account', 'ENTERA')
-            ->where('accounts.availability', 'LIBRE')
             ->where('accounts.status', 'ACTIVO')
+            ->where('accounts.availability', 'LIBRE')
             ->where('p.id', $datos->platfid)
-            ->orderBy('accounts.expiration_account', 'desc')
             ->get();
+
+        foreach ($this->cuentasEnteras as $c) {
+            $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
+                ->join('profiles as p', 'ap.profile_id', 'p.id')
+                ->where('accounts.id', $c->id)
+                ->where('p.status', 'ACTIVO')->get();
+
+            $cantidadActivos = $perfilesActivos->count();
+            $c->perfActivos = $cantidadActivos;
+
+            $c->cantiadadQueSePuedeCrear = $c->number_profiles - $c->perfActivos;
+        }
+        /* dd($this->cuentasEnteras); */
     }
+
     public function VerCuentas()
     {
         $this->emit('show-crearPerfil', 'show modal!');
@@ -798,8 +819,6 @@ class PerfilesController extends Component
 
         $this->emit('crearperfil-cerrar', 'Se creó el perfil en la cuenta seleccionada');
     }
-
-    protected $listeners = ['deleteRow' => 'Destroy', 'Vencer' => 'Vencer', 'Renovar' => 'Renovar', 'CambiarAccount' => 'CambiarAccount', 'Realizado' => 'Realizado'];
 
     public function CambiarAccount(Profile $perf)
     {
@@ -906,6 +925,9 @@ class PerfilesController extends Component
             $this->emit('item-error', 'ERROR' . $e->getMessage());
         }
     }
+
+    protected $listeners = ['deleteRow' => 'Destroy', 'Vencer' => 'Vencer', 'Renovar' => 'Renovar', 'CambiarAccount' => 'CambiarAccount', 'Realizado' => 'Realizado'];
+
     public function Realizado(Plan $plan)
     {
         $plan->done = 'SI';

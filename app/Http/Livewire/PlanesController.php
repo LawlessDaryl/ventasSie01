@@ -388,10 +388,10 @@ class PlanesController extends Component
                     $cantidadActivos = $perfilesActivos->count();
                     $c->perfActivos = $cantidadActivos;
 
-                    $fecha_actual = date("Y-m-d");
+                    /* $fecha_actual = date("Y-m-d");
                     $s = strtotime($c->expiration_account) - strtotime($fecha_actual);
                     $d = intval($s / 86400);
-                    $c->dias = $d;
+                    $c->dias = $d; */
 
                     $c->cantiadadQueSePuedeCrear = $c->number_profiles - $c->perfActivos;
                 }

@@ -84,7 +84,8 @@
                                         </td>
                                         <td class="text-center"
                                             style="{{ $acounts->dias <= 5 ? 'background-color: #FF0000 !important' : 'background-color: #09ed3d !important' }}">
-                                            <a href="javascript:void(0)" wire:click="AccionesCuenta({{ $acounts->id }})"
+                                            <a href="javascript:void(0)"
+                                                wire:click="AccionesCuenta({{ $acounts->id }})"
                                                 class="btn btn-primary" title="Renovar">
                                                 {{ $acounts->expiration_account }}
                                             </a>
@@ -164,7 +165,8 @@
                                         </td>
                                         <td class="text-center"
                                             style="{{ $acounts->dias <= 5 ? 'background-color: #FF0000 !important' : 'background-color: #09ed3d !important' }}">
-                                            <a href="javascript:void(0)" wire:click="AccionesCuenta({{ $acounts->id }})"
+                                            <a href="javascript:void(0)"
+                                                wire:click="AccionesCuenta({{ $acounts->id }})"
                                                 class="btn btn-primary" title="Renovar">
                                                 {{ $acounts->expiration_account }}
                                             </a>
@@ -285,6 +287,14 @@
             $('#modal-details3').modal('hide')
             noty(msg)
         });
+
+        window.livewire.on('item-accion', msg => {
+            $('#modal-details2').modal('hide')
+            noty(msg)
+        });
+        window.livewire.on('item-error', msg => {
+            noty(msg)
+        });
         /* window.livewire.on('cuenta-renovado-vencida', msg => {
             $('#modal-details2').modal('hide')
             noty(msg)
@@ -378,6 +388,23 @@
                 swal.fire(
                     'Se renovó la cuenta ' + cuenta + ' por ' + meses + ' meses.'
                 )
+            }
+        })
+    }
+
+    function ConfirmCambiar(id, correo) {
+        swal.fire({
+            title: 'CONFIRMAR',
+            icon: 'warning',
+            text: '¿Esta seguro de cambiar a la cuenta ' + correo + ' ?',
+            showCancelButton: true,
+            cancelButtonText: 'Cerrar',
+            cancelButtonColor: '#383838',
+            confirmButtonColor: '#3B3F5C',
+            confirmButtonText: 'Aceptar'
+        }).then(function(result) {
+            if (result.value) {
+                window.livewire.emit('CambiarAccount', id)
             }
         })
     }

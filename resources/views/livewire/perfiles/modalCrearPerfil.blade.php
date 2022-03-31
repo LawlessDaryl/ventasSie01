@@ -39,24 +39,32 @@
                         <table class="table table-hover table-sm" style="width:100%">
                             <thead class="text-white" style="background: #3B3F5C">
                                 <tr>
-                                    <th class="table-th text-withe text-center">Cuenta</th>
-                                    <th class="table-th text-withe text-center">Expiración</th>
-                                    <th class="table-th text-withe text-center">Seleccionar
-                                    </th>
+                                    <th class="table-th text-withe text-center">Cuenta </th>
+                                    <th class="table-th text-withe text-center">Expiración </th>
+                                    <th class="table-th text-withe text-center">Num_Perf </th>
+                                    <th class="table-th text-withe text-center">Espacios </th>
+                                    <th class="table-th text-withe text-center">Seleccionar </th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($this->cuentasEnteras as $c)
+                                @foreach ($cuentasEnteras as $cue)
                                     <tr>
                                         <td class="text-center">
-                                            <h6 class="text-center">{{ $c->Correo->content }}</h6>
+                                            <h6 class="text-center">{{ $cue->content }}</h6>
                                         </td>
                                         <td class="text-center">
-                                            <h6 class="text-center">{{ $c->expiration_account }}</h6>
+                                            <h6 class="text-center">{{ $cue->number_profiles }}</h6>
+                                        </td>
+                                        <td class="text-center">
+                                            <h6 class="text-center">{{ $cue->expiration_account }}</h6>
+                                        </td>
+                                        <td class="text-center">
+                                            <h6 class="text-center">{{ $cue->cantiadadQueSePuedeCrear }}</h6>
                                         </td>
                                         <td class="text-center">
                                             <a href="javascript:void(0)" class="btn btn-dark"
-                                                wire:click.prevent="SeleccionarCuenta({{ $c->id }})">Crear aqui</a>
+                                                wire:click.prevent="SeleccionarCuenta({{ $cue->id }})">Crear
+                                                aqui</a>
                                         </td>
                                     </tr>
                                 @endforeach
