@@ -20,7 +20,7 @@
                         
                            <div class="row">
 
-                                <div class="col-12 col-md-3 col-lg-4" style="border-left: thick solid #b4b4b1;" >
+                                <div class="col-12 col-md-4 col-lg-4" style="border-left: thick solid #b4b4b1;" >
                                     <div class="col-lg-12">
                                         <div class="form-group">
                                             <strong>Proveedor</strong>
@@ -59,7 +59,7 @@
                                 </div>
 
 
-                                <div class="col-12 col-md-3 col-lg-4" style="border-left: thick solid #b4b4b1;" >
+                                <div class="col-12 col-md-4 col-lg-4" style="border-left: thick solid #b4b4b1;" >
                                     <div class="col-lg-12">
                                         <div class="form-group">
                                           <strong>Tipo de Documento:</strong>
@@ -88,7 +88,7 @@
                                 </div>
                              
 
-                                <div class="col-12 col-md-3 col-lg-4" style="border-left: thick solid #b4b4b1;" >
+                                <div class="col-12 col-md-4 col-lg-4" style="border-left: thick solid #b4b4b1;" >
 
                                     <div class="col-lg-12">
                                         <div class="form-group">
@@ -129,7 +129,7 @@
 
                <div class="widget-content">
                    <div class="row">
-                       <div class="col-4">
+                       <div class="col-lg-4 col-12 col-md-12">
                                <div class="widget ml-2 mt-2 mb-2 mr-0 p-2">
                                   
                                        <div class="input-group mb-4">
@@ -195,7 +195,7 @@
                            
                        </div>
                   
-                       <div class="col-8">
+                       <div class="col-lg-8 col-12  col-md-12">
                            <div class="widget mr-2 mb-2 mt-2">
                               
                                    <div class="table-responsive p-1">
