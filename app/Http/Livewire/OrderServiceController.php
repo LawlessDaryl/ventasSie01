@@ -127,7 +127,7 @@ class OrderServiceController extends Component
                     ->orWhere('s.marca', 'like', '%' . $this->search . '%')
                     ->orWhere('s.falla_segun_cliente', 'like', '%' . $this->search . '%')
                     ->orWhere('u.name', 'like', '%' . $this->search . '%')
-                    ->orWhere('mov.import', 'like', '%' . $this->search . '%')
+                    /* ->orWhere('mov.import', 'like', '%' . $this->search . '%') */
                     ->orderBy('order_services.id', 'desc')
                     ->distinct()
                     ->paginate($this->pagination);

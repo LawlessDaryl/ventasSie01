@@ -76,7 +76,7 @@
                             <tr>
                                 <th class="table-th text-withe text-center">#</th>
                                 <th class="table-th text-withe text-center">FECHAS</th>
-                                <th class="table-th text-withe text-center">HORAS</th>
+                                <th class="table-th text-withe text-center">TIEMPO</th>
                                 {{-- <th class="table-th text-withe text-center">MINUTOS</th> --}}
                                 <th class="table-th text-withe text-center">SERVICIO</th>
                                 <th class="table-th text-withe text-center">ESTADO</th>
@@ -180,7 +180,7 @@
                                                 <h6>{{ $d3->fecha_estimada_entrega }}</h6>
                                             </td>
                                             <td class="text-center">
-                                                <h6>Pasaron {{ $d3->dias }} días</h6>
+                                                <h6>{{ $mv3->movs->created_at }}</h6>
                                             </td>
                                         @endif
                                     @endforeach

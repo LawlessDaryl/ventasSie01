@@ -124,7 +124,7 @@
                             </tr>
                         </thead>
 
-
+                        {{-- Opcion de ANULADOS --}}
                         @if($opciones == 'ANULADO')
                         <tbody>
                             @foreach ($data as $item)
@@ -141,14 +141,11 @@
                                         <td width="62%">
 
                                             @foreach ($item->services as $key => $service)
-                                                @php
-                                                    foreach($service->movservices as $sms){
-                                                        $mytotal += $sms->movs->import;
-                                                        $myacuenta += $sms->movs->on_account;
-                                                        $mysaldo += $sms->movs->saldo;
-                                                    }
-                                                    
-                                                @endphp
+                                               {{--  @php
+                                                    $mytotal += $service->movservices[0]->movs->import;
+                                                    $myacuenta += $service->movservices[0]->movs->on_account;
+                                                    $mysaldo += $service->movservices[0]->movs->saldo;
+                                                @endphp --}}
                                                 <div class="col-sm-12 col-md-12">
                                                     <div class="row">
                                                         {{-- CLIENTE --}}
@@ -229,6 +226,11 @@
                                                         <br />
                                                     @endif
                                                 </div>
+                                                @php
+                                                    $mytotal += $mm->movs->import;
+                                                    $myacuenta += $mm->movs->on_account;
+                                                    $mysaldo += $mm->movs->saldo;
+                                                @endphp
                                             @endforeach
                                         </td>
                                         {{-- CODIGO --}}
@@ -298,11 +300,11 @@
                                         <td width="62%">
 
                                             @foreach ($item->services as $key => $service)
-                                                @php
+                                                {{-- @php
                                                     $mytotal += $service->movservices[0]->movs->import;
                                                     $myacuenta += $service->movservices[0]->movs->on_account;
                                                     $mysaldo += $service->movservices[0]->movs->saldo;
-                                                @endphp
+                                                @endphp --}}
                                                 <div class="col-sm-12 col-md-12">
                                                     <div class="row">
                                                         {{-- CLIENTE --}}
@@ -383,6 +385,13 @@
                                                         <br />
                                                     @endif
                                                 </div>
+
+                                                @php
+                                                $mytotal += $mm->movs->import;
+                                                $myacuenta += $mm->movs->on_account;
+                                                $mysaldo += $mm->movs->saldo;
+                                                @endphp
+
                                             @endforeach
                                         </td>
                                         {{-- CODIGO --}}
@@ -432,6 +441,7 @@
                                     </tr>
                                 @else
                                 {{-- Desde aqui se muestran TODOS los servicios sin los ANULADOS --}}
+                                {{-- Para los usuarios sin permisos de ANULAR --}}
                                 @if ($item->status == 'ACTIVO')
                                 <tr>
                                     {{-- # --}}
@@ -446,11 +456,11 @@
                                     <td width="62%">
 
                                         @foreach ($item->services as $key => $service)
-                                            @php
+                                            {{-- @php
                                                 $mytotal += $service->movservices[0]->movs->import;
                                                 $myacuenta += $service->movservices[0]->movs->on_account;
                                                 $mysaldo += $service->movservices[0]->movs->saldo;
-                                            @endphp
+                                            @endphp --}}
                                             <div class="col-sm-12 col-md-12">
                                                 <div class="row">
                                                     {{-- CLIENTE --}}
@@ -531,6 +541,11 @@
                                                     <br />
                                                 @endif
                                             </div>
+                                            @php
+                                                $mytotal += $mm->movs->import;
+                                                $myacuenta += $mm->movs->on_account;
+                                                $mysaldo += $mm->movs->saldo;
+                                            @endphp
                                         @endforeach
                                     </td>
                                     {{-- CODIGO --}}
