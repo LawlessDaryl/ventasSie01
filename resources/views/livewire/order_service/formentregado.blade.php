@@ -152,7 +152,8 @@
 
             <div class="modal-footer">
                 <button type="button" wire:click.prevent="GuardarCambio({{$service1}})"
-                    class="btn btn-dark close-btn text-info">REGISTRAR INFORMACIÓN</button>
+                    class="btn btn-dark close-btn text-info"
+                    data-dismiss="modal" style="background: #3b3f5c">REGISTRAR INFORMACIÓN</button>
                 <button type="button" wire:click.prevent="resetUI()" class="btn btn-dark close-btn text-info"
                     data-dismiss="modal" style="background: #3b3f5c">CANCELAR</button>
             </div>

@@ -115,8 +115,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('telefonos', PhonesController::class)->name('telefonos');
     Route::get('modulos', ModulosController::class)->name('modulos');
 
-
-
     /* INVENTARIOS */
     Route::get('categories', CategoriesController::class)->name('categorias');
     Route::get('products', ProductsController::class)->name('productos');

@@ -106,12 +106,9 @@ class InicioController extends Component
             } else {
                 $orderservices = Service::join('order_services as os', 'os.id', 'services.order_service_id')
                     ->join('mov_services as ms', 'services.id', 'ms.service_id')
-                    ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
-                    ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
+                    
                     ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                    ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                    ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
-                    ->join('users as u', 'u.id', 'mov.user_id')
+                    
                     ->select(
                         'services.*',
                         DB::raw('0 as horas')/* ,
@@ -135,7 +132,7 @@ class InicioController extends Component
                     }
                 }
             }
-        }elseif ($this->condicional == 'Abandonados') {
+        }elseif ($this->condicional == 'Terminados') {
             
             if ($this->catprodservid != 'Todos') {
                 
@@ -151,7 +148,8 @@ class InicioController extends Component
                         'services.*',
                         DB::raw('0 as dias')
                     )
-                    ->where('mov.type', 'ABANDONADO')
+                    ->where('mov.type', 'TERMINADO')
+                    ->where('mov.user_id', Auth()->user()->id)
                     ->where('mov.status', 'ACTIVO')
                     ->where('cat.id', $this->catprodservid)
                     ->where('os.status', 'ACTIVO')
@@ -163,7 +161,7 @@ class InicioController extends Component
                         $date2 = new DateTime("now");
                         $diff = $date2->diff($date1);
                         if ($diff->invert == 1) {
-                            $c->dias = (($diff->days)) + ($diff->d) . ' días';
+                            $c->dias = (($diff->days)) + ($diff->d);
                         }
                     }
             } else {
@@ -181,7 +179,8 @@ class InicioController extends Component
                         DB::raw('0 as dias')/* ,
                         DB::raw('0 as minutos') */
                     )
-                    ->where('mov.type', 'ABANDONADO')
+                    ->where('mov.type', 'TERMINADO')
+                    ->where('mov.user_id', Auth()->user()->id)
                     ->where('mov.status', 'ACTIVO')
                     ->where('os.status', 'ACTIVO')
                     ->orderBy('services.fecha_estimada_entrega', 'asc')
@@ -194,7 +193,7 @@ class InicioController extends Component
                         $diff = $date2->diff($date1);
                         
                         if ($diff->invert == 1) {
-                            $c->dias = (($diff->days)) + ($diff->d) . ' días';
+                            $c->dias = (($diff->days)) + ($diff->d);
                             
                         }
                     }

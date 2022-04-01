@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reporte de Ganacias de Transacciones Tigo Money</title>
+    <title>Orden de Servicio</title>
     <link rel="stylesheet" href="{{ asset('css/custom_pdf.css') }}">
     <link rel="stylesheet" href="{{ asset('css/custom_page.css') }}">
 
@@ -25,7 +25,8 @@
                 <td style="width: 4.3cm; vertical-align: top; margin-left: 5px; margin-right:5px">
                     <div style=" font-size: 9pt; text-align: center;">
                         <div>
-                            <b>SERVICIO TÉCNICO<br>{{ $data[0]->order_service_id }}</b>
+                            <b>SERVICIO TÉCNICO<br>{{ $data[0]->order_service_id }}</b><br>
+                            <b>Sucursal: </b>{{ $sucursal->name }}
                         </div>
                     </div>
                     <hr
@@ -115,8 +116,9 @@
                                             <span class="text-bold"><u>SOLUCIONES INFORMÁTICAS EMANUEL ( S.I.E.
                                                     )</u></span><br>
                                             <span style="font-size: 8px">
-                                                AV. AMÉRICA NO. 949 ENTRE AV. GABRIEL RENE MORENO Y MUNCHAY PUITO<br>
-                                                4240013- 79771777 </span>
+                                                Sucursal: {{ $sucursal->name }}<br>
+                                                {{$sucursal->adress}}<br>
+                                                {{ $sucursal->telefono }} - {{ $sucursal->celular}}</span>
                                         </div>
                                     </div>
                                 </td>

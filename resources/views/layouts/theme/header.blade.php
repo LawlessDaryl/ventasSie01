@@ -2,7 +2,7 @@
     <header class="header navbar navbar-expand-sm 3838" style="background: #383838;">
         <ul class="navbar-item flex-row">
             <li class="nav-item theme-logo">
-                <a href="inicio">
+                <a href="{{url('inicio')}}">
                     <img src="assets/img/sie.png" class="navbar-logo" alt="logo">
                 </a>
             </li>
@@ -23,10 +23,11 @@
         <livewire:search-controller>
 
         </livewire:search-controller>
-
+        @if (@Auth::user()->hasPermissionTo('Corte_Caja_Index'))
         <ul class="tabs tab-pills text-center mt-2">            
             <a href="{{ url('cortecajas') }}" class="btn btn-warning btn-lg active" role="button" aria-pressed="true">CORTE DE CAJA</a>            
         </ul>
+        @endif
 
         <ul class="tabs tab-pills text-center mt-4">
             @if (empty(session('sesionCaja')))
@@ -227,7 +228,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="dropdown-item">
+                {{-- <div class="dropdown-item">
                     <a href="user_profile.html">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -246,7 +247,7 @@
                             <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                         </svg> <span>Lock Screen</span>
                     </a>
-                </div>
+                </div> --}}
                 <div class="dropdown-item">
                     <a class="" href="{{ route('logout') }}"
                         onclick="event.preventDefault(); document.getElementById('logout-form').submit()">
