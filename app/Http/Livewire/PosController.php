@@ -190,7 +190,8 @@ class PosController extends Component
     ];
     public function ScanCode($barcode, $cant = 1)
     {
-        //Escanea el Código
+        //ssfd
+        //Escanea el Códigodfsdfsdfsdf
         $product = Product::join("productos_destinos as pd", "pd.product_id", "products.id")
         ->join('locations as d', 'd.id', 'pd.location_id')
         ->join('destinos as des', 'des.id', 'd.destino_id')
