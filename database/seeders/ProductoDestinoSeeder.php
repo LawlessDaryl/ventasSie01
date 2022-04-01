@@ -159,7 +159,7 @@ class ProductoDestinoSeeder extends Seeder
         ]);
         ProductosDestino::create([
             'product_id'=> 9,
-            'location_id' => 4,
+            'location_id' => 1,
             'stock' => '1',
            
         

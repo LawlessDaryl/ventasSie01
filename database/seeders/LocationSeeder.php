@@ -43,7 +43,7 @@ class LocationSeeder extends Seeder
         // ]);//
         Location::create([
             
-            'codigo' => '0002',
+            'codigo' => '0001',
             'descripcion' => 'Tv Box, Cables, Dispositivos de Almacenamiento',
             
             'tipo' => 'VITRINA',
@@ -51,7 +51,7 @@ class LocationSeeder extends Seeder
         ]);
         Location::create([
             
-            'codigo' => '0003',
+            'codigo' => '0002',
             'descripcion' => 'Vidrios Templados y Fundas',
             
             'tipo' => 'Mostrador',
@@ -59,7 +59,7 @@ class LocationSeeder extends Seeder
         ]);
         Location::create([
          
-            'codigo' => '0004',
+            'codigo' => '0003',
             'descripcion' => 'Repuestos varios',
           
             'tipo' => 'ESTANTE',
