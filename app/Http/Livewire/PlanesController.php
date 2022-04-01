@@ -25,14 +25,14 @@ class PlanesController extends Component
 {
     use WithPagination;
 
-    public $profile_id, $movimiento_id, $expiration_plan, $status, $p_type, $importe,
-        $pageTitle, $componentName, $selected_id, $hora, $search, $condicion, $type, $cartera_id,
-        $nombre, $cedula, $celular, $direccion, $email, $fecha_nacim, $razon, $nit, $plataforma,
-        $cuentaperfil, $accounts, $profiles, $cantidaperf, $mostrartabla, $tipopago, $condicional,
-        $meses, $observaciones, $ready, $selected_perf, $totalCobrar, $BuscarCliente, $ClienteSelect,
-        $cuentasEnteras, $nombrePerfil, $pinPerfil, $CantidadPerfilesCrear;
+    public $expiration_plan, $status,  $importe, $pageTitle, $componentName, $selected_id, $hora, $search,
+        $condicion, $type, $nombre, $celular, $plataforma, $cuentaperfil, $accounts, $profiles, $cantidaperf,
+        $mostrartabla, $tipopago, $condicional, $meses, $observaciones, $ready, $selected_perf, $totalCobrar,
+        $BuscarCliente, $ClienteSelect, $cuentasEnteras, $nombrePerfil, $pinPerfil, $CantidadPerfilesCrear,
+        $fecha_inicio;
 
     private $pagination = 10;
+
     public function paginationView()
     {
         return 'vendor.livewire.bootstrap';
@@ -45,7 +45,6 @@ class PlanesController extends Component
         $this->selected_id = 0;
         $this->hora = date("d-m-Y H:i:s ");
         $this->status = 'Vigente';
-        $this->p_type = 'VENTA';
         $this->plataforma = 'Elegir';
         $this->cuentaperfil = 'Elegir';
         $this->cantidaperf = 1;
@@ -112,6 +111,8 @@ class PlanesController extends Component
             /* REALIZAR CALCULO DE INGRESOS - EGRESOS */
             $c->monto = $INGRESOS - $EGRESOS;
         }
+
+
         if ($this->condicional == 'perfiles') {
             if (strlen($this->search) > 0) {
                 $data = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
@@ -223,6 +224,7 @@ class PlanesController extends Component
                         'e.content as correo',
                         'e.pass as passCorreo',
                         'plans.importe as importe',
+                        'acc.account_name as account_name',
                         'acc.password_account as password_account',
                         'acc.status as accstatus',
                         'plans.id as id',
@@ -250,7 +252,7 @@ class PlanesController extends Component
                     ->where('m.status', 'ACTIVO')
                     ->whereBetween('plans.created_at', [$from, $to])
 
-                    ->orWhere('e.content', 'like', '%' . $this->search . '%')
+                    ->orWhere('acc.account_name', 'like', '%' . $this->search . '%')
                     ->where('m.user_id', $user_id)
                     ->where('plans.type_plan', 'CUENTA')
                     ->where('m.status', 'ACTIVO')
@@ -293,11 +295,12 @@ class PlanesController extends Component
                     ->paginate($this->pagination);
             }
         }
+
         /* CALCULAR LA FECHA DE EXPIRACION SEGUN LA CANTIDAD DE MESES */
         if ($this->meses > 0) {
             $date_now = date('Y-m-d h:i:s', time());
             $dias = $this->meses * 30;
-            $this->expiration_plan = strtotime('+' . $dias . ' day', strtotime($date_now));
+            $this->expiration_plan = strtotime('+' . $dias . ' day', strtotime($this->fecha_inicio));
             $this->expiration_plan = date('Y-m-d', $this->expiration_plan);
         } else {
             $this->meses = 1;
@@ -938,12 +941,15 @@ class PlanesController extends Component
         $this->emit('perf-actualizado', 'Se cambió a realizado');
     }
 
+    public function CrearCombo(){
+        $this->emit('show-modalCombos', '');
+    }
+
     public function resetUI()
     {
         $this->selected_id = 0;
         $this->hora = date("d-m-Y H:i:s ");
         $this->status = 'Vigente';
-        $this->p_type = 'VENTA';
         $this->plataforma = 'Elegir';
         $this->cuentaperfil = 'Elegir';
         $this->cantidaperf = 1;

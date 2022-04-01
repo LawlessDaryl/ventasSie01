@@ -169,16 +169,26 @@
                     </div>
 
                     <div class="col-sm-12 col-md-4">
+                        <h6>Fecha de inicio del plan</h6>
+                        <div class="form-group">
+                            <input type="date" wire:model="fecha_inicio" class="form-control">
+                            @error('fecha_inicio')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-4">
                         <h6>Fecha de expiración del plan</h6>
                         <div class="form-group">
-                            <input disabled type="date" wire:model="expiration_plan" class="form-control">
+                            <input  type="date" wire:model="expiration_plan" class="form-control">
                             @error('expiration_plan')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-md-9">
+                    <div class="col-sm-12 col-md-8">
                         <div class="form-group">
                             <label>
                                 <h6>Observaciones</h6>
@@ -279,10 +289,12 @@
                                                 @if ($profiles->count() == 0)
                                                     <tr>
                                                         <td colspan="5">
-                                                            <h6 class="text-center">No tienes perfiles creados de esa
+                                                            <h6 class="text-center">No tienes perfiles creados de
+                                                                esa
                                                                 plataforma</h6>
                                                             @if (count($this->cuentasEnteras) > 0)
-                                                                <h6 class="text-center">Pero tienes una o mas cuentas
+                                                                <h6 class="text-center">Pero tienes una o mas
+                                                                    cuentas
                                                                     con espacios de perfiles
                                                                 </h6>
                                                                 <h6 class="text-center">

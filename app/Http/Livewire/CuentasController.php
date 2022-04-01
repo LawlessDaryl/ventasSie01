@@ -93,6 +93,7 @@ class CuentasController extends Component
                         'accounts.expiration_account as expiration_account',
                         'accounts.number_profiles',
                         'accounts.whole_account',
+                        'accounts.account_name',
                         'accounts.password_account',
                         'p.nombre as nombre',
                         'e.content as content',
@@ -106,7 +107,7 @@ class CuentasController extends Component
                     ->where('accounts.status', 'ACTIVO')
                     ->where('accounts.availability', 'LIBRE')
 
-                    ->orWhere('e.content', 'like', '%' . $this->search . '%')
+                    ->orWhere('accounts.account_name', 'like', '%' . $this->search . '%')
                     ->where('accounts.status', 'ACTIVO')
                     ->where('accounts.availability', 'LIBRE')
 
@@ -198,6 +199,7 @@ class CuentasController extends Component
                         'accounts.number_profiles',
                         'accounts.whole_account',
                         'accounts.status',
+                        'accounts.account_name',
                         'accounts.password_account',
                         'p.nombre as nombre',
                         'e.content as content',
@@ -208,7 +210,8 @@ class CuentasController extends Component
                         'pl.status as plan_status',
                         'c.nombre as clienteNombre',
                         'c.celular as clienteCelular',
-                        DB::raw('0 as horas')
+                        DB::raw('0 as horas'),
+                        DB::raw('0 as dias')
                     )
                     ->where('p.nombre', 'like', '%' . $this->search . '%')
                     ->where('pl.status', 'VIGENTE')
@@ -228,7 +231,7 @@ class CuentasController extends Component
                     ->where('pl.type_plan', 'CUENTA')
                     ->where('pl.ready', 'SI')
 
-                    ->orWhere('e.content', 'like', '%' . $this->search . '%')
+                    ->orWhere('accounts.account_name', 'like', '%' . $this->search . '%')
                     ->where('pl.status', 'VIGENTE')
                     ->where('pa.status', 'ACTIVO')
                     ->where('pl.type_plan', 'CUENTA')
@@ -246,6 +249,10 @@ class CuentasController extends Component
                     } else {
                         $c->horas = '0';
                     }
+                    $fecha_actual = date("Y-m-d");
+                    $s = strtotime($c->expiration_account) - strtotime($fecha_actual);
+                    $d = intval($s / 86400);
+                    $c->dias = $d;
                 }
             } else {
                 $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
