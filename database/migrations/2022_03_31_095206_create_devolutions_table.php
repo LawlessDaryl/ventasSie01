@@ -19,6 +19,9 @@ class CreateDevolutionsTable extends Migration
             $table->dateTime('fecha_devolucion')->default(Carbon::now());
             $table->enum('tipo',['compras','ventas']);  
             $table->enum('tipo_dev',['PRODUCTO','MONETARIO','PRODUCTO_MONETARIO']);
+
+            $table->foreignId('sales_id')->constrained();
+            $table->foreignId('compras_id')->constrained();
             $table->string('observations',200)->default('Sin Observacion')->nullable();
             $table->timestamps();
         });
