@@ -3,7 +3,7 @@
         <div class="modal-content">
             <div class="modal-header bg-dark">
                 <h5 class="modal-title text-white">
-                    <b>DETALLE DEL SERVICIO TÉCNICO</b>
+                    <b>DETALLE DEL SERVICIO TÉCNICO Nº {{$numeroOrden}}</b>
                 </h5>
                 <h6 class="text-center text-warning" wire:loading>POR FAVOR ESPERE</h6>
             </div>
@@ -238,19 +238,23 @@
             </div>
 
             <div class="modal-footer">
-
-                @if ($proceso)
-                    <button type="button" wire:click.prevent="CambioProceso({{ $service1 }})"
-                        class="btn btn-dark close-btn text-info" data-dismiss="modal"
-                        style="background: #3b3f5c">REGISTRAR TERMINADO</button>
+                
+                @if(@Auth::user()->id == $this->usuarioId)
+                    @if ($proceso)
+                        <button type="button" wire:click.prevent="CambioProceso({{ $service1 }})"
+                            class="btn btn-dark close-btn text-info" data-dismiss="modal"
+                            style="background: #3b3f5c">REGISTRAR TERMINADO</button>
+                    @endif
                 @endif
 
-                @if ($selected_id < 1)
-                    <button type="button" wire:click.prevent="GuardarCambio({{ $service1 }})"
-                        class="btn btn-dark close-btn text-info">REGISTRAR INFORMACIÓN</button>
-                @else
-                    <button type="button" wire:click.prevent="Update()"
-                        class="btn btn-dark close-btn text-info">ACTUALIZAR</button>
+                @if(($this->tipo == 'PENDIENTE' || @Auth::user()->id == $this->usuarioId))
+                    @if ($selected_id < 1)
+                        <button type="button" wire:click.prevent="GuardarCambio({{ $service1 }})"
+                            class="btn btn-dark close-btn text-info">REGISTRAR INFORMACIÓN</button>
+                    @else
+                        <button type="button" wire:click.prevent="Update()"
+                            class="btn btn-dark close-btn text-info">ACTUALIZAR</button>
+                    @endif
                 @endif
                 <button type="button" wire:click.prevent="resetUI()" class="btn btn-dark close-btn text-info"
                     data-dismiss="modal" style="background: #3b3f5c">CANCELAR</button>

@@ -34,7 +34,7 @@ class OrderServiceController extends Component
         $typew, $typeworkid, $catprodservid, $diagnostico, $solucion, $hora_entrega, $proceso,
         $terminado, $costo, $detalle_costo, $nombreUsuario, $modificar, $type_service, $movimiento,
         $opciones, $tipopago, $dateFrom, $dateTo, $reportType, $userId, $estado, $mostrar,
-        $mostrarEliminar;
+        $mostrarEliminar,$tipo;
 
     private $pagination = null;
     public function paginationView()
@@ -69,6 +69,7 @@ class OrderServiceController extends Component
         $this->reportType = 0;
         $this->userId = 0;
         $this->estado = 'Todos';
+        $this->tipo= '';
     }
     public function render()
     {
@@ -107,9 +108,34 @@ class OrderServiceController extends Component
             $orderservices = OrderService::where('id', $this->search)
                 ->orderBy('order_services.id', 'desc')
                 ->paginate($this->pagination);
+            
         } else {
             if (strlen($this->search) > 0) {
-                $orderservices = OrderService::join('services as s', 'order_services.id', 's.order_service_id')
+                if($this->opciones == 'TODOS'){
+                    $orderservices = OrderService::join('services as s', 'order_services.id', 's.order_service_id')
+                    ->join('mov_services as ms', 's.id', 'ms.service_id')
+                    ->join('cat_prod_services as cat', 'cat.id', 's.cat_prod_service_id')
+                    ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+                    ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
+                    ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
+                    ->join('users as u', 'u.id', 'mov.user_id')
+                    ->select('order_services.*')
+                    /* ->where('mov.type',  $this->opciones) */
+                    ->where('mov.status', 'ACTIVO')
+                    ->where('c.nombre', 'like', '%' . $this->search . '%')
+                    ->orWhere('order_services.id', 'like', '%' . $this->search . '%')
+                    ->orWhere('order_services.type_service', 'like', '%' . $this->search . '%')
+                    ->orWhere('cat.nombre', 'like', '%' . $this->search . '%')
+                    ->orWhere('s.detalle', 'like', '%' . $this->search . '%')
+                    ->orWhere('s.marca', 'like', '%' . $this->search . '%')
+                    ->orWhere('s.falla_segun_cliente', 'like', '%' . $this->search . '%')
+                    ->orWhere('u.name', 'like', '%' . $this->search . '%')
+                    /* ->orWhere('mov.import', 'like', '%' . $this->search . '%') */
+                    ->orderBy('order_services.id', 'desc')
+                    ->distinct()
+                    ->paginate($this->pagination);
+                }else{
+                    $orderservices = OrderService::join('services as s', 'order_services.id', 's.order_service_id')
                     ->join('mov_services as ms', 's.id', 'ms.service_id')
                     ->join('cat_prod_services as cat', 'cat.id', 's.cat_prod_service_id')
                     ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
@@ -131,7 +157,10 @@ class OrderServiceController extends Component
                     ->orderBy('order_services.id', 'desc')
                     ->distinct()
                     ->paginate($this->pagination);
+                }
+                
             } elseif ($this->opciones == 'TODOS') {
+                
                 $orderservices = OrderService::join('services as s', 'order_services.id', 's.order_service_id')
                     ->join('mov_services as ms', 's.id', 'ms.service_id')
                     ->join('cat_prod_services as cat', 'cat.id', 's.cat_prod_service_id')
@@ -145,6 +174,7 @@ class OrderServiceController extends Component
                     ->orderBy('order_services.id', 'desc')
                     ->distinct()
                     ->paginate($this->pagination);
+            
             }elseif ($this->opciones == 'ANULADO') { 
                
                 $orderservices = OrderService::join('services as s', 'order_services.id', 's.order_service_id')
@@ -473,10 +503,15 @@ class OrderServiceController extends Component
         $this->typeworkid = TypeWork::find($this->service1->type_work_id)->id;
         $this->catprodservid = CatProdService::find($this->service1->cat_prod_service_id)->id;
         $this->proceso = false;
+        $this->tipo= 'PENDIENTE';
         foreach ($this->service1->movservices as $mm) {
             if ($mm->movs->status == 'ACTIVO') {
                 if ($mm->movs->type == 'PROCESO') {
                     $this->proceso = true;
+                    $this->tipo= 'PROCESO';
+                }
+                if ($mm->movs->type == 'TERMINADO') {
+                    $this->tipo= 'TERMINADO';
                 }
                 $this->import = $mm->movs->import;
                 $this->on_account = $mm->movs->on_account;
@@ -545,13 +580,18 @@ class OrderServiceController extends Component
 
         foreach ($this->service1->movservices as $mm) {
             if ($mm->movs->status == 'ACTIVO') {
+                if ($mm->movs->type == 'ENTREGADO') {
+                    $this->tipo= 'ENTREGADO';
+                }
                 $this->import = $mm->movs->import;
                 $this->on_account = $mm->movs->on_account;
                 $this->saldo = $mm->movs->saldo;
                 $this->nombreCliente = $mm->movs->climov->client->nombre;
                 $this->celular = $mm->movs->climov->client->celular;
                 $this->usuarioId = $mm->movs->user_id;
+                
             }
+            
         }
         $this->costo = $this->service1->costo;
         $this->detalle_costo = $this->service1->detalle_costo;
