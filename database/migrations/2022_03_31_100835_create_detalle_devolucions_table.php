@@ -14,13 +14,14 @@ class CreateDetalleDevolucionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('detalle_devolucions', function (Blueprint $table) {
+        Schema::create('detail_devolutions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('devolucion_id');
-            $table->foreign('devolucion_id')->references('id')->on('devolucions');
-            $table->unsignedBigInteger('producto_cambio');
+            $table->unsignedBigInteger('id_devolutions');
+            $table->foreign('id_devolutions')->references('id')->on('devolutions');
+            $table->unsignedBigInteger('product_id');
             $table->foreign('product_id')->references('id')->on('products');
             $table->integer('cantidad_dev');
+
            
             $table->timestamps();
         });

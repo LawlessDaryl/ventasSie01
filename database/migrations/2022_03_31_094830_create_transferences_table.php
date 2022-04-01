@@ -5,7 +5,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTransferenciasTable extends Migration
+class CreateTransferencesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -15,7 +15,7 @@ class CreateTransferenciasTable extends Migration
     public function up()
     {
 
-        Schema::create('transferencias', function (Blueprint $table) {
+        Schema::create('transferences', function (Blueprint $table) {
             
             $table->id();
             $table->dateTime('fecha_transferencia')->default(Carbon::now());
@@ -33,6 +33,6 @@ class CreateTransferenciasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('transferencias');
+        Schema::dropIfExists('transferences');
     }
 }

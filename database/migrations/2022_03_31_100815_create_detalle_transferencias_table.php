@@ -16,8 +16,8 @@ class CreateDetalleTransferenciasTable extends Migration
         Schema::create('detalle_transferencias', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedBigInteger('transfererencia_id');
-            $table->foreign('transferencia_id')->references('id')->on('transferencias');
+            $table->unsignedBigInteger('id_transference');
+            $table->foreign('id_transference')->references('id')->on('transferences');
 
             $table->unsignedBigInteger('product_id');
             $table->foreign('product_id')->references('id')->on('products');
