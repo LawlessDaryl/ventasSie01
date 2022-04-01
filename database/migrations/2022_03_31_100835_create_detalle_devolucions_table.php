@@ -18,9 +18,20 @@ class CreateDetalleDevolucionsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('id_devolutions');
             $table->foreign('id_devolutions')->references('id')->on('devolutions');
-            $table->unsignedBigInteger('product_id');
+            $table->unsignedBigInteger('product_id');//{mouse}
             $table->foreign('product_id')->references('id')->on('products');
-            $table->integer('cantidad_dev');
+            $table->integer('cantidad_dev');//{5}
+           
+
+            //registro de lo que  devuelvo
+            $table->decimal('monto_dev');//{30}
+            $table->unsignedBigInteger('product_id2');//{carcasas}
+            $table->foreign('product_id2')->references('id')->on('products');
+            $table->integer('cantidad_dev');//{5}
+
+
+
+
 
            
             $table->timestamps();
