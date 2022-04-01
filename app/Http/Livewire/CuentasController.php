@@ -34,7 +34,7 @@ class CuentasController extends Component
         $expiration_account_new, $password_account, $price, $mostrarCampos, $condicional, $meses, $meseRenovarProv,
         $expirationActual, $expirationNueva, $observations, $selected_plan, $correoCuenta, $passCuenta,
         $nombreCliente, $celular, $observacionesTrans, $mostrarRenovar, $meses_comprados, $mesesComprar,
-        $nombre_cuenta, $mostrartabla2;
+        $nombre_cuenta, $mostrartabla2, $mostrarCorreo;
     private $pagination = 10;
     public function paginationView()
     {
@@ -76,7 +76,6 @@ class CuentasController extends Component
         $this->observacionesTrans = '';
         $this->mostrarRenovar = 0;
         $this->mesesComprar = 1;
-        $this->start_account = null;
         $this->start_account_new = null;
         $this->expiration_account = null;
         $this->expiration_account_new = null;
@@ -146,6 +145,7 @@ class CuentasController extends Component
                         'accounts.expiration_account as expiration_account',
                         'accounts.number_profiles',
                         'accounts.whole_account',
+                        'accounts.account_name',
                         'accounts.password_account',
                         'p.nombre as nombre',
                         'e.content as content',
@@ -264,6 +264,7 @@ class CuentasController extends Component
                         'accounts.number_profiles',
                         'accounts.whole_account',
                         'accounts.status',
+                        'accounts.account_name',
                         'accounts.password_account',
                         'p.nombre as nombre',
                         'e.content as content',
@@ -392,7 +393,7 @@ class CuentasController extends Component
                     ->paginate($this->pagination);
             }
         }
-        $this->correos = Email::where('availability', 'LIBRE')->orWhere('id', $this->selected)->orderBy('id', 'desc')->get();
+        $this->correos = Email::where('availability', 'LIBRE')->orWhere('id', $this->selected)->orderBy('id', 'asc')->get();
         if ($this->selected_id != 0) {
             /* MOSTRAR TODOS LOS PERFILES DE ESA CUENTA */
             $this->perfiles = Profile::join('account_profiles as ap', 'ap.profile_id', 'profiles.id')
@@ -428,6 +429,7 @@ class CuentasController extends Component
                 $this->mostrarCampos = 0;
             }
         }
+
         /* CALCULAR FECHA DE FINALIZACION AL CREAR UNA NUEVA CUENTA */
         if ($this->start_account) {
             if ($this->mesesComprar > 0) {
@@ -474,13 +476,13 @@ class CuentasController extends Component
     }
 
     public function mostrarRenovar()
-    {
+    {   /* CARGAR DATOS DE LA CUENTA PARA RENOVAR CON EL PROVEEDOR */
         $this->mostrarRenovar = 1;
         $cuenta = Account::find($this->selected_id);
         $this->start_account = $cuenta->start_account;
         $this->expiration_account = $cuenta->expiration_account;
         $this->meseRenovarProv = 1;
-        $this->email_id = $cuenta->Correo->content;
+        $this->email_id = $cuenta->account_name;
         $this->number_profiles = $cuenta->number_profiles;
         $this->price = $cuenta->price;
         $this->password_account = $cuenta->password_account;
@@ -488,7 +490,7 @@ class CuentasController extends Component
     }
 
     public function RenovarCuenta()
-    {
+    {   /* RENOVAR LA CUENTA CON EL PROVEEDOR SEGUN LOS MESES QUE PONE EL USUARIO */
         $rules = [
             'start_account' => 'required',
             'expiration_account' => 'required',
@@ -520,7 +522,7 @@ class CuentasController extends Component
             'price' => $this->price,
             'meses_comprados' => $this->meseRenovarProv,
         ]);
-
+        /* CREAR LA MISMA CANTIDAD DE INVERSIONES QUE DE MESES EN LA RENOVACION */
         for ($i = 0; $i < $this->meseRenovarProv; $i++) {
             if ($i == 0) {
                 CuentaInversion::create([
@@ -564,19 +566,17 @@ class CuentasController extends Component
     }
 
     public function VencerCuenta()
-    {
+    {   /* SI NO RENUEVA CON EL PROVEEDOR LA CUENTA PASA A INACTIVO */
         $cuenta = Account::find($this->selected_id);
-
         $cuenta->update([
             'status' => 'INACTIVO',
         ]);
-
         $this->resetUI();
         $this->emit('modal-hide3', 'Cuenta Actualizada');
     }
 
     public function Store()
-    {
+    {   /* REGISTRAR UNA NUEVA CUENTA */
         $rules = [
             'start_account' => 'required',
             'expiration_account' => 'required',
@@ -585,7 +585,7 @@ class CuentasController extends Component
             'password_account' => 'required',
             'platform_id' => 'required|not_in:Elegir',
             'proveedor' => 'required|not_in:Elegir',
-            'email_id' => 'required|not_in:Elegir|unique:accounts'
+            'email_id' => 'required_if:mostrarCorreo,0|not_in:Elegir',
         ];
         $messages = [
             'start_account.required' => 'La fecha de inicio es requerida',
@@ -595,9 +595,8 @@ class CuentasController extends Component
             'password_account.required' => 'La contraseña de la cuenta es requerida',
             'platform_id.required' => 'La plataforma es requerida',
             'platform_id.not_in' => 'Elija una plataforma distinta a Elegir',
-            'email_id.required' => 'El correo es requerido',
-            'email_id.not_in' => 'Elija un correo distinto a Elegir',
-            'email_id.unique' => 'El email ya existe registrado en una cuenta refresca la pagina',
+            'email_id.required_if' => 'El correo es requerido',
+            'email_id.not_in' => 'El correo debe ser distinto de Elegir',
             'proveedor.required' => 'El proveedor es requerido',
             'proveedor.not_in' => 'El proveedor tiene que ser diferente de Elegir',
         ];
@@ -606,21 +605,39 @@ class CuentasController extends Component
 
         DB::beginTransaction();
         try {
-            $acc = Account::create([
-                'start_account' => $this->start_account,
-                'expiration_account' => $this->expiration_account,
-                'status' => $this->estado,
-                'whole_account' => 'ENTERA',
-                'number_profiles' => $this->number_profiles,
-                'account_name' => $this->nombre_cuenta,
-                'password_account' => $this->password_account,
-                'price' => $this->price,
-                'meses_comprados' => $this->mesesComprar,
-                'str_supplier_id' => $this->proveedor,
-                'platform_id' => $this->platform_id,
-                'email_id' => $this->email_id,
-            ]);
-
+            $correo = Email::find($this->email_id);
+            $plataform = Platform::find($this->platform_id);
+            if ($plataform->tipo == 'CORREO') {
+                $acc = Account::create([
+                    'start_account' => $this->start_account,
+                    'expiration_account' => $this->expiration_account,
+                    'status' => $this->estado,
+                    'whole_account' => 'ENTERA',
+                    'number_profiles' => $this->number_profiles,
+                    'account_name' => $correo->content,
+                    'password_account' => $this->password_account,
+                    'price' => $this->price,
+                    'meses_comprados' => $this->mesesComprar,
+                    'str_supplier_id' => $this->proveedor,
+                    'platform_id' => $this->platform_id,
+                    'email_id' => $this->email_id,
+                ]);
+            } else {
+                $acc = Account::create([
+                    'start_account' => $this->start_account,
+                    'expiration_account' => $this->expiration_account,
+                    'status' => $this->estado,
+                    'whole_account' => 'ENTERA',
+                    'number_profiles' => $this->number_profiles,
+                    'account_name' => $this->nombre_cuenta,
+                    'password_account' => $this->password_account,
+                    'price' => $this->price,
+                    'meses_comprados' => $this->mesesComprar,
+                    'str_supplier_id' => $this->proveedor,
+                    'platform_id' => $this->platform_id,
+                    'email_id' => $this->email_id,
+                ]);
+            }
             $this->price /= $this->mesesComprar;
             $dias = 30;
             $fecha30diasdespues = strtotime('+' . $dias . ' day', strtotime($this->start_account));
@@ -664,10 +681,12 @@ class CuentasController extends Component
                 }
             }
 
+            if ($this->email_id != 1) {
 
-            $correo = Email::find($this->email_id);
-            $correo->availability = 'OCUPADO';
-            $correo->save();
+                $correo->availability = 'OCUPADO';
+                $correo->save();
+            }
+
             DB::commit();
             $this->resetUI();
             $this->emit('item-added', 'Cuenta Registrada');
@@ -690,6 +709,7 @@ class CuentasController extends Component
         $this->expiration_account = $acc->expiration_account;
         $this->estado = $acc->status;
         $this->number_profiles = $acc->number_profiles;
+        $this->nombre_cuenta = $acc->account_name;
         $this->password_account = $acc->password_account;
         $this->price = $acc->price;
         $this->proveedor = $acc->str_supplier_id;
@@ -708,7 +728,7 @@ class CuentasController extends Component
             'password_account' => 'required',
             'platform_id' => 'required|not_in:Elegir',
             'proveedor' => 'required|not_in:Elegir',
-            'email_id' => "required|not_in:Elegir|unique:accounts,email_id,{$this->selected_id}"
+            /* 'email_id' => "required|not_in:Elegir|unique:accounts,email_id,{$this->selected_id}" */
         ];
 
         $messages = [
@@ -717,11 +737,11 @@ class CuentasController extends Component
             'number_profiles.required' => 'La cantidad de perfiles es requerida',
             'price.required' => 'El precio de la cuenta es requerida',
             'password_account.required' => 'La contraseña de la cuenta es requerida',
-            'platform_id.required' => 'La plataforma es requerida',
-            'platform_id.not_in' => 'Elija una plataforma distinta a Elegir',
-            'email_id.required' => 'El correo es requerido',
+            /* 'platform_id.required' => 'La plataforma es requerida',
+            'platform_id.not_in' => 'Elija una plataforma distinta a Elegir', */
+            /* 'email_id.required' => 'El correo es requerido',
             'email_id.not_in' => 'Elija un correo distinto a Elegir',
-            'email_id.unique' => 'El email ya existe registrado en una cuenta refresca la pagina',
+            'email_id.unique' => 'El email ya existe registrado en una cuenta refresca la pagina', */
             'proveedor.required' => 'El proveedor es requerido',
             'proveedor.not_in' => 'El proveedor tiene que ser diferente de Elegir',
         ];
@@ -729,18 +749,23 @@ class CuentasController extends Component
         $this->validate($rules, $messages);
 
         $acc = Account::find($this->selected_id);
-
-        $acc->update([
-            'expiration_account' => $this->expiration_account,
-            'status' => $this->estado,
-            'number_profiles' => $this->number_profiles,
-            'password_account' => $this->password_account,
-            'price' => $this->price,
-            'str_supplier_id' => $this->proveedor,
-            'platform_id' => $this->platform_id,
-            'email_id' => $this->email_id,
-        ]);
-        $acc->save();
+        $plataform = Platform::find($this->platform_id);
+        if ($plataform->tipo == 'CORREO') {
+            $acc->update([
+                'number_profiles' => $this->number_profiles,
+                'password_account' => $this->password_account,
+                'str_supplier_id' => $this->proveedor,
+            ]);
+            $acc->save();
+        } else {
+            $acc->update([
+                'number_profiles' => $this->number_profiles,
+                'account_name' => $this->nombre_cuenta,
+                'password_account' => $this->password_account,
+                'str_supplier_id' => $this->proveedor,
+            ]);
+            $acc->save();
+        }
 
 
         $this->resetUI();
@@ -756,7 +781,6 @@ class CuentasController extends Component
 
     public function CrearPerfil()
     {
-
         $rules = [
             'nameP' => 'required',
             'PIN' => 'required',
@@ -818,7 +842,6 @@ class CuentasController extends Component
         $this->emit('item-deleted', 'Perfil Eliminado');
     }
 
-
     public function Acciones(Plan $plan)
     {
         $this->selected_plan = $plan->id;
@@ -833,6 +856,7 @@ class CuentasController extends Component
                 'c.nombre as nombreCliente',
                 'c.celular as celular',
                 'e.content as correoCuenta',
+                'acc.account_name as account_name',
                 'acc.password_account as password_account',
                 'plans.expiration_plan as expiration_plan',
                 'plans.observations as observations'
@@ -842,7 +866,7 @@ class CuentasController extends Component
             ->get()->first();
         $this->nombreCliente = $this->data->nombreCliente;
         $this->celular = $this->data->celular;
-        $this->correoCuenta = $this->data->correoCuenta;
+        $this->correoCuenta = $this->data->account_name;
         $this->passCuenta = $this->data->password_account;
         $this->observacionesTrans = $this->data->observations;
         $this->expirationActual = $this->data->expiration_plan;
@@ -933,7 +957,6 @@ class CuentasController extends Component
                     'cartera_id' => $cajaFisica->id,
                     'movimiento_id' => $mv->id
                 ]);
-
                 $tigoStreaming = Cartera::where('tipo', 'TigoStreaming')
                     ->where('caja_id', '1')->get()->first();
                 CarteraMov::create([
@@ -942,7 +965,6 @@ class CuentasController extends Component
                     'cartera_id' => $tigoStreaming->id,
                     'movimiento_id' => $mv->id
                 ]);
-
                 $carteraTelefono = Cartera::where('tipo', 'Telefono')
                     ->where('caja_id', $CajaActual->id)->get()->first();
                 CarteraMov::create([
@@ -961,12 +983,12 @@ class CuentasController extends Component
                     'movimiento_id' => $mv->id
                 ]);
             } else {
-                $tigomoneyCaja = Cartera::where('tipo', 'Telefono')
-                    ->where('caja_id', $CajaActual->id)->get()->first();
+                $tigoStreaming = Cartera::where('tipo', 'TigoStreaming')
+                    ->where('caja_id', '1')->get()->first();
                 CarteraMov::create([
                     'type' => 'INGRESO',
                     'comentario' => '',
-                    'cartera_id' => $tigomoneyCaja->id,
+                    'cartera_id' => $tigoStreaming->id,
                     'movimiento_id' => $mv->id
                 ]);
             }
@@ -1206,11 +1228,14 @@ class CuentasController extends Component
         $this->Observaciones = '';
         $this->perfiles = [];
         $this->correos = [];
+        $this->nombre_cuenta = '';
         $this->password_account = '';
         $this->price = '';
         $this->mostrarCampos = 0;
         $this->meses = 0;
+        $this->meseRenovarProv = 0;
         $this->expirationNueva = Carbon::parse(Carbon::now())->format('Y-m-d');
+        $this->start_account = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->tipopago = 'EFECTIVO';
         $this->importe = 0;
         $this->correoCuenta = '';
@@ -1220,10 +1245,10 @@ class CuentasController extends Component
         $this->observacionesTrans = '';
         $this->mostrarRenovar = 0;
         $this->mesesComprar = 1;
-        $this->start_account = null;
         $this->start_account_new = null;
         $this->expiration_account = null;
         $this->expiration_account_new = null;
+        $this->mostrartabla2 = 0;
         $this->resetValidation();
     }
 }

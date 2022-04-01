@@ -208,7 +208,8 @@
                                         <table class="table table-hover table-sm" style="width:100%">
                                             <thead class="text-white" style="background: #3B3F5C">
                                                 <tr>
-                                                    <th class="table-th text-withe text-center">Email</th>
+                                                    <th class="table-th text-withe text-center">Email o Nombre Usuario
+                                                    </th>
                                                     <th class="table-th text-withe text-center">Contraseña</th>
                                                     <th class="table-th text-withe text-center">Precio</th>
                                                 </tr>
@@ -226,7 +227,7 @@
                                                 @foreach ($accounts as $ap)
                                                     <tr>
                                                         <td class="text-center">
-                                                            <h6 class="text-center">{{ $ap->Correo->content }}
+                                                            <h6 class="text-center">{{ $ap->account_name }}
                                                             </h6>
                                                         </td>
                                                         <td class="text-center">
@@ -282,7 +283,7 @@
                                                                 plataforma</h6>
                                                             @if (count($this->cuentasEnteras) > 0)
                                                                 <h6 class="text-center">Pero tienes una o mas cuentas
-                                                                    enteras libres
+                                                                    con espacios de perfiles
                                                                 </h6>
                                                                 <h6 class="text-center">
                                                                     <a wire:click="VerCuentas()"

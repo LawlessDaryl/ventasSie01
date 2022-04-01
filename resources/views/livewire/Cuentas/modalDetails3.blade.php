@@ -30,7 +30,7 @@
                         <div class="col-sm-12 col-md-6">
                             <div class="form-group">
                                 <label>
-                                    <h6>Correo</h6>
+                                    <h6>Email o Nombre-Cuenta</h6>
                                 </label>
                                 <input type="text" wire:model="email_id" class="form-control" disabled>
                                 @error('email_id')

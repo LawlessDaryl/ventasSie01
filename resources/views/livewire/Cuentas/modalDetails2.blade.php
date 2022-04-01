@@ -38,7 +38,7 @@
 
                         <div class="col-sm-12 col-md-6">
                             <div class="form-group">
-                                <h6>Correo Cuenta</h6>
+                                <h6>Email o Nombre-Cuenta</h6>
                                 <input type="text" disabled wire:model="correoCuenta" class="form-control">
                                 @error('correoCuenta')
                                     <span class="text-danger er">{{ $message }}</span>

@@ -20,6 +20,9 @@
                                 <th class="table-th text-withe">NOMBRE</th>
                                 <th class="table-th text-withe text-center">DESCRIPCIÓN</th>
                                 <th class="table-th text-withe tect-center">ESTADO</th>
+                                <th class="table-th text-withe tect-center">TIPO</th>
+                                <th class="table-th text-withe tect-center">PRECIO PERFIL</th>
+                                <th class="table-th text-withe tect-center">PRECIO ENTERA</th>
                                 <th class="table-th text-withe text-center">IMAGEN</th>
                                 <th class="table-th text-withe text-center">ACCIONES</th>
                             </tr>
@@ -37,6 +40,15 @@
 
                                     <td class="text-center">
                                         <h6>{{ $p->estado }}</h6>
+                                    </td>
+                                    <td class="text-center">
+                                        <h6>{{ $p->tipo }}</h6>
+                                    </td>
+                                    <td class="text-center">
+                                        <h6>{{ $p->precioPerfil }}</h6>
+                                    </td>
+                                    <td class="text-center">
+                                        <h6>{{ $p->precioEntera }}</h6>
                                     </td>
 
                                     <td class="text-center">

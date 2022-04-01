@@ -573,7 +573,6 @@ class PerfilesController extends Component
                     'cartera_id' => $cajaFisica->id,
                     'movimiento_id' => $mv->id
                 ]);
-
                 $tigoStreaming = Cartera::where('tipo', 'TigoStreaming')
                     ->where('caja_id', '1')->get()->first();
                 CarteraMov::create([
@@ -582,7 +581,6 @@ class PerfilesController extends Component
                     'cartera_id' => $tigoStreaming->id,
                     'movimiento_id' => $mv->id
                 ]);
-
                 $carteraTelefono = Cartera::where('tipo', 'Telefono')
                     ->where('caja_id', $CajaActual->id)->get()->first();
                 CarteraMov::create([
@@ -601,12 +599,12 @@ class PerfilesController extends Component
                     'movimiento_id' => $mv->id
                 ]);
             } else {
-                $tigomoneyCaja = Cartera::where('tipo', 'Telefono')
-                    ->where('caja_id', $CajaActual->id)->get()->first();
+                $tigoStreaming = Cartera::where('tipo', 'TigoStreaming')
+                    ->where('caja_id', '1')->get()->first();
                 CarteraMov::create([
                     'type' => 'INGRESO',
                     'comentario' => '',
-                    'cartera_id' => $tigomoneyCaja->id,
+                    'cartera_id' => $tigoStreaming->id,
                     'movimiento_id' => $mv->id
                 ]);
             }

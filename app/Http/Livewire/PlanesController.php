@@ -73,6 +73,9 @@ class PlanesController extends Component
 
     public function render()
     {
+        /* $array = [1, 2, 3, 4];
+        $psserfiles = Profile::find($array);
+        dd($psserfiles); */
         $user_id = Auth()->user()->id;
         $from = Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00';
         $to = Carbon::parse(Carbon::now())->format('Y-m-d')   . ' 23:59:59';
@@ -272,6 +275,7 @@ class PlanesController extends Component
                         'e.content as correo',
                         'e.pass as passCorreo',
                         'plans.importe as importe',
+                        'acc.account_name as account_name',
                         'acc.password_account as password_account',
                         'acc.status as accstatus',
                         'plans.id as id',
@@ -428,8 +432,8 @@ class PlanesController extends Component
         if ($this->CantidadPerfilesCrear <= $cantiadadQueSePuedeCrear) {
             for ($i = 0; $i < $this->CantidadPerfilesCrear; $i++) {
                 $perfil = Profile::create([
-                    'nameprofile' => 'emanuel' . rand(0, 999),
-                    'pin' => rand(100, 999),
+                    'nameprofile' => $this->nombre . rand(1000, 9999),
+                    'pin' => rand(1000, 9999),
                     'status' => 'ACTIVO',
                     'availability' => 'LIBRE',
                     'observations' => '',
@@ -532,15 +536,6 @@ class PlanesController extends Component
             ->select('cajas.id as id')
             ->get()->first();
 
-        /* if ($this->tipopago == 'EFECTIVO') {            
-            $cartera = Cartera::where('tipo', 'cajafisica')
-                ->where('caja_id', $cccc->id)
-                ->get()->first();
-        } else {
-            $cartera = Cartera::where('tipo', $this->tipopago)
-                ->where('caja_id', $cccc->id)->get()->first();
-        } */
-
         /* Obtener al cliente con EL CELULAR */
         $cliente = Cliente::where('celular', $this->celular)
             ->get()
@@ -613,7 +608,6 @@ class PlanesController extends Component
                         'account_id' => $accp->id
                     ]);
                     if ($this->tipopago == 'EFECTIVO') {
-
                         $cajaFisica = Cartera::where('tipo', 'CajaFisica')
                             ->where('caja_id', $cccc->id)->get()->first();
                         CarteraMov::create([
@@ -622,7 +616,6 @@ class PlanesController extends Component
                             'cartera_id' => $cajaFisica->id,
                             'movimiento_id' => $mv->id
                         ]);
-
                         $tigoStreaming = Cartera::where('tipo', 'TigoStreaming')
                             ->where('caja_id', '1')->get()->first();
                         CarteraMov::create([
@@ -631,7 +624,6 @@ class PlanesController extends Component
                             'cartera_id' => $tigoStreaming->id,
                             'movimiento_id' => $mv->id
                         ]);
-
                         $carteraTelefono = Cartera::where('tipo', 'Telefono')
                             ->where('caja_id', $cccc->id)->get()->first();
                         CarteraMov::create([
@@ -650,12 +642,12 @@ class PlanesController extends Component
                             'movimiento_id' => $mv->id
                         ]);
                     } else {
-                        $tigomoneyCaja = Cartera::where('tipo', 'Telefono')
-                            ->where('caja_id', $cccc->id)->get()->first();
+                        $tigoStreaming = Cartera::where('tipo', 'TigoStreaming')
+                            ->where('caja_id', '1')->get()->first();
                         CarteraMov::create([
                             'type' => 'INGRESO',
                             'comentario' => '',
-                            'cartera_id' => $tigomoneyCaja->id,
+                            'cartera_id' => $tigoStreaming->id,
                             'movimiento_id' => $mv->id
                         ]);
                     }
@@ -742,7 +734,6 @@ class PlanesController extends Component
                             'cartera_id' => $cajaFisica->id,
                             'movimiento_id' => $mv->id
                         ]);
-
                         $tigoStreaming = Cartera::where('tipo', 'TigoStreaming')
                             ->where('caja_id', '1')->get()->first();
                         CarteraMov::create([
@@ -751,7 +742,6 @@ class PlanesController extends Component
                             'cartera_id' => $tigoStreaming->id,
                             'movimiento_id' => $mv->id
                         ]);
-
                         $carteraTelefono = Cartera::where('tipo', 'Telefono')
                             ->where('caja_id', $cccc->id)->get()->first();
                         CarteraMov::create([
@@ -770,12 +760,12 @@ class PlanesController extends Component
                             'movimiento_id' => $mv->id
                         ]);
                     } else {
-                        $tigomoneyCaja = Cartera::where('tipo', 'Telefono')
-                            ->where('caja_id', $cccc->id)->get()->first();
+                        $tigoStreaming = Cartera::where('tipo', 'TigoStreaming')
+                            ->where('caja_id', '1')->get()->first();
                         CarteraMov::create([
                             'type' => 'INGRESO',
                             'comentario' => '',
-                            'cartera_id' => $tigomoneyCaja->id,
+                            'cartera_id' => $tigoStreaming->id,
                             'movimiento_id' => $mv->id
                         ]);
                     }

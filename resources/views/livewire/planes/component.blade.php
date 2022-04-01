@@ -56,7 +56,7 @@
                                 <tr>
                                     <th class="table-th text-withe text-center">PLATAFORMA</th>
                                     <th class="table-th text-withe text-center">CLIENTE</th>
-                                    <th class="table-th text-withe text-center">CORREO</th>
+                                    <th class="table-th text-withe text-center">EMAIL</th>
                                     <th class="table-th text-withe text-center">CONTRASEÑA CUENTA</th>
                                     <th class="table-th text-withe text-center">VENCIMIENTO CUENTA</th>
                                     <th class="table-th text-withe text-center">PERFIL</th>
@@ -138,7 +138,7 @@
                                 <tr>
                                     <th class="table-th text-withe text-center">PLATAFORMA</th>
                                     <th class="table-th text-withe text-center">CLIENTE</th>
-                                    <th class="table-th text-withe text-center">CORREO</th>
+                                    <th class="table-th text-withe text-center">EMAIL O NOMBRE-CUENTA</th>
                                     <th class="table-th text-withe text-center">CONTRASEÑA CUENTA</th>
                                     <th class="table-th text-withe text-center">VENCIMIENTO CUENTA</th>
                                     <th class="table-th text-withe text-center">IMPORTE</th>
@@ -159,7 +159,7 @@
                                             <h6 class="text-center">{{ $p->cliente }} {{ $p->celular }}</h6>
                                         </td>
                                         <td class="text-center">
-                                            <h6 class="text-center">{{ $p->correo }} {{ $p->passCorreo }}</h6>
+                                            <h6 class="text-center">{{ $p->account_name }} {{ $p->passCorreo }}</h6>
                                         </td>
                                         <td class="text-center">
                                             <h6 class="text-center">{{ $p->password_account }}</h6>
