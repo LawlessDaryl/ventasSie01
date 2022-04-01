@@ -15,11 +15,11 @@ class CreateLocationsTable extends Migration
     {
         Schema::create('locations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('sucursal_id')->constrained();
             $table->string('codigo',100);
             $table->string('descripcion',250);
-            $table->enum('ubicacion',['ALMACEN','TIENDA'])->default('ALMACEN');
-            $table->enum('tipo',['VITRINA','MOSTRADOR','ESTANTE','OTRO'])->default('ESTANTE');
+            $table->enum('tipo',['VITRINA','MOSTRADOR','ESTANTE','APARADOR'])->default('ESTANTE');
+            $table->unsignedBigInteger('destino_id');
+            $table->foreign('destino_id')->references('id')->on('destinos');
             $table->timestamps();
         });
     }

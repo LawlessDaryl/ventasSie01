@@ -10,7 +10,7 @@ class Product extends Model
     use HasFactory;
 
     protected $fillable = ['nombre','costo','caracteristicas','codigo','barcode','lote',
-    'unidad','marca','garantia','stock','industria','precio_venta','cantidad_minima',
+    'unidad','marca','garantia','stock','industria','precio_venta',
                          'status','image', 'category_id'];
 
 
@@ -22,6 +22,12 @@ class Product extends Model
     {
         return $this->belongsTo(Provider::class);
     }
+
+    public function location()
+    {
+        return $this->belongsToMany(Location::class,'productos_destinos');
+    }
+
 
     public function getImagenAttribute()
     {

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMovementDetailsTable extends Migration
+class CreateCompraDetallesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreateMovementDetailsTable extends Migration
      */
     public function up()
     {
-        Schema::create('movement__details', function (Blueprint $table) {
+        Schema::create('compra_detalles', function (Blueprint $table) {
             $table->id();
-
+            $table->decimal('precio',10,2);
             $table->integer('cantidad');
-            $table->decimal('costo');            
-            $table->foreign('id')->references('id')->on('products');
-            
+            $table->foreignId('product_id')->constrained();
+            $table->foreignId('compra_id')->constrained();
+            $table->foreignId('location_id')->constrained();
             $table->timestamps();
         });
     }
@@ -31,6 +31,6 @@ class CreateMovementDetailsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('movement__details');
+        Schema::dropIfExists('compra_detalles');
     }
 }

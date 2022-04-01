@@ -35,8 +35,6 @@ class PosController extends Component
     //Variables para el conprobantes...
     public $idventa, $totalbs, $totalitems;
 
-
-
     public function mount()
     {
         $this->efectivo = 0;

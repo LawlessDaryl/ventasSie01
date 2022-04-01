@@ -42,12 +42,22 @@ class DatabaseSeeder extends Seeder
         $this->call(ProfileSeeder::class);
         /* INVENTARIOS */
         $this->call(AccountProfileSeeder::class);
+        $this->call(DestinoSeeder::class);
         $this->call(LocationSeeder::class);
+        $this->call(ProductSeeder::class);
         $this->call(UnidadSeeder::class);
         $this->call(CategorySeeder::class);
         $this->call(ClientSeeder::class);
         $this->call(ProductSeeder::class);
         $this->call(ProductoDestinoSeeder::class);
+        
+        $this->call(ProviderSeeder::class);
+        $this->call(ProductoDestinoSeeder::class);
+       
+       // $this->call(CompraSeeder::class);
+        //$this->call(CompraDetalleSeeder::class);
+        
+        
        /*  Category::factory(20)->create(); */
     }
 }

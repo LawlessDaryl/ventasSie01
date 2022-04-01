@@ -6,8 +6,10 @@
                     <b>{{ $componentName }} | {{ $pageTitle }}</b>
                 </h4>
                 <ul class="tabs tab-pills">
-                    <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
-                        data-target="#theModal">Agregar</a>
+                    
+                        <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
+                        data-target="#theModal">Agregar Estancia</a>
+                    
                 </ul>
             </div>
             @include('common.searchbox')
@@ -17,45 +19,35 @@
                     <table class="table table-unbordered table-hover mt-2">
                         <thead class="text-white" style="background: #3B3F5C">
                             <tr>
-                                <th class="table-th text-withe text-center">TIPO</th>
-                                <th class="table-th text-withe text-center">CODIGO</th>
-                                <th class="table-th text-withe text-center">DESCRIPCION</th>
-                                <th class="table-th text-withe text-center">UBICACION</th>
+                                <th class="table-th text-withe text-center">ITEM</th>
+                                <th class="table-th text-withe text-center">NOMBRE</th>                                
+                                <th class="table-th text-withe text-center">OBSERVACION</th>
                                 <th class="table-th text-withe text-center">SUCURSAL</th>
-                                
                                 <th class="table-th text-withe text-center">ACCIONES</th>
-                               
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($data_locations as $location)
-                            <tr>
+                            @foreach ($datas as $data)
+                                <tr>
                                     <td>
-                                        <h6 class=" text-center">{{ $location->tipo }}</h6>
+                                        <h6 class="text-center">{{ $data->id }}</h6>
                                     </td>
                                     <td>
-                                        <h6 class="text-center">{{ $location->codigo }}</h6>
+                                        <h6 class="text-center">{{ $data->nombre }}</h6>
                                     </td>
                                     <td>
-                                        <h6 class="text-center">{{ $location->descripcion }}</h6>
+                                        <h6 class="text-center">{{ $data->observacion }}</h6>
                                     </td>
                                     <td>
-                                        <h6 class="text-center">{{ $location->destino }}</h6>
-                                    </td>
-                                    <td>
-                                        <h6 class="text-center">{{ $location->sucursal}}</h6>
+                                        <h6 class="text-center">{{ $data->name }}</h6>
                                     </td>
                                     
-            
-
-                                
                                     <td class="text-center">
-                                        <a href="javascript:void(0)" wire:click="Edit({{ $location->id }})"
+                                        <a href="javascript:void(0)" wire:click="Edit({{ $data->id }})"
                                             class="btn btn-dark mtmobile" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <a href="javascript:void(0)"
-                                            onclick="Confirm('{{ $location->id }}','{{ $location->descripcion }}')"
+                                        <a href="javascript:void(0)" onclick="Confirm('{{ $data->id }}','{{ $data->nombre }}')" 
                                             class="btn btn-dark" title="Delete">
                                             <i class="fas fa-trash"></i>
                                         </a>
@@ -64,56 +56,44 @@
                             @endforeach
                         </tbody>
                     </table>
-                    {{ $data_locations->links() }}
+                    {{ $datas->links() }}
                 </div>
             </div>
         </div>
     </div>
-   @include('livewire.localizacion.form') 
+    @include('livewire.destino.form')
 </div>
-
-
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
-
-        window.livewire.on('localizacion-added', msg => {
-            $('#theModal').modal('hide'),
-            noty(msg)
-        });
-        window.livewire.on('location-updated', msg => {
+        window.livewire.on('unidad-added', msg => {
             $('#theModal').modal('hide')
-            noty(msg)
         });
-        window.livewire.on('localizacion-deleted', msg => {
-            noty(msg)
+        window.livewire.on('unidad-updated', msg => {
+            $('#theModal').modal('hide')
         });
-        window.livewire.on('modal-locacion', msg => {
+        window.livewire.on('unidad-deleted', msg => {
+            ///
+        });
+        window.livewire.on('show-modal', msg => {
             $('#theModal').modal('show')
         });
         window.livewire.on('modal-hide', msg => {
             $('#theModal').modal('hide')
-        });
-        window.livewire.on('hidden.bs.modal', function(e) {
-            $('.er').css('display', 'none')
-        });
+        });        
+        $('theModal').on('hidden.bs.modal',function(e) {
+            $('.er').css('display','none')
+        })
+
     });
 
-    function Confirm(id, descripcion, locations) {
-        if (locations > 0) {
-            swal.fire({
-                title: 'PRECAUCION',
-                icon: 'warning',
-                text: 'No se puede eliminar el producto, ' + descripcion + ' porque tiene ' +
-                    locations + ' ventas relacionadas'
-            })
-            return;
-        }
+    function Confirm(id,nombre) {
+     
         swal.fire({
             title: 'CONFIRMAR',
             icon: 'warning',
-            text: 'Confirmar eliminar la locacion ' + '"' + descripcion + '"',
+            text: 'Confirmar eliminar la unidad ' + '"' + nombre + '"',
             showCancelButton: true,
             cancelButtonText: 'Cerrar',
             cancelButtonColor: '#383838',

@@ -58,6 +58,10 @@ use App\Http\Livewire\TypeWorkController;
 use App\Http\Livewire\UnidadesController;
 use App\Http\Livewire\SaleListController;
 use App\Http\Livewire\NotificacionController;
+use App\Http\Livewire\DestinoProductoController;
+use App\Http\Livewire\TransferirProductoController;
+use App\Http\Livewire\DestinoController;
+
 use Illuminate\Support\Facades\Auth;
 
 Auth::routes();
@@ -139,6 +143,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('proveedores', ProvidersController::class)->name('supliers');
     Route::get('compras', ComprasController::class)->name('compras');
     Route::get('transacciones', TransaccionesController::class)->name('transactions');
+    Route::get('destino_prod', DestinoProductoController::class)->name('destination');
+    Route::get('transferencia', TransferirProductoController::class)->name('destination');
+    Route::get('destino', DestinoController::class)->name('dest');
 
     /* VENTAS */
     Route::get('coins', CoinsController::class)->name('monedas')->middleware('permission:Coins_Index');
