@@ -29,7 +29,7 @@
                                     <input type="radio" class="new-control-input" name="custom-radio-4" id="ocupados"
                                         value="ocupados" wire:model="condicional" checked>
                                     <span class="new-control-indicator"></span>
-                                    <h6>OCUPADOS</h6>
+                                    <h6>PLANES PERFILES OCUPADOS</h6>
                                 </label>
                             </div>
                         </div>
@@ -41,7 +41,7 @@
                                     <input type="radio" class="new-control-input" name="custom-radio-4" id="ocupados"
                                         value="vencidos" wire:model="condicional" checked>
                                     <span class="new-control-indicator"></span>
-                                    <h6>VENCIDOS</h6>
+                                    <h6>PLANES PERFILES VENCIDOS</h6>
                                 </label>
                             </div>
                         </div>

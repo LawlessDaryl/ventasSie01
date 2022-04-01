@@ -264,6 +264,9 @@
         window.livewire.on('show-crearPerfil', Msg => {
             $('#Modal_crear_perfil').modal('show')
         })
+        window.livewire.on('mensajeCrearPerf', Msg => {
+            noty(Msg)
+        })
         window.livewire.on('crearperfil-cerrar', Msg => {
             $('#Modal_crear_perfil').modal('hide')
             noty(Msg)

@@ -30,7 +30,7 @@ class PlanesController extends Component
         $nombre, $cedula, $celular, $direccion, $email, $fecha_nacim, $razon, $nit, $plataforma,
         $cuentaperfil, $accounts, $profiles, $cantidaperf, $mostrartabla, $tipopago, $condicional,
         $meses, $observaciones, $ready, $selected_perf, $totalCobrar, $BuscarCliente, $ClienteSelect,
-        $cuentasEnteras, $nombrePerfil, $pinPerfil;
+        $cuentasEnteras, $nombrePerfil, $pinPerfil, $CantidadPerfilesCrear;
 
     private $pagination = 10;
     public function paginationView()
@@ -68,6 +68,7 @@ class PlanesController extends Component
         $this->pinPerfil = '';
         $this->search = '';
         $this->cuentasEnteras = [];
+        $this->CantidadPerfilesCrear = 0;
     }
 
     public function render()
@@ -90,7 +91,8 @@ class PlanesController extends Component
 
         /* MOSTRAR CARTERAS DE LA CAJA EN LA QUE SE ENCUENTRA */
         $carterasCaja = Cartera::where('caja_id', $cajausuario->id)
-            ->select('id', 'nombre', DB::raw('0 as monto'))->get();
+            ->orWhere('caja_id', '1')
+            ->select('id', 'nombre', DB::raw('0 as monto'))->orderBy('id', 'desc')->get();
         foreach ($carterasCaja as $c) {
             /* SUMAR TODO LOS INGRESOS DE LA CARTERA */
             $INGRESOS = Cartera::join('cartera_movs as cm', 'carteras.id', 'cm.cartera_id')
@@ -144,32 +146,24 @@ class PlanesController extends Component
                     ->where('m.user_id', $user_id)
                     ->where('plans.type_plan', 'PERFIL')
                     ->whereColumn('plans.id', '=', 'ap.plan_id')
-                    ->where('ca.id', $cajausuario->id)
-                    ->where('cmvs.type', 'INGRESO')
                     /* BUSCAR POR NOMBRE CLIENTE */
                     ->orWhere('c.nombre', 'like', '%' . $this->search . '%')
                     ->whereBetween('plans.created_at', [$from, $to])
                     ->where('m.user_id', $user_id)
                     ->where('plans.type_plan', 'PERFIL')
                     ->whereColumn('plans.id', '=', 'ap.plan_id')
-                    ->where('ca.id', $cajausuario->id)
-                    ->where('cmvs.type', 'INGRESO')
                     /* BUSCAR POR CORREO */
                     ->orWhere('e.content', 'like', '%' . $this->search . '%')
                     ->whereBetween('plans.created_at', [$from, $to])
                     ->where('m.user_id', $user_id)
                     ->where('plans.type_plan', 'PERFIL')
                     ->whereColumn('plans.id', '=', 'ap.plan_id')
-                    ->where('ca.id', $cajausuario->id)
-                    ->where('cmvs.type', 'INGRESO')
                     /* BUSCAR POR NOMBRE PERFILES */
                     ->orWhere('prof.nameprofile', 'like', '%' . $this->search . '%')
                     ->whereBetween('plans.created_at', [$from, $to])
                     ->where('m.user_id', $user_id)
                     ->where('plans.type_plan', 'PERFIL')
                     ->whereColumn('plans.id', '=', 'ap.plan_id')
-                    ->where('ca.id', $cajausuario->id)
-                    ->where('cmvs.type', 'INGRESO')
 
                     ->orderBy('plans.created_at', 'desc')
                     ->distinct()
@@ -184,9 +178,6 @@ class PlanesController extends Component
                     ->join('platforms as plat', 'plat.id', 'acc.platform_id')
                     ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
                     ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
-                    ->join('cartera_movs as cmvs', 'm.id', 'cmvs.movimiento_id')
-                    ->join('carteras as cart', 'cart.id', 'cmvs.cartera_id')
-                    ->join('cajas as ca', 'ca.id', 'cart.caja_id')
                     ->select(
                         'plat.nombre as plataforma',
                         'acc.expiration_account as accexp',
@@ -209,12 +200,10 @@ class PlanesController extends Component
                     ->where('m.user_id', $user_id)
                     ->where('plans.type_plan', 'PERFIL')
                     ->whereColumn('plans.id', '=', 'ap.plan_id')
-                    ->where('ca.id', $cajausuario->id)
-                    ->where('cmvs.type', 'INGRESO')
                     ->orderBy('plans.created_at', 'desc')
                     ->paginate($this->pagination);
             }
-        } else {
+        } else {    /* cuentas */
             if (strlen($this->search) > 0) {
                 $data = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
                     ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
@@ -223,9 +212,6 @@ class PlanesController extends Component
                     ->join('platforms as plat', 'plat.id', 'acc.platform_id')
                     ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
                     ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
-                    ->join('cartera_movs as cmvs', 'm.id', 'cmvs.movimiento_id')
-                    ->join('carteras as cart', 'cart.id', 'cmvs.cartera_id')
-                    ->join('cajas as ca', 'ca.id', 'cart.caja_id')
                     ->select(
                         'plat.nombre as plataforma',
                         'acc.expiration_account as accexp',
@@ -246,22 +232,25 @@ class PlanesController extends Component
                     ->where('plat.nombre', 'like', '%' . $this->search . '%')
                     ->where('m.user_id', $user_id)
                     ->where('plans.type_plan', 'CUENTA')
-                    ->where('ca.id', $cajausuario->id)
-                    ->where('cmvs.type', 'INGRESO')
+                    ->where('m.status', 'ACTIVO')
+                    ->whereBetween('plans.created_at', [$from, $to])
+
+                    ->orWhere('c.celular', 'like', '%' . $this->search . '%')
+                    ->where('m.user_id', $user_id)
+                    ->where('plans.type_plan', 'CUENTA')
+                    ->where('m.status', 'ACTIVO')
                     ->whereBetween('plans.created_at', [$from, $to])
 
                     ->orWhere('c.nombre', 'like', '%' . $this->search . '%')
                     ->where('m.user_id', $user_id)
                     ->where('plans.type_plan', 'CUENTA')
-                    ->where('ca.id', $cajausuario->id)
-                    ->where('cmvs.type', 'INGRESO')
+                    ->where('m.status', 'ACTIVO')
                     ->whereBetween('plans.created_at', [$from, $to])
 
                     ->orWhere('e.content', 'like', '%' . $this->search . '%')
                     ->where('m.user_id', $user_id)
                     ->where('plans.type_plan', 'CUENTA')
-                    ->where('ca.id', $cajausuario->id)
-                    ->where('cmvs.type', 'INGRESO')
+                    ->where('m.status', 'ACTIVO')
                     ->whereBetween('plans.created_at', [$from, $to])
 
                     ->orderBy('plans.created_at', 'desc')
@@ -275,9 +264,6 @@ class PlanesController extends Component
                     ->join('platforms as plat', 'plat.id', 'acc.platform_id')
                     ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
                     ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
-                    ->join('cartera_movs as cmvs', 'm.id', 'cmvs.movimiento_id')
-                    ->join('carteras as cart', 'cart.id', 'cmvs.cartera_id')
-                    ->join('cajas as ca', 'ca.id', 'cart.caja_id')
                     ->select(
                         'plat.nombre as plataforma',
                         'acc.expiration_account as accexp',
@@ -298,8 +284,7 @@ class PlanesController extends Component
                     ->whereBetween('plans.created_at', [$from, $to])
                     ->where('m.user_id', $user_id)
                     ->where('plans.type_plan', 'CUENTA')
-                    ->where('ca.id', $cajausuario->id)
-                    ->where('cmvs.type', 'INGRESO')
+                    ->where('m.status', 'ACTIVO')
                     ->orderBy('plans.created_at', 'desc')
                     ->paginate($this->pagination);
             }
@@ -316,8 +301,8 @@ class PlanesController extends Component
 
         /* BUSCAR CLIENTE POR CEDULA EN EL INPUT DEL MODAL */
         $datos = [];
-        if (strlen($this->celular) > 0) {
-            $datos = Cliente::where('celular', 'like', '%' . $this->celular . '%')->orderBy('celular', 'desc')->get();
+        if ($this->celular != '') {
+            $datos = Cliente::where('celular', 'like', $this->celular . '%')->orderBy('celular', 'desc')->get();
             if ($datos->count() > 0) {
                 $this->BuscarCliente = 1;
             } else {
@@ -327,6 +312,7 @@ class PlanesController extends Component
                 $this->BuscarCliente = 0;
             }
         } else {
+            $this->BuscarCliente = 0;
             if ($this->ClienteSelect == 0) {
                 $this->ClienteSelect = 1;
             }
@@ -373,16 +359,42 @@ class PlanesController extends Component
                 /* CUENTAS ENTERAS PARA CREAR UN PERFIL SI ES QUE NO TIENE CREADOS */
                 $this->cuentasEnteras = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                     ->join('emails as e', 'accounts.email_id', 'e.id')
+                    ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
                     ->select(
-                        'accounts.*',
-                        'e.content',
+                        'accounts.id as id',
+                        'accounts.expiration_account as expiration_account',
+                        'accounts.number_profiles',
+                        'accounts.whole_account',
+                        'accounts.password_account',
+                        'p.nombre as nombre',
+                        'e.content as content',
+                        'e.pass as pass',
+                        'strsp.name as name',
+                        DB::raw('0 as perfActivos'),
+                        DB::raw('0 as cantiadadQueSePuedeCrear'),
                     )
-                    ->where('accounts.whole_account', 'ENTERA')
-                    ->where('accounts.availability', 'LIBRE')
                     ->where('accounts.status', 'ACTIVO')
+                    ->where('accounts.availability', 'LIBRE')
                     ->where('p.id', $this->plataforma)
-                    ->orderBy('accounts.expiration_account', 'desc')
+                    ->orderBy('accounts.expiration_account', 'asc')
                     ->get();
+
+                foreach ($this->cuentasEnteras as $c) {
+                    $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
+                        ->join('profiles as p', 'ap.profile_id', 'p.id')
+                        ->where('accounts.id', $c->id)
+                        ->where('p.status', 'ACTIVO')->get();
+
+                    $cantidadActivos = $perfilesActivos->count();
+                    $c->perfActivos = $cantidadActivos;
+
+                    /* $fecha_actual = date("Y-m-d");
+                    $s = strtotime($c->expiration_account) - strtotime($fecha_actual);
+                    $d = intval($s / 86400);
+                    $c->dias = $d; */
+
+                    $c->cantiadadQueSePuedeCrear = $c->number_profiles - $c->perfActivos;
+                }
             } else {
                 $this->accounts = [];
                 $this->profiles = [];
@@ -406,58 +418,59 @@ class PlanesController extends Component
 
     public function SeleccionarCuenta(Account $cuenta)
     {
-        $rules = [
-            'nombrePerfil' => 'required',
-            'pinPerfil' => 'required',
+        $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
+            ->join('profiles as p', 'ap.profile_id', 'p.id')
+            ->where('accounts.id', $cuenta->id)
+            ->where('p.status', 'ACTIVO')->get();
+        $cantidadActivos = $perfilesActivos->count();
+        $cantiadadQueSePuedeCrear = $cuenta->number_profiles - $cantidadActivos;
 
-        ];
-        $messages = [
-            'nombrePerfil.required' => 'El nombre del perfil es requerido',
-            'pinPerfil.required' => 'El pin es requerido',
-        ];
+        if ($this->CantidadPerfilesCrear <= $cantiadadQueSePuedeCrear) {
+            for ($i = 0; $i < $this->CantidadPerfilesCrear; $i++) {
+                $perfil = Profile::create([
+                    'nameprofile' => 'emanuel' . rand(0, 999),
+                    'pin' => rand(100, 999),
+                    'status' => 'ACTIVO',
+                    'availability' => 'LIBRE',
+                    'observations' => '',
+                ]);
+                AccountProfile::create([
+                    'status' => 'SinAsignar',
+                    'account_id' => $cuenta->id,
+                    'profile_id' => $perfil->id,
+                ]);
+                /* LA CUENTA PASA A DIVIDIDA */
+                $cuenta->whole_account = 'DIVIDIDA';
+                $cuenta->save();
 
-        $this->validate($rules, $messages);
+                /* ACTUALIZAR LISTADO PERFILES Y MOSTAR EL CREADO */
+                $this->profiles = Profile::join('account_profiles as ap', 'ap.profile_id', 'profiles.id')
+                    ->join('accounts as a', 'ap.account_id', 'a.id')
+                    ->join('platforms as p', 'a.platform_id', 'p.id')
+                    ->join('emails as e', 'a.email_id', 'e.id')
+                    ->select(
+                        'profiles.id as id',
+                        'p.precioPerfil as precioPerfil',
+                        'a.id as cuentaid',
+                        'e.content as email',
+                        'profiles.nameprofile as nombre_perfil',
+                        'profiles.pin as pin',
+                        'a.password_account as password_account'
+                    )
+                    ->where('profiles.availability', 'LIBRE')
+                    ->where('profiles.status', 'ACTIVO')
+                    ->where('a.status', 'ACTIVO')
+                    ->orderBy('a.expiration_account', 'desc')
+                    ->where('p.id', $this->plataforma)
+                    ->get()->take($this->cantidaperf);
+            }
+            $this->emit('mensajeCrearPerf', 'Se crearon los ' . $this->CantidadPerfilesCrear . ' Perfiles');
+        } else {
+            $this->emit('mensajeCrearPerf', 'No tiene la cantidad suficiente de perfiles que usted quiere crear');
+        }
 
-        $perfil = Profile::create([
-            'nameprofile' => $this->nombrePerfil,
-            'pin' => $this->pinPerfil,
-            'status' => 'ACTIVO',
-            'availability' => 'LIBRE',
-            'observations' => '',
-        ]);
-        AccountProfile::create([
-            'status' => 'SinAsignar',
-            'account_id' => $cuenta->id,
-            'profile_id' => $perfil->id,
-        ]);
-        /* LA CUENTA PASA A DIVIDIDA */
-        $cuenta->whole_account = 'DIVIDIDA';
-        $cuenta->save();
 
-        $this->nombrePerfil = '';
-        $this->pinPerfil = '';
-        /* ACTUALIZAR LISTADO PERFILES Y MOSTAR EL CREADO */
-        $this->profiles = Profile::join('account_profiles as ap', 'ap.profile_id', 'profiles.id')
-            ->join('accounts as a', 'ap.account_id', 'a.id')
-            ->join('platforms as p', 'a.platform_id', 'p.id')
-            ->join('emails as e', 'a.email_id', 'e.id')
-            ->select(
-                'profiles.id as id',
-                'p.precioPerfil as precioPerfil',
-                'a.id as cuentaid',
-                'e.content as email',
-                'profiles.nameprofile as nombre_perfil',
-                'profiles.pin as pin',
-                'a.password_account as password_account'
-            )
-            ->where('profiles.availability', 'LIBRE')
-            ->where('profiles.status', 'ACTIVO')
-            ->where('a.status', 'ACTIVO')
-            ->orderBy('a.expiration_account', 'desc')
-            ->where('p.id', $this->plataforma)
-            ->get()->take($this->cantidaperf);
-
-        $this->emit('crearperfil-cerrar', 'Se creó el perfil en la cuenta seleccionada');
+        /* $this->emit('crearperfil-cerrar', 'Se creó el perfil en la cuenta seleccionada'); */
     }
 
     public function Agregar()
@@ -574,7 +587,7 @@ class PlanesController extends Component
                         ->where('expiration_date', '>=', $mv->created_at)
                         ->where('account_id', $accp->id)
                         ->get()->first();
-                    
+
                     $inversioncuenta->type = 'CUENTA';
                     $inversioncuenta->imports = $this->importe;
                     $inversioncuenta->ganancia = $this->importe - $inversioncuenta->price;
@@ -600,14 +613,25 @@ class PlanesController extends Component
                         'account_id' => $accp->id
                     ]);
                     if ($this->tipopago == 'EFECTIVO') {
-                        $carteraTigo = Cartera::where('tipo', 'TigoStreaming')
+
+                        $cajaFisica = Cartera::where('tipo', 'CajaFisica')
                             ->where('caja_id', $cccc->id)->get()->first();
                         CarteraMov::create([
                             'type' => 'INGRESO',
                             'comentario' => '',
-                            'cartera_id' => $carteraTigo->id,
+                            'cartera_id' => $cajaFisica->id,
                             'movimiento_id' => $mv->id
                         ]);
+
+                        $tigoStreaming = Cartera::where('tipo', 'TigoStreaming')
+                            ->where('caja_id', '1')->get()->first();
+                        CarteraMov::create([
+                            'type' => 'INGRESO',
+                            'comentario' => '',
+                            'cartera_id' => $tigoStreaming->id,
+                            'movimiento_id' => $mv->id
+                        ]);
+
                         $carteraTelefono = Cartera::where('tipo', 'Telefono')
                             ->where('caja_id', $cccc->id)->get()->first();
                         CarteraMov::create([
@@ -616,13 +640,22 @@ class PlanesController extends Component
                             'cartera_id' => $carteraTelefono->id,
                             'movimiento_id' => $mv->id
                         ]);
+                    } elseif ($this->tipopago == 'Banco') {
+                        $banco = Cartera::where('tipo', 'Banco')
+                            ->where('caja_id', '1')->get()->first();
+                        CarteraMov::create([
+                            'type' => 'INGRESO',
+                            'comentario' => '',
+                            'cartera_id' => $banco->id,
+                            'movimiento_id' => $mv->id
+                        ]);
                     } else {
-                        $cartera = Cartera::where('tipo', $this->tipopago)
+                        $tigomoneyCaja = Cartera::where('tipo', 'Telefono')
                             ->where('caja_id', $cccc->id)->get()->first();
                         CarteraMov::create([
                             'type' => 'INGRESO',
                             'comentario' => '',
-                            'cartera_id' => $cartera->id,
+                            'cartera_id' => $tigomoneyCaja->id,
                             'movimiento_id' => $mv->id
                         ]);
                     }
@@ -701,14 +734,24 @@ class PlanesController extends Component
                     } */
 
                     if ($this->tipopago == 'EFECTIVO') {
-                        $carteraTigo = Cartera::where('tipo', 'TigoStreaming')
+                        $cajaFisica = Cartera::where('tipo', 'CajaFisica')
                             ->where('caja_id', $cccc->id)->get()->first();
                         CarteraMov::create([
                             'type' => 'INGRESO',
                             'comentario' => '',
-                            'cartera_id' => $carteraTigo->id,
+                            'cartera_id' => $cajaFisica->id,
                             'movimiento_id' => $mv->id
                         ]);
+
+                        $tigoStreaming = Cartera::where('tipo', 'TigoStreaming')
+                            ->where('caja_id', '1')->get()->first();
+                        CarteraMov::create([
+                            'type' => 'INGRESO',
+                            'comentario' => '',
+                            'cartera_id' => $tigoStreaming->id,
+                            'movimiento_id' => $mv->id
+                        ]);
+
                         $carteraTelefono = Cartera::where('tipo', 'Telefono')
                             ->where('caja_id', $cccc->id)->get()->first();
                         CarteraMov::create([
@@ -717,13 +760,22 @@ class PlanesController extends Component
                             'cartera_id' => $carteraTelefono->id,
                             'movimiento_id' => $mv->id
                         ]);
+                    } elseif ($this->tipopago == 'Banco') {
+                        $banco = Cartera::where('tipo', 'Banco')
+                            ->where('caja_id', '1')->get()->first();
+                        CarteraMov::create([
+                            'type' => 'INGRESO',
+                            'comentario' => '',
+                            'cartera_id' => $banco->id,
+                            'movimiento_id' => $mv->id
+                        ]);
                     } else {
-                        $cartera = Cartera::where('tipo', $this->tipopago)
+                        $tigomoneyCaja = Cartera::where('tipo', 'Telefono')
                             ->where('caja_id', $cccc->id)->get()->first();
                         CarteraMov::create([
                             'type' => 'INGRESO',
                             'comentario' => '',
-                            'cartera_id' => $cartera->id,
+                            'cartera_id' => $tigomoneyCaja->id,
                             'movimiento_id' => $mv->id
                         ]);
                     }
@@ -848,11 +900,8 @@ class PlanesController extends Component
 
     public function Modificar()
     {
-
         $plan = Plan::find($this->selected_id);
         $plan->observations = $this->observaciones;
-        $plan->ready = $this->ready;
-        $plan->done = $this->ready;
         $plan->save();
         $this->resetUI();
         $this->emit('item-actualizado', 'Se actulizó la información');

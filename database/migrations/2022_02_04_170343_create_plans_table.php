@@ -16,8 +16,8 @@ class CreatePlansTable extends Migration
         Schema::create('plans', function (Blueprint $table) {
             $table->id();
             $table->integer('importe');
-            $table->dateTime('plan_start');
-            $table->dateTime('expiration_plan');
+            $table->date('plan_start');
+            $table->date('expiration_plan');
             $table->enum('ready', ['SI', 'NO'])->default('NO');
             $table->enum('done', ['SI', 'NO'])->default('NO');
             $table->enum('type_plan', ['CUENTA', 'PERFIL']);

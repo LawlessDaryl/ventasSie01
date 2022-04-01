@@ -28,7 +28,7 @@ class PerfilesController extends Component
         $search, $selected_id, $pageTitle, $componentName, $condicional,
         $meses, $expirationNueva, $expirationActual, $tipopago, $importe,
         $mostrartabla2, $perfil, $selected_plan, $nombreCliente, $celular, $cuentasEnteras,
-        $nombrePerfil, $pinPerfil;
+        $nombrePerfil, $pinPerfil, $datos;
     private $pagination = 10;
     public function paginationView()
     {
@@ -141,7 +141,7 @@ class PerfilesController extends Component
                         'plans.done as done',
                         DB::raw('0 as horas')
                     )
-                    ->where('plat.nombre', 'like', '%' . $this->search . '%')                    
+                    ->where('plat.nombre', 'like', '%' . $this->search . '%')
                     ->where('plans.type_plan', 'PERFIL')
                     ->where('plans.status', 'VIGENTE')
                     ->where('pa.status', 'ACTIVO')
@@ -221,7 +221,7 @@ class PerfilesController extends Component
                     ->where('plans.status', 'VIGENTE')
                     ->where('pa.status', 'ACTIVO')
                     ->where('plans.ready', 'SI')
-                    ->whereColumn('plans.id', '=', 'ap.plan_id')                    
+                    ->whereColumn('plans.id', '=', 'ap.plan_id')
                     ->orderBy('plans.done', 'desc')
                     ->orderBy('plans.expiration_plan', 'asc')
                     ->paginate($this->pagination);
@@ -267,35 +267,35 @@ class PerfilesController extends Component
                     ->where('plat.nombre', 'like', '%' . $this->search . '%')
                     ->where('plans.status', 'VENCIDO')
                     ->where('plans.type_plan', 'PERFIL')
-                    ->where('plans.ready', 'SI')                    
+                    ->where('plans.ready', 'SI')
                     ->where('ap.status', 'VENCIDO')
                     ->whereColumn('plans.id', '=', 'ap.plan_id')
 
                     ->orWhere('c.nombre', 'like', '%' . $this->search . '%')
                     ->where('plans.status', 'VENCIDO')
                     ->where('plans.type_plan', 'PERFIL')
-                    ->where('plans.ready', 'SI')                    
+                    ->where('plans.ready', 'SI')
                     ->where('ap.status', 'VENCIDO')
                     ->whereColumn('plans.id', '=', 'ap.plan_id')
 
                     ->orWhere('c.celular', 'like', '%' . $this->search . '%')
                     ->where('plans.status', 'VENCIDO')
                     ->where('plans.type_plan', 'PERFIL')
-                    ->where('plans.ready', 'SI')                    
+                    ->where('plans.ready', 'SI')
                     ->where('ap.status', 'VENCIDO')
                     ->whereColumn('plans.id', '=', 'ap.plan_id')
 
                     ->orWhere('e.content', 'like', '%' . $this->search . '%')
                     ->where('plans.status', 'VENCIDO')
                     ->where('plans.type_plan', 'PERFIL')
-                    ->where('plans.ready', 'SI')                    
+                    ->where('plans.ready', 'SI')
                     ->where('ap.status', 'VENCIDO')
                     ->whereColumn('plans.id', '=', 'ap.plan_id')
 
                     ->orWhere('prof.nameprofile', 'like', '%' . $this->search . '%')
                     ->where('plans.status', 'VENCIDO')
                     ->where('plans.type_plan', 'PERFIL')
-                    ->where('plans.ready', 'SI')                    
+                    ->where('plans.ready', 'SI')
                     ->where('ap.status', 'VENCIDO')
                     ->whereColumn('plans.id', '=', 'ap.plan_id')
 
@@ -564,14 +564,25 @@ class PerfilesController extends Component
             $perfil->save();
 
             if ($this->tipopago == 'EFECTIVO') {
-                $carteraTigo = Cartera::where('tipo', 'TigoStreaming')
+
+                $cajaFisica = Cartera::where('tipo', 'CajaFisica')
                     ->where('caja_id', $CajaActual->id)->get()->first();
                 CarteraMov::create([
                     'type' => 'INGRESO',
                     'comentario' => '',
-                    'cartera_id' => $carteraTigo->id,
+                    'cartera_id' => $cajaFisica->id,
                     'movimiento_id' => $mv->id
                 ]);
+
+                $tigoStreaming = Cartera::where('tipo', 'TigoStreaming')
+                    ->where('caja_id', '1')->get()->first();
+                CarteraMov::create([
+                    'type' => 'INGRESO',
+                    'comentario' => '',
+                    'cartera_id' => $tigoStreaming->id,
+                    'movimiento_id' => $mv->id
+                ]);
+
                 $carteraTelefono = Cartera::where('tipo', 'Telefono')
                     ->where('caja_id', $CajaActual->id)->get()->first();
                 CarteraMov::create([
@@ -580,13 +591,22 @@ class PerfilesController extends Component
                     'cartera_id' => $carteraTelefono->id,
                     'movimiento_id' => $mv->id
                 ]);
+            } elseif ($this->tipopago == 'Banco') {
+                $banco = Cartera::where('tipo', 'Banco')
+                    ->where('caja_id', '1')->get()->first();
+                CarteraMov::create([
+                    'type' => 'INGRESO',
+                    'comentario' => '',
+                    'cartera_id' => $banco->id,
+                    'movimiento_id' => $mv->id
+                ]);
             } else {
-                $cartera = Cartera::where('tipo', $this->tipopago)
+                $tigomoneyCaja = Cartera::where('tipo', 'Telefono')
                     ->where('caja_id', $CajaActual->id)->get()->first();
                 CarteraMov::create([
                     'type' => 'INGRESO',
                     'comentario' => '',
-                    'cartera_id' => $cartera->id,
+                    'cartera_id' => $tigomoneyCaja->id,
                     'movimiento_id' => $mv->id
                 ]);
             }
@@ -659,6 +679,7 @@ class PerfilesController extends Component
         $this->resetUI();
         $this->emit('item-accion', 'No se renovó este perfil y ahora esta inactivo');
     }
+
     public function CambiarCuenta()
     {
         $this->mostrartabla2 = 1;
@@ -695,16 +716,36 @@ class PerfilesController extends Component
             ->where('a.id', '!=', $datos->cuentaid)
             ->get()->first();
         $this->cuentasEnteras = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
+            ->join('emails as e', 'accounts.email_id', 'e.id')
             ->select(
-                'accounts.*',
+                'accounts.id as id',
+                'accounts.expiration_account as expiration_account',
+                'accounts.number_profiles',
+                'p.nombre as nombre',
+                'e.content as content',
+                'e.pass as pass',
+                DB::raw('0 as perfActivos'),
+                DB::raw('0 as cantiadadQueSePuedeCrear'),
             )
-            ->where('accounts.whole_account', 'ENTERA')
-            ->where('accounts.availability', 'LIBRE')
             ->where('accounts.status', 'ACTIVO')
+            ->where('accounts.availability', 'LIBRE')
             ->where('p.id', $datos->platfid)
-            ->orderBy('accounts.expiration_account', 'desc')
             ->get();
+
+        foreach ($this->cuentasEnteras as $c) {
+            $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
+                ->join('profiles as p', 'ap.profile_id', 'p.id')
+                ->where('accounts.id', $c->id)
+                ->where('p.status', 'ACTIVO')->get();
+
+            $cantidadActivos = $perfilesActivos->count();
+            $c->perfActivos = $cantidadActivos;
+
+            $c->cantiadadQueSePuedeCrear = $c->number_profiles - $c->perfActivos;
+        }
+        /* dd($this->cuentasEnteras); */
     }
+
     public function VerCuentas()
     {
         $this->emit('show-crearPerfil', 'show modal!');
@@ -778,8 +819,6 @@ class PerfilesController extends Component
 
         $this->emit('crearperfil-cerrar', 'Se creó el perfil en la cuenta seleccionada');
     }
-
-    protected $listeners = ['deleteRow' => 'Destroy', 'Vencer' => 'Vencer', 'Renovar' => 'Renovar', 'CambiarAccount' => 'CambiarAccount', 'Realizado' => 'Realizado'];
 
     public function CambiarAccount(Profile $perf)
     {
@@ -886,6 +925,9 @@ class PerfilesController extends Component
             $this->emit('item-error', 'ERROR' . $e->getMessage());
         }
     }
+
+    protected $listeners = ['deleteRow' => 'Destroy', 'Vencer' => 'Vencer', 'Renovar' => 'Renovar', 'CambiarAccount' => 'CambiarAccount', 'Realizado' => 'Realizado'];
+
     public function Realizado(Plan $plan)
     {
         $plan->done = 'SI';

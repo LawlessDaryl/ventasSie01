@@ -20,15 +20,17 @@ class CreateAccountsTable extends Migration
             $table->enum('status', ['ACTIVO', 'INACTIVO'])->default('ACTIVO');
             $table->enum('whole_account', ['ENTERA', 'DIVIDIDA'])->default('ENTERA');
             $table->integer('number_profiles');
+            $table->string('account_name', 20)->nullable();
             $table->string('password_account', 20);
             $table->decimal('price', 10, 2);
-            $table->enum('availability',['LIBRE','OCUPADO'])->default('LIBRE');
+            $table->enum('availability', ['LIBRE', 'OCUPADO'])->default('LIBRE');
+            $table->integer('meses_comprados');
             $table->unsignedBigInteger('str_supplier_id');
             $table->foreign('str_supplier_id')->references('id')->on('str_suppliers');
             $table->unsignedBigInteger('platform_id');
             $table->foreign('platform_id')->references('id')->on('platforms');
             $table->unsignedBigInteger('email_id')->nullable();
-            $table->foreign('email_id')->references('id')->on('emails');            
+            $table->foreign('email_id')->references('id')->on('emails');
             $table->timestamps();
         });
     }

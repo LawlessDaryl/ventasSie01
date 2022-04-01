@@ -32,7 +32,7 @@
                                     <input type="radio" class="new-control-input" name="custom-radio-4" id="ocupados"
                                         value="ocupados" wire:model="condicional">
                                     <span class="new-control-indicator"></span>
-                                    <h6>CUENTAS ENTERAS OCUPADAS</h6>
+                                    <h6>PLANES CUENTAS ENTERAS OCUPADAS</h6>
                                 </label>
                             </div>
                         </div>
@@ -44,7 +44,7 @@
                                     <input type="radio" class="new-control-input" name="custom-radio-4" id="ocupados"
                                         value="vencidos" wire:model="condicional">
                                     <span class="new-control-indicator"></span>
-                                    <h6>VENCIDOS</h6>
+                                    <h6>PLANES VENCIDOS</h6>
                                 </label>
                             </div>
                         </div>
@@ -60,7 +60,7 @@
                                     <th class="table-th text-withe">PLATAFORMA Y PROVEEDOR</th>
                                     <th class="table-th text-withe text-center">GMAIL</th>
                                     <th class="table-th text-withe text-center">PASS CUENTA</th>
-                                    <th class="table-th text-withe text-center">EXPIRA</th>
+                                    <th class="table-th text-withe text-center">EXPIRACIÓN CUENTA</th>
                                     <th class="table-th text-withe text-center">TIPO</th>
                                     <th class="table-th text-withe text-center">MAX PERF</th>
                                     <th class="table-th text-withe text-center">PERF LIBRES</th>
@@ -82,9 +82,10 @@
                                         <td>
                                             <h6 class="text-center">{{ $acounts->password_account }}</h6>
                                         </td>
-                                        <td
+                                        <td class="text-center"
                                             style="{{ $acounts->dias <= 5 ? 'background-color: #FF0000 !important' : 'background-color: #09ed3d !important' }}">
-                                            <a href="javascript:void(0)" wire:click="AccionesCuenta({{ $acounts->id }})"
+                                            <a href="javascript:void(0)"
+                                                wire:click="AccionesCuenta({{ $acounts->id }})"
                                                 class="btn btn-primary" title="Renovar">
                                                 {{ $acounts->expiration_account }}
                                             </a>
@@ -128,10 +129,10 @@
                                     <th class="table-th text-withe text-center">CLIENTE</th>
                                     <th class="table-th text-withe text-center">GMAIL</th>
                                     <th class="table-th text-withe text-center">PASS CUENTA</th>
-                                    <th class="table-th text-withe text-center">EXPIRA</th>
+                                    <th class="table-th text-withe text-center">EXPIRACIÓN CUENTA</th>
                                     <th class="table-th text-withe text-center">MAX PERF</th>
                                     <th class="table-th text-withe text-center">INICIO PLAN</th>
-                                    <th class="table-th text-withe text-center">EXPIRACION PLAN</th>
+                                    <th class="table-th text-withe text-center">EXPIRACIÓN PLAN</th>
                                     @if ($condicional != 'vencidos')
                                         <th class="table-th text-withe text-center">RENOVAR</th>
                                         <th class="table-th text-withe text-center">EDITAR</th>
@@ -162,8 +163,13 @@
                                         <td>
                                             <h6 class="text-center">{{ $acounts->password_account }}</h6>
                                         </td>
-                                        <td>
-                                            <h6 class="text-center">{{ $acounts->expiration_account }}</h6>
+                                        <td class="text-center"
+                                            style="{{ $acounts->dias <= 5 ? 'background-color: #FF0000 !important' : 'background-color: #09ed3d !important' }}">
+                                            <a href="javascript:void(0)"
+                                                wire:click="AccionesCuenta({{ $acounts->id }})"
+                                                class="btn btn-primary" title="Renovar">
+                                                {{ $acounts->expiration_account }}
+                                            </a>
                                         </td>
                                         <td>
                                             <h6 class="text-center">{{ $acounts->number_profiles }}</h6>
@@ -281,6 +287,14 @@
             $('#modal-details3').modal('hide')
             noty(msg)
         });
+
+        window.livewire.on('item-accion', msg => {
+            $('#modal-details2').modal('hide')
+            noty(msg)
+        });
+        window.livewire.on('item-error', msg => {
+            noty(msg)
+        });
         /* window.livewire.on('cuenta-renovado-vencida', msg => {
             $('#modal-details2').modal('hide')
             noty(msg)
@@ -374,6 +388,23 @@
                 swal.fire(
                     'Se renovó la cuenta ' + cuenta + ' por ' + meses + ' meses.'
                 )
+            }
+        })
+    }
+
+    function ConfirmCambiar(id, correo) {
+        swal.fire({
+            title: 'CONFIRMAR',
+            icon: 'warning',
+            text: '¿Esta seguro de cambiar a la cuenta ' + correo + ' ?',
+            showCancelButton: true,
+            cancelButtonText: 'Cerrar',
+            cancelButtonColor: '#383838',
+            confirmButtonColor: '#3B3F5C',
+            confirmButtonText: 'Aceptar'
+        }).then(function(result) {
+            if (result.value) {
+                window.livewire.emit('CambiarAccount', id)
             }
         })
     }

@@ -36,12 +36,6 @@ class AccountProfileSeeder extends Seeder
         AccountProfile::create([   /* Perfil netflix */
             'status' => 'SinAsignar',
             'account_id' => '1',
-            'profile_id' => '3',
-            'plan_id' => null,
-        ]);
-        AccountProfile::create([   /* Perfil netflix */
-            'status' => 'SinAsignar',
-            'account_id' => '1',
             'profile_id' => '4',
             'plan_id' => null,
         ]);

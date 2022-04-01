@@ -115,7 +115,7 @@
                             </div>
                         </div>
 
-                        <div class="col-sm-12 col-md-6">
+                        <div class="col-sm-12 col-md-4">
                             <div class="form-group text-center mt-4">
                                 <a href="javascript:void(0)" @if ($meses == 0) disabled @endif
                                     class="btn btn-dark"
@@ -124,13 +124,74 @@
                             </div>
                         </div>
 
-                        <div class="col-sm-12 col-md-6">
+                        <div class="col-sm-12 col-md-4">
                             <div class="form-group text-center mt-4">
                                 <a href="javascript:void(0)" class="btn btn-dark"
                                     onclick="ConfirmVencer('{{ $correoCuenta }}')">Vencer
                                     Cuenta</a>
                             </div>
                         </div>
+
+                        <div class="col-sm-12 col-md-4">
+                            <div class="form-group text-center mt-4">
+                                <a href="javascript:void(0)" class="btn btn-dark"
+                                    wire:click.prevent="CambiarCuenta()">Cambiar
+                                    a otra cuenta</a>
+                            </div>
+                        </div>
+
+                        @if ($mostrartabla2 == 1)
+                            <div class="col-sm-12 col-md-12">
+                                <div class="statbox widget box box-shadow">
+                                    <div class="widget-content widget-content-area row">
+                                        <div class="table-responsive table-wrapper-scroll-y my-custom-scrollbar">
+                                            <table class="table table-hover table-sm" style="width:100%">
+                                                <thead class="text-white" style="background: #3B3F5C">
+                                                    <tr>
+                                                        <th class="table-th text-withe text-center">Email</th>
+                                                        <th class="table-th text-withe text-center">Contraseña</th>
+                                                        <th class="table-th text-withe text-center">Cant.Perf</th>
+                                                        <th class="table-th text-withe text-center">Fecha.Exp</th>
+                                                        <th class="table-th text-withe text-center">CAMBIAR</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach ($cuentasEnteras as $cuent)
+                                                        <tr>
+                                                            <td class="text-center">
+                                                                <h6 class="text-center">
+                                                                    {{ $cuent->Correo->content }}</h6>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <h6 class="text-center">
+                                                                    {{ $cuent->password_account }}
+                                                                </h6>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <h6 class="text-center">
+                                                                    {{ $cuent->number_profiles }}
+                                                                </h6>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <h6 class="text-center">
+                                                                    {{ $cuent->expiration_account }}
+                                                                </h6>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <h6 class="text-center">
+                                                                    <a href="javascript:void(0)" class="btn btn-dark"
+                                                                        onclick="ConfirmCambiar('{{ $cuent->id }}','{{ $cuent->Correo->content }}')">Seleccionar</a>
+                                                                </h6>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
 
                     </div>
                 @else
