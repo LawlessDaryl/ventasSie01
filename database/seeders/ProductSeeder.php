@@ -44,7 +44,7 @@ class ProductSeeder extends Seeder
             'costo' => 4000,
             'barcode' => '33',
             'garantia' => '2',
-            'stock' => '5',
+            'stock' => '7',
             'cantidad_minima' => '10',
             'precio_venta' => 6500,
             'image' => 'Iphone_11.png',
