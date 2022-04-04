@@ -511,13 +511,44 @@ class ServiciosController extends Component
             $movServices = MovService::join('movimientos as m', 'm.id', 'mov_services.movimiento_id')
                 ->select('m.id')
                 ->where('m.type', $this->opciones)
-                ->where('mov_services.service_id', $service->id)->get()->first();
+                ->where('mov_services.service_id', $service->id)
+                ->get()
+                ->first();
 
             $movsEliminar = MovService::join('movimientos as m', 'm.id', 'mov_services.movimiento_id')
                 ->join('cliente_movs as cm', 'm.id', 'cm.movimiento_id')
                 ->select('mov_services.id as movservid', 'm.id as movid', 'cm.id as clientemovid')
-                ->where('mov_services.service_id', $service->id)->get();
-            foreach ($movsEliminar as $value) {
+                ->where('mov_services.service_id', $service->id)
+                ->get();
+
+            $services1 = Service::join('mov_services as ms', 'services.id', 'ms.service_id')
+                ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
+                ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+                ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
+                ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
+                ->select('services.*', 'mov.type as tipo', 'mov.import as import', 'mov.saldo as saldo', 'mov.on_account as on_account', 'cat.nombre as category')
+                /* ->where('services.order_service_id',  $this->orderservice) */
+                /* ->where('mov.status',  'ACTIVO') */
+                ->where('ms.service_id', $service->id)
+                /* ->where('mov.type', 'PENDIENTE') */
+                ->get();
+            
+            foreach($services1->movservices as $mm){
+                if ($mm->movs->type != 'PENDIENTE'){
+                    foreach ($movsEliminar as $value) {
+                        if ($value->movid != $movServices->id) {
+                            $ClienteMov = ClienteMov::find($value->clientemovid);
+                            $ClienteMov->delete();
+                            $movServ = MovService::find($value->movservid);
+                            $movServ->delete();
+                            $movim = Movimiento::find($value->movid);
+                            $movim->delete();
+                        }
+                    }
+                }
+            }
+
+            /* foreach ($movsEliminar as $value) {
                 if ($value->movid != $movServices->id) {
                     $ClienteMov = ClienteMov::find($value->clientemovid);
                     $ClienteMov->delete();
@@ -526,7 +557,7 @@ class ServiciosController extends Component
                     $movim = Movimiento::find($value->movid);
                     $movim->delete();
                 }
-            }
+            } */
             $movimi = Movimiento::find($movServices->id);
             $movimi->status = 'ACTIVO';
             $movimi->save();

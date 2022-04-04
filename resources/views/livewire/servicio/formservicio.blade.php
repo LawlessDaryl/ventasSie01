@@ -139,6 +139,7 @@
                         </div>
                     </div>
                     @if($selected_id > 0)
+                    @if($opciones != 'ENTREGADO')
                     <div class="col-lg-5 col-sm-12 col-md-4">
                             <label>Estado del Servicio</label>
                             <select wire:model.lazy="opciones" class="form-control">
@@ -154,15 +155,16 @@
                                     <option value="PROCESO" >PROCESO</option>
                                     <option value="TERMINADO" >TERMINADO</option>
                                 @endif
-                                @if($opciones == 'ENTREGADO')
+                                {{-- @if($opciones == 'ENTREGADO')
                                     <option value="PENDIENTE" >PENDIENTE</option>
                                     <option value="PROCESO" >PROCESO</option>
                                     <option value="TERMINADO" >TERMINADO</option>
                                     <option value="ENTREGADO" >ENTREGADO</option>
-                                @endif
+                                @endif --}}
                             </select>
                             @error('opciones') <span class="text-danger er">{{ $message }}</span>@enderror
                         </div>
+                        @endif
                     @endif
                 </div>
                 <div class="modal-footer">
