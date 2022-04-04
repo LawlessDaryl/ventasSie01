@@ -4,7 +4,7 @@
         <div class="widget widget-chart-one">
             <div class="widget-heading">
                 <div class="col-12 col-lg-12 col-md-10 mt-3">
-                    <div class="row mb-4" >
+                    <div class="row mb-3" >
                         <div class="col-sm-12" >
                             <h5 class="mb-2 mt-2">DETALLE DE COMPRA NRO. {{$nro_compra}}</h5>
                             <b>Fecha: </b>
@@ -19,95 +19,104 @@
                      
                         <div class="row">
 
-                             <div class="col-12 col-md-4 col-lg-4" style="border-left: thick solid #b4b4b1;" >
-                                 <div class="col-lg-12">
-                                     <div class="form-group">
-                                         <strong>Proveedor</strong>
-                                         <div class="input-group-prepend mb-3" >
+                             <div class="col-12 col-md-4 col-lg-4 card">
+                                 <div class="row">
 
-                                             <input type="text" wire:model.lazy="provider" class="form-control" placeholder="Introduzca el numero de factura">
-                                            
-                                                 <span class="input-group-text input-gp">
-                                                     <a href="javascript:void(0)" data-toggle="modal"
-                                                         data-target="#modal_prov" class="fas fa-plus" ></a>
-                                                 </span>
-                                             
-                                         </div>
-                                         @error('provider')
-                                             <span class="text-danger er">{{ $message }}</span>
-                                         @enderror
-                                       </div>
-                                       
-                                 </div>
-
-                                 <div class="col-lg-12">
-                                     <div class="form-group">
-                                       <strong>Metodo de Pago:</strong>
-                                       <select wire:model='tipo_documento' class="form-control">
-                                           <option value="Elegir" selected>Elegir</option>
-                                           <option value="NOTA DE VENTA">Pago en efectivo</option>
-                                           <option value="RECIBO">Transferencia bancaria</option>
-                                           <option value="RECIBO">Pago por Movil</option>
-                                       </select>
-                                       @error('tipo_documento')
-                                           <span class="text-danger er">{{ $message }}</span>
-                                       @enderror
-                                    </div>
+                                     <div class="col-lg-12">
+                                         <div class="form-group">
+                                             <strong>Proveedor</strong>
+                                             <div class="input-group-prepend mb-3" >
+    
+                                                 <input type="text" wire:model.lazy="provider" class="form-control" placeholder="Introduzca el numero de factura">
+                                                
+                                                     <span class="input-group-text input-gp">
+                                                         <a href="javascript:void(0)" data-toggle="modal"
+                                                             data-target="#modal_prov" class="fas fa-plus" ></a>
+                                                     </span>
+                                                 
+                                             </div>
+                                             @error('provider')
+                                                 <span class="text-danger er">{{ $message }}</span>
+                                             @enderror
+                                           </div>
+                                           
+                                     </div>
+    
+                                     <div class="col-lg-12">
+                                         <div class="form-group">
+                                           <strong>Tipo Transaccion:</strong>
+                                           <select wire:model='tipo_operacion' class="form-control">
+                                               <option value="Contado" selected>Compra al contado</option>
+                                               <option value="Credito">Compra a credito</option>
+                                               
+                                           </select>
+                                           @error('tipo_operacion')
+                                               <span class="text-danger er">{{ $message }}</span>
+                                           @enderror
+                                        </div>
+                                     </div>
                                  </div>
 
                              </div>
 
 
-                             <div class="col-12 col-md-4 col-lg-4" style="border-left: thick solid #b4b4b1;" >
-                                 <div class="col-lg-12">
-                                     <div class="form-group">
-                                       <strong>Tipo de Documento:</strong>
-                                       <select wire:model='tipo_documento' class="form-control">
-                                           <option value="Elegir" selected>Elegir</option>
-                                           <option value="FACTURA">FACTURA</option>
-                                           <option value="NOTA DE VENTA">NOTA DE VENTA</option>
-                                           <option value="RECIBO">RECIBO</option>
-                                       </select>
-                                       @error('tipo_documento')
-                                           <span class="text-danger er">{{ $message }}</span>
-                                       @enderror
-                                    </div>
-                                 </div>
+                             <div class="col-12 col-md-4 col-lg-4 card" style="border: thick #b4b4b1;" >
 
-                                 <div class="col-lg-12">
-                                     <div class="form-group">
-                                         <strong>Número de Documento</strong>
-                                         <input type="text" wire:model.lazy="nro_documento" class="form-control" placeholder="Introduzca el numero de factura">
-                                         @error('nro_documento')
-                                             <span class="text-danger er">{{ $message }}</span>
-                                         @enderror
+                                <div class="row">
+
+                                    <div class="col-lg-12 form ">
+                                        <div class="form-group">
+                                          <strong>Tipo de Documento:</strong>
+                                          <select wire:model='tipo_documento' class="form-control">
+                                              <option value="FACTURA" selected>FACTURA</option>
+                                              <option value="NOTA DE VENTA">NOTA DE VENTA</option>
+                                              <option value="RECIBO">RECIBO</option>
+                                          </select>
+                                          @error('tipo_documento')
+                                              <span class="text-danger er">{{ $message }}</span>
+                                          @enderror
                                        </div>
-                                 </div>
+                                    </div>
+   
+                                    <div class="col-lg-12">
+                                        <div class="form-group">
+                                            <strong>Número de Documento</strong>
+                                            <input type="text" wire:model.lazy="nro_documento" class="form-control" placeholder="Introduzca el numero de factura">
+                                            @error('nro_documento')
+                                                <span class="text-danger er">{{ $message }}</span>
+                                            @enderror
+                                          </div>
+                                    </div>
+                                </div>
 
                              </div>
                           
 
-                             <div class="col-12 col-md-4 col-lg-4" style="border-left: thick solid #b4b4b1;" >
+                             <div class="col-12 col-md-4 col-lg-4" style="border: thick #b4b4b1;" >
 
-                                 <div class="col-lg-12">
-                                     <div class="form-group">
-                                         <strong>Pago parcial:</strong>
-                                        <input  wire:model='pago_parcial' type="text" class="form-control" placeholder="Bs. 0">
-                                        @error('pago_parcial')
-                                        <span class="text-danger er">{{ $message }}</span>
-                                        @enderror
+                                <div class="row">
+
+                                    <div class="col-lg-12">
+                                        <div class="form-group">
+                                            <strong>Pago parcial:</strong>
+                                           <input  wire:model='pago_parcial' type="text" class="form-control" placeholder="Bs. 0">
+                                           @error('pago_parcial')
+                                           <span class="text-danger er">{{ $message }}</span>
+                                           @enderror
+                                       </div>
                                     </div>
-                                 </div>
+    
+                                    <div class="col-lg-12">
+                                        <div class="form-group">
+                                               <strong>Observacion: </strong>
+                                            <textarea  wire:model='observacion' class="form-control" aria-label="With textarea"></textarea>
+                                            @error('observacion')
+                                            <span class="text-danger er">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
 
-                                 <div class="col-lg-12">
-                                     <div class="form-group">
-                                            <strong>Observacion: </strong>
-                                         <textarea  wire:model='observacion' class="form-control" aria-label="With textarea"></textarea>
-                                         @error('observacion')
-                                         <span class="text-danger er">{{ $message }}</span>
-                                         @enderror
-                                     </div>
-                                 </div>
 
                              </div>
                           </div>

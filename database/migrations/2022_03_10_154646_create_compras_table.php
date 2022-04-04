@@ -18,6 +18,7 @@ class CreateComprasTable extends Migration
         {
             $table->id();
             $table->decimal('importe_total',10,2)->nullable();
+            $table->decimal('descuento',10,2)->nullable();
             $table->dateTime('fecha_compra')->default(Carbon::now());
             $table->enum('impuestos',['EXENTO','FACTURADO','P'])->default('P');
             $table->enum('transaccion',['Credito','Contado','P'])->default('Contado');
@@ -25,7 +26,7 @@ class CreateComprasTable extends Migration
             $table->enum('tipo_doc',['FACTURA','COMPROBANTE','NOTA DE VENTA','P'])->default('P');
             $table->string('nro_documento',100)->nullable();
             $table->string('observacion',100)->nullable();
-            $table->enum('metodo_pago',['PAGO EN EFECTIVO','TRANSFERENCIA BANCARIA','PAGO POR MOVIL','P'])->default('P');
+            
             $table->unsignedBigInteger('proveedor_id');
             $table->foreign('proveedor_id')->references('id')->on('providers');
             $table->enum('estado_compra',['finalizada','no_finalizada','P']);
