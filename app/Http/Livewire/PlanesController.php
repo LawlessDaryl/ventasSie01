@@ -29,7 +29,7 @@ class PlanesController extends Component
         $condicion, $type, $nombre, $celular, $plataforma, $cuentaperfil, $accounts, $profiles, $cantidaperf,
         $mostrartabla, $tipopago, $condicional, $meses, $observaciones, $ready, $selected_perf, $totalCobrar,
         $BuscarCliente, $ClienteSelect, $cuentasEnteras, $nombrePerfil, $pinPerfil, $CantidadPerfilesCrear,
-        $fecha_inicio;
+        $fecha_inicio, $plataforma1, $plataforma2, $plataforma3;
 
     private $pagination = 10;
 
@@ -68,6 +68,12 @@ class PlanesController extends Component
         $this->search = '';
         $this->cuentasEnteras = [];
         $this->CantidadPerfilesCrear = 0;
+        $this->plataforma1 = 'Elegir';
+        $this->plataforma2 = 'Elegir';
+        $this->plataforma3 = 'Elegir';
+        $this->cuentasp1 = [];
+        $this->cuentasp2 = [];
+        $this->cuentasp3 = [];
     }
 
     public function render()
@@ -408,11 +414,34 @@ class PlanesController extends Component
             }
         }
 
+        $platforms1 = Platform::where('estado', 'Activo')->get();
+
+        if ($this->plataforma1 != 'Elegir') {
+            $platforms2 = Platform::where('estado', 'Activo')
+                ->where('id', '!=', $this->plataforma1)
+                ->get();
+            $this->cuentasp1 = Account::where('platform_id', $this->plataforma1)->get();
+        } else {
+            $this->cuentasp1 = [];
+            $platforms2 = [];
+        }
+        if ($this->plataforma1 != 'Elegir' && $this->plataforma2 != 'Elegir') {
+            $platforms3 = Platform::where('estado', 'Activo')
+                ->where('id', '!=', $this->plataforma1)
+                ->where('id', '!=', $this->plataforma2)->get();
+        } else {
+            $platforms3 = [];
+        }
+
+
         return view('livewire.planes.component', [
             'planes' => $data,
             'carterasCaja' => $carterasCaja,
             'datos' => $datos,
-            'platforms' => Platform::where('estado', 'Activo')->get()
+            'platforms' => Platform::where('estado', 'Activo')->get(),
+            'platforms1' => $platforms1,
+            'platforms2' => $platforms2,
+            'platforms3' => $platforms3
         ])
             ->extends('layouts.theme.app')
             ->section('content');
@@ -667,6 +696,7 @@ class PlanesController extends Component
                     /* CALCULAR EL IMPORTE SEGUN LA PLATAFORMA Y SI ES ENTERA O PERFIL */
                     $this->importe += $accp->CuentaPerfil->Cuenta->Plataforma->precioPerfil;
                     $this->importe *= $this->meses;
+                    
                     /* CREAR EL MOVIMIENTO */
                     $mv = Movimiento::create([
                         'type' => 'TERMINADO',
@@ -674,9 +704,16 @@ class PlanesController extends Component
                         'import' => $this->importe,
                         'user_id' => Auth()->user()->id,
                     ]);
+
+                    // Poner la cuenta en dividida
+                    $account = Account::find($accp->CuentaPerfil->Cuenta->id);
+                    $account->whole_account = 'DIVIDIDA';
+                    $account->save();
+
                     /* PONER EL PERFIL EN OCUPADO */
                     $accp->availability = 'OCUPADO';
                     $accp->save();
+
                     /* ENCONTRAR INVERSION */
                     $inversioncuenta = CuentaInversion::where('start_date', '<=', $mv->created_at)
                         ->where('expiration_date', '>=', $mv->created_at)
@@ -715,6 +752,7 @@ class PlanesController extends Component
                     $cuentaPerfil->plan_id = $plan->id;
                     $cuentaPerfil->status = 'ACTIVO';
                     $cuentaPerfil->save();
+
                     /* CONTAR PERFILES OCUPADOS */
                     /* $perfilesOcupados = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                         ->join('profiles as p', 'ap.profile_id', 'p.id')
@@ -941,7 +979,8 @@ class PlanesController extends Component
         $this->emit('perf-actualizado', 'Se cambió a realizado');
     }
 
-    public function CrearCombo(){
+    public function CrearCombo()
+    {
         $this->emit('show-modalCombos', '');
     }
 

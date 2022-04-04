@@ -36,7 +36,7 @@ class UserSeeder extends Seeder
             'email' => 'arramado@gmail.com',
             'profile' => 'EMPLOYEE',
             'status' => 'ACTIVE',
-            'password' => bcrypt('123')
+            'password' => bcrypt('armando1991')
         ]);
         User::create([  /* usuario 4 */
             'name' => 'Samuel',

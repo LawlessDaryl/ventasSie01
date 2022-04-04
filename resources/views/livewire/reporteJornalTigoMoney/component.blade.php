@@ -1,0 +1,153 @@
+<div class="row sales layout-top-spacing">
+    <div class="col-sm-12">
+        <div class="widget">
+            <div class="widget-heading">
+                <h4 class="card-title text-center"><b>{{ $componentName }}</b></h4>
+            </div>
+
+            <div class="widget-content">
+                <div class="row">
+                    <div class="col-sm-12 col-md-3">
+                        <div class="form-group">
+                            <label>
+                                <h6>Seleccione la sucursal</h6>
+                            </label>
+                            <select wire:model.lazy="sucursal" class="form-control">
+
+                                @foreach ($sucursales as $s)
+                                    <option value="{{ $s->id }}">{{ $s->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-3">
+                        <div class="form-group">
+                            <label>
+                                <h6>Seleccione la caja</h6>
+                            </label>
+                            <select wire:model.lazy="caja" class="form-control">
+
+                                @foreach ($cajas as $c)
+                                    <option value="{{ $c->id }}">{{ $c->nombre }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-3">
+                        <h6>Fecha desde</h6>
+                        <div class="form-group">
+                            <input type="date" wire:model="dateFrom" class="form-control"
+                                placeholder="Click para elegir">
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12">
+                        <!-- TABLA -->
+                        <div class="table-responsive">
+                            <table class="table table-unbordered table-hover mt-1">
+                                <thead class="text-white" style="background: #3B3F5C">
+                                    <tr>
+                                        <th class="table-th text-withe text-center">INDICADORES DIARIOS</th>
+                                        <th class="table-th text-withe text-center"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <h6 class="text-center">TOTAL INGRESOS POR SERVICIOS EXTRAS SISTEMA</h6>
+                                        </td>
+                                        <td>
+                                            <h6>{{ $sistema }}</h6>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <h6 class="text-center">TOTAL INGRESOS POR SERVICIOS EXTRAS TELEFONO</h6>
+                                        </td>
+                                        <td>
+                                            <h6>{{ $telefono }}</h6>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            <h6 class="text-center">DIFERENCIA ENTRE AMBOS</h6>
+                                        </td>
+                                        <td>
+                                            <h6>{{ $total }}</h6>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        /* flatpickr(document.getElementsByClassName('flatpickr'), {
+            enableTime: false,
+            dateFormat: 'Y-m-d',
+            locale: {
+                firstDayofweek: 1,
+                weekdays: {
+                    shorthand: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
+                    longhand: [
+                        "Domingo",
+                        "Lunes",
+                        "Martes",
+                        "Miércoles",
+                        "Jueves",
+                        "Viernes",
+                        "Sábado",
+                    ],
+                },
+                months: {
+                    shorthand: [
+                        "Ene",
+                        "Feb",
+                        "Mar",
+                        "Abr",
+                        "May",
+                        "Jun",
+                        "Jul",
+                        "Ago",
+                        "Sep",
+                        "Oct",
+                        "Nov",
+                        "Dic",
+                    ],
+                    longhand: [
+                        "Enero",
+                        "Febrero",
+                        "Marzo",
+                        "Abril",
+                        "Mayo",
+                        "Junio",
+                        "Julio",
+                        "Agosto",
+                        "Septiembre",
+                        "Octubre",
+                        "Noviembre",
+                        "Diciembre",
+                    ],
+                },
+            }
+        }) */
+
+        //eventos
+        window.livewire.on('show-modal', msg => {
+            $('#modalDetails').modal('show')
+        });
+    })
+</script>

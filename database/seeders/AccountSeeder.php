@@ -18,7 +18,7 @@ class AccountSeeder extends Seeder
             'start_account' => '2022-03-22',
             'expiration_account' => '2022-04-22',
             'status' => 'ACTIVO',
-            'whole_account' => 'DIVIDIDA',
+            'whole_account' => 'ENTERA',
             'number_profiles' => '4',
             'account_name' => 'emanuelmkmxpm@gmail.com',
             'password_account' => 'netflixd1',
@@ -29,11 +29,12 @@ class AccountSeeder extends Seeder
             'platform_id' => '1',
             'email_id' => '2',
         ]);
+
         Account::create([   /* cuenta disney dividida */
             'start_account' => '2022-03-15',
             'expiration_account' => '2022-04-15',
             'status' => 'ACTIVO',
-            'whole_account' => 'DIVIDIDA',
+            'whole_account' => 'ENTERA',
             'number_profiles' => '6',
             'account_name' => 'emanuelbolaoq@gmail.com',
             'password_account' => 'disneyd1',
@@ -44,11 +45,12 @@ class AccountSeeder extends Seeder
             'platform_id' => '2',
             'email_id' => '3',
         ]);
+
         Account::create([   /* cuenta prime video dividida */
             'start_account' => '2022-03-11',
             'expiration_account' => '2022-04-11',
             'status' => 'ACTIVO',
-            'whole_account' => 'DIVIDIDA',
+            'whole_account' => 'ENTERA',
             'number_profiles' => '4',
             'account_name' => 'emanueluofsqh@gmail.com',
             'password_account' => 'primed1',
@@ -59,11 +61,12 @@ class AccountSeeder extends Seeder
             'platform_id' => '3',
             'email_id' => '4',
         ]);
+
         Account::create([   /* cuenta star plus dividida */
             'start_account' => '2022-03-02',
             'expiration_account' => '2022-04-02',
             'status' => 'ACTIVO',
-            'whole_account' => 'DIVIDIDA',
+            'whole_account' => 'ENTERA',
             'number_profiles' => '6',
             'account_name' => 'emanuelrfcmml@gmail.com',
             'password_account' => 'stard1',
@@ -74,11 +77,12 @@ class AccountSeeder extends Seeder
             'platform_id' => '4',
             'email_id' => '5',
         ]);
+
         Account::create([   /* cuenta HBO MAX dividida */
             'start_account' => '2022-03-01',
             'expiration_account' => '2022-04-01',
             'status' => 'ACTIVO',
-            'whole_account' => 'DIVIDIDA',
+            'whole_account' => 'ENTERA',
             'number_profiles' => '4',
             'account_name' => 'emanuelbwykeq@gmail.com',
             'password_account' => 'hbod1',
@@ -89,6 +93,7 @@ class AccountSeeder extends Seeder
             'platform_id' => '5',
             'email_id' => '6',
         ]);
+
         Account::create([   /* Cuenta magis tv */
             'start_account' => '2022-03-25',
             'expiration_account' => '2022-04-25',
@@ -104,6 +109,7 @@ class AccountSeeder extends Seeder
             'platform_id' => '6',
             'email_id' => '1',
         ]);
+        
         Account::create([   /* CUENTA DE NETFLIX ENTERA */
             'start_account' => '2022-03-25',
             'expiration_account' => '2022-04-25',

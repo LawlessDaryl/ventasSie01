@@ -43,6 +43,7 @@ class ProfileSeeder extends Seeder
             'observations' => 'Ninguna',
         ]);
 
+
         Profile::create([
             'nameprofile' => 'disneyDividida1',
             'pin' => 'disd1',
@@ -64,6 +65,29 @@ class ProfileSeeder extends Seeder
             'availability' => 'LIBRE',
             'observations' => 'Ninguna',
         ]);
+        Profile::create([
+            'nameprofile' => 'disneyDividida4',
+            'pin' => 'disd4',
+            'status' => 'ACTIVO',
+            'availability' => 'LIBRE',
+            'observations' => 'Ninguna',
+        ]);
+        Profile::create([
+            'nameprofile' => 'disneyDividida5',
+            'pin' => 'disd5',
+            'status' => 'ACTIVO',
+            'availability' => 'LIBRE',
+            'observations' => 'Ninguna',
+        ]);
+        Profile::create([
+            'nameprofile' => 'disneyDividida6',
+            'pin' => 'disd6',
+            'status' => 'ACTIVO',
+            'availability' => 'LIBRE',
+            'observations' => 'Ninguna',
+        ]);
+
+
 
         Profile::create([
             'nameprofile' => 'primeDiv1',
@@ -86,6 +110,14 @@ class ProfileSeeder extends Seeder
             'availability' => 'LIBRE',
             'observations' => 'Ninguna',
         ]);
+        Profile::create([
+            'nameprofile' => 'primeDiv4',
+            'pin' => 'prid4',
+            'status' => 'ACTIVO',
+            'availability' => 'LIBRE',
+            'observations' => 'Ninguna',
+        ]);
+
 
         Profile::create([
             'nameprofile' => 'starDiv1',
@@ -108,6 +140,28 @@ class ProfileSeeder extends Seeder
             'availability' => 'LIBRE',
             'observations' => 'Ninguna',
         ]);
+        Profile::create([
+            'nameprofile' => 'starDiv4',
+            'pin' => 'stard4',
+            'status' => 'ACTIVO',
+            'availability' => 'LIBRE',
+            'observations' => 'Ninguna',
+        ]);
+        Profile::create([
+            'nameprofile' => 'starDiv5',
+            'pin' => 'stard5',
+            'status' => 'ACTIVO',
+            'availability' => 'LIBRE',
+            'observations' => 'Ninguna',
+        ]);
+        Profile::create([
+            'nameprofile' => 'starDiv6',
+            'pin' => 'stard6',
+            'status' => 'ACTIVO',
+            'availability' => 'LIBRE',
+            'observations' => 'Ninguna',
+        ]);
+
 
         Profile::create([
             'nameprofile' => 'hboDivi1',
@@ -126,6 +180,96 @@ class ProfileSeeder extends Seeder
         Profile::create([
             'nameprofile' => 'hboDivi3',
             'pin' => 'hbod3',
+            'status' => 'ACTIVO',
+            'availability' => 'LIBRE',
+            'observations' => 'Ninguna',
+        ]);
+        Profile::create([
+            'nameprofile' => 'hboDivi4',
+            'pin' => 'hbod4',
+            'status' => 'ACTIVO',
+            'availability' => 'LIBRE',
+            'observations' => 'Ninguna',
+        ]);
+
+
+        Profile::create([
+            'nameprofile' => 'MAGIS1',
+            'pin' => 'MAGISP',
+            'status' => 'ACTIVO',
+            'availability' => 'LIBRE',
+            'observations' => 'Ninguna',
+        ]);
+
+
+        Profile::create([
+            'nameprofile' => 'NETFLIX1',
+            'pin' => '1234',
+            'status' => 'ACTIVO',
+            'availability' => 'LIBRE',
+            'observations' => 'Ninguna',
+        ]);
+        Profile::create([
+            'nameprofile' => 'NETFLIX2',
+            'pin' => '1234',
+            'status' => 'ACTIVO',
+            'availability' => 'LIBRE',
+            'observations' => 'Ninguna',
+        ]);
+        Profile::create([
+            'nameprofile' => 'NETFLIX3',
+            'pin' => '1234',
+            'status' => 'ACTIVO',
+            'availability' => 'LIBRE',
+            'observations' => 'Ninguna',
+        ]);
+        Profile::create([
+            'nameprofile' => 'NETFLIX4',
+            'pin' => '1234',
+            'status' => 'ACTIVO',
+            'availability' => 'LIBRE',
+            'observations' => 'Ninguna',
+        ]);
+
+
+        Profile::create([
+            'nameprofile' => 'DISNEY1',
+            'pin' => '1234',
+            'status' => 'ACTIVO',
+            'availability' => 'LIBRE',
+            'observations' => 'Ninguna',
+        ]);
+        Profile::create([
+            'nameprofile' => 'DISNEY2',
+            'pin' => '1234',
+            'status' => 'ACTIVO',
+            'availability' => 'LIBRE',
+            'observations' => 'Ninguna',
+        ]);
+        Profile::create([
+            'nameprofile' => 'DISNEY3',
+            'pin' => '1234',
+            'status' => 'ACTIVO',
+            'availability' => 'LIBRE',
+            'observations' => 'Ninguna',
+        ]);
+        Profile::create([
+            'nameprofile' => 'DISNEY4',
+            'pin' => '1234',
+            'status' => 'ACTIVO',
+            'availability' => 'LIBRE',
+            'observations' => 'Ninguna',
+        ]);
+        Profile::create([
+            'nameprofile' => 'DISNEY5',
+            'pin' => '1234',
+            'status' => 'ACTIVO',
+            'availability' => 'LIBRE',
+            'observations' => 'Ninguna',
+        ]);
+        Profile::create([
+            'nameprofile' => 'DISNEY6',
+            'pin' => '1234',
             'status' => 'ACTIVO',
             'availability' => 'LIBRE',
             'observations' => 'Ninguna',

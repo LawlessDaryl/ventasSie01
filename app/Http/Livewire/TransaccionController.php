@@ -718,7 +718,7 @@ class TransaccionController extends Component
 
                 CarteraMov::create([
                     'type' => 'INGRESO',
-                    'comentario' => '',
+                    'comentario' => 'TIGOMONEY TRANSACCION',
                     'cartera_id' => $cartera->id,
                     'movimiento_id' => $mv->id
                 ]);
@@ -732,7 +732,7 @@ class TransaccionController extends Component
 
                 CarteraMov::create([
                     'type' => 'EGRESO',
-                    'comentario' => '',
+                    'comentario' => 'TIGOMONEY TRANSACCION',
                     'cartera_id' => $CajaFisica->id,
                     'movimiento_id' => $mvt->id
                 ]);
@@ -792,7 +792,7 @@ class TransaccionController extends Component
 
                 CarteraMov::create([
                     'type' => 'INGRESO',
-                    'comentario' => '',
+                    'comentario' => 'TIGOMONEY TRANSACCION',
                     'cartera_id' => $CajaFisica->id,
                     'movimiento_id' => $mv->id
                 ]);
@@ -806,7 +806,7 @@ class TransaccionController extends Component
 
                 CarteraMov::create([
                     'type' => 'EGRESO',
-                    'comentario' => '',
+                    'comentario' => 'TIGOMONEY TRANSACCION',
                     'cartera_id' => $cartera->id,
                     'movimiento_id' => $mvt->id
                 ]);
@@ -866,7 +866,7 @@ class TransaccionController extends Component
 
                 CarteraMov::create([
                     'type' => 'INGRESO',
-                    'comentario' => '',
+                    'comentario' => 'TIGOMONEY TRANSACCION',
                     'cartera_id' => $CajaFisica->id,
                     'movimiento_id' => $mv->id
                 ]);
@@ -880,7 +880,7 @@ class TransaccionController extends Component
 
                 CarteraMov::create([
                     'type' => 'EGRESO',
-                    'comentario' => '',
+                    'comentario' => 'TIGOMONEY TRANSACCION',
                     'cartera_id' => $cartera->id,
                     'movimiento_id' => $mvt->id
                 ]);

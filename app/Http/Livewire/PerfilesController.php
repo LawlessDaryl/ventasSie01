@@ -42,7 +42,7 @@ class PerfilesController extends Component
         $this->nameperfil = '';
         $this->pin = '';
         $this->availability = 'Elegir';
-        $this->condicional = 'libres';
+        $this->condicional = 'ocupados';
         $this->meses = 0;
         $this->expirationNueva = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->tipopago = 'EFECTIVO';
@@ -547,6 +547,7 @@ class PerfilesController extends Component
                 'plan_id' => $plan->id,
                 'status' => 'ACTIVO',
             ]);
+
             /* PONER EN VENCIDO EL PLAN ANTERIOR */
             $planviejo = Plan::find($datos->planid);
             $planviejo->status = 'VENCIDO';
@@ -717,6 +718,7 @@ class PerfilesController extends Component
             ->join('emails as e', 'accounts.email_id', 'e.id')
             ->select(
                 'accounts.id as id',
+                'accounts.account_name as account_name',
                 'accounts.expiration_account as expiration_account',
                 'accounts.number_profiles',
                 'p.nombre as nombre',
@@ -727,6 +729,7 @@ class PerfilesController extends Component
             )
             ->where('accounts.status', 'ACTIVO')
             ->where('accounts.availability', 'LIBRE')
+            ->where('accounts.id', '!=', $datos->cuentaid)
             ->where('p.id', $datos->platfid)
             ->get();
 
@@ -734,86 +737,32 @@ class PerfilesController extends Component
             $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                 ->join('profiles as p', 'ap.profile_id', 'p.id')
                 ->where('accounts.id', $c->id)
-                ->where('p.status', 'ACTIVO')->get();
+                ->where('p.availability', 'OCUPADO')->get();
 
             $cantidadActivos = $perfilesActivos->count();
             $c->perfActivos = $cantidadActivos;
 
             $c->cantiadadQueSePuedeCrear = $c->number_profiles - $c->perfActivos;
         }
-        /* dd($this->cuentasEnteras); */
-    }
-
-    public function VerCuentas()
-    {
-        $this->emit('show-crearPerfil', 'show modal!');
     }
 
     public function SeleccionarCuenta(Account $cuenta)
     {
-        $rules = [
-            'nombrePerfil' => 'required',
-            'pinPerfil' => 'required',
+        $perfilCambiar = Account::join('account_profiles as ap', 'accounts.id', 'ap.account_id')
+            ->join('profiles as p', 'p.id', 'ap.profile_id')
+            ->select('p.*')
+            ->where('accounts.id', $cuenta->id)
+            ->where('p.availability', 'LIBRE')->get()->first();
 
-        ];
-        $messages = [
-            'nombrePerfil.required' => 'El nombre del perfil es requerido',
-            'pinPerfil.required' => 'El pin es requerido',
-        ];
+        $profile = Profile::find($perfilCambiar->id);
+        $profile->nameprofile = $this->nameperfil;
+        $profile->pin = $this->pin;
+        $profile->availability = 'OCUPADO';
+        $profile->save();
 
-        $this->validate($rules, $messages);
-
-        $perfil = Profile::create([
-            'nameprofile' => $this->nombrePerfil,
-            'pin' => $this->pinPerfil,
-            'status' => 'ACTIVO',
-            'availability' => 'LIBRE',
-            'observations' => '',
-        ]);
-        AccountProfile::create([
-            'status' => 'SinAsignar',
-            'account_id' => $cuenta->id,
-            'profile_id' => $perfil->id,
-        ]);
         /* LA CUENTA PASA A DIVIDIDA */
         $cuenta->whole_account = 'DIVIDIDA';
         $cuenta->save();
-
-        $this->nombrePerfil = '';
-        $this->pinPerfil = '';
-
-        $plataforma = $perfil->CuentaPerfil->Cuenta->Plataforma->id;
-
-        $cuentaVieja = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
-            ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
-            ->join('accounts as acc', 'acc.id', 'pa.account_id')
-            ->select(
-                'acc.id as cuentaid',
-            )
-            ->where('plans.id', $this->selected_plan)
-            ->orderby('plans.id', 'desc')
-            ->get()->first();
-
-        $this->perfil = Profile::join('account_profiles as ap', 'ap.profile_id', 'profiles.id')
-            ->join('accounts as a', 'ap.account_id', 'a.id')
-            ->join('platforms as p', 'a.platform_id', 'p.id')
-            ->join('emails as e', 'a.email_id', 'e.id')
-            ->select(
-                'profiles.id as id',
-                'p.precioPerfil as precioPerfil',
-                'a.id as cuentaid',
-                'e.content as email',
-                'profiles.nameprofile as nombre_perfil',
-                'profiles.pin as pin',
-                'a.password_account as password_account'
-            )
-            ->where('profiles.availability', 'LIBRE')
-            ->where('profiles.status', 'ACTIVO')
-            ->where('a.status', 'ACTIVO')
-            ->orderBy('a.expiration_account', 'desc')
-            ->where('p.id', $plataforma)
-            ->where('a.id', '!=', $cuentaVieja->cuentaid)
-            ->get()->first();
 
         $this->emit('crearperfil-cerrar', 'Se creó el perfil en la cuenta seleccionada');
     }

@@ -10,7 +10,7 @@
 
             <div class="form-group">
                 <div class="row">
-                    <div class="col-sm-12 col-md-2">
+                    {{-- <div class="col-sm-12 col-md-2">
                         <div class="form-group">
                             <div class="n-chk">
                                 <label class="new-control new-radio radio-classic-primary">
@@ -21,7 +21,7 @@
                                 </label>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="col-sm-12 col-md-2">
                         <div class="form-group">
                             <div class="n-chk">

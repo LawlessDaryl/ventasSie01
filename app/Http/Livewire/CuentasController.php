@@ -400,6 +400,7 @@ class CuentasController extends Component
                     ->paginate($this->pagination);
             }
         }
+
         $this->correos = Email::where('availability', 'LIBRE')->orWhere('id', $this->selected)->orderBy('id', 'asc')->get();
         if ($this->selected_id != 0) {
             /* MOSTRAR TODOS LOS PERFILES DE ESA CUENTA */
@@ -645,6 +646,20 @@ class CuentasController extends Component
                     'email_id' => $this->email_id,
                 ]);
             }
+
+            /* CREAR PERFILES VACIOS */
+            for ($i = 0; $i < $this->number_profiles; $i++) {
+                $perfil = Profile::create([
+                    'nameprofile' => 'emanuel' . rand(100, 999),
+                    'pin' => rand(1000, 9999),
+                ]);
+                AccountProfile::create([
+                    'status' => 'SinAsignar',
+                    'account_id' => $acc->id,
+                    'profile_id' => $perfil->id,
+                ]);
+            }
+
             $this->price /= $this->mesesComprar;
             $dias = 30;
             $fecha30diasdespues = strtotime('+' . $dias . ' day', strtotime($this->start_account));
@@ -786,7 +801,7 @@ class CuentasController extends Component
         $this->emit('details-show', 'show modal!');
     }
 
-    public function CrearPerfil()
+    /* public function CrearPerfil()
     {
         $rules = [
             'nameP' => 'required',
@@ -812,7 +827,7 @@ class CuentasController extends Component
             'account_id' => $this->selected_id,
             'profile_id' => $perfil->id,
         ]);
-        /* LA CUENTA PASA A DIVIDIDA */
+        // LA CUENTA PASA A DIVIDIDA 
         $cuenta->whole_account = 'DIVIDIDA';
         $cuenta->save();
 
@@ -823,31 +838,31 @@ class CuentasController extends Component
         $this->Observaciones = '';
 
         $this->emit('item-deleted', 'Perfil Registrado');
-    }
+    } */
 
-    public function BorrarPerfil(Profile $perf)
-    {   /* PONER EN INACTIVO AccountProfile */
+    /* public function BorrarPerfil(Profile $perf)
+    {   // PONER EN INACTIVO AccountProfile
         $CuentaPerf = $perf->CuentaPerfil;
         $CuentaPerf->status = 'INACTIVO';
         $CuentaPerf->save();
-        /* PONER EN INACTIVO EL PERFIL */
+        // PONER EN INACTIVO EL PERFIL 
         $perf->status = 'INACTIVO';
         $perf->availability = 'VENCIDO';
         $perf->save();
-        /* CONTAR LOS PERFILES ACTIVOS OCUPADOS */
+        // CONTAR LOS PERFILES ACTIVOS OCUPADOS
         $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
             ->join('profiles as p', 'ap.profile_id', 'p.id')
             ->where('accounts.id', $this->selected_id)
             ->where('ap.status', 'ACTIVO')
             ->where('p.status', 'ACTIVO')->get();
-        /* SI LA CUENTA NO TIENE PERFILES ACTIVOS REGRESA A SER ENTERA */
+        // SI LA CUENTA NO TIENE PERFILES ACTIVOS REGRESA A SER ENTERA
         if ($perfilesActivos->count() == 0) {
             $cuenta = Account::find($this->selected_id);
             $cuenta->whole_account = 'ENTERA';
             $cuenta->save();
         }
         $this->emit('item-deleted', 'Perfil Eliminado');
-    }
+    } */
 
     public function Acciones(Plan $plan)
     {

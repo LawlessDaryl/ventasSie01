@@ -51,6 +51,7 @@ use App\Http\Livewire\StrProveedorController;
 use App\Http\Livewire\ReporGananciaTgController;
 use App\Http\Livewire\ProcedenciaController;
 use App\Http\Livewire\ProvidersController;
+use App\Http\Livewire\ReporteJornadaTMController;
 use App\Http\Livewire\ReporteServiceController;
 use App\Http\Livewire\TransaccionesController;
 use App\Http\Livewire\TypeWorkController;
@@ -96,6 +97,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('reporteGananciaTigoM/pdf/{user}/{type}/{f1}/{f2}', [TigoGananciaPdfController::class, 'reporte']);
         Route::get('reporteGananciaTigoM/pdf/{user}/{type}', [TigoGananciaPdfController::class, 'reporte']);
     });
+    Route::get('ReporteJornalTM', ReporteJornadaTMController::class)->name('reportejornadatm');
 
     /* Streaming */
     Route::get('plataformas', PlataformasController::class)->name('plataforma')->middleware('permission:Plataforma_Index');
@@ -145,7 +147,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('idorderservice/{id}', [OrderServiceController::class, 'buscarid'])->name('buscarid')->middleware('permission:Orden_Servicio_Index');
     Route::get('abrirnuevo/{id}', [OrderServiceController::class, 'abrirventana'])->name('abrirventana')->middleware('permission:Orden_Servicio_Index');
     Route::get('reporte/pdf/{id}', [ImprimirController::class, 'print'])->middleware('permission:Imprimir_Orden_Servicio_Index');
-    Route::get('reporteservices', ReporteServiceController::class)->name('tw')->middleware('permission:Reporte_Servicios_Index');    
+    Route::get('reporteservices', ReporteServiceController::class)->name('tw')->middleware('permission:Reporte_Servicios_Index');
     Route::group(['middleware' => ['permission:Reporte_Servicios_Export']], function () {
         Route::get('reporteServicio/pdf/{user}/{estado}/{type}/{f1}/{f2}', [ExportServicioPdfController::class, 'reporteServPDF']);
         Route::get('reporteServicio/pdf/{user}/{estado}/{type}', [ExportServicioPdfController::class, 'reporteServPDF']);
