@@ -33,38 +33,34 @@
                                                          <a href="javascript:void(0)" data-toggle="modal"
                                                              data-target="#modal_prov" class="fas fa-plus" ></a>
                                                      </span>
-                                                 
                                              </div>
                                              @error('provider')
                                                  <span class="text-danger er">{{ $message }}</span>
                                              @enderror
                                            </div>
-                                           
                                      </div>
-    
-                                     <div class="col-lg-12">
-                                         <div class="form-group">
-                                           <strong>Tipo Transaccion:</strong>
-                                           <select wire:model='tipo_operacion' class="form-control">
-                                               <option value="Contado" selected>Compra al contado</option>
-                                               <option value="Credito">Compra a credito</option>
-                                               
-                                           </select>
-                                           @error('tipo_operacion')
-                                               <span class="text-danger er">{{ $message }}</span>
-                                           @enderror
-                                        </div>
+                                <div class="col-lg-12">
+                                        
+                                        <div class="form-group">
+                                            <strong>Destino Producto</strong>
+                                            <select value="Elegir" class="form-control" name="" id="">
+                                              <option value="Elegir Destino">Elegir Destino</option>
+                                              <option>Destino 1</option>
+                                              <option>Destino 2</option>
+                                              <option>Destino 3</option>
+                                            </select>
+                                          </div>
+
                                      </div>
+
                                  </div>
-
                              </div>
-
 
                              <div class="col-12 col-md-4 col-lg-4 card" style="border: thick #b4b4b1;" >
 
                                 <div class="row">
 
-                                    <div class="col-lg-12 form ">
+                                    <div class="col-lg-12 form">
                                         <div class="form-group">
                                           <strong>Tipo de Documento:</strong>
                                           <select wire:model='tipo_documento' class="form-control">
@@ -74,7 +70,7 @@
                                           </select>
                                           @error('tipo_documento')
                                               <span class="text-danger er">{{ $message }}</span>
-                                          @enderror
+                                          @enderror                                          
                                        </div>
                                     </div>
    
@@ -244,16 +240,6 @@
                                                    
                                                     <td>
                                                         <h6>{{$prod->getPriceSum()}}</h6>
-                                                    </td>
-                                                    <td>
-                                                        <div class="form-group">
-                                                          <select value="Elegir" class="form-control" name="" id="">
-                                                            <option value="Elegir Destino">Elegir Destino</option>
-                                                            <option>Destino 1</option>
-                                                            <option>Destino 2</option>
-                                                            <option>Destino 3</option>
-                                                          </select>
-                                                        </div>
                                                     </td>
                                                     <td class="text-center">
                                                         <a href="javascript:void(0)"
