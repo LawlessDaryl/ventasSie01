@@ -51,12 +51,11 @@ class ReporteJornadaTMController extends Component
         $this->sucursales = Sucursal::orderBy('id')->get();
 
         $this->cajasSucursal = Caja::where('sucursal_id', $this->sucursal)->get();
-        
 
-        if ($this->sucursal != $this->condicionalCaja) {            
+        //revisar el cabmio de cajas y sucursales
+        if ($this->sucursal != $this->condicionalCaja) {
             $primeracaja = Caja::where('sucursal_id', $this->sucursal)->get()->first();
             $this->caja = $primeracaja->id;
-            
         } else {
         }
 
