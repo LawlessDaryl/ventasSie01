@@ -27,7 +27,7 @@ class CreateDetalleDevolucionsTable extends Migration
             $table->decimal('monto_dev');//{30}
             $table->unsignedBigInteger('product_id2');//{carcasas}
             $table->foreign('product_id2')->references('id')->on('products');
-            $table->integer('cantidad_dev');//{5}
+            $table->integer('cantidad_dev2');//{5}
 
 
 

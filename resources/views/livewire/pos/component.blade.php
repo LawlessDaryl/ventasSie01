@@ -85,7 +85,7 @@
             </div>
             
             <!-- Ventana Modal para Avisar que ya no hay Stock en Tienda -->
-            <div class="text-center">
+            <div wire:ignore.self class="text-center">
                 <div id="modalVerticallyCentered" class="col-lg-12 layout-spacing">
                     <div class="statbox widget box box-shadow">
                         <div class="widget-content widget-content-area">

@@ -41,29 +41,28 @@ class LocationSeeder extends Seeder
         //     'tipo' => 'ESTANTE',
         //     'destino_id' => '1'
         // ]);//
+
+        //Almacén
         Location::create([
             
             'codigo' => '0001',
-            'descripcion' => 'Tv Box, Cables, Dispositivos de Almacenamiento',
-            
-            'tipo' => 'VITRINA',
-            'destino_id' => '1'
-        ]);
-        Location::create([
-            
-            'codigo' => '0002',
-            'descripcion' => 'Vidrios Templados y Fundas',
-            
-            'tipo' => 'Mostrador',
-            'destino_id' => '1'
-        ]);
-        Location::create([
-         
-            'codigo' => '0003',
-            'descripcion' => 'Repuestos varios',
-          
+            'descripcion' => 'Lugar de Almacenamiento de Productos Sucursal: Av. América',
             'tipo' => 'ESTANTE',
+            'destino_id' => '1'
+        ]);
+        //Tienda
+        Location::create([
+            'codigo' => '0002',
+            'descripcion' => 'Lugar de Ventas Sucursal: Av. América',
+            'tipo' => 'VITRINA',
             'destino_id' => '2'
+        ]);
+        //2DA Sucursal Tienda
+        Location::create([
+            'codigo' => '0003',
+            'descripcion' => 'Lugar de Ventas Sucursal: Av. Pando',
+            'tipo' => 'ESTANTE',
+            'destino_id' => '4'
         ]);
     }
 }

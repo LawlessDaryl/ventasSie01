@@ -34,5 +34,9 @@ class RoleSeeder extends Seeder
             'name' => 'ENCARGARDO ALMACENES',
             'guard_name' => 'web'
         ]);
+        Role::create([
+            'name' => 'ATM',
+            'guard_name' => 'web'
+        ]);
     }
 }

@@ -31,7 +31,7 @@
                                             @if($meses==0)
                                                 @if($dias==0)
                                                     @if ($hora == 0)
-                                                        @if($minutos<2)
+                                                        @if($minutos<1)
                                                             <p class="">En este Instante</p>
                                                         @else
                                                             <p class="">Hace {{$minutos}} Minutos</p>
