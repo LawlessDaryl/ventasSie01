@@ -17,7 +17,7 @@ class DetalleComprasController extends Component
     use WithFileUploads;
     public  $nro_compra,$search,$provider,$fecha,
     $usuario,$metodo_pago,$pago_parcial,$tipo_documento,$nro_documento,$observacion
-    ,$selected_id,$total_compra,$itemsQuantity,$price;
+    ,$selected_id,$total_compra,$itemsQuantity,$price,$prueba=true,$tipo_transaccion;
 
     private $pagination = 5;
     public function mount()
@@ -29,6 +29,7 @@ class DetalleComprasController extends Component
         $this->impuestos = false;
         $this->selected_id = 0;
         $this->price = 9;
+        $this->tipo_transaccion = "CONTADO";
 
         $this->total_compra = Compras::getTotal();
         $this->itemsQuantity = Compras::getTotalQuantity();
