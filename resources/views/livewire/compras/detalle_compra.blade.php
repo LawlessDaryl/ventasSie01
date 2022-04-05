@@ -43,14 +43,17 @@
                                         
                                         <div class="form-group">
                                             <strong>Destino Producto</strong>
-                                            <select value="Elegir" class="form-control" name="" id="">
+                                            <select value="Elegir" wire:model.lazy="destino" class="form-control">
                                               <option value="Elegir Destino">Elegir Destino</option>
-                                              <option>Destino 1</option>
-                                              <option>Destino 2</option>
-                                              <option>Destino 3</option>
+
+                                              @foreach($data_suc as $data)
+                                              <option value="{{$data->id}}">{{$data->nombre}}-{{$data->name}}</option>
+                                              @endforeach
+                                              
                                             </select>
                                           </div>
 
+                                       
                                      </div>
 
                                  </div>
@@ -73,10 +76,7 @@
                                     <div class="col-lg-6">
                                         <div class="form-group">
                                             <strong>Dscto. %</strong>
-                                            <input type="text" class="form-control">
-                                            @error('porcentaje_dscto')
-                                                <span class="text-danger er">{{ $message }}</span>
-                                            @enderror
+                                            <h5>10%</h5>
                                           </div>
                                     </div>
                                 </div>
@@ -249,7 +249,7 @@
                                                 <th class="table-th text-withe text-center">Precio <br>Compra</th>
                                                 <th class="table-th text-withe text-center">Cantidad</th>
                                                 <th class="table-th text-withe text-center">Total</th>
-                                                <th class="table-th text-withe text-center">Destino <br>Producto </th>
+                                             
                                                 <th class="table-th text-withe text-center">Acc.</th>
                                             </tr>
                                         </thead>
@@ -292,8 +292,24 @@
                                             @endforeach
                                             <tfoot class="text-white text-center" style="background: #a5a19e"  >
                                                     <tr>
-                                                        <td colspan="5">
-                                                             <h5 class="text-white">TOTAL.-</h5>
+                                                        <td colspan="4">
+                                                             <h5 class="text-white">SubTotal.-</h5>
+                                                        </td>
+                                                        <td>
+                                                            <h5 class="text-white" >{{$subtotal}}</h5>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="4">
+                                                             <h5 class="text-white">Descuento.-</h5>
+                                                        </td>
+                                                        <td>
+                                                            <h5 class="text-white" >{{$descuento}}</h5>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="4">
+                                                             <h5 class="text-white">Total.-</h5>
                                                         </td>
                                                         <td>
                                                             <h5 class="text-white" >{{$total_compra}}</h5>
@@ -304,6 +320,17 @@
                                     </table>
                                 </div>
                             
+                        </div>
+                        <div class="row">
+
+                            <div class="col-lg-6">
+        
+                                <button class="btn btn-info m-3"> <h4 style="color: aliceblue" >Guardar Compra</h4> </button>
+                            </div>
+                            <div class="col-lg-6">
+        
+                                <button class="btn btn-danger m-3"> <h4 style="color: aliceblue" >Cancelar Compra</h4> </button>
+                            </div>
                         </div>
                     </div>
                 </div>
