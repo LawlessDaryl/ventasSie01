@@ -224,7 +224,8 @@ class PosController extends Component
     public function saveSale()
     {
 
-        if ($this->total <= 0) {
+        if ($this->total <= 0) 
+        {
             $this->emit('sale-error', 'Agrega productos a la venta');
 
             return;

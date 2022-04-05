@@ -229,6 +229,7 @@ class DetalleComprasController extends Component
             $Movimiento= Movimiento::create([
                 
                 
+                
             ]);
 
             Movimiento_Compra::create([
