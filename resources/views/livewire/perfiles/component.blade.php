@@ -210,8 +210,6 @@
     </div>
     @include('livewire.perfiles.form')
     @include('livewire.perfiles.modalDetails')
-    @include('livewire.perfiles.modalCrearPerfil')
-
 
 </div>
 
@@ -244,6 +242,9 @@
         });
         window.livewire.on('item-accion', msg => {
             $('#modal-details').modal('hide')
+            noty(msg)
+        });
+        window.livewire.on('item-error', msg => {           
             noty(msg)
         });
         window.livewire.on('modal-hide', msg => {

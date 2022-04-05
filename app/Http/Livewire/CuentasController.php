@@ -47,7 +47,7 @@ class CuentasController extends Component
         $this->selected_id = 0;
         $this->selected_plan = 0;
         $this->selected = 0;
-        $this->email_id = 'Elegir';
+        $this->email_id = '';
         $this->platform_id = 'Elegir';
         $this->proveedor = 'Elegir';
         $this->estado = 'ACTIVO';
@@ -80,6 +80,9 @@ class CuentasController extends Component
         $this->expiration_account = null;
         $this->expiration_account_new = null;
         $this->mostrartabla2 = 0;
+        $this->passwordGmail = '';
+        $this->ClienteSelect = 0;
+        $this->BuscarCliente = 0;
     }
     public function render()
     {
@@ -401,7 +404,32 @@ class CuentasController extends Component
             }
         }
 
-        $this->correos = Email::where('availability', 'LIBRE')->orWhere('id', $this->selected)->orderBy('id', 'asc')->get();
+        /* BUSCAR correo POR email EN EL INPUT DEL MODAL */
+        $datos = [];
+        if ($this->email_id != '') {
+            $datos = Email::select('emails.*')
+                ->where('content', 'like', $this->email_id . '%')
+                ->where('availability', 'LIBRE')
+                ->where('status', 'ACTIVO')
+                ->where('content', '!=', 'Sin Correo')
+                ->orderBy('id', 'desc')->get();
+            if ($datos->count() > 0) {
+                $this->BuscarCliente = 1;
+            } else {
+                $this->BuscarCliente = 0;
+            }
+            if ($this->ClienteSelect == 0) {
+                $this->BuscarCliente = 0;
+            }
+        } else {
+            $this->BuscarCliente = 0;
+            if ($this->ClienteSelect == 0) {
+                $this->ClienteSelect = 1;
+            }
+        }
+
+        /* $this->correos = Email::where('availability', 'LIBRE')->orWhere('id', $this->selected)->orderBy('id', 'asc')->get(); */
+
         if ($this->selected_id != 0) {
             /* MOSTRAR TODOS LOS PERFILES DE ESA CUENTA */
             $this->perfiles = Profile::join('account_profiles as ap', 'ap.profile_id', 'profiles.id')
@@ -469,11 +497,20 @@ class CuentasController extends Component
 
         return view('livewire.cuentas.component', [
             'cuentas' => $cuentas,
+            'datos' => $datos,
             'plataformas' => Platform::where('estado', 'ACTIVO')->orderBy('nombre', 'asc')->get(),
             'proveedores' => StrSupplier::where('status', 'ACTIVO')->orderBy('id', 'asc')->get()
         ])
             ->extends('layouts.theme.app')
             ->section('content');
+    }
+
+    /* Cargar los datos seleccionados de la tabla a los label */
+    public function Seleccionar($content, $password)
+    {
+        $this->email_id = $content;
+        $this->passwordGmail = $password;
+        $this->ClienteSelect = 0;
     }
 
     public function AccionesCuenta(Account $cuenta)
@@ -610,10 +647,24 @@ class CuentasController extends Component
         ];
 
         $this->validate($rules, $messages);
+        if ($this->email_id != '') {
+            $correo = Email::where('content', $this->email_id)
+                ->get()->first();
+        } elseif ($this->email_id == '') {
+            $correo = Email::find(1)
+                ->get()->first();
+        }
 
         DB::beginTransaction();
         try {
-            $correo = Email::find($this->email_id);
+            if ($correo) {
+            } else {
+                $correo = Email::create([
+                    'content' => $this->email_id,
+                    'cedula' => $this->passwordGmail,
+                ]);
+            }
+
             $plataform = Platform::find($this->platform_id);
             if ($plataform->tipo == 'CORREO') {
                 $acc = Account::create([
@@ -703,8 +754,7 @@ class CuentasController extends Component
                 }
             }
 
-            if ($this->email_id != 1) {
-
+            if ($correo->id != 1) {
                 $correo->availability = 'OCUPADO';
                 $correo->save();
             }
@@ -1239,7 +1289,7 @@ class CuentasController extends Component
         $this->selected_id = 0;
         $this->selected_plan = 0;
         $this->selected = 0;
-        $this->email_id = 'Elegir';
+        $this->email_id = '';
         $this->platform_id = 'Elegir';
         $this->proveedor = 'Elegir';
         $this->estado = 'ACTIVO';

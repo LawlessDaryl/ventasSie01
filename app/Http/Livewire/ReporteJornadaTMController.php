@@ -5,13 +5,12 @@ namespace App\Http\Livewire;
 use App\Models\Caja;
 use App\Models\Sucursal;
 use App\Models\Transaccion;
-use App\Models\User;
 use Carbon\Carbon;
 use Livewire\Component;
 
 class ReporteJornadaTMController extends Component
 {
-    public $componentName, $dateFrom,  $sistema, $telefono, $total, $sucursal, $sucursales, $cajasSucursal, $caja,
+    public $componentName, $dateFrom, $sistema, $telefono, $total, $sucursal, $sucursales, $cajasSucursal, $caja,
         $condicionalCaja;
 
     public function mount()
@@ -50,17 +49,13 @@ class ReporteJornadaTMController extends Component
 
         $this->sucursales = Sucursal::orderBy('id')->get();
 
-        $this->cajasSucursal = Caja::where('sucursal_id', $this->sucursal)->get();
+        $this->cajasSucursal = Caja::where('sucursal_id', $this->sucursal)->where('nombre', '!=', 'Caja General')->get();
 
         //revisar el cabmio de cajas y sucursales
         if ($this->sucursal != $this->condicionalCaja) {
-            $primeracaja = Caja::where('sucursal_id', $this->sucursal)->get()->first();
-            $this->caja = $primeracaja->id;
-        } else {
+            $this->condicionalCaja = $this->sucursal;
+            $this->caja = 'Elegir';
         }
-
-
-
 
 
         return view('livewire.reporteJornalTigoMoney.component', [
@@ -72,7 +67,6 @@ class ReporteJornadaTMController extends Component
 
     public function trsbydate()
     {
-
         $from = Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00';
         $to = Carbon::parse($this->dateFrom)->format('Y-m-d')     . ' 23:59:59';
 
@@ -162,9 +156,9 @@ class ReporteJornadaTMController extends Component
         $this->sistema = $ingresosSistema - $egresosSistema;
 
         if ($this->sistema > $this->telefono) {
-            $this->total = $this->sistema - $this->telefono;
+            $this->total = $this->sistema + $this->telefono;
         } else {
-            $this->total = $this->telefono - $this->sistema;
+            $this->total = $this->telefono + $this->sistema;
         }
     }
 }

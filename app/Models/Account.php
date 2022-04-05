@@ -13,7 +13,7 @@ class Account extends Model
 
     public function CuentaPerfiles()
     {
-        return $this->hasOne(AccountProfile::class);
+        return $this->hasMany(AccountProfile::class);
     }
 
     public function PlanCuenta()

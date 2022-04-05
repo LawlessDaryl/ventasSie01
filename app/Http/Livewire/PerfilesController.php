@@ -220,6 +220,7 @@ class PerfilesController extends Component
                     ->where('plans.type_plan', 'PERFIL')
                     ->where('plans.status', 'VIGENTE')
                     ->where('pa.status', 'ACTIVO')
+                    ->where('ap.status', 'ACTIVO')
                     ->where('plans.ready', 'SI')
                     ->whereColumn('plans.id', '=', 'ap.plan_id')
                     ->orderBy('plans.done', 'desc')
@@ -691,29 +692,10 @@ class PerfilesController extends Component
                 'acc.id as cuentaid'
             )
             ->where('plans.id', $this->selected_plan)
+            ->where('pa.status', 'ACTIVO')
             ->orderby('plans.id', 'desc')
             ->get()->first();
-        /* MOSTRAR UN PERFIL DE LA MISMA PLATAFORMA PARA HACER EL CAMBIO */
-        $this->perfil = Profile::join('account_profiles as ap', 'ap.profile_id', 'profiles.id')
-            ->join('accounts as a', 'ap.account_id', 'a.id')
-            ->join('platforms as p', 'a.platform_id', 'p.id')
-            ->join('emails as e', 'a.email_id', 'e.id')
-            ->select(
-                'profiles.id as id',
-                'p.precioPerfil as precioPerfil',
-                'a.id as cuentaid',
-                'e.content as email',
-                'profiles.nameprofile as nombre_perfil',
-                'profiles.pin as pin',
-                'a.password_account as password_account'
-            )
-            ->where('profiles.availability', 'LIBRE')
-            ->where('profiles.status', 'ACTIVO')
-            ->where('a.status', 'ACTIVO')
-            ->orderBy('a.expiration_account', 'desc')
-            ->where('p.id', $datos->platfid)
-            ->where('a.id', '!=', $datos->cuentaid)
-            ->get()->first();
+        /* MOSTRAR CUENTAS CON ESPACIOS DE PERFILES */
         $this->cuentasEnteras = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
             ->join('emails as e', 'accounts.email_id', 'e.id')
             ->select(
@@ -748,27 +730,6 @@ class PerfilesController extends Component
 
     public function SeleccionarCuenta(Account $cuenta)
     {
-        $perfilCambiar = Account::join('account_profiles as ap', 'accounts.id', 'ap.account_id')
-            ->join('profiles as p', 'p.id', 'ap.profile_id')
-            ->select('p.*')
-            ->where('accounts.id', $cuenta->id)
-            ->where('p.availability', 'LIBRE')->get()->first();
-
-        $profile = Profile::find($perfilCambiar->id);
-        $profile->nameprofile = $this->nameperfil;
-        $profile->pin = $this->pin;
-        $profile->availability = 'OCUPADO';
-        $profile->save();
-
-        /* LA CUENTA PASA A DIVIDIDA */
-        $cuenta->whole_account = 'DIVIDIDA';
-        $cuenta->save();
-
-        $this->emit('crearperfil-cerrar', 'Se creó el perfil en la cuenta seleccionada');
-    }
-
-    public function CambiarAccount(Profile $perf)
-    {
         /* DATOS DEL ANTERIOR PLAN */
         $datos = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
             ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
@@ -786,9 +747,13 @@ class PerfilesController extends Component
                 'acc.id as cuentaid',
             )
             ->where('plans.id', $this->selected_plan)
+            ->where('pa.status', 'ACTIVO')
+            ->where('ap.status', 'ACTIVO')
+            ->where('plans.id', $this->selected_plan)
             ->whereColumn('plans.id', '=', 'ap.plan_id')
             ->orderby('plans.id', 'desc')
             ->get()->first();
+
         DB::beginTransaction();
         try {
             /* PONER EN NO LISTO LA ACCION */
@@ -796,51 +761,65 @@ class PerfilesController extends Component
             $plan->done = 'NO';
             $plan->observations = $this->observations;
             $plan->save();
+
+            /* OBTENER UN PERFIL DE LA CUENTA NUEVA PARA PONER LOS DATOS DEL PERFIL ANTERIOR */
+            $perfilCambiar = Account::join('account_profiles as ap', 'accounts.id', 'ap.account_id')
+                ->join('profiles as p', 'p.id', 'ap.profile_id')
+                ->select('p.*')
+                ->where('accounts.id', $cuenta->id)
+                ->where('p.availability', 'LIBRE')->get()->first();
+
+            /* PONER LOS DATOS DEL ANTERIOR PERFIL AL NUEVO */
+            $profile = Profile::find($perfilCambiar->id);
+            $profile->nameprofile = $this->nameperfil;
+            $profile->pin = $this->pin;
+            $profile->availability = 'OCUPADO';
+            $profile->save();
+
+            /* LA CUENTA PASA A DIVIDIDA SI NO LO ESTABA */
+            $cuenta->whole_account = 'DIVIDIDA';
+            $cuenta->save();
+
+            /* PONER EN CAMBIADO EL PLAN-ACCOUNT */
+            $planAccountVIEJO = PlanAccount::find($datos->planAccountid);
+            $planAccountVIEJO->update([
+                'status' => 'CAMBIADO',
+            ]);
+
+            /* CREAR NUEVO PLAN-ACCOUNT */
+            PlanAccount::create([
+                'plan_id' => $datos->planid,
+                'account_id' => $cuenta->id,
+            ]);
+
+            /* crear un nuevo perfil libre en la cuenta antigua que reemplace al que se cambió */
+            $perfil = Profile::create([
+                'nameprofile' => 'emanuel' . rand(100, 999),
+                'pin' => rand(1000, 9999),
+            ]);
+            AccountProfile::create([
+                'status' => 'SinAsignar',
+                'account_id' => $datos->cuentaid,
+                'profile_id' => $perfil->id,
+            ]);
+
             /* PONER EN VENCIDO EL PERFIL */
             $perfilViejo = Profile::find($datos->Profileid);
             $perfilViejo->status = 'INACTIVO';
             $perfilViejo->availability = 'VENCIDO';
             $perfilViejo->save();
 
-            /* PONER DATOS DEL ANTERIOR PERFIL AL NUEVO PERFIL */
-            $perf->update([
-                'nameprofile' => $perfilViejo->nameprofile,
-                'pin' => $perfilViejo->pin,
-                'availability' => 'OCUPADO',
-            ]);
-            /* OBTENER LA CUENTA DEL NUEVO PERFIL */
-            $CuentaNueva = Account::find($perf->CuentaPerfil->Cuenta->id);
-
-            /* ACTULIZAR EL PLAN ACCOUNT PONIENDO LA NUEVA CUENTA */
-            /* $planAccount->update([
-                'account_id' => $CuentaNueva->id,
-            ]); */
-            /* PONER EN CAMBIADO EL PLAN-ACCOUNT */
-            $planAccountVIEJO = PlanAccount::find($datos->planAccountid);
-            $planAccountVIEJO->update([
-                'status' => 'CAMBIADO',
-            ]);
-            /* CREAR NUEVO PLAN-ACCOUNT */
-            PlanAccount::create([
-                'plan_id' => $datos->planid,
-                'account_id' => $CuentaNueva->id,
-            ]);
-
-            /* ACTUALIZAR EL ACCOUNT PROFILE PONIENDO NUEVA CUENTA Y NUEVO PERFIL */
-
-            /* $cuentaPerfil->update([
-                'account_id' => $CuentaNueva->id,
-                'profile_id' => $perf->id,
-            ]); */
             /* PONER EN CAMBIADO EL ACCOUNT-PROFILE */
             $cuentaPerfilViejo = AccountProfile::find($datos->accountProfileid);
             $cuentaPerfilViejo->update([
                 'status' => 'CAMBIADO',
             ]);
-            AccountProfile::create([
+
+            $accountProfiles = AccountProfile::select('account_profiles.*')->where('account_id', $cuenta->id)
+                ->where('profile_id', $profile->id)->get()->first();
+            $ACCOUNTPROF = AccountProfile::find($accountProfiles->id);
+            $ACCOUNTPROF->update([
                 'status' => 'ACTIVO',
-                'account_id' => $CuentaNueva->id,
-                'profile_id' => $perf->id,
                 'plan_id' => $datos->planid,
             ]);
 
@@ -848,7 +827,7 @@ class PerfilesController extends Component
             $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                 ->join('profiles as p', 'ap.profile_id', 'p.id')
                 ->where('accounts.id', $datos->cuentaid)
-                ->where('p.status', 'ACTIVO')->get();
+                ->where('p.availability', 'OCUPADO')->get();
 
             /* SI LA CUENTA NO TIENE PERFILES ACTIVOS REGRESA A SER ENTERA */
             if ($perfilesActivos->count() == 0) {
@@ -856,24 +835,18 @@ class PerfilesController extends Component
                 $cuenta->whole_account = 'ENTERA';
                 $cuenta->save();
             }
-            /* ELIMINAR DUPLICADO ACCOUNT-PROFILE SI EXISTE "CUENTA Y PERFIL IGUALES EN UN REGISTRO" */
-            $accountProfilesD = AccountProfile::where('account_id', $CuentaNueva->id)
-                ->where('profile_id', $perf->id)->get();
-            foreach ($accountProfilesD as $acc) {
-                if ($acc->plan_id == null) {
-                    $acc->delete();
-                }
-            }
-            DB::commit();
+
             $this->resetUI();
-            $this->emit('item-accion', 'Se cambio de cuenta el perfil');
+            DB::commit();
+            $this->emit('item-accion', 'Se creó el perfil en la cuenta seleccionada');
         } catch (Exception $e) {
             DB::rollback();
             $this->emit('item-error', 'ERROR' . $e->getMessage());
         }
     }
 
-    protected $listeners = ['deleteRow' => 'Destroy', 'Vencer' => 'Vencer', 'Renovar' => 'Renovar', 'CambiarAccount' => 'CambiarAccount', 'Realizado' => 'Realizado'];
+
+    protected $listeners = ['deleteRow' => 'Destroy', 'Vencer' => 'Vencer', 'Renovar' => 'Renovar', 'Realizado' => 'Realizado'];
 
     public function Realizado(Plan $plan)
     {

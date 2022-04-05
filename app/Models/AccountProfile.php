@@ -15,4 +15,8 @@ class AccountProfile extends Model
     {
         return $this->belongsTo(Account::class, 'account_id', 'id');
     }
+    public function Perfil()
+    {
+        return $this->belongsTo(Profile::class, 'profile_id', 'id');
+    }
 }

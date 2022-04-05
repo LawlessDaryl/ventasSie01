@@ -12,8 +12,8 @@
                             <label>
                                 <h6>Seleccione la sucursal</h6>
                             </label>
-                            <select wire:model.lazy="sucursal" class="form-control">
-
+                            <select wire:model="sucursal" class="form-control">
+                                <option value="Elegir" disabled>Elegir</option>
                                 @foreach ($sucursales as $s)
                                     <option value="{{ $s->id }}">{{ $s->name }}</option>
                                 @endforeach
@@ -26,8 +26,8 @@
                             <label>
                                 <h6>Seleccione la caja</h6>
                             </label>
-                            <select wire:model.lazy="caja" class="form-control">
-
+                            <select wire:model="caja" class="form-control">
+                                <option value="Elegir">Elegir</option>
                                 @foreach ($cajas as $c)
                                     <option value="{{ $c->id }}">{{ $c->nombre }}</option>
                                 @endforeach
@@ -73,7 +73,7 @@
 
                                     <tr>
                                         <td>
-                                            <h6 class="text-center">DIFERENCIA ENTRE AMBOS</h6>
+                                            <h6 class="text-center">CALCULO ENTRE AMBOS</h6>
                                         </td>
                                         <td>
                                             <h6>{{ $total }}</h6>

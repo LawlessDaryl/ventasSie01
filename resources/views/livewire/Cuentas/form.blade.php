@@ -34,22 +34,12 @@
         </div>
     </div>
 
-    <div class="col-sm-12 col-md-6">
-        <div class="form-group">
-            <label>
-                <h6>Número de Perfiles</h6>
-            </label>
-            <input @if ($selected_id > 0) disabled @endif type="number" wire:model.lazy="number_profiles" class="form-control" placeholder="ej: 0.0">
-            @error('number_profiles')
-                <span class="text-danger er">{{ $message }}</span>
-            @enderror
-        </div>
-    </div>
 
     <div class="col-sm-12 col-md-6">
         <h6>Fecha de inicio</h6>
         <div class="form-group">
-            <input @if ($selected_id > 0) disabled @endif type="date" wire:model="start_account" class="form-control">
+            <input @if ($selected_id > 0) disabled @endif type="date" wire:model="start_account"
+                class="form-control">
             @error('start_account')
                 <span class="text-danger er">{{ $message }}</span>
             @enderror
@@ -72,25 +62,103 @@
             <label>
                 <h6>Correo</h6>
             </label>
-            <select @if ($selected_id > 0) disabled @endif @if ($platform_id == 'Elegir') disabled @endif wire:model='email_id' class="form-control">
+            {{-- <select @if ($selected_id > 0) disabled @endif @if ($platform_id == 'Elegir') disabled @endif
+                wire:model='email_id' class="form-control">
                 <option value="Elegir" disabled>Elegir</option>
                 @foreach ($correos as $c)
                     <option value="{{ $c->id }}">{{ $c->content }}</option>
                 @endforeach
-            </select>
+            </select> --}}
+            <input @if ($selected_id > 0) disabled @endif type="text" wire:model="email_id"
+                class="form-control">
             @error('email_id')
                 <span class="text-danger er">{{ $message }}</span>
             @enderror
         </div>
     </div>
 
+    <div class="col-sm-12 col-md-6">
+        <div class="form-group">
+            <label>
+                <h6>Contraseña correo</h6>
+            </label>
+            <input @if ($selected_id > 0) disabled @endif type="text" wire:model="passwordGmail"
+                class="form-control">
+            @error('passwordGmail')
+                <span class="text-danger er">{{ $message }}</span>
+            @enderror
+        </div>
+    </div>
+
+    @if ($BuscarCliente != 0)
+        <div class="col-sm-12 col-md-12">
+            <div class="vertical-scrollable">
+                <div class="row layout-spacing">
+                    <div class="col-md-12 ">
+                        <div class="statbox widget box box-shadow">
+                            <div class="widget-content widget-content-area row">
+                                <div class="table-responsive table-wrapper-scroll-y my-custom-scrollbar">
+                                    <table class="table table-hover table-sm" style="width:100%">
+                                        <thead class="text-white" style="background: #3B3F5C">
+                                            <tr>
+                                                <th class="table-th text-withe text-center">CORREO</th>
+                                                <th class="table-th text-withe">CONTRASEÑA</th>
+                                                <th class="table-th text-withe">SELECIONAR</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($datos as $d)
+                                                <tr>
+                                                    <td class="text-center">
+                                                        <h6 class="text-center">{{ $d->content }}
+                                                        </h6>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <h6 class="text-center">{{ $d->pass }}
+                                                        </h6>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <a href="javascript:void(0)"
+                                                            wire:click="Seleccionar('{{ $d->content }}','{{ $d->pass }}')"
+                                                            class="btn btn-dark mtmobile" title="Seleccionar">
+                                                            <i class="fas fa-check"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
+
+
+    <div class="col-sm-12 col-md-6">
+        <div class="form-group">
+            <label>
+                <h6>Número de Perfiles</h6>
+            </label>
+            <input @if ($selected_id > 0) disabled @endif type="number" wire:model.lazy="number_profiles"
+                class="form-control" placeholder="ej: 0.0">
+            @error('number_profiles')
+                <span class="text-danger er">{{ $message }}</span>
+            @enderror
+        </div>
+    </div>
 
     <div class="col-sm-12 col-md-6">
         <div class="form-group">
             <label>
                 <h6>Meses que compró</h6>
             </label>
-            <input  @if ($selected_id > 0) disabled @endif type="number" wire:model="mesesComprar" class="form-control">
+            <input @if ($selected_id > 0) disabled @endif type="number" wire:model="mesesComprar"
+                class="form-control">
             @error('mesesComprar')
                 <span class="text-danger er">{{ $message }}</span>
             @enderror
@@ -102,7 +170,8 @@
             <label>
                 <h6>Precio Compra Cuenta</h6>
             </label>
-            <input  @if ($selected_id > 0) disabled @endif type="number" wire:model.lazy="price" class="form-control" placeholder="ej: 90.0">
+            <input @if ($selected_id > 0) disabled @endif type="number" wire:model.lazy="price"
+                class="form-control" placeholder="ej: 90.0">
             @error('price')
                 <span class="text-danger er">{{ $message }}</span>
             @enderror

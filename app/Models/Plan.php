@@ -11,8 +11,12 @@ class Plan extends Model
 
     protected $fillable = ['importe', 'plan_start', 'expiration_plan', 'ready', 'done', 'type_plan', 'status', 'type', 'type_pay', 'observations', 'movimiento_id'];
 
-    public function MovPlan()
+    public function Mov()
     {
-        return $this->hasOne(MovPlan::class);
+        return $this->belongsTo(Movimiento::class, 'movimiento_id', 'id');
+    }
+    public function PlanAccounts()
+    {
+        return $this->hasMany(PlanAccount::class);
     }
 }
