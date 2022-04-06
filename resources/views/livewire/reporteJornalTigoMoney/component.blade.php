@@ -7,84 +7,88 @@
 
             <div class="widget-content">
                 <div class="row">
-                    <div class="col-sm-12 col-md-3">
-                        <div class="form-group">
-                            <label>
-                                <h6>Seleccione la sucursal</h6>
-                            </label>
-                            <select wire:model="sucursal" class="form-control">
-                                <option value="Elegir" disabled>Elegir</option>
-                                @foreach ($sucursales as $s)
-                                    <option value="{{ $s->id }}">{{ $s->name }}</option>
-                                @endforeach
-                            </select>
+                    @can('Modificar_Sucursal_Caja_Jornada_Tigo_Money')
+                        <div class="col-sm-12 col-md-3">
+                            <div class="form-group">
+                                <label>
+                                    <h6>Seleccione la sucursal</h6>
+                                </label>
+                                <select wire:model="sucursal" class="form-control">
+                                    <option value="Elegir" disabled>Elegir</option>
+                                    @foreach ($sucursales as $s)
+                                        <option value="{{ $s->id }}">{{ $s->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="col-sm-12 col-md-3">
-                        <div class="form-group">
-                            <label>
-                                <h6>Seleccione la caja</h6>
-                            </label>
-                            <select wire:model="caja" class="form-control">
-                                <option value="Elegir">Elegir</option>
-                                @foreach ($cajas as $c)
-                                    <option value="{{ $c->id }}">{{ $c->nombre }}</option>
-                                @endforeach
-                            </select>
+                        <div class="col-sm-12 col-md-3">
+                            <div class="form-group">
+                                <label>
+                                    <h6>Seleccione la caja</h6>
+                                </label>
+                                <select wire:model="caja" class="form-control">
+                                    <option value="Elegir">Elegir</option>
+                                    @foreach ($cajas as $c)
+                                        <option value="{{ $c->id }}">{{ $c->nombre }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
-                    </div>
-
-                    <div class="col-sm-12 col-md-3">
-                        <h6>Fecha desde</h6>
-                        <div class="form-group">
-                            <input type="date" wire:model="dateFrom" class="form-control"
-                                placeholder="Click para elegir">
+                    @endcan
+                    @if (!empty(session('sesionCaja')))
+                        <div class="col-sm-12 col-md-3">
+                            <h6>Fecha desde</h6>
+                            <div class="form-group">
+                                <input type="date" wire:model="dateFrom" class="form-control"
+                                    placeholder="Click para elegir">
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="col-sm-12 col-md-12">
-                        <!-- TABLA -->
-                        <div class="table-responsive">
-                            <table class="table table-unbordered table-hover mt-1">
-                                <thead class="text-white" style="background: #3B3F5C">
-                                    <tr>
-                                        <th class="table-th text-withe text-center">INDICADORES DIARIOS</th>
-                                        <th class="table-th text-withe text-center"></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <h6 class="text-center">TOTAL INGRESOS POR SERVICIOS EXTRAS SISTEMA</h6>
-                                        </td>
-                                        <td>
-                                            <h6>{{ $sistema }}</h6>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <h6 class="text-center">TOTAL INGRESOS POR SERVICIOS EXTRAS TELEFONO</h6>
-                                        </td>
-                                        <td>
-                                            <h6>{{ $telefono }}</h6>
-                                        </td>
-                                    </tr>
+                        <div class="col-sm-12 col-md-12">
+                            <!-- TABLA -->
+                            <div class="table-responsive">
+                                <table class="table table-unbordered table-hover mt-1">
+                                    <thead class="text-white" style="background: #3B3F5C">
+                                        <tr>
+                                            <th class="table-th text-withe text-center">INDICADORES DIARIOS</th>
+                                            <th class="table-th text-withe text-center"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <h6 class="text-center">TOTAL INGRESOS POR SERVICIOS EXTRAS SISTEMA
+                                                </h6>
+                                            </td>
+                                            <td>
+                                                <h6>{{ $sistema }}</h6>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <h6 class="text-center">TOTAL INGRESOS POR SERVICIOS EXTRAS TELEFONO
+                                                </h6>
+                                            </td>
+                                            <td>
+                                                <h6>{{ $telefono }}</h6>
+                                            </td>
+                                        </tr>
 
-                                    <tr>
-                                        <td>
-                                            <h6 class="text-center">CALCULO ENTRE AMBOS</h6>
-                                        </td>
-                                        <td>
-                                            <h6>{{ $total }}</h6>
-                                        </td>
-                                    </tr>
+                                        <tr>
+                                            <td>
+                                                <h6 class="text-center">CALCULO ENTRE AMBOS</h6>
+                                            </td>
+                                            <td>
+                                                <h6>{{ $total }}</h6>
+                                            </td>
+                                        </tr>
 
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                    </div>
-
+                    @endif
                 </div>
             </div>
         </div>

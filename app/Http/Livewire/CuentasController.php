@@ -34,7 +34,7 @@ class CuentasController extends Component
         $expiration_account_new, $password_account, $price, $mostrarCampos, $condicional, $meses, $meseRenovarProv,
         $expirationActual, $expirationNueva, $observations, $selected_plan, $correoCuenta, $passCuenta,
         $nombreCliente, $celular, $observacionesTrans, $mostrarRenovar, $meses_comprados, $mesesComprar,
-        $nombre_cuenta, $mostrartabla2, $mostrarCorreo;
+        $nombre_cuenta, $mostrartabla2, $mostrarCorreo, $mostrarNombreCuenta;
     private $pagination = 10;
     public function paginationView()
     {
@@ -64,7 +64,7 @@ class CuentasController extends Component
         $this->mostrarCampos = 0;
         $this->condicional = 'cuentas';
         $this->meses = 0;
-        $this->meseRenovarProv = 0;
+        $this->meseRenovarProv = 1;
         $this->expirationNueva = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->start_account = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->tipopago = 'EFECTIVO';
@@ -83,6 +83,8 @@ class CuentasController extends Component
         $this->passwordGmail = '';
         $this->ClienteSelect = 0;
         $this->BuscarCliente = 0;
+        $this->mostrarCorreo = 'NO';
+        $this->mostrarNombreCuenta = 'NO';
     }
     public function render()
     {
@@ -404,6 +406,21 @@ class CuentasController extends Component
             }
         }
 
+        /* MOSTRAR CORREO O NOMBRE DE LA CUENTA DEPENDIENDO LA PLATAFORMA */
+        if ($this->platform_id != 'Elegir') {
+            $platform = Platform::find($this->platform_id);
+            if ($platform->tipo == 'USUARIO') {
+                $this->email_id = '';
+                $this->passwordGmail = '';
+                $this->mostrarCorreo = 'NO';
+                $this->mostrarNombreCuenta = 'SI';
+            } else {
+                $this->nombre_cuenta = '';
+                $this->mostrarCorreo = 'SI';
+                $this->mostrarNombreCuenta = 'NO';
+            }
+        }
+
         /* BUSCAR correo POR email EN EL INPUT DEL MODAL */
         $datos = [];
         if ($this->email_id != '') {
@@ -428,8 +445,7 @@ class CuentasController extends Component
             }
         }
 
-        /* $this->correos = Email::where('availability', 'LIBRE')->orWhere('id', $this->selected)->orderBy('id', 'asc')->get(); */
-
+        /* MOSTRAR CREAR O NO PERFILES EN UNA CUENTA SELECCIONADA */
         if ($this->selected_id != 0) {
             /* MOSTRAR TODOS LOS PERFILES DE ESA CUENTA */
             $this->perfiles = Profile::join('account_profiles as ap', 'ap.profile_id', 'profiles.id')
@@ -473,7 +489,7 @@ class CuentasController extends Component
                 $this->expiration_account = strtotime('+' . $dias . ' day', strtotime($this->start_account));
                 $this->expiration_account = date('Y-m-d', $this->expiration_account);
             } else {
-                $this->expiration_account = $this->start_account;
+                $this->mesesComprar = 1;
             }
         }
         /* MOSTRAR UNA NUEVA FECHA DE EXPIRACION SEGUN EL NUMERO DE MESES QUE ESCRIBA EL USUARIO EN RENOVAR PLAN*/
@@ -505,7 +521,7 @@ class CuentasController extends Component
             ->section('content');
     }
 
-    /* Cargar los datos seleccionados de la tabla a los label */
+    /* Cargar los datos del correo seleccionado de la tabla */
     public function Seleccionar($content, $password)
     {
         $this->email_id = $content;
@@ -513,6 +529,7 @@ class CuentasController extends Component
         $this->ClienteSelect = 0;
     }
 
+    /* ABRIR MODAL PARA RENOVAR Y VENCER CUENTA CON EL PROVEEDOR */
     public function AccionesCuenta(Account $cuenta)
     {
         $this->resetUI();
@@ -550,11 +567,11 @@ class CuentasController extends Component
             'price.required' => 'El precio de la cuenta es requerida',
             'password_account.required' => 'La contraseña de la cuenta es requerida',
         ];
-
+        /* OBTENER FECHA 30 DIAS DESPUES DE LA FECHA INICIO PARA LA PRIMERA INVERSION */
         $dias = 30;
         $fecha30diasdespues = strtotime('+' . $dias . ' day', strtotime($this->start_account_new));
         $fecha30diasdespues = date('Y-m-d', $fecha30diasdespues);
-
+        /* DIVIDIR EL PRECIO DE LA CUENTA PARA LAS INVERSIONES SEGUN LA CANTIDAD DE MESES */
         $this->validate($rules, $messages);
         $this->price /= $this->meseRenovarProv;
         $cuenta = Account::find($this->selected_id);
@@ -661,8 +678,12 @@ class CuentasController extends Component
             } else {
                 $correo = Email::create([
                     'content' => $this->email_id,
-                    'cedula' => $this->passwordGmail,
+                    'pass' => $this->passwordGmail,
                 ]);
+            }
+            if ($correo->id != 1) {
+                $correo->availability = 'OCUPADO';
+                $correo->save();
             }
 
             $plataform = Platform::find($this->platform_id);
@@ -679,7 +700,7 @@ class CuentasController extends Component
                     'meses_comprados' => $this->mesesComprar,
                     'str_supplier_id' => $this->proveedor,
                     'platform_id' => $this->platform_id,
-                    'email_id' => $this->email_id,
+                    'email_id' => $correo->id,
                 ]);
             } else {
                 $acc = Account::create([
@@ -694,7 +715,7 @@ class CuentasController extends Component
                     'meses_comprados' => $this->mesesComprar,
                     'str_supplier_id' => $this->proveedor,
                     'platform_id' => $this->platform_id,
-                    'email_id' => $this->email_id,
+                    'email_id' => $correo->id,
                 ]);
             }
 
@@ -752,11 +773,6 @@ class CuentasController extends Component
                         'account_id' => $acc->id,
                     ]);
                 }
-            }
-
-            if ($correo->id != 1) {
-                $correo->availability = 'OCUPADO';
-                $correo->save();
             }
 
             DB::commit();

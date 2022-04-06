@@ -5,9 +5,9 @@
                 <h5 class="modal-title text-white">
                     <b>Detalle de la Transacción</b>
                 </h5>
-                {{-- <button class="close" data-dismiss="modal" type="button" aria-label="Close">
+                <button class="close" data-dismiss="modal" type="button" aria-label="Close">
                     <span class="text-white">&times;</span>
-                </button> --}}
+                </button>
             </div>
 
             <div class="modal-body">
@@ -46,11 +46,13 @@
                         <div class="form-group">
                             <label>Observaciones: </label><br>
                             <label>
-                                @if(!empty($details))
-                                {{$details[0]->observaciones}}
+                                @if (!empty($details))
+                                    {{ $details[0]->observaciones }}
                                 @endif
                             </label>
-                            @error('estado') <span class="text-danger er">{{ $message }}</span>@enderror
+                            @error('estado')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
                         </div>
                     </div>
 

@@ -58,7 +58,7 @@ class PermissionSeeder extends Seeder
         Permission::create([    /* INGRESAR A CORTE DE CAJA */
             'name' => 'Corte_Caja_Index',
             'guard_name' => 'web'
-        ]);        
+        ]);
 
 
         /* TIGO MONEY */
@@ -110,7 +110,7 @@ class PermissionSeeder extends Seeder
 
         /* STREAMING */
         Permission::create([    /* INGRESAR A PLATAFORMA CRUD */
-            'name' => 'Plataforma_Index',   
+            'name' => 'Plataforma_Index',
             'guard_name' => 'web'
         ]);
         Permission::create([    /* INGRESAR A PROVEEDOR CRUD */
@@ -167,7 +167,7 @@ class PermissionSeeder extends Seeder
         Permission::create([    /* INGRESAR A ORDEN DE SERVICIO */
             'name' => 'Orden_Servicio_Index',
             'guard_name' => 'web'
-        ]);        
+        ]);
         Permission::create([    /* PERMITIR VER EL INICIO CON LOS SERVICIOS */
             'name' => 'Inicio_Index',
             'guard_name' => 'web'
@@ -175,15 +175,15 @@ class PermissionSeeder extends Seeder
         Permission::create([    /* PERMITE IMPRIMIR LA ORDEN DE SERVICIO */
             'name' => 'Imprimir_Orden_Servicio_Index',
             'guard_name' => 'web'
-        ]); 
+        ]);
         Permission::create([    /* INGRESAR A REPORTES DE SERVICIO */
             'name' => 'Reporte_Servicios_Index',
             'guard_name' => 'web'
-        ]); 
+        ]);
         Permission::create([    /* PERMITE SACAR PDF DE REPORTES DE SERVICIO */
             'name' => 'Reporte_Servicios_Export',
             'guard_name' => 'web'
-        ]); 
+        ]);
         Permission::create([    /* PERMITIR ASIGNAR UN TECNICO AL SERVICIO */
             'name' => 'Asignar_Tecnico_Servicio',
             'guard_name' => 'web'
@@ -206,7 +206,7 @@ class PermissionSeeder extends Seeder
         ]);
 
 
-        
+
         /* VENTAS */
         Permission::create([    /* INGRESAR A CATEGORIA CRUD */
             'name' => 'Category_Index',
@@ -236,7 +236,7 @@ class PermissionSeeder extends Seeder
             'name' => 'Report_Sales_Export',
             'guard_name' => 'web'
         ]);
-        
+
         /* SIDEBAR */
         Permission::create([    /* PERMITIR VER TIGO MONEY EN EL SIDEBAR */
             'name' => 'Ver_TigoMoney_SideBar',
@@ -250,7 +250,19 @@ class PermissionSeeder extends Seeder
             'name' => 'Ver_Servicios_SideBar',
             'guard_name' => 'web'
         ]);
-        
-        
+
+        /* TIGO MONEY */
+        Permission::create([    /* PERMITIR VER LOS REPORTES DE JORNADA DE TIGO MONEY */
+            'name' => 'Jornada_Tigo_Index',
+            'guard_name' => 'web'
+        ]);
+        Permission::create([    /* PERMITIR MODIFICAR LA SUCURSAL Y LA CAJA EN REPORTE JORNADA */
+            'name' => 'Modificar_Sucursal_Caja_Jornada_Tigo_Money',
+            'guard_name' => 'web'
+        ]);
+        Permission::create([    /* PERMITIR VER LA GANANCIA DE LAS TRANSACCIONES DE TIGO MONEY */
+            'name' => 'Ver_Ganancia_Tigo_Money',
+            'guard_name' => 'web'
+        ]);
     }
 }

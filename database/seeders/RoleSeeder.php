@@ -34,5 +34,17 @@ class RoleSeeder extends Seeder
             'name' => 'CAJERO',
             'guard_name' => 'web'
         ]);
+        Role::create([
+            'name' => 'STREAMING_ADMIN',
+            'guard_name' => 'web'
+        ]);
+        Role::create([
+            'name' => 'STREAMING_SUPERVISOR',
+            'guard_name' => 'web'
+        ]);
+        Role::create([
+            'name' => 'STREAMING_TIGOMONEY_VENDEDOR',
+            'guard_name' => 'web'
+        ]);
     }
 }

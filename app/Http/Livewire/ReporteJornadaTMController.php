@@ -37,10 +37,15 @@ class ReporteJornadaTMController extends Component
             ->where('mov.type', 'APERTURA')
             ->select('cajas.id as cajaid', 's.id as sucursalid')
             ->get()->first();
-
-        $this->sucursal = $cajausuario->sucursalid;
-        $this->caja = $cajausuario->cajaid;
-        $this->condicionalCaja = $this->sucursal;
+        if ($cajausuario) {
+            $this->sucursal = $cajausuario->sucursalid;
+            $this->caja = $cajausuario->cajaid;
+            $this->condicionalCaja = $this->sucursal;
+        } else {
+            $this->sucursal = 'Elegir';
+            $this->caja = 'Elegir';
+            $this->condicionalCaja = $this->sucursal;
+        }
     }
 
     public function render()

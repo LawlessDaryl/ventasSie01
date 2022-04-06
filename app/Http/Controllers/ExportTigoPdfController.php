@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Motivo;
+use App\Models\Origen;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade as PDF;
 use Carbon\Carbon;
@@ -14,7 +16,7 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ExportTigoPdfController extends Controller
 {
-    public function reporteTigoPDF($userId, $reportType, $dateFrom = null, $dateTo = null)
+    public function reporteTigoPDF($userId, $reportType, $origenfiltro, $tipotr, $dateFrom = null, $dateTo = null)
     {
         $data = [];
 
@@ -28,48 +30,207 @@ class ExportTigoPdfController extends Controller
         }
 
         if ($userId == 0) {
-            $data = Transaccion::join('mov_transacs as mt', 'mt.transaccion_id', 'transaccions.id')
-                ->join('movimientos as m', 'm.id', 'mt.movimiento_id')
-                ->join('users as u', 'm.user_id', 'u.id')
-                ->join('cartera_movs as cmv', 'cmv.movimiento_id', 'm.id')
-                ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
-                ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
-                ->join('origen_motivos as om', 'transaccions.origen_motivo_id', 'om.id')
-                ->join('origens as ori', 'ori.id', 'om.origen_id')
-                ->join('motivos as mot', 'mot.id', 'om.motivo_id')
-                ->select(
-                    'c.cedula as cedula',
-                    'transaccions.*',
-                    'ori.nombre as origen_nombre',
-                    'mot.nombre as motivo_nombre',
-                )
-                ->whereBetween('transaccions.created_at', [$from, $to])
-                ->orderBy('transaccions.id', 'desc')
-                ->get();
+            if ($tipotr == '0') {
+                if ($origenfiltro == '0') {
+                    $data = Transaccion::join('mov_transacs as mt', 'mt.transaccion_id', 'transaccions.id')
+                        ->join('movimientos as m', 'm.id', 'mt.movimiento_id')
+                        ->join('users as u', 'm.user_id', 'u.id')
+                        ->join('cartera_movs as cmv', 'cmv.movimiento_id', 'm.id')
+                        ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
+                        ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
+                        ->join('origen_motivos as om', 'transaccions.origen_motivo_id', 'om.id')
+                        ->join('origens as ori', 'ori.id', 'om.origen_id')
+                        ->join('motivos as mot', 'mot.id', 'om.motivo_id')
+                        ->select(
+                            'c.cedula as cedula',
+                            'transaccions.*',
+                            'ori.nombre as origen_nombre',
+                            'mot.nombre as motivo_nombre',
+                            'm.status as estadomovimiendo',
+                        )
+                        ->whereBetween('transaccions.created_at', [$from, $to])
+
+                        ->orderBy('transaccions.id', 'desc')
+                        ->get();
+                } else {
+                    $data = Transaccion::join('mov_transacs as mt', 'mt.transaccion_id', 'transaccions.id')
+                        ->join('movimientos as m', 'm.id', 'mt.movimiento_id')
+                        ->join('users as u', 'm.user_id', 'u.id')
+                        ->join('cartera_movs as cmv', 'cmv.movimiento_id', 'm.id')
+                        ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
+                        ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
+                        ->join('origen_motivos as om', 'transaccions.origen_motivo_id', 'om.id')
+                        ->join('origens as ori', 'ori.id', 'om.origen_id')
+                        ->join('motivos as mot', 'mot.id', 'om.motivo_id')
+                        ->select(
+                            'c.cedula as cedula',
+                            'transaccions.*',
+                            'ori.nombre as origen_nombre',
+                            'mot.nombre as motivo_nombre',
+                            'm.status as estadomovimiendo',
+                        )
+                        ->whereBetween('transaccions.created_at', [$from, $to])
+                        ->where('ori.nombre', $origenfiltro)
+                        ->orderBy('transaccions.id', 'desc')
+                        ->get();
+                }
+            } else {
+                if ($origenfiltro == '0') {
+                    $data = Transaccion::join('mov_transacs as mt', 'mt.transaccion_id', 'transaccions.id')
+                        ->join('movimientos as m', 'm.id', 'mt.movimiento_id')
+                        ->join('users as u', 'm.user_id', 'u.id')
+                        ->join('cartera_movs as cmv', 'cmv.movimiento_id', 'm.id')
+                        ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
+                        ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
+                        ->join('origen_motivos as om', 'transaccions.origen_motivo_id', 'om.id')
+                        ->join('origens as ori', 'ori.id', 'om.origen_id')
+                        ->join('motivos as mot', 'mot.id', 'om.motivo_id')
+                        ->select(
+                            'c.cedula as cedula',
+                            'transaccions.*',
+                            'ori.nombre as origen_nombre',
+                            'mot.nombre as motivo_nombre',
+                            'm.status as estadomovimiendo',
+                        )
+                        ->whereBetween('transaccions.created_at', [$from, $to])
+                        ->where('mot.tipo', $tipotr)
+                        ->orderBy('transaccions.id', 'desc')
+                        ->get();
+                } else {
+                    $data = Transaccion::join('mov_transacs as mt', 'mt.transaccion_id', 'transaccions.id')
+                        ->join('movimientos as m', 'm.id', 'mt.movimiento_id')
+                        ->join('users as u', 'm.user_id', 'u.id')
+                        ->join('cartera_movs as cmv', 'cmv.movimiento_id', 'm.id')
+                        ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
+                        ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
+                        ->join('origen_motivos as om', 'transaccions.origen_motivo_id', 'om.id')
+                        ->join('origens as ori', 'ori.id', 'om.origen_id')
+                        ->join('motivos as mot', 'mot.id', 'om.motivo_id')
+                        ->select(
+                            'c.cedula as cedula',
+                            'transaccions.*',
+                            'ori.nombre as origen_nombre',
+                            'mot.nombre as motivo_nombre',
+                            'm.status as estadomovimiendo',
+                        )
+                        ->whereBetween('transaccions.created_at', [$from, $to])
+                        ->where('mot.tipo', $tipotr)
+                        ->where('ori.nombre', $origenfiltro)
+                        ->orderBy('transaccions.id', 'desc')
+                        ->get();
+                }
+            }
         } else {
-            $data = Transaccion::join('mov_transacs as mt', 'mt.transaccion_id', 'transaccions.id')
-                ->join('movimientos as m', 'm.id', 'mt.movimiento_id')
-                ->join('users as u', 'm.user_id', 'u.id')
-                ->join('cartera_movs as cmv', 'cmv.movimiento_id', 'm.id')
-                ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
-                ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
-                ->join('origen_motivos as om', 'transaccions.origen_motivo_id', 'om.id')
-                ->join('origens as ori', 'ori.id', 'om.origen_id')
-                ->join('motivos as mot', 'mot.id', 'om.motivo_id')
-                ->select(
-                    'c.cedula as cedula',
-                    'transaccions.*',
-                    'ori.nombre as origen_nombre',
-                    'mot.nombre as motivo_nombre',
-                )
-                ->whereBetween('transaccions.created_at', [$from, $to])
-                ->where('m.user_id', $userId)
-                ->orderBy('transaccions.id', 'desc')
-                ->get();
+            if ($tipotr == '0') {
+                if ($origenfiltro == '0') {
+                    $data = Transaccion::join('mov_transacs as mt', 'mt.transaccion_id', 'transaccions.id')
+                        ->join('movimientos as m', 'm.id', 'mt.movimiento_id')
+                        ->join('users as u', 'm.user_id', 'u.id')
+                        ->join('cartera_movs as cmv', 'cmv.movimiento_id', 'm.id')
+                        ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
+                        ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
+                        ->join('origen_motivos as om', 'transaccions.origen_motivo_id', 'om.id')
+                        ->join('origens as ori', 'ori.id', 'om.origen_id')
+                        ->join('motivos as mot', 'mot.id', 'om.motivo_id')
+                        ->select(
+                            'c.cedula as cedula',
+                            'transaccions.*',
+                            'ori.nombre as origen_nombre',
+                            'mot.nombre as motivo_nombre',
+                            'm.status as estadomovimiendo',
+                        )
+                        ->whereBetween('transaccions.created_at', [$from, $to])
+                        ->where('m.user_id', $userId)
+                        ->orderBy('transaccions.id', 'desc')
+                        ->get();
+                } else {
+                    $data = Transaccion::join('mov_transacs as mt', 'mt.transaccion_id', 'transaccions.id')
+                        ->join('movimientos as m', 'm.id', 'mt.movimiento_id')
+                        ->join('users as u', 'm.user_id', 'u.id')
+                        ->join('cartera_movs as cmv', 'cmv.movimiento_id', 'm.id')
+                        ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
+                        ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
+                        ->join('origen_motivos as om', 'transaccions.origen_motivo_id', 'om.id')
+                        ->join('origens as ori', 'ori.id', 'om.origen_id')
+                        ->join('motivos as mot', 'mot.id', 'om.motivo_id')
+                        ->select(
+                            'c.cedula as cedula',
+                            'transaccions.*',
+                            'ori.nombre as origen_nombre',
+                            'mot.nombre as motivo_nombre',
+                            'm.status as estadomovimiendo',
+                        )
+                        ->whereBetween('transaccions.created_at', [$from, $to])
+                        ->where('m.user_id', $userId)
+                        ->where('ori.nombre', $origenfiltro)
+                        ->orderBy('transaccions.id', 'desc')
+                        ->get();
+                }
+            } else {
+                if ($origenfiltro == '0') {
+                    $data = Transaccion::join('mov_transacs as mt', 'mt.transaccion_id', 'transaccions.id')
+                        ->join('movimientos as m', 'm.id', 'mt.movimiento_id')
+                        ->join('users as u', 'm.user_id', 'u.id')
+                        ->join('cartera_movs as cmv', 'cmv.movimiento_id', 'm.id')
+                        ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
+                        ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
+                        ->join('origen_motivos as om', 'transaccions.origen_motivo_id', 'om.id')
+                        ->join('origens as ori', 'ori.id', 'om.origen_id')
+                        ->join('motivos as mot', 'mot.id', 'om.motivo_id')
+                        ->select(
+                            'c.cedula as cedula',
+                            'transaccions.*',
+                            'ori.nombre as origen_nombre',
+                            'mot.nombre as motivo_nombre',
+                            'm.status as estadomovimiendo',
+                        )
+                        ->whereBetween('transaccions.created_at', [$from, $to])
+                        ->where('m.user_id', $userId)
+                        ->where('mot.tipo', $tipotr)
+                        ->orderBy('transaccions.id', 'desc')
+                        ->get();
+                } else {
+                    $data = Transaccion::join('mov_transacs as mt', 'mt.transaccion_id', 'transaccions.id')
+                        ->join('movimientos as m', 'm.id', 'mt.movimiento_id')
+                        ->join('users as u', 'm.user_id', 'u.id')
+                        ->join('cartera_movs as cmv', 'cmv.movimiento_id', 'm.id')
+                        ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
+                        ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
+                        ->join('origen_motivos as om', 'transaccions.origen_motivo_id', 'om.id')
+                        ->join('origens as ori', 'ori.id', 'om.origen_id')
+                        ->join('motivos as mot', 'mot.id', 'om.motivo_id')
+                        ->select(
+                            'c.cedula as cedula',
+                            'transaccions.*',
+                            'ori.nombre as origen_nombre',
+                            'mot.nombre as motivo_nombre',
+                            'm.status as estadomovimiendo',
+                        )
+                        ->whereBetween('transaccions.created_at', [$from, $to])
+                        ->where('m.user_id', $userId)
+                        ->where('mot.tipo', $tipotr)
+                        ->where('ori.nombre', $origenfiltro)
+                        ->orderBy('transaccions.id', 'desc')
+                        ->get();
+                }
+            }
+        }
+
+        $total = 0;
+        if ($data) {
+            foreach ($data as $tr) {
+                if ($tr->estadomovimiendo != 'INACTIVO') {
+                    $total += $tr->importe;
+                }
+            }
+        } else {
+            $total = 0;
         }
 
         $user = $userId == 0 ? 'Todos' : User::find($userId)->name;
-        $pdf = PDF::loadView('livewire.pdf.reporteTigo', compact('data', 'reportType', 'user', 'dateFrom', 'dateTo'));
+
+
+        $pdf = PDF::loadView('livewire.pdf.reporteTigo', compact('data', 'reportType', 'origenfiltro', 'tipotr', 'user', 'dateFrom', 'dateTo', 'total'));
 
         return $pdf->stream('TigoMoneyReport.pdf');  //visualizar
         /* return $pdf->download('salesReport.pdf');  //descargar  */

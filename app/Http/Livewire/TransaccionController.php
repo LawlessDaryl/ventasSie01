@@ -29,7 +29,7 @@ class TransaccionController extends Component
         $pageTitle, $componentName, $selected_id, $hora, $search, $condicion, $mostrartelf, $check, $type, $cartera_id,
         $nombreCliente, $cedula, $celular, $direccion, $email, $fecha_nacim, $razon, $cheq, $nit, $cantidad, $comentario, $condicional,
         $comisionSiV, $comisionNoV, $condicionalComisiones, $metodo, $condicionalOrigen, $montoB, $origMotID,
-        $montoCobrarPagar, $mostrarTelfCodigo, $mostrarCI, $ganancia, $transaccion;
+        $montoCobrarPagar, $mostrarTelfCodigo, $mostrarCI, $ganancia, $transaccion, $requerimientoComision;
     private $pagination = 10;
     public function paginationView()
     {
@@ -93,6 +93,7 @@ class TransaccionController extends Component
         $this->condicionalComisiones = 'ABC';
         $this->condicionalOrigen = 'asd';
         $this->condicionalMotivo = 'asd';
+        $this->requerimientoComision = '';
     }
 
     public function render()
@@ -246,7 +247,6 @@ class TransaccionController extends Component
         }
 
 
-
         /* RESET DE CAMPOS AL CAMBIAR MOTIVO */
         if ($this->motivo != 'Elegir' && $this->condicionalMotivo == 'asd') {
             $this->condicionalMotivo = $this->motivo;
@@ -314,6 +314,7 @@ class TransaccionController extends Component
             if ($this->OrigenMotivoObjeto->CIdeCliente == 'SI') {
                 $this->mostrarCI = 1;
             } else {
+                $this->cedula = '';
                 $this->mostrarCI = 0;
             }
         }
@@ -323,6 +324,7 @@ class TransaccionController extends Component
             if ($this->OrigenMotivoObjeto->telefSolicitante == 'SI') {
                 $this->mostrartelf = 1;
             } else {
+                $this->celular = '';
                 $this->mostrartelf = 0;
             }
         }
@@ -331,6 +333,7 @@ class TransaccionController extends Component
             if ($this->OrigenMotivoObjeto->telefDestino_codigo == 'SI') {
                 $this->mostrarTelfCodigo = 1;
             } else {
+                $this->codigo_transf = '';
                 $this->mostrarTelfCodigo = 0;
             }
         }
@@ -438,7 +441,7 @@ class TransaccionController extends Component
         try {
             $comis = Comision::find($lista[0]);
         } catch (Exception $e) {
-            $this->emit('item-error', "Selecione una comisión para este motivo");
+            $this->emit('item-error', "Este tipo de transacción no tiene una comisio o el campo esta en blanco");
             return;
         }
 
@@ -527,6 +530,7 @@ class TransaccionController extends Component
         }
         $this->check = 1;
         $this->metodo = $this->montoB;
+        $this->requerimientoComision = 'LISTO';
     }
     /* CALCULAR COMISION SI SELECCIONA NO EN RADIO BUTTON */
     public function ComisionNo()
@@ -545,7 +549,7 @@ class TransaccionController extends Component
         try {
             $comis = Comision::find($lista[0]);
         } catch (Exception $e) {
-            $this->emit('item-error', "Selecione una comisión para este motivo");
+            $this->emit('item-error', "Este tipo de transacción no tiene una comisio o el campo esta en blanco");
             return;
         }
 
@@ -630,6 +634,7 @@ class TransaccionController extends Component
         }
         $this->check = 1;
         $this->metodo = $this->montoB;
+        $this->requerimientoComision = 'LISTO';
     }
     /* REGISTRAR TRANSACCION */
     public function Store()
@@ -641,6 +646,7 @@ class TransaccionController extends Component
             'motivo' => 'required|not_in:Elegir',
             'origen' => 'required|not_in:Elegir',
             'montoB' => 'required|integer|min:1|not_in:0',
+            'requerimientoComision' => 'required_if:MostrarRadioButton,1',
         ];
         $messages = [ /* mensajes de validaciones */
             'cedula.required_if' => 'Ingrese la cedula del solicitante',
@@ -653,7 +659,8 @@ class TransaccionController extends Component
             'montoB.required' => 'Ingrese un monto válido',
             'montoB.min' => 'Ingrese un monto mayor a 0',
             'montoB.not_in' => 'Ingrese un monto válido',
-            'montoB.integer' => 'El monto debe ser un número'
+            'montoB.integer' => 'El monto debe ser un número',
+            'requerimientoComision.required_if' => 'Seleccionar si o no es requerido',
         ];
 
         $this->validate($rules, $messages);
@@ -1086,6 +1093,8 @@ class TransaccionController extends Component
         $this->condicionalComisiones = 'ABC';
         $this->condicionalOrigen = 'asd';
         $this->condicionalMotivo = 'asd';
+
+        $this->requerimientoComision = '';
 
         $this->resetValidation();
     }

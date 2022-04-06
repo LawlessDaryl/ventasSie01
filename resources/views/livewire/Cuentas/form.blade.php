@@ -62,14 +62,7 @@
             <label>
                 <h6>Correo</h6>
             </label>
-            {{-- <select @if ($selected_id > 0) disabled @endif @if ($platform_id == 'Elegir') disabled @endif
-                wire:model='email_id' class="form-control">
-                <option value="Elegir" disabled>Elegir</option>
-                @foreach ($correos as $c)
-                    <option value="{{ $c->id }}">{{ $c->content }}</option>
-                @endforeach
-            </select> --}}
-            <input @if ($selected_id > 0) disabled @endif type="text" wire:model="email_id"
+            <input @if ($mostrarCorreo == 'NO') disabled @endif type="text" wire:model="email_id"
                 class="form-control">
             @error('email_id')
                 <span class="text-danger er">{{ $message }}</span>
@@ -82,7 +75,7 @@
             <label>
                 <h6>Contraseña correo</h6>
             </label>
-            <input @if ($selected_id > 0) disabled @endif type="text" wire:model="passwordGmail"
+            <input @if ($mostrarCorreo == 'NO') disabled @endif type="text" wire:model="passwordGmail"
                 class="form-control">
             @error('passwordGmail')
                 <span class="text-danger er">{{ $message }}</span>
@@ -138,11 +131,10 @@
     @endif
 
 
-
     <div class="col-sm-12 col-md-6">
         <div class="form-group">
             <label>
-                <h6>Número de Perfiles</h6>
+                <h6>Número de Perfiles para la venta</h6>
             </label>
             <input @if ($selected_id > 0) disabled @endif type="number" wire:model.lazy="number_profiles"
                 class="form-control" placeholder="ej: 0.0">
@@ -183,8 +175,8 @@
             <label>
                 <h6>Nombre de la cuenta en Plataforma</h6>
             </label>
-            <input type="text" wire:model.lazy="nombre_cuenta" class="form-control"
-                placeholder="Dejar en blanco si se usa correo">
+            <input @if ($mostrarNombreCuenta == 'NO') disabled @endif type="text" wire:model.lazy="nombre_cuenta"
+                class="form-control">
             @error('nombre_cuenta')
                 <span class="text-danger er">{{ $message }}</span>
             @enderror
@@ -196,31 +188,12 @@
             <label>
                 <h6>Contraseña cuenta Plataforma</h6>
             </label>
-            <input type="text" wire:model.lazy="password_account" class="form-control" placeholder="ej: ntlxEmanuel">
+            <input type="text" wire:model.lazy="password_account" class="form-control">
             @error('password_account')
                 <span class="text-danger er">{{ $message }}</span>
             @enderror
         </div>
     </div>
-
-    {{-- @if ($condicional != 'ocupados')
-        @if ($selected_id > 0)
-            <div class="col-sm-12 col-md-6">
-                <div class="form-group">
-                    <label>
-                        <h6>Estado</h6>
-                    </label>
-                    <select wire:model='estado' class="form-control">
-                        <option value="ACTIVO">ACTIVO</option>
-                        <option value="INACTIVO">INACTIVO</option>
-                    </select>
-                    @error('status')
-                        <span class="text-danger er">{{ $message }}</span>
-                    @enderror
-                </div>
-            </div>
-        @endif
-    @endif --}}
 
 </div>
 

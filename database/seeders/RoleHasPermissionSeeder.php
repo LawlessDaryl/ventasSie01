@@ -15,7 +15,7 @@ class RoleHasPermissionSeeder extends Seeder
      */
     public function run()
     {
-        for ($x = 1; $x <= 46; $x++) {
+        for ($x = 1; $x <= 46; $x++) {  /* TODOS LOS PERMISOS PARA EL ROL ADMIN */
             RoleHasPermissions::create([
                 'permission_id' => $x,
                 'role_id' => 1,
@@ -26,6 +26,7 @@ class RoleHasPermissionSeeder extends Seeder
             'permission_id' => 11,
             'role_id' => 2,
         ]);
+
         for ($x = 17; $x <= 22; $x++) {     /* PERMISOS TIGO MONEY */
             RoleHasPermissions::create([
                 'permission_id' => $x,
@@ -76,6 +77,16 @@ class RoleHasPermissionSeeder extends Seeder
                 'role_id' => 5,
             ]);
         }
+
+        RoleHasPermissions::create([    //
+            'permission_id' => 57,
+            'role_id' => 1,
+        ]);
+
+        
+
+
+
         /* RoleHasPermissions::create([
             'permission_id' =>Permission::where('name','Inicio_Index')->get()->id
             ,
