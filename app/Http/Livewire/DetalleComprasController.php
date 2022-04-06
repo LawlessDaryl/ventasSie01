@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\Compra;
+use App\Models\CompraDetalle;
 use App\Models\Destino;
 use App\Models\Movimiento;
 use App\Models\Movimiento_Compra;
@@ -195,7 +196,7 @@ class DetalleComprasController extends Component
     public function guardarCompra()
     {
 
-        calcularImpuestos();
+        $this->calcularImpuestos();
 
         if ($this->total_compra <= 0) {
             $this->emit('sale-error', 'Agrega productos a la compra');
@@ -228,8 +229,13 @@ class DetalleComprasController extends Component
 
             $Movimiento= Movimiento::create([
                 
-                
-                
+                'type'=>"COMPRAS",
+                'status'=>"ACTIVO",
+                'saldo'=>$this->total_compra- $this->pago_parcial,
+                'on_account'=>$this->pago_parcial,
+                'import'=>$this->pago_parcial,
+                'user_id' => Auth()->user()->id
+
             ]);
 
             Movimiento_Compra::create([
@@ -239,23 +245,16 @@ class DetalleComprasController extends Component
 
 
 
-            $sale = Sale::create([
-                'total' => $this->total,
-                'items' => $this->itemsQuantity,
-                'cash' => $this->efectivo,
-                'change' => $this->change,
-                'movimiento_id' => $Movimiento->id,
-                'user_id' => Auth()->user()->id
-            ]);
+        
 
-            if ($sale) {
-                $items = Cart::getContent();
+            if ($Compra_encabezado) {
+                $items = Compras::getContent();
                 foreach ($items as $item) {
-                    SaleDetail::create([
-                        'price' => $item->price,
-                        'quantity' => $item->quantity,
+                    CompraDetalle::create([
+                        'precio' => $item->price,
+                        'cantidad' => $item->quantity,
                         'product_id' => $item->id,
-                        'sale_id' => $sale->id,
+                        'compra_id' => $Compra_encabezado->id,
                     ]);
 
                     $product = Product::find($item->id);

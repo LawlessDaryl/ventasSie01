@@ -29,9 +29,6 @@ class DestinoProductoController extends Component
         $this->componentName='crear';
         $this->title='ssss';
       
-
-     
-      
     }
 
     public function render()

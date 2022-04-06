@@ -16,7 +16,7 @@
                         </div>
                     </div>
                   
-                     
+
                         <div class="row">
 
                              <div class="col-12 col-md-4 col-lg-4 card">
@@ -25,7 +25,7 @@
                                      <div class="col-lg-12">
                                          <div class="form-group">
                                              <strong>Proveedor</strong>
-                                             <div class="input-group-prepend mb-3" >
+                                             <div class="input-group-prepend mb-3">
     
                                                  <input type="text" wire:model.lazy="provider" class="form-control" placeholder="Introduzca el numero de factura">
                                                 
@@ -342,7 +342,6 @@
  <script>
      document.addEventListener('DOMContentLoaded', function() {
  
-       
          window.livewire.on('show-modal', msg => {
              $('#modal_prov').modal('show')
          });

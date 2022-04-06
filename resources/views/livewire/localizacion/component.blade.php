@@ -9,6 +9,12 @@
                     <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
                         data-target="#theModal">Agregar</a>
                 </ul>
+                <ul class="tabs tab-pills">
+                    <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
+                        data-target="#asignar_mobiliario">Asignar Mobiliario</a>
+                </ul>
+
+
             </div>
             @include('common.searchbox')
 
@@ -69,7 +75,10 @@
             </div>
         </div>
     </div>
-   @include('livewire.localizacion.form') 
+   @include('livewire.localizacion.form')
+   </div>
+   @include('livewire.localizacion.modal_asignar_mobiliario') 
+   
 </div>
 
 
@@ -98,6 +107,12 @@
         window.livewire.on('hidden.bs.modal', function(e) {
             $('.er').css('display', 'none')
         });
+        window.livewire.on('show-modal', msg => {
+             $('#asignar_mobiliario').modal('show')
+         });
+         window.livewire.on('modal-hide', msg => {
+             $('#asignar_mobiliario').modal('hide')
+         });
     });
 
     function Confirm(id, descripcion, locations) {
