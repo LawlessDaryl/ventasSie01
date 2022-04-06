@@ -9,17 +9,20 @@ use Livewire\Component;
 
 class NotiController extends Component
 {
-    public $NotificacionIco, $noti, $tiempo, $year, $meses, $dias, $hora, $minutos;
+    public $NotificacionIco,$notif, $tiempo, $year, $meses, $dias, $hora, $minutos;
     public function render()
     {
+        $this->notif = [];
         //Verificando si el usuario Tiene Notificaciones Vistas
-        $this->noti = User::join("notificacion_usuarios as nu", "nu.user_id", "users.id")
+        $this->notif = User::join("notificacion_usuarios as nu", "nu.user_id", "users.id")
         ->join("notificacions as n", "n.id", "nu.notificacion_id")
         ->where('n.estado', 'NOVISTO')
         ->where('users.id', Auth()->user()->id)
-        ->select('n.nombrenotificacion as nn','n.mensaje as m')
-        ->get()
-        ->first();
+        ->select('n.nombrenotificacion as nn','n.mensaje as m','n.estado as estado')
+        ->get();
+
+
+
         //Misma consulta que arriba pero sin el $this-> para mostrar icono de notificacion nueva
         $notificacionesvistas = User::join("notificacion_usuarios as nu", "nu.user_id", "users.id")
         ->join("notificacions as n", "n.id", "nu.notificacion_id")

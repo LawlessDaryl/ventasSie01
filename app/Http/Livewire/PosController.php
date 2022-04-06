@@ -229,7 +229,7 @@ class PosController extends Component
                 "products.precio_venta as price","products.barcode", "pd.stock as stock")
                 ->where("products.id", $product->id)
                 ->where("des.nombre", 'ALMACEN')
-                ->where("des.sucursal_id", $this->idsucursal()->id)
+                ->where("des.sucursal_id", $this->idsucursal())
                 ->get()->first();
 
                 if($productoalmacen->stock > 0)
@@ -351,6 +351,8 @@ class PosController extends Component
         {
             $title = "Producto agregado";
         }
+        
+        
         if ($exist)
         {
             if ($product->stock < ($cant + $exist->quantity))
@@ -365,11 +367,6 @@ class PosController extends Component
                 ->where("des.nombre", 'ALMACEN')
                 ->where("des.sucursal_id", $this->idsucursal())
                 ->get()->first();
-
-
-
-
-
                 try
                 {
                     if($productoalmacen->stock > 0)
@@ -391,15 +388,10 @@ class PosController extends Component
                     $this->emit('no-stock', 'Stock en 0, ¡Insuficiente!');
                     return;
                 }
-
-
-
-
-
-
-                
             }
         }
+
+
 
         Cart::add($product->id, $product->name, $product->price, $cant, $product->image);
 
@@ -663,14 +655,15 @@ class PosController extends Component
                         'sale_id' => $sale->id,
                     ]);
 
-
                     //Decrementando el stock en tienda
-                    $tiendaproducto = ProductosDestino::join("products as p", "p.id", "productos_destinos.product-id")
-                    ->join('locations as d', 'd.id', 'productos_destinos.destino-id')
+                    $tiendaproducto = ProductosDestino::join("products as p", "p.id", "productos_destinos.product_id")
+                    ->join('locations as d', 'd.id', 'productos_destinos.location_id')
+                    ->join('destinos as des', 'des.id', 'd.destino_id')
                     ->select("productos_destinos.id as id","p.nombre as name",
                     "productos_destinos.stock as stock")
                     ->where("p.id", $item->id)
-                    ->where("d.ubicacion", 'TIENDA')
+                    ->where("des.nombre", 'TIENDA')
+                    ->where("des.sucursal_id", $this->idsucursal())
                     ->get()->first();
 
 
@@ -736,41 +729,60 @@ class PosController extends Component
     //Mètodo para mover productos de la tabla ALM
     public function almacenToTienda()
     {
-        //Eliminando la cantidad de productos de ALMACEN para pasar a TIENDA
-        $productoalmacenid = ProductosDestino::join("products as p", "p.id", "productos_destinos.product_id")
+        //Encontrando el Id de la Tabla ProductosDestino  a actualizar (para Decrementar Stock Almacen)
+        $almacen = ProductosDestino::join("products as p", "p.id", "productos_destinos.product_id")
         ->join('locations as d', 'd.id', 'productos_destinos.location_id')
         ->join('destinos as des', 'des.id', 'd.destino_id')
-        ->select("productos_destinos.product_id as id","p.nombre as Nombre", "productos_destinos.stock as stock")
+        ->select("productos_destinos.product_id as id","p.nombre as name","p.precio_venta as price","p.image as image", "productos_destinos.stock as cantidad_disponible_almacen"
+        , "productos_destinos.id as id_pd")
         ->where("productos_destinos.product_id", $this->idproductoalmacen)
         ->where("des.nombre", 'ALMACEN')
         ->where("des.sucursal_id", $this->idsucursal())
         ->get()->first();
 
-        //dd($productoalmacenid);
 
 
-        $productoalmacenid->update([
-            'stock' => $productoalmacenid->stock - $this->cantidadToTienda
+
+        $rules = [ 
+            'cantidadToTienda' => 'required|integer|min:1|not_in:0|max:'.$almacen->cantidad_disponible_almacen,
+        ];
+        $messages = [
+            'cantidadToTienda.required' => 'Ingrese un monto válido',
+            'cantidadToTienda.min' => 'Ingrese un monto mayor a 0',
+            'cantidadToTienda.not_in' => 'Ingrese un monto válido',
+            'cantidadToTienda.integer' => 'El monto debe ser un número',
+            'cantidadToTienda.max' => 'El monto máximo debe ser '.$almacen->cantidad_disponible_almacen
+        ];
+
+        $this->validate($rules, $messages);
+
+
+        $idproductodestinoalmacen = ProductosDestino::find($almacen->id_pd);
+        //Decrementando el Stock del Id que corresponde al Almacen
+        $idproductodestinoalmacen->update([
+            'stock' => $almacen->cantidad_disponible_almacen - $this->cantidadToTienda
         ]);
-        //dd($productoalmacenid->stock);
-        //Incrementando la cantidad de productos en TIENDA que vienen de ALMACEN
-        $productotiendaid = ProductosDestino::join("products as p", "p.id", "productos_destinos.product_id")
+
+        //dd($productoalmacenid->name ." - Cantidad en Almacen:". $productoalmacenid->cantidad_disponible_almacen);
+        //Encontrando el Id de la Tabla ProductosDestino  a actualizar (para Incrementar Stock Tienda)
+        $tienda = ProductosDestino::join("products as p", "p.id", "productos_destinos.product_id")
         ->join('locations as d', 'd.id', 'productos_destinos.location_id')
         ->join('destinos as des', 'des.id', 'd.destino_id')
-        ->select("productos_destinos.product_id as id","p.nombre as Nombre", "productos_destinos.stock as stock")
+        ->select("productos_destinos.product_id as id","p.nombre as name","p.precio_venta as price","p.image as image", "productos_destinos.stock as cantidad_disponible_tienda"
+        , "productos_destinos.id as id_pd")
         ->where("productos_destinos.product_id", $this->idproductoalmacen)
         ->where("des.nombre", 'TIENDA')
         ->where("des.sucursal_id", $this->idsucursal())
         ->get()->first();
 
 
-        $productotiendaid->update([
-            'stock' => $productotiendaid->stock + $this->cantidadToTienda
+        $idproductodestinotienda = ProductosDestino::find($tienda->id_pd);
+        //Incrementando el Stock del Id que corresponde a la Tienda
+        $idproductodestinotienda->update([
+            'stock' => $tienda->cantidad_disponible_tienda + $this->cantidadToTienda
         ]);
 
-
-
-
+        //NOTIFICACIONES
         //Obteniendo el nombre del Usuario
         $nombreusuario = User::select("users.id as id","users.name as nombre","users.profile as rol")
         ->where("users.id", Auth()->user()->id)
@@ -781,7 +793,8 @@ class PosController extends Component
         //Creando Notificacion
         $idNotificacion = Notificacion::create([
             'nombrenotificacion' => "MOVIMIENTO DE INVENTARIO",
-            'mensaje' => 'Usuario: '.$nombreusuario->nombre.' movio '.$this->cantidadToTienda.' unidade(s) del producto '.$productotiendaid->name,
+            'mensaje' => 'El usuario: '.$nombreusuario->nombre.' movio '.$this->cantidadToTienda.' unidade(s) del producto '.
+            $almacen->name." del Almacen a la Tienda en fecha: ",
         ]);
         //Obteniendo los Ids de los Administradores
         $idUsuarios[] = User::select("users.id as id","users.name as nombre","users.profile as rol")
@@ -801,7 +814,13 @@ class PosController extends Component
 
 
         //Añadimos al Carrito
-        $this->increaseQty($this->idproductoalmacen, $this->cantidadToTienda);
+
+        $this->increaseQty($almacen->id, $this->cantidadToTienda);
+
+        // Cart::add($almacen->id, $almacen->name, $almacen->price, $this->cantidadToTienda, $almacen->image);
+        // $this->total = Cart::getTotal();
+        // $this->itemsQuantity = Cart::getTotalQuantity();
+        // $this->emit('scan-ok', "Cantidad Actualizada");
     }
 
     // Llamar al Modal de Monedas Para Finalizar las Ventas

@@ -19,73 +19,97 @@
     <div class="dropdown-menu position-absolute animated fadeInUp" aria-labelledby="notificationDropdown">
         <div class="notification-scroll">
 
-            <a href="{{ url('notificaciones') }}">
-                @if ($NotificacionIco>0)
-                <div class="dropdown-item">
-                        <div class="media server-log">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-cart"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
-                            <div class="media-body">
-                                <div class="data-info">
-                                    <h6 class="">{{$noti->nn}}</h6>
-                                        @if($year == 0)
-                                            @if($meses==0)
-                                                @if($dias==0)
-                                                    @if ($hora == 0)
-                                                        @if($minutos<1)
-                                                            <p class="">En este Instante</p>
+            @if ($NotificacionIco>0)
+                @foreach ($notif as $p)
+                <a href="{{ url('notificaciones') }}">
+
+
+                            @if($p->estado == "NOVISTO")
+                            <div class="dropdown-item" style="background-color: #f6f5e1">
+                            @else
+                            <div class="dropdown-item">
+                            @endif
+
+                                <div class="media server-log">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" 
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+                                    class="feather feather-shopping-cart"><circle cx="9" cy="21" r="1"></circle>
+                                    <circle cx="20" cy="21" r="1"></circle>
+                                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                                    <div class="media-body">
+
+
+
+
+
+                                        
+                                        <div class="data-info">
+                                            <h6 class="">{{$p->nn}}</h6>
+                                                @if($year <= 0)
+                                                    @if($meses <= 0)
+                                                        @if($dias <= 0)
+                                                            @if ($hora <= 0)
+                                                                @if($minutos<1)
+                                                                    <p class="">En este Instante</p>
+                                                                @else
+                                                                    <p class="">Hace {{$minutos}} Minutos</p>
+                                                                @endif
+                                                            @else
+                                                                <p class="">Hace {{$hora}} horas</p>
+                                                            @endif
                                                         @else
-                                                            <p class="">Hace {{$minutos}} Minutos</p>
+                                                            <p class="">Hace {{$dias}} dias</p>
                                                         @endif
                                                     @else
-                                                        <p class="">Hace {{$hora}} horas</p>
+                                                        @if($meses == 1)
+                                                        <p class="">Hace {{$meses}} Mes</p>
+                                                        @else
+                                                        <p class="">Hace {{$meses}} Meses</p>
+                                                        @endif
                                                     @endif
                                                 @else
-                                                    <p class="">Hace {{$dias}} dias</p>
+                                                    <p class="">Hace {{$year}} Años</p>
                                                 @endif
-                                            @else
-                                                <p class="">Hace {{$dias}} Meses</p>
-                                            @endif
-                                        @else
-                                            <p class="">Hace {{$year}} Años</p>
-                                        @endif
-                                        {{substr($noti->m, 0, 17).'...'}}
+                                                {{substr($p->m, 3, 17).'...'}}
+                                        </div>
 
-                                    {{-- <div class="icon-status">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
-                                            <line x1="18" y1="6" x2="6" y2="18"></line>
-                                            <line x1="6" y1="6" x2="18" y2="18"></line>
-                                        </svg>
-                                    </div> --}}
+
+
+
+
+
+
+
+
+                                    </div>
                                 </div>
+                        </div>
+                </a>
+                <hr style="margin:0px; height:2px;border:none;color:rgb(212, 44, 44);background-color:rgb(221, 189, 157);" />
+                @endforeach
+            @else
+            <div class="dropdown-item">
+                <div class="media server-log">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-printer"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                        <div class="media-body">
+                            <div class="data-info">
+                                <h6 class="">Sin Notificaciones</h6>
+                                Nada que Notificar
+                            </div>
+
+                            <div class="icon-status">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
                             </div>
                         </div>
                 </div>
-                @else
-                <div class="dropdown-item">
-                    <div class="media server-log">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-printer"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-                            <div class="media-body">
-                                <div class="data-info">
-                                    <h6 class="">Sin Notificaciones</h6>
-                                    Nada que Notificar
-                                </div>
-
-                                <div class="icon-status">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
-                                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                                    </svg>
-                                </div>
-                            </div>
-                    </div>
             </div>
-                @endif
-            </a>
-
+            @endif
 
 
             {{-- <div class="dropdown-item">

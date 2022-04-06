@@ -89,7 +89,6 @@
                 <div id="modalVerticallyCentered" class="col-lg-12 layout-spacing">
                     <div class="statbox widget box box-shadow">
                         <div class="widget-content widget-content-area">
-                            <!-- Modal -->
                             <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                     <div class="modal-content">
@@ -118,12 +117,12 @@
                                                     <center>
                                                         <div class="col-lg-5">
                                                             <input type="text" min="1" max="{{$stockalmacen}}" wire:model.lazy="cantidadToTienda" class="form-control">
-                                                            {{-- @error('nombre') <span class="text-danger er">{{ $message }}</span>@enderror --}}
+                                                            @error('cantidadToTienda')
+                                                                <span class="text-danger er">{{ $message }}</span>
+                                                            @enderror
                                                         </div>
                                                     </center>
                                                     
-                                                    
-
                                                     <br>
 
 
@@ -145,6 +144,11 @@
                     </div>
                 </div>
             </div>
+
+
+
+
+
             <!-- Ventana Modal para Finalizar la Venta -->
             <div wire:ignore.self class="modal fade" id="ModalCenterFinalizarVenta" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
