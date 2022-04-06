@@ -143,14 +143,14 @@
                     <div class="col-lg-5 col-sm-12 col-md-4">
                             <label>Estado del Servicio</label>
                             <select wire:model.lazy="opciones" class="form-control">
-                                @if($opciones == 'PENDIENTE')
+                                @if($estatus == 'PENDIENTE')
                                     <option value="PENDIENTE" >PENDIENTE</option>
                                 @endif
-                                @if($opciones == 'PROCESO')
+                                @if($estatus == 'PROCESO')
                                     <option value="PENDIENTE" >PENDIENTE</option>
                                     <option value="PROCESO" >PROCESO</option>
                                 @endif
-                                @if($opciones == 'TERMINADO' )
+                                @if($estatus == 'TERMINADO' )
                                     <option value="PENDIENTE" >PENDIENTE</option>
                                     <option value="PROCESO" >PROCESO</option>
                                     <option value="TERMINADO" >TERMINADO</option>

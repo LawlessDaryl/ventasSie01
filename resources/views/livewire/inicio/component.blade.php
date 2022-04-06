@@ -111,7 +111,7 @@
                                                 <h6>{{ $mv->movs->type }}</h6>
                                             </td>
                                             <td class="text-center">
-                                                <a class="badge badge-pill badge-light"
+                                                <a class="shadow-none badge badge-primary"
                                                     href="{{ url('idorderservice' . '/' . $d->OrderServicio->id) }}"
                                                     style='font-size:18px'>Seleccionar</a>
                                             </td>
@@ -152,7 +152,7 @@
                                                     <h6>{{ $mv2->movs->type }}</h6>
                                                 </td>
                                                 <td class="text-center">
-                                                    <a class="badge badge-pill badge-light"
+                                                    <a class="shadow-none badge badge-primary"
                                                         href="{{ url('idorderservice' . '/' . $d2->OrderServicio->id) }}"
                                                         style='font-size:18px'>Seleccionar</a>
                                                 </td>
@@ -193,7 +193,7 @@
                                                 <h6>{{ $mv3->movs->type }}</h6>
                                             </td>
                                             <td class="text-center">
-                                                <a class="badge badge-pill badge-light"
+                                                <a class="shadow-none badge badge-primary"
                                                     href="{{ url('idorderservice' . '/' . $d3->OrderServicio->id) }}"
                                                     style='font-size:18px'>Seleccionar</a>
                                             </td>

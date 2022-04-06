@@ -14,7 +14,9 @@
                         <div class="text-center">
                             <div class="col-lg-12 col-sm-12 col-md-6">
                                 <div class="form-group">
-                                        <a class="badge badge-info" style="font-size: 115%" href="{{ url('reporte/pdf' . '/' . $orderservice) }}" 
+                                        {{-- <a class="badge badge-info" style="font-size: 115%" href="{{ url('reporte/pdf' . '/' . $orderservice) }}" 
+                                        target="_blank">Imprimir</a> --}}
+                                        <a class="btn btn-outline-primary" style="font-size: 115%" href="{{ url('reporte/pdf' . '/' . $orderservice) }}" 
                                         target="_blank">Imprimir</a>
                                 </div>
                             </div>
