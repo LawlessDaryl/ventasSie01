@@ -46,7 +46,6 @@
                         </div>
 
                         <div class="col-sm-12 col-md-12">
-                            <!-- TABLA -->
                             <div class="table-responsive">
                                 <table class="table table-unbordered table-hover mt-1">
                                     <thead class="text-white" style="background: #3B3F5C">
