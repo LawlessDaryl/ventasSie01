@@ -26,6 +26,27 @@
                     </div>
 
                 </div>
+
+                
+                    <div class="form-group">
+                        <div class="n-chk">
+                            <label class="new-control new-radio radio-classic-primary">
+                                <input type="radio" class="new-control-input" name="custom-radio-4" id="libres"
+                                    value="Pendientes" wire:model="condicional">
+                                <span class="new-control-indicator"></span><h6>Mi Sucursal</h6>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="n-chk">
+                            <label class="new-control new-radio radio-classic-primary">
+                                <input type="radio" class="new-control-input" name="custom-radio-4" id="ocupados"
+                                    value="Propios" wire:model="condicional" checked>
+                                <span class="new-control-indicator"></span><h6>Todas las sucursales</h6>
+                            </label>
+                        </div>
+                    </div>
+
                 <div class="col-lg-4 col-md-4 col-sm-12">
                     <select wire:model.lazy="opciones" class="form-control">
                         <option value="PENDIENTE">PENDIENTE</option>

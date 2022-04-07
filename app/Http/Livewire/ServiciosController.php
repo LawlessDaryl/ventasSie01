@@ -14,6 +14,7 @@ use App\Models\User;
 use App\Models\Service;
 use App\Models\SubCatProdService;
 use Carbon\Carbon;
+use DateTime;
 use Dompdf\Renderer\Text;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -502,43 +503,6 @@ class ServiciosController extends Component
                 'solucion' => $this->solucion,
                 'fecha_estimada_entrega' => $from,
             ]);
-            /* Obtiene el id del movimiento del id de servicio que se le pase*/
-            $movimientoid = Service::join('mov_services as ms', 'ms.service_id', 'services.id')
-                ->join('movimientos as m', 'ms.movimiento_id', 'm.id')
-                ->select('ms.movimiento_id as movimiendoID')
-                ->where('services.id', $service->id)
-                ->get()->first();
-
-            /* Aqui se obtiene el Id de Movimiento */
-            $movimiento = Movimiento::find($movimientoid->movimiendoID);
-            
-            /* Selecciona el id de Movimiento donde el Tipo de movimiento sea el mismo
-            de Opciones y el service_id de mov_services sea el id de servicio ingresado */
-            $movServices = MovService::join('movimientos as m', 'm.id', 'mov_services.movimiento_id')
-                ->select('m.id', 'm.type as mtype')
-                /* ->where('m.type', $this->opciones) */
-                ->where('mov_services.service_id', $service->id)
-                ->get()
-                ->first();
-            /* Selecciona el id de mov_services el id de movimiento y el id de cliente_movs
-            donde el service_id de mov_services sea igual al id de servicio ingresado */
-            $movsEliminar = MovService::join('movimientos as m', 'm.id', 'mov_services.movimiento_id')
-                ->join('cliente_movs as cm', 'm.id', 'cm.movimiento_id')
-                ->select('mov_services.id as movservid', 'm.id as movid', 'cm.id as clientemovid', 'm.type as mtype')
-                ->where('mov_services.service_id', $service->id)
-                ->get();
-            
-            $services1 = Service::join('mov_services as ms', 'services.id', 'ms.service_id')
-                ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
-                ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
-                ->select('services.*', 'mov.type as tipo')
-                /* ->where('services.order_service_id',  $this->orderservice) */
-                /* ->where('mov.status',  'ACTIVO') */
-                ->where('ms.service_id', $service->id)
-                /* ->where('mov.type', 'PENDIENTE') */
-                ->get();
             
             $servicioss = Service::find($this->selected_id);
             foreach($servicioss->movservices as $mm){
@@ -595,33 +559,67 @@ class ServiciosController extends Component
                         $movimi->save();
                     }
                 }
-            }
-            /* Este es el que medio funciona */
-            /* foreach ($movsEliminar as $value) {
-                if ($value->movid != $movServices->id) {
-                    $ClienteMov = ClienteMov::find($value->clientemovid);
-                    $ClienteMov->delete();
-                    $movServ = MovService::find($value->movservid);
-                    $movServ->delete();
-                    $movim = Movimiento::find($value->movid);
-                    $movim->delete();
+            }elseif($this->estatus == 'ABANDONADO' && $this->opciones == 'TERMINADO'){
+                foreach($servicioss->movservices as $mm){
+                    if($mm->movs->type == 'ABANDONADO'){
+                        $ClienteMov = ClienteMov::find($mm->movs->climov->id);
+                        $ClienteMov->delete();
+                        $movServ = MovService::find($mm->id);
+                        $movServ->delete();
+                        $movim = Movimiento::find($mm->movs->id);
+                        $movim->delete();
+                    }
+                    if($mm->movs->type == 'TERMINADO'){
+                        $movimi = Movimiento::find($mm->movs->id);
+                        $movimi->status = 'ACTIVO';
+                        $movimi->save();
+                    }
                 }
-            } */
+                $servicioss->fecha_estimada_entrega = new DateTime("now");
+                $servicioss->save();
+            }elseif($this->estatus == 'ABANDONADO' && $this->opciones == 'PROCESO'){
+                foreach($servicioss->movservices as $mm){
+                    if($mm->movs->type == 'ABANDONADO'  || $mm->movs->type == 'TERMINADO'){
+                        $ClienteMov = ClienteMov::find($mm->movs->climov->id);
+                        $ClienteMov->delete();
+                        $movServ = MovService::find($mm->id);
+                        $movServ->delete();
+                        $movim = Movimiento::find($mm->movs->id);
+                        $movim->delete();
+                    }
+                    if($mm->movs->type == 'PROCESO'){
+                        $movimi = Movimiento::find($mm->movs->id);
+                        $movimi->status = 'ACTIVO';
+                        $movimi->save();
+                    }
+                }
+                $servicioss->fecha_estimada_entrega = new DateTime("now");
+                $servicioss->save();
+            }elseif($this->estatus == 'ABANDONADO' && $this->opciones == 'PENDIENTE'){
+                foreach($servicioss->movservices as $mm){
+                    if($mm->movs->type == 'ABANDONADO'  || $mm->movs->type == 'TERMINADO' || $mm->movs->type == 'PROCESO'){
+                        $ClienteMov = ClienteMov::find($mm->movs->climov->id);
+                        $ClienteMov->delete();
+                        $movServ = MovService::find($mm->id);
+                        $movServ->delete();
+                        $movim = Movimiento::find($mm->movs->id);
+                        $movim->delete();
+                    }
+                    if($mm->movs->type == 'PENDIENTE'){
+                        $movimi = Movimiento::find($mm->movs->id);
+                        $movimi->status = 'ACTIVO';
+                        $movimi->save();
+                    }
+                }
+                $servicioss->fecha_estimada_entrega = new DateTime("now");
+                $servicioss->save();
+            }
             
+            
+
             DB::commit();
             $this->resetUI();
             $this->emit('service-updated', 'Servicio Actualizado');
-
-            /* $movimi = Movimiento::find($movServices->id);                      
-            if($movimi->type == 'PENDIENTE'){
-                $movimi->status = 'INACTIVO';
-            }else{
-                $movimi->status = 'ACTIVO';
-            }
-            $movimi->save();
-
-            DB::commit(); */
-
 
         } catch (Exception $e) {
             DB::rollback();

@@ -155,6 +155,12 @@
                                     <option value="PROCESO" >PROCESO</option>
                                     <option value="TERMINADO" >TERMINADO</option>
                                 @endif
+                                @if($estatus == 'ABANDONADO' )
+                                    <option value="PENDIENTE" >PENDIENTE</option>
+                                    <option value="PROCESO" >PROCESO</option>
+                                    <option value="TERMINADO" >TERMINADO</option>
+                                    <option value="ABANDONADO" >ABANDONADO</option>
+                                @endif
                                 {{-- @if($opciones == 'ENTREGADO')
                                     <option value="PENDIENTE" >PENDIENTE</option>
                                     <option value="PROCESO" >PROCESO</option>

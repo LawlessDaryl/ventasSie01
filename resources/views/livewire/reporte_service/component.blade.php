@@ -150,9 +150,13 @@
                                                     <td class="text-center">
                                                         <h6>{{ $mv->movs->created_at }}</h6>
                                                     </td>
+                                                @elseif ($mv->movs->type == 'ABANDONADO')
+                                                    <td class="text-center">
+                                                        <h6>Abandonado</h6>
+                                                    </td>
                                                 @endif
 
-                                                @if ($mv->movs->type == 'ABANDONADO')
+                                                {{-- @if ($mv->movs->type == 'ABANDONADO')
                                                     @if ($mv->movs->status == 'ACTIVO')
                                                         <td class="text-center">
                                                             <h6>Abandonado</h6>
@@ -164,7 +168,7 @@
                                                             <h6>Abandonado</h6>
                                                         </td>
                                                     @endif
-                                                @endif
+                                                @endif --}}
 
                                             @endforeach
                                             <td class="text-center">

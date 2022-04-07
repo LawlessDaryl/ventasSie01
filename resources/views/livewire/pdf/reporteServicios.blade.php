@@ -125,9 +125,13 @@
                                 <td align="center">
                                     <FONT FACE="times new roman" SIZE=1>{{ $mv->movs->created_at }}</FONT>
                                 </td>
+                            @elseif ($mv->movs->type == 'ABANDONADO')
+                                <td align="center">
+                                    <FONT FACE="times new roman" SIZE=1>Abandonado</FONT>
+                                </td>
                             @endif
 
-                            @if ($mv->movs->type == 'ABANDONADO')
+                            {{-- @if ($mv->movs->type == 'ABANDONADO')
                                 @if ($mv->movs->status == 'ACTIVO')
                                     <td align="center">
                                         <FONT FACE="times new roman" SIZE=1>Abandonado</FONT>
@@ -139,7 +143,7 @@
                                         <FONT FACE="times new roman" SIZE=1>Abandonado</FONT>
                                     </td>
                                 @endif
-                            @endif
+                            @endif --}}
 
                         @endforeach
                         <td align="center">
