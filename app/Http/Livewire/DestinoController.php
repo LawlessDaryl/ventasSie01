@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\Destino;
+use App\Models\Location;
 use App\Models\Sucursal;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -64,11 +65,22 @@ public function mount()
         ];
         $this->validate($rules, $messages);
 
-        Destino::create([
+        $destino=Destino::create([
             'nombre' => $this->nombre,
             'observacion'=>$this->observacion,
             'sucursal_id'=>$this->sucursal
         ]);
+        $destino->save();
+
+
+        Location::create([
+
+            'codigo'=>'ER01',
+            'descripcion'=>'Estante de recepcion de productos',
+            'tipo'=>'ESTANTE',
+            'destino_id'=>$destino->id
+        ]);
+
 
         $this->resetUI();
         $this->emit('unidad-added', 'Estancia Registrada');

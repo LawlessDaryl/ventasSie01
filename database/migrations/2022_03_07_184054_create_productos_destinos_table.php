@@ -15,12 +15,12 @@ class CreateProductosDestinosTable extends Migration
     {
         Schema::create('productos_destinos', function (Blueprint $table) {
       
-
+            $table->id();
             $table->unsignedBigInteger('product_id');
             $table->foreign('product_id')->references('id')->on('products');
             
-            $table->unsignedBigInteger('location_id');
-            $table->foreign('location_id')->references('id')->on('locations');
+            $table->unsignedBigInteger('destino_id');
+            $table->foreign('destino_id')->references('id')->on('destinos');
             
             $table->integer('stock');
             

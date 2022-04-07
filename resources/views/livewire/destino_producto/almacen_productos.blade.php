@@ -68,7 +68,7 @@
                              {{--<h5 class="card-title">{{$destino->tipo}}-{{$destino->codigo}}</h5>--}} 
                              @if($selected_id == 'General' || $selected_id == null)
                              <p class="card-text"> <strong> Stock total Disponible:</strong> {{$destino->stock_s }}</p>
-                             <p class="card-text"> <strong>Cantida minima</strong> {{$destino->cant_min}}</p>
+                             <p class="card-text"> <strong>Cantidad minima:</strong> {{$destino->cant_min}}</p>
                              @else
                                <p class="card-text"> <strong> Stock Disponible:</strong> {{$destino->stock}}</p>
                                <p class="card-text"> <strong>Mobilirio ubicacion</strong> {{$destino->tipo}}-{{$destino->codigo}}</p>

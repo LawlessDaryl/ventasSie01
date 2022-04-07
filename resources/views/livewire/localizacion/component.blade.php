@@ -91,6 +91,10 @@
             $('#theModal').modal('hide'),
             noty(msg)
         });
+        window.livewire.on('localizacion-assigned', msg => {
+            $('#asignar_mobiliario').modal('hide'),
+            noty(msg)
+        });
         window.livewire.on('location-updated', msg => {
             $('#theModal').modal('hide')
             noty(msg)
@@ -110,9 +114,7 @@
         window.livewire.on('show-modal', msg => {
              $('#asignar_mobiliario').modal('show')
          });
-         window.livewire.on('modal-hide', msg => {
-             $('#asignar_mobiliario').modal('hide')
-         });
+         
     });
 
     function Confirm(id, descripcion, locations) {

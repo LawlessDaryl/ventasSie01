@@ -49,8 +49,7 @@ class TransferirProductoController extends Component
             
               
             $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
-                                        ->join('locations as loc','loc.id','productos_destinos.location_id')
-                                        ->join('destinos as dest','dest.id','loc.destino_id')
+                                        ->join('destinos as dest','dest.id','productos_destinos.destino_id')
                                         
                                         ->select(DB::raw('SUM(productos_destinos.stock) as stock_s'),'p.nombre as name','p.cantidad_minima as cant_min')
                                         ->groupBy('productos_destinos.product_id')
@@ -59,10 +58,10 @@ class TransferirProductoController extends Component
             
          else
             $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
-                                        ->join('locations as loc','loc.id','productos_destinos.location_id')
-                                        ->join('destinos as dest','dest.id','loc.destino_id')
+                                      
+                                        ->join('destinos as dest','dest.id','productos_destinos.destino_id')
                                         
-                                        ->select('productos_destinos.*','loc.*','p.nombre as name','loc.tipo as type','dest.nombre as nombre_destino','p.id as id_prod')
+                                        ->select('productos_destinos.*','p.nombre as name','dest.nombre as nombre_destino','p.id as id_prod')
                                     
                                         ->where('dest.id',$this->selected_id)
                                         ->orderBy('p.nombre','desc')
@@ -73,8 +72,8 @@ class TransferirProductoController extends Component
             else{
                
                 $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
-                ->join('locations as loc','loc.id','productos_destinos.location_id')
-                ->join('destinos as dest','dest.id','loc.destino_id')
+                
+                ->join('destinos as dest','dest.id','productos_destinos.destino_id')
                 
                 ->select(DB::raw('SUM(productos_destinos.stock) as stock_s'),'p.nombre as name','p.cantidad_minima as cant_min')
                 ->groupBy('productos_destinos.product_id')

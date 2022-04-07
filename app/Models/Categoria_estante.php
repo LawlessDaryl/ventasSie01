@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class Categoria_estante extends Model
 {
     use HasFactory;
-    
+    protected $fillable=['product_id','location_id'];
 }

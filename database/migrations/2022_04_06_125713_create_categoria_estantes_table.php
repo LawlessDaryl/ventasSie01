@@ -15,8 +15,10 @@ class CreateCategoriaEstantesTable extends Migration
     {
         Schema::create('categoria_estantes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('categoryid')->constrained();
-            $table->foreignId('locationid')->constrained();
+            $table->unsignedBigInteger('product_id');
+            $table->foreign('product_id')->references('id')->on('products');
+            $table->unsignedBigInteger('location_id');
+            $table->foreign('location_id')->references('id')->on('locations');
 
             $table->timestamps();
         });

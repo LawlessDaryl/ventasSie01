@@ -2,11 +2,12 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Categoria_estante;
 use App\Models\Category;
 use App\Models\Destino;
 use App\Models\Sucursal;
 use App\Models\Location;
-
+use App\Models\Product;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -16,7 +17,7 @@ class LocalizacionController extends Component
 {
     use WithPagination;
     use WithFileUploads;
-    public $sucursal, $codigo, $descripcion,$ubicacion, $aparador,
+    public $sucursal, $codigo, $descripcion,$ubicacion, $aparador,$producto,
     $selected_id, $categoria,$subcategoria,$mobiliario, $pageTitle, $componentName,$search,$destino;
     private $pagination = 8;
     public function paginationView()
@@ -58,11 +59,15 @@ class LocalizacionController extends Component
 
 
         $data_categoria= Category::where('categories.categoria_padre',0)->orderBy('name', 'asc')->get();
+
         $data_subcategoria= Category::where('categories.categoria_padre',$this->categoria)
         ->where('categories.categoria_padre','!=','Elegir')
         ->get();
+        $data_producto= Product::where('category_id',$this->subcategoria)->get();
+
         $data_destino=Sucursal::join('destinos as dest','sucursals.id','dest.sucursal_id')
-        ->select('dest.*','sucursals.*')->get();
+        ->select('dest.*','dest.id as destino_id','sucursals.*')->get();
+
         $data_mobiliario=Location::join('destinos as dest', 'dest.id', 'locations.destino_id')
         ->join('sucursals as suc','suc.id','dest.sucursal_id')
         ->select('locations.*', 'dest.nombre as destino','suc.name as sucursal' )
@@ -76,7 +81,8 @@ class LocalizacionController extends Component
             'data_categoria'=> $data_categoria,
             'data_subcategoria'=> $data_subcategoria,
             'data_destino'=>$data_destino,
-            'data_mobiliario'=> $data_mobiliario
+            'data_mobiliario'=> $data_mobiliario,
+            'data_producto'=>$data_producto
 
            
         
@@ -172,16 +178,23 @@ class LocalizacionController extends Component
         $this->emit('localizacion-deleted', 'Localizacion Eliminada');
     }
 
-    public function Categoria_destino(){
-        
+    public function asignarMobiliario()
+    {
+        Categoria_estante::create([
+            'product_id'=>$this->producto,
+            'location_id'=>$this->mobiliario
+        ]);
+        $this->resetUI();
+
+        $this->emit('localizacion-assigned', 'Mobiliario asignado Exitosamente');
     }
     public function resetUI()
     {
         
-        $this->aparador = 'Elegir';
-        $this->codigo = '';
-        $this->descripcion = '';
-        $this->destino = 'Elegir';
+        $this->categoria = 'Elegir';
+        $this->subcategoria = 'Elegir';
+        $this->mobiliario = 'Elegir';
+        $this->producto= 'Elegir';
         
        
 

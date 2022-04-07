@@ -36,6 +36,21 @@
                     </div>
                 </div>
 </div>
+            <div class="row">
+                <div class="col-sm-12 col-md-8 col-lg-12">
+                    <div class="form-group">
+                        <label>Productos</label>
+                        <select wire:model='producto' class="form-control">
+                            <option value="Elegir">Elegir</option>
+                            @foreach ($data_producto as $data)
+
+                                <option value="{{$data->id}}">{{ $data->nombre}}</option>
+                            @endforeach
+                        
+                        </select>
+                    </div>
+                </div>
+            </div>
                 <div class="row">
                     <div class="col-sm-12 col-md-8 col-lg-6">
                         <div class="form-group">
@@ -44,7 +59,7 @@
                                 <option value="Elegir">Elegir</option>
                                 @foreach ($data_destino as $data)
                                 
-                                    <option value="{{$data->id}}">{{ $data->nombre}}-{{$data->name}}</option>
+                                    <option value="{{$data->destino_id}}">{{ $data->nombre}}-{{$data->name}}</option>
                                 @endforeach
                               
                             </select>
@@ -72,7 +87,7 @@
      <div class="modal-footer" style="background: #f0ecec">
          <button type="button" wire:click.prevent="resetUI()" class="btn btn-dark close-btn text-info"
              data-dismiss="modal" style="background: #3b3f5c">CANCELAR</button>
-             <button type="button" wire:click.prevent="Store()"
+             <button type="button" wire:click.prevent="asignarMobiliario()"
                  class="btn btn-dark close-btn text-info">GUARDAR</button>
      </div>
     </div>
