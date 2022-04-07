@@ -86,6 +86,9 @@
                             <input type="text" wire:model="perfilPin1" class="form-control">
                         </div>
                     </div>
+                    @error('perfil1id')
+                        <span class="text-danger er">{{ $message }}</span>
+                    @enderror
                     @if ($plataforma1 != 'Elegir')
                         <div class="col-sm-12 col-md-12">
                             <div class="statbox widget box box-shadow">
@@ -175,6 +178,9 @@
                             <input type="text" wire:model="perfilPin2" class="form-control">
                         </div>
                     </div>
+                    @error('perfil2id')
+                        <span class="text-danger er">{{ $message }}</span>
+                    @enderror
                     @if ($plataforma2 != 'Elegir')
                         <div class="col-sm-12 col-md-12">
                             <div class="statbox widget box box-shadow">
@@ -264,6 +270,9 @@
                             <input type="text" wire:model="perfilPin3" class="form-control">
                         </div>
                     </div>
+                    @error('perfil3id')
+                        <span class="text-danger er">{{ $message }}</span>
+                    @enderror
                     @if ($plataforma3 != 'Elegir')
                         <div class="col-sm-12 col-md-12">
                             <div class="statbox widget box box-shadow">

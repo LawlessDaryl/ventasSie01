@@ -103,7 +103,10 @@
                                             <h6 class="text-center">{{ $acounts->perfOcupados }}</h6>
                                         </td>
                                         <td class="text-center">
-                                            
+                                            <a href="javascript:void(0)" wire:click="Crear({{ $acounts->id }})"
+                                                class="btn btn-dark mtmobile" title="Crear Perfil">
+                                                <i class="fa-regular fa-square-plus"></i>
+                                            </a>
                                             <a href="javascript:void(0)" wire:click="Edit({{ $acounts->id }})"
                                                 class="btn btn-dark mtmobile" title="Edit">
                                                 <i class="fas fa-edit"></i>

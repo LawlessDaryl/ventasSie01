@@ -78,17 +78,20 @@ class PlanesController extends Component
         $this->perfilplataforma1 = 0;
         $this->perfilplataforma2 = 0;
         $this->perfilplataforma3 = 0;
-        $this->perfil1id = 0;
+        $this->perfil1id = null;
         $this->perfilNombre1 = '';
         $this->perfilPin1 = '';
-        $this->perfil2id = 0;
+        $this->perfil2id = null;
         $this->perfilNombre2 = '';
         $this->perfilPin2 = '';
-        $this->perfil3id = 0;
+        $this->perfil3id = null;
         $this->perfilNombre3 = '';
         $this->perfilPin3 = '';
         $this->perfiles_si_no = '';
         $this->plataformaReset = 'INICIO';
+        $this->plataforma1Require = 'NO';
+        $this->plataforma2Require = 'NO';
+        $this->plataforma3Require = 'NO';
     }
 
     public function render()
@@ -472,7 +475,9 @@ class PlanesController extends Component
                 ->where('id', '!=', $this->plataforma1)
                 ->get();
             $this->cuentasp1 = Account::where('status', 'ACTIVO')
-                ->where('availability', 'LIBRE')->where('platform_id', $this->plataforma1)->get();
+                ->where('accounts.expiration_account', '>', $date_now)
+                ->where('availability', 'LIBRE')
+                ->where('platform_id', $this->plataforma1)->get();
             foreach ($this->cuentasp1 as $c) {
                 $perfilesOcupados = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                     ->join('profiles as p', 'ap.profile_id', 'p.id')
@@ -499,7 +504,9 @@ class PlanesController extends Component
                 ->where('id', '!=', $this->plataforma1)
                 ->where('id', '!=', $this->plataforma2)->get();
             $this->cuentasp2 = Account::where('status', 'ACTIVO')
-                ->where('availability', 'LIBRE')->where('platform_id', $this->plataforma2)->get();
+                ->where('accounts.expiration_account', '>', $date_now)
+                ->where('availability', 'LIBRE')
+                ->where('platform_id', $this->plataforma2)->get();
             foreach ($this->cuentasp2 as $c) {
                 $perfilesOcupados = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                     ->join('profiles as p', 'ap.profile_id', 'p.id')
@@ -523,7 +530,9 @@ class PlanesController extends Component
         /* mostrar cuentas de la plataforma 3 */
         if ($this->plataforma1 != 'Elegir' && $this->plataforma2 != 'Elegir' && $this->plataforma3 != 'Elegir') {
             $this->cuentasp3 = Account::where('status', 'ACTIVO')
-                ->where('availability', 'LIBRE')->where('platform_id', $this->plataforma3)->get();
+                ->where('accounts.expiration_account', '>', $date_now)
+                ->where('availability', 'LIBRE')
+                ->where('platform_id', $this->plataforma3)->get();
             foreach ($this->cuentasp3 as $c) {
                 $perfilesOcupados = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                     ->join('profiles as p', 'ap.profile_id', 'p.id')
@@ -568,6 +577,7 @@ class PlanesController extends Component
         $this->perfil1id = $perfil1->id;
         $this->perfilNombre1 = $perfil1->nameprofile;
         $this->perfilPin1 = $perfil1->pin;
+        $this->plataforma1Require = 'SI';
     }
     public function SegundoPerfil(Account $cuenta2)
     {
@@ -579,6 +589,7 @@ class PlanesController extends Component
         $this->perfil2id = $perfil2->id;
         $this->perfilNombre2 = $perfil2->nameprofile;
         $this->perfilPin2 = $perfil2->pin;
+        $this->plataforma2Require = 'SI';
     }
     public function TercerPerfil(Account $cuenta3)
     {
@@ -590,9 +601,22 @@ class PlanesController extends Component
         $this->perfil3id = $perfil3->id;
         $this->perfilNombre3 = $perfil3->nameprofile;
         $this->perfilPin3 = $perfil3->pin;
+        $this->plataforma3Require = 'SI';
     }
     public function venderCombo()
     {
+        $rules = [
+            'perfil1id' => 'required_if:plataforma1Require,NO',
+            'perfil2id' => 'required_if:plataforma2Require,NO',
+            'perfil3id' => 'required_if:plataforma3Require,NO',
+        ];
+        $messages = [
+            'perfil1id.required_if' => 'Seleccione una cuenta',
+            'perfil2id.required_if' => 'Seleccione una cuenta',
+            'perfil3id.required_if' => 'Seleccione una cuenta',
+        ];
+
+        $this->validate($rules, $messages);
         /* actualizar los datos de los perfiles si los cambio el usuario segun lo que pidio el cliente */
         $perfil1 = Profile::find($this->perfil1id);
         $perfil1->update([
@@ -721,12 +745,11 @@ class PlanesController extends Component
             $inversioncuenta3->ganancia = $inversioncuenta3->imports - $inversioncuenta3->price;
             $inversioncuenta3->save();
 
-            /* OBTENER FECHA ACTUAL */
-            $DateAndTime = date('Y-m-d h:i:s', time());
+
             /* CREAR EL PLAN */
             $plan = Plan::create([
                 'importe' => $this->importe,
-                'plan_start' => $DateAndTime,
+                'plan_start' => $this->fecha_inicio,
                 'expiration_plan' => $this->expiration_plan,
                 'ready' => 'NO',
                 'status' => 'VIGENTE',
@@ -1006,7 +1029,7 @@ class PlanesController extends Component
 
                     /* OBTENER FECHA ACTUAL */
                     $DateAndTime = date('Y-m-d h:i:s', time());
-                    
+
                     /* CREAR EL PLAN */
                     $plan = Plan::create([
                         'importe' => $this->importe,
@@ -1241,7 +1264,7 @@ class PlanesController extends Component
                     ->where('pa.status', 'ACTIVO')
                     ->where('ap.status', 'ACTIVO')
                     ->get()->first();
-                   
+
                 /* PONER EN INACTIVO EL MOVIMIENTO */
                 $movimiento = Movimiento::find($anular->id);
                 $movimiento->status = 'INACTIVO';

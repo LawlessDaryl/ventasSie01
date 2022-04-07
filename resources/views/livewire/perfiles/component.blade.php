@@ -38,10 +38,22 @@
                         <div class="form-group">
                             <div class="n-chk">
                                 <label class="new-control new-radio radio-classic-primary">
-                                    <input type="radio" class="new-control-input" name="custom-radio-4" id="ocupados"
+                                    <input type="radio" class="new-control-input" name="custom-radio-4" id="vencidos"
                                         value="vencidos" wire:model="condicional" checked>
                                     <span class="new-control-indicator"></span>
                                     <h6>PLANES PERFILES VENCIDOS</h6>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-2">
+                        <div class="form-group">
+                            <div class="n-chk">
+                                <label class="new-control new-radio radio-classic-primary">
+                                    <input type="radio" class="new-control-input" name="custom-radio-4" id="combos"
+                                        value="combos" wire:model="condicional" checked>
+                                    <span class="new-control-indicator"></span>
+                                    <h6>COMBO PERFILES</h6>
                                 </label>
                             </div>
                         </div>
@@ -102,7 +114,7 @@
                         {{ $profiles->links() }}
                     </div>
                 </div>
-            @else
+            @elseif($condicional == 'ocupados' || $condicional == 'vencidos')
                 <div class="widget-content">
                     <div class="table-responsive">
                         <table class="table table-unbordered table-hover mt-2">
@@ -177,12 +189,11 @@
                                                 @endif
                                             </td>
                                         @else
-                                            <td class="text-center">                                                
-                                                    <a href="javascript:void(0)"
-                                                        wire:click="Acciones({{ $p->planid }})"
-                                                        class="btn btn-dark mtmobile" title="Observaciones">
-                                                        <i class="fa-solid fa-file-signature"></i>
-                                                    </a>
+                                            <td class="text-center">
+                                                <a href="javascript:void(0)" wire:click="Acciones({{ $p->planid }})"
+                                                    class="btn btn-dark mtmobile" title="Observaciones">
+                                                    <i class="fa-solid fa-file-signature"></i>
+                                                </a>
                                             </td>
                                         @endif
 
@@ -191,6 +202,119 @@
                                             @if ($p->done == 'NO')
                                                 <a href="javascript:void(0)" class="btn btn-dark"
                                                     onclick="ConfirmHecho('{{ $p->planid }}')">
+                                                    <i class="fa-regular fa-circle-exclamation"></i>
+                                                </a>
+                                            @else
+                                                <h6 class="text-center"><strong>Hecho</strong></h6>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                        {{ $profiles->links() }}
+                    </div>
+                </div>
+            @else
+                <div class="widget-content">
+                    <div class="table-responsive">
+                        <table class="table table-unbordered table-hover mt-2">
+                            <thead class="text-white" style="background: #3B3F5C">
+                                <tr>
+                                    <th class="table-th text-withe text-center">PLATAFORMAS</th>
+                                    <th class="table-th text-withe text-center">CLIENTE</th>
+                                    <th class="table-th text-withe text-center">EMAILS</th>
+                                    <th class="table-th text-withe text-center">CONTRASEÑAS CUENTAS</th>
+                                    <th class="table-th text-withe text-center">VENCIMIENTO CUENTAS</th>
+                                    <th class="table-th text-withe text-center">PERFILES</th>
+                                    <th class="table-th text-withe text-center">IMPORTE</th>
+                                    <th class="table-th text-withe text-center">PLAN INICIO</th>
+                                    <th class="table-th text-withe text-center">PLAN FIN</th>
+                                    <th class="table-th text-withe text-center">ACCIONES</th>
+                                    <th class="table-th text-withe text-center">REALIZADO</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($profiles as $p)
+                                    <tr>
+                                        <td class="text-center">
+                                            <h6 class="text-center">
+                                                @foreach ($p->PlanAccounts as $item)
+                                                    @if ($item->status == 'ACTIVO')
+                                                        {{ $item->Cuenta->Plataforma->nombre }} <br>
+                                                    @endif
+                                                @endforeach
+                                            </h6>
+                                        </td>
+                                        <td class="text-center">
+                                            <h6 class="text-center">{{ $p->Mov->climov->client->nombre }} <br>
+                                                {{ $p->Mov->climov->client->celular }}</h6>
+                                        </td>
+                                        <td class="text-center">
+                                            <h6 class="text-center">
+                                                @foreach ($p->PlanAccounts as $item)
+                                                    @if ($item->status == 'ACTIVO')
+                                                        {{ $item->Cuenta->account_name }}
+                                                        <br>
+                                                    @endif
+                                                @endforeach
+                                            </h6>
+                                        </td>
+                                        <td class="text-center">
+                                            <h6 class="text-center">
+                                                @foreach ($p->PlanAccounts as $item)
+                                                    @if ($item->status == 'ACTIVO')
+                                                        {{ $item->Cuenta->password_account }}
+                                                        <br>
+                                                    @endif
+                                                @endforeach
+                                            </h6>
+                                        </td>
+                                        <td class="text-center">
+                                            <h6 class="text-center">
+                                                @foreach ($p->PlanAccounts as $item)
+                                                    @if ($item->status == 'ACTIVO')
+                                                        {{ $item->Cuenta->expiration_account }}
+                                                        <br>
+                                                    @endif
+                                                @endforeach
+                                            </h6>
+                                        </td>
+                                        <td class="text-center">
+                                            <h6 class="text-center">
+                                                @foreach ($p->PlanAccounts as $item)
+                                                    @if ($item->status == 'ACTIVO')
+                                                        @foreach ($item->Cuenta->CuentaPerfiles as $acprof)
+                                                            @if ($acprof->status == 'ACTIVO' && $acprof->plan_id == $p->id)
+                                                                {{ $acprof->Perfil->nameprofile }} <br>
+                                                                {{ $acprof->Perfil->pin }}
+                                                            @endif
+                                                        @endforeach
+                                                        <br>
+                                                    @endif
+                                                @endforeach
+                                            </h6>
+                                        </td>
+                                        <td class="text-center">
+                                            <h6 class="text-center">{{ $p->importe }}</h6>
+                                        </td>
+                                        <td class="text-center">
+                                            <h6 class="text-center">
+                                                {{ \Carbon\Carbon::parse($p->plan_start)->format('d:m:Y') }} </h6>
+                                        </td>
+                                        <td class="text-center">
+                                            <h6 class="text-center">
+                                                {{ \Carbon\Carbon::parse($p->expiration_plan)->format('d:m:Y') }}
+                                            </h6>
+                                        </td>
+                                        <td class="text-center">
+
+                                        </td>
+                                        <td class="text-center"
+                                            style="{{ $p->ready == 'NO' ? 'background-color: #d97171 !important' : 'background-color: #09ed3d !important' }}">
+                                            @if ($p->ready == 'NO')
+                                                <a href="javascript:void(0)" class="btn btn-dark"
+                                                    onclick="ConfirmHecho('{{ $p->id }}')">
                                                     <i class="fa-regular fa-circle-exclamation"></i>
                                                 </a>
                                             @else
@@ -244,7 +368,7 @@
             $('#modal-details').modal('hide')
             noty(msg)
         });
-        window.livewire.on('item-error', msg => {           
+        window.livewire.on('item-error', msg => {
             noty(msg)
         });
         window.livewire.on('modal-hide', msg => {

@@ -237,7 +237,7 @@ class PerfilesController extends Component
                     }
                 }
             }
-        } else {    /* VENCIDOS */
+        } elseif ($this->condicional == 'vencidos') {    /* VENCIDOS */
             if (strlen($this->search) > 0) {
                 $prof = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
                     ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
@@ -339,6 +339,15 @@ class PerfilesController extends Component
                     ->orderBy('plans.expiration_plan', 'desc')
                     ->paginate($this->pagination);
             }
+        } else {
+            $prof = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
+                ->select(
+                    'plans.*'
+                )
+                ->where('plans.type_plan', 'COMBO')
+                /* ->whereColumn('plans.id', '=', 'ap.plan_id') */
+                ->orderBy('plans.created_at', 'desc')
+                ->paginate($this->pagination);
         }
         /* CALCULAR LA FECHA DE EXPIRACION NUEVA SEGUN LA CANTIDAD DE MESES A RENOVAR */
         if ($this->meses > 0) {
