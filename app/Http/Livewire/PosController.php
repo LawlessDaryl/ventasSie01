@@ -298,7 +298,7 @@ class PosController extends Component
                 "products.precio_venta as price","products.barcode", "pd.stock as stock")
                 ->where("products.id", $product->id)
                 ->where("des.nombre", 'ALMACEN')
-                ->where("des.sucursal_id", $this->idsucursal()->id)
+                ->where("des.sucursal_id", $this->idsucursal())
                 ->get()->first();
 
 

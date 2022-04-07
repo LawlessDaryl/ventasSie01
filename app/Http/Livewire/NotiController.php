@@ -13,12 +13,13 @@ class NotiController extends Component
     public function render()
     {
         $this->notif = [];
-        //Verificando si el usuario Tiene Notificaciones Vistas
+        //Verificando si el usuario Tiene Notificaciones Vistas para cargarlas a la vista Notificaciones
         $this->notif = User::join("notificacion_usuarios as nu", "nu.user_id", "users.id")
         ->join("notificacions as n", "n.id", "nu.notificacion_id")
         ->where('n.estado', 'NOVISTO')
         ->where('users.id', Auth()->user()->id)
-        ->select('n.nombrenotificacion as nn','n.mensaje as m','n.estado as estado')
+        ->select('n.nombrenotificacion as nn','n.mensaje as m','n.estado as estado','n.created_at as fechanoti')
+        ->OrderBy('n.created_at','DESC')
         ->get();
 
 
@@ -50,6 +51,7 @@ class NotiController extends Component
             //$fechanotimasunasemana = date("d-m-Y",strtotime($fechahoranotificacion."+ 1 week"));
             //$p = date("d-m-Y",strtotime($fechahoranotificacion."+ 1 week"));
 
+
             $fechanotificacion = $this->convertFecha($fechahoranotificacion);
             $fechaactual = $this->convertFecha($fechahoraactual);
             $diff = $fechanotificacion->diff($fechaactual);
@@ -67,6 +69,13 @@ class NotiController extends Component
         }
         
         return view('livewire.notificaciones.noti');
+    }
+    public function diferenciarfecha($fecha)
+    {
+        $fechahoraactual = date("Y-m-d H:i:s");
+        $fechahoraactualconvertido = $this->convertFecha($fechahoraactual);
+        $fechahoraconvertido = $this->convertFecha($fecha);
+        return $fechahoraconvertido->diff($fechahoraactualconvertido);
     }
     //Para Convertir las fechas a formato comparable
     public function convertFecha($fecha)

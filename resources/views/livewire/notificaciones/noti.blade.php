@@ -46,30 +46,30 @@
                                         
                                         <div class="data-info">
                                             <h6 class="">{{$p->nn}}</h6>
-                                                @if($year <= 0)
-                                                    @if($meses <= 0)
-                                                        @if($dias <= 0)
-                                                            @if ($hora <= 0)
-                                                                @if($minutos<1)
+                                                @if($this->diferenciarfecha($p->fechanoti)->y <= 0)
+                                                    @if($this->diferenciarfecha($p->fechanoti)->m <= 0)
+                                                        @if($this->diferenciarfecha($p->fechanoti)->d <= 0)
+                                                            @if ($this->diferenciarfecha($p->fechanoti)->h <= 0)
+                                                                @if($this->diferenciarfecha($p->fechanoti)->i <= 0)
                                                                     <p class="">En este Instante</p>
                                                                 @else
-                                                                    <p class="">Hace {{$minutos}} Minutos</p>
+                                                                    <p class="">Hace {{$this->diferenciarfecha($p->fechanoti)->i}} Minutos</p>
                                                                 @endif
                                                             @else
-                                                                <p class="">Hace {{$hora}} horas</p>
+                                                                <p class="">Hace {{$this->diferenciarfecha($p->fechanoti)->h}} horas</p>
                                                             @endif
                                                         @else
-                                                            <p class="">Hace {{$dias}} dias</p>
+                                                            <p class="">Hace {{$this->diferenciarfecha($p->fechanoti)->d}} dias</p>
                                                         @endif
                                                     @else
                                                         @if($meses == 1)
-                                                        <p class="">Hace {{$meses}} Mes</p>
+                                                        <p class="">Hace {{$this->diferenciarfecha($p->fechanoti)->m}} Mes</p>
                                                         @else
-                                                        <p class="">Hace {{$meses}} Meses</p>
+                                                        <p class="">Hace {{$this->diferenciarfecha($p->fechanoti)->m}} Meses</p>
                                                         @endif
                                                     @endif
                                                 @else
-                                                    <p class="">Hace {{$year}} Años</p>
+                                                    <p class="">Hace {{$this->diferenciarfecha($p->fechanoti)->y}} Años</p>
                                                 @endif
                                                 {{substr($p->m, 3, 17).'...'}}
                                         </div>
