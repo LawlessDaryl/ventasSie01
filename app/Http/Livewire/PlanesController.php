@@ -159,7 +159,7 @@ class PlanesController extends Component
                         'prof.nameprofile as nameprofile',
                         'prof.pin as pin',
                         'plans.id as id',
-                        'plans.created_at as planinicio',
+                        'plans.plan_start as planinicio',
                         'plans.expiration_plan as planfin',
                         'plans.observations as obs',
                         'plans.importe as importe',
@@ -214,7 +214,7 @@ class PlanesController extends Component
                         'prof.nameprofile as nameprofile',
                         'prof.pin as pin',
                         'plans.id as id',
-                        'plans.created_at as planinicio',
+                        'plans.plan_start as planinicio',
                         'plans.expiration_plan as planfin',
                         'plans.observations as obs',
                         'plans.importe as importe',
@@ -249,7 +249,7 @@ class PlanesController extends Component
                         'acc.password_account as password_account',
                         'acc.status as accstatus',
                         'plans.id as id',
-                        'plans.created_at as planinicio',
+                        'plans.plan_start as planinicio',
                         'plans.expiration_plan as planfin',
                         'plans.observations as obs',
                         'plans.status as estado',
@@ -302,7 +302,7 @@ class PlanesController extends Component
                         'acc.password_account as password_account',
                         'acc.status as accstatus',
                         'plans.id as id',
-                        'plans.created_at as planinicio',
+                        'plans.plan_start as planinicio',
                         'plans.expiration_plan as planfin',
                         'plans.observations as obs',
                         'plans.status as estado',
@@ -380,6 +380,7 @@ class PlanesController extends Component
             $this->profiles = [];
         }
 
+        $date_now = date('Y-m-d', time());
 
         /* MOSTRAR CUENTAS ENTERAS O PERFILES SEGUN ELIGE EL USUARIO */
         if ($this->plataforma != 'Elegir') {
@@ -394,6 +395,7 @@ class PlanesController extends Component
                     ->where('accounts.whole_account', 'ENTERA')
                     ->where('accounts.availability', 'LIBRE')
                     ->where('accounts.status', 'ACTIVO')
+                    ->where('accounts.expiration_account', '>', $date_now)
                     ->where('p.id', $this->plataforma)
                     ->orderBy('accounts.expiration_account', 'desc')
                     ->get()->take($this->cantidaperf);
@@ -411,11 +413,13 @@ class PlanesController extends Component
                         'e.content as email',
                         'profiles.nameprofile as nombre_perfil',
                         'profiles.pin as pin',
-                        'a.password_account as password_account'
+                        'a.password_account as password_account',
+                        'a.expiration_account'
                     )
                     ->where('profiles.availability', 'LIBRE')
                     ->where('profiles.status', 'ACTIVO')
                     ->where('a.status', 'ACTIVO')
+                    ->where('a.expiration_account', '>', $date_now)
                     ->orderBy('a.expiration_account', 'desc')
                     ->where('p.id', $this->plataforma)
                     ->get()->take($this->cantidaperf);
@@ -439,6 +443,7 @@ class PlanesController extends Component
                     )
                     ->where('accounts.status', 'ACTIVO')
                     ->where('accounts.availability', 'LIBRE')
+                    ->where('accounts.expiration_account', '>', $date_now)
                     ->where('p.id', $this->plataforma)
                     ->orderBy('accounts.expiration_account', 'asc')
                     ->get();
@@ -1001,10 +1006,11 @@ class PlanesController extends Component
 
                     /* OBTENER FECHA ACTUAL */
                     $DateAndTime = date('Y-m-d h:i:s', time());
+                    
                     /* CREAR EL PLAN */
                     $plan = Plan::create([
                         'importe' => $this->importe,
-                        'plan_start' => $DateAndTime,
+                        'plan_start' => $this->fecha_inicio,
                         'expiration_plan' => $this->expiration_plan,
                         'ready' => 'NO',
                         'status' => 'VIGENTE',
@@ -1110,7 +1116,7 @@ class PlanesController extends Component
                     /* CREAR EL PLAN */
                     $plan = Plan::create([
                         'importe' => $this->importe,
-                        'plan_start' => $DateAndTime,
+                        'plan_start' => $this->fecha_inicio,
                         'expiration_plan' => $this->expiration_plan,
                         'ready' => 'NO',
                         'status' => 'VIGENTE',
@@ -1223,10 +1229,19 @@ class PlanesController extends Component
                     ->join('accounts as a', 'pa.account_id', 'a.id')
                     ->join('account_profiles as ap', 'ap.account_id', 'a.id')
                     ->join('profiles as p', 'ap.profile_id', 'p.id')
-                    ->select('m.*', 'pa.id as paid', 'a.id as cuentaid', 'p.id as perfilid', 'ap.id as apid')
+                    ->select(
+                        'm.*',
+                        'pa.id as paid',
+                        'a.id as cuentaid',
+                        'p.id as perfilid',
+                        'ap.id as apid'
+                    )
                     ->whereColumn('plans.id', '=', 'ap.plan_id')
                     ->where('plans.id', $plan->id)
+                    ->where('pa.status', 'ACTIVO')
+                    ->where('ap.status', 'ACTIVO')
                     ->get()->first();
+                   
                 /* PONER EN INACTIVO EL MOVIMIENTO */
                 $movimiento = Movimiento::find($anular->id);
                 $movimiento->status = 'INACTIVO';
@@ -1251,16 +1266,15 @@ class PlanesController extends Component
                 $perf->save();
 
                 /* CONTAR LOS PERFILES ACTIVOS DE ESA CUENTA */
-                /* $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
+                $PERFocupados = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                     ->join('profiles as p', 'ap.profile_id', 'p.id')
                     ->where('accounts.id', $anular->cuentaid)
                     ->where('ap.status', 'ACTIVO')
-                    ->where('p.status', 'ACTIVO')->get(); */
-                /* SI LA CUENTA NO TIENE PERFILES REGRESA A SER ENTERA */
-                /* if ($perfilesActivos->count() == 0) {
+                    ->where('p.availability', 'OCUPADO')->get();
+                if ($PERFocupados->count() == 0) {
                     $cuenta->whole_account = 'ENTERA';
                     $cuenta->save();
-                } */
+                }
             } else {  /* CUANDO ES UNA CUENTA */
                 /* OBTENER IDS */
                 $anular = Plan::join('movimientos as m', 'plans.movimiento_id', 'm.id')

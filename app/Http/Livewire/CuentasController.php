@@ -639,12 +639,22 @@ class CuentasController extends Component
 
     public function VencerCuenta()
     {   /* SI NO RENUEVA CON EL PROVEEDOR LA CUENTA PASA A INACTIVO */
-        $cuenta = Account::find($this->selected_id);
-        $cuenta->update([
-            'status' => 'INACTIVO',
-        ]);
-        $this->resetUI();
-        $this->emit('modal-hide3', 'Cuenta Actualizada');
+        $PERFocupados = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
+            ->join('profiles as p', 'ap.profile_id', 'p.id')
+            ->where('accounts.id', $this->selected_id)
+            ->where('ap.status', 'ACTIVO')
+            ->where('p.availability', 'OCUPADO')->get();
+        /* Si no tiene perfiles ocupados se puede vencer la cuenta y poner en inactivo */
+        if ($PERFocupados->count() == 0) {
+            $cuenta = Account::find($this->selected_id);
+            $cuenta->update([
+                'status' => 'INACTIVO',
+            ]);
+            $this->resetUI();
+            $this->emit('modal-hide3', 'Cuenta Actualizada');
+        } else {
+            $this->emit('item-error', 'No puede vencer una cuenta si tiene perfiles ocupados, primero tiene que vencer los planes vigentes de esta cuenta');
+        }
     }
 
     public function Store()
@@ -755,7 +765,7 @@ class CuentasController extends Component
                         'number_profiles' => $this->number_profiles,
                         'sale_profiles' => 0,
                         'imports' => 0,
-                        'ganancia' => 0,
+                        'ganancia' => - ($this->price),
                         'account_id' => $acc->id,
                     ]);
                 } else {
@@ -834,44 +844,32 @@ class CuentasController extends Component
     {
         $rules = [
             'password_account' => 'required',
-            'passwordGmail' => 'required',
-            'number_profiles' => 'required'
+            'passwordGmail' => 'required_if:mostrarCorreo,SI',
         ];
 
         $messages = [
             'password_account.required' => 'La contraseña de la cuenta es requerida',
-            'passwordGmail.required' => 'La contraseña del correo es requerida',
-            'number_profiles.required' => 'El número de perfiles es requerido',
+            'passwordGmail.required_if' => 'La contraseña del correo es requerida',
         ];
 
         $this->validate($rules, $messages);
 
         $acc = Account::find($this->selected_id);
         $plataform = Platform::find($this->platform_id);
+
+        $correo = Email::find($acc->Correo->id);
+        $correo->update([
+            'pass' => $this->passwordGmail,
+        ]);
+        $correo->save();
+
         if ($plataform->tipo == 'CORREO') {
             $acc->update([
-                'number_profiles' => $this->number_profiles,
                 'password_account' => $this->password_account,
             ]);
             $acc->save();
         } else {
             $acc->update([
-                'number_profiles' => $this->number_profiles,
-                'account_name' => $this->nombre_cuenta,
-                'password_account' => $this->password_account,
-            ]);
-            $acc->save();
-        }
-
-        if ($plataform->perfiles == 'SI') {
-            $acc->update([
-                'number_profiles' => $this->number_profiles,
-                'password_account' => $this->password_account,
-            ]);
-            $acc->save();
-        } else {
-            $acc->update([
-                'number_profiles' => $this->number_profiles,
                 'account_name' => $this->nombre_cuenta,
                 'password_account' => $this->password_account,
             ]);
@@ -1171,17 +1169,18 @@ class CuentasController extends Component
             ->where('plans.id', $this->selected_plan)
             ->orderby('plans.id', 'desc')
             ->get()->first();
+        $date_now = date('Y-m-d', time());
         $this->cuentasEnteras = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
             ->join('emails as e', 'accounts.email_id', 'e.id')
             ->select(
                 'accounts.*'
             )
             ->where('accounts.status', 'ACTIVO')
+            ->where('accounts.expiration_account', '>', $date_now)
             ->where('accounts.availability', 'LIBRE')
             ->where('accounts.whole_account', 'ENTERA')
             ->where('p.id', $datos->platfid)
             ->get();
-        /* dd($this->cuentasEnteras); */
     }
     public function VerCuentas()
     {

@@ -155,6 +155,13 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+                                                    @if ($cuentasEnteras->count() == 0)
+                                                    <tr>
+                                                        <td colspan="5">
+                                                            <h6 class="text-center">No tiene cuentas para hacer el cambio</h6>                                                            
+                                                        </td>
+                                                    </tr>
+                                                @endif
                                                     @if ($cuentasEnteras)
                                                         @foreach ($cuentasEnteras as $item)
                                                             <tr>

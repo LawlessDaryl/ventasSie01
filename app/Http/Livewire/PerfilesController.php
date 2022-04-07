@@ -627,7 +627,7 @@ class PerfilesController extends Component
         $this->emit('details-show', 'show modal!');
     }
     public function Vencer()
-    {   /* OBTENER EL ID DEL PERFIL Y LA CUENTA */
+    {   /* OBTENER DATOS DEL PLAN */
         $datos = Plan::join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
             ->join('accounts as acc', 'acc.id', 'pa.account_id')
             ->join('account_profiles as ap', 'acc.id', 'ap.account_id')
@@ -641,9 +641,21 @@ class PerfilesController extends Component
             )
             ->where('plans.id', $this->selected_plan)
             ->where('prof.status', 'ACTIVO')
+            ->where('pa.status', 'ACTIVO')
+            ->where('ap.status', 'ACTIVO')
             ->whereColumn('plans.id', '=', 'ap.plan_id')
             ->orderby('plans.id', 'desc')
             ->get()->first();
+
+        $perfil = Profile::create([
+            'nameprofile' => 'emanuel' . rand(100, 999),
+            'pin' => rand(1000, 9999),
+        ]);
+        AccountProfile::create([
+            'status' => 'SinAsignar',
+            'account_id' => $datos->cuentaid,
+            'profile_id' => $perfil->id,
+        ]);
 
         $planAntiguo = Plan::find($datos->planid);
         $planAntiguo->status = 'VENCIDO';
@@ -655,24 +667,25 @@ class PerfilesController extends Component
         $plaAcount->status = 'VENCIDO';
         $plaAcount->save();
 
-        $perf = Profile::find($datos->Profileid);
         /* PONER EN INACTIVO AccountProfile */
         $CuentaPerf = AccountProfile::find($datos->accproid);
         $CuentaPerf->status = 'VENCIDO';
         $CuentaPerf->save();
+
         /* PONER EN INACTIVO EL PERFIL */
+        $perf = Profile::find($datos->Profileid);
         $perf->availability = 'VENCIDO';
         $perf->status = 'INACTIVO';
         $perf->save();
 
-        $Cuenta = Account::find($perf->CuentaPerfil->Cuenta->id);
-        /* CONTAR LOS PERFILES ACTIVOS */
-        $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
+        $Cuenta = Account::find($datos->cuentaid);
+        /* CONTAR LOS PERFILES OCUPADOS */
+        $perfOcupados = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
             ->join('profiles as p', 'ap.profile_id', 'p.id')
             ->where('accounts.id', $Cuenta->id)
-            ->where('p.status', 'ACTIVO')->get();
-        /* SI LA CUENTA NO TIENE PERFILES ACTIVOS REGRESA A SER ENTERA */
-        if ($perfilesActivos->count() == 0) {
+            ->where('p.availability', 'OCUPADO')->get();
+        /* SI LA CUENTA NO TIENE PERFILES OCUPADOS REGRESA A SER ENTERA */
+        if ($perfOcupados->count() == 0) {
             $Cuenta->whole_account = 'ENTERA';
             $Cuenta->save();
         }
@@ -696,6 +709,7 @@ class PerfilesController extends Component
             ->orderby('plans.id', 'desc')
             ->get()->first();
         /* MOSTRAR CUENTAS CON ESPACIOS DE PERFILES */
+        $date_now = date('Y-m-d', time());
         $this->cuentasEnteras = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
             ->join('emails as e', 'accounts.email_id', 'e.id')
             ->select(
@@ -711,6 +725,7 @@ class PerfilesController extends Component
             )
             ->where('accounts.status', 'ACTIVO')
             ->where('accounts.availability', 'LIBRE')
+            ->where('accounts.expiration_account', '>', $date_now)
             ->where('accounts.id', '!=', $datos->cuentaid)
             ->where('p.id', $datos->platfid)
             ->get();

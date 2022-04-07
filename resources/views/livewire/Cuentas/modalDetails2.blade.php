@@ -156,6 +156,14 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+                                                    @if ($cuentasEnteras->count() == 0)
+                                                        <tr>
+                                                            <td colspan="5">
+                                                                <h6 class="text-center">No tienes cuentas de esa
+                                                                    plataforma para hacer el cambio</h6>
+                                                            </td>
+                                                        </tr>
+                                                    @endif
                                                     @foreach ($cuentasEnteras as $cuent)
                                                         <tr>
                                                             <td class="text-center">

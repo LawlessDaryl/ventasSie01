@@ -136,7 +136,7 @@
             <label>
                 <h6>Número de Perfiles para la venta</h6>
             </label>
-            <input @if ($mostrarNumPerf == 'NO') disabled @endif type="number" wire:model.lazy="number_profiles"
+            <input @if ($mostrarNumPerf == 'NO') disabled @endif @if ($selected_id > 0) disabled @endif type="number" wire:model.lazy="number_profiles"
                 class="form-control">
             @error('number_profiles')
                 <span class="text-danger er">{{ $message }}</span>
@@ -162,7 +162,7 @@
             <label>
                 <h6>Nombre de la cuenta Plataforma</h6>
             </label>
-            <input @if ($mostrarNombreCuenta == 'NO') disabled @endif type="text" wire:model.lazy="nombre_cuenta"
+            <input @if ($mostrarNombreCuenta == 'NO') disabled @endif @if ($selected_id > 0) disabled @endif type="text" wire:model.lazy="nombre_cuenta"
                 class="form-control">
             @error('nombre_cuenta')
                 <span class="text-danger er">{{ $message }}</span>
