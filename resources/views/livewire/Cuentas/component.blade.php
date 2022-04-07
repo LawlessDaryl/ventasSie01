@@ -62,9 +62,9 @@
                                     <th class="table-th text-withe text-center">PASS CUENTA</th>
                                     <th class="table-th text-withe text-center">EXPIRACIÓN CUENTA</th>
                                     <th class="table-th text-withe text-center">TIPO</th>
-                                    <th class="table-th text-withe text-center">MAX PERF</th>
-                                    <th class="table-th text-withe text-center">PERF LIBRES</th>
-                                    <th class="table-th text-withe text-center">PERF ACTIVOS</th>
+                                    <th class="table-th text-withe text-center">MAX. PERF</th>
+                                    <th class="table-th text-withe text-center">PERF. LIBRES</th>
+                                    <th class="table-th text-withe text-center">PERF. OCUPADOS</th>
                                     <th class="table-th text-withe text-center">ACCIONES</th>
                                 </tr>
                             </thead>
@@ -100,13 +100,10 @@
                                             <h6 class="text-center">{{ $acounts->perfLibres }}</h6>
                                         </td>
                                         <td>
-                                            <h6 class="text-center">{{ $acounts->perfActivos }}</h6>
+                                            <h6 class="text-center">{{ $acounts->perfOcupados }}</h6>
                                         </td>
                                         <td class="text-center">
-                                            <a href="javascript:void(0)" wire:click="Crear({{ $acounts->id }})"
-                                                class="btn btn-dark mtmobile" title="Crear Perfil">
-                                                <i class="fa-regular fa-square-plus"></i>
-                                            </a>
+                                            
                                             <a href="javascript:void(0)" wire:click="Edit({{ $acounts->id }})"
                                                 class="btn btn-dark mtmobile" title="Edit">
                                                 <i class="fas fa-edit"></i>

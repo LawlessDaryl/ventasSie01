@@ -14,13 +14,13 @@
 
                     <div class="col-sm-12 col-md-12">
                         <div class="form-group">
-                            <label>Observaciones</label>
+                            <h6>Observaciones</h6>
                             <textarea wire:model.lazy="observaciones" class="form-control" name="" rows="5"></textarea>
                             @error('observaciones') <span class="text-danger er">{{ $message }}</span>@enderror
                         </div>
                     </div>
                 </div>
-                <div>
+                <div class="text-center">
                     <a href="javascript:void(0)" class="btn btn-dark" wire:click.prevent="Modificar()">Modificar</a>
                 </div>
             </div>

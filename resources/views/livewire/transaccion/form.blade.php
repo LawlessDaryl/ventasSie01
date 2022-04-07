@@ -64,6 +64,31 @@
                                 @enderror
                             </div>
                         </div>
+                        
+                        <div class="col-sm-8 col-md-12">
+                            <div class="form-group">
+                                <h6>¿Con comisión?</h6>
+                            </div>
+                            <div class="n-chk">
+                                <label class="new-control new-radio radio-classic-primary">
+                                    <input @if ($MostrarRadioButton == 0) disabled @endif type="radio"
+                                        class="new-control-input" name="custom-radio-2" id="SI" value="SI"
+                                        wire:model="comisionSiV">
+                                    <span class="new-control-indicator"></span>
+                                    <h6>SI</h6>
+                                </label>
+                                <label class="new-control new-radio radio-classic-primary">
+                                    <input @if ($MostrarRadioButton == 0) disabled @endif type="radio"
+                                        class="new-control-input" name="custom-radio-2" id="NO" value="NO"
+                                        wire:model="comisionNoV">
+                                    <span class="new-control-indicator"></span>
+                                    <h6>NO</h6>
+                                </label>
+                                @error('requerimientoComision')
+                                    <span class="text-danger er">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
 
                         <div class="col-sm-8 col-md-12">
                             <div class="form-group">
@@ -76,25 +101,6 @@
                                     <span class="text-danger er">{{ $message }}</span>
                                 @enderror
                             </div>
-                        </div>
-
-
-                        <div class="n-chk">
-                            <label class="new-control new-radio radio-classic-primary">
-                                <input @if ($MostrarRadioButton == 0) disabled @endif type="radio"
-                                    class="new-control-input" name="custom-radio-2" id="SI" value="SI"
-                                    wire:model="comisionSiV">
-                                <span class="new-control-indicator"></span>SI
-                            </label>
-                            <label class="new-control new-radio radio-classic-primary">
-                                <input @if ($MostrarRadioButton == 0) disabled @endif type="radio"
-                                    class="new-control-input" name="custom-radio-2" id="NO" value="NO"
-                                    wire:model="comisionNoV">
-                                <span class="new-control-indicator"></span>NO
-                            </label>
-                            @error('requerimientoComision')
-                                <span class="text-danger er">{{ $message }}</span>
-                            @enderror
                         </div>
 
 
@@ -119,7 +125,7 @@
                         <div class="col-sm-12 col-md-12">
                             <div class="form-group">
                                 <label>
-                                    <h6>CI</h6>
+                                    <h6>Cedula de identidad</h6>
                                 </label>
                                 <input @if ($mostrarCI == 0) disabled @endif type="number"
                                     wire:model="cedula" class="form-control">

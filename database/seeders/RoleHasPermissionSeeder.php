@@ -48,7 +48,7 @@ class RoleHasPermissionSeeder extends Seeder
             ]);
         }
         for ($x = 32; $x <= 44; $x++) {     /* PERMISOS SERVICIOS ROL SUPERVISOR*/
-            if($x != 39 && $x != 40){
+            if ($x != 39 && $x != 40) {
                 RoleHasPermissions::create([
                     'permission_id' => $x,
                     'role_id' => 4,
@@ -56,7 +56,7 @@ class RoleHasPermissionSeeder extends Seeder
             }
         }
         for ($x = 35; $x <= 43; $x++) {     /* PERMISOS SERVICIOS ROL TECNICO*/
-            if($x != 39 && $x != 40 && $x != 41 && $x != 42 && $x != 43){
+            if ($x != 39 && $x != 40 && $x != 41 && $x != 42 && $x != 43) {
                 RoleHasPermissions::create([
                     'permission_id' => $x,
                     'role_id' => 3,
@@ -64,7 +64,7 @@ class RoleHasPermissionSeeder extends Seeder
             }
         }
         for ($x = 35; $x <= 43; $x++) {     /* PERMISOS SERVICIOS ROL CAJERO*/
-            if($x != 39 && $x != 40 && $x != 41 && $x != 43){
+            if ($x != 39 && $x != 40 && $x != 41 && $x != 43) {
                 RoleHasPermissions::create([
                     'permission_id' => $x,
                     'role_id' => 5,
@@ -78,22 +78,26 @@ class RoleHasPermissionSeeder extends Seeder
             ]);
         }
 
-        RoleHasPermissions::create([    //
+        RoleHasPermissions::create([    // PERMITIR VER JORNADA AL ADMIN
+            'permission_id' => 56,
+            'role_id' => 1,
+        ]);
+        RoleHasPermissions::create([    // PERMITIR VER JORNADA AL EMPLOYEE
+            'permission_id' => 56,
+            'role_id' => 2,
+        ]);
+        RoleHasPermissions::create([    // PERMITIR MODIFICAR CAJA Y SUCURSAL AL ADMIN
             'permission_id' => 57,
             'role_id' => 1,
         ]);
-
-        
-
-
-
-        /* RoleHasPermissions::create([
-            'permission_id' =>Permission::where('name','Inicio_Index')->get()->id
-            ,
-            'role_id' => 3,
-        ]); */
-       
-
+        RoleHasPermissions::create([    // VER GANANCIAS TIGO MONEY
+            'permission_id' => 58,
+            'role_id' => 1,
+        ]);
+        RoleHasPermissions::create([    // VER GENERAR INGRESO EGRESO
+            'permission_id' => 59,
+            'role_id' => 1,
+        ]);
 
     }
 }

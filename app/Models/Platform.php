@@ -9,7 +9,7 @@ class Platform extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nombre', 'descripcion', 'estado', 'tipo', 'precioEntera', 'precioPerfil'];
+    protected $fillable = ['nombre', 'descripcion', 'estado', 'tipo', 'perfiles', 'precioEntera', 'precioPerfil'];
 
     public function getImagenAttribute()
     {

@@ -22,19 +22,6 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-md-6">
-                        <div class="form-group">
-                            <label>
-                                <h6>Descripción</h6>
-                            </label>
-                            <input type="text" wire:model="description" class="form-control"
-                                placeholder="ej: Deportes, Cultura, Cine, Series">
-                            @error('description')
-                                <span class="text-danger er">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-
                     <div class="col-sm-12 col-md-3">
                         <div class="form-group">
                             <label>
@@ -59,7 +46,7 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-md-3">
+                    <div class="col-sm-12 col-md-4">
                         <div class="form-group">
                             <label>
                                 <h6>Estado</h6>
@@ -74,7 +61,7 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-md-3">
+                    <div class="col-sm-12 col-md-4">
                         <div class="form-group">
                             <label>
                                 <h6>Tipo</h6>
@@ -84,6 +71,34 @@
                                 <option value="USUARIO">USUARIO</option>
                             </select>
                             @error('tipo')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-4">
+                        <div class="form-group">
+                            <label>
+                                <h6>Perfiles</h6>
+                            </label>
+                            <select wire:model='perfiles_si_no' class="form-control">
+                                <option value="SI" selected>SI</option>
+                                <option value="NO">NO</option>
+                            </select>
+                            @error('tipo')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12">
+                        <div class="form-group">
+                            <label>
+                                <h6>Descripción</h6>
+                            </label>
+                            <input type="text" wire:model="description" class="form-control"
+                                placeholder="ej: Deportes, Cultura, Cine, Series">
+                            @error('description')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror
                         </div>

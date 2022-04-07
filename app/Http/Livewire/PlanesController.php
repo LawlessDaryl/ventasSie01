@@ -29,7 +29,8 @@ class PlanesController extends Component
         $condicion, $type, $nombre, $celular, $plataforma, $cuentaperfil, $accounts, $profiles, $cantidaperf,
         $mostrartabla, $tipopago, $condicional, $meses, $observaciones, $ready, $selected_perf, $totalCobrar,
         $BuscarCliente, $ClienteSelect, $cuentasEnteras, $nombrePerfil, $pinPerfil, $CantidadPerfilesCrear,
-        $fecha_inicio, $plataforma1, $plataforma2, $plataforma3, $perfilplataforma1, $perfilplataforma2, $perfilplataforma3;
+        $fecha_inicio, $plataforma1, $plataforma2, $plataforma3, $perfilplataforma1, $perfilplataforma2,
+        $perfilplataforma3;
 
     private $pagination = 10;
 
@@ -86,6 +87,8 @@ class PlanesController extends Component
         $this->perfil3id = 0;
         $this->perfilNombre3 = '';
         $this->perfilPin3 = '';
+        $this->perfiles_si_no = '';
+        $this->plataformaReset = 'INICIO';
     }
 
     public function render()
@@ -323,7 +326,6 @@ class PlanesController extends Component
                 /* ->whereColumn('plans.id', '=', 'ap.plan_id') */
                 ->orderBy('plans.created_at', 'desc')
                 ->paginate($this->pagination);
-                
         }
 
         /* CALCULAR LA FECHA DE EXPIRACION SEGUN LA CANTIDAD DE MESES */
@@ -355,6 +357,31 @@ class PlanesController extends Component
             }
         }
 
+        /* MOSTRAR SOLO CUENTA ENTERA O CUENTA ENTERA Y PERFILES SEGUN LA PLATAFORMA SELECCIONADA */
+        if ($this->plataforma != 'Elegir') {
+            $PLATF = Platform::find($this->plataforma);
+            if ($PLATF->perfiles == 'SI') {
+                $this->perfiles_si_no = 'SI';
+            } else {
+                $this->perfiles_si_no = 'NO';
+            }
+        }
+
+
+        /* RESET tipo cuenta o perfil al cambiar la plataforma */
+        if ($this->plataforma != 'Elegir' && $this->plataformaReset == 'INICIO') {
+            $this->plataformaReset = $this->plataforma;
+        }
+        if ($this->plataforma != 'Elegir' && $this->plataforma != $this->plataformaReset) {
+            $this->plataformaReset = 'INICIO';
+            $this->cuentaperfil = 'Elegir';
+            $this->mostrartabla = 0;
+            $this->accounts = [];
+            $this->profiles = [];
+        }
+
+
+        /* MOSTRAR CUENTAS ENTERAS O PERFILES SEGUN ELIGE EL USUARIO */
         if ($this->plataforma != 'Elegir') {
             if ($this->cuentaperfil == 'ENTERA') {  /* MOSTRAR TODAS LAS CUENTAS ENTERAS LIBRES */
                 $this->mostrartabla = 0;
@@ -434,7 +461,7 @@ class PlanesController extends Component
         }
 
         $platforms1 = Platform::where('estado', 'Activo')->get();
-
+        /* mostrar cuentas de la plataforma 1 */
         if ($this->plataforma1 != 'Elegir') {
             $platforms2 = Platform::where('estado', 'Activo')
                 ->where('id', '!=', $this->plataforma1)
@@ -461,6 +488,7 @@ class PlanesController extends Component
             $this->cuentasp1 = [];
             $platforms2 = [];
         }
+        /* mostrar cuentas de la plataforma 2 */
         if ($this->plataforma1 != 'Elegir' && $this->plataforma2 != 'Elegir') {
             $platforms3 = Platform::where('estado', 'Activo')
                 ->where('id', '!=', $this->plataforma1)
@@ -487,7 +515,7 @@ class PlanesController extends Component
             $this->cuentasp2 = [];
             $platforms3 = [];
         }
-
+        /* mostrar cuentas de la plataforma 3 */
         if ($this->plataforma1 != 'Elegir' && $this->plataforma2 != 'Elegir' && $this->plataforma3 != 'Elegir') {
             $this->cuentasp3 = Account::where('status', 'ACTIVO')
                 ->where('availability', 'LIBRE')->where('platform_id', $this->plataforma3)->get();

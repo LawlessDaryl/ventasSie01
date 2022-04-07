@@ -231,13 +231,13 @@
                                 Origen motivo comisiones</a>
                         </li>
                     @endcan
-
-                    <li>
-                        <a href="{{ url('ReporteJornalTM') }}">
-                            <i class="fa-solid fa-baht-sign"></i>
-                            Reporte Jornada T.M.</a>
-                    </li>
-
+                    @can('Jornada_Tigo_Index')
+                        <li>
+                            <a href="{{ url('ReporteJornalTM') }}">
+                                <i class="fa-solid fa-baht-sign"></i>
+                                Reporte Jornada T.M.</a>
+                        </li>
+                    @endcan
                     @can('Arqueos_Tigo_Index')
                         <li>
                             <a href="{{ url('arqueostigo') }}">
@@ -309,13 +309,13 @@
                                 Origen motivo comisiones</a>
                         </li>
                     @endcan
-
-                    <li>
-                        <a href="{{ url('ReporteJornalTM') }}">
-                            <i class="fa-solid fa-baht-sign"></i>
-                            Reporte Jornada T.M.</a>
-                    </li>
-
+                    @can('Jornada_Tigo_Index')
+                        <li>
+                            <a href="{{ url('ReporteJornalTM') }}">
+                                <i class="fa-solid fa-baht-sign"></i>
+                                Reporte Jornada T.M.</a>
+                        </li>
+                    @endcan
                     @can('Arqueos_Tigo_Index')
                         <li>
                             <a href="{{ url('arqueostigo') }}">

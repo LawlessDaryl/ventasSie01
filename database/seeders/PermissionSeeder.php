@@ -264,5 +264,9 @@ class PermissionSeeder extends Seeder
             'name' => 'Ver_Ganancia_Tigo_Money',
             'guard_name' => 'web'
         ]);
+        Permission::create([    /* PERMITIR GENERAR INGRESO Y EGRESO */
+            'name' => 'Ver_Generar_Ingreso_Egreso_Boton',
+            'guard_name' => 'web'
+        ]);
     }
 }

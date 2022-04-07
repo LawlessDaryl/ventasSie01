@@ -52,7 +52,7 @@ class CuentasController extends Component
         $this->proveedor = 'Elegir';
         $this->estado = 'ACTIVO';
         $this->availability = 'LIBRE';
-        $this->number_profiles = 5;
+        $this->number_profiles = 1;
         $this->nameP = '';
         $this->PIN = '';
         $this->Observaciones = '';
@@ -85,6 +85,7 @@ class CuentasController extends Component
         $this->BuscarCliente = 0;
         $this->mostrarCorreo = 'NO';
         $this->mostrarNombreCuenta = 'NO';
+        $this->mostrarNumPerf = 'NO';
     }
     public function render()
     {
@@ -157,7 +158,7 @@ class CuentasController extends Component
                         'e.content as content',
                         'e.pass as pass',
                         'strsp.name as name',
-                        DB::raw('0 as perfActivos'),
+                        DB::raw('0 as perfOcupados'),
                         DB::raw('0 as perfLibres'),
                         DB::raw('0 as dias')
                     )
@@ -166,17 +167,17 @@ class CuentasController extends Component
                     ->orderBy('accounts.expiration_account', 'asc')
                     ->paginate($this->pagination);
                 foreach ($cuentas as $c) {
-                    $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
+                    $perfilesOcupado = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                         ->join('profiles as p', 'ap.profile_id', 'p.id')
                         ->where('accounts.id', $c->id)
-                        ->where('p.status', 'ACTIVO')->get();
+                        ->where('p.availability', 'OCUPADO')->get();
                     $perfilesLibres = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                         ->join('profiles as p', 'ap.profile_id', 'p.id')
                         ->where('accounts.id', $c->id)
                         ->where('p.availability', 'LIBRE')
                         ->where('p.status', 'ACTIVO')->get();
-                    $cantidadActivos = $perfilesActivos->count();
-                    $c->perfActivos = $cantidadActivos;
+                    $cantidadOcupados = $perfilesOcupado->count();
+                    $c->perfOcupados = $cantidadOcupados;
                     $cantidadLibres = $perfilesLibres->count();
                     $c->perfLibres = $cantidadLibres;
 
@@ -419,7 +420,16 @@ class CuentasController extends Component
                 $this->mostrarCorreo = 'SI';
                 $this->mostrarNombreCuenta = 'NO';
             }
+            //MOSTRAR O NO NUMERO DE PERFILES DEPENDIENDO LA PLATAFORMA
+            if ($platform->perfiles == 'SI') {
+                $this->mostrarNumPerf = 'SI';
+            } else {
+                $this->number_profiles = 1;
+                $this->mostrarNumPerf = 'NO';
+            }
         }
+
+
 
         /* BUSCAR correo POR email EN EL INPUT DEL MODAL */
         $datos = [];
@@ -792,46 +802,46 @@ class CuentasController extends Component
 
     public function Edit(Account $acc)
     {
+        /* MOSTRAR CORREO O NOMBRE DE LA CUENTA DEPENDIENDO LA PLATAFORMA */
+        $platform = Platform::find($acc->Plataforma->id);
+        if ($platform->tipo == 'USUARIO') {
+            $this->email_id = '';
+            $this->passwordGmail = '';
+            $this->mostrarCorreo = 'NO';
+            $this->mostrarNombreCuenta = 'SI';
+        } else {
+            $this->nombre_cuenta = '';
+            $this->mostrarCorreo = 'SI';
+            $this->mostrarNombreCuenta = 'NO';
+        }
+
         $this->selected_id = $acc->id;
         $this->selected = $acc->email_id;
         $this->expiration_account = $acc->expiration_account;
         $this->estado = $acc->status;
         $this->number_profiles = $acc->number_profiles;
         $this->nombre_cuenta = $acc->account_name;
+        $this->passwordGmail = $acc->Correo->pass;
         $this->password_account = $acc->password_account;
         $this->price = $acc->price;
         $this->proveedor = $acc->str_supplier_id;
         $this->platform_id = $acc->platform_id;
-        $this->email_id = $acc->email_id;
+        $this->email_id = $acc->Correo->content;
         $this->emit('modal-show', 'show modal!');
     }
 
     public function Update()
     {
         $rules = [
-            'start_account' => 'required',
-            'expiration_account' => 'required',
-            'number_profiles' => 'required',
-            'price' => 'required',
             'password_account' => 'required',
-            'platform_id' => 'required|not_in:Elegir',
-            'proveedor' => 'required|not_in:Elegir',
-            /* 'email_id' => "required|not_in:Elegir|unique:accounts,email_id,{$this->selected_id}" */
+            'passwordGmail' => 'required',
+            'number_profiles' => 'required'
         ];
 
         $messages = [
-            'start_account.required' => 'La fecha de inicio es requerida',
-            'expiration_account.required' => 'La fecha de expiración es requerida',
-            'number_profiles.required' => 'La cantidad de perfiles es requerida',
-            'price.required' => 'El precio de la cuenta es requerida',
             'password_account.required' => 'La contraseña de la cuenta es requerida',
-            /* 'platform_id.required' => 'La plataforma es requerida',
-            'platform_id.not_in' => 'Elija una plataforma distinta a Elegir', */
-            /* 'email_id.required' => 'El correo es requerido',
-            'email_id.not_in' => 'Elija un correo distinto a Elegir',
-            'email_id.unique' => 'El email ya existe registrado en una cuenta refresca la pagina', */
-            'proveedor.required' => 'El proveedor es requerido',
-            'proveedor.not_in' => 'El proveedor tiene que ser diferente de Elegir',
+            'passwordGmail.required' => 'La contraseña del correo es requerida',
+            'number_profiles.required' => 'El número de perfiles es requerido',
         ];
 
         $this->validate($rules, $messages);
@@ -842,7 +852,6 @@ class CuentasController extends Component
             $acc->update([
                 'number_profiles' => $this->number_profiles,
                 'password_account' => $this->password_account,
-                'str_supplier_id' => $this->proveedor,
             ]);
             $acc->save();
         } else {
@@ -850,11 +859,24 @@ class CuentasController extends Component
                 'number_profiles' => $this->number_profiles,
                 'account_name' => $this->nombre_cuenta,
                 'password_account' => $this->password_account,
-                'str_supplier_id' => $this->proveedor,
             ]);
             $acc->save();
         }
 
+        if ($plataform->perfiles == 'SI') {
+            $acc->update([
+                'number_profiles' => $this->number_profiles,
+                'password_account' => $this->password_account,
+            ]);
+            $acc->save();
+        } else {
+            $acc->update([
+                'number_profiles' => $this->number_profiles,
+                'account_name' => $this->nombre_cuenta,
+                'password_account' => $this->password_account,
+            ]);
+            $acc->save();
+        }
 
         $this->resetUI();
         $this->emit('item-updated', 'Cuenta Actualizada');
@@ -1310,7 +1332,7 @@ class CuentasController extends Component
         $this->proveedor = 'Elegir';
         $this->estado = 'ACTIVO';
         $this->availability = 'LIBRE';
-        $this->number_profiles = 5;
+        $this->number_profiles = 1;
         $this->nameP = '';
         $this->PIN = '';
         $this->Observaciones = '';
@@ -1321,7 +1343,7 @@ class CuentasController extends Component
         $this->price = '';
         $this->mostrarCampos = 0;
         $this->meses = 0;
-        $this->meseRenovarProv = 0;
+        $this->meseRenovarProv = 1;
         $this->expirationNueva = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->start_account = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->tipopago = 'EFECTIVO';
@@ -1337,6 +1359,12 @@ class CuentasController extends Component
         $this->expiration_account = null;
         $this->expiration_account_new = null;
         $this->mostrartabla2 = 0;
+        $this->passwordGmail = '';
+        $this->ClienteSelect = 0;
+        $this->BuscarCliente = 0;
+        $this->mostrarCorreo = 'NO';
+        $this->mostrarNombreCuenta = 'NO';
+        $this->mostrarNumPerf = 'NO';
         $this->resetValidation();
     }
 }

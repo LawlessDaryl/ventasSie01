@@ -87,7 +87,12 @@
                                 </table>
                             </div>
                         </div>
+                    @else
+                    <div class="col-sm-12 col-md-12">
+                        <h6 class="text-center">NO TIENES UNA CAJA ABIERTA</h6>
+                    </div>
                     @endif
+
                 </div>
             </div>
         </div>

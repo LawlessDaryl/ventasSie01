@@ -13,14 +13,14 @@ class PlataformasController extends Component
     use WithPagination;
 
     public $nombre, $description, $status = 'ACTIVO', $image, $precioEntera, $precioPerfil, $selected_id,
-        $pageTitle, $componentName, $search, $readytoload = false, $tipo;
-    public $pagination = 5;
+        $pageTitle, $componentName, $search, $readytoload = false, $tipo, $perfiles_si_no;
+    public $pagination = 10;
 
     public function mount()
     {
         $this->pageTitle = 'Listado';
         $this->componentName = 'Plataformas';
-        $this->pagination = '5';
+        $this->pagination = '10';
         $this->search = '';
         $this->nombre = '';
         $this->description = '';
@@ -29,6 +29,7 @@ class PlataformasController extends Component
         $this->precioPerfil = '';
         $this->selected_id = 0;
         $this->tipo = 'CORREO';
+        $this->perfiles_si_no = 'SI';
     }
 
     public function paginationView()
@@ -100,6 +101,7 @@ class PlataformasController extends Component
             'descripcion' => $this->description,
             'estado' => $this->status,
             'tipo' => $this->tipo,
+            'perfiles' => $this->perfiles_si_no,
             'precioEntera' => $this->precioEntera,
             'precioPerfil' => $this->precioPerfil,
         ]);
@@ -124,6 +126,7 @@ class PlataformasController extends Component
         $this->description = $plat->descripcion;
         $this->status = $plat->estado;
         $this->tipo = $plat->tipo;
+        $this->perfiles_si_no = $plat->perfiles;
         $this->precioEntera = $plat->precioEntera;
         $this->precioPerfil = $plat->precioPerfil;
         $this->image = null;
@@ -148,6 +151,7 @@ class PlataformasController extends Component
             'descripcion' => $this->description,
             'estado' => $this->status,
             'tipo' => $this->tipo,
+            'perfiles' => $this->perfiles_si_no,
             'precioEntera' => $this->precioEntera,
             'precioPerfil' => $this->precioPerfil,
         ]);
@@ -195,7 +199,8 @@ class PlataformasController extends Component
         $this->precioEntera = '';
         $this->precioPerfil = '';
         $this->selected_id = 0;
-        $this->tipo = 'Elegir';
+        $this->tipo = 'CORREO';
+        $this->perfiles_si_no = 'SI';
         /* $this->reset(['nombre', 'description', 'status', 'tipo', 'precioEntera', 'precioPerfil', 'image', 'selected_id']); */
         $this->resetValidation();
     }

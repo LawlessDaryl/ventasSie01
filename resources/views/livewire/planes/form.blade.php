@@ -18,7 +18,7 @@
                             <label>
                                 <h6>Plataforma</h6>
                             </label>
-                            <select wire:model.lazy="plataforma" class="form-control">
+                            <select wire:model="plataforma" class="form-control">
                                 <option value="Elegir" disabled selected>Elegir</option>
 
                                 @foreach ($platforms as $p)
@@ -36,10 +36,15 @@
                             <label>
                                 <h6>TIPO</h6>
                             </label>
-                            <select wire:model.lazy="cuentaperfil" class="form-control">
+                            <select @if ($plataforma == 'Elegir') disabled @endif wire:model.lazy="cuentaperfil"
+                                class="form-control">
                                 <option value="Elegir" disabled selected>Elegir</option>
-                                <option value="ENTERA">ENTERA</option>
-                                <option value="PERFIL">PERFIL</option>
+                                @if ($perfiles_si_no == 'SI')
+                                    <option value="ENTERA">ENTERA</option>
+                                    <option value="PERFIL">PERFIL</option>
+                                @else
+                                    <option value="ENTERA">ENTERA</option>
+                                @endif
                             </select>
                             @error('cuentaperfil')
                                 <span class="text-danger er">{{ $message }}</span>
@@ -181,7 +186,7 @@
                     <div class="col-sm-12 col-md-4">
                         <h6>Fecha de expiración del plan</h6>
                         <div class="form-group">
-                            <input  type="date" wire:model="expiration_plan" class="form-control">
+                            <input type="date" wire:model="expiration_plan" class="form-control">
                             @error('expiration_plan')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror

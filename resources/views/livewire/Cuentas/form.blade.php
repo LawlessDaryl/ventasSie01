@@ -62,7 +62,7 @@
             <label>
                 <h6>Correo</h6>
             </label>
-            <input @if ($mostrarCorreo == 'NO') disabled @endif type="text" wire:model="email_id"
+            <input @if ($mostrarCorreo == 'NO') disabled @endif @if ($selected_id > 0) disabled @endif type="text" wire:model="email_id"
                 class="form-control">
             @error('email_id')
                 <span class="text-danger er">{{ $message }}</span>
@@ -136,8 +136,8 @@
             <label>
                 <h6>Número de Perfiles para la venta</h6>
             </label>
-            <input @if ($selected_id > 0) disabled @endif type="number" wire:model.lazy="number_profiles"
-                class="form-control" placeholder="ej: 0.0">
+            <input @if ($mostrarNumPerf == 'NO') disabled @endif type="number" wire:model.lazy="number_profiles"
+                class="form-control">
             @error('number_profiles')
                 <span class="text-danger er">{{ $message }}</span>
             @enderror
@@ -160,20 +160,7 @@
     <div class="col-sm-12 col-md-6">
         <div class="form-group">
             <label>
-                <h6>Precio Compra Cuenta</h6>
-            </label>
-            <input @if ($selected_id > 0) disabled @endif type="number" wire:model.lazy="price"
-                class="form-control" placeholder="ej: 90.0">
-            @error('price')
-                <span class="text-danger er">{{ $message }}</span>
-            @enderror
-        </div>
-    </div>
-
-    <div class="col-sm-12 col-md-6">
-        <div class="form-group">
-            <label>
-                <h6>Nombre de la cuenta en Plataforma</h6>
+                <h6>Nombre de la cuenta Plataforma</h6>
             </label>
             <input @if ($mostrarNombreCuenta == 'NO') disabled @endif type="text" wire:model.lazy="nombre_cuenta"
                 class="form-control">
@@ -190,6 +177,19 @@
             </label>
             <input type="text" wire:model.lazy="password_account" class="form-control">
             @error('password_account')
+                <span class="text-danger er">{{ $message }}</span>
+            @enderror
+        </div>
+    </div>
+
+    <div class="col-sm-12 col-md-6">
+        <div class="form-group">
+            <label>
+                <h6>Precio Compra Cuenta</h6>
+            </label>
+            <input @if ($selected_id > 0) disabled @endif type="number" wire:model.lazy="price"
+                class="form-control">
+            @error('price')
                 <span class="text-danger er">{{ $message }}</span>
             @enderror
         </div>
