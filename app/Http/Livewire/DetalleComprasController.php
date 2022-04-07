@@ -11,14 +11,19 @@ use App\Models\Product;
 use App\Models\Sucursal;
 use Carbon\Carbon;
 use Livewire\Component;
+
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
 
+
 use Darryldecode\Cart\Facades\ComprasFacade as Compras;
+
 
 class DetalleComprasController extends Component
 {
+
+    
     use WithPagination;
     use WithFileUploads;
     public  $nro_compra,$search,$provider,$fecha_compra,
@@ -69,9 +74,8 @@ class DetalleComprasController extends Component
     }
   
 
-    public function increaseQty($productId, $cant = 1,$precio_compra = 2)
-    {
-       
+    public function increaseQty($productId, $cant = 1,$precio_compra = 0)
+    {  
         $title = 'aaa';
         $product = Product::select('products.id','products.nombre as name')
         ->where('products.id',$productId)->first();
@@ -83,8 +87,22 @@ class DetalleComprasController extends Component
             $title = "Producto agregado";
         }
 
-        Compras::add($product->id, $product->name, $precio_compra, $cant);
+        $attributos=[
+            'precio'=>$product->precio,
+            'codigo'=>$product->codigo
+        ];
 
+        $products = array(
+            'id'=>$product->id,
+            'name'=>$product->name,
+            'price'=>$precio_compra,
+            'quantity'=>$cant,
+            'attributes'=>$attributos
+        );
+
+       // Compras::add($product->id, $product->name, $precio_compra, $cant);
+
+       Compras::add($products);
         
         $this->total = Compras::getTotal();
         $this->itemsQuantity = Compras::getTotalQuantity();
@@ -144,22 +162,15 @@ class DetalleComprasController extends Component
        
         $this->removeItem($productId);
        
-        if ($price > 0) {
-
-
-          
-            Compras::add($product->id, $product->name, $price, $quantitys);
-          
+        if ($price > 0) 
+        {
+            Compras::add($product->id, $product->name, $price, $quantitys);  
             $this->total = Compras::getTotal();
             $this->itemsQuantity = Compras::getTotalQuantity();
             $this->emit('scan-ok', $title);
             $this->total_compra = Compras::getTotal();
 
-
-
         }
-        
-    
     }
     public function removeItem($productId)
     {
@@ -200,7 +211,6 @@ class DetalleComprasController extends Component
 
         if ($this->total_compra <= 0) {
             $this->emit('sale-error', 'Agrega productos a la compra');
-
             return;
         }
        
@@ -247,7 +257,8 @@ class DetalleComprasController extends Component
 
         
 
-            if ($Compra_encabezado) {
+            if ($Compra_encabezado)
+            {
                 $items = Compras::getContent();
                 foreach ($items as $item) {
                     CompraDetalle::create([
@@ -258,7 +269,7 @@ class DetalleComprasController extends Component
                     ]);
 
                     $product = Product::find($item->id);
-                    $product->stock = $product->stock - $item->quantity;
+                    $product->stock = $product->stock + $item->quantity;
                     $product->save();
                 }
             }

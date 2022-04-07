@@ -22,7 +22,7 @@ class TransferirProductoController extends Component
     
     use WithPagination;
 
-    public $selected_id,$search,$selected_p,$selected_ubicacion,$componentName,$title,$itemsQuantity;
+    public $selected_id,$search,$selected_p,$selected_ubicacion,$componentName,$title,$itemsQuantity,$selected_3;
     private $pagination = 10;
     public function paginationView()
     {
@@ -45,18 +45,6 @@ class TransferirProductoController extends Component
     {
         if($this->selected_id !== null){
 
-            if($this->selected_id == 'General')
-            
-              
-            $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
-                                        ->join('destinos as dest','dest.id','productos_destinos.destino_id')
-                                        
-                                        ->select(DB::raw('SUM(productos_destinos.stock) as stock_s'),'p.nombre as name','p.cantidad_minima as cant_min')
-                                        ->groupBy('productos_destinos.product_id')
-                                      
-                                        ->paginate($this->pagination);
-            
-         else
             $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
                                       
                                         ->join('destinos as dest','dest.id','productos_destinos.destino_id')
@@ -95,11 +83,13 @@ class TransferirProductoController extends Component
     }
     public function increaseQty($productId, $cant = 1,$precio_compra = 0)
     {
+       
         $title = 'aaa';
         $product = Product::select('products.id','products.nombre as name')
         ->where('products.id',$productId)->first();
-       
+        
         $exist = Transferencia::get($product->id);
+       
         if ($exist) {
             $title = 'Cantidad actualizada';
         } else {

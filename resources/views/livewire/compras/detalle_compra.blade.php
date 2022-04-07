@@ -124,6 +124,7 @@
                                               <option value="FACTURA" selected>Factura</option>
                                               <option value="NOTA DE VENTA">Nota de Venta</option>
                                               <option value="RECIBO">Recibo</option>
+                                              <option value="Ninguno">Ninguno</option>
                                           </select>
                                           @error('tipo_documento')
                                               <span class="text-danger er">{{ $message }}</span>
@@ -246,7 +247,9 @@
                                         <thead class="text-white" style="background: #3B3F5C">
                                             <tr>
                                                 <th class="table-th text-withe text-center">Producto</th>
+                                                <th class="table-th text-withe text-center">Codigo</th>
                                                 <th class="table-th text-withe text-center">Precio <br>Compra</th>
+                                                <th class="table-th text-withe text-center">Precio <br>Venta</th>
                                                 <th class="table-th text-withe text-center">Cantidad</th>
                                                 <th class="table-th text-withe text-center">Total</th>
                                              
