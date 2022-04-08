@@ -382,6 +382,7 @@ class DetalleComprasController extends Component
                         'cantidad' => $item->quantity,
                         'product_id' => $item->id,
                         'compra_id' => $Compra_encabezado->id,
+                        
                     ]);
 
                     $product = Product::find($item->id);
