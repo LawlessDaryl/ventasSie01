@@ -19,7 +19,7 @@ class ReporteServiceController extends Component
 
     public function mount()
     {
-        $this->componentName = 'Reportes Servicio';
+        $this->componentName = 'REPORTES SERVICIO';
         $this->data = [];
         $this->details = [];
         $this->sumDetails = 0;

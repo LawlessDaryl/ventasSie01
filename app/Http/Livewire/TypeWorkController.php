@@ -19,8 +19,8 @@ class TypeWorkController extends Component
 
     public function mount()
     {
-        $this->pageTitle = 'Listado';
-        $this->componentName = 'Tipo de Trabajo';
+        $this->pageTitle = 'LISTADO';
+        $this->componentName = 'TIPO DE TRABAJO';
         $this->status = 'Elegir';
         $this->selected_id = 0;
     }

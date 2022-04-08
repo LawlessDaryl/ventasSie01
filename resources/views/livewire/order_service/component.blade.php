@@ -6,8 +6,8 @@
                     <b>{{ $componentName }} | {{ $pageTitle }}</b>
                 </h4>
                 <ul class="tabs tab-pills">
-                    <a href="javascript:void(0)" class="btn btn-dark" wire:click="IrInicio">Ir a Inicio</a>
-                    <a href="javascript:void(0)" class="btn btn-dark" wire:click="GoService">Agregar</a>
+                    <a href="javascript:void(0)" class="btn btn-dark" wire:click="IrInicio">IR A INICIO</a>
+                    <a href="javascript:void(0)" class="btn btn-dark" wire:click="GoService">AGREGAR</a>
                 </ul>
 
             </div>
@@ -27,27 +27,26 @@
 
                 </div>
 
+                <div class="form-group">
+                    <div class="n-chk">
+                        <label class="new-control new-radio radio-classic-primary">
+                            <input type="radio" class="new-control-input" name="custom-radio-4" id="libres"
+                                value="MiSucursal" wire:model="condicion">
+                            <span class="new-control-indicator"></span><h6>MI SUCURSAL</h6>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="n-chk">
+                        <label class="new-control new-radio radio-classic-primary">
+                            <input type="radio" class="new-control-input" name="custom-radio-4" id="ocupados"
+                                value="Todos" wire:model="condicion" checked>
+                            <span class="new-control-indicator"></span><h6>TODAS LAS SUCURSALES</h6>
+                        </label>
+                    </div>
+                </div>
                 
-                    <div class="form-group">
-                        <div class="n-chk">
-                            <label class="new-control new-radio radio-classic-primary">
-                                <input type="radio" class="new-control-input" name="custom-radio-4" id="libres"
-                                    value="Pendientes" wire:model="condicional">
-                                <span class="new-control-indicator"></span><h6>Mi Sucursal</h6>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="n-chk">
-                            <label class="new-control new-radio radio-classic-primary">
-                                <input type="radio" class="new-control-input" name="custom-radio-4" id="ocupados"
-                                    value="Propios" wire:model="condicional" checked>
-                                <span class="new-control-indicator"></span><h6>Todas las sucursales</h6>
-                            </label>
-                        </div>
-                    </div>
-
-                <div class="col-lg-4 col-md-4 col-sm-12">
+                <div class="col-lg-2 col-md-4 col-sm-12">
                     <select wire:model.lazy="opciones" class="form-control">
                         <option value="PENDIENTE">PENDIENTE</option>
                         <option value="PROCESO">PROCESO</option>
