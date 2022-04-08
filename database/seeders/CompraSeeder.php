@@ -16,14 +16,17 @@ class CompraSeeder extends Seeder
     {
         Compra::create([
             'importe_total' => '850',
+            'descuento'=>'120',
             'fecha_compra' => '2022-02-10',
             'impuestos' => '2',
-            'pago' => 'pagado',
-            'saldo_por_pagar' => 'pagado',
+            'transaccion' => 'contado',
+            'saldo_por_pagar' => '0',
             'tipo_doc' => 'FACTURA',
             'nro_documento' => '12012',
             'observacion' => 'ninguna',
-            'proveedor_id' => '1'
+            'proveedor_id' => '1',
+            'estado_compra'=>'finalizada',
+            'status'=>'ACTIVO'
         ]);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\CompraDetalle;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -50,6 +51,8 @@ class DatabaseSeeder extends Seeder
         
         $this->call(ProviderSeeder::class);
         $this->call(ProductoDestinoSeeder::class);
+        $this->call(CompraSeeder::class);
+        $this->call(CompraDetalleSeeder::class);
        
        // $this->call(CompraSeeder::class);
         //$this->call(CompraDetalleSeeder::class);

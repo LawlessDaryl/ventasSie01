@@ -6,7 +6,7 @@ use App\Models\Company;
 use App\Models\CompraDetalle;
 use Illuminate\Database\Seeder;
 
-class CompanySeeder extends Seeder
+class CompraDetalleSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -16,11 +16,32 @@ class CompanySeeder extends Seeder
     public function run()
     {
         CompraDetalle::create([
-            'precio' => 'Soluciones informaticas Emanuel',
-            'cantidad' => 'Av. America casi G.Rene Moreno',
-            'product_id' => '4408080',
-            'compra_id' => '76564512',
-            'location_id' => '1'
+            'precio' => '45',
+            'cantidad' => '20',
+            'product_id' => '1',
+            'compra_id' => '1',
+            'destino_id' => '1'
+        ]);
+        CompraDetalle::create([
+            'precio' => '100',
+            'cantidad' => '35',
+            'product_id' => '2',
+            'compra_id' => '1',
+            'destino_id' => '1'
+        ]);
+        CompraDetalle::create([
+            'precio' => '150',
+            'cantidad' => '120',
+            'product_id' => '3',
+            'compra_id' => '1',
+            'destino_id' => '1'
+        ]);
+        CompraDetalle::create([
+            'precio' => '80',
+            'cantidad' => '85',
+            'product_id' => '4',
+            'compra_id' => '1',
+            'destino_id' => '1'
         ]);
     }
 }

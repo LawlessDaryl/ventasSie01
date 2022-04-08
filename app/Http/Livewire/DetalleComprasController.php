@@ -327,7 +327,8 @@ class DetalleComprasController extends Component
 
         $this->calcularImpuestos();
 
-        if ($this->subtotal<= 0) {
+        if ($this->subtotal<= 0) 
+        {
             $this->emit('sale-error', 'Agrega productos a la compra');
             return;
         }
@@ -352,7 +353,8 @@ class DetalleComprasController extends Component
                 'estado_compra'=>$this->estado_compra,
                 'status'=>$this->status
             ]);
-            // Creando Cliente_Movimiento
+           
+            dd($Compra_encabezado);
 
 
             $Movimiento= Movimiento::create([

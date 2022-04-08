@@ -352,7 +352,7 @@
 
                             <div class="col-lg-6">
         
-                                <button class="btn btn-info m-3"> <h4 style="color: aliceblue" >Guardar Compra</h4> </button>
+                                <button class="btn btn-info m-3"  wire:click.prevent="guardarCompra()"> <h4 style="color: aliceblue" >Guardar Compra</h4> </button>
                             </div>
                             <div class="col-lg-6">
         
