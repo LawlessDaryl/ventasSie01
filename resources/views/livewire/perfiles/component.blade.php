@@ -221,17 +221,19 @@
                         <table class="table table-unbordered table-hover mt-2">
                             <thead class="text-white" style="background: #3B3F5C">
                                 <tr>
-                                    <th class="table-th text-withe text-center">PLATAFORMAS</th>
-                                    <th class="table-th text-withe text-center">CLIENTE</th>
-                                    <th class="table-th text-withe text-center">EMAILS</th>
-                                    <th class="table-th text-withe text-center">CONTRASEÑAS CUENTAS</th>
-                                    <th class="table-th text-withe text-center">VENCIMIENTO CUENTAS</th>
-                                    <th class="table-th text-withe text-center">PERFILES</th>
-                                    <th class="table-th text-withe text-center">IMPORTE</th>
-                                    <th class="table-th text-withe text-center">PLAN INICIO</th>
-                                    <th class="table-th text-withe text-center">PLAN FIN</th>
-                                    <th class="table-th text-withe text-center">ACCIONES</th>
-                                    <th class="table-th text-withe text-center">REALIZADO</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">PLATAFORMAS</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">CLIENTE</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">EMAILS</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">CONTRASEÑAS
+                                        CUENTAS</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">VENCIMIENTO
+                                        CUENTAS</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">PERFILES</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">IMPORTE</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">PLAN INICIO</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">PLAN FIN</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">ACCIONES</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">REALIZADO</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -307,8 +309,18 @@
                                                 {{ \Carbon\Carbon::parse($p->expiration_plan)->format('d:m:Y') }}
                                             </h6>
                                         </td>
-                                        <td class="text-center">
+                                        <td>
+                                            @if ($condicional == 'combos')
+                                                <a href="javascript:void(0)" wire:click="Acciones({{ $p->id }})"
+                                                    class="btn btn-dark mtmobile" title="Renovación">
+                                                    <i class="fa-regular fa-calendar-check"></i>
+                                                </a>
 
+                                                <a href="javascript:void(0)" wire:click="Edit({{ $p->id }})"
+                                                    class="btn btn-dark mtmobile" title="Edit">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                            @endif
                                         </td>
                                         <td class="text-center"
                                             style="{{ $p->ready == 'NO' ? 'background-color: #d97171 !important' : 'background-color: #09ed3d !important' }}">

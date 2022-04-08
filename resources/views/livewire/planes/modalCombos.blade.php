@@ -74,8 +74,11 @@
                             <label>
                                 <h6>Nombre perfil plataforma 1</h6>
                             </label>
-                            <input type="text" wire:model="perfilNombre1" class="form-control">
-
+                            <input type="text" wire:model="perfilNombre1" class="form-control"
+                                placeholder="Seleccione una cuenta">
+                            @error('perfilNombre1')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
                         </div>
                     </div>
                     <div class="col-sm-12 col-md-6">
@@ -83,7 +86,11 @@
                             <label>
                                 <h6>Pin perfil plataforma 1</h6>
                             </label>
-                            <input type="text" wire:model="perfilPin1" class="form-control">
+                            <input type="text" wire:model="perfilPin1" class="form-control"
+                                placeholder="Seleccione una cuenta">
+                            @error('perfilPin1')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
                         </div>
                     </div>
                     @error('perfil1id')
@@ -135,7 +142,7 @@
                                                             <a href="javascript:void(0)"
                                                                 wire:click="PrimerPerfil({{ $ap->id }})"
                                                                 class="btn btn-dark mtmobile">
-                                                                <i class="fa-solid fa-file-signature"></i>
+                                                                <i class="fas fa-check"></i>
                                                             </a>
                                                         </td>
                                                     </tr>
@@ -166,8 +173,11 @@
                             <label>
                                 <h6>Nombre perfil plataforma 2</h6>
                             </label>
-                            <input type="text" wire:model="perfilNombre2" class="form-control">
-
+                            <input type="text" wire:model="perfilNombre2" class="form-control"
+                                placeholder="Seleccione una cuenta">
+                            @error('perfilNombre2')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
                         </div>
                     </div>
                     <div class="col-sm-12 col-md-6">
@@ -175,7 +185,11 @@
                             <label>
                                 <h6>Pin perfil plataforma 2</h6>
                             </label>
-                            <input type="text" wire:model="perfilPin2" class="form-control">
+                            <input type="text" wire:model="perfilPin2" class="form-control"
+                                placeholder="Seleccione una cuenta">
+                            @error('perfilPin2')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
                         </div>
                     </div>
                     @error('perfil2id')
@@ -227,7 +241,7 @@
                                                             <a href="javascript:void(0)"
                                                                 wire:click="SegundoPerfil({{ $c2->id }})"
                                                                 class="btn btn-dark mtmobile">
-                                                                <i class="fa-solid fa-file-signature"></i>
+                                                                <i class="fas fa-check"></i>
                                                             </a>
                                                         </td>
                                                     </tr>
@@ -258,8 +272,11 @@
                             <label>
                                 <h6>Nombre perfil plataforma 3</h6>
                             </label>
-                            <input type="text" wire:model="perfilNombre3" class="form-control">
-
+                            <input type="text" wire:model="perfilNombre3" class="form-control"
+                                placeholder="Seleccione una cuenta">
+                            @error('perfilNombre3')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
                         </div>
                     </div>
                     <div class="col-sm-12 col-md-6">
@@ -267,7 +284,11 @@
                             <label>
                                 <h6>Pin perfil plataforma 3</h6>
                             </label>
-                            <input type="text" wire:model="perfilPin3" class="form-control">
+                            <input type="text" wire:model="perfilPin3" class="form-control"
+                                placeholder="Seleccione una cuenta">
+                            @error('perfilPin3')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
                         </div>
                     </div>
                     @error('perfil3id')
@@ -319,7 +340,7 @@
                                                             <a href="javascript:void(0)"
                                                                 wire:click="TercerPerfil({{ $c3->id }})"
                                                                 class="btn btn-dark mtmobile">
-                                                                <i class="fa-solid fa-file-signature"></i>
+                                                                <i class="fas fa-check"></i>
                                                             </a>
                                                         </td>
                                                     </tr>

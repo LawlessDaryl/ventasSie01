@@ -64,7 +64,7 @@
                                 @enderror
                             </div>
                         </div>
-                        
+
                         <div class="col-sm-8 col-md-12">
                             <div class="form-group">
                                 <h6>¿Con comisión?</h6>
@@ -276,6 +276,9 @@
                 </div>
             </div>
             <div class="modal-footer">
+                <button type="button" wire:click.prevent="CargarAnterior()"
+                    class="btn btn-dark close-btn text-info">CARGAR
+                    ANTERIOR</button>
                 <button type="button" wire:click.prevent="resetUI()"
                     class="btn btn-dark close-btn text-info">LIMPIAR</button>
                 <button type="button" wire:click.prevent="Store()"

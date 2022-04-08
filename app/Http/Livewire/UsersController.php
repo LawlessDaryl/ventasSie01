@@ -14,6 +14,7 @@ use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 
 class UsersController extends Component
 {
@@ -49,7 +50,11 @@ class UsersController extends Component
         if (strlen($this->search) > 0) {
             $data = User::join('sucursal_users as su', 'su.user_id', 'users.id')
                 ->join('sucursals as s', 'su.sucursal_id', 's.id')
-                ->select('users.*', 's.name as nombreEmpresa')
+                ->select(
+                    'users.*',
+                    's.name as nombreEmpresa',
+                    'su.estado as estadosu'
+                )
                 ->whereNull('fecha_fin')
                 ->where('users.name', 'like', '%' . $this->search . '%')
                 ->orwhere('s.name', 'like', '%' . $this->search . '%')
@@ -58,7 +63,11 @@ class UsersController extends Component
         } else { /* MOSTRAR SUCURSAL_USER DE LOS USUARIOS CON FECHA_FIN NULL */
             $data = User::join('sucursal_users as su', 'su.user_id', 'users.id')
                 ->join('sucursals as s', 'su.sucursal_id', 's.id')
-                ->select('users.*', 's.name as nombreEmpresa')
+                ->select(
+                    'users.*',
+                    's.name as nombreEmpresa',
+                    'su.estado as estadosu'
+                )
                 ->where('estado', 'ACTIVO')
                 ->orderBy('name', 'asc')
                 ->paginate($this->pagination);
@@ -145,6 +154,13 @@ class UsersController extends Component
 
     public function Edit(User $user)
     {   /* CARGAR LOS DATOS DEL USUARIO EN EL MODAL */
+        $sucursal = User::join('sucursal_users as su', 'su.user_id', 'users.id')
+            ->join('sucursals as s', 'su.sucursal_id', 's.id')
+            ->select('s.*')
+            ->where('su.estado', 'ACTIVO')
+            ->where('su.user_id', $user->id)->get()->first();
+
+        $this->sucursal_id = $sucursal->id;
         $this->selected_id = $user->id;
         $this->name = $user->name;
         $this->phone = $user->phone;
@@ -219,7 +235,7 @@ class UsersController extends Component
     {   /*  */
         if ($user) {
             $sales = Sale::where('user_id', $user->id)->count();
-            
+
             if ($sales > 0) {
                 $this->emit('user-withsales', 'No es posible eliminar el usuario porque tiene ventas o transacciones registradas');
             } else {
@@ -274,7 +290,7 @@ class UsersController extends Component
                         'estado' => 'FINALIZADO',
                         'fecha_fin' => $DateAndTime
                     ]);
-                }else{
+                } else {
                     $su->update([
                         'estado' => 'FINALIZADO'
                     ]);
@@ -286,7 +302,11 @@ class UsersController extends Component
     public function finalizar()
     {
         $DateAndTime = date('Y-m-d H:i:s', time());
-
+        $usuario = User::find($this->selected_id);
+        $usuario->update([
+            'status' => 'LOCKED',
+        ]);
+        $usuario->save();
         $su = SucursalUser::find($this->idsucursalUser);
         $su->update([
             'fecha_fin' => $DateAndTime

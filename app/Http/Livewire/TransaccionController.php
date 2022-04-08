@@ -29,7 +29,8 @@ class TransaccionController extends Component
         $pageTitle, $componentName, $selected_id, $hora, $search, $condicion, $mostrartelf, $check, $type, $cartera_id,
         $nombreCliente, $cedula, $celular, $direccion, $email, $fecha_nacim, $razon, $cheq, $nit, $cantidad, $comentario, $condicional,
         $comisionSiV, $comisionNoV, $condicionalComisiones, $metodo, $condicionalOrigen, $montoB, $origMotID,
-        $montoCobrarPagar, $mostrarTelfCodigo, $mostrarCI, $ganancia, $transaccion, $requerimientoComision;
+        $montoCobrarPagar, $mostrarTelfCodigo, $mostrarCI, $ganancia, $transaccion, $requerimientoComision, $origenAnterior='Elegir', $motivoAnterior='Elegir',
+        $telefonoAnterior, $cedulaAnterior, $destinoAnterior;
     private $pagination = 10;
     public function paginationView()
     {
@@ -953,7 +954,11 @@ class TransaccionController extends Component
                 'transaccion_id' => $this->transaccion->id
             ]);
             DB::commit();
-
+            $this->origenAnterior = $this->origen;
+            $this->motivoAnterior = $this->motivo;
+            $this->telefonoAnterior = $this->celular;
+            $this->cedulaAnterior = $this->cedula;
+            $this->destinoAnterior = $this->codigo_transf;
             $this->resetUI();
             $this->emit('item-added', 'Transacción Registrada');
         } catch (Exception $e) {
@@ -1040,6 +1045,18 @@ class TransaccionController extends Component
         $this->resetUI();
         $this->emit('item-actualizado', 'Se actulizaron las observaciones');
     }
+
+    public function CargarAnterior()
+    {
+        $this->origen = $this->origenAnterior;
+        $this->motivo = $this->motivoAnterior;
+        $this->celular = $this->telefonoAnterior;
+        $this->cedula = $this->cedulaAnterior;
+        $this->codigo_transf = $this->destinoAnterior;
+        $this->ClienteSelect = 0;
+        $this->TelfSelect = 0;
+    }
+
     /* RESET DE INPUT Y DEMAS */
     public function resetUI()
     {

@@ -30,7 +30,7 @@ class PlanesController extends Component
         $mostrartabla, $tipopago, $condicional, $meses, $observaciones, $ready, $selected_perf, $totalCobrar,
         $BuscarCliente, $ClienteSelect, $cuentasEnteras, $nombrePerfil, $pinPerfil, $CantidadPerfilesCrear,
         $fecha_inicio, $plataforma1, $plataforma2, $plataforma3, $perfilplataforma1, $perfilplataforma2,
-        $perfilplataforma3;
+        $perfilplataforma3, $telefonoAnterior, $NombreAnterior;
 
     private $pagination = 10;
 
@@ -92,13 +92,17 @@ class PlanesController extends Component
         $this->plataforma1Require = 'NO';
         $this->plataforma2Require = 'NO';
         $this->plataforma3Require = 'NO';
+        $this->fecha_inicio = Carbon::parse(Carbon::now())->format('Y-m-d');
+        $this->Reset1Platf = 'INICIO';
+        $this->Reset2Platf = 'INICIO';
+        $this->Reset3Platf = 'INICIO';
+        $this->mostrartablaCuenta = 'NO';
+        $this->mostrartablaPerfiles = 'NO';
+        $this->array = array();
     }
 
     public function render()
     {
-        /* $array = [1, 2, 3, 4];
-        $psserfiles = Profile::find($array);
-        dd($psserfiles); */
         $user_id = Auth()->user()->id;
         $from = Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00';
         $to = Carbon::parse(Carbon::now())->format('Y-m-d')   . ' 23:59:59';
@@ -379,9 +383,17 @@ class PlanesController extends Component
             $this->plataformaReset = 'INICIO';
             $this->cuentaperfil = 'Elegir';
             $this->mostrartabla = 0;
-            $this->accounts = [];
-            $this->profiles = [];
+            $this->plataforma1Require = 'NO';
+            $this->plataforma2Require = 'NO';
+            $this->plataforma3Require = 'NO';
+            $this->Reset1Platf = 'INICIO';
+            $this->Reset2Platf = 'INICIO';
+            $this->Reset3Platf = 'INICIO';
+            $this->mostrartablaCuenta = 'NO';
+            $this->mostrartablaPerfiles = 'NO';
+            $this->array = array();
         }
+
 
         $date_now = date('Y-m-d', time());
 
@@ -389,54 +401,30 @@ class PlanesController extends Component
         if ($this->plataforma != 'Elegir') {
             if ($this->cuentaperfil == 'ENTERA') {  /* MOSTRAR TODAS LAS CUENTAS ENTERAS LIBRES */
                 $this->mostrartabla = 0;
-                $this->accounts = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
+
+                $this->cuentasLibresEnteras = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                     ->join('emails as e', 'accounts.email_id', 'e.id')
                     ->select(
                         'accounts.*',
                         'p.precioEntera'
                     )
-                    ->where('accounts.whole_account', 'ENTERA')
-                    ->where('accounts.availability', 'LIBRE')
                     ->where('accounts.status', 'ACTIVO')
                     ->where('accounts.expiration_account', '>', $date_now)
+                    ->where('accounts.availability', 'LIBRE')
+                    ->where('accounts.whole_account', 'ENTERA')
                     ->where('p.id', $this->plataforma)
-                    ->orderBy('accounts.expiration_account', 'desc')
-                    ->get()->take($this->cantidaperf);
+                    ->get();
+
                 $this->mostrartabla = 1;
             } elseif ($this->cuentaperfil == 'PERFIL') {  /* MOSTRAR LOS PERFILES LIBRES */
                 $this->mostrartabla = 0;
-                $this->profiles = Profile::join('account_profiles as ap', 'ap.profile_id', 'profiles.id')
-                    ->join('accounts as a', 'ap.account_id', 'a.id')
-                    ->join('platforms as p', 'a.platform_id', 'p.id')
-                    ->join('emails as e', 'a.email_id', 'e.id')
-                    ->select(
-                        'profiles.id as id',
-                        'p.precioPerfil as precioPerfil',
-                        'a.id as cuentaid',
-                        'e.content as email',
-                        'profiles.nameprofile as nombre_perfil',
-                        'profiles.pin as pin',
-                        'a.password_account as password_account',
-                        'a.expiration_account'
-                    )
-                    ->where('profiles.availability', 'LIBRE')
-                    ->where('profiles.status', 'ACTIVO')
-                    ->where('a.status', 'ACTIVO')
-                    ->where('a.expiration_account', '>', $date_now)
-                    ->orderBy('a.expiration_account', 'desc')
-                    ->where('p.id', $this->plataforma)
-                    ->get()->take($this->cantidaperf);
                 $this->mostrartabla = 2;
                 /* CUENTAS ENTERAS PARA CREAR UN PERFIL SI ES QUE NO TIENE CREADOS */
                 $this->cuentasEnteras = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                     ->join('emails as e', 'accounts.email_id', 'e.id')
                     ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
                     ->select(
-                        'accounts.id as id',
-                        'accounts.expiration_account as expiration_account',
-                        'accounts.number_profiles',
-                        'accounts.whole_account',
-                        'accounts.password_account',
+                        'accounts.*',
                         'p.nombre as nombre',
                         'e.content as content',
                         'e.pass as pass',
@@ -466,6 +454,42 @@ class PlanesController extends Component
                 $this->accounts = [];
                 $this->profiles = [];
             }
+        }
+
+        /* RESET de nombre de perfil 1 y pin al cambiar la plataforma 1 */
+        if ($this->plataforma1 != 'Elegir' && $this->Reset1Platf == 'INICIO') {
+            $this->Reset1Platf = $this->plataforma1;
+        }
+        if ($this->plataforma1 != 'Elegir' && $this->plataforma1 != $this->Reset1Platf) {
+            $this->Reset1Platf = 'INICIO';
+            $this->perfil1id = null;
+            $this->perfilNombre1 = '';
+            $this->perfilPin1 = '';
+            $this->plataforma1Require = 'NO';
+        }
+
+        /* RESET de nombre de perfil 2 y pin al cambiar la plataforma 2 */
+        if ($this->plataforma2 != 'Elegir' && $this->Reset2Platf == 'INICIO') {
+            $this->Reset2Platf = $this->plataforma2;
+        }
+        if ($this->plataforma2 != 'Elegir' && $this->plataforma2 != $this->Reset2Platf) {
+            $this->Reset2Platf = 'INICIO';
+            $this->perfil2id = null;
+            $this->perfilNombre2 = '';
+            $this->perfilPin2 = '';
+            $this->plataforma2Require = 'NO';
+        }
+
+        /* RESET de nombre de perfil 3 y pin al cambiar la plataforma 3 */
+        if ($this->plataforma3 != 'Elegir' && $this->Reset3Platf == 'INICIO') {
+            $this->Reset3Platf = $this->plataforma3;
+        }
+        if ($this->plataforma3 != 'Elegir' && $this->plataforma3 != $this->Reset3Platf) {
+            $this->Reset3Platf = 'INICIO';
+            $this->perfil3id = null;
+            $this->perfilNombre3 = '';
+            $this->perfilPin3 = '';
+            $this->plataforma3Require = 'NO';
         }
 
         $platforms1 = Platform::where('estado', 'Activo')->get();
@@ -566,9 +590,49 @@ class PlanesController extends Component
             ->extends('layouts.theme.app')
             ->section('content');
     }
+    /* PONER LA CUENTA SELECCIONADA EN EL SEGUNDA TABLA PARA LA VENTA */
+    public function BuscarCuenta(Account $cuenta)
+    {
+        $this->mostrartablaCuenta = 'SI';
+        array_push($this->array, $cuenta->id);
+
+        $this->accounts = Account::find($this->array);
+    }
+    /* PONER PERFILES EN LA SEGUNDA TABLA DESPUES DE SELECCIONAR UNA CUENTA */
+    public function BuscarPerfil(Account $cuenta)
+    {
+        $this->mostrartablaPerfiles = 'SI';
+        $this->profiles = Profile::join('account_profiles as ap', 'ap.profile_id', 'profiles.id')
+            ->join('accounts as a', 'ap.account_id', 'a.id')
+            ->join('platforms as p', 'a.platform_id', 'p.id')
+            ->join('emails as e', 'a.email_id', 'e.id')
+            ->select(
+                'profiles.id as id',
+                'p.precioPerfil as precioPerfil',
+                'a.id as cuentaid',
+                'e.content as email',
+                'profiles.nameprofile as nombre_perfil',
+                'profiles.pin as pin',
+                'a.password_account as password_account',
+                'a.expiration_account'
+            )
+            ->where('profiles.availability', 'LIBRE')
+            ->where('profiles.status', 'ACTIVO')
+            ->where('a.status', 'ACTIVO')
+            ->where('a.id', $cuenta->id)
+            ->orderBy('a.expiration_account', 'desc')
+            ->where('p.id', $this->plataforma)
+            ->get()->take($this->cantidaperf);
+    }
+
+    public function CrearCombo()
+    {
+        $this->resetUI();
+        $this->emit('show-modalCombos', '');
+    }
 
     public function PrimerPerfil(Account $cuenta1)
-    {
+    {   //CARGAR PERFIL 1 EN LOS INPUT
         $perfil1 = Account::join('account_profiles as ap', 'accounts.id', 'ap.account_id')
             ->join('profiles as p', 'p.id', 'ap.profile_id')
             ->select('p.*')
@@ -579,8 +643,9 @@ class PlanesController extends Component
         $this->perfilPin1 = $perfil1->pin;
         $this->plataforma1Require = 'SI';
     }
+
     public function SegundoPerfil(Account $cuenta2)
-    {
+    {   //CARGAR PERFIL 2 EN LOS INPUT
         $perfil2 = Account::join('account_profiles as ap', 'accounts.id', 'ap.account_id')
             ->join('profiles as p', 'p.id', 'ap.profile_id')
             ->select('p.*')
@@ -591,8 +656,9 @@ class PlanesController extends Component
         $this->perfilPin2 = $perfil2->pin;
         $this->plataforma2Require = 'SI';
     }
+
     public function TercerPerfil(Account $cuenta3)
-    {
+    {   //CARGAR PERFIL 3 EN LOS INPUT
         $perfil3 = Account::join('account_profiles as ap', 'accounts.id', 'ap.account_id')
             ->join('profiles as p', 'p.id', 'ap.profile_id')
             ->select('p.*')
@@ -603,17 +669,39 @@ class PlanesController extends Component
         $this->perfilPin3 = $perfil3->pin;
         $this->plataforma3Require = 'SI';
     }
+
     public function venderCombo()
     {
         $rules = [
+            'nombre' => 'required|min:4',
+            'celular' => 'required|integer|min:8',
+            'fecha_inicio' => 'required|not_in:0000-00-00',
+            'perfilNombre1' => 'required',
+            'perfilPin1' => 'required',
+            'perfilNombre2' => 'required',
+            'perfilPin2' => 'required',
+            'perfilNombre3' => 'required',
+            'perfilPin3' => 'required',
             'perfil1id' => 'required_if:plataforma1Require,NO',
             'perfil2id' => 'required_if:plataforma2Require,NO',
             'perfil3id' => 'required_if:plataforma3Require,NO',
         ];
         $messages = [
-            'perfil1id.required_if' => 'Seleccione una cuenta',
-            'perfil2id.required_if' => 'Seleccione una cuenta',
-            'perfil3id.required_if' => 'Seleccione una cuenta',
+            'nombre.required' => 'El nombre del cliente es requerido',
+            'nombre.min' => 'El nombre debe tener al menos 4 caracteres',
+            'celular.required' => 'El numero de celular del cliente es requerido',
+            'celular.integer' => 'El celular debe ser un número',
+            'perfilNombre1.required' => 'EL nombre del perfil es requerido',
+            'perfilPin1.required' => 'El pin es requerido',
+            'perfilNombre2.required' => 'EL nombre del perfil es requerido',
+            'perfilPin2.required' => 'El pin es requerido',
+            'perfilNombre3.required' => 'EL nombre del perfil es requerido',
+            'perfilPin3.required' => 'El pin es requerido',
+            'fecha_inicio.required' => 'Seleccione una fecha valida',
+            'fecha_inicio.not_in' => 'Seleccione una fecha valida',
+            'perfil1id.required_if' => 'Seleccione una cuenta de la plataforma 1',
+            'perfil2id.required_if' => 'Seleccione una cuenta de la plataforma 2',
+            'perfil3id.required_if' => 'Seleccione una cuenta de la plataforma 3',
         ];
 
         $this->validate($rules, $messages);
@@ -841,12 +929,11 @@ class PlanesController extends Component
                 'cliente_id' => $cliente->id
             ]);
 
-            $this->condicional = 'perfiles';
-
+            $this->condicional = 'combos';
 
             DB::commit();
             $this->resetUI();
-            $this->emit('item-added', 'Plan Registrado');
+            $this->emit('hide-modalCombos', 'Plan Registrado');
         } catch (Exception $e) {
             DB::rollback();
             $this->emit('item-error', 'ERROR' . $e->getMessage());
@@ -940,6 +1027,7 @@ class PlanesController extends Component
             'nombre' => 'required|min:4',
             'celular' => 'required|integer|min:8',
             'tipopago' => 'required|not_in:Elegir',
+            'fecha_inicio' => 'required|not_in:0000-00-00',
             'expiration_plan' => 'required|not_in:0000-00-00',
             'accounts' => 'required_if:mostrartabla,1',
             'profiles' => 'required_if:mostrartabla,2',
@@ -956,10 +1044,12 @@ class PlanesController extends Component
             'celular.min' => 'El celular debe tener 8 dígitos',
             'tipopago.required' => 'El tipo de pago es requerido',
             'tipopago.not_in' => 'Seleccione un valor distinto a Elegir',
+            'fecha_inicio.required' => 'Seleccione una fecha valida',
+            'fecha_inicio.not_in' => 'Seleccione una fecha valida',
             'expiration_plan.required' => 'Seleccione una fecha valida',
             'expiration_plan.not_in' => 'Seleccione una fecha valida',
             'accounts.required_if' => 'No tiene cuentas seleccionadas',
-            'profiles.required_if' => 'No tiene perfiles seleccionados',
+            'profiles.required_if' => 'Selecciona una cuenta para el perfil',
         ];
 
         $this->validate($rules, $messages);
@@ -1228,6 +1318,8 @@ class PlanesController extends Component
                     $this->condicional = 'perfiles';
                 }
             }
+            $this->telefonoAnterior = $this->celular;
+            $this->NombreAnterior = $this->nombre;
             DB::commit();
             $this->resetUI();
             $this->emit('item-added', 'Plan Registrado');
@@ -1235,6 +1327,13 @@ class PlanesController extends Component
             DB::rollback();
             $this->emit('item-error', 'ERROR' . $e->getMessage());
         }
+    }
+
+    public function CargarAnterior()
+    {
+        $this->celular = $this->telefonoAnterior;
+        $this->nombre = $this->NombreAnterior;
+        $this->ClienteSelect = 0;
     }
 
     /* Anular una transacción */
@@ -1395,11 +1494,6 @@ class PlanesController extends Component
         $this->emit('perf-actualizado', 'Se cambió a realizado');
     }
 
-    public function CrearCombo()
-    {
-        $this->emit('show-modalCombos', '');
-    }
-
     public function resetUI()
     {
         $this->selected_id = 0;
@@ -1424,7 +1518,33 @@ class PlanesController extends Component
         $this->ClienteSelect = 0;
         $this->nombrePerfil = '';
         $this->pinPerfil = '';
+        $this->search = '';
         $this->cuentasEnteras = [];
+        $this->CantidadPerfilesCrear = 0;
+        $this->plataforma1 = 'Elegir';
+        $this->plataforma2 = 'Elegir';
+        $this->plataforma3 = 'Elegir';
+        $this->cuentasp1 = [];
+        $this->cuentasp2 = [];
+        $this->cuentasp3 = [];
+        $this->perfilplataforma1 = 0;
+        $this->perfilplataforma2 = 0;
+        $this->perfilplataforma3 = 0;
+        $this->perfil1id = null;
+        $this->perfilNombre1 = '';
+        $this->perfilPin1 = '';
+        $this->perfil2id = null;
+        $this->perfilNombre2 = '';
+        $this->perfilPin2 = '';
+        $this->perfil3id = null;
+        $this->perfilNombre3 = '';
+        $this->perfilPin3 = '';
+        $this->perfiles_si_no = '';
+        $this->plataformaReset = 'INICIO';
+        $this->plataforma1Require = 'NO';
+        $this->plataforma2Require = 'NO';
+        $this->plataforma3Require = 'NO';
+        $this->fecha_inicio = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->resetValidation();
     }
 }

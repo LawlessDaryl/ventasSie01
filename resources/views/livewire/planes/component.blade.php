@@ -7,7 +7,7 @@
                 </h4>
                 <ul class="tabs tab-pills">
                     <a href="javascript:void(0)" class="btn btn-dark" wire:click="CrearCombo()"
-                        data-target="#theModal">Vender por Combo</a>
+                        data-target="#theModal">Vender Combo</a>
                 </ul>
                 <ul class="tabs tab-pills">
                     <a href="javascript:void(0)" class="btn btn-dark" wire:click="Agregar()" data-target="#theModal">+
@@ -69,17 +69,17 @@
                         <table class="table table-unbordered table-hover mt-2">
                             <thead class="text-white" style="background: #3B3F5C">
                                 <tr>
-                                    <th class="table-th text-withe text-center">PLATAFORMA</th>
-                                    <th class="table-th text-withe text-center">CLIENTE</th>
-                                    <th class="table-th text-withe text-center">EMAIL</th>
-                                    <th class="table-th text-withe text-center">CONTRASEÑA CUENTA</th>
-                                    <th class="table-th text-withe text-center">VENCIMIENTO CUENTA</th>
-                                    <th class="table-th text-withe text-center">PERFIL</th>
-                                    <th class="table-th text-withe text-center">IMPORTE</th>
-                                    <th class="table-th text-withe text-center">PLAN INICIO</th>
-                                    <th class="table-th text-withe text-center">PLAN FIN</th>
-                                    <th class="table-th text-withe text-center">ACCIONES</th>
-                                    <th class="table-th text-withe text-center">REALIZADO</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">PLATAFORMA</th>
+                                    <th class="table-th text-withe text-center"style="font-size: 80%">CLIENTE</th>
+                                    <th class="table-th text-withe text-center"style="font-size: 80%">EMAIL</th>
+                                    <th class="table-th text-withe text-center"style="font-size: 80%">CONTRASEÑA CUENTA</th>
+                                    <th class="table-th text-withe text-center"style="font-size: 80%">VENCIMIENTO CUENTA</th>
+                                    <th class="table-th text-withe text-center"style="font-size: 80%">PERFIL</th>
+                                    <th class="table-th text-withe text-center"style="font-size: 80%">IMPORTE</th>
+                                    <th class="table-th text-withe text-center"style="font-size: 80%">PLAN INICIO</th>
+                                    <th class="table-th text-withe text-center"style="font-size: 80%">PLAN FIN</th>
+                                    <th class="table-th text-withe text-center"style="font-size: 80%">ACCIONES</th>
+                                    <th class="table-th text-withe text-center"style="font-size: 80%">REALIZADO</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -232,17 +232,17 @@
                         <table class="table table-unbordered table-hover mt-2">
                             <thead class="text-white" style="background: #3B3F5C">
                                 <tr>
-                                    <th class="table-th text-withe text-center">PLATAFORMAS</th>
-                                    <th class="table-th text-withe text-center">CLIENTE</th>
-                                    <th class="table-th text-withe text-center">EMAILS</th>
-                                    <th class="table-th text-withe text-center">CONTRASEÑAS CUENTAS</th>
-                                    <th class="table-th text-withe text-center">VENCIMIENTO CUENTAS</th>
-                                    <th class="table-th text-withe text-center">PERFILES</th>
-                                    <th class="table-th text-withe text-center">IMPORTE</th>
-                                    <th class="table-th text-withe text-center">PLAN INICIO</th>
-                                    <th class="table-th text-withe text-center">PLAN FIN</th>
-                                    <th class="table-th text-withe text-center">ACCIONES</th>
-                                    <th class="table-th text-withe text-center">REALIZADO</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">PLATAFORMAS</th>
+                                    <th class="table-th text-withe text-center"style="font-size: 80%">CLIENTE</th>
+                                    <th class="table-th text-withe text-center"style="font-size: 80%">EMAILS</th>
+                                    <th class="table-th text-withe text-center"style="font-size: 80%">CONTRASEÑAS CUENTAS</th>
+                                    <th class="table-th text-withe text-center"style="font-size: 80%">VENCIMIENTO CUENTAS</th>
+                                    <th class="table-th text-withe text-center"style="font-size: 80%">PERFILES</th>
+                                    <th class="table-th text-withe text-center"style="font-size: 80%">IMPORTE</th>
+                                    <th class="table-th text-withe text-center"style="font-size: 80%">PLAN INICIO</th>
+                                    <th class="table-th text-withe text-center"style="font-size: 80%">PLAN FIN</th>
+                                    <th class="table-th text-withe text-center"style="font-size: 80%">ACCIONES</th>
+                                    <th class="table-th text-withe text-center"style="font-size: 80%">REALIZADO</th>
                                 </tr>
                             </thead>
                             <tbody>
