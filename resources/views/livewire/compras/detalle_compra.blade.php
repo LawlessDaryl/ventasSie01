@@ -27,7 +27,14 @@
                                              <strong>Proveedor</strong>
                                              <div class="input-group-prepend mb-3">
     
-                                                 <input type="text" wire:model.lazy="provider" class="form-control" placeholder="Introduzca el numero de factura">
+                                              
+                                                 
+                                                 <input list="provider" wire:model.lazy="provider" class="form-control">
+                                                 <datalist id="provider">
+                                                    @foreach($data_prov as $data)
+                                                                <option value="{{$data->id}}">{{$data->nombre}}</option>
+                                                    @endforeach 
+                                                            </datalist>
                                                 
                                                      <span class="input-group-text input-gp">
                                                          <a href="javascript:void(0)" data-toggle="modal"
@@ -66,17 +73,20 @@
                                     <div class="col-lg-6">
                                         <div class="form-group">
                                           <strong>Dscto. en compras:</strong>
-                                          <input type="text" wire:model.lazy="descuento" class="form-control">
+                                          <input type="text" wire:model="descuento" wire:change="descuento_change" class="form-control">
                                           @error('descuento')
                                               <span class="text-danger er">{{ $message }}</span>
-                                          @enderror                                          
+                                          @enderror   
+                                          
+                                          
+
                                        </div>
                                     </div>
    
                                     <div class="col-lg-6">
                                         <div class="form-group">
-                                            <strong>Dscto. %</strong>
-                                            <h5>10%</h5>
+                                            <strong>Dscto. </strong>
+                                            <h5>{{$porcentaje}}%</h5>
                                           </div>
                                     </div>
                                 </div>
@@ -174,7 +184,7 @@
             <div class="widget-content">
                 <div class="row">
                     <div class="col-lg-4 col-12 col-md-12">
-                            <div class="widget ml-2 mt-2 mb-2 mr-0 p-2">
+                            <div class="ml-2 mt-2 mb-2 mr-0 p-2">
                                
                                     <div class="input-group mb-4">
                                         <div class="input-group-prepend">
@@ -241,12 +251,11 @@
                
                     <div class="col-lg-8 col-12  col-md-12">
                         <div class="widget mr-2 mb-2 mt-2">
-                           
                                 <div class="table-responsive p-1">
                                     <table class="table table-unbordered table-hover mt-2">
                                         <thead class="text-white" style="background: #3B3F5C">
                                             <tr>
-                                                <th class="table-th text-withe text-center">Producto</th>
+                                                <th class="table-th text-withe text-center" style="width: 12rem">Producto</th>
                                                 <th class="table-th text-withe text-center">Codigo</th>
                                                 <th class="table-th text-withe text-center">Precio <br>Compra</th>
                                                 <th class="table-th text-withe text-center">Precio <br>Venta</th>
@@ -260,10 +269,13 @@
                                             @foreach ($cart as $prod)
                                                 <tr>
                                                     <td>
-                                                        <h6> {{$prod->name}}</h6>
+                                                        <h6 style="font-size: 0.90rem" >{{$prod->name}}</h6>
                                                     </td>
                                                     <td>
-                                                         <input type="number" 
+                                                        <h6> {{$prod->attributes->codigo}}</h6>
+                                                    </td>
+                                                    <td>
+                                                         <input type="text" 
                                                          id="r{{$prod->id}}" 
                                                          wire:change="UpdatePrice({{$prod->id}}, $('#r' + {{$prod->id}}).val() )" 
                                                          style="font-size: 1rem!important;" 
@@ -272,10 +284,22 @@
                                                     </td>
 
                                                     <td>
-                                                         <input type="number" 
+                                                        <input type="text" 
+                                                         id="rs{{$prod->id}}" 
+                                                         wire:change="UpdatePrecioVenta({{$prod->id}}, $('#rs' + {{$prod->id}}).val() )" 
+                                                         style="font-size: 1rem!important;" 
+                                                         class="form-control text-center" 
+                                                         value="{{$prod->attributes->precio}}">
+
+
+                                                     
+                                                    </td>
+
+                                                    <td>
+                                                         <input type="text" 
                                                          id="rr{{$prod->id}}" 
                                                          wire:change="UpdateQty({{$prod->id}}, $('#rr' + {{$prod->id}}).val() )" 
-                                                         style="font-size: 1rem!important;" 
+                                                         style="font-size: 1rem!important; padding:0.1rem" 
                                                          class="form-control text-center" 
                                                          value="{{$prod->quantity}}">
                                                     </td>
@@ -286,36 +310,36 @@
                                                     <td class="text-center">
                                                         <a href="javascript:void(0)"
                                                         wire:click="removeItem({{ $prod->id }})"
-                                                            class="btn btn-dark mtmobile" title="Edit">
+                                                            class="btn btn-dark mtmobile p-2" title="Edit">
                                                             <i class="fas fa-trash"></i>
                                                         </a>
 
                                                     </td>
                                                 </tr>
                                             @endforeach
-                                            <tfoot class="text-white text-center" style="background: #a5a19e"  >
+                                            <tfoot class="text-white text-right" style="background: #fffefd"  >
                                                     <tr>
-                                                        <td colspan="4">
-                                                             <h5 class="text-white">SubTotal.-</h5>
+                                                        <td colspan="6">
+                                                             <h5 class="text-dark">SubTotal.-</h5>
                                                         </td>
                                                         <td>
-                                                            <h5 class="text-white" >{{$subtotal}}</h5>
+                                                            <h5 class="text-dark" >{{$subtotal}}</h5>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td colspan="4">
-                                                             <h5 class="text-white">Descuento.-</h5>
+                                                        <td colspan="6">
+                                                             <h5 class="text-dark">Descuento.-</h5>
                                                         </td>
                                                         <td>
-                                                            <h5 class="text-white" >{{$descuento}}</h5>
+                                                            <h5 class="text-dark" >{{$descuento}}</h5>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td colspan="4">
-                                                             <h5 class="text-white">Total.-</h5>
+                                                        <td colspan="6">
+                                                             <h5 class="text-dark">Total.-</h5>
                                                         </td>
                                                         <td>
-                                                            <h5 class="text-white" >{{$total_compra}}</h5>
+                                                            <h5 class="text-dark" >{{$total_compra}}</h5>
                                                         </td>
                                                     </tr>
                                             </tfoot>
