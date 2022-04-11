@@ -268,5 +268,9 @@ class PermissionSeeder extends Seeder
             'name' => 'Ver_Generar_Ingreso_Egreso_Boton',
             'guard_name' => 'web'
         ]);
+        Permission::create([    /* PERMITIR ANULAR TRANSACCION TIGO MONEY */
+            'name' => 'Anular_trans_tigomoney_Boton',
+            'guard_name' => 'web'
+        ]);
     }
 }

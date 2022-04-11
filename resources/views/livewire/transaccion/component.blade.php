@@ -50,33 +50,36 @@
                                     style="{{ $d->estado == 'Anulada' ? 'background-color: #d97171 !important' : '' }}">
                                     <td class="text-center">
                                         <h6 class="text-center">
-                                            {{ \Carbon\Carbon::parse($d->hora)->format('H:i:s') }}</h6>
+                                            <strong>{{ \Carbon\Carbon::parse($d->hora)->format('H:i:s') }}</strong>
+                                        </h6>
                                     </td>
                                     <td class="text-center">
-                                        <h6 class="text-center">{{ $d->codCliente }}</h6>
+                                        <h6 class="text-center"><strong>{{ $d->codCliente }}</strong></h6>
                                     </td>
                                     <td class="text-center">
-                                        <h6 class="text-center">{{ $d->TelCliente }}</h6>
+                                        <h6 class="text-center"><strong>{{ $d->TelCliente }}</strong></h6>
                                     </td>
                                     <td class="text-center">
-                                        <h6 class="text-center">{{ $d->codigotrans }}</h6>
+                                        <h6 class="text-center"><strong>{{ $d->codigotrans }}</strong></h6>
                                     </td>
                                     <td class="text-center">
-                                        <h6 class="text-center">{{ $d->origen_nombre }}</h6>
+                                        <h6 class="text-center"><strong>{{ $d->origen_nombre }}</strong></h6>
                                     </td>
                                     <td class="text-center">
-                                        <h6 class="text-center">{{ $d->motivo_nombre }}</h6>
+                                        <h6 class="text-center"><strong>{{ $d->motivo_nombre }}</strong></h6>
                                     </td>
                                     <td class="text-center">
-                                        <h6 class="text-center">{{ $d->importe }}</h6>
+                                        <h6 class="text-center"><strong>{{ $d->importe }}</strong></h6>
                                     </td>
                                     <td class="text-center">
-                                        @if ($d->estado != 'Anulada')
-                                            <a href="javascript:void(0)" onclick="Confirm({{ $d->id }})"
-                                                class="btn btn-dark mtmobile" title="Anular">
-                                                <i class="fas fa-trash"></i>
-                                            </a>
-                                        @endif
+                                        @can('Anular_trans_tigomoney_Boton')
+                                            @if ($d->estado != 'Anulada')
+                                                <a href="javascript:void(0)" onclick="Confirm({{ $d->id }})"
+                                                    class="btn btn-dark mtmobile" title="Anular">
+                                                    <i class="fas fa-trash"></i>
+                                                </a>
+                                            @endif
+                                        @endcan
                                         <a href="javascript:void(0)" wire:click="VerObservaciones({{ $d->id }})"
                                             class="btn btn-dark mtmobile" title="Observaciones">
                                             <svg viewBox="0 0 1024 1024" focusable="false" data-icon="bars" width="1em"

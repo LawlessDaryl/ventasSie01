@@ -32,7 +32,7 @@ class CarteraSeeder extends Seeder
 
         /* CAJA PRINCIPAL */
         Cartera::create([
-            'nombre' => 'Sistema',
+            'nombre' => 'Sistema 75006327',
             'descripcion' => 'Sistema tigo Money',
             'tipo' => 'Sistema',
             'telefonoNum' => 75006327,
@@ -46,10 +46,10 @@ class CarteraSeeder extends Seeder
             'caja_id' => '2',
         ]);
         Cartera::create([
-            'nombre' => 'Telefono 61879011',
+            'nombre' => 'Telefono 75997054',
             'descripcion' => 'Telefono tigo money',
             'tipo' => 'Telefono',
-            'telefonoNum' => '61879011',
+            'telefonoNum' => 75997054,
             'caja_id' => '2',
         ]);
 

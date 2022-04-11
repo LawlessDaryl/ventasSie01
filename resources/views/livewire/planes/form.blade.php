@@ -258,9 +258,14 @@
                                                         </td>
                                                         <td>
                                                             <a href="javascript:void(0)"
-                                                                wire:click="BuscarCuenta({{ $ap->id }})"
+                                                                wire:click="AgregarCuenta({{ $ap->id }})"
                                                                 class="btn btn-dark mtmobile" title="Seleccionar">
                                                                 <i class="fas fa-check"></i>
+                                                            </a>
+                                                            <a href="javascript:void(0)"
+                                                                wire:click="QuitarCuenta({{ $ap->id }})"
+                                                                class="btn btn-dark mtmobile" title="Remover">
+                                                                <i class="fa-solid fa-x"></i>
                                                             </a>
                                                         </td>
                                                     </tr>
@@ -314,7 +319,7 @@
                                                     </td>
                                                     <td class="text-right " colspan="2">
                                                         <span><strong>
-                                                                @if ($accounts)
+                                                                @if ($accounts->count() > 0)
                                                                     Bs.
                                                                     {{ number_format($accounts[0]->Plataforma->precioEntera, 2) * $accounts->Count() }}
                                                                 @endif
@@ -343,13 +348,19 @@
                                         <table class="table table-hover table-sm" style="width:100%">
                                             <thead class="text-white" style="background: #3B3F5C">
                                                 <tr>
-                                                    <th class="table-th text-withe text-center">Email-Nombre Usuario
+                                                    <th class="table-th text-withe text-center" style="font-size: 80%">
+                                                        Email-Nombre Usuario
                                                     </th>
-                                                    <th class="table-th text-withe text-center">VENCIMIENTO</th>
-                                                    <th class="table-th text-withe text-center">Max perf</th>
-                                                    <th class="table-th text-withe text-center">Perf Ocupados</th>
-                                                    <th class="table-th text-withe text-center">Espacios</th>
-                                                    <th class="table-th text-withe text-center">Select</th>
+                                                    <th class="table-th text-withe text-center" style="font-size: 80%">
+                                                        VENCIMIENTO</th>
+                                                    <th class="table-th text-withe text-center" style="font-size: 80%">
+                                                        Max perf</th>
+                                                    <th class="table-th text-withe text-center" style="font-size: 80%">
+                                                        Perf Ocupados</th>
+                                                    <th class="table-th text-withe text-center" style="font-size: 80%">
+                                                        Espacios</th>
+                                                    <th class="table-th text-withe text-center" style="font-size: 80%">
+                                                        Select</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -365,27 +376,37 @@
                                                 @foreach ($cuentasEnteras as $ap)
                                                     <tr>
                                                         <td class="text-center">
-                                                            <h6 class="text-center">{{ $ap->account_name }}</h6>
+                                                            <h6 class="text-center" style="font-size: 100%">
+                                                                {{ $ap->account_name }}</h6>
                                                         </td>
                                                         <td class="text-center">
-                                                            <h6 class="text-center">{{ $ap->expiration_account }}
+                                                            <h6 class="text-center" style="font-size: 100%">
+                                                                {{ $ap->expiration_account }}
                                                             </h6>
                                                         </td>
                                                         <td class="text-center">
-                                                            <h6 class="text-center">{{ $ap->number_profiles }}
+                                                            <h6 class="text-center" style="font-size: 100%">
+                                                                {{ $ap->number_profiles }}
                                                             </h6>
                                                         </td>
                                                         <td class="text-center">
-                                                            <h6 class="text-center">{{ $ap->perfOcupados }}</h6>
+                                                            <h6 class="text-center" style="font-size: 100%">
+                                                                {{ $ap->perfOcupados }}</h6>
                                                         </td>
                                                         <td class="text-center">
-                                                            <h6 class="text-center">{{ $ap->espacios }}</h6>
+                                                            <h6 class="text-center" style="font-size: 100%">
+                                                                {{ $ap->espacios }}</h6>
                                                         </td>
                                                         <td>
                                                             <a href="javascript:void(0)"
-                                                                wire:click="BuscarPerfil({{ $ap->id }})"
+                                                                wire:click="AgregarPerfil({{ $ap->id }})"
                                                                 class="btn btn-dark mtmobile" title="Seleccionar">
                                                                 <i class="fas fa-check"></i>
+                                                            </a>
+                                                            <a href="javascript:void(0)"
+                                                                wire:click="QuitarPerfil({{ $ap->id }})"
+                                                                class="btn btn-dark mtmobile" title="Remover">
+                                                                <i class="fa-solid fa-x"></i>
                                                             </a>
                                                         </td>
                                                     </tr>
@@ -427,22 +448,37 @@
                                                     @foreach ($profiles as $ap)
                                                         <tr>
                                                             <td class="text-center">
-                                                                <h6 class="text-center">{{ $ap->email }}</h6>
-                                                            </td>
-                                                            <td class="text-center">
                                                                 <h6 class="text-center">
-                                                                    {{ $ap->password_account }}
+                                                                    @foreach ($ap->CuentaPerfil as $item)
+                                                                        @if ($item->status = 'SinAsignar')
+                                                                            {{ $item->Cuenta->account_name }}
+                                                                        @endif
+                                                                    @endforeach
                                                                 </h6>
                                                             </td>
                                                             <td class="text-center">
-                                                                <h6 class="text-center">{{ $ap->nombre_perfil }}
+                                                                <h6 class="text-center">
+                                                                    @foreach ($ap->CuentaPerfil as $item)
+                                                                        @if ($item->status = 'SinAsignar')
+                                                                            {{ $item->Cuenta->password_account }}
+                                                                        @endif
+                                                                    @endforeach
+                                                                </h6>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <h6 class="text-center">{{ $ap->nameprofile }}
                                                                 </h6>
                                                             </td>
                                                             <td class="text-center">
                                                                 <h6 class="text-center">{{ $ap->pin }}</h6>
                                                             </td>
                                                             <td class="text-center">
-                                                                <h6 class="text-center">{{ $ap->precioPerfil }}
+                                                                <h6 class="text-center">
+                                                                    @foreach ($ap->CuentaPerfil as $item)
+                                                                        @if ($item->status = 'SinAsignar')
+                                                                            {{ $item->Cuenta->Plataforma->precioPerfil }}
+                                                                        @endif
+                                                                    @endforeach
                                                                 </h6>
                                                             </td>
                                                             <td>

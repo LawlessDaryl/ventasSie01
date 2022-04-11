@@ -23,11 +23,11 @@
         <livewire:search-controller>
 
         </livewire:search-controller>
-        @if (@Auth::user()->hasPermissionTo('Corte_Caja_Index'))
+        
         <ul class="tabs tab-pills text-center mt-2">            
             <a href="{{ url('cortecajas') }}" class="btn btn-warning btn-lg active" role="button" aria-pressed="true">CORTE DE CAJA</a>            
         </ul>
-        @endif
+        
 
         <ul class="tabs tab-pills text-center mt-4">
             @if (empty(session('sesionCaja')))

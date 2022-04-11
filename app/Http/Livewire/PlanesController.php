@@ -98,7 +98,8 @@ class PlanesController extends Component
         $this->Reset3Platf = 'INICIO';
         $this->mostrartablaCuenta = 'NO';
         $this->mostrartablaPerfiles = 'NO';
-        $this->array = array();
+        $this->arrayCuentas = array();
+        $this->arrayPerfiles = array();
     }
 
     public function render()
@@ -391,7 +392,7 @@ class PlanesController extends Component
             $this->Reset3Platf = 'INICIO';
             $this->mostrartablaCuenta = 'NO';
             $this->mostrartablaPerfiles = 'NO';
-            $this->array = array();
+            $this->arrayCuentas = array();
         }
 
 
@@ -590,39 +591,47 @@ class PlanesController extends Component
             ->extends('layouts.theme.app')
             ->section('content');
     }
-    /* PONER LA CUENTA SELECCIONADA EN EL SEGUNDA TABLA PARA LA VENTA */
-    public function BuscarCuenta(Account $cuenta)
+
+    /* PONER LA CUENTA SELECCIONADA EN EL SEGUNDA TABLA PARA LA VENTA AÑADIENDO A UN ARREGLO*/
+    public function AgregarCuenta(Account $cuenta)
     {
         $this->mostrartablaCuenta = 'SI';
-        array_push($this->array, $cuenta->id);
-
-        $this->accounts = Account::find($this->array);
+        array_push($this->arrayCuentas, $cuenta->id);
+        $this->arrayCuentas = array_unique($this->arrayCuentas);
+        $this->accounts = Account::find($this->arrayCuentas);
     }
+    /* ELIMINAR CUENTA DEL ARREGLO */
+    public function QuitarCuenta(Account $cuenta)
+    {
+        $clave = array_search($cuenta->id, $this->arrayCuentas);
+        unset($this->arrayCuentas[$clave]);
+        $this->accounts = Account::find($this->arrayCuentas);
+    }
+
     /* PONER PERFILES EN LA SEGUNDA TABLA DESPUES DE SELECCIONAR UNA CUENTA */
-    public function BuscarPerfil(Account $cuenta)
+    public function AgregarPerfil(Account $cuenta)
     {
         $this->mostrartablaPerfiles = 'SI';
-        $this->profiles = Profile::join('account_profiles as ap', 'ap.profile_id', 'profiles.id')
-            ->join('accounts as a', 'ap.account_id', 'a.id')
-            ->join('platforms as p', 'a.platform_id', 'p.id')
-            ->join('emails as e', 'a.email_id', 'e.id')
-            ->select(
-                'profiles.id as id',
-                'p.precioPerfil as precioPerfil',
-                'a.id as cuentaid',
-                'e.content as email',
-                'profiles.nameprofile as nombre_perfil',
-                'profiles.pin as pin',
-                'a.password_account as password_account',
-                'a.expiration_account'
-            )
-            ->where('profiles.availability', 'LIBRE')
-            ->where('profiles.status', 'ACTIVO')
-            ->where('a.status', 'ACTIVO')
-            ->where('a.id', $cuenta->id)
-            ->orderBy('a.expiration_account', 'desc')
-            ->where('p.id', $this->plataforma)
-            ->get()->take($this->cantidaperf);
+
+        $perfilCuenta = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
+            ->select('p.*')
+            ->join('profiles as p', 'p.id', 'ap.profile_id')
+            ->where('accounts.id', $cuenta->id)
+            ->whereNotIn('p.id', $this->arrayPerfiles)
+            ->where('p.availability', 'LIBRE')
+            ->where('p.status', 'ACTIVO')->get()->first();
+        if ($perfilCuenta) {
+            array_push($this->arrayPerfiles, $perfilCuenta->id);
+        }
+        $this->arrayPerfiles = array_unique($this->arrayPerfiles);
+        $this->profiles = Profile::find($this->arrayPerfiles);
+    }
+    /* ELIMINAR CUENTA DEL ARREGLO */
+    public function QuitarPerfil(Profile $perfil)
+    {
+        $clave = array_search($perfil->id, $this->arrayPerfiles);
+        unset($this->arrayPerfiles[$clave]);
+        $this->profiles = Profile::find($this->arrayPerfiles);
     }
 
     public function CrearCombo()
