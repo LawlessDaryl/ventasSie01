@@ -8,7 +8,7 @@
                         <div class="col-sm-12" >
                             <h5 class="mb-2 mt-2">DETALLE DE COMPRA NRO. {{$nro_compra}}</h5>
                             <b>Fecha: </b>
-                            {{$fecha}}<br/>  
+                            {{$fecha_compra}}<br/>  
                             <b>Registrado por: </b> 
                             {{$usuario}}<br/>
                             <hr style="height:3px;border:none;color:rgb(189, 188, 188);background-color:rgb(230, 152, 64);" />

@@ -89,7 +89,7 @@
                                 <table class="table table-unbordered table-hover mt-2">
                                     <thead class="text-white" style="background: #3B3F5C">
                                         <tr>
-                                            <th class="table-th text-withe text-center">Item</th>
+                                           
                                             <th class="table-th text-withe text-center">Proveedor</th>                                
                                             <th class="table-th text-withe text-center">Documento</th>                                
                                             <th class="table-th text-withe text-center">Total<br>Compra</br></th>                                
@@ -104,9 +104,7 @@
                                     <tbody>
                                         @foreach ($data_compras as $data)
                                             <tr>
-                                                <td>
-                                                    <h6 class="text-center">{{ $data->id }}</h6>
-                                                </td>
+                                               
                                                 <td>
                                                     <h6 class="text-center">{{ $data->nombre_prov}}</h6>
                                                 </td>

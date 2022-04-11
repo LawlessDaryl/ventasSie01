@@ -6,7 +6,8 @@ use App\Models\Compra;
 use App\Models\CompraDetalle;
 use App\Models\Destino;
 use App\Models\Movimiento;
-use App\Models\Movimiento_Compra;
+
+use App\Models\MovimientoCompra;
 use App\Models\Product;
 use App\Models\Provider;
 use App\Models\Sucursal;
@@ -29,7 +30,7 @@ class DetalleComprasController extends Component
     use WithFileUploads;
     public  $nro_compra,$search,$provider,$fecha_compra,
     $usuario,$metodo_pago,$pago_parcial,$tipo_documento,$nro_documento,$observacion
-    ,$selected_id,$descuento=0,$impuestos,$selected_transaccion,$saldo_por_pagar,$selected_proveedor,$subtotal,
+    ,$selected_id,$descuento=0,$impuestos,$saldo_por_pagar,$subtotal,
     $estado_compra,$total_compra,$itemsQuantity,$price,$status,$tipo_transaccion,$destino,$porcentaje,
     $alicuota=0.13;
 
@@ -38,11 +39,12 @@ class DetalleComprasController extends Component
     {
         $this->nro_compra = 00200;
       
-        $this->fecha = Carbon::now();
+        $this->fecha_compra = Carbon::now();
         $this->usuario = Auth()->user()->name;
         $this->estado_compra = "finalizada";
         $this->selected_id = 0;
-        $this->price = 9;
+        $this->pago_parcial = 0;
+
         $this->tipo_transaccion = "CONTADO";
         $this->status = "ACTIVO";
         $this->total_compra= $this->subtotal-$this->descuento;
@@ -94,7 +96,8 @@ class DetalleComprasController extends Component
 
         $attributos=[
             'precio'=>$product->precio_venta,
-            'codigo'=>$product->codigo
+            'codigo'=>$product->codigo,
+            'fecha_compra'=>$this->fecha_compra
         ];
 
         $products = array(
@@ -143,7 +146,8 @@ class DetalleComprasController extends Component
             //Compras::add($product->id, $product->name,$prices, $cant);
             $attributos=[
                 'precio'=>$precio_venta,
-                'codigo'=>$codigo
+                'codigo'=>$codigo,
+                'fecha_compra'=>$this->fecha_compra
             ];
     
             $products = array(
@@ -194,7 +198,8 @@ class DetalleComprasController extends Component
             
             $attributos=[
                 'precio'=>$precio_venta,
-                'codigo'=>$codigo
+                'codigo'=>$codigo,
+                'fecha_compra'=>$this->fecha_compra
             ];
     
             $products = array(
@@ -205,8 +210,6 @@ class DetalleComprasController extends Component
                 'attributes'=>$attributos
             );
     
-            
-            
             Compras::add($products);
 
             $this->subtotal = Compras::getTotal();
@@ -243,7 +246,8 @@ class DetalleComprasController extends Component
             
             $attributos=[
                 'precio'=>$price,
-                'codigo'=>$codigo
+                'codigo'=>$codigo,
+                'fecha_compra'=>$this->fecha_compra
             ];
 
             $new_price=Product::find($productId);
@@ -305,9 +309,11 @@ class DetalleComprasController extends Component
             $this->impuestos= $this->total_compra*$this->alicuota;
 
         }
+
         else
+
         {
-            $this->impuestos= 0;
+            $this->impuestos= "0";
         }
 
     }
@@ -338,25 +344,35 @@ class DetalleComprasController extends Component
 
         try {
             // Creando Movimiento
+
+
+   
+            
+
+         
+
+       
+
             $Compra_encabezado = Compra::create([
 
+              
+                
                 'importe_total'=>$this->total_compra,
                 'descuento'=>$this->descuento,
                 'fecha_compra'=>$this->fecha_compra,
                 'impuestos'=>$this->impuestos,
-                'transaccion'=>$this->selected_transaccion,
+                'transaccion'=>$this->tipo_transaccion,
                 'saldo_por_pagar'=>$this->total_compra-$this->pago_parcial,
                 'tipo_doc'=>$this->tipo_documento,
                 'nro_documento'=>$this->nro_documento,
                 'observacion'=>$this->observacion,
-                'proveedor_id'=>$this->selected_proveedor,
+                'proveedor_id'=>$this->provider,
                 'estado_compra'=>$this->estado_compra,
                 'status'=>$this->status
             ]);
            
-            dd($Compra_encabezado);
-
-
+          
+        
             $Movimiento= Movimiento::create([
                 
                 'type'=>"COMPRAS",
@@ -368,13 +384,14 @@ class DetalleComprasController extends Component
 
             ]);
 
-            Movimiento_Compra::create([
+            $ss = MovimientoCompra::create([
                 'compra_id'=>$Compra_encabezado->id,
                 'movimiento_id' => $Movimiento->id
             ]);
-
+            
             if ($Compra_encabezado)
             {
+              
                 $items = Compras::getContent();
                 foreach ($items as $item) {
                     CompraDetalle::create([
@@ -382,6 +399,7 @@ class DetalleComprasController extends Component
                         'cantidad' => $item->quantity,
                         'product_id' => $item->id,
                         'compra_id' => $Compra_encabezado->id,
+                        'destino_id'=>$this->destino
                         
                     ]);
 
@@ -412,7 +430,8 @@ class DetalleComprasController extends Component
             //$this->emit('print-ticket', $sale->id);
         } catch (Exception $e) {
             DB::rollback();
-            $this->emit('sale-error', $e->getMessage());
+            dd($e->getMessage());
+            
         }
     }
 
