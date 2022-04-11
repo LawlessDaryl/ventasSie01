@@ -27,7 +27,7 @@
                         <ul class="tabs tab-pills">
                             <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
                                 data-target="#theNewClient" wire:click.prevent="resetUI()" data-dismiss="modal">Nuevo
-                                Cliente</a>
+                                Clientes</a>
                         </ul>
                     </div>
                 </div>
