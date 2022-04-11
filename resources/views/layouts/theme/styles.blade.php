@@ -37,6 +37,15 @@
 <script src="{{ asset('plugins/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js') }}"></script>
 <script src="{{ asset('plugins/bootstrap-touchspin/custom-bootstrap-touchspin.js') }}"></script>
 
+
+
+
+
+{{-- Estilos para las Notificaciones - Ventas --}}
+<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/forms/theme-checkbox-radio.css') }}">
+<link href="{{ asset('plugins/jquery-ui/jquery-ui.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('assets/css/apps/contacts.css') }}" rel="stylesheet" type="text/css" />
+
 <style>
     aside {
         display: none !important;

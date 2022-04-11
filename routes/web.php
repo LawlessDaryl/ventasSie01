@@ -153,13 +153,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('cashout', CashoutController::class)->name('cashout')->middleware('permission:Cashout_Index');
     Route::get('reports', ReportsController::class)->name('reportes')->middleware('permission:Reportes_Index');
     Route::group(['middleware' => ['permission:Report_Sales_Export']], function () {
-        Route::get('report/pdf/{user}/{type}/{f1}/{f2}', [ExportController::class, 'reportPDF']);
-        Route::get('report/pdf/{user}/{type}', [ExportController::class, 'reportPDF']);
-        Route::get('report/pdf/{total}/{idventa}/{totalitems}', [ExportSaleController::class, 'reportPDFVenta']);
+    Route::get('report/pdf/{user}/{type}/{f1}/{f2}', [ExportController::class, 'reportPDF']);
+    Route::get('report/pdf/{user}/{type}', [ExportController::class, 'reportPDF']);
+    Route::get('report/pdf/{total}/{idventa}/{totalitems}', [ExportSaleController::class, 'reportPDFVenta']);
     });
     //Lista de Ventas
     Route::get('salelist', SaleListController::class)->name('salelist');
     Route::get('notificaciones', NotificacionController::class)->name('notificaciones');
+    Route::get('notificaciones/{idnotificacion}', [NotificacionController::class,'mostrarnotificacion']);
 
 });
 

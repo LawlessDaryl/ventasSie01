@@ -21,15 +21,15 @@
 
             @if ($NotificacionIco>0)
                 @foreach ($notif as $p)
+
+                {{-- href="{{ url('report/pdf' . '/' . $total. '/' . $idventa . '/' . Auth()->user()->id)}}" --}}
+
                 <a href="{{ url('notificaciones') }}">
-
-
                             @if($p->estado == "NOVISTO")
                             <div class="dropdown-item" style="background-color: #f6f5e1">
                             @else
                             <div class="dropdown-item">
                             @endif
-
                                 <div class="media server-log">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" 
                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -38,12 +38,6 @@
                                     <circle cx="20" cy="21" r="1"></circle>
                                     <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
                                     <div class="media-body">
-
-
-
-
-
-                                        
                                         <div class="data-info">
                                             <h6 class="">{{$p->nn}}</h6>
                                                 @if($this->diferenciarfecha($p->fechanoti)->y <= 0)
@@ -73,15 +67,6 @@
                                                 @endif
                                                 {{substr($p->m, 3, 17).'...'}}
                                         </div>
-
-
-
-
-
-
-
-
-
                                     </div>
                                 </div>
                         </div>

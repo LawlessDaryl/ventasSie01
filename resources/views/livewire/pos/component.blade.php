@@ -85,7 +85,6 @@
             </div>
             
             <!-- Ventana Modal para Avisar que ya no hay Stock en Tienda -->
-            
             <div wire:ignore.self class="modal fade text-center" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
@@ -137,13 +136,6 @@
                     </div>
                 </div>
             </div>
-
-
-
-
-
-
-
             <!-- Ventana Modal para Finalizar la Venta -->
             <div wire:ignore.self class="modal fade" id="ModalCenterFinalizarVenta" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">

@@ -18,7 +18,7 @@ class NotiController extends Component
         ->join("notificacions as n", "n.id", "nu.notificacion_id")
         ->where('n.estado', 'NOVISTO')
         ->where('users.id', Auth()->user()->id)
-        ->select('n.nombrenotificacion as nn','n.mensaje as m','n.estado as estado','n.created_at as fechanoti')
+        ->select('n.id','n.nombrenotificacion as nn','n.mensaje as m','n.estado as estado','n.created_at as fechanoti')
         ->OrderBy('n.created_at','DESC')
         ->get();
 

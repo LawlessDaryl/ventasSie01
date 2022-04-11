@@ -16,7 +16,7 @@ class ExportSaleController extends Controller
 {
     public function reportPDFVenta($total, $idventa,$totalitems)
     {
-        //Buscar Nokmbre del Usuario
+        //Buscar Nombre del Usuario
         $nombreusuario = User::select("name as name")
         ->where("id", Auth()->user()->id)
         ->get()
