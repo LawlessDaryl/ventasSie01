@@ -332,8 +332,8 @@ class ServiciosController extends Component
     public function Store()
     {
         $rules = [
-            'typeworkid' => 'required',
-            'catprodservid' => 'required',
+            'typeworkid' => 'required|not_in:Elegir',
+            'catprodservid' => 'required|not_in:Elegir',
             'marc' => 'required',
             'detalle' => 'required',
             'falla_segun_cliente' => 'required',
@@ -345,7 +345,9 @@ class ServiciosController extends Component
         ];
         $messages = [
             'typeworkid.required' => 'El Tipo de Trabajo es requerido',
+            'typeworkid.not_in' => 'Seleccine una opción distinto a Elegir',
             'catprodservid.required' => 'El Tipo de Equipo es requerido',
+            'catprodservid.not_in' => 'Seleccine una opción distinto a Elegir',
             'marc.required' => 'La Marca/Modelo es requerida',
             'detalle.required' => 'El Estado del Equipo es requerido',
             'falla_segun_cliente.required' => 'La Falla es requerida',
@@ -462,8 +464,8 @@ class ServiciosController extends Component
     {
         
         $rules = [
-            'typeworkid' => 'required',
-            'catprodservid' => 'required',
+            'typeworkid' => 'required|not_in:Elegir',
+            'catprodservid' => 'required|not_in:Elegir',
             'marc' => 'required',
             'detalle' => 'required',
             'falla_segun_cliente' => 'required',
@@ -475,7 +477,9 @@ class ServiciosController extends Component
         ];
         $messages = [
             'typeworkid.required' => 'El Tipo de Trabajo es requerido',
+            'typeworkid.not_in' => 'Seleccine una opción distinto a Elegir',
             'catprodservid.required' => 'El Tipo de Equipo es requerido',
+            'catprodservid.not_in' => 'Seleccine una opción distinto a Elegir',
             'marc.required' => 'La Marca/Modelo es requerida',
             'detalle.required' => 'El Estado del Equipo es requerido',
             'falla_segun_cliente.required' => 'La Falla es requerida',
