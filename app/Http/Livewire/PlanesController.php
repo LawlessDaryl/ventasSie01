@@ -1201,8 +1201,12 @@ class PlanesController extends Component
                 /* SI SE SELECCIONÓ PERFIL */
                 foreach ($this->profiles as $accp) {
                     /* CALCULAR EL IMPORTE SEGUN LA PLATAFORMA Y SI ES ENTERA O PERFIL */
-                    $this->importe += $accp->CuentaPerfil->Cuenta->Plataforma->precioPerfil;
-                    $this->importe *= $this->meses;
+                    foreach ($accp->CuentaPerfil as  $value) {
+                        if ($value->status == 'SinAsignar') {
+                            $this->importe += $value->Cuenta->Plataforma->precioPerfil;
+                            $this->importe *= $this->meses;
+                        }
+                    }
 
                     /* CREAR EL MOVIMIENTO */
                     $mv = Movimiento::create([
@@ -1212,20 +1216,27 @@ class PlanesController extends Component
                         'user_id' => Auth()->user()->id,
                     ]);
 
-                    // Poner la cuenta en dividida
-                    $account = Account::find($accp->CuentaPerfil->Cuenta->id);
-                    $account->whole_account = 'DIVIDIDA';
-                    $account->save();
+                    foreach ($accp->CuentaPerfil as  $value) {
+                        if ($value->status == 'SinAsignar') {
+                            // Poner la cuenta en dividida
+                            $account = Account::find($value->Cuenta->id);
+                            $account->whole_account = 'DIVIDIDA';
+                            $account->save();
+                        }
+                    }
 
                     /* PONER EL PERFIL EN OCUPADO */
                     $accp->availability = 'OCUPADO';
                     $accp->save();
-
-                    /* ENCONTRAR INVERSION */
-                    $inversioncuenta = CuentaInversion::where('start_date', '<=', $mv->created_at)
-                        ->where('expiration_date', '>=', $mv->created_at)
-                        ->where('account_id', $accp->CuentaPerfil->account_id)
-                        ->get()->first();
+                    foreach ($accp->CuentaPerfil as  $value) {
+                        if ($value->status == 'SinAsignar') {
+                            /* ENCONTRAR INVERSION */
+                            $inversioncuenta = CuentaInversion::where('start_date', '<=', $mv->created_at)
+                                ->where('expiration_date', '>=', $mv->created_at)
+                                ->where('account_id', $value->Cuenta->id)
+                                ->get()->first();
+                        }
+                    }
 
                     $inversioncuenta->type = 'PERFILES';
                     $inversioncuenta->sale_profiles += 1;
@@ -1247,31 +1258,26 @@ class PlanesController extends Component
                         'observations' => $this->observaciones,
                         'movimiento_id' => $mv->id
                     ]);
+                    
+                    foreach ($accp->CuentaPerfil as  $value) {
+                        if ($value->status == 'SinAsignar') {
+                            PlanAccount::create([
+                                'status' => 'ACTIVO',
+                                'plan_id' => $plan->id,
+                                'account_id' => $value->Cuenta->id,
+                            ]);
+                        }
+                    }
 
-                    PlanAccount::create([
-                        'status' => 'ACTIVO',
-                        'plan_id' => $plan->id,
-                        'account_id' => $accp->CuentaPerfil->account_id,
-                    ]);
-
-                    /* MODIFICAR REGISTRO ACCONNTPROFILE Y DARLE EL ID DEL PLAN*/
-                    $cuentaPerfil = $accp->CuentaPerfil;
-                    $cuentaPerfil->plan_id = $plan->id;
-                    $cuentaPerfil->status = 'ACTIVO';
-                    $cuentaPerfil->save();
-
-                    /* CONTAR PERFILES OCUPADOS */
-                    /* $perfilesOcupados = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
-                        ->join('profiles as p', 'ap.profile_id', 'p.id')
-                        ->where('accounts.id', $accp->CuentaPerfil->Cuenta->id)
-                        ->where('p.availability', 'OCUPADO')
-                        ->where('p.status', 'ACTIVO')->get(); */
-                    /* SI LA CUENTA TIENE TODOS LOS PERFILES DISPONIBLES OCUPADOS LA CUENTA PASA A ESTAR OCUPADA */
-                    /* if (($perfilesOcupados->count() / 2) == $accp->CuentaPerfil->Cuenta->number_profiles) {
-                        $cuenta = $accp->CuentaPerfil->Cuenta;
-                        $cuenta->availability = 'OCUPADO';
-                        $cuenta->save();
-                    } */
+                    foreach ($accp->CuentaPerfil as  $value) {
+                        if ($value->status == 'SinAsignar') {
+                            /* MODIFICAR REGISTRO ACCONNTPROFILE Y DARLE EL ID DEL PLAN*/
+                            $cuentaPerfil = $value;
+                            $cuentaPerfil->plan_id = $plan->id;
+                            $cuentaPerfil->status = 'ACTIVO';
+                            $cuentaPerfil->save();
+                        }
+                    }
 
                     if ($this->tipopago == 'EFECTIVO') {
                         $cajaFisica = Cartera::where('tipo', 'CajaFisica')

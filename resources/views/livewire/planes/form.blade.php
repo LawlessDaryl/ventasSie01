@@ -403,11 +403,6 @@
                                                                 class="btn btn-dark mtmobile" title="Seleccionar">
                                                                 <i class="fas fa-check"></i>
                                                             </a>
-                                                            <a href="javascript:void(0)"
-                                                                wire:click="QuitarPerfil({{ $ap->id }})"
-                                                                class="btn btn-dark mtmobile" title="Remover">
-                                                                <i class="fa-solid fa-x"></i>
-                                                            </a>
                                                         </td>
                                                     </tr>
                                                 @endforeach
@@ -441,14 +436,14 @@
                                                         <th class="table-th text-withe text-center">Nombre Perfil</th>
                                                         <th class="table-th text-withe text-center">Pin</th>
                                                         <th class="table-th text-withe text-center">Precio</th>
-                                                        <th class="table-th text-withe text-center">EDITAR</th>
+                                                        <th class="table-th text-withe text-center">ACCIONES</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     @foreach ($profiles as $ap)
                                                         <tr>
                                                             <td class="text-center">
-                                                                <h6 class="text-center">
+                                                                <h6 class="text-center" style="font-size: 100%">
                                                                     @foreach ($ap->CuentaPerfil as $item)
                                                                         @if ($item->status = 'SinAsignar')
                                                                             {{ $item->Cuenta->account_name }}
@@ -457,7 +452,7 @@
                                                                 </h6>
                                                             </td>
                                                             <td class="text-center">
-                                                                <h6 class="text-center">
+                                                                <h6 class="text-center" style="font-size: 100%">
                                                                     @foreach ($ap->CuentaPerfil as $item)
                                                                         @if ($item->status = 'SinAsignar')
                                                                             {{ $item->Cuenta->password_account }}
@@ -466,14 +461,16 @@
                                                                 </h6>
                                                             </td>
                                                             <td class="text-center">
-                                                                <h6 class="text-center">{{ $ap->nameprofile }}
+                                                                <h6 class="text-center" style="font-size: 100%">
+                                                                    {{ $ap->nameprofile }}
                                                                 </h6>
                                                             </td>
                                                             <td class="text-center">
-                                                                <h6 class="text-center">{{ $ap->pin }}</h6>
+                                                                <h6 class="text-center" style="font-size: 100%">
+                                                                    {{ $ap->pin }}</h6>
                                                             </td>
                                                             <td class="text-center">
-                                                                <h6 class="text-center">
+                                                                <h6 class="text-center" style="font-size: 100%">
                                                                     @foreach ($ap->CuentaPerfil as $item)
                                                                         @if ($item->status = 'SinAsignar')
                                                                             {{ $item->Cuenta->Plataforma->precioPerfil }}
@@ -486,6 +483,11 @@
                                                                     wire:click="EditarPerf({{ $ap->id }})"
                                                                     class="btn btn-dark mtmobile" title="EDITAR">
                                                                     <i class="fa-solid fa-file-signature"></i>
+                                                                </a>
+                                                                <a href="javascript:void(0)"
+                                                                    wire:click="QuitarPerfil({{ $ap->id }})"
+                                                                    class="btn btn-dark mtmobile" title="Remover">
+                                                                    <i class="fa-solid fa-x"></i>
                                                                 </a>
                                                             </td>
                                                         </tr>
