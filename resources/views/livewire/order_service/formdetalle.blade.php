@@ -109,7 +109,7 @@
                                     @enderror
                                 </td>
                             </tr>
-
+                            @if(@Auth::user()->id == $this->usuarioId)
                             <tr>
                                 <td class="text-right">
                                     <label>
@@ -228,7 +228,127 @@
                                 </td>
 
                             </tr>
+                            @else
+                            <tr>
+                                <td class="text-right">
+                                    <label>
+                                        <h6>Diagnóstico</h6>
+                                    </label>
+                                </td>
+                                <td class="text-left" colspan="5">
+                                    <input disabled type="text" wire:model.lazy="diagnostico" class="form-control"
+                                        placeholder="ej: Revisión">
+                                    @error('diagnostico')
+                                        <span class="text-danger er">{{ $message }}</span>
+                                    @enderror
+                                </td>
+                            </tr>
 
+                            <tr>
+                                <td class="text-right">
+                                    <label>
+                                        <h6>Solución</h6>
+                                    </label>
+                                </td>
+                                <td class="text-left" colspan="5">
+                                    <input disabled type="text" wire:model.lazy="solucion" class="form-control"
+                                        placeholder="ej: Revisión">
+                                    @error('solucion')
+                                        <span class="text-danger er">{{ $message }}</span>
+                                    @enderror
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text-right">
+                                    <label>
+                                        <h6>Costo</h6>
+                                    </label>
+                                </td>
+                                <td class="text-left">
+                                    <input disabled type="number" wire:model="costo" class="form-control"
+                                        placeholder="ej: 0.0">
+                                    @error('costo')
+                                        <span class="text-danger er">{{ $message }}</span>
+                                    @enderror
+                                </td>
+                                <td class="text-left" colspan="4">
+                                    <input disabled type="text" wire:model.lazy="detalle_costo" class="form-control"
+                                        placeholder="ej: Se compró una pantalla">
+                                    @error('detalle_costo')
+                                        <span class="text-danger er">{{ $message }}</span>
+                                    @enderror
+
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text-right">
+                                    <label>
+                                        <h6>Total</h6>
+                                    </label>
+                                </td>
+                                <td class="text-left">
+                                    <input disabled type="number" wire:model="import" class="form-control"
+                                        placeholder="ej: 0.0">
+                                    @error('import')
+                                        <span class="text-danger er">{{ $message }}</span>
+                                    @enderror
+                                </td>
+
+                                <td class="text-right">
+                                    <label>
+                                        <h6>A Cuenta</h6>
+                                    </label>
+                                </td>
+                                <td class="text-left">
+                                    <input disabled type="number" wire:model="on_account" class="form-control"
+                                        placeholder="ej: 0.0">
+                                    @error('on_account')
+                                        <span class="text-danger er">{{ $message }}</span>
+                                    @enderror
+                                </td>
+
+                                <td class="text-right">
+                                    <label>
+                                        <h6>Saldo</h6>
+                                    </label>
+                                </td>
+                                <td class="text-left">
+                                    <input type="number" wire:model.lazy="saldo" class="form-control"
+                                        placeholder="ej: 0.0" disabled>
+                                    @error('saldo')
+                                        <span class="text-danger er">{{ $message }}</span>
+                                    @enderror
+                                </td>
+
+                            </tr>
+
+                            <tr>
+                                <td class="text-right">
+                                    <label>
+                                        <h6>Fecha Entrega</h6>
+                                    </label>
+                                </td>
+                                <td class="text-left" colspan="2">
+                                    <input disabled type="date" wire:model.lazy="fecha_estimada_entrega" class="form-control">
+                                    @error('fecha_estimada_entrega')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </td>
+                                <td class="text-left">
+                                    <label>
+                                        <h6>Hora Entrega</h6>
+                                    </label>
+                                </td>
+                                <td class="text-left" colspan="2">
+                                    <input disabled type="time" name="hora_entrega" wire:model.lazy="hora_entrega"
+                                        class="form-control">
+                                </td>
+
+                            </tr>
+
+                            @endif
 
                         </table>
                     </div>
@@ -247,7 +367,7 @@
                     @endif
                 @endif
 
-                @if(($this->tipo == 'PENDIENTE' || @Auth::user()->id == $this->usuarioId))
+                @if((/* $this->tipo == 'PENDIENTE' ||  */@Auth::user()->id == $this->usuarioId))
                     @if ($selected_id < 1)
                         <button type="button" wire:click.prevent="GuardarCambio({{ $service1 }})"
                             class="btn btn-dark close-btn text-info">REGISTRAR INFORMACIÓN</button>

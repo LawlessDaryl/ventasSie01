@@ -576,7 +576,10 @@
                                         @endforeach
                                     </td>
                                     {{-- CODIGO --}}
-                                    @if ($item->id < 10)
+                                    <td class="text-center" width="7%">
+                                        <h6 class="table-th text-withe text-center" style="font-size: 100%">{{ $item->id }}</h6>
+                                    </td>
+                                    {{-- @if ($item->id < 10)
                                         <td class="text-center" width="7%">
                                             <h6 class="table-th text-withe text-center" style="font-size: 100%">000{{ $item->id }}</h6>
                                         </td>
@@ -595,7 +598,7 @@
                                         <td class="text-center" width="7%">
                                             <h6 class="table-th text-withe text-center" style="font-size: 100%">{{ $item->id }}</h6>
                                         </td>
-                                    @endif
+                                    @endif --}}
                                     {{-- TOTAL --}}
                                     <td class="text-center" width="7%">
                                         <h6 class="table-th text-withe text-center" style="font-size: 100%">

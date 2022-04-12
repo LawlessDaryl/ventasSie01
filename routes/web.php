@@ -51,6 +51,7 @@ use App\Http\Livewire\StrProveedorController;
 use App\Http\Livewire\ReporGananciaTgController;
 use App\Http\Livewire\ProcedenciaController;
 use App\Http\Livewire\ProvidersController;
+use App\Http\Livewire\ReportEntregadoServController;
 use App\Http\Livewire\ReporteServiceController;
 use App\Http\Livewire\TransaccionesController;
 use App\Http\Livewire\TypeWorkController;
@@ -152,6 +153,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('reporteServicio/pdf/{user}/{estado}/{type}/{f1}/{f2}', [ExportServicioPdfController::class, 'reporteServPDF']);
         Route::get('reporteServicio/pdf/{user}/{estado}/{type}', [ExportServicioPdfController::class, 'reporteServPDF']);
     });
+    Route::get('reportentregservices', ReportEntregadoServController ::class)->name('res')->middleware('permission:Boton_Entregar_Servicio'); 
 });
 
 

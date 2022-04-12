@@ -105,9 +105,11 @@
 
                                     @foreach ($data as $d)
                                         <tr>
+                                            {{-- CLIENTE --}}
                                             <td class="text-center">
                                                 <h6>{{ $d->movservices[0]->movs->climov->client->nombre }}</h6>
                                             </td>
+                                            {{-- NÚMERO ORDEN --}}
                                             <td class="text-center">
                                                 <h6>{{ $d->order_service_id }}</h6>
                                             </td>

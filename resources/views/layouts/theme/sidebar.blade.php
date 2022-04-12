@@ -427,10 +427,16 @@
                     <li>
                         <a href="{{ url('reporteservices') }}">
                             <i class="fa-regular fa-clipboard"></i>
-                            Reportes de Servicios </a>
+                            Reporte de Servicios </a>
                     </li>
                 @endcan
-
+                @can('Boton_Entregar_Servicio')
+                <li>
+                    <a href="{{ url('reportentregservices') }}">
+                        <i class="fa-regular fa-clipboard"></i>
+                        Repor. Servi. Entregados </a>
+                </li>
+                @endcan
             </ul>
         </div>
         <div class="submenu" id="inventario">

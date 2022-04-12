@@ -75,6 +75,7 @@ class OrderServiceController extends Component
     }
     public function render()
     {
+        
         /* session(['opcio' => null]);
         if (!empty(session('opcio'))) {
             
@@ -1027,6 +1028,21 @@ class OrderServiceController extends Component
                     'on_account' => $this->on_account,
                     'saldo' => $this->saldo,
                 ]);
+                /* if($this->on_account <= $this->import){
+                    $mm->movs->update([
+                        'import' => $this->import,
+                        'on_account' => $this->on_account,
+                        'saldo' => $this->saldo,
+                    ]);
+                }else{
+                    $rules = [
+                        'on_account' => 'numeric',
+                    ];
+                    $messages = [
+                        'on_account.numeric' => 'A CUENTA no puede ser mayor al TOTAL',
+                    ];
+                    $this->validate($rules, $messages);
+                } */
             }
         }
         
@@ -1142,6 +1158,7 @@ class OrderServiceController extends Component
 
     public function CambioTerminado(Service $service)
     {
+        
         $this->GuardarCambio($service);
         foreach ($service->movservices as $servmov) {
 
@@ -1171,20 +1188,25 @@ class OrderServiceController extends Component
                         ->where('mov.type', 'APERTURA')
                         ->select('cajas.id as id')
                         ->get()->first();
+                    
                     if ($this->tipopago == 'EFECTIVO') {
                         $cartera = Cartera::where('tipo', 'cajafisica')
                             ->where('caja_id', $cajaActual->id)
                             ->get()->first();
                     } else {
-                        $cartera = Cartera::where('tipo', $this->tipopago)
-                            ->where('caja_id', $cajaActual->id)->get()->first();
+                        $cartera = Cartera::where('tipo','Banco')
+                            ->where('caja_id', '1')
+                            ->get()
+                            ->first();
+                        
                     }
                     CarteraMov::create([
-                        'type' => 'INGRESO',
-                        'comentario' => '',
+                        'type' =>'INGRESO',
+                        'comentario' => 'SERVICIOS',
                         'cartera_id' => $cartera->id,
                         'movimiento_id' => $mv->id
                     ]);
+
                     MovService::create([
                         'movimiento_id' => $mv->id,
                         'service_id' => $service->id
@@ -1201,6 +1223,7 @@ class OrderServiceController extends Component
                     ]);
 
                     $this->resetUI();
+                    $this->tipopago = 'EFECTIVO';
                     $this->emit('hide-detalle-entrega-msg', 'Servicio Entregado');
                 } catch (Exception $e) {
                     DB::rollback();
@@ -1266,7 +1289,7 @@ class OrderServiceController extends Component
         $this->detalle_costo = '';
         $this->nombreUsuario = '';
         /* $this->opciones = 'PENDIENTE'; */
-        $this->tipopago = 'EFECTIVO';
+        
         /* $this->condicion == 'MiSucursal'; */
 
         $this->resetValidation();
