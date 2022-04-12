@@ -15,7 +15,8 @@ class CreateAccountProfilesTable extends Migration
     {
         Schema::create('account_profiles', function (Blueprint $table) {
             $table->id();
-            $table->enum('status', ['ACTIVO','INACTIVO','SinAsignar', 'VENCIDO','CAMBIADO'])->default('SinAsignar');
+            $table->enum('status', ['ACTIVO', 'INACTIVO', 'SinAsignar', 'VENCIDO', 'CAMBIADO'])->default('SinAsignar');
+            $table->enum('COMBO', ['PERFIL1', 'PERFIL2', 'PERFIL3'])->nullable();
             $table->unsignedBigInteger('account_id');
             $table->foreign('account_id')->references('id')->on('accounts');
             $table->unsignedBigInteger('profile_id');

@@ -604,7 +604,7 @@ class CuentasController extends Component
                     'number_profiles' => $this->number_profiles,
                     'sale_profiles' => 0,
                     'imports' => 0,
-                    'ganancia' => 0,
+                    'ganancia' => - ($this->price),
                     'account_id' => $cuenta->id,
                 ]);
             } else {
@@ -627,7 +627,7 @@ class CuentasController extends Component
                     'number_profiles' => $this->number_profiles,
                     'sale_profiles' => 0,
                     'imports' => 0,
-                    'ganancia' => 0,
+                    'ganancia' => - ($this->price),
                     'account_id' => $cuenta->id,
                 ]);
             }
@@ -789,7 +789,7 @@ class CuentasController extends Component
                         'number_profiles' => $this->number_profiles,
                         'sale_profiles' => 0,
                         'imports' => 0,
-                        'ganancia' => 0,
+                        'ganancia' => - ($this->price),
                         'account_id' => $acc->id,
                     ]);
                 }
@@ -1036,6 +1036,17 @@ class CuentasController extends Component
                 'user_id' => Auth()->user()->id,
             ]);
 
+            /* ENCONTRAR INVERSION */
+            $inversioncuenta = CuentaInversion::where('start_date', '<=', $this->expirationActual)
+                ->where('expiration_date', '>=', $this->expirationActual)
+                ->where('account_id', $cuenta->id)
+                ->get()->first();
+
+            $inversioncuenta->type = 'CUENTA';
+            $inversioncuenta->imports = $this->importe;
+            $inversioncuenta->ganancia = $this->importe - $inversioncuenta->price;
+            $inversioncuenta->save();
+
             $plan = Plan::create([
                 'importe' => $this->importe,
                 'plan_start' => $this->expirationActual,
@@ -1122,6 +1133,7 @@ class CuentasController extends Component
         } catch (Exception $e) {
             DB::rollback();
             $this->emit('item-error', 'ERROR' . $e->getMessage());
+            $this->emit('cuenta-renovado-vencida', 'No se pudo renovar el plan porque la cuenta no ha sido renovada con su proveedor');
         }
     }
 

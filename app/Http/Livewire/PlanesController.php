@@ -410,7 +410,7 @@ class PlanesController extends Component
                         'p.precioEntera'
                     )
                     ->where('accounts.status', 'ACTIVO')
-                    ->where('accounts.expiration_account', '>', $date_now)
+                    ->where('accounts.start_account', '<=', $date_now)
                     ->where('accounts.availability', 'LIBRE')
                     ->where('accounts.whole_account', 'ENTERA')
                     ->where('p.id', $this->plataforma)
@@ -435,7 +435,7 @@ class PlanesController extends Component
                     )
                     ->where('accounts.status', 'ACTIVO')
                     ->where('accounts.availability', 'LIBRE')
-                    ->where('accounts.expiration_account', '>', $date_now)
+                    ->where('accounts.start_account', '<=', $date_now)
                     ->where('p.id', $this->plataforma)
                     ->orderBy('accounts.expiration_account', 'asc')
                     ->get();
@@ -467,6 +467,24 @@ class PlanesController extends Component
             $this->perfilNombre1 = '';
             $this->perfilPin1 = '';
             $this->plataforma1Require = 'NO';
+
+            $this->Reset2Platf = 'INICIO';
+            $this->perfil2id = null;
+            $this->perfilNombre2 = '';
+            $this->perfilPin2 = '';
+            $this->plataforma2Require = 'NO';
+
+            $this->Reset3Platf = 'INICIO';
+            $this->perfil3id = null;
+            $this->perfilNombre3 = '';
+            $this->perfilPin3 = '';
+            $this->plataforma3Require = 'NO';
+
+            $this->plataforma2 = 'Elegir';
+            $this->plataforma3 = 'Elegir';
+
+            $this->cuentasp2 = [];
+            $this->cuentasp3 = [];
         }
 
         /* RESET de nombre de perfil 2 y pin al cambiar la plataforma 2 */
@@ -474,11 +492,29 @@ class PlanesController extends Component
             $this->Reset2Platf = $this->plataforma2;
         }
         if ($this->plataforma2 != 'Elegir' && $this->plataforma2 != $this->Reset2Platf) {
+            $this->Reset1Platf = 'INICIO';
+            $this->perfil1id = null;
+            $this->perfilNombre1 = '';
+            $this->perfilPin1 = '';
+            $this->plataforma1Require = 'NO';
+
             $this->Reset2Platf = 'INICIO';
             $this->perfil2id = null;
             $this->perfilNombre2 = '';
             $this->perfilPin2 = '';
             $this->plataforma2Require = 'NO';
+
+            $this->Reset3Platf = 'INICIO';
+            $this->perfil3id = null;
+            $this->perfilNombre3 = '';
+            $this->perfilPin3 = '';
+            $this->plataforma3Require = 'NO';
+
+            $this->plataforma1 = 'Elegir';
+            $this->plataforma3 = 'Elegir';
+
+            $this->cuentasp1 = [];
+            $this->cuentasp3 = [];
         }
 
         /* RESET de nombre de perfil 3 y pin al cambiar la plataforma 3 */
@@ -486,21 +522,40 @@ class PlanesController extends Component
             $this->Reset3Platf = $this->plataforma3;
         }
         if ($this->plataforma3 != 'Elegir' && $this->plataforma3 != $this->Reset3Platf) {
+            $this->Reset1Platf = 'INICIO';
+            $this->perfil1id = null;
+            $this->perfilNombre1 = '';
+            $this->perfilPin1 = '';
+            $this->plataforma1Require = 'NO';
+
+            $this->Reset2Platf = 'INICIO';
+            $this->perfil2id = null;
+            $this->perfilNombre2 = '';
+            $this->perfilPin2 = '';
+            $this->plataforma2Require = 'NO';
+
             $this->Reset3Platf = 'INICIO';
             $this->perfil3id = null;
             $this->perfilNombre3 = '';
             $this->perfilPin3 = '';
             $this->plataforma3Require = 'NO';
+
+            $this->plataforma1 = 'Elegir';
+            $this->plataforma2 = 'Elegir';
+
+            $this->cuentasp1 = [];
+            $this->cuentasp2 = [];
         }
 
-        $platforms1 = Platform::where('estado', 'Activo')->get();
+        $platforms1 = Platform::where('estado', 'Activo')->where('perfiles', 'SI')->get();
         /* mostrar cuentas de la plataforma 1 */
         if ($this->plataforma1 != 'Elegir') {
             $platforms2 = Platform::where('estado', 'Activo')
+                ->where('perfiles', 'SI')
                 ->where('id', '!=', $this->plataforma1)
                 ->get();
             $this->cuentasp1 = Account::where('status', 'ACTIVO')
-                ->where('accounts.expiration_account', '>', $date_now)
+                ->where('accounts.start_account', '<=', $date_now)
                 ->where('availability', 'LIBRE')
                 ->where('platform_id', $this->plataforma1)->get();
             foreach ($this->cuentasp1 as $c) {
@@ -526,10 +581,11 @@ class PlanesController extends Component
         /* mostrar cuentas de la plataforma 2 */
         if ($this->plataforma1 != 'Elegir' && $this->plataforma2 != 'Elegir') {
             $platforms3 = Platform::where('estado', 'Activo')
+                ->where('perfiles', 'SI')
                 ->where('id', '!=', $this->plataforma1)
                 ->where('id', '!=', $this->plataforma2)->get();
             $this->cuentasp2 = Account::where('status', 'ACTIVO')
-                ->where('accounts.expiration_account', '>', $date_now)
+                ->where('accounts.start_account', '<=', $date_now)
                 ->where('availability', 'LIBRE')
                 ->where('platform_id', $this->plataforma2)->get();
             foreach ($this->cuentasp2 as $c) {
@@ -555,7 +611,7 @@ class PlanesController extends Component
         /* mostrar cuentas de la plataforma 3 */
         if ($this->plataforma1 != 'Elegir' && $this->plataforma2 != 'Elegir' && $this->plataforma3 != 'Elegir') {
             $this->cuentasp3 = Account::where('status', 'ACTIVO')
-                ->where('accounts.expiration_account', '>', $date_now)
+                ->where('accounts.start_account', '<=', $date_now)
                 ->where('availability', 'LIBRE')
                 ->where('platform_id', $this->plataforma3)->get();
             foreach ($this->cuentasp3 as $c) {
@@ -782,19 +838,32 @@ class PlanesController extends Component
                 'import' => $this->importe,
                 'user_id' => Auth()->user()->id,
             ]);
+            foreach ($perfil1->CuentaPerfil as  $value) {
+                if ($value->status == 'SinAsignar') {
+                    // Poner la cuenta del perfil 1 en dividida
+                    $account1 = Account::find($value->Cuenta->id);
+                    $account1->whole_account = 'DIVIDIDA';
+                    $account1->save();
+                }
+            }
 
-            // Poner la cuenta del perfil 1 en dividida
-            $account1 = Account::find($perfil1->CuentaPerfil->Cuenta->id);
-            $account1->whole_account = 'DIVIDIDA';
-            $account1->save();
-            // Poner la cuenta del perfil 2 en dividida
-            $account2 = Account::find($perfil2->CuentaPerfil->Cuenta->id);
-            $account2->whole_account = 'DIVIDIDA';
-            $account2->save();
-            // Poner la cuenta del perfil 3 en dividida
-            $account3 = Account::find($perfil3->CuentaPerfil->Cuenta->id);
-            $account3->whole_account = 'DIVIDIDA';
-            $account3->save();
+
+            foreach ($perfil2->CuentaPerfil as  $value) {
+                if ($value->status == 'SinAsignar') {
+                    // Poner la cuenta del perfil 2 en dividida
+                    $account2 = Account::find($value->Cuenta->id);
+                    $account2->whole_account = 'DIVIDIDA';
+                    $account2->save();
+                }
+            }
+            foreach ($perfil3->CuentaPerfil as  $value) {
+                if ($value->status == 'SinAsignar') {
+                    // Poner la cuenta del perfil 3 en dividida
+                    $account3 = Account::find($value->Cuenta->id);
+                    $account3->whole_account = 'DIVIDIDA';
+                    $account3->save();
+                }
+            }
 
             // PONER EL PERFIL 1 EN OCUPADO 
             $perfil1->availability = 'OCUPADO';
@@ -873,21 +942,33 @@ class PlanesController extends Component
             ]);
 
             /* MODIFICAR REGISTRO ACCONNTPROFILE Y DARLE EL ID DEL PLAN*/
-            $cuentaPerfil = $perfil1->CuentaPerfil;
-            $cuentaPerfil->plan_id = $plan->id;
-            $cuentaPerfil->status = 'ACTIVO';
-            $cuentaPerfil->save();
-
-            $cuentaPerfil2 = $perfil2->CuentaPerfil;
-            $cuentaPerfil2->plan_id = $plan->id;
-            $cuentaPerfil2->status = 'ACTIVO';
-            $cuentaPerfil2->save();
-
-            $cuentaPerfil3 = $perfil3->CuentaPerfil;
-            $cuentaPerfil3->plan_id = $plan->id;
-            $cuentaPerfil3->status = 'ACTIVO';
-            $cuentaPerfil3->save();
-
+            foreach ($perfil1->CuentaPerfil as  $value) {
+                if ($value->status == 'SinAsignar') {
+                    $cuentaPerfil = $value;
+                    $cuentaPerfil->plan_id = $plan->id;
+                    $cuentaPerfil->status = 'ACTIVO';
+                    $cuentaPerfil->COMBO = 'PERFIL1';
+                    $cuentaPerfil->save();
+                }
+            }
+            foreach ($perfil2->CuentaPerfil as  $value) {
+                if ($value->status == 'SinAsignar') {
+                    $cuentaPerfil2 = $value;
+                    $cuentaPerfil2->plan_id = $plan->id;
+                    $cuentaPerfil2->status = 'ACTIVO';
+                    $cuentaPerfil2->COMBO = 'PERFIL2';
+                    $cuentaPerfil2->save();
+                }
+            }
+            foreach ($perfil3->CuentaPerfil as  $value) {
+                if ($value->status == 'SinAsignar') {
+                    $cuentaPerfil3 = $value;
+                    $cuentaPerfil3->plan_id = $plan->id;
+                    $cuentaPerfil3->status = 'ACTIVO';
+                    $cuentaPerfil3->COMBO = 'PERFIL3';
+                    $cuentaPerfil3->save();
+                }
+            }
             if ($this->tipopago == 'EFECTIVO') {
                 $cajaFisica = Cartera::where('tipo', 'CajaFisica')
                     ->where('caja_id', $cccc->id)->get()->first();
@@ -1258,7 +1339,7 @@ class PlanesController extends Component
                         'observations' => $this->observaciones,
                         'movimiento_id' => $mv->id
                     ]);
-                    
+
                     foreach ($accp->CuentaPerfil as  $value) {
                         if ($value->status == 'SinAsignar') {
                             PlanAccount::create([
@@ -1560,6 +1641,8 @@ class PlanesController extends Component
         $this->plataforma2Require = 'NO';
         $this->plataforma3Require = 'NO';
         $this->fecha_inicio = Carbon::parse(Carbon::now())->format('Y-m-d');
+        $this->arrayCuentas = array();
+        $this->arrayPerfiles = array();
         $this->resetValidation();
     }
 }

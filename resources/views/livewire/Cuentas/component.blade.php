@@ -384,10 +384,7 @@
             confirmButtonText: 'Aceptar'
         }).then(function(result) {
             if (result.value) {
-                window.livewire.emit('Renovar')
-                swal.fire(
-                    'Se renovó la cuenta ' + cuenta + ' por ' + meses + ' meses.'
-                )
+                window.livewire.emit('Renovar')                
             }
         })
     }

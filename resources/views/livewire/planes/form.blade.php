@@ -256,16 +256,11 @@
                                                         <td class="text-center">
                                                             <h6 class="text-center">{{ $ap->precioEntera }}</h6>
                                                         </td>
-                                                        <td>
+                                                        <td class="text-center">
                                                             <a href="javascript:void(0)"
                                                                 wire:click="AgregarCuenta({{ $ap->id }})"
                                                                 class="btn btn-dark mtmobile" title="Seleccionar">
                                                                 <i class="fas fa-check"></i>
-                                                            </a>
-                                                            <a href="javascript:void(0)"
-                                                                wire:click="QuitarCuenta({{ $ap->id }})"
-                                                                class="btn btn-dark mtmobile" title="Remover">
-                                                                <i class="fa-solid fa-x"></i>
                                                             </a>
                                                         </td>
                                                     </tr>
@@ -288,7 +283,9 @@
                                                             Usuario
                                                         </th>
                                                         <th class="table-th text-withe text-center">Contraseña</th>
+                                                        <th class="table-th text-withe text-center">Vencimiento</th>
                                                         <th class="table-th text-withe text-center">Precio</th>
+                                                        <th class="table-th text-withe text-center">Remover</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -305,8 +302,20 @@
                                                             </td>
                                                             <td class="text-center">
                                                                 <h6 class="text-center">
+                                                                    {{ $ap->expiration_account }}
+                                                                </h6>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <h6 class="text-center">
                                                                     {{ $ap->Plataforma->precioEntera }}
                                                                 </h6>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <a href="javascript:void(0)"
+                                                                    wire:click="QuitarCuenta({{ $ap->id }})"
+                                                                    class="btn btn-dark mtmobile" title="Remover">
+                                                                    <i class="fa-solid fa-x"></i>
+                                                                </a>
                                                             </td>
                                                         </tr>
                                                     @endforeach
@@ -321,7 +330,7 @@
                                                         <span><strong>
                                                                 @if ($accounts->count() > 0)
                                                                     Bs.
-                                                                    {{ number_format($accounts[0]->Plataforma->precioEntera, 2) * $accounts->Count() }}
+                                                                    {{ number_format($accounts[0]->Plataforma->precioEntera, 2) * $accounts->Count() * $meses }}
                                                                 @endif
                                                             </strong></span>
                                                     </td>
@@ -500,8 +509,14 @@
                                                         </td>
                                                         <td class="text-right " colspan="4">
                                                             <span><strong>
-                                                                    Bs.
-                                                                    {{ number_format($profiles->sum('precioPerfil'), 2) * $meses }}
+                                                                    @if ($profiles->count() > 0)
+                                                                        Bs.
+                                                                        @foreach ($profiles[0]->CuentaPerfil as $item)
+                                                                            @if ($item->status = 'SinAsignar')
+                                                                                {{ number_format($item->Cuenta->Plataforma->precioPerfil * $profiles->Count() * $meses) }}
+                                                                            @endif
+                                                                        @endforeach
+                                                                    @endif
                                                                 </strong></span>
                                                         </td>
                                                     </tr>

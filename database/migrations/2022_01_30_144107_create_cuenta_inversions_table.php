@@ -21,11 +21,11 @@ class CreateCuentaInversionsTable extends Migration
             $table->integer('number_profiles');
             $table->enum('status', ['ACTIVO', 'PASADA'])->default('ACTIVO');
 
-            $table->enum('type', ['CUENTA', 'PERFILES'])->nullable();            
+            $table->enum('type', ['CUENTA', 'PERFILES'])->nullable();
             $table->integer('sale_profiles')->nullable();
-            $table->integer('imports')->nullable();
-            $table->integer('ganancia')->nullable();
-            
+            $table->decimal('imports', 10, 2)->nullable();
+            $table->decimal('ganancia', 10, 2)->nullable();
+
             $table->unsignedBigInteger('account_id');
             $table->foreign('account_id')->references('id')->on('accounts');
             $table->timestamps();

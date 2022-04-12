@@ -9,7 +9,7 @@ class AccountProfile extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['status','account_id', 'profile_id', 'plan_id'];
+    protected $fillable = ['status', 'COMBO', 'account_id', 'profile_id', 'plan_id'];
 
     public function Cuenta()
     {

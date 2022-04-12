@@ -229,11 +229,11 @@
                                     <th class="table-th text-withe text-center" style="font-size: 80%">VENCIMIENTO
                                         CUENTAS</th>
                                     <th class="table-th text-withe text-center" style="font-size: 80%">PERFILES</th>
-                                    <th class="table-th text-withe text-center" style="font-size: 80%">IMPORTE</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">IMPORT</th>
                                     <th class="table-th text-withe text-center" style="font-size: 80%">PLAN INICIO</th>
                                     <th class="table-th text-withe text-center" style="font-size: 80%">PLAN FIN</th>
                                     <th class="table-th text-withe text-center" style="font-size: 80%">ACCIONES</th>
-                                    <th class="table-th text-withe text-center" style="font-size: 80%">REALIZADO</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -253,7 +253,7 @@
                                                 {{ $p->Mov->climov->client->celular }}</h6>
                                         </td>
                                         <td class="text-center">
-                                            <h6 class="text-center">
+                                            <h6 class="text-center" style="font-size: 80%">
                                                 @foreach ($p->PlanAccounts as $item)
                                                     @if ($item->status == 'ACTIVO')
                                                         {{ $item->Cuenta->account_name }}
@@ -273,10 +273,13 @@
                                             </h6>
                                         </td>
                                         <td class="text-center">
-                                            <h6 class="text-center">
+                                            <h6 class="text-center" style="font-size: 80%">
                                                 @foreach ($p->PlanAccounts as $item)
                                                     @if ($item->status == 'ACTIVO')
-                                                        {{ $item->Cuenta->expiration_account }}
+                                                        <a href="javascript:void(0)" wire:click="AccionesCuenta()"
+                                                            class="btn btn-primary" title="Renovar">
+                                                            {{ $item->Cuenta->expiration_account }}
+                                                        </a>
                                                         <br>
                                                     @endif
                                                 @endforeach
@@ -298,25 +301,26 @@
                                             </h6>
                                         </td>
                                         <td class="text-center">
-                                            <h6 class="text-center">{{ $p->importe }}</h6>
+                                            <h6 class="text-center" style="font-size: 80%">{{ $p->importe }}</h6>
                                         </td>
                                         <td class="text-center">
-                                            <h6 class="text-center">
+                                            <h6 class="text-center" style="font-size: 80%">
                                                 {{ \Carbon\Carbon::parse($p->plan_start)->format('d:m:Y') }} </h6>
                                         </td>
                                         <td class="text-center">
-                                            <h6 class="text-center">
+                                            <h6 class="text-center" style="font-size: 80%">
                                                 {{ \Carbon\Carbon::parse($p->expiration_plan)->format('d:m:Y') }}
                                             </h6>
                                         </td>
-                                        <td>
+                                        <td class="text-center">
                                             @if ($condicional == 'combos')
                                                 <a href="javascript:void(0)" wire:click="Acciones({{ $p->id }})"
                                                     class="btn btn-dark mtmobile" title="Renovación">
                                                     <i class="fa-regular fa-calendar-check"></i>
                                                 </a>
 
-                                                <a href="javascript:void(0)" wire:click="Edit({{ $p->id }})"
+                                                <a href="javascript:void(0)"
+                                                    wire:click="EditCombo({{ $p->id }})"
                                                     class="btn btn-dark mtmobile" title="Edit">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
@@ -346,13 +350,12 @@
     </div>
     @include('livewire.perfiles.form')
     @include('livewire.perfiles.modalDetails')
+    @include('livewire.perfiles.modalEditCombos')
 
 </div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-
-
         window.livewire.on('item-added', msg => {
             $('#theModal').modal('hide'),
                 noty(msg)
@@ -394,6 +397,15 @@
             $('#Modal_crear_perfil').modal('hide')
             noty(Msg)
         })
+
+        window.livewire.on('modal-show-edit-combo', msg => {
+            $('#modal-edit-combos').modal('show')
+        });
+        window.livewire.on('combo-updated', msg => {
+            $('#modal-edit-combos').modal('hide')
+            noty(msg)
+        });
+
 
         flatpickr(document.getElementsByClassName('flatpickr'), {
             enableTime: false,
@@ -480,9 +492,6 @@
         }).then(function(result) {
             if (result.value) {
                 window.livewire.emit('Renovar')
-                swal.fire(
-                    'Se renovó el perfil ' + nameperfil + ' por ' + meses + ' meses.'
-                )
             }
         })
     }

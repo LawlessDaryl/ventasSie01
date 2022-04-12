@@ -113,40 +113,43 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @if ($cuentasp1->count() == 0)
-                                                    <tr>
-                                                        <td colspan="2">
-                                                            <h6 class="text-center">No tiene cuentas con espacios
-                                                            </h6>
-                                                        </td>
-                                                    </tr>
+                                                @if ($cuentasp1)
+                                                    @if ($cuentasp1->count() == 0)
+                                                        <tr>
+                                                            <td colspan="2">
+                                                                <h6 class="text-center">No tiene cuentas con espacios
+                                                                </h6>
+                                                            </td>
+                                                        </tr>
+                                                    @endif
+                                                    @foreach ($cuentasp1 as $ap)
+                                                        <tr>
+                                                            <td class="text-center">
+                                                                <h6 class="text-center">{{ $ap->account_name }}
+                                                                </h6>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <h6 class="text-center">
+                                                                    {{ $ap->expiration_account }}
+                                                                </h6>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <h6 class="text-center">{{ $ap->number_profiles }}
+                                                                </h6>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <h6 class="text-center">{{ $ap->espacios }}</h6>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <a href="javascript:void(0)"
+                                                                    wire:click="PrimerPerfil({{ $ap->id }})"
+                                                                    class="btn btn-dark mtmobile">
+                                                                    <i class="fas fa-check"></i>
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
                                                 @endif
-                                                @foreach ($cuentasp1 as $ap)
-                                                    <tr>
-                                                        <td class="text-center">
-                                                            <h6 class="text-center">{{ $ap->account_name }}
-                                                            </h6>
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <h6 class="text-center">{{ $ap->expiration_account }}
-                                                            </h6>
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <h6 class="text-center">{{ $ap->number_profiles }}
-                                                            </h6>
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <h6 class="text-center">{{ $ap->espacios }}</h6>
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <a href="javascript:void(0)"
-                                                                wire:click="PrimerPerfil({{ $ap->id }})"
-                                                                class="btn btn-dark mtmobile">
-                                                                <i class="fas fa-check"></i>
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
                                             </tbody>
                                         </table>
                                     </div>
@@ -212,40 +215,44 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @if ($cuentasp2->count() == 0)
-                                                    <tr>
-                                                        <td colspan="2">
-                                                            <h6 class="text-center">No tiene cuentas con espacios
-                                                            </h6>
-                                                        </td>
-                                                    </tr>
+                                                @if ($cuentasp2)
+                                                    @if ($cuentasp2->count() == 0)
+                                                        <tr>
+                                                            <td colspan="2">
+                                                                <h6 class="text-center">No tiene cuentas con espacios
+                                                                </h6>
+                                                            </td>
+                                                        </tr>
+                                                    @endif
+
+                                                    @foreach ($cuentasp2 as $c2)
+                                                        <tr>
+                                                            <td class="text-center">
+                                                                <h6 class="text-center">{{ $c2->account_name }}
+                                                                </h6>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <h6 class="text-center">
+                                                                    {{ $c2->expiration_account }}
+                                                                </h6>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <h6 class="text-center">{{ $c2->number_profiles }}
+                                                                </h6>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <h6 class="text-center">{{ $c2->espacios }}</h6>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <a href="javascript:void(0)"
+                                                                    wire:click="SegundoPerfil({{ $c2->id }})"
+                                                                    class="btn btn-dark mtmobile">
+                                                                    <i class="fas fa-check"></i>
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
                                                 @endif
-                                                @foreach ($cuentasp2 as $c2)
-                                                    <tr>
-                                                        <td class="text-center">
-                                                            <h6 class="text-center">{{ $c2->account_name }}
-                                                            </h6>
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <h6 class="text-center">{{ $c2->expiration_account }}
-                                                            </h6>
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <h6 class="text-center">{{ $c2->number_profiles }}
-                                                            </h6>
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <h6 class="text-center">{{ $c2->espacios }}</h6>
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <a href="javascript:void(0)"
-                                                                wire:click="SegundoPerfil({{ $c2->id }})"
-                                                                class="btn btn-dark mtmobile">
-                                                                <i class="fas fa-check"></i>
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
                                             </tbody>
                                         </table>
                                     </div>
@@ -311,40 +318,46 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @if ($cuentasp3->count() == 0)
-                                                    <tr>
-                                                        <td colspan="2">
-                                                            <h6 class="text-center">No tiene cuentas con espacios
-                                                            </h6>
-                                                        </td>
-                                                    </tr>
+                                                @if ($cuentasp3)
+                                                    @if ($cuentasp3->count() == 0)
+                                                        <tr>
+                                                            <td colspan="2">
+                                                                <h6 class="text-center">No tiene cuentas con
+                                                                    espacios
+                                                                </h6>
+                                                            </td>
+                                                        </tr>
+                                                    @endif
+
+                                                    @foreach ($cuentasp3 as $c3)
+                                                        <tr>
+                                                            <td class="text-center">
+                                                                <h6 class="text-center">{{ $c3->account_name }}
+                                                                </h6>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <h6 class="text-center">
+                                                                    {{ $c3->expiration_account }}
+                                                                </h6>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <h6 class="text-center">
+                                                                    {{ $c3->number_profiles }}
+                                                                </h6>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <h6 class="text-center">{{ $c3->espacios }}</h6>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <a href="javascript:void(0)"
+                                                                    wire:click="TercerPerfil({{ $c3->id }})"
+                                                                    class="btn btn-dark mtmobile">
+                                                                    <i class="fas fa-check"></i>
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
                                                 @endif
-                                                @foreach ($cuentasp3 as $c3)
-                                                    <tr>
-                                                        <td class="text-center">
-                                                            <h6 class="text-center">{{ $c3->account_name }}
-                                                            </h6>
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <h6 class="text-center">{{ $c3->expiration_account }}
-                                                            </h6>
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <h6 class="text-center">{{ $c3->number_profiles }}
-                                                            </h6>
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <h6 class="text-center">{{ $c3->espacios }}</h6>
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <a href="javascript:void(0)"
-                                                                wire:click="TercerPerfil({{ $c3->id }})"
-                                                                class="btn btn-dark mtmobile">
-                                                                <i class="fas fa-check"></i>
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
                                             </tbody>
                                         </table>
                                     </div>
