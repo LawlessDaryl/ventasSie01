@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\I_Supplier;
+
 use App\Models\Provider;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -52,18 +52,17 @@ class ProvidersController extends Component
     {
         $rules = [
             'nombre' => 'required|unique:providers',
-            'apellido' => 'required',
-            
-            
         ];
         $messages = [
             'nombre.required' => 'El nombre del proveedor es requerido.',
-            'nombre.unique' => 'Ya existe un proveedor  con ese nombre.',
-            'apellido.required' => 'El apellido del proveedor es requerido.'
+            'nombre.unique' => 'Ya existe un proveedor  con ese nombre.', 
         ];
         $this->validate($rules, $messages);
 
+        
+
         Provider::create([
+
             'nombre' => $this->nombre,
             'apellido'=>$this->apellido,
             'direccion' => $this->direccion,

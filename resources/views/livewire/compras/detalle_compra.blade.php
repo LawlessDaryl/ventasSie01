@@ -5,15 +5,21 @@
             <div class="widget-heading">
                 <div class="col-12 col-lg-12 col-md-10 mt-3">
                     <div class="row mb-3" >
-                        <div class="col-sm-12" >
+                        <div class="col-lg-11" >
                             <h5 class="mb-2 mt-2">DETALLE DE COMPRA</h5>
                             <b>Fecha: </b>
                             {{$fecha_compra}}<br/>  
                             <b>Registrado por: </b> 
                             {{$usuario}}<br/>
-                            <hr style="height:3px;border:none;color:rgb(189, 188, 188);background-color:rgb(230, 152, 64);" />
-
+                            
                         </div>
+                        
+                        <div class="col-lg-1 col-sm-1 col-md-1">
+                            <a href="javascript:void(0)" data-toggle="modal"
+                                data-target="#modal_prod" class="btn btn-primary" > <strong> Registrar Producto</strong></a>
+                        </div>
+                        
+                        <hr style="height:3px;border:none;color:rgb(189, 188, 188);background-color:rgb(230, 152, 64);" />
                     </div>
                   
 
@@ -50,8 +56,8 @@
                                         
                                         <div class="form-group">
                                             <strong>Destino Producto</strong>
-                                            <select value="Elegir" wire:model.lazy="destino" class="form-control">
-                                              <option value="Elegir Destino">Elegir Destino</option>
+                                            <select wire:model.lazy="destino" class="form-control">
+                                              <option value='Elegir'>Elegir Destino</option>
 
                                               @foreach($data_suc as $data)
                                               <option value="{{$data->destino_id}}">{{$data->nombre}}-{{$data->name}}</option>
@@ -59,8 +65,10 @@
                                               
                                             </select>
                                           </div>
-
-                                       
+                                        
+                                          @error('destino')
+                                                 <span class="text-danger er">{{ $message }}</span>
+                                          @enderror
                                      </div>
 
                                  </div>
@@ -372,8 +380,10 @@
          window.livewire.on('show-modal', msg => {
              $('#modal_prov').modal('show')
          });
-         window.livewire.on('modal-hide', msg => {
+         window.livewire.on('prov_added', msg => {
+
              $('#modal_prov').modal('hide')
+             noty(Msg)
          });
      });
  

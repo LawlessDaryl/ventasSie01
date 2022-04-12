@@ -1,5 +1,5 @@
 <div wire:ignore.self class="modal fade" id="modal_prov" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog" role="document">
         <div class="modal-content" >
 
             <div class="modal-header" style="background: #414141">
@@ -10,43 +10,42 @@
             </div>
          <div class="modal-body" style="background: #f0ecec">
             <div class="row">
-                <div class="col-sm-12 col-md-6 col-lg-12">
-                    <div class="form-group">
+              
+                    <div class="col-sm-12 col-md-6 col-lg-6 form-group">
                         <label>Nombre</label>
-                        <input type="text" wire:model.lazy="nombre_prov" class="form-control" placeholder="nombres proveedor"
-                        >
-                        @error('nombre_prov') <span class="text-danger er">{{ $message }}</span>@enderror
+                        <input type="text" wire:model.lazy="nombre_prov" class="form-control">
+                        @error('nombre') <span class="text-danger er">{{ $message }}</span>@enderror
                     </div>
-                    <div class="form-group">
+                
+              
+
+                    <div class=" col-lg-6 col-md-6 col-12 form-group">
                         <label>Apellidos</label>
-                        <input type="text" wire:model.lazy="apellido_prov" class="form-control" placeholder="apellidos proveedor"
-                       >
-                        @error('apellido_prov') <span class="text-danger er">{{ $message }}</span>@enderror
+                        <input type="text" wire:model.lazy="apellido_prov" class="form-control">
+                        @error('apellido') <span class="text-danger er">{{ $message }}</span>@enderror
                     </div>
-                    <div class="form-group">
+                
+                    <div class="col-sm-12 col-md-6 col-lg-6 form-group">
                         <label>Direccion</label>
-                        <input type="text" wire:model.lazy="direccion_prov" class="form-control" placeholder="direccion proveedor"
-                        >
-                        @error('direccion_prov') <span class="text-danger er">{{ $message }}</span>@enderror
+                        <input type="text" wire:model.lazy="direccion_prov" class="form-control" >
+                        @error('direccion') <span class="text-danger er">{{ $message }}</span>@enderror
                     </div>
-                    <div class="form-group">
+                    <div class="col-sm-12 col-md-6 col-lg-6 form-group">
                         <label>Correo</label>
-                        <input type="text" wire:model.lazy="correo_prov" class="form-control" placeholder="correo proveedor"
-                        >
-                        @error('correo_prov') <span class="text-danger er">{{ $message }}</span>@enderror
+                        <input type="text" wire:model.lazy="correo_prov" class="form-control" >
+                        @error('correo') <span class="text-danger er">{{ $message }}</span>@enderror
                     </div>
-                    <div class="form-group">
+                    <div class="col-sm-12 col-md-6 col-lg-6 form-group">
                         <label>Telefono</label>
-                        <input type="text" wire:model.lazy="telefono_prov" class="form-control" placeholder="telefono proveedor"
-                        >
-                        @error('telefono_prov') <span class="text-danger er">{{ $message }}</span>@enderror
+                        <input type="text" wire:model.lazy="telefono_prov" class="form-control" >
+                        @error('telefono') <span class="text-danger er">{{ $message }}</span>@enderror
                     </div>
                 </div>
                 <div class="row">
 
                     <div class="col-lg-6" >
-                        <button type="button" wire:click.prevent="resetUI()" class="btn btn-dark close-btn text-info"
-                         style="background: #3b3f5c">CANCELAR</button>
+                        <button type="button" wire:click.prevent="resetProv()" class="btn btn-dark close-btn text-info"
+                         data-dismiss="modal" style="background: #3b3f5c">CANCELAR</button>
                        
                     </div>
         

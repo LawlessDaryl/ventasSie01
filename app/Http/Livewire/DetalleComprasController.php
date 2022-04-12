@@ -8,9 +8,6 @@ use App\Models\Destino;
 use App\Http\Livewire\ProvidersController as Prov;
 
 use App\Models\Movimiento;
-
-
-
 use App\Models\MovimientoCompra;
 use App\Models\Product;
 use App\Models\Provider;
@@ -50,6 +47,8 @@ class DetalleComprasController extends Component
         $this->estado_compra = "finalizada";
         $this->selected_id = 0;
         $this->pago_parcial = 0;
+        $this->destino = 'Elegir';
+
 
         $this->tipo_transaccion = "CONTADO";
         $this->status = "ACTIVO";
@@ -61,9 +60,6 @@ class DetalleComprasController extends Component
     }
     public function render()
     {
-
-        
-
         if (strlen($this->search) > 0)
         $prod = Product::select('products.*')
         ->where('nombre', 'like', '%' . $this->search . '%')
@@ -138,6 +134,9 @@ class DetalleComprasController extends Component
         $obj->telefono = $this->telefono_prov;
 
         $obj->Store();
+        $this->resetProv();
+        $this->emit('prov_added', 'Proveedor Registrado');
+
     }
 
     public function UpdateQty($productId, $cant = 3)
@@ -319,6 +318,17 @@ class DetalleComprasController extends Component
         $this->selected_id=0;
        
     }
+    public function resetProv()
+    {
+        $this->nombre_prov='';
+        $this->apellido_prov='';
+        $this->direccion_prov='';
+        $this->correo_prov='';
+        $this->telefono_prov='';
+              
+    }
+
+
 
   
     public function descuento_change(){
@@ -335,7 +345,19 @@ class DetalleComprasController extends Component
     public function guardarCompra()
     {
 
-     
+        $rules = [
+            'provider'=>'required',
+            'destino'=>'required|not_in:Elegir'
+            
+        ];
+        $messages = [
+            'provider.required' => 'El nombre del proveedor es requerido.',
+            'destino.required'=>'Elige un destino',
+            'destino.not_in'=>'Elija un destino del producto'
+            
+        ];
+        $this->validate($rules, $messages);
+
 
         if ($this->subtotal<= 0) 
         {
