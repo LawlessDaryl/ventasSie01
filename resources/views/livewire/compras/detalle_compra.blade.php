@@ -6,7 +6,7 @@
                 <div class="col-12 col-lg-12 col-md-10 mt-3">
                     <div class="row mb-3" >
                         <div class="col-sm-12" >
-                            <h5 class="mb-2 mt-2">DETALLE DE COMPRA NRO. {{$nro_compra}}</h5>
+                            <h5 class="mb-2 mt-2">DETALLE DE COMPRA</h5>
                             <b>Fecha: </b>
                             {{$fecha_compra}}<br/>  
                             <b>Registrado por: </b> 
@@ -54,7 +54,7 @@
                                               <option value="Elegir Destino">Elegir Destino</option>
 
                                               @foreach($data_suc as $data)
-                                              <option value="{{$data->id}}">{{$data->nombre}}-{{$data->name}}</option>
+                                              <option value="{{$data->destino_id}}">{{$data->nombre}}-{{$data->name}}</option>
                                               @endforeach
                                               
                                             </select>
@@ -131,10 +131,10 @@
                                         <div class="form-group">
                                           <strong>Tipo de Documento:</strong>
                                           <select wire:model='tipo_documento' class="form-control">
-                                              <option value="FACTURA" selected>Factura</option>
-                                              <option value="NOTA DE VENTA">Nota de Venta</option>
-                                              <option value="RECIBO">Recibo</option>
-                                              <option value="Ninguno">Ninguno</option>
+                                              <option value='FACTURA' selected>Factura</option>
+                                              <option value='NOTA DE VENTA'>Nota de Venta</option>
+                                              <option value='RECIBO'>Recibo</option>
+                                              <option value='NINGUNO'>Ninguno</option>
                                           </select>
                                           @error('tipo_documento')
                                               <span class="text-danger er">{{ $message }}</span>

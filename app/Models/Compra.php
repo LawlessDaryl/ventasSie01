@@ -11,7 +11,7 @@ class Compra extends Model
     protected $fillable=['importe_total',
                             'descuento',
                             'fecha_compra',
-                            'impuestos',
+                          
                             'transaccion',
                             'saldo_por_pagar',
                             'tipo_doc',

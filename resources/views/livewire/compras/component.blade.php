@@ -90,12 +90,13 @@
                                     <thead class="text-white" style="background: #3B3F5C">
                                         <tr>
                                            
+                                            <th class="table-th text-withe text-center">#</th>                                
                                             <th class="table-th text-withe text-center">Proveedor</th>                                
                                             <th class="table-th text-withe text-center">Documento</th>                                
                                             <th class="table-th text-withe text-center">Total<br>Compra</br></th>                                
                                             <th class="table-th text-withe text-center">Tipo<br>Compra</br> </th>                                
                                             <th class="table-th text-withe text-center">Saldo</th>                                
-                                            <th class="table-th text-withe text-center">Credito <br> Fiscal</th>                                
+                                                                         
                                             <th class="table-th text-withe text-center">Estado</th>
                                             <th class="table-th text-withe text-center">Usuario</th>
                                             <th class="table-th text-withe text-center">Acciones</th>
@@ -105,6 +106,11 @@
                                         @foreach ($data_compras as $data)
                                             <tr>
                                                
+
+                                               
+                                                <td>
+                                                    <h6 class="text-center">{{ $nro++}}</h6>
+                                                </td>
                                                 <td>
                                                     <h6 class="text-center">{{ $data->nombre_prov}}</h6>
                                                 </td>
@@ -121,9 +127,7 @@
                                                 <td>
                                                     <h6 class="text-center">{{ $data->saldo_por_pagar }}</h6>
                                                 </td>
-                                                <td>
-                                                    <h6 class="text-center">{{ $data->impuestos}}</h6>
-                                                </td>
+                                              
                                                 @if( $data->status_compra == 'ACTIVO')
                                                 <td>
                                                     <h6 class="text-center card text-white bg-primary">{{ $data->status_compra }}</h6>

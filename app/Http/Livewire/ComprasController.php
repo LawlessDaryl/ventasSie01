@@ -15,14 +15,17 @@ class ComprasController extends Component
     public $fromDate,
             $toDate,
             $filtro,
-            $criterio;
+            $criterio,
+            $nro;
 
   public function paginationView()
      {
                 return 'vendor.livewire.bootstrap';
      }
 
-    
+    public function mount(){
+        $this->nro=1;
+    }
 
 
     public function render()

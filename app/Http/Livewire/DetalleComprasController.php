@@ -5,7 +5,11 @@ namespace App\Http\Livewire;
 use App\Models\Compra;
 use App\Models\CompraDetalle;
 use App\Models\Destino;
+use App\Http\Livewire\ProvidersController as Prov;
+
 use App\Models\Movimiento;
+
+
 
 use App\Models\MovimientoCompra;
 use App\Models\Product;
@@ -30,15 +34,17 @@ class DetalleComprasController extends Component
     use WithFileUploads;
     public  $nro_compra,$search,$provider,$fecha_compra,
     $usuario,$metodo_pago,$pago_parcial,$tipo_documento,$nro_documento,$observacion
-    ,$selected_id,$descuento=0,$impuestos,$saldo_por_pagar,$subtotal,
-    $estado_compra,$total_compra,$itemsQuantity,$price,$status,$tipo_transaccion,$destino,$porcentaje,
-    $alicuota=0.13;
+    ,$selected_id,$descuento=0,$saldo_por_pagar,$subtotal,
+    $estado_compra,$total_compra,$itemsQuantity,$price,$status,$tipo_transaccion,$destino,$porcentaje;
+
+    public $nombre_prov, $apellido_prov, $direccion_prov, $correo_prov,
+    $telefono_prov;
 
     private $pagination = 5;
     public function mount()
     {
-        $this->nro_compra = 00200;
-      
+        
+       
         $this->fecha_compra = Carbon::now();
         $this->usuario = Auth()->user()->name;
         $this->estado_compra = "finalizada";
@@ -55,6 +61,9 @@ class DetalleComprasController extends Component
     }
     public function render()
     {
+
+        
+
         if (strlen($this->search) > 0)
         $prod = Product::select('products.*')
         ->where('nombre', 'like', '%' . $this->search . '%')
@@ -66,7 +75,7 @@ class DetalleComprasController extends Component
         $prod = "cero";
 
        $data_destino= Sucursal::join('destinos as dest','sucursals.id','dest.sucursal_id')
-       ->select('dest.*','sucursals.*')->get();
+       ->select('dest.*','dest.id as destino_id','sucursals.*')->get();
 
        $data_provider= Provider::select('providers.*')->get();
   
@@ -119,6 +128,16 @@ class DetalleComprasController extends Component
          $this->subtotal = Compras::getTotal();
          $this->total_compra= $this->subtotal-$this->descuento;
 
+    }
+    public function addProvider(){
+        $obj= new Prov;
+        $obj->nombre = $this->nombre_prov;
+        $obj->apellido = $this->apellido_prov;
+        $obj->direccion = $this->direccion_prov;
+        $obj->correo = $this->correo_prov;
+        $obj->telefono = $this->telefono_prov;
+
+        $obj->Store();
     }
 
     public function UpdateQty($productId, $cant = 3)
@@ -287,7 +306,7 @@ class DetalleComprasController extends Component
         $this->subtotal = Compras::getTotal();
         $this->total_compra= $this->subtotal-$this->descuento;
         $this->descuento_change();
-        if ($this->descuento!=0 && $this->descuento>0) {
+        if ( $this->descuento>0) {
             
             $this->porcentaje= (round($this->descuento/$this->subtotal,2))*100;
         }
@@ -301,24 +320,9 @@ class DetalleComprasController extends Component
        
     }
 
-    public function calcularImpuestos()
-    {
-        if ($this->tipo_documento == "FACTURA")
-        {
-            
-            $this->impuestos= $this->total_compra*$this->alicuota;
-
-        }
-
-        else
-
-        {
-            $this->impuestos= "0";
-        }
-
-    }
+  
     public function descuento_change(){
-        if ($this->descuento !=0 && $this->subtotal>0 && $this->descuento>0 && $this->descuento<$this->subtotal) {
+        if ($this->subtotal>0 && $this->descuento>0 && $this->descuento<$this->subtotal) {
             
             $this->total_compra= $this->subtotal-$this->descuento;
             $this->porcentaje= (round($this->descuento/$this->subtotal,2))*100;
@@ -331,7 +335,7 @@ class DetalleComprasController extends Component
     public function guardarCompra()
     {
 
-        $this->calcularImpuestos();
+     
 
         if ($this->subtotal<= 0) 
         {
@@ -360,7 +364,7 @@ class DetalleComprasController extends Component
                 'importe_total'=>$this->total_compra,
                 'descuento'=>$this->descuento,
                 'fecha_compra'=>$this->fecha_compra,
-                'impuestos'=>$this->impuestos,
+           
                 'transaccion'=>$this->tipo_transaccion,
                 'saldo_por_pagar'=>$this->total_compra-$this->pago_parcial,
                 'tipo_doc'=>$this->tipo_documento,
@@ -427,6 +431,8 @@ class DetalleComprasController extends Component
             $this->total = Compras::getTotal();
             $this->itemsQuantity = Compras::getTotalQuantity();
             $this->emit('save-ok', 'venta registrada con exito');
+
+            redirect('/compras');
             //$this->emit('print-ticket', $sale->id);
         } catch (Exception $e) {
             DB::rollback();
