@@ -54,7 +54,3 @@ integrity="sha512-hkvXFLlESjeYENO4CNi69z3A1puvONQV5Uh+G4TUDayZxSLyic5Kba9hhuiNLb
 
 <script src="plugins/table/datatable/datatables.js"></script>
 <script src="plugins/table/datatable/custom_miscellaneous.js"></script>
-
-
-<script src="{{ asset('plugins/jquery-ui/jquery-ui.min.js') }}"></script>
-<script src="{{ asset('assets/js/apps/contact.js') }}"></script>

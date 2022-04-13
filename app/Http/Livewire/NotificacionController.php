@@ -30,9 +30,6 @@ class NotificacionController extends Component
     }
     public function mostrarnotificacion($idnotificacion)
     {
-        
-        
-
         return view('livewire.notificaciones.notificacion')
         ->extends('layouts.theme.app')
         ->section('content');
