@@ -385,6 +385,9 @@
              $('#modal_prov').modal('hide')
              noty(Msg)
          });
+         window.livewire.on('empty_cart', msg => {
+            noty(msg)
+        });
      });
  
      function Confirm(id, name, cantRelacionados ) {

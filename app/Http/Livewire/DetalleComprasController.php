@@ -348,6 +348,11 @@ class DetalleComprasController extends Component
             $this->descuento =0;
         }
     }
+    public function validateCarrito(){
+        if (Compras::getTotalQuantity() == 0) {
+            $this->emit('empty_cart', 'No tiene productos en el detalle de compra');
+        }
+    }
 
     public function guardarCompra()
     {
@@ -364,6 +369,7 @@ class DetalleComprasController extends Component
             
         ];
         $this->validate($rules, $messages);
+        $this->validateCarrito();
 
 
         if ($this->subtotal<= 0) 
@@ -373,6 +379,7 @@ class DetalleComprasController extends Component
         }
        
       $this->compraCredito();
+
         DB::beginTransaction();
 
         try {

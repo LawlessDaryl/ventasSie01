@@ -51,9 +51,9 @@
                                     <select wire:model="filtro" class="form-control">
                                         <option value="0" disabled>Elegir</option>
                                       
-                                            <option value='nro_compra'>Numero de Compra</option>
-                                            <option value='nro_factura'>Numero de Factura</option>
-                                            <option value='proveedor'>Nombre Proveedor</option>
+                                            <option value='id'>Numero de Compra</option>
+                                            <option value='tipo_doc'>Numero de Factura</option>
+                                            <option value='proveedor_id'>Nombre Proveedor</option>
                                        
                                     </select>
                                     @error('filtro')
@@ -107,7 +107,7 @@
                                             <tr>
                                                
 
-                                               
+                                            
                                                 <td>
                                                     <h6 class="text-center">{{ $nro++}}</h6>
                                                 </td>
