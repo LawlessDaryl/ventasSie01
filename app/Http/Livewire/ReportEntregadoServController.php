@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Cartera;
 use App\Models\ModelHasRoles;
 use App\Models\OrderService;
 use App\Models\Service;
@@ -15,7 +16,8 @@ use Livewire\Component;
 class ReportEntregadoServController extends Component
 {
     public $componentName, $data, $details, $sumDetails, $countDetails, $reportType,
-        $userId, $dateFrom, $dateTo, $transaccionId, $estado, $fechas;
+        $userId, $dateFrom, $dateTo, $transaccionId, $estado, $fechas, $sumaEfectivo,
+        $sumaBanco;
 
     public function mount()
     {
@@ -31,10 +33,36 @@ class ReportEntregadoServController extends Component
         $this->fechas = [];
         $this->dateFrom = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->dateTo = Carbon::parse(Carbon::now())->format('Y-m-d');
+        $this->sumaEfectivo = 0;
+        $this->sumaBanco = 0;
     }
 
     public function render()
     {
+        $user = User::find(Auth()->user()->id);
+        foreach($user->sucursalusers as $usersuc){
+            if($usersuc->estado == 'ACTIVO'){
+                $this->sucursal= $usersuc->sucursal->id;
+            }
+        }
+
+        if ($this->reportType == 0) {
+            $from = Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00';
+            $to = Carbon::parse(Carbon::now())->format('Y-m-d')   . ' 23:59:59';
+        } else {
+            $from = Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00';
+            $to = Carbon::parse($this->dateTo)->format('Y-m-d')     . ' 23:59:59';
+        }
+        if ($this->reportType == 1 && ($this->dateFrom == '' || $this->dateTo == '')) {
+            $this->dateFrom = Carbon::parse(Carbon::now())->format('Y-m-d');
+            $this->dateTo = Carbon::parse(Carbon::now())->format('Y-m-d');
+            $this->emit('item', 'Hiciste algo incorrecto, la fecha se actualizó');
+        }
+
+        if ($this->dateFrom == "" || $this->dateTo == "") {
+            $this->reportType = 0;
+        }
+
         $this->trsbydate();
 
         /* $rules = [
@@ -64,6 +92,37 @@ class ReportEntregadoServController extends Component
         ->distinct()
         ->get();
         
+        $totalEfectivo = Cartera ::join('cajas as caj','caj.id','carteras.caja_id')
+        ->join('sucursals as s', 's.id', 'caj.sucursal_id')
+        ->join('cartera_movs as cm', 'carteras.id', 'cm.cartera_id')
+        ->join('movimientos as m', 'm.id','cm.movimiento_id')
+        ->join('mov_services as ms', 'ms.movimiento_id', 'm.id')
+        ->join('services as serv', 'serv.id','ms.service_id')
+        ->select('m.*')
+        ->whereBetween('serv.created_at', [$from, $to])
+        ->where('m.status', 'ACTIVO')
+        ->where('cm.comentario', 'SERVICIOS')
+        ->where('carteras.tipo', 'CajaFisica')
+        ->where('s.id',$this->sucursal)
+        ->get();
+        $this->sumaEfectivo = $totalEfectivo->sum('import');
+
+        $totalBanco = Cartera ::join('cajas as caj','caj.id','carteras.caja_id')
+        ->join('sucursals as s', 's.id', 'caj.sucursal_id')
+        ->join('cartera_movs as cm', 'carteras.id', 'cm.cartera_id')
+        ->join('movimientos as m', 'm.id','cm.movimiento_id')
+        ->join('mov_services as ms', 'ms.movimiento_id', 'm.id')
+        ->join('services as serv', 'serv.id','ms.service_id')
+        ->select('m.*')
+        ->whereBetween('serv.created_at', [$from, $to])
+        ->where('m.status', 'ACTIVO')
+        ->where('cm.comentario', 'SERVICIOS')
+        ->where('carteras.tipo', 'Banco')
+        ->where('s.id',$this->sucursal)
+        ->get();
+        $this->sumaBanco = $totalBanco->sum('import');
+
+
         /* foreach($users as $us){
             if($us->hasPermissionTo('Orden_Servicio_Index')){
                 $usuario = 

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ExportController;
+use App\Http\Controllers\ExportServicioEntregPdfController;
 use App\Http\Controllers\ExportServicioPdfController;
 use App\Http\Controllers\ExportStreamingPdfController;
 use App\Http\Controllers\ExportTigoPdfController;
@@ -154,6 +155,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('reporteServicio/pdf/{user}/{estado}/{type}', [ExportServicioPdfController::class, 'reporteServPDF']);
     });
     Route::get('reportentregservices', ReportEntregadoServController ::class)->name('res')->middleware('permission:Boton_Entregar_Servicio'); 
+    Route::get('reporteServicEntreg/pdf/{type}/{f1}/{f2}/{sucursal}/{sE}/{sB}', [ExportServicioEntregPdfController::class, 'reporteServPDF']);
+    Route::get('reporteServicEntreg/pdf/{type}/{sucursal}', [ExportServicioEntregPdfController::class, 'reporteServPDF']);
 });
 
 

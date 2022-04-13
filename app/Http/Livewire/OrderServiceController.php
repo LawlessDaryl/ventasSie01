@@ -35,7 +35,7 @@ class OrderServiceController extends Component
         $typew, $typeworkid, $catprodservid, $diagnostico, $solucion, $hora_entrega, $proceso,
         $terminado, $costo, $detalle_costo, $nombreUsuario, $modificar, $type_service, $movimiento,
         $opciones, $tipopago, $dateFrom, $dateTo, $reportType, $userId, $estado, $mostrar,
-        $mostrarEliminar,$tipo, $condicion;
+        $mostrarEliminar,$tipo, $condicion, $fechahoy;
 
     private $pagination = null;
     public function paginationView()
@@ -72,10 +72,11 @@ class OrderServiceController extends Component
         $this->estado = 'Todos';
         $this->tipo= '';
         $this->condicion = 'MiSucursal';
+        $this->fechahoy = Carbon::parse(Carbon::now())->format('Y-m-d');
     }
     public function render()
     {
-        
+        $this->fechahoy = Carbon::parse(Carbon::now())->format('Y-m-d');
         /* session(['opcio' => null]);
         if (!empty(session('opcio'))) {
             
@@ -665,8 +666,7 @@ class OrderServiceController extends Component
         }
 
 
-
-
+        
 
         //$users = User::all();
         $users = User::join('model_has_roles as mr', 'users.id', 'mr.model_id')

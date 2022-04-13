@@ -41,7 +41,7 @@
                     <div class="col-sm-2 mt-4">
 
                         <a class="btn btn-dark btn-block {{ count($data) < 1 ? 'disabled' : '' }}"
-                            href="{{ url('reporteServicio/pdf' . '/' . $userId . '/' . $estado . '/' . $reportType . '/' . $dateFrom . '/' . $dateTo) }}"
+                            href="{{ url('reporteServicEntreg/pdf' . '/' . $reportType . '/' . $dateFrom . '/' . $dateTo . '/' . $sucursal . '/' . $sumaEfectivo . '/' . $sumaBanco) }}"
                             target="_blank" style='font-size:18px'>Generar PDF</a>
 
                     </div>
@@ -101,6 +101,32 @@
                                     @endforeach
                                 </tbody>
                                 <tfoot>
+                                    
+                                    <tr>
+                                        <td colspan="2" class="text-left">
+                                            <span><b>EFECTIVO</b></span>
+                                        </td>
+                                        <td class="text-right" colspan="4">
+                                            <span>
+                                                
+                                                {{$sumaEfectivo}}
+
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" class="text-left">
+                                            <span><b>TRANSFERENCIA BANCARIA</b></span>
+                                        </td>
+                                        <td class="text-right" colspan="4">
+                                            <span>
+                                                
+                                                {{$sumaBanco}}
+
+                                            </span>
+                                        </td>
+                                    </tr>
+
                                     <tr>
                                         <td colspan="2" class="text-left">
                                             <span><b>TOTALES</b></span>
@@ -132,6 +158,7 @@
                                         </td>
                                         
                                     </tr>
+
                                 </tfoot>
                             </table>
                         </div>
