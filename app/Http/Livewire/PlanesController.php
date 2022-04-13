@@ -556,6 +556,7 @@ class PlanesController extends Component
                 ->get();
             $this->cuentasp1 = Account::where('status', 'ACTIVO')
                 ->where('accounts.start_account', '<=', $date_now)
+                ->where('accounts.expiration_account', '>=', $date_now)
                 ->where('availability', 'LIBRE')
                 ->where('platform_id', $this->plataforma1)->get();
             foreach ($this->cuentasp1 as $c) {
@@ -586,6 +587,7 @@ class PlanesController extends Component
                 ->where('id', '!=', $this->plataforma2)->get();
             $this->cuentasp2 = Account::where('status', 'ACTIVO')
                 ->where('accounts.start_account', '<=', $date_now)
+                ->where('accounts.expiration_account', '>=', $date_now)
                 ->where('availability', 'LIBRE')
                 ->where('platform_id', $this->plataforma2)->get();
             foreach ($this->cuentasp2 as $c) {
@@ -612,6 +614,7 @@ class PlanesController extends Component
         if ($this->plataforma1 != 'Elegir' && $this->plataforma2 != 'Elegir' && $this->plataforma3 != 'Elegir') {
             $this->cuentasp3 = Account::where('status', 'ACTIVO')
                 ->where('accounts.start_account', '<=', $date_now)
+                ->where('accounts.expiration_account', '>=', $date_now)
                 ->where('availability', 'LIBRE')
                 ->where('platform_id', $this->plataforma3)->get();
             foreach ($this->cuentasp3 as $c) {

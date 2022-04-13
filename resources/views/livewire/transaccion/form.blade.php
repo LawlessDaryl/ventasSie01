@@ -3,7 +3,7 @@
         <div class="modal-content">
             <div class="modal-header" style="background: #414141">
                 <h5 class="modal-title text-white">
-                    <b>{{ $componentName }}</b> | {{ $selected_id > 0 ? 'EDITAR' : 'CREAR' }}
+                    <b>{{ $componentName }}</b> | NUEVA TRANSACCIÓN
                 </h5>
                 <button class="close" data-dismiss="modal" type="button" aria-label="Close">
                     <span class="text-white">&times;</span>
@@ -40,11 +40,11 @@
                                 <select @if ($origen == 'Elegir') disabled @endif wire:model.lazy="motivo"
                                     class="form-control">
                                     <option value="Elegir" disabled selected>Elegir</option>
-                                    @if ($origen != 'Elegir')
-                                        @foreach ($motivos as $mot)
-                                            <option value="{{ $mot->id }}">{{ $mot->nombre }}</option>
-                                        @endforeach
-                                    @endif
+
+                                    @foreach ($motivos as $mot)
+                                        <option value="{{ $mot->id }}">{{ $mot->nombre }}</option>
+                                    @endforeach
+
                                 </select>
                                 @error('motivo')
                                     <span class="text-danger er">{{ $message }}</span>
@@ -57,8 +57,8 @@
                                 <label>
                                     <h6>Monto</h6>
                                 </label>
-                                <input @if ($origen == 'Elegir' || $motivo == 'Elegir') disabled @endif type="number"
-                                    wire:model.lazy="montoB" class="form-control" placeholder="">
+                                <input @if ($motivo == 'Elegir') disabled @endif type="number"
+                                    wire:model="montoB" class="form-control" placeholder="">
                                 @error('montoB')
                                     <span class="text-danger er">{{ $message }}</span>
                                 @enderror
@@ -95,11 +95,9 @@
                                 <label>
                                     <h6>Monto a Registrar</h6>
                                 </label>
-                                <label class="form-control" wire:model.lazy="montoR"
-                                    disabled>{{ $montoR }}</label>
-                                @error('montoR')
-                                    <span class="text-danger er">{{ $message }}</span>
-                                @enderror
+                                <h6 class="form-control" wire:model.lazy="montoR"><strong>{{ $montoR }}</strong>
+                                </h6>
+
                             </div>
                         </div>
 
@@ -109,10 +107,9 @@
                                 <label>
                                     <h6>{{ $montoCobrarPagar }}</h6>
                                 </label>
-                                <label class="form-control" wire:model="importe" disabled>{{ $importe }}</label>
-                                @error('importe')
-                                    <span class="text-danger er">{{ $message }}</span>
-                                @enderror
+                                <h6 class="form-control" wire:model="importe"><strong>{{ $importe }}</strong>
+                                </h6>
+
                             </div>
                         </div>
 
@@ -227,7 +224,7 @@
                                                                     </td>
                                                                     <td class="text-center">
                                                                         <a href="javascript:void(0)"
-                                                                            wire:click="SeleccionarTelf({{ $d->celular }})"
+                                                                            wire:click="SeleccionarTelf({{ $d->cedula }},{{ $d->celular }})"
                                                                             class="btn btn-dark mtmobile"
                                                                             title="Seleccionar">
                                                                             <i class="fas fa-check"></i>
@@ -263,7 +260,7 @@
                         <div class="col-sm-12 col-md-12">
                             <div class="form-group">
                                 <label>
-                                    <h6>Observaciones</h6>
+                                    <h6>Observaciones (opcional)</h6>
                                 </label>
                                 <textarea wire:model.lazy="observaciones" class="form-control" name="" rows="5"></textarea>
                                 @error('observaciones')
