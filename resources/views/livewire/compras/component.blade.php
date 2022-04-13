@@ -158,9 +158,20 @@
                                                 </td>
                                             </tr>
                                         @endforeach
+                                        <tfoot class="text-white text-right" style="background: #fffefd"  >
+                                            <tr>
+                                                <td colspan="8">
+                                                     <h5 class="text-dark">Total.-</h5>
+                                                </td>
+                                                <td>
+                                                    <h5 class="text-dark">{{$totales}}</h5>
+                                                </td>
+                                            </tr>
+                                            
+                                    </tfoot>
                                     </tbody>
                                 </table>
-                                {{ $data_compras->links() }}
+                           
                             </div>
                         </div>
                     </div>

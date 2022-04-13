@@ -16,11 +16,11 @@
                         
                         <div class="col-lg-1 col-sm-1 col-md-1">
                             <a href="javascript:void(0)" data-toggle="modal"
-                                data-target="#modal_prod" class="btn btn-primary" > <strong> Registrar Producto</strong></a>
+                                data-target="#modal_prod" class="btn btn-primary p-1 m-1" > <strong> Registrar Producto</strong></a>
                         </div>
                         
-                        <hr style="height:3px;border:none;color:rgb(189, 188, 188);background-color:rgb(230, 152, 64);" />
                     </div>
+                    <hr style="height:3px;border:none;color:rgb(189, 188, 188);background-color:rgb(230, 152, 64);" />
                   
 
                         <div class="row">

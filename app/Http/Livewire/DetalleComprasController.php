@@ -48,14 +48,14 @@ class DetalleComprasController extends Component
         $this->selected_id = 0;
         $this->pago_parcial = 0;
         $this->destino = 'Elegir';
-
-
         $this->tipo_transaccion = "CONTADO";
+        $this->tipo_documento = "FACTURA";
         $this->status = "ACTIVO";
         $this->total_compra= $this->subtotal-$this->descuento;
         $this->subtotal = Compras::getTotal();
         $this->itemsQuantity = Compras::getTotalQuantity();
         $this->porcentaje=0;
+
   
     }
     public function render()
@@ -328,9 +328,16 @@ class DetalleComprasController extends Component
               
     }
 
+    public function compraCredito(){
+        if ($this->tipo_transaccion == 'CONTADO') {
+            $this->saldo_por_pagar =0;
+            $this->pago_parcial= $this->total_compra;
+        }
+        else{
+            $this->saldo_por_pagar = $this->total_compra - $this->pago_parcial;
+        }
+    }
 
-
-  
     public function descuento_change(){
         if ($this->subtotal>0 && $this->descuento>0 && $this->descuento<$this->subtotal) {
             
@@ -365,30 +372,19 @@ class DetalleComprasController extends Component
             return;
         }
        
-      
+      $this->compraCredito();
         DB::beginTransaction();
 
         try {
-            // Creando Movimiento
-
-
-   
             
-
-         
-
-       
-
             $Compra_encabezado = Compra::create([
 
-              
-                
                 'importe_total'=>$this->total_compra,
                 'descuento'=>$this->descuento,
                 'fecha_compra'=>$this->fecha_compra,
            
                 'transaccion'=>$this->tipo_transaccion,
-                'saldo_por_pagar'=>$this->total_compra-$this->pago_parcial,
+                'pago'=>$this->pago_parcial,
                 'tipo_doc'=>$this->tipo_documento,
                 'nro_documento'=>$this->nro_documento,
                 'observacion'=>$this->observacion,
@@ -396,14 +392,13 @@ class DetalleComprasController extends Component
                 'estado_compra'=>$this->estado_compra,
                 'status'=>$this->status
             ]);
-           
-          
-        
+
+
             $Movimiento= Movimiento::create([
                 
                 'type'=>"COMPRAS",
                 'status'=>"ACTIVO",
-                'saldo'=>$this->total_compra- $this->pago_parcial,
+                'saldo'=>$this->saldo_por_pagar,
                 'on_account'=>$this->pago_parcial,
                 'import'=>$this->pago_parcial,
                 'user_id' => Auth()->user()->id

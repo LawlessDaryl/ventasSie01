@@ -22,7 +22,7 @@ class CreateComprasTable extends Migration
             $table->dateTime('fecha_compra')->default(Carbon::now());
            
             $table->enum('transaccion',['Credito','Contado','P'])->default('Contado');
-            $table->decimal('saldo_por_pagar',10,2)->default(0);
+            $table->decimal('pago',10,2)->default(0);
             $table->enum('tipo_doc',['FACTURA','NOTA DE VENTA','RECIBO','NINGUNO'])->default('FACTURA');
             $table->string('nro_documento',100)->nullable();
             $table->string('observacion',100)->nullable();
