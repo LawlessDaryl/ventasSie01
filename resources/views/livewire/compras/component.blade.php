@@ -12,16 +12,36 @@
                       
                     
                 </ul>
+                <ul class="tabs tab-pills">
+                    
+                        <a wire:click=print() class="btn btn-dark" >Imprimir</a>
+                      
+                    
+                </ul>
             </div>
-              
-                
-            
+
             <div class="widget-body">
 
-                <div class="row m-1" >
+                <div class="row m-1">
                     <div class="col-12 col-lg-5 col-md-4 card">
                         <h5 class="mt-2">Fecha de Compra</h5>
-                        <div class="row mt-1">
+
+                        <div class="row align-items-center mt-1">
+
+                            <div class="col-lg-8">
+
+                                <select wire:model="fecha" class="form-control">
+                                                               
+                                        <option value='hoy' selected>Hoy</option>
+                                        <option value='ayer'>Ayer</option>
+                                        <option value='semana'>Semana</option>
+                                        <option value='fechas'>Entre Fechas</option>
+                                   
+                                 </select>
+                            </div>
+
+
+                            @if($fecha == 'fechas')
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <label>Fecha inicial</label>
@@ -29,8 +49,8 @@
                                     @error('fromDate')
                                     <span class="text-danger">{{ $message}}</span>
                                     @enderror
-                                </div>
-                            </div>
+                                 </div>
+                             </div>
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <label>Fecha final</label>
@@ -40,20 +60,22 @@
                                     @enderror
                                 </div>
                             </div>
+                            @endif
+
                         </div>
                     </div>
                     <div class="col-12 col-lg-5 col-md-4 card ml-3">
-                        <h5 class="mt-2">Filtrado</h5>
+                        <h5 class="mt-2">Filtrar Transaccion</h5>
                         <div class="row mt-1">
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <label>Seleccionar filtro</label>
+                                  
                                     <select wire:model="filtro" class="form-control">
-                                        <option value="0" disabled>Elegir</option>
+                                       
                                       
-                                            <option value='id'>Numero de Compra</option>
-                                            <option value='tipo_doc'>Numero de Factura</option>
-                                            <option value='proveedor_id'>Nombre Proveedor</option>
+                                            <option value ='Contado' selected>Contado</option>
+                                            <option value='Credito'>Credito</option>
+                                          
                                        
                                     </select>
                                     @error('filtro')
@@ -61,22 +83,12 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-lg-6">
-                               
-                               
-                               
-                                <div class="form-group">
-                                    <label>Ingresar criterio</label>
-                                    <input type="text" wire:model.lazy="criterio" class="form-control">
-                                    @error('criterio')
-                                    <span class="text-danger">{{ $message}}</span>
-                                    @enderror
-                                </div>
-                               
-                               
-                              
-                            </div>
+                          
                         </div>
+                    </div>
+                    <div class="col-lg-12 col-md-12 col-12 mt-3">
+
+                        @include('common.searchbox')
                     </div>
                 </div>
 
@@ -105,9 +117,6 @@
                                     <tbody>
                                         @foreach ($data_compras as $data)
                                             <tr>
-                                               
-
-                                            
                                                 <td>
                                                     <h6 class="text-center">{{ $nro++}}</h6>
                                                 </td>

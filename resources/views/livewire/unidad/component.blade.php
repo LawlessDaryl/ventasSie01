@@ -20,7 +20,7 @@
                         <thead class="text-white" style="background: #3B3F5C">
                             <tr>
                                 <th class="table-th text-withe text-center">ITEM</th>
-                                <th class="table-th text-withe text-center">NOMBRE</th>                                
+                                <th class="table-th text-withe text-center">NOMBRE</th>                              
                                 <th class="table-th text-withe text-center">ACCIONES</th>
                             </tr>
                         </thead>

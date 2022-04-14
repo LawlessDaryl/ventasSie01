@@ -145,6 +145,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('destino_prod', DestinoProductoController::class)->name('destination');
     Route::get('transferencia', TransferirProductoController::class)->name('destination');
     Route::get('destino', DestinoController::class)->name('dest');
+    Route::get('reporteCompras/pdf', [ComprasController::class, 'print']);
 
     /* VENTAS */
     Route::get('coins', CoinsController::class)->name('monedas')->middleware('permission:Coins_Index');
