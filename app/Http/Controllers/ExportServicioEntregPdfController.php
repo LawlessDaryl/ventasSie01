@@ -82,7 +82,7 @@ class ExportServicioEntregPdfController extends Controller
         $sucursal = Sucursal::find($sucursal);
         $pdf = PDF::loadView('livewire.pdf.reporteServiciosEntregados', compact('data', 'reportType', 'dateFrom', 'dateTo', 'sucursal', 'sumaEfectivo', 'sumaBanco'));
 
-        return $pdf->setPaper('letter', 'landscape')->stream('ServiciosReport.pdf');  //visualizar
+        return $pdf->setPaper('letter')->stream('ServiciosReport.pdf');  //visualizar
         /* return $pdf->download('salesReport.pdf');  //descargar  */
     }
 }

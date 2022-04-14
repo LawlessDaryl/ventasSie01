@@ -225,6 +225,12 @@
                         <div class="media-body">
                             <h5>{{ auth()->user()->name }}</h5>
                             <p>{{ auth()->user()->profile }}</p>
+                            @foreach(auth()->user()->sucursalusers as $sucu)
+                                @if($sucu->estado == 'ACTIVO')
+                                    <p>{{$sucu->sucursal->name}}</p>
+                                @endif
+                            @endforeach
+                            <p></p>
                         </div>
                     </div>
                 </div>

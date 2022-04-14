@@ -58,13 +58,13 @@
         <table cellpadding="0" cellspacing="-1" class="table-items" width="100%" height="50%">
             <thead>
                 <tr>
-                    
-                    <th width="4%">Orden</th>
+                    <th width="4%">#</th>
+                    <th width="7%">Fecha</th>
                     <th width="8%">Cliente</th>
+                    <th width="4%">Orden</th>
                    {{--  <th width="12%">Fecha Hora Recep.</th>
                     <th width="11%">Fecha Hora Term.</th>
                     <th width="11%">Fecha Hora Entr.</th> --}}
-                    <th width="7%">Celular</th>
                     <th width="7%">Detalle</th>
                     <th width="5%">Costo</th>
                     <th width="8%">Utilidad</th>
@@ -82,19 +82,30 @@
             <tbody>
                 @foreach ($data as $d)
                     <tr height="10px">
-                        {{-- NUMERO ORDEN --}}
+                        {{-- # --}}
                         <td align="center">
-                            <FONT FACE="times new roman" SIZE=1>{{ $d->order_service_id }}</FONT>
+                            <FONT FACE="times new roman" SIZE=1>{{ $loop->iteration }}
+                            </FONT>
                         </td>
+                        {{-- FECHA --}}
+                        <td align="center">
+                            <FONT FACE="times new roman" SIZE=1>
+                                @foreach($d->movservices as $movser)
+                                @if($movser->movs->type=='ENTREGADO' && $movser->movs->status == 'ACTIVO')
+                                    {{ $movser->movs->created_at }}
+                                @endif
+                            @endforeach
+                            </FONT>
+                        </td>
+                        
                         {{-- CLIENTE --}}
                         <td align="center">
                             <FONT FACE="times new roman" SIZE=1>{{ $d->movservices[0]->movs->climov->client->nombre }}
                             </FONT>
                         </td>
-                        {{-- CELULAR --}}
+                        {{-- NUMERO ORDEN --}}
                         <td align="center">
-                            <FONT FACE="times new roman" SIZE=1>{{ $d->movservices[0]->movs->climov->client->celular }}
-                            </FONT>
+                            <FONT FACE="times new roman" SIZE=1>{{ $d->order_service_id }}</FONT>
                         </td>
                         {{-- DETALLE --}}
                         <td align="center">
@@ -110,118 +121,6 @@
                             <FONT FACE="times new roman" SIZE=1>
                                 {{ number_format($d->movservices[0]->movs->import, 2) }}</FONT>
                         </td>
-                       {{--  @foreach ($d->movservices as $mv)
-                            @if ($mv->movs->type == 'PENDIENTE')
-                                <td align="center">
-                                    <FONT FACE="times new roman" SIZE=1>{{ $mv->movs->created_at }}</FONT>
-                                </td>
-                                @if ($mv->movs->status == 'ACTIVO')
-                                    <td align="center">
-                                        <FONT FACE="times new roman" SIZE=1>Pendiente</FONT>
-                                    </td>
-                                    <td align="center">
-                                        <FONT FACE="times new roman" SIZE=1>Pendiente</FONT>
-                                    </td>
-                                @endif
-                            @endif
-                            @if ($mv->movs->type == 'PROCESO')
-                                @if ($mv->movs->status == 'ACTIVO')
-                                    <td align="center">
-                                        <FONT FACE="times new roman" SIZE=1>Proceso</FONT>
-                                    </td>
-                                    <td align="center">
-                                        <FONT FACE="times new roman" SIZE=1>Proceso</FONT>
-                                    </td>
-                                @endif
-                            @endif
-                            @if ($mv->movs->type == 'TERMINADO')
-                                <td align="center">
-                                    <FONT FACE="times new roman" SIZE=1>{{ $mv->movs->created_at }}</FONT>
-                                </td>
-                                @if ($mv->movs->status == 'ACTIVO')
-                                    <td align="center">
-                                        <FONT FACE="times new roman" SIZE=1>Terminado</FONT>
-                                    </td>
-                                @endif
-                            @endif
-
-                            @if ($mv->movs->type == 'ENTREGADO')
-                                <td align="center">
-                                    <FONT FACE="times new roman" SIZE=1>{{ $mv->movs->created_at }}</FONT>
-                                </td>
-                            @elseif ($mv->movs->type == 'ABANDONADO')
-                                <td align="center">
-                                    <FONT FACE="times new roman" SIZE=1>Abandonado</FONT>
-                                </td>
-                            @endif
-                        @endforeach --}}
-                        <td align="center">
-                            <FONT FACE="times new roman" SIZE=1>{{ number_format($d->costo, 2) }}</FONT>
-                        </td>
-                        <td align="center">
-                            <FONT FACE="times new roman" SIZE=1>
-                                {{ number_format($d->movservices[0]->movs->import, 2) }}</FONT>
-                        </td>
-                        <td align="center">
-                            <FONT FACE="times new roman" SIZE=1>
-                                {{ number_format($d->movservices[0]->movs->on_account, 2) }}</FONT>
-                        </td>
-                        <td align="center">
-                            <FONT FACE="times new roman" SIZE=1>
-                                {{ number_format($d->movservices[0]->movs->saldo, 2) }}</FONT>
-                        </td>
-
-                        <td align="center">
-                            <FONT FACE="times new roman" SIZE=1>{{ $d->OrderServicio->type_service }}</FONT>
-                        </td>
-                        <td align="center">
-                            <FONT FACE="times new roman" SIZE=1>{{ $d->marca }} {{ $d->categoria->nombre }}
-                            </FONT>
-                        </td>
-                        @foreach ($d->movservices as $mv)
-                            @if ($mv->movs->type == 'PENDIENTE' && $mv->movs->status == 'ACTIVO')
-                                <td align="center">
-                                    <FONT FACE="times new roman" SIZE=1>{{ $mv->movs->type }}</FONT>
-                                </td>
-                                <td align="center">
-                                    <FONT FACE="times new roman" SIZE=1>{{ $mv->movs->usermov->name }}</FONT>
-                                </td>
-                            @endif
-                            @if ($mv->movs->type == 'PROCESO' && $mv->movs->status == 'ACTIVO')
-                                <td align="center">
-                                    <FONT FACE="times new roman" SIZE=1>{{ $mv->movs->type }}</FONT>
-                                </td>
-                                <td align="center">
-                                    <FONT FACE="times new roman" SIZE=1>{{ $mv->movs->usermov->name }}</FONT>
-                                </td>
-                            @endif
-                            @if ($mv->movs->type == 'TERMINADO' && $mv->movs->status == 'ACTIVO')
-                                <td align="center">
-                                    <FONT FACE="times new roman" SIZE=1>{{ $mv->movs->type }}</FONT>
-                                </td>
-                                <td align="center">
-                                    <FONT FACE="times new roman" SIZE=1>{{ $mv->movs->usermov->name }}</FONT>
-                                </td>
-                            @endif
-                            @if ($mv->movs->type == 'ENTREGADO' && $mv->movs->status == 'ACTIVO')
-                                <td align="center">
-                                    <FONT FACE="times new roman" SIZE=1>{{ $mv->movs->type }}</FONT>
-                                </td>
-                                <td align="center">
-                                    <FONT FACE="times new roman" SIZE=1>{{ $d->movservices[2]->movs->usermov->name }}
-                                    </FONT>
-                                </td>
-                            @endif
-                            @if ($mv->movs->type == 'ABANDONADO' && $mv->movs->status == 'ACTIVO')
-                                <td align="center">
-                                    <FONT FACE="times new roman" SIZE=1>{{ $mv->movs->type }}</FONT>
-                                </td>
-                                <td align="center">
-                                    <FONT FACE="times new roman" SIZE=1>{{ $mv->movs->usermov->name }}</FONT>
-                                </td>
-                            @endif
-                        @endforeach
-
                     </tr>
                 @endforeach
             </tbody>
@@ -232,7 +131,7 @@
                     <td colspan="2" class="text-left">
                         <span><b>EFECTIVO</b></span>
                     </td>
-                    <td class="text-right" colspan="4">
+                    <td class="text-right" colspan="5">
                         <span>
                             
                             {{$sumaEfectivo}}
@@ -244,7 +143,7 @@
                     <td colspan="2" class="text-left">
                         <span><b>TRANSFERENCIA BANCARIA</b></span>
                     </td>
-                    <td class="text-right" colspan="4">
+                    <td class="text-right" colspan="5">
                         <span>
                             
                             {{$sumaBanco}}
@@ -263,7 +162,7 @@
 
                             </strong></span>
                     </td>
-                    <td class="text-right" colspan="0">
+                    <td class="text-right" colspan="1">
                         <span><strong>
                                 @php
                                     $mytotal = 0;                                     

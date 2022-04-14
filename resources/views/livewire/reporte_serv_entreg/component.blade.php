@@ -23,16 +23,16 @@
                     <div class="col-sm-2 ">
                         <h6>Fecha desde</h6>
                         <div class="form-group">
-                            <input @if ($reportType == 0) disabled @endif type="text" wire:model="dateFrom"
-                                class="form-control flatpickr" placeholder="Click para elegir">
+                            <input @if ($reportType == 0) disabled @endif type="date" wire:model="dateFrom"
+                                class="form-control" placeholder="Click para elegir">
                         </div>
                     </div>
 
                     <div class="col-sm-2 ">
                         <h6>Fecha hasta</h6>
                         <div class="form-group">
-                            <input @if ($reportType == 0) disabled @endif type="text" wire:model="dateTo"
-                                class="form-control flatpickr" placeholder="Click para elegir">
+                            <input @if ($reportType == 0) disabled @endif type="date" wire:model="dateTo"
+                                class="form-control" placeholder="Click para elegir">
                         </div>
                     </div>
 
@@ -54,9 +54,12 @@
                             <table class="table table-unbordered table-hover mt-1">
                                 <thead class="text-white" style="background: #3B3F5C">
                                     <tr>
-                                        <th class="table-th text-withe text-center">ORDEN</th>
+                                        <th class="table-th text-withe text-center">#</th>
+                                        <th class="table-th text-withe text-center">FECHA</th>
                                         <th class="table-th text-withe text-center">CLIENTE</th>
-                                        <th class="table-th text-withe text-center">CELULAR</th>
+                                        <th class="table-th text-withe text-center">ORDEN</th>
+                                       
+                                        
                                         <th class="table-th text-withe text-center">DETALLE</th>
                                         <th class="table-th text-withe text-center">COSTO</th>
                                         <th class="table-th text-withe text-center">IMPORTE</th>
@@ -73,18 +76,27 @@
 
                                     @foreach ($data as $d)
                                         <tr>
-                                            {{-- NÚMERO DE ORDEN --}}
-                                            <td class="text-center">
-                                                <h6>{{ $d->order_service_id }}</h6>
+                                            {{-- # --}}
+                                            <td width="2%">
+                                                <h6 class="table-th text-withe text-center" style="font-size: 100%">{{ $loop->iteration }}</h6>
                                             </td>
+                                            {{-- FECHA --}}
+                                            @foreach($d->movservices as $movser)
+                                                @if($movser->movs->type=='ENTREGADO' && $movser->movs->status == 'ACTIVO')
+                                                    <td class="text-center">
+                                                        <h6>{{ $movser->movs->created_at }}</h6>
+                                                    </td>
+                                                @endif
+                                            @endforeach
                                             {{-- CLIENTE --}}
                                             <td class="text-center">
                                                 <h6>{{ $d->movservices[0]->movs->climov->client->nombre }}</h6>
                                             </td>
-                                            {{-- CELULAR --}}
+                                            {{-- NÚMERO DE ORDEN --}}
                                             <td class="text-center">
-                                                <h6>{{ $d->movservices[0]->movs->climov->client->celular }}</h6>
+                                                <h6>{{ $d->order_service_id }}</h6>
                                             </td>
+                                            
                                             {{-- DETALLE --}}
                                             <td class="text-center">
                                                 <h6>{{ $d->categoria->nombre }} {{ $d->marca }} {{ $d->detalle }}</h6>
@@ -106,7 +118,7 @@
                                         <td colspan="2" class="text-left">
                                             <span><b>EFECTIVO</b></span>
                                         </td>
-                                        <td class="text-right" colspan="4">
+                                        <td class="text-right" colspan="5">
                                             <span>
                                                 
                                                 {{$sumaEfectivo}}
@@ -116,9 +128,9 @@
                                     </tr>
                                     <tr>
                                         <td colspan="2" class="text-left">
-                                            <span><b>TRANSFERENCIA BANCARIA</b></span>
+                                            <span><b>TRANSFERENCIA BANCARIA /T.DEBITO</b></span>
                                         </td>
-                                        <td class="text-right" colspan="4">
+                                        <td class="text-right" colspan="5">
                                             <span>
                                                 
                                                 {{$sumaBanco}}
@@ -131,7 +143,7 @@
                                         <td colspan="2" class="text-left">
                                             <span><b>TOTALES</b></span>
                                         </td>
-                                        <td class="text-right" colspan="3">
+                                        <td class="text-right" colspan="4">
                                             <span><strong>
                                                     
                                                 ${{ number_format($data->sum('costo'), 2) }}

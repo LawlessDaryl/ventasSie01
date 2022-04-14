@@ -33,9 +33,11 @@
                         style="border-color: black; margin-top: 0px; margin-bottom: 3px; margin-left: 5px; margin-right:5px">
                     <div style="text-align: center; font-size: 7pt;">
                         <b>{{ $data[0]->nombreC }}</b>
-                        Celular: <b>{{ $data[0]->celular }}</b>
+                        
                     </div>
                     <div style=" font-size: 7pt; line-height: 12px">
+                        Celular: <b>{{ $data[0]->celular }}</b><br>
+                        {{-- Teléfono: <b>{{ $data[0]->telefono }}</b><br> --}}
                         <b>CANT.:{{ $datos->services->count() }}</b>&nbsp;&nbsp;
 
                         <b>DESCRIPCIÓN: </b>
@@ -163,7 +165,7 @@
                                     <td style="width: 300px">
                                         <div style="width: auto;">
                                             <b>FECHA: </b>{{\Carbon\Carbon::now()->format('Y-m-d')}}&nbsp; - &nbsp;{{\Carbon\Carbon::now()->format('H:i:s')}}<br>
-                                            <b>CODIGO: </b>MAA1191<br>
+                                            
                                             <b>CLIENTE: </b>{{ $data[0]->nombreC }}
                                         </div>
                                     </td>
@@ -255,8 +257,8 @@
                             <tr>
                                 <td>
                                     <div class="" style="text-align: center">
-                                        Administrador<br>
-                                        DPTO. TECNICO
+                                        RESPONSABLE TÉCNICO <br>
+                                        {{ $usuario->name }}
                                     </div>
                                 </td>
 

@@ -331,34 +331,70 @@ class ServiciosController extends Component
     //Store de Agregar Servicio
     public function Store()
     {
-        $rules = [
-            'typeworkid' => 'required|not_in:Elegir',
-            'catprodservid' => 'required|not_in:Elegir',
-            'marc' => 'required',
-            'detalle' => 'required',
-            'falla_segun_cliente' => 'required',
-            'diagnostico' => 'required',
-            'solucion' => 'required',
-            'import' => 'required',
-            'on_account' => 'required',
-            'fecha_estimada_entrega' => 'required'
-        ];
-        $messages = [
-            'typeworkid.required' => 'El Tipo de Trabajo es requerido',
-            'typeworkid.not_in' => 'Seleccine una opción distinto a Elegir',
-            'catprodservid.required' => 'El Tipo de Equipo es requerido',
-            'catprodservid.not_in' => 'Seleccine una opción distinto a Elegir',
-            'marc.required' => 'La Marca/Modelo es requerida',
-            'detalle.required' => 'El Estado del Equipo es requerido',
-            'falla_segun_cliente.required' => 'La Falla es requerida',
-            'diagnostico.required' => 'El Diagnostico es requerido',
-            'solucion.required' => 'La Solución es requerida',
-            'import.required' => 'El Saldo es requerido',
-            'on_account.required' => 'Si no desea ingresar nada ingrese "0"',
-            'fecha_estimada_entrega.required' => 'La Fecha es requerida'
-        ];
-
-        $this->validate($rules, $messages);
+        if($this->on_account <= $this->import){
+            $rules = [
+                'typeworkid' => 'required|not_in:Elegir',
+                'catprodservid' => 'required|not_in:Elegir',
+                'marc' => 'required',
+                'detalle' => 'required',
+                'falla_segun_cliente' => 'required',
+                'diagnostico' => 'required',
+                'solucion' => 'required',
+                'import' => 'required',
+                'on_account' => 'required',
+                'fecha_estimada_entrega' => 'required'
+            ];
+            $messages = [
+                'typeworkid.required' => 'El Tipo de Trabajo es requerido',
+                'typeworkid.not_in' => 'Seleccine una opción distinto a Elegir',
+                'catprodservid.required' => 'El Tipo de Equipo es requerido',
+                'catprodservid.not_in' => 'Seleccine una opción distinto a Elegir',
+                'marc.required' => 'La Marca/Modelo es requerida',
+                'detalle.required' => 'El Estado del Equipo es requerido',
+                'falla_segun_cliente.required' => 'La Falla es requerida',
+                'diagnostico.required' => 'El Diagnostico es requerido',
+                'solucion.required' => 'La Solución es requerida',
+                'import.required' => 'El Saldo es requerido',
+                'on_account.required' => 'Si no desea ingresar nada ingrese "0"',
+                'fecha_estimada_entrega.required' => 'La Fecha es requerida'
+            ];
+    
+            $this->validate($rules, $messages);
+        }else{
+            $rules = [
+                'typeworkid' => 'required|not_in:Elegir',
+                'catprodservid' => 'required|not_in:Elegir',
+                'marc' => 'required',
+                'detalle' => 'required',
+                'falla_segun_cliente' => 'required',
+                'diagnostico' => 'required',
+                'solucion' => 'required',
+                'import' => 'required',
+                'on_account' => 'required',
+                'on_account' => 'required_with:import|lt:import',
+                'import' => 'required_with:on_account',
+                'fecha_estimada_entrega' => 'required'
+            ];
+            $messages = [
+                'typeworkid.required' => 'El Tipo de Trabajo es requerido',
+                'typeworkid.not_in' => 'Seleccine una opción distinto a Elegir',
+                'catprodservid.required' => 'El Tipo de Equipo es requerido',
+                'catprodservid.not_in' => 'Seleccine una opción distinto a Elegir',
+                'marc.required' => 'La Marca/Modelo es requerida',
+                'detalle.required' => 'El Estado del Equipo es requerido',
+                'falla_segun_cliente.required' => 'La Falla es requerida',
+                'diagnostico.required' => 'El Diagnostico es requerido',
+                'solucion.required' => 'La Solución es requerida',
+                'import.required' => 'El Saldo es requerido',
+                'on_account.required' => 'Si no desea ingresar nada ingrese "0"',
+                'import.required_with' => 'Ingrese un monto válido',
+                'on_account.required_with' => 'Ingrese un monto válido.',
+                'on_account.lt' => 'A cuenta no puede ser mayor al total',
+                'fecha_estimada_entrega.required' => 'La Fecha es requerida'
+            ];
+    
+            $this->validate($rules, $messages);
+        }
 
 
         DB::beginTransaction();
@@ -384,6 +420,7 @@ class ServiciosController extends Component
                 'fecha_estimada_entrega' => $from,
                 'order_service_id' => $neworder->id
             ]);
+
             $mv = Movimiento::create([
                 'type' => 'PENDIENTE',
                 'status' => 'ACTIVO',
@@ -392,6 +429,7 @@ class ServiciosController extends Component
                 'saldo' => $this->saldo,
                 'user_id' => Auth()->user()->id,
             ]);
+
             MovService::create([
                 'movimiento_id' => $mv->id,
                 'service_id' => $newservice->id
@@ -463,34 +501,71 @@ class ServiciosController extends Component
     public function Update()
     {
         
-        $rules = [
-            'typeworkid' => 'required|not_in:Elegir',
-            'catprodservid' => 'required|not_in:Elegir',
-            'marc' => 'required',
-            'detalle' => 'required',
-            'falla_segun_cliente' => 'required',
-            'diagnostico' => 'required',
-            'solucion' => 'required',
-            'import' => 'required',
-            'on_account' => 'required',
-            'fecha_estimada_entrega' => 'required'
-        ];
-        $messages = [
-            'typeworkid.required' => 'El Tipo de Trabajo es requerido',
-            'typeworkid.not_in' => 'Seleccine una opción distinto a Elegir',
-            'catprodservid.required' => 'El Tipo de Equipo es requerido',
-            'catprodservid.not_in' => 'Seleccine una opción distinto a Elegir',
-            'marc.required' => 'La Marca/Modelo es requerida',
-            'detalle.required' => 'El Estado del Equipo es requerido',
-            'falla_segun_cliente.required' => 'La Falla es requerida',
-            'diagnostico.required' => 'El Diagnostico es requerido',
-            'solucion.required' => 'La Solución es requerida',
-            'import.required' => 'El Saldo es requerido',
-            'on_account.required' => 'Si no desea ingresar nada ingrese "0"',
-            'fecha_estimada_entrega.required' => 'La Fecha es requerida'
-        ];
+        if($this->on_account <= $this->import){
+            $rules = [
+                'typeworkid' => 'required|not_in:Elegir',
+                'catprodservid' => 'required|not_in:Elegir',
+                'marc' => 'required',
+                'detalle' => 'required',
+                'falla_segun_cliente' => 'required',
+                'diagnostico' => 'required',
+                'solucion' => 'required',
+                'import' => 'required',
+                'on_account' => 'required',
+                'fecha_estimada_entrega' => 'required'
+            ];
+            $messages = [
+                'typeworkid.required' => 'El Tipo de Trabajo es requerido',
+                'typeworkid.not_in' => 'Seleccine una opción distinto a Elegir',
+                'catprodservid.required' => 'El Tipo de Equipo es requerido',
+                'catprodservid.not_in' => 'Seleccine una opción distinto a Elegir',
+                'marc.required' => 'La Marca/Modelo es requerida',
+                'detalle.required' => 'El Estado del Equipo es requerido',
+                'falla_segun_cliente.required' => 'La Falla es requerida',
+                'diagnostico.required' => 'El Diagnostico es requerido',
+                'solucion.required' => 'La Solución es requerida',
+                'import.required' => 'El Saldo es requerido',
+                'on_account.required' => 'Si no desea ingresar nada ingrese "0"',
+                'fecha_estimada_entrega.required' => 'La Fecha es requerida'
+            ];
+    
+            $this->validate($rules, $messages);
+        }else{
+            $rules = [
+                'typeworkid' => 'required|not_in:Elegir',
+                'catprodservid' => 'required|not_in:Elegir',
+                'marc' => 'required',
+                'detalle' => 'required',
+                'falla_segun_cliente' => 'required',
+                'diagnostico' => 'required',
+                'solucion' => 'required',
+                'import' => 'required',
+                'on_account' => 'required',
+                'on_account' => 'required_with:import|lt:import',
+                'import' => 'required_with:on_account',
+                'fecha_estimada_entrega' => 'required'
+            ];
+            $messages = [
+                'typeworkid.required' => 'El Tipo de Trabajo es requerido',
+                'typeworkid.not_in' => 'Seleccine una opción distinto a Elegir',
+                'catprodservid.required' => 'El Tipo de Equipo es requerido',
+                'catprodservid.not_in' => 'Seleccine una opción distinto a Elegir',
+                'marc.required' => 'La Marca/Modelo es requerida',
+                'detalle.required' => 'El Estado del Equipo es requerido',
+                'falla_segun_cliente.required' => 'La Falla es requerida',
+                'diagnostico.required' => 'El Diagnostico es requerido',
+                'solucion.required' => 'La Solución es requerida',
+                'import.required' => 'El Saldo es requerido',
+                'on_account.required' => 'Si no desea ingresar nada ingrese "0"',
+                'import.required_with' => 'Ingrese un monto válido',
+                'on_account.required_with' => 'Ingrese un monto válido.',
+                'on_account.lt' => 'A cuenta no puede ser mayor al total',
+                'fecha_estimada_entrega.required' => 'La Fecha es requerida'
+            ];
+    
+            $this->validate($rules, $messages);
+        }
 
-        $this->validate($rules, $messages);
         DB::beginTransaction();
         /* dd($this->hora_entrega); */
         try {
@@ -507,7 +582,15 @@ class ServiciosController extends Component
                 'solucion' => $this->solucion,
                 'fecha_estimada_entrega' => $from,
             ]);
-            
+            foreach ($service->movservices as $mm){
+                $mm->movs->update([
+                    'import' => $this->import,
+                    'on_account' => $this->on_account,
+                    'saldo' => $this->saldo,
+                ]);
+            }
+
+
             $servicioss = Service::find($this->selected_id);
             foreach($servicioss->movservices as $mm){
                 if($mm->movs->status == 'ACTIVO'){

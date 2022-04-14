@@ -1022,30 +1022,45 @@ class OrderServiceController extends Component
 
         ]);
         foreach ($this->service1->movservices as $mm) {
+            /* $rules = [
+                'on_account' => 'required_with:import|lt:import',
+                'import' => 'required_with:on_account',
+                
+            ];
+            $messages = [
+                'import.required_with' => 'Ingrese un monto válido',
+                'on_account.required_with' => 'Ingrese un monto válido.',
+                'on_account.lt' => 'A cuenta no puede ser mayor al total',
+            ];
+            $this->validate($rules, $messages);
+
             if ($mm->movs->status == 'ACTIVO') {
                 $mm->movs->update([
                     'import' => $this->import,
                     'on_account' => $this->on_account,
                     'saldo' => $this->saldo,
                 ]);
-                /* if($this->on_account <= $this->import){
-                    $mm->movs->update([
-                        'import' => $this->import,
-                        'on_account' => $this->on_account,
-                        'saldo' => $this->saldo,
-                    ]);
-                }else{
-                    $rules = [
-                        'on_account' => 'numeric',
-                    ];
-                    $messages = [
-                        'on_account.numeric' => 'A CUENTA no puede ser mayor al TOTAL',
-                    ];
-                    $this->validate($rules, $messages);
-                } */
+            } */
+
+            if($this->on_account <= $this->import){
+                $mm->movs->update([
+                    'import' => $this->import,
+                    'on_account' => $this->on_account,
+                    'saldo' => $this->saldo,
+                ]);
+            }else{
+                $rules = [
+                    'on_account' => 'required_with:import|lt:import',
+                    'import' => 'required_with:on_account',
+                ];
+                $messages = [
+                    'import.required_with' => 'Ingrese un monto válido',
+                    'on_account.required_with' => 'Ingrese un monto válido.',
+                    'on_account.lt' => 'A cuenta no puede ser mayor al total',
+                ];
+                $this->validate($rules, $messages);
             }
         }
-        
         $this->resetUI();
         $this->emit('detail-hide-msg', 'Servicio Actualizado');
     }
