@@ -314,7 +314,8 @@
                                         </td>
                                         <td class="text-center">
                                             @if ($condicional == 'combos')
-                                                <a href="javascript:void(0)" wire:click="Acciones({{ $p->id }})"
+                                                <a href="javascript:void(0)"
+                                                    wire:click="AccionesCombo({{ $p->id }})"
                                                     class="btn btn-dark mtmobile" title="Renovación">
                                                     <i class="fa-regular fa-calendar-check"></i>
                                                 </a>
@@ -351,6 +352,7 @@
     @include('livewire.perfiles.form')
     @include('livewire.perfiles.modalDetails')
     @include('livewire.perfiles.modalEditCombos')
+    @include('livewire.perfiles.modalRenovarCombos')
 
 </div>
 
@@ -403,6 +405,14 @@
         });
         window.livewire.on('combo-updated', msg => {
             $('#modal-edit-combos').modal('hide')
+            noty(msg)
+        });
+
+        window.livewire.on('modal-acciones-combo', msg => {
+            $('#modal-acciones-combo').modal('show')
+        });
+        window.livewire.on('acciones-combo-hide', msg => {
+            $('#modal-acciones-combo').modal('hide')
             noty(msg)
         });
 

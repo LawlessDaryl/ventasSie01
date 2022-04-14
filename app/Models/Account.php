@@ -18,9 +18,8 @@ class Account extends Model
 
     public function PlanCuenta()
     {
-        return $this->hasOne(PlanAccount::class);
+        return $this->hasMany(PlanAccount::class);
     }
-
     public function Correo()
     {
         return $this->belongsTo(Email::class, 'email_id', 'id');

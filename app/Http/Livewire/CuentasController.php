@@ -494,7 +494,7 @@ class CuentasController extends Component
 
         /* CALCULAR FECHA DE FINALIZACION AL CREAR UNA NUEVA CUENTA */
         if ($this->start_account) {
-            if ($this->mesesComprar > 0) {
+            if ($this->mesesComprar > 0 && $this->mostrarRenovar == 0) {
                 $dias = $this->mesesComprar * 30;
                 $this->expiration_account = strtotime('+' . $dias . ' day', strtotime($this->start_account));
                 $this->expiration_account = date('Y-m-d', $this->expiration_account);
@@ -564,18 +564,21 @@ class CuentasController extends Component
     public function RenovarCuenta()
     {   /* RENOVAR LA CUENTA CON EL PROVEEDOR SEGUN LOS MESES QUE PONE EL USUARIO */
         $rules = [
-            'start_account' => 'required',
-            'expiration_account' => 'required',
+            'start_account_new' => 'required',
+            'expiration_account_new' => 'required',
             'number_profiles' => 'required',
             'price' => 'required',
             'password_account' => 'required',
+            'meseRenovarProv' => 'required|integer|gt:0',
         ];
         $messages = [
-            'start_account.required' => 'La fecha de inicio es requerida',
-            'expiration_account.required' => 'La fecha de expiración es requerida',
+            'start_account_new.required' => 'La nueva fecha de inicio es requerida',
+            'expiration_account_new.required' => 'La nueva fecha de expiración es requerida',
             'number_profiles.required' => 'La cantidad de perfiles es requerida',
             'price.required' => 'El precio de la cuenta es requerida',
-            'password_account.required' => 'La contraseña de la cuenta es requerida',
+            'meseRenovarProv.required' => 'Los meses a renovar son requeridos si va a renovar',
+            'meseRenovarProv.integer' => 'Los meses a renovar deben ser minimo 1',
+            'meseRenovarProv.gt' => 'Los meses a renovar deben ser minimo 1',
         ];
         /* OBTENER FECHA 30 DIAS DESPUES DE LA FECHA INICIO PARA LA PRIMERA INVERSION */
         $dias = 30;
