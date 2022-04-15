@@ -48,16 +48,16 @@
                     <div class="col-sm-2 ">
                         <h6>Fecha desde</h6>
                         <div class="form-group">
-                            <input @if ($reportType == 0) disabled @endif type="text" wire:model="dateFrom"
-                                class="form-control flatpickr" placeholder="Click para elegir">
+                            <input @if ($reportType == 0) disabled @endif type="date" wire:model="dateFrom"
+                                class="form-control" placeholder="Click para elegir">
                         </div>
                     </div>
 
                     <div class="col-sm-2 ">
                         <h6>Fecha hasta</h6>
                         <div class="form-group">
-                            <input @if ($reportType == 0) disabled @endif type="text" wire:model="dateTo"
-                                class="form-control flatpickr" placeholder="Click para elegir">
+                            <input @if ($reportType == 0) disabled @endif type="date" wire:model="dateTo"
+                                class="form-control" placeholder="Click para elegir">
                         </div>
                     </div>
 
@@ -105,9 +105,11 @@
 
                                     @foreach ($data as $d)
                                         <tr>
+                                            {{-- CLIENTE --}}
                                             <td class="text-center">
                                                 <h6>{{ $d->movservices[0]->movs->climov->client->nombre }}</h6>
                                             </td>
+                                            {{-- NÚMERO ORDEN --}}
                                             <td class="text-center">
                                                 <h6>{{ $d->order_service_id }}</h6>
                                             </td>
@@ -150,9 +152,13 @@
                                                     <td class="text-center">
                                                         <h6>{{ $mv->movs->created_at }}</h6>
                                                     </td>
+                                                @elseif ($mv->movs->type == 'ABANDONADO')
+                                                    <td class="text-center">
+                                                        <h6>Abandonado</h6>
+                                                    </td>
                                                 @endif
 
-                                                @if ($mv->movs->type == 'ABANDONADO')
+                                                {{-- @if ($mv->movs->type == 'ABANDONADO')
                                                     @if ($mv->movs->status == 'ACTIVO')
                                                         <td class="text-center">
                                                             <h6>Abandonado</h6>
@@ -164,7 +170,7 @@
                                                             <h6>Abandonado</h6>
                                                         </td>
                                                     @endif
-                                                @endif
+                                                @endif --}}
 
                                             @endforeach
                                             <td class="text-center">

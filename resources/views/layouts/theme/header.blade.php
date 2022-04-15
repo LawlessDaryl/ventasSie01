@@ -23,11 +23,11 @@
         <livewire:search-controller>
 
         </livewire:search-controller>
-        
+        @if (@Auth::user()->hasPermissionTo('Corte_Caja_Index'))
         <ul class="tabs tab-pills text-center mt-2">            
             <a href="{{ url('cortecajas') }}" class="btn btn-warning btn-lg active" role="button" aria-pressed="true">CORTE DE CAJA</a>            
         </ul>
-        
+        @endif
 
         <ul class="tabs tab-pills text-center mt-4">
             @if (empty(session('sesionCaja')))
@@ -225,6 +225,12 @@
                         <div class="media-body">
                             <h5>{{ auth()->user()->name }}</h5>
                             <p>{{ auth()->user()->profile }}</p>
+                            @foreach(auth()->user()->sucursalusers as $sucu)
+                                @if($sucu->estado == 'ACTIVO')
+                                    <p>{{$sucu->sucursal->name}}</p>
+                                @endif
+                            @endforeach
+                            <p></p>
                         </div>
                     </div>
                 </div>

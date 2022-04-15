@@ -8,7 +8,7 @@
                 <ul class="tabs tab-pills">
                    
                     <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
-                        data-target="#theModal">Agregar</a>
+                        data-target="#theModal">AGREGAR</a>
                     
                 </ul>
             </div>

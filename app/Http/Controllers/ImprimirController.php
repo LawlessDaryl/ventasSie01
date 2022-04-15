@@ -25,9 +25,11 @@ class ImprimirController extends Controller
                 'mov.saldo as saldo',
                 'mov.type as type',
                 'mov.on_account as on_account',
+                'mov.user_id as usuarioid',
                 'cat.nombre as category',
                 'c.nombre as nombreC',
                 'c.celular as celular',
+                'c.telefono as telefono',
                 'cps.nombre as nombreCateg'
             )
             ->where('services.order_service_id',  $idServicio)

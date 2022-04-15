@@ -20,8 +20,8 @@ class SubCatProdServiceController extends Component
     }
     public function mount()
     {
-        $this->pageTitle = 'Listado';
-        $this->componentName = 'Sub Categoría Productos';
+        $this->pageTitle = 'LISTADO';
+        $this->componentName = 'SUB CATEGORÍA PRODUCTOS';
         $this->categoryid = 'Elegir';
         $this->status = 'Elegir';
     }

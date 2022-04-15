@@ -3,7 +3,7 @@
         <div class="widget widget-chart-one">
             <div class="widget-heading">
                 <h4 class="card-title">
-                    <b>Servicios y Pendientes Próximos a Vencer</b>
+                    <b>SERVICIOS Y PENDIENTES PRÓXIMOS A VENCER</b>
                 </h4>
             </div>
             <div class="form-group">
@@ -27,7 +27,7 @@
                     </div>
 
 
-                    <div class="col-sm-2 col-md-3 mt-4">
+                    <div class="col-lg-2 col-sm-2 col-md-3 mt-4">
                         <div class="form-group">
                             <div class="n-chk">
                                 <label class="new-control new-radio radio-classic-primary">
@@ -38,7 +38,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-2 col-md-3 mt-4">
+                    <div class="col-lg-3 col-sm-2 col-md-3 mt-4">
                         <div class="form-group">
                             <div class="n-chk">
                                 <label class="new-control new-radio radio-classic-primary">
@@ -50,7 +50,7 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-2 col-md-3 mt-4">
+                    <div class="col-lg-3 col-sm-2 col-md-3 mt-4">
                         <div class="form-group">
                             <div class="n-chk">
                                 <label class="new-control new-radio radio-classic-primary">
@@ -61,12 +61,40 @@
                             </div>
                         </div>
                     </div>
+
                     @if (@Auth::user()->hasPermissionTo('Orden_Servicio_Index'))
-                    <ul class="tabs tab-pills">
-                        <a href="{{ url('orderservice') }}" class="btn btn-dark">Ir a Ordenes de Servicio</a>
-                    </ul>
+                    <div class="col-lg-2 col-sm-2 col-md-3 mt-4">
+                        <ul class="tabs tab-pills">
+                            <a href="{{ url('orderservice') }}" class="btn btn-dark">IR A ORDENES DE SERVICIO</a>
+                        </ul>
+                    </div>
                     @endif
                 </div>
+                <div class="row">
+                    <div class="col-sm-2 col-md-3 mt-4">
+                        <div class="form-group">
+                            <div class="n-chk">
+                                <label class="new-control new-radio radio-classic-primary">
+                                    <input type="radio" class="new-control-input" name="sucursales"
+                                        value="MiSucursal" wire:model="condicion">
+                                    <span class="new-control-indicator"></span><h6>MI SUCURSAL</h6>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-2 col-md-3 mt-4">
+                        <div class="form-group">
+                            <div class="n-chk">
+                                <label class="new-control new-radio radio-classic-primary">
+                                    <input type="radio" class="new-control-input" name="sucursales"
+                                        value="Todos" wire:model="condicion" checked>
+                                    <span class="new-control-indicator"></span><h6>TODAS LAS SUCURSALES</h6>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
             <div class="row">
                 <div class="col-sm-12">
@@ -111,7 +139,7 @@
                                                 <h6>{{ $mv->movs->type }}</h6>
                                             </td>
                                             <td class="text-center">
-                                                <a class="badge badge-pill badge-light"
+                                                <a class="shadow-none badge badge-primary"
                                                     href="{{ url('idorderservice' . '/' . $d->OrderServicio->id) }}"
                                                     style='font-size:18px'>Seleccionar</a>
                                             </td>
@@ -152,7 +180,7 @@
                                                     <h6>{{ $mv2->movs->type }}</h6>
                                                 </td>
                                                 <td class="text-center">
-                                                    <a class="badge badge-pill badge-light"
+                                                    <a class="shadow-none badge badge-primary"
                                                         href="{{ url('idorderservice' . '/' . $d2->OrderServicio->id) }}"
                                                         style='font-size:18px'>Seleccionar</a>
                                                 </td>
@@ -193,7 +221,7 @@
                                                 <h6>{{ $mv3->movs->type }}</h6>
                                             </td>
                                             <td class="text-center">
-                                                <a class="badge badge-pill badge-light"
+                                                <a class="shadow-none badge badge-primary"
                                                     href="{{ url('idorderservice' . '/' . $d3->OrderServicio->id) }}"
                                                     style='font-size:18px'>Seleccionar</a>
                                             </td>

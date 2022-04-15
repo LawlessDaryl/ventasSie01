@@ -3,7 +3,7 @@
         <div class="modal-content">
             <div class="modal-header bg-dark">
                 <h5 class="modal-title text-white">
-                    <b>DETALLE DEL SERVICIO ENTREGADO</b>
+                    <b>DETALLE DEL SERVICIO ENTREGADO Nº {{$numeroOrden}}</b>
                 </h5>
                 <h6 class="text-center text-warning" wire:loading>POR FAVOR ESPERE</h6>
             </div>
@@ -89,7 +89,7 @@
                                     <label><h6>Diagnóstico</h6></label>
                                 </td>
                                 <td class="text-left" colspan="5">
-                                    <input type="text" wire:model.lazy="diagnostico" class="form-control"
+                                    <input disabled type="text" wire:model.lazy="diagnostico" class="form-control"
                                         placeholder="ej: Revisión">
                                         @error('diagnostico') <span class="text-danger er">{{ $message }}</span>@enderror
                                 </td>
@@ -100,7 +100,7 @@
                                     <label><h6>Solución</h6></label>
                                 </td>
                                 <td class="text-left" colspan="5">
-                                    <input type="text" wire:model.lazy="solucion" class="form-control"
+                                    <input disabled type="text" wire:model.lazy="solucion" class="form-control"
                                         placeholder="ej: Revisión">
                                         @error('solucion') <span class="text-danger er">{{ $message }}</span>@enderror
                                 </td>
@@ -111,11 +111,11 @@
                                     <label><h6>Costo</h6></label>
                                 </td>
                                 <td class="text-left">
-                                    <input type="number" wire:model="costo" class="form-control" placeholder="ej: 0.0">
+                                    <input disabled type="number" wire:model="costo" class="form-control" placeholder="ej: 0.0">
                                     @error('costo') <span class="text-danger er">{{ $message }}</span>@enderror
                                 </td>
                                 <td class="text-left" colspan="4">
-                                    <input type="text" wire:model.lazy="detalle_costo" class="form-control"
+                                    <input disabled type="text" wire:model.lazy="detalle_costo" class="form-control"
                                         placeholder="ej: Se compró una pantalla">
                                         @error('detalle_costo') <span class="text-danger er">{{ $message }}</span>@enderror
                                 </td>
@@ -125,14 +125,14 @@
                                     <label><h6>Total</h6></label>
                                 </td>
                                 <td class="text-left" >
-                                    <input type="number" wire:model="import" class="form-control" placeholder="ej: 0.0">
+                                    <input disabled type="number" wire:model="import" class="form-control" placeholder="ej: 0.0">
                                         @error('import') <span class="text-danger er">{{ $message }}</span>@enderror
                                 </td>
                                 <td class="text-right" >
                                     <label><h6>A Cuenta</h6></label>
                                 </td>
                                 <td class="text-left" >
-                                    <input type="number" wire:model="on_account" class="form-control"
+                                    <input disabled type="number" wire:model="on_account" class="form-control"
                                     placeholder="ej: 0.0">
                                     @error('on_account') <span class="text-danger er">{{ $message }}</span>@enderror
                                 </td>
@@ -140,7 +140,7 @@
                                     <label><h6>Saldo</h6></label>
                                 </td>
                                 <td class="text-left" >
-                                    <input type="number" wire:model.lazy="saldo" class="form-control" placeholder="ej: 0.0" disabled>
+                                    <input disabled type="number" wire:model.lazy="saldo" class="form-control" placeholder="ej: 0.0" disabled>
                                     @error('saldo') <span class="text-danger er">{{ $message }}</span>@enderror
                                 </td>
                             </tr>
@@ -151,9 +151,9 @@
             
 
             <div class="modal-footer">
-                <button type="button" wire:click.prevent="GuardarCambio({{$service1}})"
+                {{-- <button type="button" wire:click.prevent="GuardarCambio({{$service1}})"
                     class="btn btn-dark close-btn text-info"
-                    data-dismiss="modal" style="background: #3b3f5c">REGISTRAR INFORMACIÓN</button>
+                    data-dismiss="modal" style="background: #3b3f5c">REGISTRAR INFORMACIÓN</button> --}}
                 <button type="button" wire:click.prevent="resetUI()" class="btn btn-dark close-btn text-info"
                     data-dismiss="modal" style="background: #3b3f5c">CANCELAR</button>
             </div>

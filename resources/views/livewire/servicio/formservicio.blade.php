@@ -13,7 +13,7 @@
                 <div class="row">
                     <div class="col-lg-4 col-sm-12 col-md-6">
                         <div class="form-group">
-                            <label>Tipo de Trabajo</label>
+                            <label><h6>Tipo de Trabajo *</h6></label>
                             <select wire:model.lazy="typeworkid" class="form-control">
                                 <option value="Elegir" disabled selected>Elegir</option>
 
@@ -30,7 +30,7 @@
 
                     <div class="col-lg-4 col-sm-12 col-md-6">
                         <div class="form-group">
-                            <label>Tipo de equipo</label>
+                            <label><h6>Tipo de equipo *</h6></label>
                             <select wire:model.lazy="catprodservid" class="form-control">
                                 <option value="Elegir" disabled selected>Elegir</option>
 
@@ -46,7 +46,7 @@
                     </div>
 
                     <div class="col-lg-4 col-sm-12 col-md-6">
-                        <label>Marca/Modelo</label>
+                        <label><h6>Marca/Modelo *</h6></label>
                         <datalist id="colores">
                             @foreach ($marcas as $cat)
                                 @if($cat->status=='ACTIVE')
@@ -55,11 +55,12 @@
                             @endforeach
                         </datalist>
                         <input list="colores" wire:model.lazy="marc" name="colores" type="text" class="form-control">
+                        @error('marc') <span class="text-danger er">{{ $message }}</span>@enderror
                     </div>
 
                     <div class="col-lg-6 col-sm-12 col-md-8">
                         <div class="form-group">
-                            <label>Estado del Equipo</label>
+                            <label><h6>Estado del Equipo *</h6></label>
                             <input type="text" wire:model.lazy="detalle" class="form-control"
                                 placeholder="ej: Note 7 con protector de pantalla">
                             @error('detalle') <span class="text-danger er">{{ $message }}</span>@enderror
@@ -69,9 +70,9 @@
 
                     <div class="col-lg-6 col-sm-12 col-md-8">
                         <div class="form-group">
-                            <label>Falla según el cliente</label>
+                            <label><h6>Falla según el cliente *</h6></label>
                             <input type="text" wire:model.lazy="falla_segun_cliente" class="form-control"
-                                placeholder="ej: Revisión">
+                                placeholder="ej: No carga">
                             @error('falla_segun_cliente') <span
                                 class="text-danger er">{{ $message }}</span>@enderror
                         </div>
@@ -79,7 +80,7 @@
 
                     <div class="col-lg-6 col-sm-12 col-md-8">
                         <div class="form-group">
-                            <label>Diagnóstico</label>
+                            <label><h6>Diagnóstico</h6></label>
                             <input type="text" wire:model.lazy="diagnostico" class="form-control"
                                 placeholder="ej: Revisión">
                             @error('diagnostico') <span class="text-danger er">{{ $message }}</span>@enderror
@@ -88,7 +89,7 @@
 
                     <div class="col-lg-6 col-sm-12 col-md-8">
                         <div class="form-group">
-                            <label>Solución</label>
+                            <label><h6>Solución</h6></label>
                             <input type="text" wire:model.lazy="solucion" class="form-control"
                                 placeholder="ej: Revisión">
                             @error('solucion') <span class="text-danger er">{{ $message }}</span>@enderror
@@ -97,14 +98,14 @@
 
                     <div class="col-lg-4 col-sm-12 col-md-4">
                         <div class="form-group">
-                            <label>Total</label>
+                            <label><h6>Total</h6></label>
                             <input type="number" wire:model="import" class="form-control" placeholder="ej: 0.0">
                             @error('import') <span class="text-danger er">{{ $message }}</span>@enderror
                         </div>
                     </div>
                     <div class="col-sm-12 col-md-4">
                         <div class="form-group">
-                            <label>A Cuenta</label>
+                            <label><h6>A Cuenta</h6></label>
                             <input type="number" wire:model="on_account" class="form-control"
                                 placeholder="ej: 0.0">
                             @error('on_account') <span class="text-danger er">{{ $message }}</span>@enderror
@@ -113,7 +114,7 @@
 
                     <div class="col-lg-4 col-sm-12 col-md-4">
                         <div class="form-group">
-                            <label>Saldo</label>
+                            <label><h6>Saldo</h6></label>
                             <input type="number" wire:model.lazy="saldo" class="form-control" placeholder="ej: 0.0" disabled>
                             @error('saldo') <span class="text-danger er">{{ $message }}</span>@enderror
                         </div>
@@ -122,7 +123,7 @@
 
                     <div class="col-lg-4 col-sm-12 col-md-4">
                         <div class="form-group">
-                            <label>Fecha Entrega</label>
+                            <label><h6>Fecha Entrega</h6></label>
                             <input type="date" wire:model.lazy="fecha_estimada_entrega" class="form-control">
                             @error('fecha_estimada_entrega')
                                 <span class="text-danger">{{ $message }}</span>
@@ -132,37 +133,45 @@
 
                     <div class="col-lg-3 col-sm-12 col-md-4">
                         <div class="form-group">
-                            <label>Hora Entrega</label>
+                            <label><h6>Hora Entrega</h6></label>
 
                             <input type="time" name="hora_entrega" wire:model.lazy="hora_entrega"
                                 class="form-control">
                         </div>
                     </div>
                     @if($selected_id > 0)
+                    @if($opciones != 'ENTREGADO')
                     <div class="col-lg-5 col-sm-12 col-md-4">
-                            <label>Estado del Servicio</label>
+                            <label><h6>Estado del Servicio</h6></label>
                             <select wire:model.lazy="opciones" class="form-control">
-                                @if($opciones == 'PENDIENTE')
+                                @if($estatus == 'PENDIENTE')
                                     <option value="PENDIENTE" >PENDIENTE</option>
                                 @endif
-                                @if($opciones == 'PROCESO')
+                                @if($estatus == 'PROCESO')
                                     <option value="PENDIENTE" >PENDIENTE</option>
                                     <option value="PROCESO" >PROCESO</option>
                                 @endif
-                                @if($opciones == 'TERMINADO' )
+                                @if($estatus == 'TERMINADO' )
                                     <option value="PENDIENTE" >PENDIENTE</option>
                                     <option value="PROCESO" >PROCESO</option>
                                     <option value="TERMINADO" >TERMINADO</option>
                                 @endif
-                                @if($opciones == 'ENTREGADO')
+                                @if($estatus == 'ABANDONADO' )
+                                    <option value="PENDIENTE" >PENDIENTE</option>
+                                    <option value="PROCESO" >PROCESO</option>
+                                    <option value="TERMINADO" >TERMINADO</option>
+                                    <option value="ABANDONADO" >ABANDONADO</option>
+                                @endif
+                                {{-- @if($opciones == 'ENTREGADO')
                                     <option value="PENDIENTE" >PENDIENTE</option>
                                     <option value="PROCESO" >PROCESO</option>
                                     <option value="TERMINADO" >TERMINADO</option>
                                     <option value="ENTREGADO" >ENTREGADO</option>
-                                @endif
+                                @endif --}}
                             </select>
                             @error('opciones') <span class="text-danger er">{{ $message }}</span>@enderror
                         </div>
+                        @endif
                     @endif
                 </div>
                 <div class="modal-footer">

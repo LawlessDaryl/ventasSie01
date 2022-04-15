@@ -14,15 +14,20 @@
                         <div class="text-center">
                             <div class="col-lg-12 col-sm-12 col-md-6">
                                 <div class="form-group">
-                                        <a class="badge badge-info" style="font-size: 115%" href="{{ url('reporte/pdf' . '/' . $orderservice) }}" 
+                                        {{-- <a class="badge badge-info" style="font-size: 115%" href="{{ url('reporte/pdf' . '/' . $orderservice) }}" 
+                                        target="_blank">Imprimir</a> --}}
+                                        <a class="btn btn-outline-primary" style="font-size: 115%" href="{{ url('reporte/pdf' . '/' . $orderservice) }}" 
                                         target="_blank">Imprimir</a>
                                 </div>
                             </div>
                             @if(@Auth::user()->hasPermissionTo('Ver_Modificar_Eliminar_Servicio'))
                                 <div class="col-lg-12 col-sm-12 col-md-6">
                                     <div class="form-group">
-                                        <span data-dismiss="modal" wire:click.prevent="EditService({{$orderservice}})" 
+                                        {{-- <span data-dismiss="modal" wire:click.prevent="EditService({{$orderservice}})" 
                                         class="badge badge-success" style="font-size: 115%"
+                                        data-dismiss="modal">Modificar Servicio</span> --}}
+                                        <span data-dismiss="modal" wire:click.prevent="EditService({{$orderservice}})" 
+                                        class="btn btn-outline-success" style="font-size: 115%"
                                         data-dismiss="modal">Modificar Servicio</span>
                                     </div>
                                 </div>
@@ -31,8 +36,10 @@
                                         @if(@Auth::user()->hasPermissionTo('Anular_Servicio'))
                                             <div class="col-lg-12 col-sm-12 col-md-6">
                                                 <div class="form-group">
+                                                    {{-- <span data-dismiss="modal" wire:click.prevent="VerAnular({{$orderservice}})" 
+                                                    class="badge badge-warning" style="font-size: 115%">Anular Servicio</span> --}}
                                                     <span data-dismiss="modal" wire:click.prevent="VerAnular({{$orderservice}})" 
-                                                    class="badge badge-warning" style="font-size: 115%">Anular Servicio</span>
+                                                    class="btn btn-outline-warning" style="font-size: 115%">Anular Servicio</span>
                                                 </div>
                                             </div>
                                         @endif
@@ -42,8 +49,10 @@
                                         @if(@Auth::user()->hasPermissionTo('Eliminar_Servicio'))
                                             <div class="col-lg-12 col-sm-12 col-md-6">
                                                 <div class="form-group">
+                                                    {{-- <span data-dismiss="modal" wire:click.prevent="VerEliminar({{$orderservice}})" 
+                                                    class="badge badge-danger" style="font-size: 115%">Eliminar Servicio</span> --}}
                                                     <span data-dismiss="modal" wire:click.prevent="VerEliminar({{$orderservice}})" 
-                                                    class="badge badge-danger" style="font-size: 115%">Eliminar Servicio</span>
+                                                    class="btn btn-outline-danger" style="font-size: 115%">Eliminar Servicio</span>
                                                 </div>
                                             </div>
                                         @endif

@@ -6,8 +6,8 @@
                     <b>{{ $componentName }} | {{ $pageTitle }}</b>
                 </h4>
                 <ul class="tabs tab-pills">
-                    <a href="javascript:void(0)" class="btn btn-dark" wire:click="IrInicio">Ir a Inicio</a>
-                    <a href="javascript:void(0)" class="btn btn-dark" wire:click="GoService">Agregar</a>
+                    <a href="javascript:void(0)" class="btn btn-dark" wire:click="IrInicio">IR A INICIO</a>
+                    <a href="javascript:void(0)" class="btn btn-dark" wire:click="GoService">AGREGAR</a>
                 </ul>
 
             </div>
@@ -26,7 +26,27 @@
                     </div>
 
                 </div>
-                <div class="col-lg-4 col-md-4 col-sm-12">
+
+                <div class="form-group">
+                    <div class="n-chk">
+                        <label class="new-control new-radio radio-classic-primary">
+                            <input type="radio" class="new-control-input" name="custom-radio-4" id="libres"
+                                value="MiSucursal" wire:model="condicion">
+                            <span class="new-control-indicator"></span><h6>MI SUCURSAL</h6>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="n-chk">
+                        <label class="new-control new-radio radio-classic-primary">
+                            <input type="radio" class="new-control-input" name="custom-radio-4" id="ocupados"
+                                value="Todos" wire:model="condicion" checked>
+                            <span class="new-control-indicator"></span><h6>TODAS LAS SUCURSALES</h6>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="col-lg-2 col-md-4 col-sm-12">
                     <select wire:model.lazy="opciones" class="form-control">
                         <option value="PENDIENTE">PENDIENTE</option>
                         <option value="PROCESO">PROCESO</option>
@@ -234,7 +254,10 @@
                                             @endforeach
                                         </td>
                                         {{-- CODIGO --}}
-                                        @if ($item->id < 10)
+                                        <td class="text-center" width="7%">
+                                            <h6 class="table-th text-withe text-center" style="font-size: 100%">{{ $item->id }}</h6>
+                                        </td>
+                                        {{-- @if ($item->id < 10)
                                             <td class="text-center" width="7%">
                                                 <h6 class="table-th text-withe text-center" style="font-size: 100%">000{{ $item->id }}</h6>
                                             </td>
@@ -253,7 +276,8 @@
                                             <td class="text-center" width="7%">
                                                 <h6 class="table-th text-withe text-center" style="font-size: 100%">{{ $item->id }}</h6>
                                             </td>
-                                        @endif
+                                        @endif --}}
+                                        
                                         {{-- TOTAL --}}
                                         <td class="text-center" width="7%">
                                             <h6 class="table-th text-withe text-center" style="font-size: 100%">
@@ -395,7 +419,10 @@
                                             @endforeach
                                         </td>
                                         {{-- CODIGO --}}
-                                        @if ($item->id < 10)
+                                        <td class="text-center" width="7%">
+                                            <h6 class="table-th text-withe text-center" style="font-size: 100%">{{ $item->id }}</h6>
+                                        </td>
+                                        {{-- @if ($item->id < 10)
                                             <td class="text-center" width="7%">
                                                 <h6 class="table-th text-withe text-center" style="font-size: 100%">000{{ $item->id }}</h6>
                                             </td>
@@ -414,7 +441,7 @@
                                             <td class="text-center" width="7%">
                                                 <h6 class="table-th text-withe text-center" style="font-size: 100%">{{ $item->id }}</h6>
                                             </td>
-                                        @endif
+                                        @endif --}}
                                         {{-- TOTAL --}}
                                         <td class="text-center" width="7%">
                                             <h6 class="table-th text-withe text-center" style="font-size: 100%">
@@ -549,7 +576,10 @@
                                         @endforeach
                                     </td>
                                     {{-- CODIGO --}}
-                                    @if ($item->id < 10)
+                                    <td class="text-center" width="7%">
+                                        <h6 class="table-th text-withe text-center" style="font-size: 100%">{{ $item->id }}</h6>
+                                    </td>
+                                    {{-- @if ($item->id < 10)
                                         <td class="text-center" width="7%">
                                             <h6 class="table-th text-withe text-center" style="font-size: 100%">000{{ $item->id }}</h6>
                                         </td>
@@ -568,7 +598,7 @@
                                         <td class="text-center" width="7%">
                                             <h6 class="table-th text-withe text-center" style="font-size: 100%">{{ $item->id }}</h6>
                                         </td>
-                                    @endif
+                                    @endif --}}
                                     {{-- TOTAL --}}
                                     <td class="text-center" width="7%">
                                         <h6 class="table-th text-withe text-center" style="font-size: 100%">

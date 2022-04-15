@@ -14,6 +14,7 @@ use App\Models\User;
 use App\Models\Service;
 use App\Models\SubCatProdService;
 use Carbon\Carbon;
+use DateTime;
 use Dompdf\Renderer\Text;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -29,7 +30,7 @@ class ServiciosController extends Component
         $movimiento, $typeworkid, $detalle, $categoryid, $from, $usuariolog, $catprodservid, $marc, $typeservice,
         $falla_segun_cliente, $diagnostico, $solucion, $saldo, $on_account, $import, $fecha_estimada_entrega,
         $search,  $condicion, $selected_id, $pageTitle, $buscarCliente, $service, $type_service, $procedencia,
-        $opciones;
+        $opciones, $estatus;
     private $pagination = 5;
     public function paginationView()
     {
@@ -55,7 +56,7 @@ class ServiciosController extends Component
         $this->opciones = '';
         $this->from = Carbon::parse(Carbon::now())->format('d-m-Y  H:i');
         $this->fecha_estimada_entrega = Carbon::parse(Carbon::now())->format('Y-m-d');
-
+        $this->estatus = '';
         $this->procedencia = 'Nuevo';
 
         $this->hora_entrega = Carbon::parse(Carbon::now())->format('H:i');
@@ -330,32 +331,70 @@ class ServiciosController extends Component
     //Store de Agregar Servicio
     public function Store()
     {
-        $rules = [
-            'typeworkid' => 'required',
-            'catprodservid' => 'required',
-            'marc' => 'required',
-            'detalle' => 'required',
-            'falla_segun_cliente' => 'required',
-            'diagnostico' => 'required',
-            'solucion' => 'required',
-            'import' => 'required',
-            'on_account' => 'required',
-            'fecha_estimada_entrega' => 'required'
-        ];
-        $messages = [
-            'typeworkid.required' => 'El Tipo de Trabajo es requerido',
-            'catprodservid.required' => 'El Tipo de Equipo es requerido',
-            'marc.required' => 'La Marca/Modelo es requerida',
-            'detalle.required' => 'El Estado del Equipo es requerido',
-            'falla_segun_cliente.required' => 'La Falla es requerida',
-            'diagnostico.required' => 'El Diagnostico es requerido',
-            'solucion.required' => 'La Solución es requerida',
-            'import.required' => 'El Saldo es requerido',
-            'on_account.required' => 'Si no desea ingresar nada ingrese "0"',
-            'fecha_estimada_entrega.required' => 'La Fecha es requerida'
-        ];
-
-        $this->validate($rules, $messages);
+        if($this->on_account <= $this->import){
+            $rules = [
+                'typeworkid' => 'required|not_in:Elegir',
+                'catprodservid' => 'required|not_in:Elegir',
+                'marc' => 'required',
+                'detalle' => 'required',
+                'falla_segun_cliente' => 'required',
+                'diagnostico' => 'required',
+                'solucion' => 'required',
+                'import' => 'required',
+                'on_account' => 'required',
+                'fecha_estimada_entrega' => 'required'
+            ];
+            $messages = [
+                'typeworkid.required' => 'El Tipo de Trabajo es requerido',
+                'typeworkid.not_in' => 'Seleccine una opción distinto a Elegir',
+                'catprodservid.required' => 'El Tipo de Equipo es requerido',
+                'catprodservid.not_in' => 'Seleccine una opción distinto a Elegir',
+                'marc.required' => 'La Marca/Modelo es requerida',
+                'detalle.required' => 'El Estado del Equipo es requerido',
+                'falla_segun_cliente.required' => 'La Falla es requerida',
+                'diagnostico.required' => 'El Diagnostico es requerido',
+                'solucion.required' => 'La Solución es requerida',
+                'import.required' => 'El Saldo es requerido',
+                'on_account.required' => 'Si no desea ingresar nada ingrese "0"',
+                'fecha_estimada_entrega.required' => 'La Fecha es requerida'
+            ];
+    
+            $this->validate($rules, $messages);
+        }else{
+            $rules = [
+                'typeworkid' => 'required|not_in:Elegir',
+                'catprodservid' => 'required|not_in:Elegir',
+                'marc' => 'required',
+                'detalle' => 'required',
+                'falla_segun_cliente' => 'required',
+                'diagnostico' => 'required',
+                'solucion' => 'required',
+                'import' => 'required',
+                'on_account' => 'required',
+                'on_account' => 'required_with:import|lt:import',
+                'import' => 'required_with:on_account',
+                'fecha_estimada_entrega' => 'required'
+            ];
+            $messages = [
+                'typeworkid.required' => 'El Tipo de Trabajo es requerido',
+                'typeworkid.not_in' => 'Seleccine una opción distinto a Elegir',
+                'catprodservid.required' => 'El Tipo de Equipo es requerido',
+                'catprodservid.not_in' => 'Seleccine una opción distinto a Elegir',
+                'marc.required' => 'La Marca/Modelo es requerida',
+                'detalle.required' => 'El Estado del Equipo es requerido',
+                'falla_segun_cliente.required' => 'La Falla es requerida',
+                'diagnostico.required' => 'El Diagnostico es requerido',
+                'solucion.required' => 'La Solución es requerida',
+                'import.required' => 'El Saldo es requerido',
+                'on_account.required' => 'Si no desea ingresar nada ingrese "0"',
+                'import.required_with' => 'Ingrese un monto válido',
+                'on_account.required_with' => 'Ingrese un monto válido.',
+                'on_account.lt' => 'A cuenta no puede ser mayor al total',
+                'fecha_estimada_entrega.required' => 'La Fecha es requerida'
+            ];
+    
+            $this->validate($rules, $messages);
+        }
 
 
         DB::beginTransaction();
@@ -381,6 +420,7 @@ class ServiciosController extends Component
                 'fecha_estimada_entrega' => $from,
                 'order_service_id' => $neworder->id
             ]);
+
             $mv = Movimiento::create([
                 'type' => 'PENDIENTE',
                 'status' => 'ACTIVO',
@@ -389,6 +429,7 @@ class ServiciosController extends Component
                 'saldo' => $this->saldo,
                 'user_id' => Auth()->user()->id,
             ]);
+
             MovService::create([
                 'movimiento_id' => $mv->id,
                 'service_id' => $newservice->id
@@ -435,6 +476,13 @@ class ServiciosController extends Component
         $this->saldo = $movimiento_Serv->saldo;
         $this->opciones = $movimiento_Serv->type;
         $this->emit('modal-show', 'show modal!');
+
+        $servicioss = Service::find($this->selected_id);
+        foreach($servicioss->movservices as $mm){
+            if($mm->movs->status == 'ACTIVO'){
+                $this->estatus = $mm->movs->type;
+            }
+        }
     }
     public function ChangeTypeService()
     {
@@ -452,32 +500,72 @@ class ServiciosController extends Component
     //Update de Servicios
     public function Update()
     {
-        $rules = [
-            'typeworkid' => 'required',
-            'catprodservid' => 'required',
-            'marc' => 'required',
-            'detalle' => 'required',
-            'falla_segun_cliente' => 'required',
-            'diagnostico' => 'required',
-            'solucion' => 'required',
-            'import' => 'required',
-            'on_account' => 'required',
-            'fecha_estimada_entrega' => 'required'
-        ];
-        $messages = [
-            'typeworkid.required' => 'El Tipo de Trabajo es requerido',
-            'catprodservid.required' => 'El Tipo de Equipo es requerido',
-            'marc.required' => 'La Marca/Modelo es requerida',
-            'detalle.required' => 'El Estado del Equipo es requerido',
-            'falla_segun_cliente.required' => 'La Falla es requerida',
-            'diagnostico.required' => 'El Diagnostico es requerido',
-            'solucion.required' => 'La Solución es requerida',
-            'import.required' => 'El Saldo es requerido',
-            'on_account.required' => 'Si no desea ingresar nada ingrese "0"',
-            'fecha_estimada_entrega.required' => 'La Fecha es requerida'
-        ];
+        
+        if($this->on_account <= $this->import){
+            $rules = [
+                'typeworkid' => 'required|not_in:Elegir',
+                'catprodservid' => 'required|not_in:Elegir',
+                'marc' => 'required',
+                'detalle' => 'required',
+                'falla_segun_cliente' => 'required',
+                'diagnostico' => 'required',
+                'solucion' => 'required',
+                'import' => 'required',
+                'on_account' => 'required',
+                'fecha_estimada_entrega' => 'required'
+            ];
+            $messages = [
+                'typeworkid.required' => 'El Tipo de Trabajo es requerido',
+                'typeworkid.not_in' => 'Seleccine una opción distinto a Elegir',
+                'catprodservid.required' => 'El Tipo de Equipo es requerido',
+                'catprodservid.not_in' => 'Seleccine una opción distinto a Elegir',
+                'marc.required' => 'La Marca/Modelo es requerida',
+                'detalle.required' => 'El Estado del Equipo es requerido',
+                'falla_segun_cliente.required' => 'La Falla es requerida',
+                'diagnostico.required' => 'El Diagnostico es requerido',
+                'solucion.required' => 'La Solución es requerida',
+                'import.required' => 'El Saldo es requerido',
+                'on_account.required' => 'Si no desea ingresar nada ingrese "0"',
+                'fecha_estimada_entrega.required' => 'La Fecha es requerida'
+            ];
+    
+            $this->validate($rules, $messages);
+        }else{
+            $rules = [
+                'typeworkid' => 'required|not_in:Elegir',
+                'catprodservid' => 'required|not_in:Elegir',
+                'marc' => 'required',
+                'detalle' => 'required',
+                'falla_segun_cliente' => 'required',
+                'diagnostico' => 'required',
+                'solucion' => 'required',
+                'import' => 'required',
+                'on_account' => 'required',
+                'on_account' => 'required_with:import|lt:import',
+                'import' => 'required_with:on_account',
+                'fecha_estimada_entrega' => 'required'
+            ];
+            $messages = [
+                'typeworkid.required' => 'El Tipo de Trabajo es requerido',
+                'typeworkid.not_in' => 'Seleccine una opción distinto a Elegir',
+                'catprodservid.required' => 'El Tipo de Equipo es requerido',
+                'catprodservid.not_in' => 'Seleccine una opción distinto a Elegir',
+                'marc.required' => 'La Marca/Modelo es requerida',
+                'detalle.required' => 'El Estado del Equipo es requerido',
+                'falla_segun_cliente.required' => 'La Falla es requerida',
+                'diagnostico.required' => 'El Diagnostico es requerido',
+                'solucion.required' => 'La Solución es requerida',
+                'import.required' => 'El Saldo es requerido',
+                'on_account.required' => 'Si no desea ingresar nada ingrese "0"',
+                'import.required_with' => 'Ingrese un monto válido',
+                'on_account.required_with' => 'Ingrese un monto válido.',
+                'on_account.lt' => 'A cuenta no puede ser mayor al total',
+                'fecha_estimada_entrega.required' => 'La Fecha es requerida'
+            ];
+    
+            $this->validate($rules, $messages);
+        }
 
-        $this->validate($rules, $messages);
         DB::beginTransaction();
         /* dd($this->hora_entrega); */
         try {
@@ -494,45 +582,132 @@ class ServiciosController extends Component
                 'solucion' => $this->solucion,
                 'fecha_estimada_entrega' => $from,
             ]);
+            foreach ($service->movservices as $mm){
+                $mm->movs->update([
+                    'import' => $this->import,
+                    'on_account' => $this->on_account,
+                    'saldo' => $this->saldo,
+                ]);
+            }
 
-            $movimientoid = Service::join('mov_services as ms', 'ms.service_id', 'services.id')
-                ->join('movimientos as m', 'ms.movimiento_id', 'm.id')
-                ->select('ms.movimiento_id as movimiendoID')
-                ->where('services.id', $service->id)
-                ->get()->first();
 
-            $movimiento = Movimiento::find($movimientoid->movimiendoID);
-            $movimiento->update([
-                'import' => $this->import,
-                'on_account' => $this->on_account,
-                'saldo' => $this->saldo,
-                'type' => $this->opciones
-            ]);
-            $movServices = MovService::join('movimientos as m', 'm.id', 'mov_services.movimiento_id')
-                ->select('m.id')
-                ->where('m.type', $this->opciones)
-                ->where('mov_services.service_id', $service->id)->get()->first();
-
-            $movsEliminar = MovService::join('movimientos as m', 'm.id', 'mov_services.movimiento_id')
-                ->join('cliente_movs as cm', 'm.id', 'cm.movimiento_id')
-                ->select('mov_services.id as movservid', 'm.id as movid', 'cm.id as clientemovid')
-                ->where('mov_services.service_id', $service->id)->get();
-            foreach ($movsEliminar as $value) {
-                if ($value->movid != $movServices->id) {
-                    $ClienteMov = ClienteMov::find($value->clientemovid);
-                    $ClienteMov->delete();
-                    $movServ = MovService::find($value->movservid);
-                    $movServ->delete();
-                    $movim = Movimiento::find($value->movid);
-                    $movim->delete();
+            $servicioss = Service::find($this->selected_id);
+            foreach($servicioss->movservices as $mm){
+                if($mm->movs->status == 'ACTIVO'){
+                    $this->estatus = $mm->movs->type;
                 }
             }
-            $movimi = Movimiento::find($movServices->id);
-            $movimi->status = 'ACTIVO';
-            $movimi->save();
+            
+            if($this->estatus == 'TERMINADO' && $this->opciones == 'PENDIENTE'){
+                foreach($servicioss->movservices as $mm){
+                    if($mm->movs->type == 'TERMINADO' || $mm->movs->type == 'PROCESO'){
+                        $ClienteMov = ClienteMov::find($mm->movs->climov->id);
+                        $ClienteMov->delete();
+                        $movServ = MovService::find($mm->id);
+                        $movServ->delete();
+                        $movim = Movimiento::find($mm->movs->id);
+                        $movim->delete();
+                    }
+                    if($mm->movs->type == 'PENDIENTE'){
+                        $movimi = Movimiento::find($mm->movs->id);
+                        $movimi->status = 'ACTIVO';
+                        $movimi->save();
+                    }
+                }
+            }elseif($this->estatus == 'TERMINADO' && $this->opciones == 'PROCESO'){
+                foreach($servicioss->movservices as $mm){
+                    if($mm->movs->type == 'TERMINADO'){
+                        $ClienteMov = ClienteMov::find($mm->movs->climov->id);
+                        $ClienteMov->delete();
+                        $movServ = MovService::find($mm->id);
+                        $movServ->delete();
+                        $movim = Movimiento::find($mm->movs->id);
+                        $movim->delete();
+                    }
+                    if($mm->movs->type == 'PROCESO'){
+                        $movimi = Movimiento::find($mm->movs->id);
+                        $movimi->status = 'ACTIVO';
+                        $movimi->save();
+                    }
+                }
+            }elseif($this->estatus == 'PROCESO' && $this->opciones == 'PENDIENTE'){
+                foreach($servicioss->movservices as $mm){
+                    if($mm->movs->type == 'PROCESO'){
+                        $ClienteMov = ClienteMov::find($mm->movs->climov->id);
+                        $ClienteMov->delete();
+                        $movServ = MovService::find($mm->id);
+                        $movServ->delete();
+                        $movim = Movimiento::find($mm->movs->id);
+                        $movim->delete();
+                    }
+                    if($mm->movs->type == 'PENDIENTE'){
+                        $movimi = Movimiento::find($mm->movs->id);
+                        $movimi->status = 'ACTIVO';
+                        $movimi->save();
+                    }
+                }
+            }elseif($this->estatus == 'ABANDONADO' && $this->opciones == 'TERMINADO'){
+                foreach($servicioss->movservices as $mm){
+                    if($mm->movs->type == 'ABANDONADO'){
+                        $ClienteMov = ClienteMov::find($mm->movs->climov->id);
+                        $ClienteMov->delete();
+                        $movServ = MovService::find($mm->id);
+                        $movServ->delete();
+                        $movim = Movimiento::find($mm->movs->id);
+                        $movim->delete();
+                    }
+                    if($mm->movs->type == 'TERMINADO'){
+                        $movimi = Movimiento::find($mm->movs->id);
+                        $movimi->status = 'ACTIVO';
+                        $movimi->save();
+                    }
+                }
+                $servicioss->fecha_estimada_entrega = new DateTime("now");
+                $servicioss->save();
+            }elseif($this->estatus == 'ABANDONADO' && $this->opciones == 'PROCESO'){
+                foreach($servicioss->movservices as $mm){
+                    if($mm->movs->type == 'ABANDONADO'  || $mm->movs->type == 'TERMINADO'){
+                        $ClienteMov = ClienteMov::find($mm->movs->climov->id);
+                        $ClienteMov->delete();
+                        $movServ = MovService::find($mm->id);
+                        $movServ->delete();
+                        $movim = Movimiento::find($mm->movs->id);
+                        $movim->delete();
+                    }
+                    if($mm->movs->type == 'PROCESO'){
+                        $movimi = Movimiento::find($mm->movs->id);
+                        $movimi->status = 'ACTIVO';
+                        $movimi->save();
+                    }
+                }
+                $servicioss->fecha_estimada_entrega = new DateTime("now");
+                $servicioss->save();
+            }elseif($this->estatus == 'ABANDONADO' && $this->opciones == 'PENDIENTE'){
+                foreach($servicioss->movservices as $mm){
+                    if($mm->movs->type == 'ABANDONADO'  || $mm->movs->type == 'TERMINADO' || $mm->movs->type == 'PROCESO'){
+                        $ClienteMov = ClienteMov::find($mm->movs->climov->id);
+                        $ClienteMov->delete();
+                        $movServ = MovService::find($mm->id);
+                        $movServ->delete();
+                        $movim = Movimiento::find($mm->movs->id);
+                        $movim->delete();
+                    }
+                    if($mm->movs->type == 'PENDIENTE'){
+                        $movimi = Movimiento::find($mm->movs->id);
+                        $movimi->status = 'ACTIVO';
+                        $movimi->save();
+                    }
+                }
+                $servicioss->fecha_estimada_entrega = new DateTime("now");
+                $servicioss->save();
+            }
+            
+            
+
             DB::commit();
             $this->resetUI();
             $this->emit('service-updated', 'Servicio Actualizado');
+
         } catch (Exception $e) {
             DB::rollback();
             $this->emit('item-error', 'ERROR' . $e->getMessage());

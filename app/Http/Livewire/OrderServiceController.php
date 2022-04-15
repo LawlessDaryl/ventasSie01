@@ -12,6 +12,7 @@ use App\Models\MovService;
 use App\Models\Service;
 use App\Models\OrderService;
 use App\Models\SubCatProdService;
+use App\Models\Sucursal;
 use App\Models\TypeWork;
 use App\Models\User;
 use Carbon\Carbon;
@@ -34,7 +35,7 @@ class OrderServiceController extends Component
         $typew, $typeworkid, $catprodservid, $diagnostico, $solucion, $hora_entrega, $proceso,
         $terminado, $costo, $detalle_costo, $nombreUsuario, $modificar, $type_service, $movimiento,
         $opciones, $tipopago, $dateFrom, $dateTo, $reportType, $userId, $estado, $mostrar,
-        $mostrarEliminar;
+        $mostrarEliminar,$tipo, $condicion, $fechahoy;
 
     private $pagination = null;
     public function paginationView()
@@ -43,8 +44,8 @@ class OrderServiceController extends Component
     }
     public function mount()
     {
-        $this->pageTitle = 'Listado';
-        $this->componentName = 'Ordenes de Servicio';
+        $this->pageTitle = 'LISTADO';
+        $this->componentName = 'ORDENES DE SERVICIO';
         $this->usuarioId = -1;
         /* $this->search = ''; */
         $this->typeworkid = '';
@@ -69,9 +70,13 @@ class OrderServiceController extends Component
         $this->reportType = 0;
         $this->userId = 0;
         $this->estado = 'Todos';
+        $this->tipo= '';
+        $this->condicion = 'MiSucursal';
+        $this->fechahoy = Carbon::parse(Carbon::now())->format('Y-m-d');
     }
     public function render()
     {
+        $this->fechahoy = Carbon::parse(Carbon::now())->format('Y-m-d');
         /* session(['opcio' => null]);
         if (!empty(session('opcio'))) {
             
@@ -101,141 +106,497 @@ class OrderServiceController extends Component
             $this->reportType = 0;
         }
 
-        if (!empty(session('orderserv'))) {
-            $this->search = session('orderserv');
-            session(['orderserv' => null]);
-            $orderservices = OrderService::where('id', $this->search)
-                ->orderBy('order_services.id', 'desc')
-                ->paginate($this->pagination);
-        } else {
-            if (strlen($this->search) > 0) {
-                $orderservices = OrderService::join('services as s', 'order_services.id', 's.order_service_id')
-                    ->join('mov_services as ms', 's.id', 'ms.service_id')
-                    ->join('cat_prod_services as cat', 'cat.id', 's.cat_prod_service_id')
-                    ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                    ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                    ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
-                    ->join('users as u', 'u.id', 'mov.user_id')
-                    ->select('order_services.*')
-                    ->where('mov.type',  $this->opciones)
-                    ->where('mov.status', 'ACTIVO')
-                    ->where('c.nombre', 'like', '%' . $this->search . '%')
-                    ->orWhere('order_services.id', 'like', '%' . $this->search . '%')
-                    ->orWhere('order_services.type_service', 'like', '%' . $this->search . '%')
-                    ->orWhere('cat.nombre', 'like', '%' . $this->search . '%')
-                    ->orWhere('s.detalle', 'like', '%' . $this->search . '%')
-                    ->orWhere('s.marca', 'like', '%' . $this->search . '%')
-                    ->orWhere('s.falla_segun_cliente', 'like', '%' . $this->search . '%')
-                    ->orWhere('u.name', 'like', '%' . $this->search . '%')
-                    /* ->orWhere('mov.import', 'like', '%' . $this->search . '%') */
+        $user = User::find(Auth()->user()->id);
+        foreach($user->sucursalusers as $usersuc){
+            if($usersuc->estado == 'ACTIVO'){
+                $this->sucursal= $usersuc->sucursal->id;
+            }
+        }
+        
+
+        if($this->condicion == 'Todos'){
+            if (!empty(session('orderserv'))) {
+                $this->search = session('orderserv');
+                session(['orderserv' => null]);
+                $orderservices = OrderService::where('id', $this->search)
                     ->orderBy('order_services.id', 'desc')
-                    ->distinct()
-                    ->paginate($this->pagination);
-            } elseif ($this->opciones == 'TODOS') {
-                $orderservices = OrderService::join('services as s', 'order_services.id', 's.order_service_id')
-                    ->join('mov_services as ms', 's.id', 'ms.service_id')
-                    ->join('cat_prod_services as cat', 'cat.id', 's.cat_prod_service_id')
-                    ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                    ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                    ->join('clientes as c', 'c.id', 'cliemov.cliente_id')                    
-                    ->where('mov.status', 'ACTIVO')
-                    ->orWhere('mov.status', 'INACTIVO')
-                    ->where('mov.type', 'ANULADO')
-                    ->select('order_services.*')
-                    ->orderBy('order_services.id', 'desc')
-                    ->distinct()
-                    ->paginate($this->pagination);
-            }elseif ($this->opciones == 'ANULADO') { 
-               
-                $orderservices = OrderService::join('services as s', 'order_services.id', 's.order_service_id')
-                    ->join('mov_services as ms', 's.id', 'ms.service_id')
-                    ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                    ->where('mov.type', 'ANULADO')
-                    ->select('order_services.*')
-                    ->orderBy('order_services.id', 'desc')
-                    ->distinct()
                     ->paginate($this->pagination);
                 
-            } 
-            elseif ($this->opciones != 'fechas') { 
-                $orderservices = OrderService::join('services as s', 'order_services.id', 's.order_service_id')
-                    ->join('mov_services as ms', 's.id', 'ms.service_id')
-                    ->join('cat_prod_services as cat', 'cat.id', 's.cat_prod_service_id')
-                    ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                    ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                    ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
-                    ->where('mov.type',  $this->opciones)
-                    ->where('mov.status', 'ACTIVO')
-                    ->select('order_services.*')
-                    ->orderBy('order_services.id', 'desc')
-                    ->distinct()
-                    ->paginate($this->pagination);
-            }
-             elseif ($this->opciones == 'fechas') {
-                if ($this->estado == 'Todos') {
-                    if ($this->userId == 0) {
+            } else {
+                if (strlen($this->search) > 0) {
+                    if($this->opciones == 'TODOS'){
                         $orderservices = OrderService::join('services as s', 'order_services.id', 's.order_service_id')
-                            ->join('mov_services as ms', 's.id', 'ms.service_id')
-                            ->join('cat_prod_services as cat', 'cat.id', 's.cat_prod_service_id')
-                            ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                            ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                            ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
-                            ->where('mov.status', 'ACTIVO')
-                            ->select('order_services.*')
-                            ->whereBetween('order_services.created_at', [$from, $to])
-                            ->orderBy('order_services.id', 'desc')
-                            ->distinct()
-                            ->paginate($this->pagination);
-                    } else {
+                        ->join('mov_services as ms', 's.id', 'ms.service_id')
+                        ->join('cat_prod_services as cat', 'cat.id', 's.cat_prod_service_id')
+                        ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+                        ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
+                        ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
+                        ->join('users as u', 'u.id', 'mov.user_id')
+                        ->select('order_services.*')
+                        /* ->where('mov.type',  $this->opciones) */
+                        ->where('mov.status', 'ACTIVO')
+                        ->where('c.nombre', 'like', '%' . $this->search . '%')
+                        ->orWhere('order_services.id', 'like', '%' . $this->search . '%')
+                        ->orWhere('order_services.type_service', 'like', '%' . $this->search . '%')
+                        ->orWhere('cat.nombre', 'like', '%' . $this->search . '%')
+                        ->orWhere('s.detalle', 'like', '%' . $this->search . '%')
+                        ->orWhere('s.marca', 'like', '%' . $this->search . '%')
+                        ->orWhere('s.falla_segun_cliente', 'like', '%' . $this->search . '%')
+                        ->orWhere('u.name', 'like', '%' . $this->search . '%')
+                        /* ->orWhere('mov.import', 'like', '%' . $this->search . '%') */
+                        ->orderBy('order_services.id', 'desc')
+                        ->distinct()
+                        ->paginate($this->pagination);
+                    }else{
+                        if($this->opciones == 'ANULADO'){
+                            $orderservices = OrderService::join('services as s', 'order_services.id', 's.order_service_id')
+                        ->join('mov_services as ms', 's.id', 'ms.service_id')
+                        ->join('cat_prod_services as cat', 'cat.id', 's.cat_prod_service_id')
+                        ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+                        ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
+                        ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
+                        ->join('users as u', 'u.id', 'mov.user_id')
+                        ->select('order_services.*')
+                        ->where('mov.type', 'ANULADO')
+                        ->where('mov.status', 'INACTIVO')
+                        ->where('c.nombre', 'like', '%' . $this->search . '%')
+                        ->where('mov.type', 'ANULADO')
+                        ->where('mov.status', 'INACTIVO')
+                        ->orWhere('order_services.id', 'like', '%' . $this->search . '%')
+                        ->where('mov.type', 'ANULADO')
+                        ->where('mov.status', 'INACTIVO')
+                        ->orWhere('order_services.type_service', 'like', '%' . $this->search . '%')
+                        ->where('mov.status', 'INACTIVO')
+                        ->where('mov.type', 'ANULADO')
+                        ->orWhere('cat.nombre', 'like', '%' . $this->search . '%')
+                        ->where('mov.status', 'INACTIVO')
+                        ->where('mov.type', 'ANULADO')
+                        ->orWhere('s.detalle', 'like', '%' . $this->search . '%')
+                        ->where('mov.status', 'INACTIVO')
+                        ->where('mov.type', 'ANULADO')
+                        ->orWhere('s.marca', 'like', '%' . $this->search . '%')
+                        ->where('mov.status', 'INACTIVO')
+                        ->where('mov.type', 'ANULADO')
+                        ->orWhere('s.falla_segun_cliente', 'like', '%' . $this->search . '%')
+                        ->where('mov.status', 'INACTIVO')
+                        ->where('mov.type', 'ANULADO')
+                        ->orWhere('u.name', 'like', '%' . $this->search . '%')
+                        ->where('mov.status', 'INACTIVO')
+                        ->where('mov.type', 'ANULADO')
+                        /* ->orWhere('mov.import', 'like', '%' . $this->search . '%') */
+                        ->orderBy('order_services.id', 'desc')
+                        ->distinct()
+                        ->paginate($this->pagination);
+                        }
+                        else{
                         $orderservices = OrderService::join('services as s', 'order_services.id', 's.order_service_id')
-                            ->join('mov_services as ms', 's.id', 'ms.service_id')
-                            ->join('cat_prod_services as cat', 'cat.id', 's.cat_prod_service_id')
-                            ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                            ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                            ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
-
-                            ->select('order_services.*')
-                            ->whereBetween('order_services.created_at', [$from, $to])
-                            ->where('mov.user_id', $this->userId)
-                            ->where('mov.status', 'ACTIVO')
-                            ->orderBy('order_services.id', 'desc')
-                            ->distinct()
-                            ->paginate($this->pagination);
+                        ->join('mov_services as ms', 's.id', 'ms.service_id')
+                        ->join('cat_prod_services as cat', 'cat.id', 's.cat_prod_service_id')
+                        ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+                        ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
+                        ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
+                        ->join('users as u', 'u.id', 'mov.user_id')
+                        ->select('order_services.*')
+                        ->where('mov.type',  $this->opciones)
+                        ->where('mov.status', 'ACTIVO')
+                        ->where('c.nombre', 'like', '%' . $this->search . '%')
+                        ->orWhere('order_services.id', 'like', '%' . $this->search . '%')
+                        ->where('mov.type',  $this->opciones)
+                        ->where('mov.status', 'ACTIVO')
+                        ->orWhere('order_services.type_service', 'like', '%' . $this->search . '%')
+                        ->where('mov.status', 'ACTIVO')
+                        ->where('mov.type',  $this->opciones)
+                        ->orWhere('cat.nombre', 'like', '%' . $this->search . '%')
+                        ->where('mov.status', 'ACTIVO')
+                        ->where('mov.type',  $this->opciones)
+                        ->orWhere('s.detalle', 'like', '%' . $this->search . '%')
+                        ->where('mov.status', 'ACTIVO')
+                        ->where('mov.type',  $this->opciones)
+                        ->orWhere('s.marca', 'like', '%' . $this->search . '%')
+                        ->where('mov.status', 'ACTIVO')
+                        ->where('mov.type',  $this->opciones)
+                        ->orWhere('s.falla_segun_cliente', 'like', '%' . $this->search . '%')
+                        ->where('mov.status', 'ACTIVO')
+                        ->where('mov.type',  $this->opciones)
+                        ->orWhere('u.name', 'like', '%' . $this->search . '%')
+                        ->where('mov.status', 'ACTIVO')
+                        ->where('mov.type',  $this->opciones)
+                        /* ->orWhere('mov.import', 'like', '%' . $this->search . '%') */
+                        ->orderBy('order_services.id', 'desc')
+                        ->distinct()
+                        ->paginate($this->pagination);
+                        }
                     }
-                } else {
-                    if ($this->userId == 0) {
-                        $orderservices = OrderService::join('services as s', 'order_services.id', 's.order_service_id')
-                            ->join('mov_services as ms', 's.id', 'ms.service_id')
-                            ->join('cat_prod_services as cat', 'cat.id', 's.cat_prod_service_id')
-                            ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                            ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                            ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
-                            ->select('order_services.*')
-                            ->whereBetween('order_services.created_at', [$from, $to])
-                            ->where('mov.type', $this->estado)
-                            ->where('mov.status', 'ACTIVO')
-                            ->orderBy('order_services.id', 'desc')
-                            ->distinct()
-                            ->paginate($this->pagination);
+                }elseif ($this->opciones == 'TODOS') {
+                    
+                    $orderservices = OrderService::join('services as s', 'order_services.id', 's.order_service_id')
+                        ->join('mov_services as ms', 's.id', 'ms.service_id')
+                        ->join('cat_prod_services as cat', 'cat.id', 's.cat_prod_service_id')
+                        ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+                        ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
+                        ->join('clientes as c', 'c.id', 'cliemov.cliente_id')                    
+                        ->where('mov.status', 'ACTIVO')
+                        ->orWhere('mov.status', 'INACTIVO')
+                        ->where('mov.type', 'ANULADO')
+                        ->select('order_services.*')
+                        ->orderBy('order_services.id', 'desc')
+                        ->distinct()
+                        ->paginate($this->pagination);
+                
+                }elseif ($this->opciones == 'ANULADO') { 
+                   
+                    $orderservices = OrderService::join('services as s', 'order_services.id', 's.order_service_id')
+                        ->join('mov_services as ms', 's.id', 'ms.service_id')
+                        ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+                        ->where('mov.type', 'ANULADO')
+                        ->select('order_services.*')
+                        ->orderBy('order_services.id', 'desc')
+                        ->distinct()
+                        ->paginate($this->pagination);
+                    
+                } 
+                elseif ($this->opciones != 'fechas') { 
+                    $orderservices = OrderService::join('services as s', 'order_services.id', 's.order_service_id')
+                        ->join('mov_services as ms', 's.id', 'ms.service_id')
+                        ->join('cat_prod_services as cat', 'cat.id', 's.cat_prod_service_id')
+                        ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+                        ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
+                        ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
+                        ->where('mov.type',  $this->opciones)
+                        ->where('mov.status', 'ACTIVO')
+                        ->select('order_services.*')
+                        ->orderBy('order_services.id', 'desc')
+                        ->distinct()
+                        ->paginate($this->pagination);
+                }
+                 elseif ($this->opciones == 'fechas') {
+                    if ($this->estado == 'Todos') {
+                        if ($this->userId == 0) {
+                            $orderservices = OrderService::join('services as s', 'order_services.id', 's.order_service_id')
+                                ->join('mov_services as ms', 's.id', 'ms.service_id')
+                                ->join('cat_prod_services as cat', 'cat.id', 's.cat_prod_service_id')
+                                ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+                                ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
+                                ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
+                                ->where('mov.status', 'ACTIVO')
+                                ->select('order_services.*')
+                                ->whereBetween('order_services.created_at', [$from, $to])
+                                ->orderBy('order_services.id', 'desc')
+                                ->distinct()
+                                ->paginate($this->pagination);
+                        } else {
+                            $orderservices = OrderService::join('services as s', 'order_services.id', 's.order_service_id')
+                                ->join('mov_services as ms', 's.id', 'ms.service_id')
+                                ->join('cat_prod_services as cat', 'cat.id', 's.cat_prod_service_id')
+                                ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+                                ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
+                                ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
+    
+                                ->select('order_services.*')
+                                ->whereBetween('order_services.created_at', [$from, $to])
+                                ->where('mov.user_id', $this->userId)
+                                ->where('mov.status', 'ACTIVO')
+                                ->orderBy('order_services.id', 'desc')
+                                ->distinct()
+                                ->paginate($this->pagination);
+                        }
                     } else {
+                        if ($this->userId == 0) {
+                            $orderservices = OrderService::join('services as s', 'order_services.id', 's.order_service_id')
+                                ->join('mov_services as ms', 's.id', 'ms.service_id')
+                                ->join('cat_prod_services as cat', 'cat.id', 's.cat_prod_service_id')
+                                ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+                                ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
+                                ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
+                                ->select('order_services.*')
+                                ->whereBetween('order_services.created_at', [$from, $to])
+                                ->where('mov.type', $this->estado)
+                                ->where('mov.status', 'ACTIVO')
+                                ->orderBy('order_services.id', 'desc')
+                                ->distinct()
+                                ->paginate($this->pagination);
+                        } else {
+                            $orderservices = OrderService::join('services as s', 'order_services.id', 's.order_service_id')
+                                ->join('mov_services as ms', 's.id', 'ms.service_id')
+                                ->join('cat_prod_services as cat', 'cat.id', 's.cat_prod_service_id')
+                                ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+                                ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
+                                ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
+                                ->select('order_services.*')
+                                ->whereBetween('order_services.created_at', [$from, $to])
+                                ->where('mov.user_id', $this->userId)
+                                ->where('mov.type', $this->estado)
+                                ->where('mov.status', 'ACTIVO')
+                                ->orderBy('order_services.id', 'desc')
+                                ->distinct()
+                                ->paginate($this->pagination);
+                        }
+                    }
+                }
+            }
+        }elseif($this->condicion == 'MiSucursal'){
+            if (!empty(session('orderserv'))) {
+                $this->search = session('orderserv');
+                session(['orderserv' => null]);
+                $orderservices = OrderService::where('id', $this->search)
+                    ->orderBy('order_services.id', 'desc')
+                    ->paginate($this->pagination);
+                
+            } else {
+                if (strlen($this->search) > 0) {
+                    if($this->opciones == 'TODOS'){
                         $orderservices = OrderService::join('services as s', 'order_services.id', 's.order_service_id')
-                            ->join('mov_services as ms', 's.id', 'ms.service_id')
-                            ->join('cat_prod_services as cat', 'cat.id', 's.cat_prod_service_id')
-                            ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                            ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                            ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
-                            ->select('order_services.*')
-                            ->whereBetween('order_services.created_at', [$from, $to])
-                            ->where('mov.user_id', $this->userId)
-                            ->where('mov.type', $this->estado)
-                            ->where('mov.status', 'ACTIVO')
-                            ->orderBy('order_services.id', 'desc')
-                            ->distinct()
-                            ->paginate($this->pagination);
+                        ->join('mov_services as ms', 's.id', 'ms.service_id')
+                        ->join('cat_prod_services as cat', 'cat.id', 's.cat_prod_service_id')
+                        ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+                        ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
+                        ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
+                        ->join('users as u', 'u.id', 'mov.user_id')
+                        ->join('sucursal_users as suu', 'u.id', 'suu.user_id')
+                        ->join('sucursals as suc', 'suc.id', 'suu.sucursal_id')
+                        ->select('order_services.*')
+                        ->where('suc.id',$this->sucursal)
+                        /* ->where('mov.type',  $this->opciones) */
+                        ->where('mov.status', 'ACTIVO')
+                        ->where('c.nombre', 'like', '%' . $this->search . '%')
+                        ->orWhere('order_services.id', 'like', '%' . $this->search . '%')
+                        ->orWhere('order_services.type_service', 'like', '%' . $this->search . '%')
+                        ->orWhere('cat.nombre', 'like', '%' . $this->search . '%')
+                        ->orWhere('s.detalle', 'like', '%' . $this->search . '%')
+                        ->orWhere('s.marca', 'like', '%' . $this->search . '%')
+                        ->orWhere('s.falla_segun_cliente', 'like', '%' . $this->search . '%')
+                        ->orWhere('u.name', 'like', '%' . $this->search . '%')
+                        /* ->orWhere('mov.import', 'like', '%' . $this->search . '%') */
+                        ->orderBy('order_services.id', 'desc')
+                        ->distinct()
+                        ->paginate($this->pagination);
+                    }else{
+                        if($this->opciones == 'ANULADO'){
+                            $orderservices = OrderService::join('services as s', 'order_services.id', 's.order_service_id')
+                        ->join('mov_services as ms', 's.id', 'ms.service_id')
+                        ->join('cat_prod_services as cat', 'cat.id', 's.cat_prod_service_id')
+                        ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+                        ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
+                        ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
+                        ->join('users as u', 'u.id', 'mov.user_id')
+                        ->join('sucursal_users as suu', 'u.id', 'suu.user_id')
+                        ->join('sucursals as suc', 'suc.id', 'suu.sucursal_id')
+                        ->select('order_services.*')
+                        ->where('suc.id',$this->sucursal)
+                        ->where('mov.type', 'ANULADO')
+                        ->where('mov.status', 'INACTIVO')
+                        ->where('c.nombre', 'like', '%' . $this->search . '%')
+                        ->where('mov.type', 'ANULADO')
+                        ->where('mov.status', 'INACTIVO')
+                        ->orWhere('order_services.id', 'like', '%' . $this->search . '%')
+                        ->where('mov.type', 'ANULADO')
+                        ->where('mov.status', 'INACTIVO')
+                        ->orWhere('order_services.type_service', 'like', '%' . $this->search . '%')
+                        ->where('mov.status', 'INACTIVO')
+                        ->where('mov.type', 'ANULADO')
+                        ->orWhere('cat.nombre', 'like', '%' . $this->search . '%')
+                        ->where('mov.status', 'INACTIVO')
+                        ->where('mov.type', 'ANULADO')
+                        ->orWhere('s.detalle', 'like', '%' . $this->search . '%')
+                        ->where('mov.status', 'INACTIVO')
+                        ->where('mov.type', 'ANULADO')
+                        ->orWhere('s.marca', 'like', '%' . $this->search . '%')
+                        ->where('mov.status', 'INACTIVO')
+                        ->where('mov.type', 'ANULADO')
+                        ->orWhere('s.falla_segun_cliente', 'like', '%' . $this->search . '%')
+                        ->where('mov.status', 'INACTIVO')
+                        ->where('mov.type', 'ANULADO')
+                        ->orWhere('u.name', 'like', '%' . $this->search . '%')
+                        ->where('mov.status', 'INACTIVO')
+                        ->where('mov.type', 'ANULADO')
+                        /* ->orWhere('mov.import', 'like', '%' . $this->search . '%') */
+                        ->orderBy('order_services.id', 'desc')
+                        ->distinct()
+                        ->paginate($this->pagination);
+                        }
+                        else{
+                        $orderservices = OrderService::join('services as s', 'order_services.id', 's.order_service_id')
+                        ->join('mov_services as ms', 's.id', 'ms.service_id')
+                        ->join('cat_prod_services as cat', 'cat.id', 's.cat_prod_service_id')
+                        ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+                        ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
+                        ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
+                        ->join('users as u', 'u.id', 'mov.user_id')
+                        ->join('sucursal_users as suu', 'u.id', 'suu.user_id')
+                        ->join('sucursals as suc', 'suc.id', 'suu.sucursal_id')
+                        ->select('order_services.*')
+                        ->where('mov.type',  $this->opciones)
+                        ->where('suc.id',$this->sucursal)
+                        ->where('mov.status', 'ACTIVO')
+                        ->where('c.nombre', 'like', '%' . $this->search . '%')
+                        ->orWhere('order_services.id', 'like', '%' . $this->search . '%')
+                        ->where('mov.type',  $this->opciones)
+                        ->where('mov.status', 'ACTIVO')
+                        ->orWhere('order_services.type_service', 'like', '%' . $this->search . '%')
+                        ->where('mov.status', 'ACTIVO')
+                        ->where('mov.type',  $this->opciones)
+                        ->orWhere('cat.nombre', 'like', '%' . $this->search . '%')
+                        ->where('mov.status', 'ACTIVO')
+                        ->where('mov.type',  $this->opciones)
+                        ->orWhere('s.detalle', 'like', '%' . $this->search . '%')
+                        ->where('mov.status', 'ACTIVO')
+                        ->where('mov.type',  $this->opciones)
+                        ->orWhere('s.marca', 'like', '%' . $this->search . '%')
+                        ->where('mov.status', 'ACTIVO')
+                        ->where('mov.type',  $this->opciones)
+                        ->orWhere('s.falla_segun_cliente', 'like', '%' . $this->search . '%')
+                        ->where('mov.status', 'ACTIVO')
+                        ->where('mov.type',  $this->opciones)
+                        ->orWhere('u.name', 'like', '%' . $this->search . '%')
+                        ->where('mov.status', 'ACTIVO')
+                        ->where('mov.type',  $this->opciones)
+                        /* ->orWhere('mov.import', 'like', '%' . $this->search . '%') */
+                        ->orderBy('order_services.id', 'desc')
+                        ->distinct()
+                        ->paginate($this->pagination);
+                        }
+                    }
+                }elseif ($this->opciones == 'TODOS') {
+                    
+                    $orderservices = OrderService::join('services as s', 'order_services.id', 's.order_service_id')
+                        ->join('mov_services as ms', 's.id', 'ms.service_id')
+                        ->join('cat_prod_services as cat', 'cat.id', 's.cat_prod_service_id')
+                        ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+                        ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
+                        ->join('clientes as c', 'c.id', 'cliemov.cliente_id')                    
+                        ->join('users as u', 'u.id', 'mov.user_id')
+                        ->join('sucursal_users as suu', 'u.id', 'suu.user_id')
+                        ->join('sucursals as suc', 'suc.id', 'suu.sucursal_id')
+                        ->where('mov.status', 'ACTIVO')
+                        ->where('suc.id',$this->sucursal)
+                        ->orWhere('mov.status', 'INACTIVO')
+                        ->where('mov.type', 'ANULADO')
+                        ->select('order_services.*')
+                        ->orderBy('order_services.id', 'desc')
+                        ->distinct()
+                        ->paginate($this->pagination);
+                
+                }elseif ($this->opciones == 'ANULADO') { 
+                   
+                    $orderservices = OrderService::join('services as s', 'order_services.id', 's.order_service_id')
+                        ->join('mov_services as ms', 's.id', 'ms.service_id')
+                        ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+                        ->join('users as u', 'u.id', 'mov.user_id')
+                        ->join('sucursal_users as suu', 'u.id', 'suu.user_id')
+                        ->join('sucursals as suc', 'suc.id', 'suu.sucursal_id')
+                        ->where('mov.type', 'ANULADO')
+                        ->where('suc.id',$this->sucursal)
+                        ->select('order_services.*')
+                        ->orderBy('order_services.id', 'desc')
+                        ->distinct()
+                        ->paginate($this->pagination);
+                    
+                } 
+                elseif ($this->opciones != 'fechas') { 
+                    $orderservices = OrderService::join('services as s', 'order_services.id', 's.order_service_id')
+                        ->join('mov_services as ms', 's.id', 'ms.service_id')
+                        ->join('cat_prod_services as cat', 'cat.id', 's.cat_prod_service_id')
+                        ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+                        ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
+                        ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
+                        ->join('users as u', 'u.id', 'mov.user_id')
+                        ->join('sucursal_users as suu', 'u.id', 'suu.user_id')
+                        ->join('sucursals as suc', 'suc.id', 'suu.sucursal_id')
+                        ->where('mov.type',  $this->opciones)
+                        ->where('mov.status', 'ACTIVO')
+                        ->where('suc.id',$this->sucursal)
+                        ->select('order_services.*')
+                        ->orderBy('order_services.id', 'desc')
+                        ->distinct()
+                        ->paginate($this->pagination);
+                }
+                 elseif ($this->opciones == 'fechas') {
+                    if ($this->estado == 'Todos') {
+                        if ($this->userId == 0) {
+                            $orderservices = OrderService::join('services as s', 'order_services.id', 's.order_service_id')
+                                ->join('mov_services as ms', 's.id', 'ms.service_id')
+                                ->join('cat_prod_services as cat', 'cat.id', 's.cat_prod_service_id')
+                                ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+                                ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
+                                ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
+                                ->join('users as u', 'u.id', 'mov.user_id')
+                                ->join('sucursal_users as suu', 'u.id', 'suu.user_id')
+                                ->join('sucursals as suc', 'suc.id', 'suu.sucursal_id')
+                                ->where('mov.status', 'ACTIVO')
+                                ->where('suc.id',$this->sucursal)
+                                ->select('order_services.*')
+                                ->whereBetween('order_services.created_at', [$from, $to])
+                                ->orderBy('order_services.id', 'desc')
+                                ->distinct()
+                                ->paginate($this->pagination);
+                        } else {
+                            $orderservices = OrderService::join('services as s', 'order_services.id', 's.order_service_id')
+                                ->join('mov_services as ms', 's.id', 'ms.service_id')
+                                ->join('cat_prod_services as cat', 'cat.id', 's.cat_prod_service_id')
+                                ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+                                ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
+                                ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
+                                ->join('users as u', 'u.id', 'mov.user_id')
+                                ->join('sucursal_users as suu', 'u.id', 'suu.user_id')
+                                ->join('sucursals as suc', 'suc.id', 'suu.sucursal_id')
+                                ->select('order_services.*')
+                                ->whereBetween('order_services.created_at', [$from, $to])
+                                ->where('mov.user_id', $this->userId)
+                                ->where('mov.status', 'ACTIVO')
+                                ->where('suc.id',$this->sucursal)
+                                ->orderBy('order_services.id', 'desc')
+                                ->distinct()
+                                ->paginate($this->pagination);
+                        }
+                    } else {
+                        if ($this->userId == 0) {
+                            $orderservices = OrderService::join('services as s', 'order_services.id', 's.order_service_id')
+                                ->join('mov_services as ms', 's.id', 'ms.service_id')
+                                ->join('cat_prod_services as cat', 'cat.id', 's.cat_prod_service_id')
+                                ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+                                ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
+                                ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
+                                ->join('users as u', 'u.id', 'mov.user_id')
+                                ->join('sucursal_users as suu', 'u.id', 'suu.user_id')
+                                ->join('sucursals as suc', 'suc.id', 'suu.sucursal_id')
+                                ->select('order_services.*')
+                                ->whereBetween('order_services.created_at', [$from, $to])
+                                ->where('mov.type', $this->estado)
+                                ->where('mov.status', 'ACTIVO')
+                                ->where('suc.id',$this->sucursal)
+                                ->orderBy('order_services.id', 'desc')
+                                ->distinct()
+                                ->paginate($this->pagination);
+                        } else {
+                            $orderservices = OrderService::join('services as s', 'order_services.id', 's.order_service_id')
+                                ->join('mov_services as ms', 's.id', 'ms.service_id')
+                                ->join('cat_prod_services as cat', 'cat.id', 's.cat_prod_service_id')
+                                ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+                                ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
+                                ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
+                                ->join('users as u', 'u.id', 'mov.user_id')
+                                ->join('sucursal_users as suu', 'u.id', 'suu.user_id')
+                                ->join('sucursals as suc', 'suc.id', 'suu.sucursal_id')
+                                ->select('order_services.*')
+                                ->whereBetween('order_services.created_at', [$from, $to])
+                                ->where('mov.user_id', $this->userId)
+                                ->where('mov.type', $this->estado)
+                                ->where('mov.status', 'ACTIVO')
+                                ->where('suc.id',$this->sucursal)
+                                ->orderBy('order_services.id', 'desc')
+                                ->distinct()
+                                ->paginate($this->pagination);
+                        }
                     }
                 }
             }
         }
+
+        
+
+
+        
+
 
         $orderser = OrderService::join(
             'services as s',
@@ -305,8 +666,7 @@ class OrderServiceController extends Component
         }
 
 
-
-
+        
 
         //$users = User::all();
         $users = User::join('model_has_roles as mr', 'users.id', 'mr.model_id')
@@ -473,10 +833,15 @@ class OrderServiceController extends Component
         $this->typeworkid = TypeWork::find($this->service1->type_work_id)->id;
         $this->catprodservid = CatProdService::find($this->service1->cat_prod_service_id)->id;
         $this->proceso = false;
+        $this->tipo= 'PENDIENTE';
         foreach ($this->service1->movservices as $mm) {
             if ($mm->movs->status == 'ACTIVO') {
                 if ($mm->movs->type == 'PROCESO') {
                     $this->proceso = true;
+                    $this->tipo= 'PROCESO';
+                }
+                if ($mm->movs->type == 'TERMINADO') {
+                    $this->tipo= 'TERMINADO';
                 }
                 $this->import = $mm->movs->import;
                 $this->on_account = $mm->movs->on_account;
@@ -545,13 +910,18 @@ class OrderServiceController extends Component
 
         foreach ($this->service1->movservices as $mm) {
             if ($mm->movs->status == 'ACTIVO') {
+                if ($mm->movs->type == 'ENTREGADO') {
+                    $this->tipo= 'ENTREGADO';
+                }
                 $this->import = $mm->movs->import;
                 $this->on_account = $mm->movs->on_account;
                 $this->saldo = $mm->movs->saldo;
                 $this->nombreCliente = $mm->movs->climov->client->nombre;
                 $this->celular = $mm->movs->climov->client->celular;
                 $this->usuarioId = $mm->movs->user_id;
+                
             }
+            
         }
         $this->costo = $this->service1->costo;
         $this->detalle_costo = $this->service1->detalle_costo;
@@ -652,15 +1022,45 @@ class OrderServiceController extends Component
 
         ]);
         foreach ($this->service1->movservices as $mm) {
+            /* $rules = [
+                'on_account' => 'required_with:import|lt:import',
+                'import' => 'required_with:on_account',
+                
+            ];
+            $messages = [
+                'import.required_with' => 'Ingrese un monto válido',
+                'on_account.required_with' => 'Ingrese un monto válido.',
+                'on_account.lt' => 'A cuenta no puede ser mayor al total',
+            ];
+            $this->validate($rules, $messages);
+
             if ($mm->movs->status == 'ACTIVO') {
                 $mm->movs->update([
                     'import' => $this->import,
                     'on_account' => $this->on_account,
                     'saldo' => $this->saldo,
                 ]);
+            } */
+
+            if($this->on_account <= $this->import){
+                $mm->movs->update([
+                    'import' => $this->import,
+                    'on_account' => $this->on_account,
+                    'saldo' => $this->saldo,
+                ]);
+            }else{
+                $rules = [
+                    'on_account' => 'required_with:import|lt:import',
+                    'import' => 'required_with:on_account',
+                ];
+                $messages = [
+                    'import.required_with' => 'Ingrese un monto válido',
+                    'on_account.required_with' => 'Ingrese un monto válido.',
+                    'on_account.lt' => 'A cuenta no puede ser mayor al total',
+                ];
+                $this->validate($rules, $messages);
             }
         }
-        
         $this->resetUI();
         $this->emit('detail-hide-msg', 'Servicio Actualizado');
     }
@@ -773,6 +1173,7 @@ class OrderServiceController extends Component
 
     public function CambioTerminado(Service $service)
     {
+        
         $this->GuardarCambio($service);
         foreach ($service->movservices as $servmov) {
 
@@ -802,20 +1203,25 @@ class OrderServiceController extends Component
                         ->where('mov.type', 'APERTURA')
                         ->select('cajas.id as id')
                         ->get()->first();
+                    
                     if ($this->tipopago == 'EFECTIVO') {
                         $cartera = Cartera::where('tipo', 'cajafisica')
                             ->where('caja_id', $cajaActual->id)
                             ->get()->first();
                     } else {
-                        $cartera = Cartera::where('tipo', $this->tipopago)
-                            ->where('caja_id', $cajaActual->id)->get()->first();
+                        $cartera = Cartera::where('tipo','Banco')
+                            ->where('caja_id', '1')
+                            ->get()
+                            ->first();
+                        
                     }
                     CarteraMov::create([
-                        'type' => 'INGRESO',
-                        'comentario' => '',
+                        'type' =>'INGRESO',
+                        'comentario' => 'SERVICIOS',
                         'cartera_id' => $cartera->id,
                         'movimiento_id' => $mv->id
                     ]);
+
                     MovService::create([
                         'movimiento_id' => $mv->id,
                         'service_id' => $service->id
@@ -832,6 +1238,7 @@ class OrderServiceController extends Component
                     ]);
 
                     $this->resetUI();
+                    $this->tipopago = 'EFECTIVO';
                     $this->emit('hide-detalle-entrega-msg', 'Servicio Entregado');
                 } catch (Exception $e) {
                     DB::rollback();
@@ -897,7 +1304,8 @@ class OrderServiceController extends Component
         $this->detalle_costo = '';
         $this->nombreUsuario = '';
         /* $this->opciones = 'PENDIENTE'; */
-        $this->tipopago = 'EFECTIVO';
+        
+        /* $this->condicion == 'MiSucursal'; */
 
         $this->resetValidation();
     }

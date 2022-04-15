@@ -32,33 +32,54 @@
                     <hr
                         style="border-color: black; margin-top: 0px; margin-bottom: 3px; margin-left: 5px; margin-right:5px">
                     <div style="text-align: center; font-size: 7pt;">
-                        <b>{{ $data[0]->nombreC }}</b>
-                        Celular: <b>{{ $data[0]->celular }}</b>
+                        CLIENTE: <b>{{ $data[0]->nombreC }}</b>
+                        
                     </div>
                     <div style=" font-size: 7pt; line-height: 12px">
+                        CELULAR: <b>{{ $data[0]->celular }}</b><br>
+                        TELÉFONO: <b>{{ $data[0]->telefono }}</b><br>
                         <b>CANT.:{{ $datos->services->count() }}</b>&nbsp;&nbsp;
 
                         <b>DESCRIPCIÓN: </b>
+                        @php
+                            $x=0;
+                        @endphp
                         @foreach ($datos->services as $item)
-                            {{ $item->categoria->nombre }} {{ $item->marca }} |
+                            @php
+                                if($x>0){
+                                    $n='|';
+                                }else{
+                                    $n=null;
+                                }
+                                $x++;
+                            @endphp
+                            {{$n}} {{ $item->categoria->nombre }} {{ $item->marca }} {{$n}}
                         @endforeach<br>
                         <b><u>FALLA:</u> </b>
                         @foreach ($datos->services as $item)
-                            {{ $item->falla_segun_cliente }} |
+                            {{ $item->falla_segun_cliente }} {{$n}}
                         @endforeach<br>
                         <b><u>DIAGNOSTICO:</u> </b>
                         @foreach ($datos->services as $item)
-                            {{ $item->diagnostico }} |
+                            {{ $item->diagnostico }} {{$n}}
                         @endforeach<br>
                         <b><u>SOLUCION:</u> </b>
                         @foreach ($datos->services as $item)
-                            {{ $item->solucion }} |
+                            {{ $item->solucion }} {{$n}}
                         @endforeach<br>
                         <b>FECHA ENTREGA APROX.: </b>
                         @foreach ($datos->services as $item)
-                            {{ $item->fecha_estimada_entrega }} |
+                            {{ $item->fecha_estimada_entrega }} {{$n}}
                         @endforeach<br>
-                        <b>RESPONSABLE TÉCNICO: </b>{{ $usuario->name }}<br>
+                        <b>RESPONSABLE TÉCNICO: </b>
+                        @foreach ($datos->services as $item)
+                            @foreach($item->movservices as $mm)
+                                @if($mm->movs->status == 'ACTIVO')
+                                    {{$mm->movs->usermov->name}}
+                                @endif
+                            @endforeach
+                        @endforeach
+                        <!-- {{ $usuario->name }} --><br>
                     </div>
                     <hr
                         style="border-color: black; margin-top: 0px; margin-bottom: 1px; margin-left: 5px; margin-right:5px">
@@ -67,7 +88,7 @@
                             <td style="text-align: right;">TOTALES:</td>
                             <td style="text-align: right;">
                                 @foreach ($data as $item)
-                                    {{ $item->import }} |
+                                    {{ $item->import }} {{$n}}
                                 @endforeach
                             </td>
                         </tr>
@@ -75,7 +96,7 @@
                             <td style="text-align: right;">A CUENTA:</td>
                             <td style="text-align: right;">
                                 @foreach ($data as $item)
-                                    {{ $item->on_account }} |
+                                    {{ $item->on_account }} {{$n}}
                                 @endforeach
                             </td>
                         </tr>
@@ -83,14 +104,20 @@
                             <td style="text-align: right;">SALDO:</td>
                             <td style="text-align: right;">
                                 @foreach ($data as $item)
-                                    {{ $item->saldo }} |
+                                    {{ $item->saldo }} {{$n}}
                                 @endforeach
                             </td>
                         </tr>
                     </table>
                     <div style="font-size: 7pt">
                         TIPO SERV.:{{ $datos->type_service }}<br>
-                        27/01/2022 06:25:15 pm </div>
+                        @php
+                            $today = date('d-m-Y h:i:s', time());
+                        @endphp
+                        {{$today}}
+                        {{-- 27/01/2022 06:25:15 pm --}} 
+                    
+                    </div>
                 </td>
 
                 <td style="width: 5px;"></td> {{-- espaciador entre columnas --}}
@@ -106,7 +133,12 @@
                                             <b>ORDEN DE SERVICIO TÉCNICO<br>{{ $data[0]->order_service_id }}</b>
                                         </div>
                                         <!--<font size="2"><b>Nro.:  </b></font>-->
-                                        <span style="font-size: 9px">27/01/2022 06:25:15 pm</span><br>
+                                        <span style="font-size: 9px">
+                                            @php
+                                                $today = date('d-m-Y h:i:s', time());
+                                            @endphp
+                                            {{$today}}
+                                        </span><br>
                                     </div>
                                 </td>
 
@@ -141,7 +173,7 @@
                                     <td style="width: 300px">
                                         <div style="width: auto;">
                                             <b>FECHA: </b>{{\Carbon\Carbon::now()->format('Y-m-d')}}&nbsp; - &nbsp;{{\Carbon\Carbon::now()->format('H:i:s')}}<br>
-                                            <b>CODIGO: </b>MAA1191<br>
+                                            
                                             <b>CLIENTE: </b>{{ $data[0]->nombreC }}
                                         </div>
                                     </td>
@@ -188,26 +220,45 @@
                                 <td style="font-size: 10px; width: 10cm">
                                     <b>CANT.: </b>{{ $datos->services->count() }}<br>
                                     <b>DESCRIPCIÓN: </b>
+                                    @php
+                                        $x=0;
+                                    @endphp
                                     @foreach ($datos->services as $item)
-                                        {{ $item->categoria->nombre }} {{ $item->marca }} |
+                                        @php
+                                            if($x>0){
+                                                $n='|';
+                                            }else{
+                                                $n=null;
+                                            }
+                                            $x++;
+                                        @endphp
+                                        {{$n}} {{ $item->categoria->nombre }} {{ $item->marca }} {{$n}}
                                     @endforeach<br>
                                     <b>FALLA SEGUN CLIENTE: </b>
                                     @foreach ($datos->services as $item)
-                                        {{ $item->falla_segun_cliente }} |
+                                        {{ $item->falla_segun_cliente }} {{$n}}
                                     @endforeach<br>
                                     <b>DIAGNOSTICO: </b>
                                     @foreach ($datos->services as $item)
-                                        {{ $item->diagnostico }} |
+                                        {{ $item->diagnostico }} {{$n}}
                                     @endforeach<br>
                                     <b>SOLUCION: </b>
                                     @foreach ($datos->services as $item)
-                                        {{ $item->solucion }} |
+                                        {{ $item->solucion }} {{$n}}
                                     @endforeach<br>
                                     <b>FECHA ENTREGA APROX.: </b>
                                     @foreach ($datos->services as $item)
-                                        {{ $item->fecha_estimada_entrega }} |
+                                        {{ $item->fecha_estimada_entrega }} {{$n}}
                                     @endforeach<br>
-                                    <b>RESPONSABLE TÉCNICO: </b>{{ $usuario->name }}<br>
+                                    <b>RESPONSABLE TÉCNICO: </b>
+                                    @foreach ($datos->services as $item)
+                                        @foreach($item->movservices as $mm)
+                                            @if($mm->movs->status == 'ACTIVO')
+                                                {{$mm->movs->usermov->name}}
+                                            @endif
+                                        @endforeach
+                                    @endforeach
+                                    <!-- {{ $usuario->name }} --><br>
                                     <b>ESTADO: {{ $data[0]->type }}</b>
                                 </td>
 
@@ -222,8 +273,15 @@
                             <tr>
                                 <td>
                                     <div class="" style="text-align: center">
-                                        Administrador<br>
-                                        DPTO. TECNICO
+                                        RESPONSABLE TÉCNICO <br>
+                                        @foreach ($datos->services as $item)
+                                            @foreach($item->movservices as $mm)
+                                                @if($mm->movs->status == 'ACTIVO')
+                                                    {{$mm->movs->usermov->name}}
+                                                @endif
+                                            @endforeach
+                                        @endforeach
+                                        <!-- {{ $usuario->name }} -->
                                     </div>
                                 </td>
 
@@ -241,7 +299,11 @@
 
                     <div style="display: flex; font-size: 9px; width: 100%">
                         <div style="text-align:center">
-                            CCA: SIS.INF.SOLUCIONES INFORMÁTICAS EMANUEL ( S.I.E. ) | 27/01/2022 - 06:25:15 pm </div>
+                            @php
+                                $today = date('d-m-Y h:i:s', time());
+                            @endphp
+                            CCA: SIS.INF.SOLUCIONES INFORMÁTICAS EMANUEL ( S.I.E. ) | {{$today}}
+                        </div>
                     </div>
                 </td>
             </tr>
