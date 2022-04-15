@@ -109,7 +109,7 @@
                                     @enderror
                                 </td>
                             </tr>
-                            @if(@Auth::user()->id == $this->usuarioId)
+                            @if((@Auth::user()->id == $this->usuarioId) || (@Auth::user()->hasPermissionTo('Ver_Modificar_Eliminar_Servicio')))
                             <tr>
                                 <td class="text-right">
                                     <label>
@@ -359,7 +359,7 @@
 
             <div class="modal-footer">
                 
-                @if(@Auth::user()->id == $this->usuarioId)
+                @if((@Auth::user()->id == $this->usuarioId) || (@Auth::user()->hasPermissionTo('Ver_Modificar_Eliminar_Servicio')))
                     @if ($proceso)
                         <button type="button" wire:click.prevent="CambioProceso({{ $service1 }})"
                             class="btn btn-dark close-btn text-info" data-dismiss="modal"
@@ -367,7 +367,7 @@
                     @endif
                 @endif
 
-                @if((/* $this->tipo == 'PENDIENTE' ||  */@Auth::user()->id == $this->usuarioId))
+                @if((/* $this->tipo == 'PENDIENTE' ||  */(@Auth::user()->id == $this->usuarioId) || (@Auth::user()->hasPermissionTo('Ver_Modificar_Eliminar_Servicio'))))
                     @if ($selected_id < 1)
                         <button type="button" wire:click.prevent="GuardarCambio({{ $service1 }})"
                             class="btn btn-dark close-btn text-info">REGISTRAR INFORMACIÓN</button>

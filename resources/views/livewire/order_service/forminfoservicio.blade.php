@@ -19,8 +19,8 @@
                                     
                                     <div class="text-center user-info">
                                         <h6 class=""><b>Responsable: </b>{{$nombreUsuario}}</h6>
-                                        <p class="">{{$nombreCliente}}</p>
-                                        <h6>{{$celular}}</h6>
+                                        <p class=""><b>Cliente: </b>{{$nombreCliente}}</p>
+                                        <h6><b>Celular: </b>{{$celular}}</h6>
                                     </div>
 
                                     <div class="user-info-list row">
