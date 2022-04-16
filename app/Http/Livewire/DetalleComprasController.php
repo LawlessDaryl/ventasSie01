@@ -10,6 +10,7 @@ use App\Http\Livewire\ProvidersController as Prov;
 use App\Models\Movimiento;
 use App\Models\MovimientoCompra;
 use App\Models\Product;
+use App\Models\ProductosDestino;
 use App\Models\Provider;
 use App\Models\Sucursal;
 use Carbon\Carbon;
@@ -430,10 +431,15 @@ class DetalleComprasController extends Component
                         'destino_id'=>$this->destino
                         
                     ]);
+                    
+                    /*DB::table('productos_destinos')
+                    ->updateOrInsert(['stock'],$item->quantity, ['product_id' => $item->id, 'destino_id'=>$this->destino]);*/
+                    
+                    $q=ProductosDestino::where('product_id',$item->id)
+                    ->where('destino_id',$this->destino)->value('stock');
 
-                    $product = Product::find($item->id);
-                    $product->stock = $product->stock + $item->quantity;
-                    $product->save();
+                    ProductosDestino::updateOrCreate(['product_id' => $item->id, 'destino_id'=>$this->destino],['stock'=>$q+$item->quantity]);
+
                 }
             }
 

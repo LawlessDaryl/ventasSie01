@@ -9,7 +9,7 @@ class ProductosDestino extends Model
 {
     use HasFactory;
 
-    protected $fillable=['product_id','location_id','stock'];
+    protected $fillable=['product_id','destino_id','stock'];
 
     public function productos(){
        $this->hasOne(Product::class);  

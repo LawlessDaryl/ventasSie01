@@ -7,8 +7,9 @@ use Carbon\Carbon;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
-use Barryvdh\DomPDF\Facade as PDF;
+use Barryvdh\DomPDF\Facade as PDFB;
 use Illuminate\Support\Facades\DB;
+use Exception;
 class ComprasController extends Component
 {
     use WithPagination;
@@ -22,7 +23,8 @@ class ComprasController extends Component
             $nro,
             $fecha,
             $search,
-            $datas_compras;
+            $datas_compras,
+            $totales;
 
   public function paginationView()
      {
@@ -53,7 +55,7 @@ class ComprasController extends Component
         ->orderBy('compras.fecha_compra')
         ->get();
 
-        $totales = $this->datas_compras->sum('importe_total');
+        $this->totales = $this->datas_compras->sum('importe_total');
 
 
         if (strlen($this->search) > 0){
@@ -72,12 +74,12 @@ class ComprasController extends Component
 
           
 
-            $totales = $this->datas_compras->sum('importe_total');
+            $this->totales = $this->datas_compras->sum('importe_total');
 
 
         }
 
-        return view('livewire.compras.component',['data_compras'=>$this->datas_compras, 'totales'=>$totales])
+        return view('livewire.compras.component',['data_compras'=>$this->datas_compras, 'totales'=>$this->totales])
         ->extends('layouts.theme.app')
         ->section('content');
     }
@@ -116,17 +118,34 @@ class ComprasController extends Component
   
     }
 
-    public function print()
+    public function Print()
     {
-    
-        $usuario = Auth()->user()->id;
-        $data= $this->datas_compras;
-     
-        $pdf = PDF::loadView('livewire.pdf.ImprimirOrden', compact('data', 'usuario'));
-        /* $pdf->setPaper("A4", "landscape"); //orientacion y tamaño */
 
-        //no se q hace esta linea
-        return $pdf->stream('OrdenTrSe.pdf');  //visualizar
-        /* return $pdf->download('ordenServicio.pdf');  //descargar  */
+        try{
+
+            $data= $this->datas_compras;
+            $totales=$this->totales;
+            $fecha=$this->fecha;
+           $filtro=$this->filtro;
+           $from=$this->fromDate;
+           $to=$this->toDate;
+         $nro=$this->nro;
+            $pdf = PDFB::loadView('livewire.pdf.reporteCompras', compact($data,'totales','fecha','filtro','from','to','nro'));
+            /* $pdf->setPaper("A4", "landscape"); //orientacion y tamaño */
+    
+            //no se q hace esta linea
+            $pdf->render();
+            return $pdf->setPaper('letter', 'landscape')->stream('cns.pdf'); //visualizar
+            /* return $pdf->download('ordenServicio.pdf');  //descargar  */
+        }
+        catch (Exception $e) {
+        
+            dd($e->getMessage());
+            
+        }
+    
+
+
+        
     }
 }
