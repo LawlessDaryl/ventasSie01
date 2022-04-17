@@ -8,75 +8,73 @@
             <div class="widget-content">
                 <div class="row">
                     <div class="col-sm-12 col-md-3">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <h6>Elige el usuario</h6>
-                                <div class="form-group">
-                                    <select wire:model="userId" class="form-control">
-                                        <option value="">Todos</option>
-                                        @foreach ($users as $user)
-                                            <option value="{{ $user->id }}">{{ $user->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-12">
-                                <h6>Elige el tipo de Reporte</h6>
-                                <div class="form-group">
-                                    <select wire:model="reportType" class="form-control">
-                                        <option value="0">Transacciones del Día</option>
-                                        <option value="1">Transacciones por Fecha</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-12 col-md-12">
-                                <div class="form-group">
-                                    <label>Origen</label>
-                                    <select wire:model="origenfiltro" class="form-control">
-                                        <option value="0" selected>Todas</option>
-                                        <option value="Sistema">Sistema</option>
-                                        <option value="Telefono">Telefono</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-12 col-md-12">
-                                <div class="form-group">
-                                    <label>Tipo de transacción</label>
-                                    <select wire:model="tipotr" class="form-control">
-                                        <option value="0" selected>Todas</option>
-                                        <option value="Retiro">Retiro</option>
-                                        <option value="Abono">Abono</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-12 mt-2">
-                                <h6>Fecha desde</h6>
-                                <div class="form-group">
-                                    <input @if ($reportType == 0) disabled @endif type="date"
-                                        wire:model="dateFrom" class="form-control">
-                                </div>
-                            </div>
-
-                            <div class="col-sm-12 mt-2">
-                                <h6>Fecha hasta</h6>
-                                <div class="form-group">
-                                    <input @if ($reportType == 0) disabled @endif type="date"
-                                        wire:model="dateTo" class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-sm-12">
-                                <a class="btn btn-dark btn-block {{ count($data) < 1 ? 'disabled' : '' }}"
-                                    href="{{ url('reporteTigo/pdf' .'/' .$userId .'/' .$reportType .'/' .$origenfiltro .'/' .$tipotr .'/' .$dateFrom .'/' .$dateTo) }}">Generar
-                                    PDF</a>
-                            </div>
-
+                        <h6>Elige el usuario</h6>
+                        <div class="form-group">
+                            <select wire:model="userId" class="form-control">
+                                <option value="">Todos</option>
+                                @foreach ($users as $user)
+                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
-                    <div class="col-sm-12 col-md-9">
+
+                    <div class="col-sm-12 col-md-3">
+                        <h6>Elige el tipo de Reporte</h6>
+                        <div class="form-group">
+                            <select wire:model="reportType" class="form-control">
+                                <option value="0">Transacciones del Día</option>
+                                <option value="1">Transacciones por Fecha</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-3">
+                        <div class="form-group">
+                            <h6>Origen</h6>
+                            <select wire:model="origenfiltro" class="form-control">
+                                <option value="0" selected>Todas</option>
+                                <option value="Sistema">Sistema</option>
+                                <option value="Telefono">Telefono</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-3">
+                        <div class="form-group">
+                            <h6>Tipo de transacción</h6>
+                            <select wire:model="tipotr" class="form-control">
+                                <option value="0" selected>Todas</option>
+                                <option value="Retiro">Retiro</option>
+                                <option value="Abono">Abono</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-4">
+                        <h6>Fecha desde</h6>
+                        <div class="form-group">
+                            <input @if ($reportType == 0) disabled @endif type="date" wire:model="dateFrom"
+                                class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-4">
+                        <h6>Fecha hasta</h6>
+                        <div class="form-group">
+                            <input @if ($reportType == 0) disabled @endif type="date" wire:model="dateTo"
+                                class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-4 mt-4">
+                                <a class=" btn btn-dark btn-block {{ count($data) < 1 ? 'disabled' : '' }}"
+                        href="{{ url('reporteTigo/pdf' .'/' .$userId .'/' .$reportType .'/' .$origenfiltro .'/' .$tipotr .'/' .$dateFrom .'/' .$dateTo) }}">
+                        Generar
+                        PDF</a>
+                    </div>
+
+
+                    <div class="col-sm-12 col-md-12">
                         <div class="table-responsive">
                             <table class="table table-unbordered table-hover mt-1">
                                 <thead class="text-white" style="background: #3B3F5C">

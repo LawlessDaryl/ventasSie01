@@ -39,17 +39,21 @@ class TransaccionController extends Component
 
         $igualarMontos,
 
-        $comisionSiV, $comisionNoV, $condicionalComisiones, $ResetRadioButton, $requerimientoComision,
+        $ResetRadioButton, $requerimientoComision,
 
         $condicionalOrigen, $condicionalMotivo,
 
         $origMotID, $OrigenMotivoObjeto,
 
-        $BuscarCliente, $BuscarClientePorCel, $ClienteSelect, $TelfSelect, $MostrarRadioButton,
+        $ClienteSelect, $TelfSelect, $MostrarRadioButton,
 
         $transaccion,
 
         $origenAnterior = 'Elegir', $motivoAnterior = 'Elegir', $telefonoAnterior, $cedulaAnterior, $destinoAnterior;
+
+    public $identificador, $identificador2;
+
+    public $datosPorCedula, $datosPorTelefono;
 
     private $pagination = 10;
 
@@ -60,6 +64,8 @@ class TransaccionController extends Component
 
     public function mount()
     {
+        $this->identificador = rand();
+        $this->identificador2 = rand();
         $this->pageTitle = 'Transacciones del día';
         $this->componentName = 'TIGO MONEY';
         $this->montoCobrarPagar = 'Monto a cobrar/pagar';
@@ -90,19 +96,13 @@ class TransaccionController extends Component
         $this->mostrartelf = 0;
         $this->mostrarTelfCodigo = 0;
 
-        $this->comisionSiV = 'S';
-        $this->comisionNoV = 'S';
-
-        $this->BuscarCliente = 0;
-        $this->BuscarClientePorCel = 0;
-        $this->ClienteSelect = 1;
-        $this->TelfSelect = 1;
+        $this->ClienteSelect = 0;
+        $this->TelfSelect = 0;
 
         $this->igualarMontos = 0;
         $this->MostrarRadioButton = 0;
 
         $this->ResetRadioButton = 0;
-        $this->condicionalComisiones = 'ABC';
         $this->condicionalOrigen = 'asd';
         $this->condicionalMotivo = 'asd';
         $this->requerimientoComision = '';
@@ -112,6 +112,9 @@ class TransaccionController extends Component
         $this->telefonoAnterior = '';
         $this->cedulaAnterior = '';
         $this->destinoAnterior = '';
+
+        $this->datosPorCedula = [];
+        $this->datosPorTelefono = [];
     }
 
     public function render()
@@ -195,44 +198,6 @@ class TransaccionController extends Component
                 ->paginate($this->pagination);
         }
 
-
-        /* BUSCAR CLIENTE POR CEDULA EN EL INPUT DEL MODAL */
-        $datos = [];
-        if (strlen($this->cedula) > 0) {
-            $datos = Cliente::where('cedula', 'like', '%' . $this->cedula . '%')->orderBy('cedula', 'desc')->get();
-            if ($datos->count() > 0) {
-                $this->BuscarCliente = 1;
-            } else {
-                $this->BuscarCliente = 0;
-            }
-            if ($this->ClienteSelect == 0) {
-                $this->BuscarCliente = 0;
-            }
-        } else {
-            if ($this->ClienteSelect == 0) {
-                $this->ClienteSelect = 1;
-            }
-        }
-
-        /* BUSCAR CLIENTE POR TELEFONO EN EL INPUT DEL MODAL */
-        $datos2 = [];
-        if (strlen($this->celular) > 0) {
-            $datos2 = Cliente::where('celular', 'like', '%' . $this->celular . '%')->orderBy('celular', 'desc')->get();
-            if ($datos2->count() > 0) {
-                $this->BuscarClientePorCel = 1;
-            } else {
-                $this->BuscarClientePorCel = 0;
-            }
-            if ($this->TelfSelect == 0) {
-                $this->BuscarClientePorCel = 0;
-            }
-        } else {
-            if ($this->TelfSelect == 0) {
-                $this->TelfSelect = 1;
-            }
-        }
-
-
         /* LISTADO DE MOTIVOS DE ESE ORIGEN */
         if ($this->origen != 'Elegir') {
             $motivos = OrigenMotivo::join('motivos as m', 'm.id', 'origen_motivos.motivo_id')
@@ -242,11 +207,27 @@ class TransaccionController extends Component
         }
 
 
+        /* BUSCAR CLIENTE POR CEDULA EN EL INPUT DEL MODAL */
+        if ($this->cedula != '' && $this->ClienteSelect == 0) {
+            $this->datosPorCedula = Cliente::where('cedula', 'like', $this->cedula . '%')->orderBy('cedula', 'desc')->get();
+        } else {
+            $this->datosPorCedula = [];
+        }
+
+        /* BUSCAR CLIENTE POR TELEFONO EN EL INPUT DEL MODAL */
+        if ($this->celular != '' && $this->TelfSelect == 0) {
+            $this->datosPorTelefono = Cliente::where('celular', 'like', $this->celular . '%')->orderBy('celular', 'desc')->get();
+        } else {
+            $this->datosPorTelefono = [];
+        }
+
+
         /* RESET DE CAMPOS AL CAMBIAR ORIGEN */
         if ($this->origen != 'Elegir' && $this->condicionalOrigen == 'asd') {
             $this->condicionalOrigen = $this->origen;
-        }
-        if ($this->origen != $this->condicionalOrigen) {
+        } elseif ($this->origen != $this->condicionalOrigen) {
+            $this->identificador = rand();
+            $this->identificador2 = rand();
             $this->montoCobrarPagar = 'Monto a cobrar/pagar';
 
             $this->motivo = 'Elegir';
@@ -262,19 +243,13 @@ class TransaccionController extends Component
             $this->montoR = 0;
             $this->importe = '';
 
-            $this->comisionSiV = 'S';
-            $this->comisionNoV = 'S';
-
-            $this->BuscarCliente = 0;
-            $this->BuscarClientePorCel = 0;
-            $this->ClienteSelect = 1;
-            $this->TelfSelect = 1;
+            $this->ClienteSelect = 0;
+            $this->TelfSelect = 0;
 
             $this->igualarMontos = 0;
             $this->MostrarRadioButton = 0;
 
             $this->ResetRadioButton = 0;
-            $this->condicionalComisiones = 'ABC';
             $this->condicionalOrigen = 'asd';
             $this->condicionalMotivo = 'asd';
             $this->requerimientoComision = '';
@@ -284,8 +259,9 @@ class TransaccionController extends Component
         /* RESET DE CAMPOS AL CAMBIAR MOTIVO */
         if ($this->motivo != 'Elegir' && $this->condicionalMotivo == 'asd') {
             $this->condicionalMotivo = $this->motivo;
-        }
-        if ($this->motivo != $this->condicionalMotivo) {
+        } elseif ($this->motivo != $this->condicionalMotivo) {
+            $this->identificador = rand();
+            $this->identificador2 = rand();
             $this->montoCobrarPagar = 'Monto a cobrar/pagar';
 
             $this->origMotID = 0;
@@ -300,47 +276,24 @@ class TransaccionController extends Component
             $this->mostrartelf = 0;
             $this->mostrarTelfCodigo = 0;
 
-            $this->comisionSiV = 'S';
-            $this->comisionNoV = 'S';
-
-            $this->BuscarCliente = 0;
-            $this->BuscarClientePorCel = 0;
-            $this->ClienteSelect = 1;
-            $this->TelfSelect = 1;
+            $this->ClienteSelect = 0;
+            $this->TelfSelect = 0;
 
             $this->igualarMontos = 0;
             $this->MostrarRadioButton = 0;
 
             $this->ResetRadioButton = 0;
-            $this->condicionalComisiones = 'ABC';
             $this->condicionalMotivo = 'asd';
             $this->requerimientoComision = '';
         }
 
 
 
-        /* EJECUTAR METODO DE COMISIONSI CONDICIONADO CON UN VALOR */
-        if ($this->comisionSiV == 'SI' && $this->comisionSiV != $this->condicionalComisiones) {
-            $this->comisionNoV = 'S';
-            $this->ComisionSi();
-            $this->condicionalComisiones = $this->comisionSiV;
-        }
-
-
-        /* EJECUTAR METODO DE COMISIONNO CONDICIONADO CON UN VALOR */
-        if ($this->comisionNoV == 'NO'  && $this->comisionNoV != $this->condicionalComisiones) {
-            $this->comisionSiV = 'S';
-            $this->ComisionNo();
-            $this->condicionalComisiones = $this->comisionNoV;
-        }
-
-
         /* RESET DE RADIO BUTTONS AL CAMBIAR IMPORTE */
         if ($this->ResetRadioButton != 0) {
             if ($this->ResetRadioButton != $this->montoB) {
-                $this->comisionSiV = 'S';
-                $this->comisionNoV = 'S';
-                $this->condicionalComisiones = 'ABC';
+                $this->identificador = rand();
+                $this->identificador2 = rand();
                 $this->igualarMontos = 0;
                 $this->importe = $this->montoB;
                 $this->montoR = $this->montoB;
@@ -395,7 +348,7 @@ class TransaccionController extends Component
         }
 
 
-        /* Monto a registrar igual a importe si variable igualarMontos es igual a 0 
+        /* Monto a registrar igual a importe si variable igualarMontos es igual a 0
         (cambia a 1 cuando se ejecutan las comisiones) */
         if ($this->igualarMontos == 0) {
             $this->montoR = $this->montoB;
@@ -447,8 +400,6 @@ class TransaccionController extends Component
             'origenes' => $carterasDe,
             'motivos' => $motivos,
             'carterasCaja' => $carterasCaja,
-            'datos' => $datos,
-            'datos2' => $datos2,
         ])
             ->extends('layouts.theme.app')
             ->section('content');
@@ -458,16 +409,15 @@ class TransaccionController extends Component
     {
         $this->cedula = $cedula;
         $this->celular = $celular;
-        $this->ClienteSelect = 0;
-        $this->TelfSelect = 0;
+        $this->ClienteSelect = 1;
+        $this->TelfSelect = 1;
     }
     /* Cargar los datos seleccionados de la tabla a los label */
-    public function SeleccionarTelf($cedula, $celular)
+    public function SeleccionarTelf($celular)
     {
-        $this->cedula = $cedula;
         $this->celular = $celular;
-        $this->ClienteSelect = 0;
-        $this->TelfSelect = 0;
+        $this->ClienteSelect = 1;
+        $this->TelfSelect = 1;
     }
     /* CALCULAR COMISION SI SELECCIONA SI EN RADIO BUTTON */
     public function ComisionSi()
@@ -480,10 +430,10 @@ class TransaccionController extends Component
             ->where('c.monto_final', '>=', $this->montoB)
             ->where('origen_motivo_comisions.origen_motivo_id', $this->origMotID)
             ->where('c.tipo', 'Cliente')
-            ->select('c.id')->get()->first()->id;
+            ->select('c.id')->get()->first();
 
         try {
-            $comis = Comision::find($lista);
+            $comis = Comision::find($lista->id);
         } catch (Exception $e) {
             $this->emit('item-error', "Este tipo de transacción no tiene una comisio o el campo esta en blanco");
             return;
@@ -587,10 +537,10 @@ class TransaccionController extends Component
             ->where('c.monto_final', '>=', $this->montoB)
             ->where('origen_motivo_comisions.origen_motivo_id', $this->origMotID)
             ->where('c.tipo', 'Cliente')
-            ->select('c.id')->get()->first()->id;
+            ->select('c.id')->get()->first();
 
         try {
-            $comis = Comision::find($lista);
+            $comis = Comision::find($lista->id);
         } catch (Exception $e) {
             $this->emit('item-error', "Este tipo de transacción no tiene una comisio o el campo esta en blanco");
             return;
@@ -683,7 +633,7 @@ class TransaccionController extends Component
     public function nuevatransaccion()
     {
         $this->resetUI();
-        $this->emit('show-modal', 'Transacción Registrada');
+        $this->emit('show-modal', '');
     }
 
     /* REGISTRAR TRANSACCION */
@@ -793,11 +743,11 @@ class TransaccionController extends Component
                     ->where('c.monto_final', '>=', $this->montoB)
                     ->where('origen_motivo_comisions.origen_motivo_id', $this->origMotID)
                     ->where('c.tipo', 'Propia')
-                    ->pluck('c.id')->toArray();
+                    ->select('c.id')->get()->first();
 
                 if ($lista) {
 
-                    $comis = Comision::find($lista[0]);
+                    $comis = Comision::find($lista->id);
 
                     if ($comis->porcentaje == 'Desactivo') {
                         $ganancia = $comis->comision;
@@ -859,11 +809,11 @@ class TransaccionController extends Component
                     ->where('c.monto_final', '>=', $this->montoB)
                     ->where('origen_motivo_comisions.origen_motivo_id', $this->origMotID)
                     ->where('c.tipo', 'Propia')
-                    ->pluck('c.id')->toArray();
+                    ->select('c.id')->get()->first();
 
                 if ($lista) {
 
-                    $comis = Comision::find($lista[0]);
+                    $comis = Comision::find($lista->id);
 
                     if ($comis->porcentaje == 'Desactivo') {
                         $ganancia = $comis->comision;
@@ -925,11 +875,10 @@ class TransaccionController extends Component
                     ->where('c.monto_final', '>=', $this->montoB)
                     ->where('origen_motivo_comisions.origen_motivo_id', $this->origMotID)
                     ->where('c.tipo', 'Propia')
-                    ->pluck('c.id')->toArray();
-
+                    ->select('c.id')->get()->first();
                 if ($lista) {
 
-                    $comis = Comision::find($lista[0]);
+                    $comis = Comision::find($lista->id);
 
                     if ($comis->porcentaje == 'Desactivo') {
                         $ganancia = $comis->comision;
@@ -1072,13 +1021,16 @@ class TransaccionController extends Component
         $this->celular = $this->telefonoAnterior;
         $this->cedula = $this->cedulaAnterior;
         $this->codigo_transf = $this->destinoAnterior;
-        $this->ClienteSelect = 0;
-        $this->TelfSelect = 0;
+        $this->ClienteSelect = 1;
+        $this->TelfSelect = 1;
     }
 
     /* RESET DE INPUT Y DEMAS */
     public function resetUI()
     {
+        $this->identificador = rand();
+        $this->identificador2 = rand();
+
         $this->selected_id = 0;
         $this->origen = 'Elegir';
         $this->motivo = 'Elegir';
@@ -1105,13 +1057,8 @@ class TransaccionController extends Component
         $this->mostrartelf = 0;
         $this->mostrarTelfCodigo = 0;
 
-        $this->comisionSiV = 'S';
-        $this->comisionNoV = 'S';
-
-        $this->BuscarCliente = 0;
-        $this->BuscarClientePorCel = 0;
-        $this->ClienteSelect = 1;
-        $this->TelfSelect = 1;
+        $this->ClienteSelect = 0;
+        $this->TelfSelect = 0;
 
         $this->igualarMontos = 0;
         $this->MostrarRadioButton = 0;
