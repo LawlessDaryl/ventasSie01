@@ -6,8 +6,8 @@
             </div>
 
             <div class="widget-content">
-
-
+                
+                
                 <div class="row">
                     <div class="col-sm-2">
                         <h6>Elige el usuario</h6>
@@ -70,6 +70,22 @@
                     </div>
 
                 </div>
+
+                <div class="row">
+                    <div class="col-lg-3">
+                        <label><h6>TÉCNICO: {{$tecnico}}</h6></label><br/>
+                    </div>
+                    <div class="col-lg-3">
+                        <label><h6>ESTADO: {{$estadovista}}</h6></label><br/>
+                    </div>
+                    <div class="col-lg-3">
+                        <label><h6>FECHA DESDE: {{$fechadesde}}</h6></label><br/>
+                    </div>
+                    <div class="col-lg-3">
+                        <label><h6>FECHA HASTA: {{$fechahasta}}</h6></label><br/>
+                    </div>
+                </div>
+
                 <div class="row">
                     <div class="col-sm-12 col-md-12">
                         <!-- TABLA -->

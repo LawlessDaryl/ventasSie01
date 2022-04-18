@@ -7,7 +7,9 @@
                 </h4>
                 <ul class="tabs tab-pills">
                     <a href="javascript:void(0)" class="btn btn-dark" wire:click="IrInicio">IR A INICIO</a>
-                    <a href="javascript:void(0)" class="btn btn-dark" wire:click="GoService">AGREGAR</a>
+                    @if(@Auth::user()->hasPermissionTo('Recepcionar_Servicio'))
+                        <a href="javascript:void(0)" class="btn btn-dark" wire:click="GoService">AGREGAR</a>
+                    @endif
                 </ul>
 
             </div>
@@ -204,11 +206,13 @@
                                                                 <b>{{ $mm->movs->type }}</b>
                                                                 Serv: {{ $item->type_service }}
                                                             </h6>
-                                                            @if ($mm->movs->type == 'PENDIENTE')
-                                                                <a href="javascript:void(0)"
-                                                                    class="btn btn-dark mtmobile"
-                                                                    wire:click="Edit({{ $service->id }})"
-                                                                    title="Cambiar Estado">{{ $mm->movs->type }}</a>
+                                                            @if(@Auth::user()->hasPermissionTo('Recepcionar_Servicio'))
+                                                                @if ($mm->movs->type == 'PENDIENTE')
+                                                                    <a href="javascript:void(0)"
+                                                                        class="btn btn-dark mtmobile"
+                                                                        wire:click="Edit({{ $service->id }})"
+                                                                        title="Cambiar Estado">{{ $mm->movs->type }}</a>
+                                                                @endif
                                                             @endif
 
                                                             @if (!empty(session('sesionCaja')) && @Auth::user()->hasPermissionTo('Boton_Entregar_Servicio'))
@@ -367,11 +371,13 @@
                                                                 <b>{{ $mm->movs->type }}</b>
                                                                 Serv: {{ $item->type_service }}
                                                             </h6>
-                                                            @if ($mm->movs->type == 'PENDIENTE')
-                                                                <a href="javascript:void(0)"
-                                                                    class="btn btn-dark mtmobile"
-                                                                    wire:click="Edit({{ $service->id }})"
-                                                                    title="Cambiar Estado">{{ $mm->movs->type }}</a>
+                                                            @if(@Auth::user()->hasPermissionTo('Recepcionar_Servicio'))
+                                                                @if ($mm->movs->type == 'PENDIENTE')
+                                                                    <a href="javascript:void(0)"
+                                                                        class="btn btn-dark mtmobile"
+                                                                        wire:click="Edit({{ $service->id }})"
+                                                                        title="Cambiar Estado">{{ $mm->movs->type }}</a>
+                                                                @endif
                                                             @endif
 
                                                             @if (!empty(session('sesionCaja')) && @Auth::user()->hasPermissionTo('Boton_Entregar_Servicio'))
@@ -526,11 +532,13 @@
                                                             <b>{{ $mm->movs->type }}</b>
                                                             Serv: {{ $item->type_service }}
                                                         </h6>
-                                                        @if ($mm->movs->type == 'PENDIENTE')
-                                                            <a href="javascript:void(0)"
-                                                                class="btn btn-dark mtmobile"
-                                                                wire:click="Edit({{ $service->id }})"
-                                                                title="Cambiar Estado">{{ $mm->movs->type }}</a>
+                                                        @if(@Auth::user()->hasPermissionTo('Recepcionar_Servicio'))
+                                                            @if ($mm->movs->type == 'PENDIENTE')
+                                                                <a href="javascript:void(0)"
+                                                                    class="btn btn-dark mtmobile"
+                                                                    wire:click="Edit({{ $service->id }})"
+                                                                    title="Cambiar Estado">{{ $mm->movs->type }}</a>
+                                                            @endif
                                                         @endif
 
                                                         @if (!empty(session('sesionCaja')) && @Auth::user()->hasPermissionTo('Boton_Entregar_Servicio'))

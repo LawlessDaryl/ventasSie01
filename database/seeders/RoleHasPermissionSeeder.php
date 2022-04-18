@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Http\Livewire\PermisosController;
 use App\Models\Permission;
 use App\Models\RoleHasPermissions;
 use Illuminate\Database\Seeder;
@@ -15,7 +16,7 @@ class RoleHasPermissionSeeder extends Seeder
      */
     public function run()
     {
-        for ($x = 1; $x <= 46; $x++) {  /* TODOS LOS PERMISOS PARA EL ROL ADMIN */
+        for ($x = 1; $x <= 61; $x++) {  /* TODOS LOS PERMISOS PARA EL ROL ADMIN */
             RoleHasPermissions::create([
                 'permission_id' => $x,
                 'role_id' => 1,
@@ -50,6 +51,10 @@ class RoleHasPermissionSeeder extends Seeder
                 ]);
             }
         }
+        RoleHasPermissions::create([    /* PERMISOS SERVICIOS ROL SUPERVISOR */
+            'permission_id' => 61,
+            'role_id' => 4,
+        ]);
         for ($x = 35; $x <= 43; $x++) {     /* PERMISOS SERVICIOS ROL TECNICO*/
             if ($x != 39 && $x != 40 && $x != 41 && $x != 42 && $x != 43) {
                 RoleHasPermissions::create([
@@ -58,6 +63,10 @@ class RoleHasPermissionSeeder extends Seeder
                 ]);
             }
         }
+        RoleHasPermissions::create([    /* PERMISOS SERVICIOS ROL TECNICO */
+            'permission_id' => 61,
+            'role_id' => 3,
+        ]);
         for ($x = 35; $x <= 43; $x++) {     /* PERMISOS SERVICIOS ROL CAJERO*/
             if ($x != 39 && $x != 40 && $x != 41 && $x != 43) {
                 RoleHasPermissions::create([
