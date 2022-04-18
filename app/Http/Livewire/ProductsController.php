@@ -16,7 +16,8 @@ class ProductsController extends Component
     use WithFileUploads;
     public $nombre, $barcode, $costo, $precio_venta,$cantidad_minima,
     $codigo,$lote,$unidad,$industria,$caracteristicas,$status,$categoryid, $search,
-     $image, $selected_id, $pageTitle, $componentName,$cate,$marca,$garantia,$stock,$stock_v;
+     $image, $selected_id, $pageTitle, $componentName,$cate,$marca,$garantia,$stock,$stock_v
+     ,$selected_categoria,$selected_sub;
 
     private $pagination = 5;
     public $selected_id2=0;
@@ -35,21 +36,47 @@ class ProductsController extends Component
     }
     public function render()
     {
+
         if (strlen($this->search) > 0) {
             $products = Product::join('categories as c', 'c.id', 'products.category_id')
                 ->select('products.*', 'c.name as category')
-                ->where('products.name', 'like', '%' . $this->search . '%')
+                ->where('products.nombre', 'like', '%' . $this->search . '%')
                 ->orWhere('products.barcode', 'like', '%' . $this->search . '%')
                 ->orWhere('c.name', 'like', '%' . $this->search . '%')
                 ->orderBy('products.id', 'desc')
                 ->paginate($this->pagination);
         } else {
-            $products = Product::join('categories as c', 'c.id', 'products.category_id')
-                ->select('products.*', 'c.name as category')
+            if ($this->selected_categoria != null && $this->selected_sub == null) {
+          
+                $products = Product::join('categories as c', 'c.id', 'products.category_id')
+                ->select('products.*', 'c.*')
+                ->where('c.categoria_padre',$this->selected_categoria)
                 ->orderBy('products.id', 'desc')
                 ->paginate($this->pagination);
+                dd($this->selected_sub);
+               
+            }
+            else if ($this->selected_categoria != null && $this->selected_sub != null ) {
+              
+                $products = Product::join('categories as c', 'c.id', 'products.category_id')
+                ->select('products.*', 'c.*')
+          
+                ->where('c.id',$this->selected_sub)
+                ->orderBy('products.id', 'desc')
+                ->paginate($this->pagination);
+                
+            }
+            else{
+                $products = Product::join('categories as c', 'c.id', 'products.category_id')
+                ->select('products.*', 'c.*')
+                         
+                ->orderBy('products.id', 'desc')
+                ->paginate($this->pagination);
+                
+            }
+           
         }
-        $sub= Category::where('categories.categoria_padre',$this->selected_id2)
+        $sub= Category::where('categories.categoria_padre',$this->selected_categoria)
         ->where('categories.categoria_padre','!=','Elegir')
         ->get();
 

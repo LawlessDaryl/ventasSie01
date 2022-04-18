@@ -7,9 +7,7 @@ use Carbon\Carbon;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
-use Barryvdh\DomPDF\Facade as PDFB;
-use Illuminate\Support\Facades\DB;
-use Exception;
+
 class ComprasController extends Component
 {
     use WithPagination;
@@ -17,6 +15,8 @@ class ComprasController extends Component
     private $pagination = 5;
     public $fromDate,
             $toDate,
+            $from,
+            $to,
             $filtro,
             $criterio,
            $total_compras,
@@ -34,6 +34,7 @@ class ComprasController extends Component
     public function mount(){
         $this->nro=1;
         $this->filtro='Contado';
+        $this->fecha='hoy';
         
         
     }
@@ -49,13 +50,14 @@ class ComprasController extends Component
         ->join('movimientos as mov','mov_compra.id','mov.id')
         ->join('users','mov.user_id','users.id')
         ->join('providers as prov','compras.proveedor_id','prov.id')
-        ->select('compras.*','compras.status as status_compra','mov.*','prov.nombre as nombre_prov','users.name')
+        ->select('compras.*','compras.id as compra_id','compras.status as status_compra','mov.*','prov.nombre as nombre_prov','users.name')
         ->whereBetween('compras.created_at',[$this->from,$this->to])
         ->where('compras.transaccion',$this->filtro)
         ->orderBy('compras.fecha_compra')
         ->get();
 
         $this->totales = $this->datas_compras->sum('importe_total');
+       
 
 
         if (strlen($this->search) > 0){
@@ -64,11 +66,12 @@ class ComprasController extends Component
             ->join('users','mov.user_id','users.id')
             ->join('providers as prov','compras.proveedor_id','prov.id')
             ->select('compras.*','compras.status as status_compra','mov.*','prov.nombre as nombre_prov','users.name')
+            ->whereBetween('compras.created_at',[$this->from,$this->to])
             ->where('compras.transaccion',$this->filtro)
             ->where('nombre', 'like', '%' . $this->search . '%')
             ->orWhere('users.name', 'like', '%' . $this->search . '%')
-            ->orWhere('compras.created_at', 'like', '%' . $this->search . '%')
             ->orWhere('compras.id', 'like', '%' . $this->search . '%')
+            ->orWhere('compras.created_at', 'like', '%' . $this->search . '%')
             ->orWhere('compras.status', 'like', '%' . $this->search . '%')
             ->get();
 
@@ -106,7 +109,9 @@ class ComprasController extends Component
             $this->toDate = Carbon::now();
             $this->fromDate = $this->toDate->subWeeks(1);
             $this->from = Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00';
-            $this->to = Carbon::parse($this->toDate)->format('Y-m-d')     . ' 23:59:59';
+            $this->to = Carbon::parse(Carbon::now())->format('Y-m-d')     . ' 23:59:59';
+
+
 
         }
 
@@ -118,34 +123,5 @@ class ComprasController extends Component
   
     }
 
-    public function Print()
-    {
-
-        try{
-
-            $data= $this->datas_compras;
-            $totales=$this->totales;
-            $fecha=$this->fecha;
-           $filtro=$this->filtro;
-           $from=$this->fromDate;
-           $to=$this->toDate;
-         $nro=$this->nro;
-            $pdf = PDFB::loadView('livewire.pdf.reporteCompras', compact($data,'totales','fecha','filtro','from','to','nro'));
-            /* $pdf->setPaper("A4", "landscape"); //orientacion y tamaño */
-    
-            //no se q hace esta linea
-            $pdf->render();
-            return $pdf->setPaper('letter', 'landscape')->stream('cns.pdf'); //visualizar
-            /* return $pdf->download('ordenServicio.pdf');  //descargar  */
-        }
-        catch (Exception $e) {
-        
-            dd($e->getMessage());
-            
-        }
-    
-
-
-        
-    }
+  
 }

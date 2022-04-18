@@ -14,7 +14,8 @@
                 </ul>
                 <ul class="tabs tab-pills">
                     
-                        <a wire:click=print() class="btn btn-dark" >Imprimir</a>
+                        <a href="{{ url('reporteCompras/pdf' . '/' . $filtro . '/' . $fecha .'/'
+                        . $from. '/' . $to . '/' .$search)}}" class="btn btn-dark" >Imprimir</a>
                       
                     
                 </ul>
@@ -160,9 +161,9 @@
                                                         class="btn btn-dark" title="Delete">
                                                         <i class="fas fa-trash"></i>
                                                     </a>
-                                                    <a href="javascript:void(0)" onclick="Confirm('{{ $data->id }}')" 
-                                                        class="btn btn-dark" title="Delete">
-                                                        <i class="fas fa-info"></i>
+                                                    <a href="{{ url('Compras/pdf' . '/' . $data->compra_id)}}"  
+                                                        class="btn btn-dark" title="Print">
+                                                        <i class="fas fa-print"></i>
                                                     </a>
                                                 </td>
                                             </tr>

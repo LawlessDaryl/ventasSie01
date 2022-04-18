@@ -4,7 +4,7 @@
 <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 <link href="{{ asset('assets/css/plugins.css') }}" rel="stylesheet" type="text/css" />
 <link href="{{ asset('assets/css/structure.css') }}" rel="stylesheet" type="text/css" class="structure" />
-
+<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/elements/print.css') }}" media="print">
 <link href="{{ asset('plugins/apex/apexcharts.css') }}" rel="stylesheet" type="text/css">
 <link href="{{ asset('assets/css/dashboard/dash_2.css') }}" rel="stylesheet" type="text/css" />
 

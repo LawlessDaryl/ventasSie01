@@ -23,29 +23,16 @@
                     <img src="{{ asset('assets/img/sie.png') }}" alt="" class="invoice-logo">
                 </td>
 
-                <td width="70%" class="text-left text-company" style="vertical-align: top; padding-top:10px;">
-                    @if ($fecha == 'hoy')
-                        <span style="font-size: 16px;"><strong>Reporte de Compras del día</strong></span>
-                    @else
-                        <span style="font-size: 16px;"><strong>Reporte de Compras por fecha</strong></span>
-                    @endif
-                    <br>
-                    @if ($filtro == 'Contado')
-                        <span style="font-size: 16px;"><strong>Tipo de Compra: </strong>{{$filtro}}</span>
-                    @else
-                    <span style="font-size: 16px;"><strong>Tipo de Compra: </strong>{{$filtro}}</span>
-                    @endif
-
-                    <br>
-                    <br>
-                  
-                        <span style="font-size: 16px;"><strong>Fecha inicio: 
-                               </strong> {{ $dateFrom  }}</span>
-                        <span style="font-size: 16px;"><strong>Fecha final:
-                               </strong> {{ $dateTo }}</span>
+                <td width="70%" class="text-left text-company" style="vertical-align: top; padding-top:8px;">
+                        <span style="font-size: 16px;"><strong>COMPRA N°</strong>{{$data->id}}</span>
+                        <br>
+                        <span style="font-size: 16px;"><strong>Proveedor:</strong>{{$data->nombre}} </span>
+                        <br>
+                        <span style="font-size: 16px;"><strong>Fecha de Compra:</strong>{{$data->fecha_compra}}</span>
                     <br>
 
                     <span style="font-size: 14px;">Usuario: {{ Auth()->user()->name }}</span>
+                    <br>
                 </td>
             </tr>
         </table>
@@ -56,36 +43,44 @@
             <thead>
                 <tr>
                     <th width="10%">#</th>
-                    <th width="12%">PROVEEDOR</th>
-                    <th width="10%">COMPRA</th>
-                    <th width="12%">IMPORTE TOTAL</th>
-                    <th>USUARIO</th>
-                    <th width="18%">FECHA</th>
+                    <th width="12%">CODIGO</th>
+                    <th width="10%">DESCRIPCION</th>
+                    <th width="12%">UNIDAD</th>
+                    <th width="12%">CANTIDAD</th>
+                    <th width="12%">COSTO/U</th>
+                    <th width="12%">SUBTOTAL</th>
+                    <th width="12%">DESCUENTO</th>
+                    <th width="12%">TOTAL</th>
+                   
                 </tr>
             </thead>
 
             <tbody>
-                @foreach ($data as $item)
+                @foreach ($detalle as $item)
                     <tr>
                         <td align="center">{{ $nro++ }}</td>
-                        <td align="center">{{ $item->nombre_prov }}</td>
-                        <td align="center">{{ $item->compras_id }}</td>
-                        <td align="center">{{ $item->importe_total }}</td>
-                        <td align="center">{{ $item->name }}</td>
-                        <td align="center">{{ $item->created_at }}</td>
+                        <td align="center">{{ $item->barcode}}</td>
+                        <td align="center">{{ $item->nombre }}</td>
+                        <td align="center">{{ $item->unidad}}</td>
+                        <td align="center">{{ $item->cantidad }}</td>
+                        <td align="center">{{ $item->precio }}</td>
+                        <td align="center">{{ $item->precio*$item->cantidad }}</td>
+                        <td align="center">0</td>
+                        <td align="center">{{ $item->precio*$item->cantidad}}</td>
                     </tr>
                 @endforeach
             </tbody>
             <br>
-
+    
             <tfoot>
                 <tr>
                     <td class="text-center">
                         <span><b>TOTALES</b></span>
                     </td>
                     <td class="text-center" colspan="4">
-                        <span><strong>Bs{{$totales}}</strong></span>
-                        <span><strong>$us{{$totales/6.96}}</strong></span>
+                        <span><strong>Bs {{$data->importe_total}}</strong></span>
+                        <br>
+                        <span><strong>$us{{round($data->importe_total/6.96,2)}}</strong></span>
                     </td>
                   
                     <td colspan="2"></td>

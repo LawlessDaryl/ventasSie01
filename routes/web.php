@@ -5,6 +5,8 @@ use App\Http\Controllers\ExportServicioPdfController;
 use App\Http\Controllers\ExportStreamingPdfController;
 use App\Http\Controllers\ExportTigoPdfController;
 use App\Http\Controllers\ImprimirController;
+use App\Http\Controllers\ExportComprasController;
+
 use App\Http\Livewire\ArqueosStreamingController;
 use App\Http\Livewire\ArqueosTigoController;
 use App\Http\Livewire\AsignarController;
@@ -145,7 +147,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('destino_prod', DestinoProductoController::class)->name('destination');
     Route::get('transferencia', TransferirProductoController::class)->name('destination');
     Route::get('destino', DestinoController::class)->name('dest');
-    Route::get('reporteCompras/pdf', [ComprasController::class, 'print']);
+
+    Route::get('Compras/pdf/{id}', [ExportComprasController::class, 'PrintCompraPdf']);
+    Route::get('reporteCompras/pdf/{filtro}/{fecha}/{fromDate}/{toDate}/{data?}', [ExportComprasController::class, 'reporteComprasPdf']);
+    
+ 
+    
+    
 
     /* VENTAS */
     Route::get('coins', CoinsController::class)->name('monedas')->middleware('permission:Coins_Index');
