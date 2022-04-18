@@ -66,6 +66,7 @@ class TransaccionController extends Component
     {
         $this->identificador = rand();
         $this->identificador2 = rand();
+        
         $this->pageTitle = 'Transacciones del día';
         $this->componentName = 'TIGO MONEY';
         $this->montoCobrarPagar = 'Monto a cobrar/pagar';
