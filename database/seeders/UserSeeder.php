@@ -34,9 +34,9 @@ class UserSeeder extends Seeder
             'name' => 'Armando',
             'phone' => '68007552',
             'email' => 'arramado@gmail.com',
-            'profile' => 'EMPLOYEE',
+            'profile' => 'CAJA_ADMIN',
             'status' => 'ACTIVE',
-            'password' => bcrypt('123')
+            'password' => bcrypt('armando1991')
         ]);
         User::create([  /* usuario 4 */
             'name' => 'Samuel',
@@ -77,6 +77,14 @@ class UserSeeder extends Seeder
             'profile' => 'CAJERO',
             'status' => 'ACTIVE',
             'password' => bcrypt('123')
+        ]);
+        User::create([  /* usuario 9 */
+            'name' => 'caja1Central',
+            'phone' => '',
+            'email' => 'caja1@gmail.com',
+            'profile' => 'CAJERO',
+            'status' => 'ACTIVE',
+            'password' => bcrypt('caja1')
         ]);
     }
 }

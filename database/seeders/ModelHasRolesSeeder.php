@@ -25,7 +25,7 @@ class ModelHasRolesSeeder extends Seeder
             'model_id' => 2,
         ]);
         ModelHasRoles::create([     /* ARMANDO - ROL EMPLEADO */
-            'role_id' => 2,
+            'role_id' => 6,
             'model_type' => 'App\Models\User',
             'model_id' => 3,
         ]);
@@ -35,7 +35,7 @@ class ModelHasRolesSeeder extends Seeder
             'model_id' => 4,
         ]);
         ModelHasRoles::create([     /* LUIS - ROL EMPLEADO */
-            'role_id' => 2,
+            'role_id' => 5,
             'model_type' => 'App\Models\User',
             'model_id' => 5,
         ]);
@@ -53,6 +53,11 @@ class ModelHasRolesSeeder extends Seeder
             'role_id' => 5,
             'model_type' => 'App\Models\User',
             'model_id' => 8,
+        ]);
+        ModelHasRoles::create([     /* CAJA1 - ROL CAJERO */
+            'role_id' => 5,
+            'model_type' => 'App\Models\User',
+            'model_id' => 9,
         ]);
     }
 }

@@ -6,6 +6,10 @@
                     <b>{{ $componentName }} | {{ $pageTitle }}</b>
                 </h4>
                 <ul class="tabs tab-pills">
+                    <a href="javascript:void(0)" class="btn btn-dark" wire:click="CrearCombo()"
+                        data-target="#theModal">Vender Combo</a>
+                </ul>
+                <ul class="tabs tab-pills">
                     <a href="javascript:void(0)" class="btn btn-dark" wire:click="Agregar()" data-target="#theModal">+
                         Nueva</a>
                 </ul>
@@ -45,6 +49,17 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-sm-12 col-md-2">
+                            <div class="form-group">
+                                <div class="n-chk">
+                                    <label class="new-control new-radio radio-classic-primary">
+                                        <input type="radio" class="new-control-input" name="custom-radio-4" id="combos"
+                                            value="combos" wire:model="condicional">
+                                        <span class="new-control-indicator"></span>COMBOS
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -54,17 +69,17 @@
                         <table class="table table-unbordered table-hover mt-2">
                             <thead class="text-white" style="background: #3B3F5C">
                                 <tr>
-                                    <th class="table-th text-withe text-center">PLATAFORMA</th>
-                                    <th class="table-th text-withe text-center">CLIENTE</th>
-                                    <th class="table-th text-withe text-center">CORREO</th>
-                                    <th class="table-th text-withe text-center">CONTRASEÑA CUENTA</th>
-                                    <th class="table-th text-withe text-center">VENCIMIENTO CUENTA</th>
-                                    <th class="table-th text-withe text-center">PERFIL</th>
-                                    <th class="table-th text-withe text-center">IMPORTE</th>
-                                    <th class="table-th text-withe text-center">PLAN INICIO</th>
-                                    <th class="table-th text-withe text-center">PLAN FIN</th>
-                                    <th class="table-th text-withe text-center">ACCIONES</th>
-                                    <th class="table-th text-withe text-center">REALIZADO</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">PLATAFORMA</th>
+                                    <th class="table-th text-withe text-center"style="font-size: 80%">CLIENTE</th>
+                                    <th class="table-th text-withe text-center"style="font-size: 80%">EMAIL</th>
+                                    <th class="table-th text-withe text-center"style="font-size: 80%">CONTRASEÑA CUENTA</th>
+                                    <th class="table-th text-withe text-center"style="font-size: 80%">VENCIMIENTO CUENTA</th>
+                                    <th class="table-th text-withe text-center"style="font-size: 80%">PERFIL</th>
+                                    <th class="table-th text-withe text-center"style="font-size: 80%">IMPORTE</th>
+                                    <th class="table-th text-withe text-center"style="font-size: 80%">PLAN INICIO</th>
+                                    <th class="table-th text-withe text-center"style="font-size: 80%">PLAN FIN</th>
+                                    <th class="table-th text-withe text-center"style="font-size: 80%">ACCIONES</th>
+                                    <th class="table-th text-withe text-center"style="font-size: 80%">REALIZADO</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -86,8 +101,9 @@
                                             <h6 class="text-center">{{ $p->accexp }}</h6>
                                         </td>
                                         <td class="text-center">
-                                            <h6 class="text-center">{{ $p->nameprofile }} {{ $p->pin }}</h6>
-                                        </td>                                        
+                                            <h6 class="text-center">{{ $p->nameprofile }} {{ $p->pin }}
+                                            </h6>
+                                        </td>
                                         <td class="text-center">
                                             <h6 class="text-center">{{ $p->importe }}</h6>
                                         </td>
@@ -99,7 +115,7 @@
                                             <h6 class="text-center">
                                                 {{ \Carbon\Carbon::parse($p->planfin)->format('d:m:Y') }} </h6>
                                         </td>
-                                        <td class="text-center">                                            
+                                        <td class="text-center">
                                             <a href="javascript:void(0)"
                                                 wire:click="VerObservaciones({{ $p->id }})"
                                                 class="btn btn-dark mtmobile" title="Observaciones">
@@ -110,7 +126,87 @@
                                                     class="btn btn-dark mtmobile" title="Anular">
                                                     <i class="fas fa-trash"></i>
                                                 </a>
-                                            @endif                                            
+                                            @endif
+                                        </td>
+                                        <td class="text-center"
+                                            style="{{ $p->ready == 'NO' ? 'background-color: #d97171 !important' : 'background-color: #09ed3d !important' }}">
+                                            @if ($p->ready == 'NO')
+                                                <a href="javascript:void(0)" class="btn btn-dark"
+                                                    onclick="ConfirmHecho('{{ $p->id }}')">
+                                                    <i class="fa-regular fa-circle-exclamation"></i>
+                                                </a>
+                                            @else
+                                                <h6 class="text-center"><strong>Hecho</strong></h6>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                        {{ $planes->links() }}
+                    </div>
+                </div>
+            @elseif($condicional == 'cuentas')
+                <div class="widget-content">
+                    <div class="table-responsive">
+                        <table class="table table-unbordered table-striped mt-2">
+                            <thead class="text-white" style="background: #3B3F5C">
+                                <tr>
+                                    <th class="table-th text-withe text-center">PLATAFORMA</th>
+                                    <th class="table-th text-withe text-center">CLIENTE</th>
+                                    <th class="table-th text-withe text-center">EMAIL O NOMBRE-CUENTA</th>
+                                    <th class="table-th text-withe text-center">CONTRASEÑA CUENTA</th>
+                                    <th class="table-th text-withe text-center">VENCIMIENTO CUENTA</th>
+                                    <th class="table-th text-withe text-center">IMPORTE</th>
+                                    <th class="table-th text-withe text-center">PLAN INICIO</th>
+                                    <th class="table-th text-withe text-center">PLAN FIN</th>
+                                    <th class="table-th text-withe text-center">ACCIONES</th>
+                                    <th class="table-th text-withe text-center">REALIZADO</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($planes as $p)
+                                    <tr
+                                        style="{{ $p->estado == 'ANULADO' ? 'background-color: #d97171 !important' : '' }}">
+                                        <td class="text-center">
+                                            <h6 class="text-center">{{ $p->plataforma }}</h6>
+                                        </td>
+                                        <td class="text-center">
+                                            <h6 class="text-center">{{ $p->cliente }} {{ $p->celular }}</h6>
+                                        </td>
+                                        <td class="text-center">
+                                            <h6 class="text-center">{{ $p->account_name }} {{ $p->passCorreo }}
+                                            </h6>
+                                        </td>
+                                        <td class="text-center">
+                                            <h6 class="text-center">{{ $p->password_account }}</h6>
+                                        </td>
+                                        <td class="text-center">
+                                            <h6 class="text-center">{{ $p->accexp }}</h6>
+                                        </td>
+                                        <td class="text-center">
+                                            <h6 class="text-center">{{ $p->importe }}</h6>
+                                        </td>
+                                        <td class="text-center">
+                                            <h6 class="text-center">
+                                                {{ \Carbon\Carbon::parse($p->planinicio)->format('d:m:Y') }} </h6>
+                                        </td>
+                                        <td class="text-center">
+                                            <h6 class="text-center">
+                                                {{ \Carbon\Carbon::parse($p->planfin)->format('d:m:Y') }} </h6>
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="javascript:void(0)"
+                                                wire:click="VerObservaciones({{ $p->id }})"
+                                                class="btn btn-dark mtmobile" title="Observaciones">
+                                                <i class="fa-solid fa-file-signature"></i>
+                                            </a>
+                                            @if ($p->estado != 'ANULADO')
+                                                <a href="javascript:void(0)" onclick="Confirm({{ $p->id }})"
+                                                    class="btn btn-dark mtmobile" title="Anular">
+                                                    <i class="fas fa-trash"></i>
+                                                </a>
+                                            @endif
                                         </td>
                                         <td class="text-center"
                                             style="{{ $p->ready == 'NO' ? 'background-color: #d97171 !important' : 'background-color: #09ed3d !important' }}">
@@ -133,50 +229,94 @@
             @else
                 <div class="widget-content">
                     <div class="table-responsive">
-                        <table class="table table-unbordered table-striped mt-2">
+                        <table class="table table-unbordered table-hover mt-2">
                             <thead class="text-white" style="background: #3B3F5C">
                                 <tr>
-                                    <th class="table-th text-withe text-center">PLATAFORMA</th>
-                                    <th class="table-th text-withe text-center">CLIENTE</th>
-                                    <th class="table-th text-withe text-center">CORREO</th>
-                                    <th class="table-th text-withe text-center">CONTRASEÑA CUENTA</th>
-                                    <th class="table-th text-withe text-center">VENCIMIENTO CUENTA</th>
-                                    <th class="table-th text-withe text-center">IMPORTE</th>
-                                    <th class="table-th text-withe text-center">PLAN INICIO</th>
-                                    <th class="table-th text-withe text-center">PLAN FIN</th>
-                                    <th class="table-th text-withe text-center">ACCIONES</th>
-                                    <th class="table-th text-withe text-center">REALIZADO</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">PLATAFORMAS</th>
+                                    <th class="table-th text-withe text-center"style="font-size: 80%">CLIENTE</th>
+                                    <th class="table-th text-withe text-center"style="font-size: 80%">EMAILS</th>
+                                    <th class="table-th text-withe text-center"style="font-size: 80%">CONTRASEÑAS CUENTAS</th>
+                                    <th class="table-th text-withe text-center"style="font-size: 80%">VENCIMIENTO CUENTAS</th>
+                                    <th class="table-th text-withe text-center"style="font-size: 80%">PERFILES</th>
+                                    <th class="table-th text-withe text-center"style="font-size: 80%">IMPORTE</th>
+                                    <th class="table-th text-withe text-center"style="font-size: 80%">PLAN INICIO</th>
+                                    <th class="table-th text-withe text-center"style="font-size: 80%">PLAN FIN</th>
+                                    <th class="table-th text-withe text-center"style="font-size: 80%">ACCIONES</th>
+                                    <th class="table-th text-withe text-center"style="font-size: 80%">REALIZADO</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($planes as $p)
-                                    <tr
-                                        style="{{ $p->estado == 'ANULADO' ? 'background-color: #d97171 !important' : '' }}">
+                                    <tr>
                                         <td class="text-center">
-                                            <h6 class="text-center">{{ $p->plataforma }}</h6>
+                                            <h6 class="text-center">
+                                                @foreach ($p->PlanAccounts as $item)
+                                                    @if ($item->status == 'ACTIVO')
+                                                        {{ $item->Cuenta->Plataforma->nombre }} <br>
+                                                    @endif
+                                                @endforeach
+                                            </h6>
                                         </td>
                                         <td class="text-center">
-                                            <h6 class="text-center">{{ $p->cliente }} {{ $p->celular }}</h6>
+                                            <h6 class="text-center">{{ $p->Mov->climov->client->nombre }} <br>
+                                                {{ $p->Mov->climov->client->celular }}</h6>
                                         </td>
                                         <td class="text-center">
-                                            <h6 class="text-center">{{ $p->correo }} {{ $p->passCorreo }}</h6>
+                                            <h6 class="text-center">
+                                                @foreach ($p->PlanAccounts as $item)
+                                                    @if ($item->status == 'ACTIVO')
+                                                        {{ $item->Cuenta->account_name }}
+                                                        <br>
+                                                    @endif
+                                                @endforeach
+                                            </h6>
                                         </td>
                                         <td class="text-center">
-                                            <h6 class="text-center">{{ $p->password_account }}</h6>
+                                            <h6 class="text-center">
+                                                @foreach ($p->PlanAccounts as $item)
+                                                    @if ($item->status == 'ACTIVO')
+                                                        {{ $item->Cuenta->password_account }}
+                                                        <br>
+                                                    @endif
+                                                @endforeach
+                                            </h6>
                                         </td>
                                         <td class="text-center">
-                                            <h6 class="text-center">{{ $p->accexp }}</h6>
+                                            <h6 class="text-center">
+                                                @foreach ($p->PlanAccounts as $item)
+                                                    @if ($item->status == 'ACTIVO')
+                                                        {{ $item->Cuenta->expiration_account }}
+                                                        <br>
+                                                    @endif
+                                                @endforeach
+                                            </h6>
+                                        </td>
+                                        <td class="text-center">
+                                            <h6 class="text-center">
+                                                @foreach ($p->PlanAccounts as $item)
+                                                    @if ($item->status == 'ACTIVO')
+                                                        @foreach ($item->Cuenta->CuentaPerfiles as $acprof)
+                                                            @if ($acprof->status == 'ACTIVO' && $acprof->plan_id == $p->id)
+                                                                {{ $acprof->Perfil->nameprofile }} <br>
+                                                                {{ $acprof->Perfil->pin }}
+                                                            @endif
+                                                        @endforeach
+                                                        <br>
+                                                    @endif
+                                                @endforeach
+                                            </h6>
                                         </td>
                                         <td class="text-center">
                                             <h6 class="text-center">{{ $p->importe }}</h6>
                                         </td>
                                         <td class="text-center">
                                             <h6 class="text-center">
-                                                {{ \Carbon\Carbon::parse($p->planinicio)->format('d:m:Y') }} </h6>
+                                                {{ \Carbon\Carbon::parse($p->plan_start)->format('d:m:Y') }} </h6>
                                         </td>
                                         <td class="text-center">
                                             <h6 class="text-center">
-                                                {{ \Carbon\Carbon::parse($p->planfin)->format('d:m:Y') }} </h6>
+                                                {{ \Carbon\Carbon::parse($p->expiration_plan)->format('d:m:Y') }}
+                                            </h6>
                                         </td>
                                         <td class="text-center">
                                             <a href="javascript:void(0)"
@@ -184,12 +324,12 @@
                                                 class="btn btn-dark mtmobile" title="Observaciones">
                                                 <i class="fa-solid fa-file-signature"></i>
                                             </a>
-                                            @if ($p->estado != 'ANULADO')
+                                            @if ($p->status != 'ANULADO')
                                                 <a href="javascript:void(0)" onclick="Confirm({{ $p->id }})"
                                                     class="btn btn-dark mtmobile" title="Anular">
                                                     <i class="fas fa-trash"></i>
                                                 </a>
-                                            @endif                                     
+                                            @endif
                                         </td>
                                         <td class="text-center"
                                             style="{{ $p->ready == 'NO' ? 'background-color: #d97171 !important' : 'background-color: #09ed3d !important' }}">
@@ -217,6 +357,8 @@
     @include('livewire.planes.modalObservaciones')
     @include('livewire.planes.modalPerfil')
     @include('livewire.planes.modalCrearPerfil')
+    @include('livewire.planes.modalCombos')
+
 </div>
 
 <script>
@@ -252,7 +394,7 @@
         window.livewire.on('show-modal3', Msg => {
             $('#Modal_Observaciones').modal('show')
         })
-        
+
         window.livewire.on('show-modalPerf', Msg => {
             $('#Modal_perfil').modal('show')
         })
@@ -269,6 +411,14 @@
         })
         window.livewire.on('crearperfil-cerrar', Msg => {
             $('#Modal_crear_perfil').modal('hide')
+            noty(Msg)
+        })
+
+        window.livewire.on('show-modalCombos', Msg => {
+            $('#Modal_combos').modal('show')
+        })
+        window.livewire.on('hide-modalCombos', Msg => {
+            $('#Modal_combos').modal('hide')
             noty(Msg)
         })
 

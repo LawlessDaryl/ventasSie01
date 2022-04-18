@@ -13,6 +13,6 @@ class Profile extends Model
 
     public function CuentaPerfil()
     {
-        return $this->hasOne(AccountProfile::class, 'profile_id', 'id');
+        return $this->hasMany(AccountProfile::class);
     }
 }

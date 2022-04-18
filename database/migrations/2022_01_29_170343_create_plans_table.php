@@ -20,7 +20,7 @@ class CreatePlansTable extends Migration
             $table->date('expiration_plan');
             $table->enum('ready', ['SI', 'NO'])->default('NO');
             $table->enum('done', ['SI', 'NO'])->default('NO');
-            $table->enum('type_plan', ['CUENTA', 'PERFIL']);
+            $table->enum('type_plan', ['CUENTA', 'PERFIL', 'COMBO']);
             $table->enum('status', ['VIGENTE', 'VENCIDO', 'ANULADO'])->default('VIGENTE');
             $table->enum('type_pay', ['EFECTIVO', 'Banco', 'TigoStreaming']);
             $table->string('observations')->nullable();

@@ -38,7 +38,7 @@
 
                         <div class="col-sm-12 col-md-6">
                             <div class="form-group">
-                                <h6>Correo Cuenta</h6>
+                                <h6>Email o Nombre-Cuenta</h6>
                                 <input type="text" disabled wire:model="correoCuenta" class="form-control">
                                 @error('correoCuenta')
                                     <span class="text-danger er">{{ $message }}</span>
@@ -156,6 +156,14 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+                                                    @if ($cuentasEnteras->count() == 0)
+                                                        <tr>
+                                                            <td colspan="5">
+                                                                <h6 class="text-center">No tienes cuentas de esa
+                                                                    plataforma para hacer el cambio</h6>
+                                                            </td>
+                                                        </tr>
+                                                    @endif
                                                     @foreach ($cuentasEnteras as $cuent)
                                                         <tr>
                                                             <td class="text-center">

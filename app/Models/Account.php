@@ -9,18 +9,17 @@ class Account extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['start_account', 'expiration_account', 'status', 'whole_account', 'number_profiles', 'name_account', 'password_account', 'price', 'availability', 'meses_comprados', 'str_supplier_id', 'platform_id', 'email_id'];
+    protected $fillable = ['start_account', 'expiration_account', 'status', 'whole_account', 'number_profiles', 'account_name', 'password_account', 'price', 'availability', 'meses_comprados', 'str_supplier_id', 'platform_id', 'email_id'];
 
     public function CuentaPerfiles()
     {
-        return $this->hasOne(AccountProfile::class);
+        return $this->hasMany(AccountProfile::class);
     }
 
     public function PlanCuenta()
     {
-        return $this->hasOne(PlanAccount::class);
+        return $this->hasMany(PlanAccount::class);
     }
-
     public function Correo()
     {
         return $this->belongsTo(Email::class, 'email_id', 'id');

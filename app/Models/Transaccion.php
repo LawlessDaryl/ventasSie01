@@ -9,5 +9,5 @@ class Transaccion extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['codigo_transf', 'importe', 'utilidad', 'costo', 'observaciones', 'fecha_transaccion', 'estado', 'telefono', 'ganancia', 'origen_motivo_id'];
+    protected $fillable = ['codigo_transf', 'importe', 'observaciones', 'estado', 'telefono', 'ganancia', 'origen_motivo_id'];
 }

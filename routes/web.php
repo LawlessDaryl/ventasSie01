@@ -52,6 +52,7 @@ use App\Http\Livewire\StrProveedorController;
 use App\Http\Livewire\ReporGananciaTgController;
 use App\Http\Livewire\ProcedenciaController;
 use App\Http\Livewire\ProvidersController;
+use App\Http\Livewire\ReporteJornadaTMController;
 use App\Http\Livewire\ReportEntregadoServController;
 use App\Http\Livewire\ReporteServiceController;
 use App\Http\Livewire\TransaccionesController;
@@ -91,13 +92,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('reportestigo', ReportesTigoController::class)->name('reportestigo')->middleware('permission:Reportes_Tigo_Index');
     Route::get('ReporteGananciaTg', ReporGananciaTgController::class)->name('ReporteGananciaTg')->middleware('permission:Rep_Gan_Tigo_Index');
     Route::group(['middleware' => ['permission:Report_Tigo_Export']], function () {
-        Route::get('reporteTigo/pdf/{user}/{type}/{f1}/{f2}', [ExportTigoPdfController::class, 'reporteTigoPDF']);
-        Route::get('reporteTigo/pdf/{user}/{type}', [ExportTigoPdfController::class, 'reporteTigoPDF']);
+        Route::get('reporteTigo/pdf/{user}/{type}/{origen}/{motivo}/{f1}/{f2}', [ExportTigoPdfController::class, 'reporteTigoPDF']);
+        Route::get('reporteTigo/pdf/{user}/{type}/{origen}/{motivo}', [ExportTigoPdfController::class, 'reporteTigoPDF']);
     });
     Route::group(['middleware' => ['permission:Report_Ganancia_Tigo_Export']], function () {
         Route::get('reporteGananciaTigoM/pdf/{user}/{type}/{f1}/{f2}', [TigoGananciaPdfController::class, 'reporte']);
         Route::get('reporteGananciaTigoM/pdf/{user}/{type}', [TigoGananciaPdfController::class, 'reporte']);
     });
+    Route::get('ReporteJornalTM', ReporteJornadaTMController::class)->name('reportejornadatm');
 
     /* Streaming */
     Route::get('plataformas', PlataformasController::class)->name('plataforma')->middleware('permission:Plataforma_Index');
@@ -116,8 +118,6 @@ Route::middleware(['auth'])->group(function () {
     /* NOTIFICACIONES */
     Route::get('telefonos', PhonesController::class)->name('telefonos');
     Route::get('modulos', ModulosController::class)->name('modulos');
-
-
 
     /* INVENTARIOS */
     Route::get('categories', CategoriesController::class)->name('categorias');
@@ -149,12 +149,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('idorderservice/{id}', [OrderServiceController::class, 'buscarid'])->name('buscarid')->middleware('permission:Orden_Servicio_Index');
     Route::get('abrirnuevo/{id}', [OrderServiceController::class, 'abrirventana'])->name('abrirventana')->middleware('permission:Orden_Servicio_Index');
     Route::get('reporte/pdf/{id}', [ImprimirController::class, 'print'])->middleware('permission:Imprimir_Orden_Servicio_Index');
-    Route::get('reporteservices', ReporteServiceController::class)->name('tw')->middleware('permission:Reporte_Servicios_Index');    
+    Route::get('reporteservices', ReporteServiceController::class)->name('tw')->middleware('permission:Reporte_Servicios_Index');
     Route::group(['middleware' => ['permission:Reporte_Servicios_Export']], function () {
         Route::get('reporteServicio/pdf/{user}/{estado}/{type}/{f1}/{f2}', [ExportServicioPdfController::class, 'reporteServPDF']);
         Route::get('reporteServicio/pdf/{user}/{estado}/{type}', [ExportServicioPdfController::class, 'reporteServPDF']);
     });
-    Route::get('reportentregservices', ReportEntregadoServController ::class)->name('res')->middleware('permission:Boton_Entregar_Servicio'); 
+    Route::get('reportentregservices', ReportEntregadoServController ::class)->name('res')->middleware('permission:Boton_Entregar_Servicio');
     Route::get('reporteServicEntreg/pdf/{type}/{f1}/{f2}/{sucursal}/{sE}/{sB}', [ExportServicioEntregPdfController::class, 'reporteServPDF']);
     Route::get('reporteServicEntreg/pdf/{type}/{sucursal}', [ExportServicioEntregPdfController::class, 'reporteServPDF']);
 });

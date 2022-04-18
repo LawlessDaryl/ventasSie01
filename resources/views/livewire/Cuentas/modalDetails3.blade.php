@@ -30,7 +30,7 @@
                         <div class="col-sm-12 col-md-6">
                             <div class="form-group">
                                 <label>
-                                    <h6>Correo</h6>
+                                    <h6>Email o Nombre-Cuenta</h6>
                                 </label>
                                 <input type="text" wire:model="email_id" class="form-control" disabled>
                                 @error('email_id')
@@ -44,8 +44,7 @@
                                 <label>
                                     <h6>Número de Perfiles</h6>
                                 </label>
-                                <input type="number" wire:model.lazy="number_profiles" class="form-control"
-                                    placeholder="ej: 0.0">
+                                <input type="number" wire:model.lazy="number_profiles" class="form-control">
                                 @error('number_profiles')
                                     <span class="text-danger er">{{ $message }}</span>
                                 @enderror
@@ -104,7 +103,7 @@
                             <div class="form-group">
                                 <input wire:model.lazy="start_account_new" type="date" min="" max=""
                                     class="form-control" placeholder="Click para elegir">
-                                @error('start_account')
+                                @error('start_account_new')
                                     <span class="text-danger er">{{ $message }}</span>
                                 @enderror
                             </div>
@@ -115,7 +114,7 @@
                             <div class="form-group">
                                 <input disabled wire:model="expiration_account_new" type="date" min="" max=""
                                     class="form-control" placeholder="Click para elegir">
-                                @error('expiration_account')
+                                @error('expiration_account_new')
                                     <span class="text-danger er">{{ $message }}</span>
                                 @enderror
                             </div>
@@ -139,7 +138,7 @@
                                     <h6>Meses a renovar // Si va renovar la cuenta actualice los datos de la cuenta</h6>
                                 </label>
                                 <input type="number" wire:model="meseRenovarProv" class="form-control">
-                                @error('meses')
+                                @error('meseRenovarProv')
                                     <span class="text-danger er">{{ $message }}</span>
                                 @enderror
                             </div>
@@ -151,7 +150,6 @@
                                     Cuenta</a>
                             </div>
                         </div>
-                        
                     @endif
                 </div>
             </div>

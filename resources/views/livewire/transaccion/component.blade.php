@@ -6,11 +6,14 @@
                     <b>{{ $componentName }} | {{ $pageTitle }}</b>
                 </h4>
                 <ul class="tabs tab-pills">
-                    <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal" data-target="#theModal">+
+                    <a href="javascript:void(0)" class="btn btn-dark" wire:click="nuevatransaccion()">+
                         Nueva</a>
-                    <a wire:click.prevent="viewDetails()" class="btn btn-dark">
-                        Generar Ingreso/Egreso
-                    </a>
+                    @can('Ver_Generar_Ingreso_Egreso_Boton')
+                        <a wire:click.prevent="viewDetails()" class="btn btn-dark">
+                            Generar Ingreso/Egreso
+                        </a>
+                    @endcan
+
                 </ul>
             </div>
             @include('common.searchbox')
@@ -47,36 +50,47 @@
                                     style="{{ $d->estado == 'Anulada' ? 'background-color: #d97171 !important' : '' }}">
                                     <td class="text-center">
                                         <h6 class="text-center">
-                                            {{ \Carbon\Carbon::parse($d->hora)->format('H:i:s') }}</h6>
+                                            <strong>{{ \Carbon\Carbon::parse($d->hora)->format('H:i:s') }}</strong>
+                                        </h6>
                                     </td>
                                     <td class="text-center">
-                                        <h6 class="text-center">{{ $d->codCliente }}</h6>
+                                        <h6 class="text-center"><strong>{{ $d->codCliente }}</strong></h6>
                                     </td>
                                     <td class="text-center">
-                                        <h6 class="text-center">{{ $d->TelCliente }}</h6>
+                                        <h6 class="text-center"><strong>{{ $d->TelCliente }}</strong></h6>
                                     </td>
                                     <td class="text-center">
-                                        <h6 class="text-center">{{ $d->codigotrans }}</h6>
+                                        <h6 class="text-center"><strong>{{ $d->codigotrans }}</strong></h6>
                                     </td>
                                     <td class="text-center">
-                                        <h6 class="text-center">{{ $d->origen_nombre }}</h6>
+                                        <h6 class="text-center"><strong>{{ $d->origen_nombre }}</strong></h6>
                                     </td>
                                     <td class="text-center">
-                                        <h6 class="text-center">{{ $d->motivo_nombre }}</h6>
+                                        <h6 class="text-center"><strong>{{ $d->motivo_nombre }}</strong></h6>
                                     </td>
                                     <td class="text-center">
-                                        <h6 class="text-center">{{ $d->importe }}</h6>
+                                        <h6 class="text-center"><strong>{{ $d->importe }}</strong></h6>
                                     </td>
                                     <td class="text-center">
-                                        @if ($d->estado != 'Anulada')
-                                            <a href="javascript:void(0)" onclick="Confirm({{ $d->id }})"
-                                                class="btn btn-dark mtmobile" title="Anular">
-                                                <i class="fas fa-trash"></i>
-                                            </a>
-                                        @endif
+                                        @can('Anular_trans_tigomoney_Boton')
+                                            @if ($d->estado != 'Anulada')
+                                                <a href="javascript:void(0)" onclick="Confirm({{ $d->id }})"
+                                                    class="btn btn-dark mtmobile" title="Anular">
+                                                    <i class="fas fa-trash"></i>
+                                                </a>
+                                            @endif
+                                        @endcan
                                         <a href="javascript:void(0)" wire:click="VerObservaciones({{ $d->id }})"
                                             class="btn btn-dark mtmobile" title="Observaciones">
-                                            <svg viewBox="0 0 1024 1024" focusable="false" data-icon="bars" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M912 192H328c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h584c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 284H328c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h584c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 284H328c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h584c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM104 228a56 56 0 10112 0 56 56 0 10-112 0zm0 284a56 56 0 10112 0 56 56 0 10-112 0zm0 284a56 56 0 10112 0 56 56 0 10-112 0z"></path></svg>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round"
+                                                class="feather feather-align-center">
+                                                <line x1="18" y1="10" x2="6" y2="10"></line>
+                                                <line x1="21" y1="6" x2="3" y2="6"></line>
+                                                <line x1="21" y1="14" x2="3" y2="14"></line>
+                                                <line x1="18" y1="18" x2="6" y2="18"></line>
+                                            </svg>
                                         </a>
                                     </td>
                                 </tr>

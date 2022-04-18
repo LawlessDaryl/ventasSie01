@@ -10,7 +10,7 @@
 
             <div class="form-group">
                 <div class="row">
-                    <div class="col-sm-12 col-md-2">
+                    {{-- <div class="col-sm-12 col-md-2">
                         <div class="form-group">
                             <div class="n-chk">
                                 <label class="new-control new-radio radio-classic-primary">
@@ -21,7 +21,7 @@
                                 </label>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="col-sm-12 col-md-2">
                         <div class="form-group">
                             <div class="n-chk">
@@ -38,10 +38,22 @@
                         <div class="form-group">
                             <div class="n-chk">
                                 <label class="new-control new-radio radio-classic-primary">
-                                    <input type="radio" class="new-control-input" name="custom-radio-4" id="ocupados"
+                                    <input type="radio" class="new-control-input" name="custom-radio-4" id="vencidos"
                                         value="vencidos" wire:model="condicional" checked>
                                     <span class="new-control-indicator"></span>
                                     <h6>PLANES PERFILES VENCIDOS</h6>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-2">
+                        <div class="form-group">
+                            <div class="n-chk">
+                                <label class="new-control new-radio radio-classic-primary">
+                                    <input type="radio" class="new-control-input" name="custom-radio-4" id="combos"
+                                        value="combos" wire:model="condicional" checked>
+                                    <span class="new-control-indicator"></span>
+                                    <h6>COMBO PERFILES</h6>
                                 </label>
                             </div>
                         </div>
@@ -102,7 +114,7 @@
                         {{ $profiles->links() }}
                     </div>
                 </div>
-            @else
+            @elseif($condicional == 'ocupados' || $condicional == 'vencidos')
                 <div class="widget-content">
                     <div class="table-responsive">
                         <table class="table table-unbordered table-hover mt-2">
@@ -177,12 +189,11 @@
                                                 @endif
                                             </td>
                                         @else
-                                            <td class="text-center">                                                
-                                                    <a href="javascript:void(0)"
-                                                        wire:click="Acciones({{ $p->planid }})"
-                                                        class="btn btn-dark mtmobile" title="Observaciones">
-                                                        <i class="fa-solid fa-file-signature"></i>
-                                                    </a>
+                                            <td class="text-center">
+                                                <a href="javascript:void(0)" wire:click="Acciones({{ $p->planid }})"
+                                                    class="btn btn-dark mtmobile" title="Observaciones">
+                                                    <i class="fa-solid fa-file-signature"></i>
+                                                </a>
                                             </td>
                                         @endif
 
@@ -204,21 +215,149 @@
                         {{ $profiles->links() }}
                     </div>
                 </div>
+            @else
+                <div class="widget-content">
+                    <div class="table-responsive">
+                        <table class="table table-unbordered table-hover mt-2">
+                            <thead class="text-white" style="background: #3B3F5C">
+                                <tr>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">PLATAFORMAS</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">CLIENTE</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">EMAILS</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">CONTRASEÑAS
+                                        CUENTAS</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">VENCIMIENTO
+                                        CUENTAS</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">PERFILES</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">IMPORT</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">PLAN INICIO</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">PLAN FIN</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">ACCIONES</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($profiles as $p)
+                                    <tr>
+                                        <td class="text-center">
+                                            <h6 class="text-center">
+                                                @foreach ($p->PlanAccounts as $item)
+                                                    @if ($item->status == 'ACTIVO')
+                                                        {{ $item->Cuenta->Plataforma->nombre }} <br>
+                                                    @endif
+                                                @endforeach
+                                            </h6>
+                                        </td>
+                                        <td class="text-center">
+                                            <h6 class="text-center">{{ $p->Mov->climov->client->nombre }} <br>
+                                                {{ $p->Mov->climov->client->celular }}</h6>
+                                        </td>
+                                        <td class="text-center">
+                                            <h6 class="text-center" style="font-size: 80%">
+                                                @foreach ($p->PlanAccounts as $item)
+                                                    @if ($item->status == 'ACTIVO')
+                                                        {{ $item->Cuenta->account_name }}
+                                                        <br>
+                                                    @endif
+                                                @endforeach
+                                            </h6>
+                                        </td>
+                                        <td class="text-center">
+                                            <h6 class="text-center">
+                                                @foreach ($p->PlanAccounts as $item)
+                                                    @if ($item->status == 'ACTIVO')
+                                                        {{ $item->Cuenta->password_account }}
+                                                        <br>
+                                                    @endif
+                                                @endforeach
+                                            </h6>
+                                        </td>
+                                        <td class="text-center">
+                                            <h6 class="text-center" style="font-size: 80%">
+                                                @foreach ($p->PlanAccounts as $item)
+                                                    @if ($item->status == 'ACTIVO')
+                                                        <a href="javascript:void(0)" wire:click="AccionesCuenta()"
+                                                            class="btn btn-primary" title="Renovar">
+                                                            {{ $item->Cuenta->expiration_account }}
+                                                        </a>
+                                                        <br>
+                                                    @endif
+                                                @endforeach
+                                            </h6>
+                                        </td>
+                                        <td class="text-center">
+                                            <h6 class="text-center">
+                                                @foreach ($p->PlanAccounts as $item)
+                                                    @if ($item->status == 'ACTIVO')
+                                                        @foreach ($item->Cuenta->CuentaPerfiles as $acprof)
+                                                            @if ($acprof->status == 'ACTIVO' && $acprof->plan_id == $p->id)
+                                                                {{ $acprof->Perfil->nameprofile }} <br>
+                                                                {{ $acprof->Perfil->pin }}
+                                                            @endif
+                                                        @endforeach
+                                                        <br>
+                                                    @endif
+                                                @endforeach
+                                            </h6>
+                                        </td>
+                                        <td class="text-center">
+                                            <h6 class="text-center" style="font-size: 80%">{{ $p->importe }}</h6>
+                                        </td>
+                                        <td class="text-center">
+                                            <h6 class="text-center" style="font-size: 80%">
+                                                {{ \Carbon\Carbon::parse($p->plan_start)->format('d:m:Y') }} </h6>
+                                        </td>
+                                        <td class="text-center">
+                                            <h6 class="text-center" style="font-size: 80%">
+                                                {{ \Carbon\Carbon::parse($p->expiration_plan)->format('d:m:Y') }}
+                                            </h6>
+                                        </td>
+                                        <td class="text-center">
+                                            @if ($condicional == 'combos')
+                                                <a href="javascript:void(0)"
+                                                    wire:click="AccionesCombo({{ $p->id }})"
+                                                    class="btn btn-dark mtmobile" title="Renovación">
+                                                    <i class="fa-regular fa-calendar-check"></i>
+                                                </a>
+
+                                                <a href="javascript:void(0)"
+                                                    wire:click="EditCombo({{ $p->id }})"
+                                                    class="btn btn-dark mtmobile" title="Edit">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                            @endif
+                                        </td>
+                                        <td class="text-center"
+                                            style="{{ $p->ready == 'NO' ? 'background-color: #d97171 !important' : 'background-color: #09ed3d !important' }}">
+                                            @if ($p->ready == 'NO')
+                                                <a href="javascript:void(0)" class="btn btn-dark"
+                                                    onclick="ConfirmHecho('{{ $p->id }}')">
+                                                    <i class="fa-regular fa-circle-exclamation"></i>
+                                                </a>
+                                            @else
+                                                <h6 class="text-center"><strong>Hecho</strong></h6>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                        {{ $profiles->links() }}
+                    </div>
+                </div>
             @endif
 
         </div>
     </div>
     @include('livewire.perfiles.form')
     @include('livewire.perfiles.modalDetails')
-    @include('livewire.perfiles.modalCrearPerfil')
-
+    @include('livewire.perfiles.modalEditCombos')
+    @include('livewire.perfiles.modalRenovarCombos')
 
 </div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-
-
         window.livewire.on('item-added', msg => {
             $('#theModal').modal('hide'),
                 noty(msg)
@@ -246,6 +385,9 @@
             $('#modal-details').modal('hide')
             noty(msg)
         });
+        window.livewire.on('item-error', msg => {
+            noty(msg)
+        });
         window.livewire.on('modal-hide', msg => {
             $('#modal-details').modal('hide')
         });
@@ -257,6 +399,23 @@
             $('#Modal_crear_perfil').modal('hide')
             noty(Msg)
         })
+
+        window.livewire.on('modal-show-edit-combo', msg => {
+            $('#modal-edit-combos').modal('show')
+        });
+        window.livewire.on('combo-updated', msg => {
+            $('#modal-edit-combos').modal('hide')
+            noty(msg)
+        });
+
+        window.livewire.on('modal-acciones-combo', msg => {
+            $('#modal-acciones-combo').modal('show')
+        });
+        window.livewire.on('acciones-combo-hide', msg => {
+            $('#modal-acciones-combo').modal('hide')
+            noty(msg)
+        });
+
 
         flatpickr(document.getElementsByClassName('flatpickr'), {
             enableTime: false,
@@ -343,9 +502,6 @@
         }).then(function(result) {
             if (result.value) {
                 window.livewire.emit('Renovar')
-                swal.fire(
-                    'Se renovó el perfil ' + nameperfil + ' por ' + meses + ' meses.'
-                )
             }
         })
     }

@@ -33,7 +33,7 @@ class CuentaInversionSeeder extends Seeder
             'number_profiles' => '4',
             'sale_profiles' => 0,
             'imports' => 0,
-            'ganancia' => 0,
+            'ganancia' => -90,
             'account_id' => 1,
         ]);
         CuentaInversion::create([   /* cuenta disney dividida */
@@ -55,7 +55,7 @@ class CuentaInversionSeeder extends Seeder
             'number_profiles' => '6',
             'sale_profiles' => 0,
             'imports' => 0,
-            'ganancia' => 0,
+            'ganancia' => -35,
             'account_id' => '2',
         ]);
         CuentaInversion::create([   /* cuenta prime video dividida */
@@ -77,7 +77,7 @@ class CuentaInversionSeeder extends Seeder
             'number_profiles' => '4',
             'sale_profiles' => 0,
             'imports' => 0,
-            'ganancia' => 0,
+            'ganancia' => -35,
             'account_id' => '3',
         ]);
         CuentaInversion::create([   /* cuenta star plus dividida */
@@ -99,7 +99,7 @@ class CuentaInversionSeeder extends Seeder
             'number_profiles' => '3',
             'sale_profiles' => 0,
             'imports' => 0,
-            'ganancia' => 0,
+            'ganancia' => -35,
             'account_id' => '4',
         ]);
         CuentaInversion::create([   /* cuenta HBO MAX dividida */
@@ -121,7 +121,7 @@ class CuentaInversionSeeder extends Seeder
             'number_profiles' => '4',
             'sale_profiles' => 0,
             'imports' => 0,
-            'ganancia' => 0,
+            'ganancia' => -35,
             'account_id' => '5',
         ]);
         CuentaInversion::create([   /* Cuenta magis tv */
@@ -143,7 +143,7 @@ class CuentaInversionSeeder extends Seeder
             'number_profiles' => '1',
             'sale_profiles' => 0,
             'imports' => 0,
-            'ganancia' => 0,
+            'ganancia' => -55,
             'account_id' => '6',
         ]);
         CuentaInversion::create([   /* CUENTA DE NETFLIX ENTERA */
@@ -165,7 +165,7 @@ class CuentaInversionSeeder extends Seeder
             'number_profiles' => '1',
             'sale_profiles' => 0,
             'imports' => 0,
-            'ganancia' => 0,
+            'ganancia' => -90,
             'account_id' => '7',
         ]);
         CuentaInversion::create([   /* CUENTA DE DISNEY ENTERA */
@@ -187,7 +187,7 @@ class CuentaInversionSeeder extends Seeder
             'number_profiles' => '6',
             'sale_profiles' => 0,
             'imports' => 0,
-            'ganancia' => 0,
+            'ganancia' => -35,
             'account_id' => '8',
         ]);
     }

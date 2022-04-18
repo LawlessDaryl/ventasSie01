@@ -19,7 +19,7 @@
                 </td>
             </tr>
             <tr>
-                <td width="30%" class="text-center"style="vertical-align: top; padding-top:10px; position:relative;">
+                <td width="30%" class="text-center" style="vertical-align: top; padding-top:10px; position:relative;">
                     <img src="{{ asset('assets/img/sie.png') }}" alt="" class="invoice-logo">
                 </td>
 
@@ -29,6 +29,7 @@
                     @else
                         <span style="font-size: 16px;"><strong>Reporte de Transacciones por fecha</strong></span>
                     @endif
+
                     <br>
                     @if ($reportType != 0)
                         <span style="font-size: 16px;"><strong>Fecha de consulta: {{ $dateFrom }} al
@@ -40,7 +41,9 @@
 
                     <br>
 
-                    <span style="font-size: 14px;">Usuario: {{ $user }}</span>
+                    <span style="font-size: 14px;">Usuario: {{ $user }} </span> <br>
+                    <span style="font-size: 14px;">Origen: {{ $origenfiltro }} </span> <br>
+                    <span style="font-size: 14px;">Motivo: {{ $tipotr }} </span> <br>
                 </td>
             </tr>
         </table>
@@ -55,17 +58,20 @@
                     <th width="10%">CEDULA</th>
                     <th width="10%">TELEFONO</th>
                     <th width="10%">DESTINO</th>
-                    
                     <th width="10%">ESTADO</th>
                     <th width="10%">ORIGEN</th>
                     <th width="10%">MOTIVO</th>
                     <th width="10%">IMPORTE</th>
+                    @can('Origen_Mot_Com_Index')
+                        <th width="10%">GANANCIA</th>
+                    @endcan
                 </tr>
             </thead>
 
             <tbody>
                 @foreach ($data as $item)
-                    <tr height="10px">
+                    <tr height="10px"
+                        style="{{ $item->estado == 'Anulada' ? 'background-color: #d97171 !important' : '' }}">
                         <td align="center">
                             <FONT FACE="times new roman" SIZE=1> {{ $loop->iteration }}</FONT>
                         </td>
@@ -81,7 +87,7 @@
                         <td align="center">
                             <FONT FACE="times new roman" SIZE=1>{{ $item->codigo_transf }}</FONT>
                         </td>
-                        
+
                         <td align="center">
                             <FONT FACE="times new roman" SIZE=1>{{ $item->estado }}</FONT>
                         </td>
@@ -94,6 +100,11 @@
                         <td align="center">
                             <FONT FACE="times new roman" SIZE=1>{{ number_format($item->importe, 2) }}</FONT>
                         </td>
+                        @can('Origen_Mot_Com_Index')
+                            <td align="center">
+                                <FONT FACE="times new roman" SIZE=1>{{ number_format($item->ganancia, 2) }}</FONT>
+                            </td>
+                        @endcan
                     </tr>
                 @endforeach
             </tbody>
@@ -105,7 +116,7 @@
                         <span><b>TOTALES</b></span>
                     </td>
                     <td class="text-right" colspan="7">
-                        <span><strong>${{ number_format($data->sum('importe'), 2) }}</strong></span>
+                        <span><strong>${{ number_format($total, 2) }}</strong></span>
                     </td>
                 </tr>
             </tfoot>

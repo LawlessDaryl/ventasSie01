@@ -11,7 +11,7 @@
             </div>
 
             <div class="modal-body">
-                @if ($mostrarCampos == 0)
+                {{-- @if ($mostrarCampos == 0)
                     <div class="row">
                         <div class="col-sm-12 col-md-6">
                             <div class="form-group">
@@ -85,7 +85,7 @@
                             <b class="text-center">Esta cuenta ya tiene todos los perfiles creados</b>
                         </h5>
                     </div>
-                @endif
+                @endif --}}
                 <div class="table-responsive">
                     <table class="table table-bordered table-hover mt-1">
                         <thead class="text-white" style="background: #3b3ff5;">
@@ -95,18 +95,11 @@
                                 <th class="table-th text-center text-white">STATUS</th>
                                 <th class="table-th text-center text-white">DISPONIBILIDAD</th>
                                 <th class="table-th text-center text-white">OBSERVACIONES</th>
-                                <th class="table-th text-center text-white">BORRAR</th>
+                                {{-- <th class="table-th text-center text-white">BORRAR</th> --}}
                             </tr>
                         </thead>
 
-                        <tbody>
-                            @if (count($perfiles) == 0)
-                                <tr>
-                                    <td colspan="6">
-                                        <h6 class="text-center">Esta cuenta no tiene perfiles</h6>
-                                    </td>
-                                </tr>
-                            @endif
+                        <tbody>                            
                             @foreach ($perfiles as $d)
                                 <tr>
                                     <td class="text-center">
@@ -125,11 +118,11 @@
                                         <h6>{{ $d->Observaciones }}</h6>
                                     </td>
                                     <td class="text-center">
-                                        <a href="javascript:void(0)"
+                                        {{-- <a href="javascript:void(0)"
                                             onclick="Confirmar('{{ $d->id }}','{{ $d->namep }}')"
                                             class="btn btn-dark" title="Delete">
                                             <i class="fas fa-trash"></i>
-                                        </a>
+                                        </a> --}}
                                     </td>
                                 </tr>
                             @endforeach

@@ -12,7 +12,9 @@
                 <div class="row">
                     <div class="col-sm-12 col-md-6">
                         <div class="form-group">
-                            <label><h6>Nombre</h6></label>
+                            <label>
+                                <h6>Nombre</h6>
+                            </label>
                             <input type="text" wire:model="nombre" class="form-control" placeholder="ej: Magis">
                             @error('nombre')
                                 <span class="text-danger er">{{ $message }}</span>
@@ -20,30 +22,23 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-md-6">
+                    <div class="col-sm-12 col-md-3">
                         <div class="form-group">
-                            <label><h6>Descripción</h6></label>
-                            <input type="text" wire:model="description" class="form-control"
-                                placeholder="ej: Deportes, Cultura, Cine, Series">
-                            @error('description')
-                                <span class="text-danger er">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="col-sm-12 col-md-4">
-                        <div class="form-group">
-                            <label><h6>Precio Entera</h6></label>
+                            <label>
+                                <h6>Precio Entera</h6>
+                            </label>
                             <input type="text" wire:model="precioEntera" class="form-control" placeholder="ej: 100">
                             @error('precioEntera')
-                            <span class=" text-danger er">{{ $message }}</span>
+                                <span class=" text-danger er">{{ $message }}</span>
                             @enderror
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-md-4">
+                    <div class="col-sm-12 col-md-3">
                         <div class="form-group">
-                            <label><h6>Precio Perfil</h6></label>
+                            <label>
+                                <h6>Precio Perfil</h6>
+                            </label>
                             <input type="text" wire:model="precioPerfil" class="form-control" placeholder="ej: 30">
                             @error('precioPerfil')
                                 <span class="text-danger er">{{ $message }}</span>
@@ -53,12 +48,57 @@
 
                     <div class="col-sm-12 col-md-4">
                         <div class="form-group">
-                            <label><h6>Estado</h6></label>
+                            <label>
+                                <h6>Estado</h6>
+                            </label>
                             <select wire:model='status' class="form-control">
                                 <option value="ACTIVO">ACTIVO</option>
                                 <option value="BLOQUEADO">BLOQUEADO</option>
                             </select>
                             @error('status')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-4">
+                        <div class="form-group">
+                            <label>
+                                <h6>Tipo</h6>
+                            </label>
+                            <select wire:model='tipo' class="form-control">
+                                <option value="CORREO" selected>CORREO</option>
+                                <option value="USUARIO">USUARIO</option>
+                            </select>
+                            @error('tipo')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-4">
+                        <div class="form-group">
+                            <label>
+                                <h6>Perfiles</h6>
+                            </label>
+                            <select wire:model='perfiles_si_no' class="form-control">
+                                <option value="SI" selected>SI</option>
+                                <option value="NO">NO</option>
+                            </select>
+                            @error('tipo')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-12">
+                        <div class="form-group">
+                            <label>
+                                <h6>Descripción</h6>
+                            </label>
+                            <input type="text" wire:model="description" class="form-control"
+                                placeholder="ej: Deportes, Cultura, Cine, Series">
+                            @error('description')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror
                         </div>

@@ -8,6 +8,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+use Monolog\Handler\IFTTTHandler;
 
 class ArqueosTigoController extends Component
 {
@@ -15,8 +16,8 @@ class ArqueosTigoController extends Component
 
     public function mount()
     {
-        $this->fromDate = null;
-        $this->toDate = null;
+        $this->fromDate = Carbon::parse(Carbon::now())->format('Y-m-d');
+        $this->toDate = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->userid = 0;
         $this->total = 0;
         $this->tipotr = 0;
@@ -57,6 +58,7 @@ class ArqueosTigoController extends Component
                         'transaccions.*',
                         'ori.nombre as origen_nombre',
                         'mot.nombre as motivo_nombre',
+                        'm.status as estadomovimiendo',
                     )
                     ->whereBetween('transaccions.created_at', [$from, $to])
 
@@ -77,6 +79,7 @@ class ArqueosTigoController extends Component
                         'transaccions.*',
                         'ori.nombre as origen_nombre',
                         'mot.nombre as motivo_nombre',
+                        'm.status as estadomovimiendo',
                     )
                     ->whereBetween('transaccions.created_at', [$from, $to])
                     ->where('ori.nombre', $this->origenfiltro)
@@ -99,6 +102,7 @@ class ArqueosTigoController extends Component
                         'transaccions.*',
                         'ori.nombre as origen_nombre',
                         'mot.nombre as motivo_nombre',
+                        'm.status as estadomovimiendo',
                     )
                     ->whereBetween('transaccions.created_at', [$from, $to])
                     ->where('mot.tipo', $this->tipotr)
@@ -119,6 +123,7 @@ class ArqueosTigoController extends Component
                         'transaccions.*',
                         'ori.nombre as origen_nombre',
                         'mot.nombre as motivo_nombre',
+                        'm.status as estadomovimiendo',
                     )
                     ->whereBetween('transaccions.created_at', [$from, $to])
                     ->where('mot.tipo', $this->tipotr)
@@ -127,8 +132,15 @@ class ArqueosTigoController extends Component
                     ->get();
             }
         }
-
-        $this->total = $this->transaccions ? $this->transaccions->sum('importe') : 0;
+        if ($this->transaccions) {
+            foreach ($this->transaccions as $tr) {
+                if ($tr->estadomovimiendo != 'INACTIVO') {
+                    $this->total += $tr->importe;
+                }
+            }
+        } else {
+            $this->total = 0;
+        }
     }
 
     public function viewDetails(Transaccion $transaccion)

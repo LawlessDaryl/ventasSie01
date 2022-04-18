@@ -18,8 +18,12 @@
                         <thead class="text-white" style="background: #3B3F5C">
                             <tr>
                                 <th class="table-th text-withe">NOMBRE</th>
+                                <th class="table-th text-withe text-center">PRECIO PERFIL</th>
+                                <th class="table-th text-withe text-center">PRECIO ENTERA</th>
+                                <th class="table-th text-withe text-center">ESTADO</th>
+                                <th class="table-th text-withe text-center">TIPO</th>
+                                <th class="table-th text-withe tect-center">¿PERFILES?</th>
                                 <th class="table-th text-withe text-center">DESCRIPCIÓN</th>
-                                <th class="table-th text-withe tect-center">ESTADO</th>
                                 <th class="table-th text-withe text-center">IMAGEN</th>
                                 <th class="table-th text-withe text-center">ACCIONES</th>
                             </tr>
@@ -30,14 +34,29 @@
                                     <td>
                                         <h6>{{ $p->nombre }}</h6>
                                     </td>
+                                    <td class="text-center">
+                                        <h6>{{ $p->precioPerfil }}</h6>
+                                    </td>
+                                    <td class="text-center">
+                                        <h6>{{ $p->precioEntera }}</h6>
+                                    </td>
+
+
+
+                                    <td class="text-center">
+                                        <h6>{{ $p->estado }}</h6>
+                                    </td>
+                                    <td class="text-center">
+                                        <h6>{{ $p->tipo }}</h6>
+                                    </td>
+                                    <td class="text-center">
+                                        <h6>{{ $p->perfiles }}</h6>
+                                    </td>
 
                                     <td class="text-center">
                                         <h6>{{ $p->descripcion }}</h6>
                                     </td>
 
-                                    <td class="text-center">
-                                        <h6>{{ $p->estado }}</h6>
-                                    </td>
 
                                     <td class="text-center">
                                         <span>

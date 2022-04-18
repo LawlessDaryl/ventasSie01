@@ -25,12 +25,38 @@ class TransaccionController extends Component
 {
     use WithPagination;
 
-    public $codigo, $importe, $importe2, $utilidad, $costo, $observaciones, $fecha, $origen, $motivo, $codigo_transf, $montoR, $estado,
-        $pageTitle, $componentName, $selected_id, $hora, $search, $condicion, $mostrartelf, $check, $type, $cartera_id,
-        $nombreCliente, $cedula, $celular, $direccion, $email, $fecha_nacim, $razon, $cheq, $nit, $cantidad, $comentario, $condicional,
-        $comisionSiV, $comisionNoV, $condicionalComisiones, $metodo, $condicionalOrigen, $montoB, $origMotID,
-        $montoCobrarPagar, $mostrarTelfCodigo, $mostrarCI, $ganancia, $transaccion;
+    public $pageTitle, $componentName, $selected_id, $search, $montoCobrarPagar,
+
+        $origen, $motivo,
+
+        $montoB, $montoR, $importe,
+
+        $cedula, $celular, $codigo_transf, $observaciones,
+
+        $cartera_id, $type, $cantidad, $comentario,
+
+        $mostrarCI, $mostrartelf, $mostrarTelfCodigo,
+
+        $igualarMontos,
+
+        $ResetRadioButton, $requerimientoComision,
+
+        $condicionalOrigen, $condicionalMotivo,
+
+        $origMotID, $OrigenMotivoObjeto,
+
+        $ClienteSelect, $TelfSelect, $MostrarRadioButton,
+
+        $transaccion,
+
+        $origenAnterior = 'Elegir', $motivoAnterior = 'Elegir', $telefonoAnterior, $cedulaAnterior, $destinoAnterior;
+
+    public $identificador, $identificador2;
+
+    public $datosPorCedula, $datosPorTelefono;
+
     private $pagination = 10;
+
     public function paginationView()
     {
         return 'vendor.livewire.bootstrap';
@@ -38,61 +64,58 @@ class TransaccionController extends Component
 
     public function mount()
     {
-        $this->pageTitle = 'Transacciones';
-        $this->componentName = 'Tigo Money';
+        $this->identificador = rand();
+        $this->identificador2 = rand();
+        
+        $this->pageTitle = 'Transacciones del día';
+        $this->componentName = 'TIGO MONEY';
+        $this->montoCobrarPagar = 'Monto a cobrar/pagar';
 
         $this->selected_id = 0;
-        $this->motivo = 'Elegir';
         $this->origen = 'Elegir';
-        $this->montoCobrarPagar = 'Monto a cobrar/pagar';
-        $this->origMotID = 0;
-        $this->OrigenMotivoObjeto = [];
-        $this->transaccion = [];
-        $this->montoR = 0;
+        $this->motivo = 'Elegir';
+
         $this->montoB = '';
-
-        $this->mostrarCI = 0;
-        $this->mostrartelf = 0;
-        $this->mostrarTelfCodigo = 0;
-
-        $this->comisionSiV = 'S';
-        $this->comisionNoV = 'S';
-
-
-        $this->codigo_transf = '';
+        $this->montoR = 0;
         $this->importe = '';
-        $this->utilidad = 0;
-        $this->costo = 0;
-        $this->observaciones = '';
-        $this->hora = date("d-m-y H:i:s ");
-        $this->estado = 'Activa';
-        $this->ganancia = 0;
 
-        $this->nombreCliente = '';
         $this->cedula = '';
         $this->celular = '';
-        $this->direccion = '';
-        $this->email = '';
-        $this->razon = '';
-        $this->nit = 0;
-
-        $this->cheq = 0;
-        $this->BuscarCliente = 0;
-        $this->BuscarClientePorCel = 0;
-        $this->ClienteSelect = 1;
-        $this->TelfSelect = 1;
-        $this->check = 0;
-        $this->MostrarRadioButton = 0;
+        $this->codigo_transf = '';
+        $this->observaciones = '';
 
         $this->cartera_id = 'Elegir';
         $this->type = 'Elegir';
         $this->cantidad = '';
         $this->comentario = '';
 
-        $this->metodo = 0;
-        $this->condicionalComisiones = 'ABC';
+        $this->origMotID = 0;
+        $this->OrigenMotivoObjeto = [];
+        $this->transaccion = [];
+
+        $this->mostrarCI = 0;
+        $this->mostrartelf = 0;
+        $this->mostrarTelfCodigo = 0;
+
+        $this->ClienteSelect = 0;
+        $this->TelfSelect = 0;
+
+        $this->igualarMontos = 0;
+        $this->MostrarRadioButton = 0;
+
+        $this->ResetRadioButton = 0;
         $this->condicionalOrigen = 'asd';
         $this->condicionalMotivo = 'asd';
+        $this->requerimientoComision = '';
+
+        $this->origenAnterior = '';
+        $this->motivoAnterior = '';
+        $this->telefonoAnterior = '';
+        $this->cedulaAnterior = '';
+        $this->destinoAnterior = '';
+
+        $this->datosPorCedula = [];
+        $this->datosPorTelefono = [];
     }
 
     public function render()
@@ -176,191 +199,169 @@ class TransaccionController extends Component
                 ->paginate($this->pagination);
         }
 
+        /* LISTADO DE MOTIVOS DE ESE ORIGEN */
+        if ($this->origen != 'Elegir') {
+            $motivos = OrigenMotivo::join('motivos as m', 'm.id', 'origen_motivos.motivo_id')
+                ->select('m.*')->where('origen_motivos.origen_id', $this->origen)->get();
+        } else {
+            $motivos = [];
+        }
 
 
         /* BUSCAR CLIENTE POR CEDULA EN EL INPUT DEL MODAL */
-        $datos = [];
-        if (strlen($this->cedula) > 0) {
-            $datos = Cliente::where('cedula', 'like', '%' . $this->cedula . '%')->orderBy('cedula', 'desc')->get();
-            if ($datos->count() > 0) {
-                $this->BuscarCliente = 1;
-            } else {
-                $this->BuscarCliente = 0;
-            }
-            if ($this->ClienteSelect == 0) {
-                $this->BuscarCliente = 0;
-            }
+        if ($this->cedula != '' && $this->ClienteSelect == 0) {
+            $this->datosPorCedula = Cliente::where('cedula', 'like', $this->cedula . '%')->orderBy('cedula', 'desc')->get();
         } else {
-            if ($this->ClienteSelect == 0) {
-                $this->ClienteSelect = 1;
-            }
+            $this->datosPorCedula = [];
         }
 
         /* BUSCAR CLIENTE POR TELEFONO EN EL INPUT DEL MODAL */
-        $datos2 = [];
-        if (strlen($this->celular) > 0) {
-            $datos2 = Cliente::where('celular', 'like', '%' . $this->celular . '%')->orderBy('celular', 'desc')->get();
-            if ($datos2->count() > 0) {
-                $this->BuscarClientePorCel = 1;
-            } else {
-                $this->BuscarClientePorCel = 0;
-            }
-            if ($this->TelfSelect == 0) {
-                $this->BuscarClientePorCel = 0;
-            }
+        if ($this->celular != '' && $this->TelfSelect == 0) {
+            $this->datosPorTelefono = Cliente::where('celular', 'like', $this->celular . '%')->orderBy('celular', 'desc')->get();
         } else {
-            if ($this->TelfSelect == 0) {
-                $this->TelfSelect = 1;
-            }
-        }
-
-
-
-        /* LISTADO DE MOTIVOS DE ESE ORIGEN */
-        if ($this->origen != 'Elegir') {
-            $mot = OrigenMotivo::join('motivos as m', 'm.id', 'origen_motivos.motivo_id')
-                ->where('origen_motivos.origen_id', $this->origen)->pluck('m.id')->toArray();
-            $motivos = Motivo::find($mot);
-        } else {
-            $motivos = [];
+            $this->datosPorTelefono = [];
         }
 
 
         /* RESET DE CAMPOS AL CAMBIAR ORIGEN */
         if ($this->origen != 'Elegir' && $this->condicionalOrigen == 'asd') {
             $this->condicionalOrigen = $this->origen;
-        }
-        if ($this->origen != 'Elegir' && $this->motivo != 'Elegir' && $this->origen != $this->condicionalOrigen) {
+        } elseif ($this->origen != $this->condicionalOrigen) {
+            $this->identificador = rand();
+            $this->identificador2 = rand();
+            $this->montoCobrarPagar = 'Monto a cobrar/pagar';
+
             $this->motivo = 'Elegir';
-            $this->importe = '';
-            $this->montoB = '';
-            $this->montoR = '';
-            $this->condicionalOrigen = 'asd';
-            $this->condicionalMotivo = 'asd';
-            $this->comisionSiV = 'S';
-            $this->comisionNoV = 'S';
-            $this->condicionalComisiones = 'ABC';
-            $this->check = 0;
+
             $this->origMotID = 0;
             $this->OrigenMotivoObjeto = [];
-        }
+            $this->transaccion = [];
 
+            $this->mostrarCI = 0;
+            $this->mostrartelf = 0;
+            $this->mostrarTelfCodigo = 0;
+
+            $this->montoR = 0;
+            $this->importe = '';
+
+            $this->ClienteSelect = 0;
+            $this->TelfSelect = 0;
+
+            $this->igualarMontos = 0;
+            $this->MostrarRadioButton = 0;
+
+            $this->ResetRadioButton = 0;
+            $this->condicionalOrigen = 'asd';
+            $this->condicionalMotivo = 'asd';
+            $this->requerimientoComision = '';
+        }
 
 
         /* RESET DE CAMPOS AL CAMBIAR MOTIVO */
         if ($this->motivo != 'Elegir' && $this->condicionalMotivo == 'asd') {
             $this->condicionalMotivo = $this->motivo;
-        }
-        if ($this->motivo != 'Elegir' && $this->importe != 0 && $this->motivo != $this->condicionalMotivo) {
-            $this->importe = '';
+        } elseif ($this->motivo != $this->condicionalMotivo) {
+            $this->identificador = rand();
+            $this->identificador2 = rand();
+            $this->montoCobrarPagar = 'Monto a cobrar/pagar';
+
+            $this->origMotID = 0;
+            $this->OrigenMotivoObjeto = [];
+            $this->transaccion = [];
+
             $this->montoB = '';
-            $this->montoR = '';
+            $this->montoR = 0;
+            $this->importe = '';
+
+            $this->mostrarCI = 0;
+            $this->mostrartelf = 0;
+            $this->mostrarTelfCodigo = 0;
+
+            $this->ClienteSelect = 0;
+            $this->TelfSelect = 0;
+
+            $this->igualarMontos = 0;
+            $this->MostrarRadioButton = 0;
+
+            $this->ResetRadioButton = 0;
             $this->condicionalMotivo = 'asd';
-            $this->comisionSiV = 'S';
-            $this->comisionNoV = 'S';
-            $this->condicionalComisiones = 'ABC';
-            $this->check = 0;
-        }
-
-
-
-        /* EJECUTAR METODO DE COMISIONSI CONDICIONADO CON UN VALOR */
-        if ($this->comisionSiV == 'SI' && $this->comisionSiV != $this->condicionalComisiones) {
-            $this->comisionNoV = 'S';
-            $this->ComisionSi();
-            $this->condicionalComisiones = $this->comisionSiV;
-        }
-
-
-        /* EJECUTAR METODO DE COMISIONNO CONDICIONADO CON UN VALOR */
-        if ($this->comisionNoV == 'NO'  && $this->condicionalComisiones != $this->comisionNoV) {
-            $this->comisionSiV = 'S';
-            $this->ComisionNo();
-            $this->condicionalComisiones = $this->comisionNoV;
+            $this->requerimientoComision = '';
         }
 
 
 
         /* RESET DE RADIO BUTTONS AL CAMBIAR IMPORTE */
-        if ($this->metodo != 0) {
-            if ($this->metodo != $this->montoB) {
-                $this->comisionSiV = 'S';
-                $this->comisionNoV = 'S';
-                $this->condicionalComisiones = 'ABC';
-                $this->check = 0;
+        if ($this->ResetRadioButton != 0) {
+            if ($this->ResetRadioButton != $this->montoB) {
+                $this->identificador = rand();
+                $this->identificador2 = rand();
+                $this->igualarMontos = 0;
                 $this->importe = $this->montoB;
                 $this->montoR = $this->montoB;
+                $this->requerimientoComision = '';
+                $this->MostrarRadioButton = 0;
+                $this->ResetRadioButton = 0;
             }
         }
 
 
-
         /* OBTENER ORIGEN-MOTIVO DE LOS CAMPOS SELECCIONADOS */
         if ($this->origen != 'Elegir' && $this->motivo != 'Elegir') {
+            /* CARGAR ORIGEN MOTIVO OBJETO */
             $this->OrigenMotivoObjeto = OrigenMotivo::where('motivo_id', $this->motivo)
                 ->where('origen_id', $this->origen)
                 ->get()->first();
+            /* CARGAR ORIGEN MOTIVO ID */
             $this->origMotID = $this->OrigenMotivoObjeto->id;
             if ($this->OrigenMotivoObjeto->comision_si_no == 'si') {
                 $this->MostrarRadioButton = 1;
             } else {
                 $this->MostrarRadioButton = 0;
             }
-        }
-
-
-        /* Mostrar label e imput (CI CLIENTE) solo si el origen motivo lo requiere */
-        if ($this->origen != 'Elegir' && $this->motivo != 'Elegir') {
+            /* Mostrar label e imput (CI CLIENTE) solo si el origen motivo lo requiere */
             if ($this->OrigenMotivoObjeto->CIdeCliente == 'SI') {
                 $this->mostrarCI = 1;
             } else {
+                $this->cedula = '';
                 $this->mostrarCI = 0;
             }
-        }
-        /* Mostrar label e imput (Telf Solicitante) solo si el origen motivo lo requiere */
-        if ($this->origen != 'Elegir' && $this->motivo != 'Elegir') {
-
+            /* Mostrar label e imput (Telf Solicitante) solo si el origen motivo lo requiere */
             if ($this->OrigenMotivoObjeto->telefSolicitante == 'SI') {
                 $this->mostrartelf = 1;
             } else {
+                $this->celular = '';
                 $this->mostrartelf = 0;
             }
-        }
-        /* Mostrar label e imput (Telf destino) solo si el origen motivo lo requiere */
-        if ($this->origen != 'Elegir' && $this->motivo != 'Elegir') {
+            /* Mostrar label e imput (Telf destino) solo si el origen motivo lo requiere */
             if ($this->OrigenMotivoObjeto->telefDestino_codigo == 'SI') {
                 $this->mostrarTelfCodigo = 1;
             } else {
+                $this->codigo_transf = '';
                 $this->mostrarTelfCodigo = 0;
             }
-        }
-
-
-        /* Monto a cobrar o pagar */
-        if ($this->motivo != 'Elegir') {
+            /* Monto a cobrar o pagar */
             $motiv = Motivo::find($this->motivo);
             if ($motiv->tipo == 'Retiro') {
-                $this->montoCobrarPagar = 'Monto a Pagar';
+                $this->montoCobrarPagar = 'Monto a pagar';
             } elseif ($motiv->tipo == 'Abono') {
                 $this->montoCobrarPagar = 'Monto a cobrar';
             }
         }
 
 
-        /* Monto a registrar igual a importe si variable check es igual a 0 
+        /* Monto a registrar igual a importe si variable igualarMontos es igual a 0
         (cambia a 1 cuando se ejecutan las comisiones) */
-        if ($this->check == 0) {
+        if ($this->igualarMontos == 0) {
+            $this->montoR = $this->montoB;
             $this->importe = $this->montoB;
-            $this->montoR = $this->importe;
         }
 
 
-
         /* Calcular comision cuando cuando comision_si_no de origen_motivo es nopreguntar pero si son afectados los montos */
-        if ($this->origMotID != 0 && $this->montoB != '' && $this->importe != '' && $this->montoR != '' && $this->check == 0) {
+        if ($this->origMotID != 0 && $this->montoB != '' && $this->igualarMontos == 0) {
             if ($this->OrigenMotivoObjeto->comision_si_no == 'nopreguntar' && ($this->OrigenMotivoObjeto->suma_resta_si != 'mantiene' || $this->OrigenMotivoObjeto->suma_resta_no != 'mantiene')) {
                 $this->importe = $this->montoB;
-                $this->montoR = $this->importe;
+                $this->montoR = $this->montoB;
                 $this->ComisionSi();
             }
         }
@@ -400,8 +401,6 @@ class TransaccionController extends Component
             'origenes' => $carterasDe,
             'motivos' => $motivos,
             'carterasCaja' => $carterasCaja,
-            'datos' => $datos,
-            'datos2' => $datos2,
         ])
             ->extends('layouts.theme.app')
             ->section('content');
@@ -411,14 +410,15 @@ class TransaccionController extends Component
     {
         $this->cedula = $cedula;
         $this->celular = $celular;
-        $this->ClienteSelect = 0;
-        $this->TelfSelect = 0;
+        $this->ClienteSelect = 1;
+        $this->TelfSelect = 1;
     }
     /* Cargar los datos seleccionados de la tabla a los label */
     public function SeleccionarTelf($celular)
     {
         $this->celular = $celular;
-        $this->TelfSelect = 0;
+        $this->ClienteSelect = 1;
+        $this->TelfSelect = 1;
     }
     /* CALCULAR COMISION SI SELECCIONA SI EN RADIO BUTTON */
     public function ComisionSi()
@@ -426,19 +426,17 @@ class TransaccionController extends Component
         $this->importe = $this->montoB;
         $this->montoR = $this->montoB;
 
-        $this->importe2 = $this->montoB;
-
         $lista = OrigenMotivoComision::join('comisions as c', 'origen_motivo_comisions.comision_id', 'c.id')
-            ->where('c.monto_inicial', '<=', $this->importe2)
-            ->where('c.monto_final', '>=', $this->importe2)
+            ->where('c.monto_inicial', '<=', $this->montoB)
+            ->where('c.monto_final', '>=', $this->montoB)
             ->where('origen_motivo_comisions.origen_motivo_id', $this->origMotID)
             ->where('c.tipo', 'Cliente')
-            ->pluck('c.id')->toArray();
-        /* dd($lista); */
+            ->select('c.id')->get()->first();
+
         try {
-            $comis = Comision::find($lista[0]);
+            $comis = Comision::find($lista->id);
         } catch (Exception $e) {
-            $this->emit('item-error', "Selecione una comisión para este motivo");
+            $this->emit('item-error', "Este tipo de transacción no tiene una comisio o el campo esta en blanco");
             return;
         }
 
@@ -525,27 +523,27 @@ class TransaccionController extends Component
                 }
             }
         }
-        $this->check = 1;
-        $this->metodo = $this->montoB;
+        $this->igualarMontos = 1;
+        $this->ResetRadioButton = $this->montoB;
+        $this->requerimientoComision = 'LISTO';
     }
     /* CALCULAR COMISION SI SELECCIONA NO EN RADIO BUTTON */
     public function ComisionNo()
     {
-        $this->montoR = $this->importe;
-
-        $this->importe2 = $this->importe;
+        $this->importe = $this->montoB;
+        $this->montoR = $this->montoB;
 
         $lista = OrigenMotivoComision::join('comisions as c', 'origen_motivo_comisions.comision_id', 'c.id')
-            ->where('c.monto_inicial', '<=', $this->importe2)
-            ->where('c.monto_final', '>=', $this->importe2)
+            ->where('c.monto_inicial', '<=', $this->montoB)
+            ->where('c.monto_final', '>=', $this->montoB)
             ->where('origen_motivo_comisions.origen_motivo_id', $this->origMotID)
             ->where('c.tipo', 'Cliente')
-            ->pluck('c.id')->toArray();
+            ->select('c.id')->get()->first();
 
         try {
-            $comis = Comision::find($lista[0]);
+            $comis = Comision::find($lista->id);
         } catch (Exception $e) {
-            $this->emit('item-error', "Selecione una comisión para este motivo");
+            $this->emit('item-error', "Este tipo de transacción no tiene una comisio o el campo esta en blanco");
             return;
         }
 
@@ -628,9 +626,17 @@ class TransaccionController extends Component
                 }
             }
         }
-        $this->check = 1;
-        $this->metodo = $this->montoB;
+        $this->igualarMontos = 1;
+        $this->ResetRadioButton = $this->montoB;
+        $this->requerimientoComision = 'LISTO';
     }
+
+    public function nuevatransaccion()
+    {
+        $this->resetUI();
+        $this->emit('show-modal', '');
+    }
+
     /* REGISTRAR TRANSACCION */
     public function Store()
     {
@@ -641,6 +647,7 @@ class TransaccionController extends Component
             'motivo' => 'required|not_in:Elegir',
             'origen' => 'required|not_in:Elegir',
             'montoB' => 'required|integer|min:1|not_in:0',
+            'requerimientoComision' => 'required_if:MostrarRadioButton,1',
         ];
         $messages = [ /* mensajes de validaciones */
             'cedula.required_if' => 'Ingrese la cedula del solicitante',
@@ -653,7 +660,8 @@ class TransaccionController extends Component
             'montoB.required' => 'Ingrese un monto válido',
             'montoB.min' => 'Ingrese un monto mayor a 0',
             'montoB.not_in' => 'Ingrese un monto válido',
-            'montoB.integer' => 'El monto debe ser un número'
+            'montoB.integer' => 'El monto debe ser un número',
+            'requerimientoComision.required_if' => 'Seleccionar si o no es requerido',
         ];
 
         $this->validate($rules, $messages);
@@ -696,14 +704,8 @@ class TransaccionController extends Component
                 }
             } else { /* Registrar un nuevo cliente */
                 $listaCL = Cliente::create([
-                    'nombre' => $this->nombreCliente,
                     'cedula' => $this->cedula,
                     'celular' => $this->celular,
-                    'direccion' => $this->direccion,
-                    'email' => $this->email,
-                    'fecha_nacim' => $this->fecha_nacim,
-                    'razon_social' => $this->razon,
-                    'nit' => $this->nit,
                     'procedencia_cliente_id' => 1,
                 ]);
             }
@@ -718,7 +720,7 @@ class TransaccionController extends Component
 
                 CarteraMov::create([
                     'type' => 'INGRESO',
-                    'comentario' => '',
+                    'comentario' => 'TIGOMONEY TRANSACCION',
                     'cartera_id' => $cartera->id,
                     'movimiento_id' => $mv->id
                 ]);
@@ -732,7 +734,7 @@ class TransaccionController extends Component
 
                 CarteraMov::create([
                     'type' => 'EGRESO',
-                    'comentario' => '',
+                    'comentario' => 'TIGOMONEY TRANSACCION',
                     'cartera_id' => $CajaFisica->id,
                     'movimiento_id' => $mvt->id
                 ]);
@@ -742,11 +744,11 @@ class TransaccionController extends Component
                     ->where('c.monto_final', '>=', $this->montoB)
                     ->where('origen_motivo_comisions.origen_motivo_id', $this->origMotID)
                     ->where('c.tipo', 'Propia')
-                    ->pluck('c.id')->toArray();
+                    ->select('c.id')->get()->first();
 
                 if ($lista) {
 
-                    $comis = Comision::find($lista[0]);
+                    $comis = Comision::find($lista->id);
 
                     if ($comis->porcentaje == 'Desactivo') {
                         $ganancia = $comis->comision;
@@ -757,11 +759,7 @@ class TransaccionController extends Component
                     $this->transaccion = Transaccion::create([
                         'codigo_transf' => $this->codigo_transf,
                         'importe' => $this->importe,
-                        'utilidad' => $this->utilidad,
-                        'costo' => $this->costo,
                         'observaciones' => $this->observaciones,
-                        'fecha_transaccion' => $this->hora,
-                        'estado' => $this->estado,
                         'telefono' => $this->celular,
                         'ganancia' => $ganancia,
                         'origen_motivo_id' => $this->origMotID
@@ -772,11 +770,7 @@ class TransaccionController extends Component
                     $this->transaccion = Transaccion::create([
                         'codigo_transf' => $this->codigo_transf,
                         'importe' => $this->importe,
-                        'utilidad' => $this->utilidad,
-                        'costo' => $this->costo,
                         'observaciones' => $this->observaciones,
-                        'fecha_transaccion' => $this->hora,
-                        'estado' => $this->estado,
                         'telefono' => $this->celular,
                         'ganancia' => $ganancia,
                         'origen_motivo_id' => $this->origMotID
@@ -792,7 +786,7 @@ class TransaccionController extends Component
 
                 CarteraMov::create([
                     'type' => 'INGRESO',
-                    'comentario' => '',
+                    'comentario' => 'TIGOMONEY TRANSACCION',
                     'cartera_id' => $CajaFisica->id,
                     'movimiento_id' => $mv->id
                 ]);
@@ -806,7 +800,7 @@ class TransaccionController extends Component
 
                 CarteraMov::create([
                     'type' => 'EGRESO',
-                    'comentario' => '',
+                    'comentario' => 'TIGOMONEY TRANSACCION',
                     'cartera_id' => $cartera->id,
                     'movimiento_id' => $mvt->id
                 ]);
@@ -816,11 +810,11 @@ class TransaccionController extends Component
                     ->where('c.monto_final', '>=', $this->montoB)
                     ->where('origen_motivo_comisions.origen_motivo_id', $this->origMotID)
                     ->where('c.tipo', 'Propia')
-                    ->pluck('c.id')->toArray();
+                    ->select('c.id')->get()->first();
 
                 if ($lista) {
 
-                    $comis = Comision::find($lista[0]);
+                    $comis = Comision::find($lista->id);
 
                     if ($comis->porcentaje == 'Desactivo') {
                         $ganancia = $comis->comision;
@@ -831,11 +825,7 @@ class TransaccionController extends Component
                     $this->transaccion = Transaccion::create([
                         'codigo_transf' => $this->codigo_transf,
                         'importe' => $this->importe,
-                        'utilidad' => $this->utilidad,
-                        'costo' => $this->costo,
                         'observaciones' => $this->observaciones,
-                        'fecha_transaccion' => $this->hora,
-                        'estado' => $this->estado,
                         'telefono' => $this->celular,
                         'ganancia' => $ganancia,
                         'origen_motivo_id' => $this->origMotID
@@ -846,11 +836,7 @@ class TransaccionController extends Component
                     $this->transaccion = Transaccion::create([
                         'codigo_transf' => $this->codigo_transf,
                         'importe' => $this->importe,
-                        'utilidad' => $this->utilidad,
-                        'costo' => $this->costo,
                         'observaciones' => $this->observaciones,
-                        'fecha_transaccion' => $this->hora,
-                        'estado' => $this->estado,
                         'telefono' => $this->celular,
                         'ganancia' => $ganancia,
                         'origen_motivo_id' => $this->origMotID
@@ -866,7 +852,7 @@ class TransaccionController extends Component
 
                 CarteraMov::create([
                     'type' => 'INGRESO',
-                    'comentario' => '',
+                    'comentario' => 'TIGOMONEY TRANSACCION',
                     'cartera_id' => $CajaFisica->id,
                     'movimiento_id' => $mv->id
                 ]);
@@ -880,7 +866,7 @@ class TransaccionController extends Component
 
                 CarteraMov::create([
                     'type' => 'EGRESO',
-                    'comentario' => '',
+                    'comentario' => 'TIGOMONEY TRANSACCION',
                     'cartera_id' => $cartera->id,
                     'movimiento_id' => $mvt->id
                 ]);
@@ -890,11 +876,10 @@ class TransaccionController extends Component
                     ->where('c.monto_final', '>=', $this->montoB)
                     ->where('origen_motivo_comisions.origen_motivo_id', $this->origMotID)
                     ->where('c.tipo', 'Propia')
-                    ->pluck('c.id')->toArray();
-
+                    ->select('c.id')->get()->first();
                 if ($lista) {
 
-                    $comis = Comision::find($lista[0]);
+                    $comis = Comision::find($lista->id);
 
                     if ($comis->porcentaje == 'Desactivo') {
                         $ganancia = $comis->comision;
@@ -905,11 +890,7 @@ class TransaccionController extends Component
                     $this->transaccion = Transaccion::create([
                         'codigo_transf' => $this->codigo_transf,
                         'importe' => $this->importe,
-                        'utilidad' => $this->utilidad,
-                        'costo' => $this->costo,
                         'observaciones' => $this->observaciones,
-                        'fecha_transaccion' => $this->hora,
-                        'estado' => $this->estado,
                         'telefono' => $this->celular,
                         'ganancia' => $ganancia,
                         'origen_motivo_id' => $this->origMotID
@@ -920,11 +901,7 @@ class TransaccionController extends Component
                     $this->transaccion = Transaccion::create([
                         'codigo_transf' => $this->codigo_transf,
                         'importe' => $this->importe,
-                        'utilidad' => $this->utilidad,
-                        'costo' => $this->costo,
                         'observaciones' => $this->observaciones,
-                        'fecha_transaccion' => $this->hora,
-                        'estado' => $this->estado,
                         'telefono' => $this->celular,
                         'ganancia' => $ganancia,
                         'origen_motivo_id' => $this->origMotID
@@ -946,7 +923,11 @@ class TransaccionController extends Component
                 'transaccion_id' => $this->transaccion->id
             ]);
             DB::commit();
-
+            $this->origenAnterior = $this->origen;
+            $this->motivoAnterior = $this->motivo;
+            $this->telefonoAnterior = $this->celular;
+            $this->cedulaAnterior = $this->cedula;
+            $this->destinoAnterior = $this->codigo_transf;
             $this->resetUI();
             $this->emit('item-added', 'Transacción Registrada');
         } catch (Exception $e) {
@@ -1033,59 +1014,67 @@ class TransaccionController extends Component
         $this->resetUI();
         $this->emit('item-actualizado', 'Se actulizaron las observaciones');
     }
+
+    public function CargarAnterior()
+    {
+        $this->origen = $this->origenAnterior;
+        $this->motivo = $this->motivoAnterior;
+        $this->celular = $this->telefonoAnterior;
+        $this->cedula = $this->cedulaAnterior;
+        $this->codigo_transf = $this->destinoAnterior;
+        $this->ClienteSelect = 1;
+        $this->TelfSelect = 1;
+    }
+
     /* RESET DE INPUT Y DEMAS */
     public function resetUI()
     {
-        $this->motivo = 'Elegir';
+        $this->identificador = rand();
+        $this->identificador2 = rand();
+
+        $this->selected_id = 0;
         $this->origen = 'Elegir';
-        $this->montoCobrarPagar = 'Monto a cobrar/pagar';
-        $this->origMotID = 0;
-        $this->transaccion = [];
-        $this->montoR = 0;
+        $this->motivo = 'Elegir';
+
         $this->montoB = '';
-
-        $this->mostrarCI = 0;
-        $this->mostrartelf = 0;
-        $this->mostrarTelfCodigo = 0;
-
-        $this->comisionSiV = 'S';
-        $this->comisionNoV = 'S';
-
-
-        $this->codigo_transf = '';
+        $this->montoR = 0;
         $this->importe = '';
-        $this->utilidad = 0;
-        $this->costo = 0;
-        $this->observaciones = '';
-        $this->hora = date("d-m-y H:i:s ");
-        $this->estado = 'Activa';
-        $this->ganancia = 0;
 
-        $this->nombreCliente = '';
         $this->cedula = '';
         $this->celular = '';
-        $this->direccion = '';
-        $this->email = '';
-        $this->razon = '';
-        $this->nit = 0;
-
-        $this->cheq = 0;
-        $this->BuscarCliente = 0;
-        $this->BuscarClientePorCel = 0;
-        $this->ClienteSelect = 1;
-        $this->TelfSelect = 1;
-        $this->check = 0;
-        $this->MostrarRadioButton = 0;
+        $this->codigo_transf = '';
+        $this->observaciones = '';
 
         $this->cartera_id = 'Elegir';
         $this->type = 'Elegir';
         $this->cantidad = '';
         $this->comentario = '';
 
-        $this->metodo = 0;
+        $this->origMotID = 0;
+        $this->OrigenMotivoObjeto = [];
+        $this->transaccion = [];
+
+        $this->mostrarCI = 0;
+        $this->mostrartelf = 0;
+        $this->mostrarTelfCodigo = 0;
+
+        $this->ClienteSelect = 0;
+        $this->TelfSelect = 0;
+
+        $this->igualarMontos = 0;
+        $this->MostrarRadioButton = 0;
+
+        $this->ResetRadioButton = 0;
         $this->condicionalComisiones = 'ABC';
         $this->condicionalOrigen = 'asd';
         $this->condicionalMotivo = 'asd';
+        $this->requerimientoComision = '';
+
+        $this->origenAnterior = '';
+        $this->motivoAnterior = '';
+        $this->telefonoAnterior = '';
+        $this->cedulaAnterior = '';
+        $this->destinoAnterior = '';
 
         $this->resetValidation();
     }

@@ -58,13 +58,13 @@
                             <thead class="text-white" style="background: #3B3F5C">
                                 <tr>
                                     <th class="table-th text-withe">PLATAFORMA Y PROVEEDOR</th>
-                                    <th class="table-th text-withe text-center">GMAIL</th>
+                                    <th class="table-th text-withe text-center">GMAIL O NOMBRE-USUARIO</th>
                                     <th class="table-th text-withe text-center">PASS CUENTA</th>
                                     <th class="table-th text-withe text-center">EXPIRACIÓN CUENTA</th>
                                     <th class="table-th text-withe text-center">TIPO</th>
-                                    <th class="table-th text-withe text-center">MAX PERF</th>
-                                    <th class="table-th text-withe text-center">PERF LIBRES</th>
-                                    <th class="table-th text-withe text-center">PERF ACTIVOS</th>
+                                    <th class="table-th text-withe text-center">MAX. PERF</th>
+                                    <th class="table-th text-withe text-center">PERF. LIBRES</th>
+                                    <th class="table-th text-withe text-center">PERF. OCUPADOS</th>
                                     <th class="table-th text-withe text-center">ACCIONES</th>
                                 </tr>
                             </thead>
@@ -76,7 +76,7 @@
                                                 {{ $acounts->name }}</h6>
                                         </td>
                                         <td>
-                                            <h6 class="text-center">{{ $acounts->content }} <br>
+                                            <h6 class="text-center">{{ $acounts->account_name }} <br>
                                                 {{ $acounts->pass }}</h6>
                                         </td>
                                         <td>
@@ -100,7 +100,7 @@
                                             <h6 class="text-center">{{ $acounts->perfLibres }}</h6>
                                         </td>
                                         <td>
-                                            <h6 class="text-center">{{ $acounts->perfActivos }}</h6>
+                                            <h6 class="text-center">{{ $acounts->perfOcupados }}</h6>
                                         </td>
                                         <td class="text-center">
                                             <a href="javascript:void(0)" wire:click="Crear({{ $acounts->id }})"
@@ -127,7 +127,7 @@
                                 <tr>
                                     <th class="table-th text-withe text-center">PLATAFORMA Y PROVEEDOR</th>
                                     <th class="table-th text-withe text-center">CLIENTE</th>
-                                    <th class="table-th text-withe text-center">GMAIL</th>
+                                    <th class="table-th text-withe text-center">GMAIL O NOMBRE-USUARIO</th>
                                     <th class="table-th text-withe text-center">PASS CUENTA</th>
                                     <th class="table-th text-withe text-center">EXPIRACIÓN CUENTA</th>
                                     <th class="table-th text-withe text-center">MAX PERF</th>
@@ -157,7 +157,7 @@
                                             </h6>
                                         </td>
                                         <td>
-                                            <h6 class="text-center">{{ $acounts->content }} <br>
+                                            <h6 class="text-center">{{ $acounts->account_name }} <br>
                                                 {{ $acounts->pass }}</h6>
                                         </td>
                                         <td>
@@ -384,10 +384,7 @@
             confirmButtonText: 'Aceptar'
         }).then(function(result) {
             if (result.value) {
-                window.livewire.emit('Renovar')
-                swal.fire(
-                    'Se renovó la cuenta ' + cuenta + ' por ' + meses + ' meses.'
-                )
+                window.livewire.emit('Renovar')                
             }
         })
     }
