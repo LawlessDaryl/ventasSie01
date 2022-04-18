@@ -11,6 +11,11 @@
                       
                     
                 </ul>
+                <ul class="tabs tab-pills">
+                    
+                        <a href="transferencias" class="btn btn-dark">Ver<br/>Transferencias</a>
+                      
+                </ul>
             </div>
           
 
@@ -25,8 +30,8 @@
                                 </div>
                                 <input type="text" wire:model="search" placeholder="Buscar" class="form-control">
                             </div>
-
                 </div>
+                
                 <div class="col-12 col-lg-2 col-md-3">
 
                     <div class="form-group">

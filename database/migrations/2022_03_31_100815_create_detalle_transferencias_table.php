@@ -24,8 +24,8 @@ class CreateDetalleTransferenciasTable extends Migration
 
             $table->integer('cantidad');
 
-            $table->unsignedBigInteger('id_location');
-            $table->foreign('id_location')->references('id')->on('locations');
+            $table->unsignedBigInteger('id_destino');
+            $table->foreign('id_destino')->references('id')->on('destinos');
 
             $table->timestamps();
             

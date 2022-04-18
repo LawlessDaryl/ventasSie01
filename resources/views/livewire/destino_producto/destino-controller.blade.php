@@ -18,7 +18,8 @@
                         <div class="col-lg-6 col-md-6 col-12">
                             <div class="form-group">
                                 <label> <strong style="color: black" >Origen de transferencia:</strong> </label>
-                                <select wire:model='selected_id' class="form-control">
+                                <select wire:model='selected_origen' class="form-control">
+                                    <option value=null>Elegir Origen</option>
                                   @foreach ($data_suc as $data)
                                   <option value="{{ $data->id }}">{{ $data->sucursal }}-{{$data->destino}}</option>
                                   @endforeach
@@ -29,8 +30,8 @@
                             <div class="col-lg-6 col-md-6 col-12">
                                 <div class="form-group">
                                     <label> <strong style="color: black">Destino de transferencia:</strong> </label>
-                                    <select wire:model='selected_id' class="form-control">
-                                       
+                                    <select wire:model='selected_destino' class="form-control">
+                                        <option value=null>Elegir Destino</option>
                                       @foreach ($data_suc as $data)
                                       <option value="{{ $data->id }}">{{ $data->sucursal }}-{{$data->destino}}</option>
                                       @endforeach
@@ -84,7 +85,7 @@
                                <p class="card-text"> <strong> Stock Disponible:</strong> {{$destino->stock}}</p>
                                <p class="card-text"> <strong>Mobilirio ubicacion</strong> {{$destino->tipo}}-{{$destino->codigo}}</p>
                              
-                               <button wire:click="increaseQty({{$destino->id_prod}})" class="btn btn-success" style="padding: 10px">Transferir</button>
+                               <button wire:click="increaseQty({{$destino->id_prod}})" class="btn btn-success" style="padding: 10px">Agregar</button>
                              </div>
                            </div>
                            

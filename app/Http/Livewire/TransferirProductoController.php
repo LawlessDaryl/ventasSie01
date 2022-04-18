@@ -5,24 +5,26 @@ namespace App\Http\Livewire;
 use App\Models\Category;
 use App\Models\Compra as ModelsCompra;
 use App\Models\Destino;
+use App\Models\DetalleTransferencia;
 use App\Models\Location;
 use App\Models\Product;
 use App\Models\ProductosDestino;
 use App\Models\Sucursal;
-
+use App\Models\Transference;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
 
 
 use Darryldecode\Cart\Facades\TransferenciasFacade as Transferencia;
+use Exception;
 
 class TransferirProductoController extends Component
 {
     
     use WithPagination;
 
-    public $selected_id,$search,$selected_p,$selected_ubicacion,$componentName,$title,$itemsQuantity,$selected_3;
+    public $selected_id,$search,$selected_p,$selected_ubicacion,$componentName,$title,$itemsQuantity,$selected_3,$selected_origen,$selected_destino;
     private $pagination = 10;
     public function paginationView()
     {
@@ -31,7 +33,7 @@ class TransferirProductoController extends Component
     
     public function mount()
     {
-        $this->selected_id=0;
+      
         $this->componentName='crear';
         $this->title='ssss';
       
@@ -43,7 +45,7 @@ class TransferirProductoController extends Component
 
     public function render()
     {
-        if($this->selected_id !== null){
+        if($this->selected_origen !== null){
 
             $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
                                       
@@ -51,7 +53,7 @@ class TransferirProductoController extends Component
                                         
                                         ->select('productos_destinos.*','p.nombre as name','dest.nombre as nombre_destino','p.id as id_prod')
                                     
-                                        ->where('dest.id',$this->selected_id)
+                                        ->where('dest.id',$this->selected_origen)
                                         ->orderBy('p.nombre','desc')
                                         ->paginate($this->pagination);
                                         
@@ -95,6 +97,20 @@ class TransferirProductoController extends Component
         } else {
             $title = "Producto agregado";
         }
+
+        $attributos=[
+            'precio'=>$product->precio_venta,
+            'codigo'=>$product->codigo,
+            'fecha_compra'=>$this->fecha_compra
+        ];
+
+        $products = array(
+            'id'=>$product->id,
+            'name'=>$product->nombre,
+            'price'=>$precio_compra,
+            'quantity'=>$cant,
+            'attributes'=>$attributos
+        );
 
         Transferencia::add($product->id, $product->name, $precio_compra, $cant);
 
@@ -152,6 +168,47 @@ class TransferirProductoController extends Component
         $this->nombre = '';
         $this->selected_id=0;
        
+    }
+    public function finalizar_tr()
+    {
+        
+        DB::beginTransaction();
+
+        try {
+            $Transferencia_encabezado = Transference::create([
+                'fecha_transferencia'=>$this->total_compra,
+                'status'=>$this->descuento,
+                'id_usuario'=>$this->fecha_compra
+            ]);
+
+            if ($Transferencia_encabezado)
+            {
+                $items = Transferencia::getContent();
+                foreach ($items as $item) {
+                    DetalleTransferencia::create([
+                        'id_transference' => $Transferencia_encabezado->id,
+                        'product_id' => $item->id,
+                        'cantidad' => $item->quantity,
+                        'destino_id'=>$this->destino
+                    ]);
+                    /*DB::table('productos_destinos')
+                    ->updateOrInsert(['stock'],$item->quantity, ['product_id' => $item->id, 'destino_id'=>$this->destino]);*/
+                }
+            }
+
+            DB::commit();
+
+            Transferencia::clear();
+            $this->selected_destino = "Elegir Destino";
+            $this->selected_origen = "Elegir Destino";
+            $this->itemsQuantity = Transferencia::getTotalQuantity();
+            redirect('/transferencias');
+        
+        } catch (Exception $e) {
+            DB::rollback();
+            dd($e->getMessage());
+            
+        }
     }
 
 }
