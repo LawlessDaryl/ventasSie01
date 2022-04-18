@@ -193,8 +193,75 @@
                     <li>
                         <strong>
                             <p> No tiene una caja abierta </p>
+                            <p> para hacer transacciones </p>
                         </strong>
                     </li>
+                    @can('Origen_Index')
+                        <li>
+                            <a href="{{ url('origenes') }}">
+                                <img src="{{ asset('storage/icons/origen.png') }}" alt="Origen CRUD" width="25px">
+                                Origen CRUD </a>
+                        </li>
+                    @endcan
+                    @can('Motivo_Index')
+                        <li>
+                            <a href="{{ url('motivos') }}">
+                                <img src="{{ asset('storage/icons/motivo.png') }}" alt="Motivo CRUD" width="25px">
+                                Motivo CRUD </a>
+                        </li>
+                    @endcan
+                    @can('Comision_Index')
+                        <li>
+                            <a href="{{ url('comisiones') }}">
+                                <img src="{{ asset('storage/icons/comision.png') }}" alt="Comision CRUD" width="25px">
+                                Comisión CRUD </a>
+                        </li>
+                    @endcan
+                    @can('Origen_Mot_Index')
+                        <li>
+                            <a href="{{ url('origen-motivo') }}">
+                                <img src="{{ asset('storage/icons/comision.png') }}" alt="Comision CRUD" width="25px">
+                                Origen motivo </a>
+                        </li>
+                    @endcan
+                    @can('Origen_Mot_Com_Index')
+                        <li>
+                            <a href="{{ url('origen-motivo-comision') }}">
+                                <img src="{{ asset('storage/icons/comision.png') }}" alt="Comision CRUD" width="25px">
+                                Origen motivo comisiones</a>
+                        </li>
+                    @endcan
+                    @can('Jornada_Tigo_Index')
+                        <li>
+                            <a href="{{ url('ReporteJornalTM') }}">
+                                <i class="fa-solid fa-baht-sign"></i>
+                                Reporte Jornada T.M.</a>
+                        </li>
+                    @endcan
+                    @can('Arqueos_Tigo_Index')
+                        <li>
+                            <a href="{{ url('arqueostigo') }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-dollar-sign">
+                                    <line x1="12" y1="1" x2="12" y2="23"></line>
+                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                </svg>
+                                Arqueos Tigo</a>
+                        </li>
+                    @endcan
+                    @can('Reportes_Tigo_Index')
+                        <li>
+                            <a href="{{ url('reportestigo') }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-pie-chart">
+                                    <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
+                                    <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
+                                </svg>
+                                Reportes Tigo</a>
+                        </li>
+                    @endcan
                 </ul>
             </div>
         @else
@@ -242,6 +309,13 @@
                                 Origen motivo comisiones</a>
                         </li>
                     @endcan
+                    @can('Jornada_Tigo_Index')
+                        <li>
+                            <a href="{{ url('ReporteJornalTM') }}">
+                                <i class="fa-solid fa-baht-sign"></i>
+                                Reporte Jornada T.M.</a>
+                        </li>
+                    @endcan
                     @can('Arqueos_Tigo_Index')
                         <li>
                             <a href="{{ url('arqueostigo') }}">
@@ -254,6 +328,7 @@
                                 Arqueos Tigo</a>
                         </li>
                     @endcan
+
                     @can('Reportes_Tigo_Index')
                         <li>
                             <a href="{{ url('reportestigo') }}">
@@ -266,29 +341,66 @@
                                 Reportes Tigo</a>
                         </li>
                     @endcan
-                    @can('Rep_Gan_Tigo_Index')
-                        <li>
-                            <a href="{{ url('ReporteGananciaTg') }}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="feather feather-pie-chart">
-                                    <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
-                                    <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
-                                </svg>
-                                Reporte Ganancias Tigo</a>
-                        </li>
-                    @endcan
                 </ul>
             </div>
         @endif
+
         @if (empty(session('sesionCaja')))
             <div class="submenu" id="streaming">
                 <ul class="submenu-list" data-parent-element="#app">
                     <li>
                         <strong>
                             <p> No tiene una caja abierta </p>
+                            <p> para vender planes </p>
                         </strong>
                     </li>
+                    @can('Cuentas_Index')
+                        <li>
+                            <a href="{{ url('cuentas') }}">
+                                <img src="{{ asset('storage/icons/plan.png') }}" alt="Transacciones" width="25px">
+                                Cuentas </a>
+                        </li>
+                    @endcan
+                    @can('Perfiles_Index')
+                        <li>
+                            <a href="{{ url('perfiles') }}">
+                                <img src="{{ asset('storage/icons/plan.png') }}" alt="perfiles" width="25px">
+                                Perfiles </a>
+                        </li>
+                    @endcan
+                    @can('Plataforma_Index')
+                        <li>
+                            <a href="{{ url('plataformas') }}">
+                                <img src="{{ asset('storage/icons/cuentas.png') }}" alt="Origen CRUD" width="25px">
+                                Plataformas </a>
+                        </li>
+                    @endcan
+                    @can('Proveedor_Index')
+                        <li>
+                            <a href="{{ url('strproveedores') }}">
+                                <img src="{{ asset('storage/icons/cuentas.png') }}" alt="Origen CRUD" width="25px">
+                                Proveedores </a>
+                        </li>
+                    @endcan
+                    @can('Correos_Index')
+                        <li>
+                            <a href="{{ url('emails') }}">
+                                <img src="{{ asset('storage/icons/cuentas.png') }}" alt="Origen CRUD" width="25px">
+                                Correos </a>
+                        </li>
+                    @endcan
+                    @can('Reportes_Streaming_Index')
+                        <li>
+                            <a href="{{ url('reportStreaming') }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="25" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"
+                                    class="feather feather-pie-chart">
+                                    <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
+                                    <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
+                                </svg>
+                                Reportes Streaming </a>
+                        </li>
+                    @endcan
                 </ul>
             </div>
         @else
@@ -431,11 +543,11 @@
                     </li>
                 @endcan
                 @can('Boton_Entregar_Servicio')
-                <li>
-                    <a href="{{ url('reportentregservices') }}">
-                        <i class="fa-regular fa-clipboard"></i>
-                        Repor. Servi. Entregados </a>
-                </li>
+                    <li>
+                        <a href="{{ url('reportentregservices') }}">
+                            <i class="fa-regular fa-clipboard"></i>
+                            Repor. Servi. Entregados </a>
+                    </li>
                 @endcan
             </ul>
         </div>

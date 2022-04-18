@@ -710,6 +710,7 @@ class CuentasController extends Component
             }
 
             $plataform = Platform::find($this->platform_id);
+            dd($this->start_account);
             if ($plataform->tipo == 'CORREO') {
                 $acc = Account::create([
                     'start_account' => $this->start_account,
@@ -1010,7 +1011,12 @@ class CuentasController extends Component
             ->where('mov.type', 'APERTURA')
             ->select('cajas.id as id')
             ->get()->first();
-
+        try {
+            $caja = Caja::find($CajaActual->id);
+        } catch (Exception $e) {
+            $this->emit('item-error', "NO TIENE UNA CAJA ABIERTA PARA RENOVAR");
+            return;
+        }
         /* OBTENER IDS PARA HACER LOS CAMBIOS */
         $datos = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
             ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')

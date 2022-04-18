@@ -61,60 +61,7 @@
                 </div>
             </div>
 
-            @if ($condicional == 'libres')
-                <div class="widget-content">
-                    <div class="table-responsive">
-                        <table class="table table-unbordered table-hover mt-2">
-                            <thead class="text-white" style="background: #3B3F5C">
-                                <tr>
-                                    <th class="table-th text-withe">PLATAFORMA</th>
-                                    <th class="table-th text-withe text-center">GMAIL</th>
-                                    <th class="table-th text-withe text-center">CONTRASEÑA CUENTA</th>
-                                    <th class="table-th text-withe text-center">PERFIL</th>
-                                    <th class="table-th text-withe text-center">EXPIRACION CUENTA</th>
-
-                                    <th class="table-th text-withe text-center">ACCIONES</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($profiles as $p)
-                                    <tr>
-                                        <td>
-                                            <h6 class="text-center">{{ $p->nombre }}</h6>
-                                        </td>
-                                        <td>
-                                            <h6 class="text-center">{{ $p->content }} <br> {{ $p->pass }}</h6>
-                                        </td>
-                                        <td>
-                                            <h6 class="text-center">{{ $p->passAccount }}</h6>
-                                        </td>
-                                        <td>
-                                            <h6 class="text-center"><strong> Nombre: </strong>{{ $p->namep }}
-                                                <strong>PIN: </strong>{{ $p->pin }}
-                                            </h6>
-                                        </td>
-                                        <td>
-                                            <h6 class="text-center">{{ $p->expiration }}</h6>
-                                        </td>
-                                        <td class="text-center">
-                                            <a href="javascript:void(0)" wire:click="Edit({{ $p->id }})"
-                                                class="btn btn-dark mtmobile" title="Edit">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            <a href="javascript:void(0)"
-                                                onclick="Confirm('{{ $p->id }}','{{ $p->correo }}')"
-                                                class="btn btn-dark" title="Delete">
-                                                <i class="fas fa-trash"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                        {{ $profiles->links() }}
-                    </div>
-                </div>
-            @elseif($condicional == 'ocupados' || $condicional == 'vencidos')
+            @if ($condicional == 'ocupados' || $condicional == 'vencidos')
                 <div class="widget-content">
                     <div class="table-responsive">
                         <table class="table table-unbordered table-hover mt-2">
@@ -161,14 +108,20 @@
                                             </h6>
                                         </td>
                                         <td>
-                                            <h6 class="text-center">{{ $p->expiration }}</h6>
+                                            <h6 class="text-center">
+                                                {{ \Carbon\Carbon::parse($p->expiration)->format('d:m:Y') }}
+                                            </h6>
                                         </td>
                                         <td>
-                                            <h6 class="text-center">{{ $p->plan_start }}</h6>
+                                            <h6 class="text-center">
+                                                {{ \Carbon\Carbon::parse($p->plan_start)->format('d:m:Y') }}
+                                            </h6>
                                         </td>
                                         <td
                                             @if ($condicional == 'ocupados') style="{{ $p->horas <= 24 ? 'background-color: #FF0000 !important' : 'background-color: #09ed3d !important' }}" @endif>
-                                            <h6 class="text-center">{{ $p->expiration_plan }}</h6>
+                                            <h6 class="text-center">
+                                                {{ \Carbon\Carbon::parse($p->expiration_plan)->format('d:m:Y') }}
+                                            </h6>
                                         </td>
                                         @if ($condicional != 'vencidos')
                                             <td class="text-center">
@@ -278,7 +231,7 @@
                                                     @if ($item->status == 'ACTIVO')
                                                         <a href="javascript:void(0)" wire:click="AccionesCuenta()"
                                                             class="btn btn-primary" title="Renovar">
-                                                            {{ $item->Cuenta->expiration_account }}
+                                                            {{ \Carbon\Carbon::parse($item->Cuenta->expiration_account)->format('d:m:Y') }}
                                                         </a>
                                                         <br>
                                                     @endif
@@ -506,7 +459,7 @@
         })
     }
 
-    function ConfirmCambiar(id, nameperfil, pin, email, password) {
+    function ConfirmCambiar(id, nameperfil, email) {
         swal.fire({
             title: 'CONFIRMAR',
             icon: 'warning',
@@ -518,11 +471,11 @@
             confirmButtonText: 'Aceptar'
         }).then(function(result) {
             if (result.value) {
-                window.livewire.emit('CambiarAccount', id)
+                window.livewire.emit('SeleccionarCuenta', id)
                 swal.fire(
                     'Los datos del perfil actual se cambiaran por los del nuevo automaticamente',
-                    'Se cambio de cuenta el perfil ' + nameperfil + ' de pin ' +
-                    pin + ' a la cuenta ' + email + ' de contraseña ' + password
+                    'Se cambio de cuenta el perfil ' + nameperfil + ' de pin a la cuenta ' +
+                    email
                 )
             }
         })

@@ -114,10 +114,10 @@
 
                         <div class="col-sm-12 col-md-4">
                             <div class="form-group text-center mt-4">
-                                <a @if ($meses == 0) disabled @endif href="javascript:void(0)"
-                                    class="btn btn-dark"
-                                    onclick="ConfirmRenovar('{{ $nameperfil }}','{{ $meses }}')">Renovar
-                                    Perfil</a>
+                                <button type="button" @if ($meses <= 0) disabled @endif
+                                    onclick="ConfirmRenovar('{{ $nameperfil }}','{{ $meses }}')"
+                                    class="btn btn-dark">Renovar
+                                    Perfil</button>
                             </div>
                         </div>
 
@@ -132,8 +132,8 @@
                         <div class="col-sm-12 col-md-4">
                             <div class="form-group text-center mt-4">
                                 <a href="javascript:void(0)" class="btn btn-dark"
-                                    wire:click.prevent="CambiarCuenta()">Cambiar
-                                    a otra cuenta</a>
+                                    wire:click.prevent="CambiarCuenta()">Buscar
+                                    otra cuenta (Cambiar)</a>
                             </div>
                         </div>
 
@@ -156,12 +156,13 @@
                                                 </thead>
                                                 <tbody>
                                                     @if ($cuentasEnteras->count() == 0)
-                                                    <tr>
-                                                        <td colspan="5">
-                                                            <h6 class="text-center">No tiene cuentas para hacer el cambio</h6>                                                            
-                                                        </td>
-                                                    </tr>
-                                                @endif
+                                                        <tr>
+                                                            <td colspan="5">
+                                                                <h6 class="text-center">No tiene cuentas para hacer
+                                                                    el cambio</h6>
+                                                            </td>
+                                                        </tr>
+                                                    @endif
                                                     @if ($cuentasEnteras)
                                                         @foreach ($cuentasEnteras as $item)
                                                             <tr>
@@ -188,9 +189,8 @@
                                                                 <td class="text-center">
                                                                     <h6 class="text-center">
                                                                         <a href="javascript:void(0)"
-                                                                            wire:click="SeleccionarCuenta('{{ $item->id }}')"
-                                                                            class="btn btn-dark mtmobile"
-                                                                            title="Seleccionar">
+                                                                            class="btn btn-dark"
+                                                                            onclick="ConfirmCambiar('{{ $item->id }}','{{ $nameperfil }}','{{ $item->account_name }}')">
                                                                             <i class="fas fa-check"></i>
                                                                         </a>
                                                                     </h6>

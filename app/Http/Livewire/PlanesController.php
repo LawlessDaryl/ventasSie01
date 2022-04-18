@@ -411,6 +411,7 @@ class PlanesController extends Component
                     )
                     ->where('accounts.status', 'ACTIVO')
                     ->where('accounts.start_account', '<=', $date_now)
+                    ->where('accounts.expiration_account', '>=', $date_now)
                     ->where('accounts.availability', 'LIBRE')
                     ->where('accounts.whole_account', 'ENTERA')
                     ->where('p.id', $this->plataforma)
@@ -436,6 +437,7 @@ class PlanesController extends Component
                     ->where('accounts.status', 'ACTIVO')
                     ->where('accounts.availability', 'LIBRE')
                     ->where('accounts.start_account', '<=', $date_now)
+                    ->where('accounts.expiration_account', '>=', $date_now)
                     ->where('p.id', $this->plataforma)
                     ->orderBy('accounts.expiration_account', 'asc')
                     ->get();
@@ -1183,6 +1185,7 @@ class PlanesController extends Component
                     'procedencia_cliente_id' => 1,
                 ]);
             }
+
             if ($this->cuentaperfil == 'ENTERA') {
                 /* SI SE SELECCIONÓ CUENTA ENTERA */
                 foreach ($this->accounts as $accp) {
@@ -1199,6 +1202,7 @@ class PlanesController extends Component
                     /* PONER LA CUENTA EN OCUPADO */
                     $accp->availability = 'OCUPADO';
                     $accp->save();
+
                     /* ENCONTRAR INVERSION */
                     $inversioncuenta = CuentaInversion::where('start_date', '<=', $mv->created_at)
                         ->where('expiration_date', '>=', $mv->created_at)
@@ -1545,11 +1549,18 @@ class PlanesController extends Component
 
     public function Modificar()
     {
-        $plan = Plan::find($this->selected_id);
-        $plan->observations = $this->observaciones;
-        $plan->save();
-        $this->resetUI();
-        $this->emit('item-actualizado', 'Se actulizó la información');
+        DB::beginTransaction();
+        try {
+            $plan = Plan::find($this->selected_id);
+            $plan->observations = $this->observaciones;
+            $plan->save();
+            $this->resetUI();
+            $this->emit('item-actualizado', 'Se actulizó la información');
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollback();
+            $this->emit('item-error', 'ERROR' . $e->getMessage());
+        }
     }
 
     public function EditarPerf(Profile $perf)
@@ -1571,26 +1582,41 @@ class PlanesController extends Component
             'nombrePerfil.required' => 'El nombre del perfil es requerido',
             'pinPerfil.required' => 'El pin es requerido',
         ];
-
         $this->validate($rules, $messages);
-        $perfil = Profile::find($this->selected_perf);
-        $perfil->nameprofile = $this->nombrePerfil;
-        $perfil->pin = $this->pinPerfil;
-        $perfil->save();
-        $this->nombrePerfil = '';
-        $this->pinPerfil = '';
-        $this->emit('perf-actualizado', 'Se actulizó el perfil');
+
+        DB::beginTransaction();
+        try {
+            $perfil = Profile::find($this->selected_perf);
+            $perfil->nameprofile = $this->nombrePerfil;
+            $perfil->pin = $this->pinPerfil;
+            $perfil->save();
+            $this->nombrePerfil = '';
+            $this->pinPerfil = '';
+            $this->profiles = Profile::find($this->arrayPerfiles);
+            DB::commit();
+            $this->emit('perf-actualizado', 'Se actualizó el perfil');
+        } catch (Exception $e) {
+            DB::rollback();
+            $this->emit('item-error', 'ERROR' . $e->getMessage());
+        }
     }
 
     protected $listeners = ['deleteRow' => 'Anular', 'Realizado' => 'Realizado'];
 
     public function Realizado(Plan $plan)
     {
-        $plan->ready = 'SI';
-        $plan->done = 'SI';
-        $plan->save();
-        $this->resetUI();
-        $this->emit('perf-actualizado', 'Se cambió a realizado');
+        DB::beginTransaction();
+        try {
+            $plan->ready = 'SI';
+            $plan->done = 'SI';
+            $plan->save();
+            $this->resetUI();
+            DB::commit();
+            $this->emit('perf-actualizado', 'Se cambió a realizado');
+        } catch (Exception $e) {
+            DB::rollback();
+            $this->emit('item-error', 'ERROR' . $e->getMessage());
+        }
     }
 
     public function resetUI()

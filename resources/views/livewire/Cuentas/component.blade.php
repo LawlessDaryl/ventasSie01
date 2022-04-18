@@ -87,7 +87,7 @@
                                             <a href="javascript:void(0)"
                                                 wire:click="AccionesCuenta({{ $acounts->id }})"
                                                 class="btn btn-primary" title="Renovar">
-                                                {{ $acounts->expiration_account }}
+                                                {{ \Carbon\Carbon::parse($acounts->expiration_account)->format('d:m:Y') }}
                                             </a>
                                         </td>
                                         <td>
@@ -168,18 +168,22 @@
                                             <a href="javascript:void(0)"
                                                 wire:click="AccionesCuenta({{ $acounts->id }})"
                                                 class="btn btn-primary" title="Renovar">
-                                                {{ $acounts->expiration_account }}
+                                                {{ \Carbon\Carbon::parse($acounts->expiration_account)->format('d:m:Y') }}
                                             </a>
                                         </td>
                                         <td>
                                             <h6 class="text-center">{{ $acounts->number_profiles }}</h6>
                                         </td>
                                         <td>
-                                            <h6 class="text-center">{{ $acounts->plan_start }}</h6>
+                                            <h6 class="text-center">
+                                                {{ \Carbon\Carbon::parse($acounts->plan_start)->format('d:m:Y') }}
+                                            </h6>
                                         </td>
                                         <td
                                             @if ($condicional == 'ocupados') style="{{ $acounts->horas <= 24 ? 'background-color: #FF0000 !important' : 'background-color: #09ed3d !important' }}" @endif>
-                                            <h6 class="text-center">{{ $acounts->expiration_plan }}</h6>
+                                            <h6 class="text-center">
+                                                {{ \Carbon\Carbon::parse($acounts->expiration_plan)->format('d:m:Y') }}
+                                            </h6>
                                         </td>
                                         @if ($condicional != 'vencidos')
                                             <td class="text-center">
@@ -384,7 +388,7 @@
             confirmButtonText: 'Aceptar'
         }).then(function(result) {
             if (result.value) {
-                window.livewire.emit('Renovar')                
+                window.livewire.emit('Renovar')
             }
         })
     }

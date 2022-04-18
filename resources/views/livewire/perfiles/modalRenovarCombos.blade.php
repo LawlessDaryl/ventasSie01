@@ -17,7 +17,7 @@
                             <h6>{{ $plataforma1Nombre }}</h6>
                         </div>
                     </div>
-                    <div class="col-sm-12 col-md-6">
+                    <div class="col-sm-12 col-md-4">
                         <div class="form-group">
                             <h6>NOMBRE PERFIL</h6>
                             <input type="text" wire:model="perfil1COMBO" class="form-control">
@@ -28,13 +28,22 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-md-6">
+                    <div class="col-sm-12 col-md-4">
                         <div class="form-group">
                             <h6>PIN PERFIL</h6>
                             <input type="text" wire:model="PIN1COMBO" class="form-control">
                             @error('celular')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-4">
+                        <div class="form-group">
+                            <label>Expiracion cuenta {{ $plataforma1Nombre }}</label>
+                            <h6 class="form-control"><strong>
+                                    {{ \Carbon\Carbon::parse($expiracionCuenta1)->format('d-m-Y') }}</strong>
+                            </h6>
                         </div>
                     </div>
 
@@ -127,7 +136,7 @@
                             <h6>{{ $plataforma2Nombre }}</h6>
                         </div>
                     </div>
-                    <div class="col-sm-12 col-md-6">
+                    <div class="col-sm-12 col-md-4">
                         <div class="form-group">
                             <h6>NOMBRE PERFIL</h6>
                             <input type="text" wire:model="perfil2COMBO" class="form-control">
@@ -137,13 +146,22 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-md-6">
+                    <div class="col-sm-12 col-md-4">
                         <div class="form-group">
                             <h6>PIN PERFIL</h6>
                             <input type="text" wire:model="PIN2COMBO" class="form-control">
                             @error('celular')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-4">
+                        <div class="form-group">
+                            <label>Expiracion cuenta {{ $plataforma2Nombre }}</label>
+                            <h6 class="form-control"><strong>
+                                    {{ \Carbon\Carbon::parse($expiracionCuenta2)->format('d-m-Y') }}</strong>
+                            </h6>
                         </div>
                     </div>
 
@@ -236,7 +254,7 @@
                             <h6>{{ $plataforma3Nombre }}</h6>
                         </div>
                     </div>
-                    <div class="col-sm-12 col-md-6">
+                    <div class="col-sm-12 col-md-4">
                         <div class="form-group">
                             <h6>NOMBRE PERFIL</h6>
                             <input type="text" wire:model="perfil3COMBO" class="form-control">
@@ -246,13 +264,22 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-md-6">
+                    <div class="col-sm-12 col-md-4">
                         <div class="form-group">
                             <h6>PIN PERFIL</h6>
                             <input type="text" wire:model="PIN3COMBO" class="form-control">
                             @error('celular')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-4">
+                        <div class="form-group">
+                            <label>Expiracion cuenta {{ $plataforma3Nombre }}</label>
+                            <h6 class="form-control"><strong>
+                                    {{ \Carbon\Carbon::parse($expiracionCuenta3)->format('d-m-Y') }}</strong>
+                            </h6>
                         </div>
                     </div>
 

@@ -88,62 +88,13 @@ class PerfilesController extends Component
         $this->cuentaPerfil2 = '';
         $this->cuentaPerfil3 = '';
         $this->clienteID = '';
+        $this->expiracionCuenta1 = '';
+        $this->expiracionCuenta2 = '';
+        $this->expiracionCuenta3 = '';
     }
     public function render()
     {
-        if ($this->condicional == 'libres') {
-            if (strlen($this->search) > 0) {
-                $prof = Profile::join('account_profiles as ap', 'ap.profile_id', 'profiles.id')
-                    ->join('accounts as a', 'ap.account_id', 'a.id')
-                    ->join('emails as e', 'e.id', 'a.email_id')
-                    ->join('platforms as p', 'p.id', 'a.platform_id')
-                    ->select(
-                        'profiles.*',
-                        'a.expiration_account as expiration',
-                        'profiles.nameprofile as namep',
-                        'a.password_account as passAccount',
-                        'p.nombre',
-                        'p.image',
-                        'e.content',
-                        'e.pass',
-                        'ap.status as estadoCuentaPerfil',
-                    )
-                    ->where('p.nombre', 'like', '%' . $this->search . '%')
-                    ->where('profiles.availability', 'LIBRE')
-                    ->where('profiles.status', 'ACTIVO')
-
-                    ->orWhere('e.content', 'like', '%' . $this->search . '%')
-                    ->where('profiles.availability', 'LIBRE')
-                    ->where('profiles.status', 'ACTIVO')
-
-                    ->orWhere('profiles.nameprofile', 'like', '%' . $this->search . '%')
-                    ->where('profiles.availability', 'LIBRE')
-                    ->where('profiles.status', 'ACTIVO')
-
-                    ->orderBy('a.expiration_account', 'desc')
-                    ->paginate($this->pagination);
-            } else {
-                $prof = Profile::join('account_profiles as ap', 'ap.profile_id', 'profiles.id')
-                    ->join('accounts as a', 'ap.account_id', 'a.id')
-                    ->join('emails as e', 'e.id', 'a.email_id')
-                    ->join('platforms as p', 'p.id', 'a.platform_id')
-                    ->select(
-                        'profiles.*',
-                        'a.expiration_account as expiration',
-                        'profiles.nameprofile as namep',
-                        'a.password_account as passAccount',
-                        'p.nombre',
-                        'p.image',
-                        'e.content',
-                        'e.pass',
-                        'ap.status as estadoCuentaPerfil',
-                    )
-                    ->where('profiles.availability', 'LIBRE')
-                    ->where('profiles.status', 'ACTIVO')
-                    ->orderBy('a.expiration_account', 'desc')
-                    ->paginate($this->pagination);
-            }
-        } elseif ($this->condicional == 'ocupados') {
+        if ($this->condicional == 'ocupados') {
             if (strlen($this->search) > 0) {
                 $prof = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
                     ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
@@ -528,6 +479,7 @@ class PerfilesController extends Component
                         $this->perfil1COMBO =  $v->Perfil->nameprofile;
                         $this->PIN1COMBO = $v->Perfil->pin;
                         $this->perfil1ID = $v->Perfil->id;
+                        $this->expiracionCuenta1 = $v->Cuenta->expiration_account;
                     }
                 }
             }
@@ -548,6 +500,7 @@ class PerfilesController extends Component
                         $this->perfil2COMBO =  $v->Perfil->nameprofile;
                         $this->PIN2COMBO = $v->Perfil->pin;
                         $this->perfil2ID = $v->Perfil->id;
+                        $this->expiracionCuenta2 = $v->Cuenta->expiration_account;
                     }
                 }
             }
@@ -568,6 +521,7 @@ class PerfilesController extends Component
                         $this->perfil3COMBO =  $v->Perfil->nameprofile;
                         $this->PIN3COMBO = $v->Perfil->pin;
                         $this->perfil3ID = $v->Perfil->id;
+                        $this->expiracionCuenta3 = $v->Cuenta->expiration_account;
                     }
                 }
             }
@@ -1417,10 +1371,7 @@ class PerfilesController extends Component
             DB::rollback();
             $this->emit('item-error', 'ERROR' . $e->getMessage());
         }
-
     }
-
-
 
     public function Edit(Profile $prof)
     {
@@ -1553,7 +1504,12 @@ class PerfilesController extends Component
             ->where('mov.type', 'APERTURA')
             ->select('cajas.id as id')
             ->get()->first();
-
+        try {
+            $caja = Caja::find($CajaActual->id);
+        } catch (Exception $e) {
+            $this->emit('item-error', "NO TIENE UNA CAJA ABIERTA PARA RENOVAR");
+            return;
+        }
         /* OBTENER IDS PARA HACER LAS MODIFICACIONES */
         $datos = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
             ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
@@ -1946,7 +1902,7 @@ class PerfilesController extends Component
     }
 
 
-    protected $listeners = ['deleteRow' => 'Destroy', 'Vencer' => 'Vencer', 'Renovar' => 'Renovar', 'Realizado' => 'Realizado'];
+    protected $listeners = ['deleteRow' => 'Destroy', 'Vencer' => 'Vencer', 'Renovar' => 'Renovar', 'Realizado' => 'Realizado', 'SeleccionarCuenta' => 'SeleccionarCuenta'];
 
     public function Realizado(Plan $plan)
     {

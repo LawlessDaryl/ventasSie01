@@ -117,10 +117,10 @@
 
                         <div class="col-sm-12 col-md-4">
                             <div class="form-group text-center mt-4">
-                                <a href="javascript:void(0)" @if ($meses == 0) disabled @endif
-                                    class="btn btn-dark"
-                                    onclick="ConfirmRenovar('{{ $correoCuenta }}','{{ $meses }}')">Renovar
-                                    Cuenta</a>
+                                <button type="button" @if ($meses == 0) disabled @endif
+                                    onclick="ConfirmRenovar('{{ $correoCuenta }}','{{ $meses }}')"
+                                    class="btn btn-dark">Renovar
+                                    Cuenta</button>
                             </div>
                         </div>
 
@@ -135,8 +135,7 @@
                         <div class="col-sm-12 col-md-4">
                             <div class="form-group text-center mt-4">
                                 <a href="javascript:void(0)" class="btn btn-dark"
-                                    wire:click.prevent="CambiarCuenta()">Cambiar
-                                    a otra cuenta</a>
+                                    wire:click.prevent="CambiarCuenta()">Buscar otra cuenta (Cambiar)</a>
                             </div>
                         </div>
 
