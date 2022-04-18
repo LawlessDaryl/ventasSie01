@@ -16,8 +16,8 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 //Modulo para buscar clientes en las ventas
 use App\Models\Cliente;
-use App\Models\Notificacion;
-use App\Models\NotificacionUsuario;
+use App\Models\Notification;
+use App\Models\NotificationUser;
 use App\Models\User;
 use Darryldecode\Cart\Facades\CartFacade as Cart;
 use Exception;
@@ -152,7 +152,7 @@ class PosController extends Component
         }
     }
 
-    //PAra Saber si se registrara la venta con un Clinete Anònimo
+    //Para Saber si se registrara la venta con un Cliente Anònimo
     public function clienteanonimo()
     {
         if($this->clienteanonimo == 'true')
@@ -791,21 +791,30 @@ class PosController extends Component
         //Notificando al Administrador el Movimiento del Inventario
         
         //Creando Notificacion
-        $idNotificacion = Notificacion::create([
+        $idNotificacion = Notification::create([
+
             'nombrenotificacion' => "MOVIMIENTO DE INVENTARIO",
+
             'mensaje' => 'El usuario: '.$nombreusuario->nombre.' movio '.$this->cantidadToTienda.' unidade(s) del producto '.
-            $almacen->name." del Almacen a la Tienda en fecha: ",
+            $almacen->name." del Almacen a la Tienda",
+
+            'user_id' => Auth()->user()->id,
+            'sucursal_id' => $this->idsucursal(),
         ]);
-        //Obteniendo los Ids de los Administradores
+
+        //dd($idNotificacion->id);
+
+
+        //Obteniendo los Ids de los Administradores para Notificarlos
         $idUsuarios[] = User::select("users.id as id","users.name as nombre","users.profile as rol")
         ->where("users.profile", 'ADMIN')->get()->first();
         
         //Notificando a todos los Administradores
         foreach ($idUsuarios as $item)
         {
-            NotificacionUsuario::create([
+            NotificationUser::create([
                 'user_id' => $item->id,
-                'notificacion_id' => $idNotificacion->id
+                'notification_id' => $idNotificacion->id
             ]);
         }
 

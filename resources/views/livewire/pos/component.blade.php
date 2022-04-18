@@ -1,3 +1,16 @@
+
+
+
+@section('css')
+
+
+<!-- Estilo ventas Switches en Ventas -->
+<link href="{{ asset('assets/css/scrollspyNav.css') }}" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/forms/switches.css') }}">
+
+
+@endsection
+
 <div class="row sales layout-top-spacing">
     <div class="col-sm-12" >
 
@@ -110,8 +123,17 @@
                                     <br>
                                     ¿Desea Agregarlos al Carrito?
                                 </h6>
+
+
+
+
                                     <center>
                                         <div class="col-lg-5">
+                                            
+                                            
+
+
+
                                             <input type="text" min="1" max="{{$stockalmacen}}" wire:model.lazy="cantidadToTienda" class="form-control">
                                             @error('cantidadToTienda')
                                                 <span class="text-danger er">{{ $message }}</span>
@@ -223,11 +245,25 @@
                 </div>
             </div>
     </div>
+
+    <br>
+
 </div>
 
 
 
-    @include('livewire.pos.scripts.events')
-    @include('livewire.pos.scripts.general')
-    @include('livewire.pos.scripts.scan')
-    @include('livewire.pos.scripts.shortcuts')
+
+
+@include('livewire.pos.scripts.events')
+@include('livewire.pos.scripts.general')
+@include('livewire.pos.scripts.scan')
+@include('livewire.pos.scripts.shortcuts')
+
+
+
+
+@section('javascript')
+
+
+
+@endsection

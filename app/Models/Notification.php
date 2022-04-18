@@ -5,8 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Notificacion extends Model
+class Notification extends Model
 {
     use HasFactory;
-    protected $fillable = ['nombrenotificacion', 'mensaje','estado'];
+    protected $fillable = ['nombrenotificacion', 'mensaje','estado','user_id','sucursal_id'];
 }

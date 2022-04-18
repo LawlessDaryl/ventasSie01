@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateNotificacionUsuariosTable extends Migration
+class CreateNotificationUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateNotificacionUsuariosTable extends Migration
      */
     public function up()
     {
-        Schema::create('notificacion_usuarios', function (Blueprint $table) {
+        Schema::create('notification_users', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained();
-            $table->foreignId('notificacion_id')->constrained();
+            $table->foreignId('notification_id')->constrained();
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreateNotificacionUsuariosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('notificacion_usuarios');
+        Schema::dropIfExists('notification_users');
     }
 }

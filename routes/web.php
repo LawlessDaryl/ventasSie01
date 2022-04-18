@@ -57,7 +57,7 @@ use App\Http\Livewire\TransaccionesController;
 use App\Http\Livewire\TypeWorkController;
 use App\Http\Livewire\UnidadesController;
 use App\Http\Livewire\SaleListController;
-use App\Http\Livewire\NotificacionController;
+use App\Http\Livewire\NotificationController;
 use App\Http\Livewire\DestinoProductoController;
 use App\Http\Livewire\TransferirProductoController;
 use App\Http\Livewire\DestinoController;
@@ -159,7 +159,7 @@ Route::middleware(['auth'])->group(function () {
     });
     //Lista de Ventas
     Route::get('salelist', SaleListController::class)->name('salelist');
-    Route::get('notificaciones', NotificacionController::class)->name('notificaciones');
+    Route::get('notificaciones', NotificationController::class)->name('notificaciones');
     Route::get('notificaciones/{idnotificacion}', [NotificacionController::class,'mostrarnotificacion']);
 
 });

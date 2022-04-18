@@ -26,7 +26,7 @@
 
                 <a href="{{ url('notificaciones') }}">
                             @if($p->estado == "NOVISTO")
-                            <div class="dropdown-item" style="background-color: #f6f5e1">
+                            <div class="dropdown-item" style="background-color: rgb(240, 231, 212)">
                             @else
                             <div class="dropdown-item">
                             @endif
@@ -53,10 +53,16 @@
                                                                 <p class="">Hace {{$this->diferenciarfecha($p->fechanoti)->h}} horas</p>
                                                             @endif
                                                         @else
+                                                            @if($this->diferenciarfecha($p->fechanoti)->d == 1)
+                                                            <p class="">Hace {{$this->diferenciarfecha($p->fechanoti)->d}} dia</p>
+                                                            @else
                                                             <p class="">Hace {{$this->diferenciarfecha($p->fechanoti)->d}} dias</p>
+                                                            @endif
+
+                                                            
                                                         @endif
                                                     @else
-                                                        @if($meses == 1)
+                                                        @if($this->diferenciarfecha($p->fechanoti)->m == 1)
                                                         <p class="">Hace {{$this->diferenciarfecha($p->fechanoti)->m}} Mes</p>
                                                         @else
                                                         <p class="">Hace {{$this->diferenciarfecha($p->fechanoti)->m}} Meses</p>
@@ -95,64 +101,6 @@
                 </div>
             </div>
             @endif
-
-
-            {{-- <div class="dropdown-item">
-                <div class="media ">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round" class="feather feather-heart">
-                        <path
-                            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
-                        </path>
-                    </svg>
-                    <div class="media-body">
-                        <div class="data-info">
-                            <h6 class="">Licence Expiring Soon</h6>
-                            <p class="">8 hrs ago</p>
-                        </div>
-
-                        <div class="icon-status">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
-                                <line x1="18" y1="6" x2="6" y2="18"></line>
-                                <line x1="6" y1="6" x2="18" y2="18"></line>
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="dropdown-item">
-                <div class="media file-upload">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round" class="feather feather-file-text">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                        <polyline points="14 2 14 8 20 8"></polyline>
-                        <line x1="16" y1="13" x2="8" y2="13"></line>
-                        <line x1="16" y1="17" x2="8" y2="17"></line>
-                        <polyline points="10 9 9 9 8 9"></polyline>
-                    </svg>
-                    <div class="media-body">
-                        <div class="data-info">
-                            <h6 class="">Kelly Portfolio.pdf</h6>
-                            <p class="">670 kb</p>
-                        </div>
-
-                        <div class="icon-status">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round"
-                                class="feather feather-check">
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-            </div> --}}
-
 
         </div>
     </div>

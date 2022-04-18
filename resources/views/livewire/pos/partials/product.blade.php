@@ -31,7 +31,7 @@
                             </td>
                             {{-- Precio Producto--}}
                             <td class="text-right">
-                                <h6>{{ $p->precio_venta }} Bs</h6>
+                                {{ $p->precio_venta }} Bs
                             </td>
                             {{-- Stock Disponible --}}
                             {{-- <td  class="text-center">

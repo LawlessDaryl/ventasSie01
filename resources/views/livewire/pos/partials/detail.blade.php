@@ -10,6 +10,9 @@
                     <th class="table-th text-left text-white">IMAGEN</th>
                     <th class="table-th text-left text-white">DESCRIPCIóN</th>
                     <th class="table-th text-center text-white">PRECIO</th>
+                    
+                    <th width="17%" class="table-th text-center text-white">P.VENTA</th>
+
                     <th width="12%" class="table-th text-center text-white">CANTIDAD</th>
                     <th class="table-th text-center text-white">IMPORTE</th>
                     {{-- <th class="table-th text-center text-white">DESC/REC</th> --}}
@@ -30,10 +33,19 @@
                     </td>
                     {{-- Descripciòn Producto --}}
                     <td>
-                        <h6>{{ $item->name }}</h6>
+                        {{ $item->name }}
                     </td>
                     {{-- Precio --}}
                     <td class="text-center">Bs{{ number_format($item->price, 2) }}</td>
+                    
+                    <td class="text-center">
+
+
+                          <input type="number" class="form-control" 
+                        value="{{ number_format($item->price, 2) }}">
+
+                        
+                    </td>
                     {{-- Cantidad --}}
                     <td>
                         <input type="number" maxlength="{{$item->stock}}" max="{{$item->stock}}"
@@ -47,18 +59,8 @@
                     <td class="text-center">
                         <h6>{{ $item->price * $item->quantity, 2 }}</h6>
                     </td>
-                    {{-- <td>
-                        <div class="input-group mb-4">
-                            
-                                <div class="input-group-prepend">
-                                    <input type="number" value="0" class="form-control">
-                                    <select class="btn btn-outline-info">
-                                        <option value="Bs" selected>Bs</option>
-                                        <option value="%">%</option>
-                                    </select>
-                                </div>
-                        </div>
-                    </td> --}}
+
+
                     {{-- Acciones --}}
                     <td class="text-center">
                         <button onclick="Confirm('{{ $item->id }}','removeItem','¿Confirmas eliminar el Registro?')" class="btn btn-dark mbmobile">

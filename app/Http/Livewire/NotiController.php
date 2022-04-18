@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\Notificacion;
+use App\Models\Notification;
 use App\Models\User;
 use DateTime;
 use Livewire\Component;
@@ -14,8 +14,8 @@ class NotiController extends Component
     {
         $this->notif = [];
         //Verificando si el usuario Tiene Notificaciones Vistas para cargarlas a la vista Notificaciones
-        $this->notif = User::join("notificacion_usuarios as nu", "nu.user_id", "users.id")
-        ->join("notificacions as n", "n.id", "nu.notificacion_id")
+        $this->notif = User::join("notification_users as nu", "nu.user_id", "users.id")
+        ->join("notifications as n", "n.id", "nu.notification_id")
         ->where('n.estado', 'NOVISTO')
         ->where('users.id', Auth()->user()->id)
         ->select('n.id','n.nombrenotificacion as nn','n.mensaje as m','n.estado as estado','n.created_at as fechanoti')
@@ -25,8 +25,8 @@ class NotiController extends Component
 
 
         //Misma consulta que arriba pero sin el $this-> para mostrar icono de notificacion nueva
-        $notificacionesvistas = User::join("notificacion_usuarios as nu", "nu.user_id", "users.id")
-        ->join("notificacions as n", "n.id", "nu.notificacion_id")
+        $notificacionesvistas = User::join("notification_users as nu", "nu.user_id", "users.id")
+        ->join("notifications as n", "n.id", "nu.notification_id")
         ->where('n.estado', 'NOVISTO')
         ->where('users.id', Auth()->user()->id)
         ->select('n.nombrenotificacion as nn','n.mensaje as m')
@@ -36,8 +36,8 @@ class NotiController extends Component
         {
             $this->NotificacionIco = 1;
              //Consulta para sacar el tiempo: Fecha y Hora de la Notificacion
-            $sacartiempo = User::join("notificacion_usuarios as nu", "nu.user_id", "users.id")
-            ->join("notificacions as n", "n.id", "nu.notificacion_id")
+            $sacartiempo = User::join("notification_users as nu", "nu.user_id", "users.id")
+            ->join("notifications as n", "n.id", "nu.notification_id")
             ->where('n.estado', 'NOVISTO')
             ->where('users.id', Auth()->user()->id)
             ->select('n.nombrenotificacion as nn','n.mensaje as m','n.created_at as tiempo')
