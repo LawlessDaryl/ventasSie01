@@ -19,7 +19,7 @@
                             <div class="form-group">
                                 <label> <strong style="color: black" >Origen de transferencia:</strong> </label>
                                 <select wire:model='selected_origen' class="form-control">
-                                    <option value=null>Elegir Origen</option>
+                                    <option value=0>Elegir Origen</option>
                                   @foreach ($data_suc as $data)
                                   <option value="{{ $data->id }}">{{ $data->sucursal }}-{{$data->destino}}</option>
                                   @endforeach
@@ -31,7 +31,7 @@
                                 <div class="form-group">
                                     <label> <strong style="color: black">Destino de transferencia:</strong> </label>
                                     <select wire:model='selected_destino' class="form-control">
-                                        <option value=null>Elegir Destino</option>
+                                        <option value=0>Elegir Destino</option>
                                       @foreach ($data_suc as $data)
                                       <option value="{{ $data->id }}">{{ $data->sucursal }}-{{$data->destino}}</option>
                                       @endforeach
@@ -207,6 +207,6 @@
         </div>
       
     </div>
-    @include('livewire.destino_producto.form')
+  
   
 </div>

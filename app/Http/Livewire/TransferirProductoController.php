@@ -24,7 +24,8 @@ class TransferirProductoController extends Component
     
     use WithPagination;
 
-    public $selected_id,$search,$selected_p,$selected_ubicacion,$componentName,$title,$itemsQuantity,$selected_3,$selected_origen,$selected_destino;
+    public $selected_id,$search,
+    $itemsQuantity,$selected_3,$selected_origen,$selected_destino;
     private $pagination = 10;
     public function paginationView()
     {
@@ -33,11 +34,7 @@ class TransferirProductoController extends Component
     
     public function mount()
     {
-      
-        $this->componentName='crear';
-        $this->title='ssss';
-      
-
+    $this->selected_origen="Elegir Origen";
         //$this->itemsQuantity = Cart::getTotalQuantity();
         $quantity= Transferencia::getTotalQuantity();
       
@@ -45,14 +42,11 @@ class TransferirProductoController extends Component
 
     public function render()
     {
-        if($this->selected_origen !== null){
+        if($this->selected_origen != null){
 
             $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
-                                      
                                         ->join('destinos as dest','dest.id','productos_destinos.destino_id')
-                                        
                                         ->select('productos_destinos.*','p.nombre as name','dest.nombre as nombre_destino','p.id as id_prod')
-                                    
                                         ->where('dest.id',$this->selected_origen)
                                         ->orderBy('p.nombre','desc')
                                         ->paginate($this->pagination);
@@ -62,17 +56,13 @@ class TransferirProductoController extends Component
             else{
                
                 $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
-                
-                ->join('destinos as dest','dest.id','productos_destinos.destino_id')
-                
-                ->select(DB::raw('SUM(productos_destinos.stock) as stock_s'),'p.nombre as name','p.cantidad_minima as cant_min')
-                ->groupBy('productos_destinos.product_id')
-              
-                ->paginate($this->pagination);
+                                            ->join('destinos as dest','dest.id','productos_destinos.destino_id')
+                                            ->select(DB::raw('SUM(productos_destinos.stock) as stock_s'),'p.nombre as name','p.cantidad_minima as cant_min')
+                                            ->groupBy('productos_destinos.product_id')
+                                            ->paginate($this->pagination);
             }
             $sucursal_ubicacion=Destino::join('sucursals as suc','suc.id','destinos.sucursal_id')
                                         ->select ('suc.name as sucursal','destinos.nombre as destino','destinos.id')
-                                       
                                         ->orderBy('suc.name','asc');
 
                                     
@@ -86,7 +76,6 @@ class TransferirProductoController extends Component
     public function increaseQty($productId, $cant = 1,$precio_compra = 0)
     {
        
-        $title = 'aaa';
         $product = Product::select('products.id','products.nombre as name')
         ->where('products.id',$productId)->first();
         
@@ -156,8 +145,6 @@ class TransferirProductoController extends Component
     public function removeItem($productId)
     {
         Transferencia::remove($productId);
-
-        
         $this->itemsQuantity = Transferencia::getTotalQuantity();
         $this->emit('scan-ok', 'Producto eliminado');
   
