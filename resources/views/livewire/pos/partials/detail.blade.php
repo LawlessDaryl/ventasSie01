@@ -11,7 +11,7 @@
                     <th class="table-th text-left text-white">DESCRIPCIóN</th>
                     <th class="table-th text-center text-white">PRECIO</th>
                     
-                    <th width="17%" class="table-th text-center text-white">P.VENTA</th>
+                    <th width="17%" class="table-th text-center text-white">PRECIO 2</th>
 
                     <th width="12%" class="table-th text-center text-white">CANTIDAD</th>
                     <th class="table-th text-center text-white">IMPORTE</th>
@@ -31,7 +31,7 @@
                         </span>
                         @endif
                     </td>
-                    {{-- Descripciòn Producto --}}
+                    {{-- Descripción Producto --}}
                     <td>
                         {{ $item->name }}
                     </td>
@@ -39,18 +39,17 @@
                     <td class="text-center">Bs{{ number_format($item->price, 2) }}</td>
                     
                     <td class="text-center">
-
-
-                          <input type="number" class="form-control" 
+                        <input type="number" 
+                        id="p{{$item->id}}" 
+                        wire:change="precioventa({{$item->id}}, $('#p' + {{$item->id}}).val() )"
+                        class="form-control" 
                         value="{{ number_format($item->price, 2) }}">
-
-                        
                     </td>
                     {{-- Cantidad --}}
                     <td>
                         <input type="number" maxlength="{{$item->stock}}" max="{{$item->stock}}"
                         id="r{{$item->id}}" 
-                        wire:change="UpdateQty({{$item->id}}, $('#r' + {{$item->id}}).val() )" 
+                        wire:change="UpdateQty({{$item->id}}, $('#r' + {{$item->id}}).val() )"
                         style="font-size: 1rem!important;" 
                         class="form-control text-center" 
                         value="{{$item->quantity}}">

@@ -33,8 +33,10 @@ class PosController extends Component
     //Variables para la venta desde almacen, moviendo productos de almacen a la tienda
     public  $stockalmacen, $nombrestockproducto, $cantidadToTienda = 1, $idproductoalmacen;
 
-    //Variables para el conprobantes...
+    //Variables para el comprobantes...
     public $idventa, $totalbs, $totalitems;
+    //Variables para Calcular el Desuento en Ventas...
+    public $descuento;
 
     public function mount()
     {
@@ -47,6 +49,7 @@ class PosController extends Component
         $this->tipopago = 'EFECTIVO';
         $this->anonimo = 0;
         $this->facturasino = 'No';
+        $this->descuento = 0;
 
     }
     public function render()
@@ -848,6 +851,21 @@ class PosController extends Component
         ->get()
         ->first();
         return $idsucursal->id;
+    }
+    //Aplicar descuento o recargo Dependiendo del valor que se modifique en el Precio de Venta
+    //public function UpdateQty($productId, $cant = 1)
+    public function precioventa($id,$valor)
+    {
+        $precioproducto = User::join("sucursal_users as su","su.user_id","users.id")
+        ->select("su.sucursal_id as id","users.name as n")
+        ->where("users.id",Auth()->user()->id)
+        ->where("su.estado","ACTIVO")
+        ->get()
+        ->first();
+        return $precioproducto->id;
+
+        $this->descuento = $valor;
+        dd("El Id del Producto es: ".$valor);
     }
 
     
