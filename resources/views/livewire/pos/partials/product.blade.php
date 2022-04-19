@@ -60,7 +60,7 @@
     <br>
     <br>
 
-    <h5 class="text-center text-muted">Para Buscar use el Cuadro: Buscar Productos...</h5>
+    <h5 class="text-center text-muted">PARA BUSCAR USE EL CUADRO: BUSCAR PRODUCTOS...</h5>
 
     <br>
     <br>

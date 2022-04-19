@@ -80,7 +80,7 @@
     @else
 
     <div class="text-center">
-        <h3>Shopping Cart</h3>
+        <h3>CARRITO DE COMPRAS</h3>
     </div>
     
     @endif

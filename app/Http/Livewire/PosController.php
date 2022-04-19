@@ -36,7 +36,7 @@ class PosController extends Component
     //Variables para el comprobantes...
     public $idventa, $totalbs, $totalitems;
     //Variables para Calcular el Desuento en Ventas...
-    public $descuento;
+    public $descuento, $arrayDetalle = Array();
 
     public function mount()
     {
@@ -854,18 +854,23 @@ class PosController extends Component
     }
     //Aplicar descuento o recargo Dependiendo del valor que se modifique en el Precio de Venta
     //public function UpdateQty($productId, $cant = 1)
-    public function precioventa($id,$valor)
+    public function precioventa(Product $producto, $valor)
     {
-        $precioproducto = User::join("sucursal_users as su","su.user_id","users.id")
-        ->select("su.sucursal_id as id","users.name as n")
-        ->where("users.id",Auth()->user()->id)
-        ->where("su.estado","ACTIVO")
-        ->get()
-        ->first();
-        return $precioproducto->id;
 
-        $this->descuento = $valor;
-        dd("El Id del Producto es: ".$valor);
+        // $arrayDetalle[] = array(
+        //     "idproducto" => $producto->id,
+        //     "precio" => $producto->precio_venta - $valor
+        // );
+
+        // dd($arrayDetalle);
+
+        // for($i = 0; $i < count($arrayDetalle); $i++)
+        // {
+        //     $this->descuento = $arrayDetalle[$i]["precio"] + $this->descuento;
+        // }
+        
+        $this->descuento = ($producto->precio_venta - $valor) + $this->descuento;
+        //dd("El descuento de Venta es: ".$this->descuento);
     }
 
     

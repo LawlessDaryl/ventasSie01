@@ -9,6 +9,39 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/forms/switches.css') }}">
 
 
+
+<style>
+    .btn-flotante {
+    font-size: 16px; /* Cambiar el tamaño de la tipografia */
+    text-transform: uppercase; /* Texto en mayusculas */
+    font-weight: bold; /* Fuente en negrita o bold */
+    color: rgba(0, 0, 0, 0.9); /* Color del texto */
+    border-radius: 5px; /* Borde del boton */
+    letter-spacing: 2px; /* Espacio entre letras */
+    background-color: rgba(255, 255, 255, 0.6); /* Color de fondo */
+    padding: 18px 30px; /* Relleno del boton */
+    position: fixed;
+    top: 170px;
+    right: 50px;
+    transition: all 300ms ease 0ms;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+    z-index: 99;
+    }
+    .btn-flotante:hover {
+    background-color: #ffffff; /* Color de fondo al pasar el cursor */
+    box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.3);
+    transform: translateY(-7px);
+    }
+    @media only screen and (max-width: 600px) {
+        .btn-flotante {
+        font-size: 14px;
+        padding: 12px 20px;
+        right: 20px;
+        }
+    }
+</style>
+
+
 @endsection
 
 <div class="row sales layout-top-spacing">
@@ -28,7 +61,10 @@
                                     <?php
                                     $DateAndTime = date('d-m-Y', time());  
                                     echo " $DateAndTime.";
-                                    ?><br/>  
+                                    ?><br/> 
+                                    
+                                    <b>Descuento:</b> {{$descuento}} Bs
+                                    <br>
                                     {{-- <b>Registrado por: </b> 
                                     EMANUEL<br/> --}}
 
@@ -246,7 +282,17 @@
             </div>
     </div>
 
-    <br>
+    @if($descuento == 0)
+    <a href="#" class="btn-flotante">Descuento {{$descuento}} Bs</a>
+    @else
+    
+        @if($descuento > 0)
+        <a href="#" class="btn-flotante">Descuento {{$descuento}} Bs</a>
+        @else
+        <a href="#" class="btn-flotante">Recargo {{$descuento*-1}} Bs</a>
+        @endif
+
+    @endif
 
 </div>
 

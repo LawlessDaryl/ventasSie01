@@ -22,58 +22,58 @@
             </thead>
             <tbody>
                 @foreach ($cart as $item)
-                <tr>
-                    {{-- Imagen Producto --}}
-                    <td class="text-center">
-                        @if (count($item->attributes) > 0)
-                        <span>
-                            <img src="{{ asset('storage/productos/' . $item->attributes[0]) }}" alt="imágen del producto" height="40" class="rounded">
-                        </span>
-                        @endif
-                    </td>
-                    {{-- Descripción Producto --}}
-                    <td>
-                        {{ $item->name }}
-                    </td>
-                    {{-- Precio --}}
-                    <td class="text-center">Bs{{ number_format($item->price, 2) }}</td>
-                    
-                    <td class="text-center">
-                        <input type="number" 
-                        id="p{{$item->id}}" 
-                        wire:change="precioventa({{$item->id}}, $('#p' + {{$item->id}}).val() )"
-                        class="form-control" 
-                        value="{{ number_format($item->price, 2) }}">
-                    </td>
-                    {{-- Cantidad --}}
-                    <td>
-                        <input type="number" maxlength="{{$item->stock}}" max="{{$item->stock}}"
-                        id="r{{$item->id}}" 
-                        wire:change="UpdateQty({{$item->id}}, $('#r' + {{$item->id}}).val() )"
-                        style="font-size: 1rem!important;" 
-                        class="form-control text-center" 
-                        value="{{$item->quantity}}">
-                    </td>
-                    {{-- Importe --}}
-                    <td class="text-center">
-                        <h6>{{ $item->price * $item->quantity, 2 }}</h6>
-                    </td>
+                    <tr>
+                        {{-- Imagen Producto --}}
+                        <td class="text-center">
+                            @if (count($item->attributes) > 0)
+                            <span>
+                                <img src="{{ asset('storage/productos/' . $item->attributes[0]) }}" alt="imágen del producto" height="40" class="rounded">
+                            </span>
+                            @endif
+                        </td>
+                        {{-- Descripción Producto --}}
+                        <td>
+                            {{ $item->name }}
+                        </td>
+                        {{-- Precio --}}
+                        <td class="text-center">Bs{{ number_format($item->price, 2) }}</td>
+                        
+                        <td class="text-center">
+                            <input type="number" 
+                            id="pp{{$item->id}}" 
+                            wire:change="precioventa({{$item->id}}, $('#pp' + {{$item->id}}).val() )"
+                            class="form-control" 
+                            value="{{ $item->price }}" max="{{ $item->price }}">
+                        </td>
+                        {{-- Cantidad --}}
+                        <td>
+                            <input type="number" maxlength="{{$item->stock}}" max="{{$item->stock}}"
+                            id="r{{$item->id}}" 
+                            wire:change="UpdateQty({{$item->id}}, $('#r' + {{$item->id}}).val() )"
+                            style="font-size: 1rem!important;" 
+                            class="form-control text-center" 
+                            value="{{$item->quantity}}">
+                        </td>
+                        {{-- Importe --}}
+                        <td class="text-center">
+                            <h6>{{ $item->price * $item->quantity, 2 }}</h6>
+                        </td>
 
 
-                    {{-- Acciones --}}
-                    <td class="text-center">
-                        <button onclick="Confirm('{{ $item->id }}','removeItem','¿Confirmas eliminar el Registro?')" class="btn btn-dark mbmobile">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                        <button wire:click.prevent="decreaseQty({{ $item->id }})" class="btn btn-dark mbmobile">
-                            <i class="fas fa-minus"></i>
-                        </button>
+                        {{-- Acciones --}}
+                        <td class="text-center">
+                            <button onclick="Confirm('{{ $item->id }}','removeItem','¿Confirmas Eliminar el Registro?')" class="btn btn-dark mbmobile">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                            <button wire:click.prevent="decreaseQty({{ $item->id }})" class="btn btn-dark mbmobile">
+                                <i class="fas fa-minus"></i>
+                            </button>
 
-                        <button wire:click.prevent="increaseQty({{ $item->id }})" class="btn btn-dark mbmobile">
-                            <i class="fas fa-plus"></i>
-                        </button>
-                    </td>
-                </tr>
+                            <button wire:click.prevent="increaseQty({{ $item->id }})" class="btn btn-dark mbmobile">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </td>
+                    </tr>
                 @endforeach
             </tbody>
         </table>
@@ -89,7 +89,7 @@
             <br>
             <br>
             
-        <h5 class="text-center text-muted">Agregar productos a la venta</h5>
+        <h5 class="text-center text-muted">AGREGAR PRODUCTOS A LA VENTA</h5>
 
             <br>
             <br>
