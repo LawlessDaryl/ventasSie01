@@ -132,7 +132,7 @@
                                             </td> --}}
                                         @endforeach
                                         <td class="text-center">
-                                            <h6>{{ $d->marca }} {{ $d->categoria->nombre }}</h6>
+                                            <h6>{{ $d->categoria->nombre }} {{ $d->marca }}</h6>
                                         </td>
                                         @foreach ($d->movservices as $mv)
                                             <td class="text-center">
@@ -172,7 +172,7 @@
                                             @endif
                                         @endforeach
                                         <td class="text-center">
-                                            <h6>{{ $d2->marca }} {{ $d2->categoria->nombre }}</h6>
+                                            <h6>{{ $d2->categoria->nombre }} {{ $d2->marca }}</h6>
                                         </td>
                                         @foreach ($d2->movservices as $mv2)
                                             @if ($mv2->movs->type == 'PROCESO' && $mv2->movs->status == 'ACTIVO')
@@ -213,7 +213,7 @@
                                         @endif
                                     @endforeach
                                     <td class="text-center">
-                                        <h6>{{ $d3->marca }} {{ $d3->categoria->nombre }}</h6>
+                                        <h6>{{ $d3->categoria->nombre }} {{ $d3->marca }}</h6>
                                     </td>
                                     @foreach ($d3->movservices as $mv3)
                                         @if ($mv3->movs->type == 'TERMINADO' && $mv3->movs->status == 'ACTIVO')

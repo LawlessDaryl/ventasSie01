@@ -121,7 +121,26 @@
             <div class="modal-footer">
 
                 <ul class="tabs tab-pills">
+                {{-- @php
+                    $cantidadServ = 0
+                @endphp
+                @foreach($orderservice->services as $serv)
+                    {{ $cantidadServ++}}
+                    {{$x=$cantidadServ}}
+                @endforeach
+
+                <a class="btn btn-dark mb-2" 
+                    @if($cantidadServ > 0)
+                        @while ($x>$cantidadServ)
+                            href="{{ url('reporte/pdf' . '/' . $orderservice) }}" target="_blank" 
+                            {{$x=$x-1}}
+                        @endwhile
+                    @else
+                        href="{{ url('reporte/pdf' . '/' . $orderservice) }}" target="_blank" 
+                    @endif
                     
+                    wire:click="ResetSession">Guardar</a> --}}
+
                     <a class="btn btn-dark mb-2" href="{{ url('reporte/pdf' . '/' . $orderservice) }}" target="_blank" wire:click="ResetSession">Guardar</a>
                     
                     <button class="btn btn-dark mb-2" wire:click="ResetSession">Salir</button>

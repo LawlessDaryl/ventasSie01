@@ -19,9 +19,14 @@
     </style>
 
 <body>
+    @foreach ($datos->services as $key => $item2)
+    @if (count($datos->services) - 1 != $key)
+    <div style="page-break-after: always">
+    @endif
     <section class="header" style="top: -290px; left:-30px">
         <table style=" font-size: 11px;">
             <tr>
+                {{-- Primera columna --}}
                 <td style="width: 4.3cm; vertical-align: top; margin-left: 5px; margin-right:5px">
                     <div style=" font-size: 9pt; text-align: center;">
                         <div>
@@ -32,52 +37,80 @@
                     <hr
                         style="border-color: black; margin-top: 0px; margin-bottom: 3px; margin-left: 5px; margin-right:5px">
                     <div style="text-align: center; font-size: 7pt;">
-                        CLIENTE: <b>{{ $data[0]->nombreC }}</b>
+                        <b>CLIENTE: </b>{{ $data[0]->nombreC }}
                         
                     </div>
                     <div style=" font-size: 7pt; line-height: 12px">
-                        CELULAR: <b>{{ $data[0]->celular }}</b><br>
-                        TELÉFONO: <b>{{ $data[0]->telefono }}</b><br>
-                        <b>CANT.:{{ $datos->services->count() }}</b>&nbsp;&nbsp;
+                        @if($data[0]->telefono != 0)
+                            <b>CELULAR: </b>{{ $data[0]->celular }} - {{ $data[0]->telefono }}<br>
+                        @else
+                            <b>CELULAR: </b>{{ $data[0]->celular }}<br>
+                        @endif
+                        <b>SERVICIO: </b>{{ $loop->iteration }}&nbsp;&nbsp;<br>
 
                         <b>DESCRIPCIÓN: </b>
                         @php
                             $x=0;
                         @endphp
-                        @foreach ($datos->services as $item)
-                            @php
-                                if($x>0){
-                                    $n='|';
-                                }else{
-                                    $n=null;
-                                }
-                                $x++;
-                            @endphp
-                            {{$n}} {{ $item->categoria->nombre }} {{ $item->marca }} {{$n}}
+                        @foreach ($datos->services as $key2 => $item)
+                            @if($key2== $key)
+                            {{-- {{$loop->iteration}} --}}
+                                @php
+                                    if($x>0){
+                                        $n='|';
+                                    }else{
+                                        $n=null;
+                                    }
+                                    $x++;
+                                @endphp
+                                {{$n}} {{ $item->categoria->nombre }} {{ $item->marca }} {{$item->detalle}}{{$n}}
+                            @endif
                         @endforeach<br>
-                        <b><u>FALLA:</u> </b>
+                        <b>FALLA: </b>
                         @foreach ($datos->services as $item)
-                            {{ $item->falla_segun_cliente }} {{$n}}
+                            @if($item->id== $item2->id)
+                                {{ $item->falla_segun_cliente }} {{$n}}
+                            @endif
                         @endforeach<br>
-                        <b><u>DIAGNOSTICO:</u> </b>
+                        <b>DIAGNÓSTICO: </b>
                         @foreach ($datos->services as $item)
-                            {{ $item->diagnostico }} {{$n}}
+                            @if($item->id== $item2->id)
+                                {{ $item->diagnostico }} {{$n}}
+                            @endif
                         @endforeach<br>
-                        <b><u>SOLUCION:</u> </b>
+                        <b>SOLUCIÓN: </b>
                         @foreach ($datos->services as $item)
-                            {{ $item->solucion }} {{$n}}
+                            @if($item->id== $item2->id)
+                                {{ $item->solucion }} {{$n}}
+                            @endif
                         @endforeach<br>
-                        <b>FECHA ENTREGA APROX.: </b>
+
+                        @php
+                            $today = date('d-m-Y h:i:s', time());
+                        @endphp
+                        <b>F. RECEPCIÓN: </b>{{ \Carbon\Carbon::parse($today)->format('d/m/Y - h:i') }}<br>
+                        
+                        <b>F. ENTREGA: </b>
+
                         @foreach ($datos->services as $item)
-                            {{ $item->fecha_estimada_entrega }} {{$n}}
+                            @if($item->id== $item2->id)
+                                {{ \Carbon\Carbon::parse($item->fecha_estimada_entrega)->format('d/m/Y - h:i') }} {{$n}}
+                            @endif
                         @endforeach<br>
-                        <b>RESPONSABLE TÉCNICO: </b>
+
+                        <div style="font-size: 7pt">
+                            <b>TIPO SERV.: </b>{{ $datos->type_service }}<br>
+                        </div>
+
+                        <b>RESP. TÉCNICO: </b>
                         @foreach ($datos->services as $item)
-                            @foreach($item->movservices as $mm)
-                                @if($mm->movs->status == 'ACTIVO')
-                                    {{$mm->movs->usermov->name}}
-                                @endif
-                            @endforeach
+                            @if($item->id== $item2->id)
+                                @foreach($item->movservices as $mm)
+                                    @if($mm->movs->status == 'ACTIVO')
+                                        {{$mm->movs->usermov->name}} {{$n}}
+                                    @endif
+                                @endforeach
+                            @endif
                         @endforeach
                         <!-- {{ $usuario->name }} --><br>
                     </div>
@@ -88,7 +121,9 @@
                             <td style="text-align: right;">TOTALES:</td>
                             <td style="text-align: right;">
                                 @foreach ($data as $item)
-                                    {{ $item->import }} {{$n}}
+                                    @if($item->id== $item2->id)
+                                        {{ $item->import }} {{$n}}
+                                    @endif
                                 @endforeach
                             </td>
                         </tr>
@@ -96,7 +131,9 @@
                             <td style="text-align: right;">A CUENTA:</td>
                             <td style="text-align: right;">
                                 @foreach ($data as $item)
-                                    {{ $item->on_account }} {{$n}}
+                                    @if($item->id== $item2->id)
+                                        {{ $item->on_account }} {{$n}}
+                                    @endif
                                 @endforeach
                             </td>
                         </tr>
@@ -104,24 +141,18 @@
                             <td style="text-align: right;">SALDO:</td>
                             <td style="text-align: right;">
                                 @foreach ($data as $item)
-                                    {{ $item->saldo }} {{$n}}
+                                    @if($item->id== $item2->id)
+                                        {{ $item->saldo }} {{$n}}
+                                    @endif
                                 @endforeach
                             </td>
                         </tr>
                     </table>
-                    <div style="font-size: 7pt">
-                        TIPO SERV.:{{ $datos->type_service }}<br>
-                        @php
-                            $today = date('d-m-Y h:i:s', time());
-                        @endphp
-                        {{$today}}
-                        {{-- 27/01/2022 06:25:15 pm --}} 
                     
-                    </div>
                 </td>
 
                 <td style="width: 5px;"></td> {{-- espaciador entre columnas --}}
-
+                {{-- Aqui comienza la segunda columna --}}
                 <td style="width: 15.3cm; vertical-align: top; margin-left: 5px; margin-right:5px;">
                     <div>
                         <table>
@@ -187,7 +218,9 @@
                                                     <td style="text-align: right;">TOTAL:</td>
                                                     <td style="text-align: right;">
                                                         @foreach ($data as $item)
-                                                        {{ $item->import }}
+                                                            @if($item->id== $item2->id)
+                                                                {{ $item->import }}
+                                                            @endif
                                                         @endforeach
                                                     </td>
                                                 </tr>
@@ -195,7 +228,9 @@
                                                     <td style="text-align: right;">A CUENTA:</td>
                                                     <td style="text-align: right;">
                                                         @foreach ($data as $item)
-                                                            {{ $item->on_account }} 
+                                                            @if($item->id== $item2->id)
+                                                                {{ $item->on_account }} 
+                                                            @endif
                                                         @endforeach
                                                     </td>
                                                 </tr>
@@ -203,7 +238,9 @@
                                                     <td style="text-align: right;">SALDO:</td>
                                                     <td style="text-align: right;">
                                                         @foreach ($data as $item)
-                                                            {{ $item->saldo }} 
+                                                            @if($item->id== $item2->id)
+                                                                {{ $item->saldo }}
+                                                            @endif
                                                         @endforeach
                                                     </td>
                                                 </tr>
@@ -218,48 +255,60 @@
                         <table>
                             <tr>
                                 <td style="font-size: 10px; width: 10cm">
-                                    <b>CANT.: </b>{{ $datos->services->count() }}<br>
+                                    <b>SERVICIO: </b>{{ $datos->services->count() }}<br>
                                     <b>DESCRIPCIÓN: </b>
                                     @php
                                         $x=0;
                                     @endphp
                                     @foreach ($datos->services as $item)
-                                        @php
-                                            if($x>0){
-                                                $n='|';
-                                            }else{
-                                                $n=null;
-                                            }
-                                            $x++;
-                                        @endphp
-                                        {{$n}} {{ $item->categoria->nombre }} {{ $item->marca }} {{$n}}
+                                        @if($item->id== $item2->id)
+                                            @php
+                                                if($x>0){
+                                                    $n='|';
+                                                }else{
+                                                    $n=null;
+                                                }
+                                                $x++;
+                                            @endphp
+                                            {{$n}} {{ $item->categoria->nombre }} {{ $item->marca }} {{$n}}
+                                        @endif
                                     @endforeach<br>
                                     <b>FALLA SEGUN CLIENTE: </b>
                                     @foreach ($datos->services as $item)
-                                        {{ $item->falla_segun_cliente }} {{$n}}
+                                        @if($item->id== $item2->id)
+                                            {{ $item->falla_segun_cliente }} {{$n}}
+                                        @endif
                                     @endforeach<br>
-                                    <b>DIAGNOSTICO: </b>
+                                    <b>DIAGNÓSTICO: </b>
                                     @foreach ($datos->services as $item)
-                                        {{ $item->diagnostico }} {{$n}}
+                                        @if($item->id== $item2->id)
+                                            {{ $item->diagnostico }} {{$n}}
+                                        @endif
                                     @endforeach<br>
-                                    <b>SOLUCION: </b>
+                                    <b>SOLUCIÓN: </b>
                                     @foreach ($datos->services as $item)
-                                        {{ $item->solucion }} {{$n}}
+                                        @if($item->id== $item2->id)
+                                            {{ $item->solucion }} {{$n}}
+                                        @endif
                                     @endforeach<br>
                                     <b>FECHA ENTREGA APROX.: </b>
                                     @foreach ($datos->services as $item)
-                                        {{ $item->fecha_estimada_entrega }} {{$n}}
+                                        @if($item->id== $item2->id)
+                                            {{ \Carbon\Carbon::parse($item->fecha_estimada_entrega)->format('d/m/Y - h:i') }} {{$n}}
+                                        @endif
                                     @endforeach<br>
                                     <b>RESPONSABLE TÉCNICO: </b>
                                     @foreach ($datos->services as $item)
-                                        @foreach($item->movservices as $mm)
-                                            @if($mm->movs->status == 'ACTIVO')
-                                                {{$mm->movs->usermov->name}}
-                                            @endif
-                                        @endforeach
+                                        @if($item->id== $item2->id)
+                                            @foreach($item->movservices as $mm)
+                                                @if($mm->movs->status == 'ACTIVO')
+                                                    {{$mm->movs->usermov->name}} {{$n}}
+                                                @endif
+                                            @endforeach
+                                        @endif
                                     @endforeach
                                     <!-- {{ $usuario->name }} --><br>
-                                    <b>ESTADO: {{ $data[0]->type }}</b>
+                                    <b>ESTADO: </b>{{ $data[0]->type }}
                                 </td>
 
                             </tr>
@@ -273,13 +322,15 @@
                             <tr>
                                 <td>
                                     <div class="" style="text-align: center">
-                                        RESPONSABLE TÉCNICO <br>
+                                        <b>RESPONSABLE TÉCNICO </b><br>
                                         @foreach ($datos->services as $item)
-                                            @foreach($item->movservices as $mm)
-                                                @if($mm->movs->status == 'ACTIVO')
-                                                    {{$mm->movs->usermov->name}}
-                                                @endif
-                                            @endforeach
+                                            @if($item->id== $item2->id)
+                                                @foreach($item->movservices as $mm)
+                                                    @if($mm->movs->status == 'ACTIVO')
+                                                        {{$mm->movs->usermov->name}} {{$n}}
+                                                    @endif
+                                                @endforeach
+                                            @endif
                                         @endforeach
                                         <!-- {{ $usuario->name }} -->
                                     </div>
@@ -289,7 +340,7 @@
 
                                 <td>
                                     <div class="text-center">
-                                        CLIENTE<br>
+                                        <b>CLIENTE</b><br>
                                         {{ $data[0]->nombreC }}
                                     </div>
                                 </td>
@@ -323,6 +374,10 @@
             </tr>
         </table>
     </section>
+    @if (count($datos->services) - 1 != $key)
+  </div>
+    @endif
+    @endforeach
 </body>
 
 </html>
