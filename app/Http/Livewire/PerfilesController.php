@@ -49,7 +49,7 @@ class PerfilesController extends Component
         $this->meses = 0;
         $this->expirationNueva = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->tipopago = 'EFECTIVO';
-        $this->importe = 0;
+        $this->importe = '';
         $this->mostrartabla2 = 0;
         $this->perfil = [];
         $this->selected_id = 0;
@@ -197,7 +197,8 @@ class PerfilesController extends Component
                         'c.nombre as clienteNombre',
                         'c.celular as clienteCelular',
                         'plans.done as done',
-                        DB::raw('0 as horas')
+                        DB::raw('0 as horasPlan'),
+                        DB::raw('0 as horasCuenta')
                     )
                     ->where('plans.type_plan', 'PERFIL')
                     ->where('plans.status', 'VIGENTE')
@@ -213,9 +214,16 @@ class PerfilesController extends Component
                     $date2 = new DateTime("now");
                     $diff = $date2->diff($date1);
                     if ($diff->invert != 1) {
-                        $c->horas = (($diff->days * 24)) + ($diff->h);
+                        $c->horasPlan = (($diff->days * 24)) + ($diff->h);
                     } else {
-                        $c->horas = '0';
+                        $c->horasPlan = '0';
+                    }
+                    $date1 = new DateTime($c->expiration);
+                    $diff = $date2->diff($date1);
+                    if ($diff->invert != 1) {
+                        $c->horasCuenta = (($diff->days * 24)) + ($diff->h);
+                    } else {
+                        $c->horasCuenta = '0';
                     }
                 }
             }
@@ -324,12 +332,25 @@ class PerfilesController extends Component
         } else {
             $prof = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
                 ->select(
-                    'plans.*'
+                    'plans.*',
+                    DB::raw('0 as horasPlan'),
+                    DB::raw('0 as horasCuenta')
                 )
+                ->where('plans.status', 'VIGENTE')
                 ->where('plans.type_plan', 'COMBO')
                 /* ->whereColumn('plans.id', '=', 'ap.plan_id') */
                 ->orderBy('plans.created_at', 'desc')
                 ->paginate($this->pagination);
+            foreach ($prof as $c) {
+                $date1 = new DateTime($c->expiration_plan);
+                $date2 = new DateTime("now");
+                $diff = $date2->diff($date1);
+                if ($diff->invert != 1) {
+                    $c->horasPlan = (($diff->days * 24)) + ($diff->h);
+                } else {
+                    $c->horasPlan = '0';
+                }
+            }
         }
         /* CALCULAR LA FECHA DE EXPIRACION NUEVA SEGUN LA CANTIDAD DE MESES A RENOVAR */
         if ($this->meses > 0) {
@@ -1025,9 +1046,6 @@ class PerfilesController extends Component
         $perfil2 = Profile::find($this->perfil2ID);
         $perfil3 = Profile::find($this->perfil3ID);
 
-        $this->importe = 35;
-        $this->importe *= $this->meses;
-
         DB::beginTransaction();
         try {
             $mv = Movimiento::create([
@@ -1241,7 +1259,7 @@ class PerfilesController extends Component
 
             DB::commit();
             $this->resetUI();
-            $this->emit('item-accion', 'Se renovó el combo');
+            $this->emit('acciones-combo-hide', 'Se renovó el combo');
         } catch (Exception $e) {
             DB::rollback();
             $this->emit('item-error', 'ERROR' . $e->getMessage());
@@ -1533,13 +1551,7 @@ class PerfilesController extends Component
             ->get()->first();
 
         $perfil = Profile::find($datos->Profileid);
-        foreach ($perfil->CuentaPerfil as  $value) {
-            if ($value->status == 'ACTIVO') {
-                /* CALCULAR EL IMPORTE SEGUN EL PRECIO DEL PERFIL Y LA CANTIDAD DE MESES A RENOVAR */
-                $this->importe += $value->Cuenta->Plataforma->precioPerfil;
-                $this->importe *= $this->meses;
-            }
-        }
+
         DB::beginTransaction();
         try {
             $mv = Movimiento::create([
@@ -1920,7 +1932,7 @@ class PerfilesController extends Component
         $this->meses = 0;
         $this->expirationNueva = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->tipopago = 'EFECTIVO';
-        $this->importe = 0;
+        $this->importe = '';
         $this->mostrartabla2 = 0;
         $this->perfil = [];
         $this->selected_id = 0;
@@ -1966,7 +1978,6 @@ class PerfilesController extends Component
         $this->meses = 0;
         $this->expirationNueva = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->tipopago = 'EFECTIVO';
-        $this->importe = 0;
         $this->mostrartabla2 = 0;
         $this->perfil = [];
         $this->selected_id = 0;

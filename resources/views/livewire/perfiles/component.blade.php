@@ -10,18 +10,6 @@
 
             <div class="form-group">
                 <div class="row">
-                    {{-- <div class="col-sm-12 col-md-2">
-                        <div class="form-group">
-                            <div class="n-chk">
-                                <label class="new-control new-radio radio-classic-primary">
-                                    <input type="radio" class="new-control-input" name="custom-radio-4" id="libres"
-                                        value="libres" wire:model="condicional">
-                                    <span class="new-control-indicator"></span>
-                                    <h6>LIBRES</h6>
-                                </label>
-                            </div>
-                        </div>
-                    </div> --}}
                     <div class="col-sm-12 col-md-2">
                         <div class="form-group">
                             <div class="n-chk">
@@ -107,20 +95,21 @@
                                                 <strong>PIN: </strong>{{ $p->pin }}
                                             </h6>
                                         </td>
-                                        <td>
+                                        <td
+                                            @if ($condicional == 'ocupados') style="{{ $p->horasCuenta <= 72 ? 'background-color: #FF0000 !important' : 'background-color: #09ed3d !important' }}" @endif>
                                             <h6 class="text-center">
-                                                {{ \Carbon\Carbon::parse($p->expiration)->format('d:m:Y') }}
+                                                {{ \Carbon\Carbon::parse($p->expiration)->format('d/m/Y') }}
                                             </h6>
                                         </td>
                                         <td>
                                             <h6 class="text-center">
-                                                {{ \Carbon\Carbon::parse($p->plan_start)->format('d:m:Y') }}
+                                                {{ \Carbon\Carbon::parse($p->plan_start)->format('d/m/Y') }}
                                             </h6>
                                         </td>
                                         <td
-                                            @if ($condicional == 'ocupados') style="{{ $p->horas <= 24 ? 'background-color: #FF0000 !important' : 'background-color: #09ed3d !important' }}" @endif>
+                                            @if ($condicional == 'ocupados') style="{{ $p->horasPlan <= 72 ? 'background-color: #FF0000 !important' : 'background-color: #09ed3d !important' }}" @endif>
                                             <h6 class="text-center">
-                                                {{ \Carbon\Carbon::parse($p->expiration_plan)->format('d:m:Y') }}
+                                                {{ \Carbon\Carbon::parse($p->expiration_plan)->format('d/m/Y') }}
                                             </h6>
                                         </td>
                                         @if ($condicional != 'vencidos')
@@ -229,11 +218,20 @@
                                             <h6 class="text-center" style="font-size: 80%">
                                                 @foreach ($p->PlanAccounts as $item)
                                                     @if ($item->status == 'ACTIVO')
-                                                        <a href="javascript:void(0)" wire:click="AccionesCuenta()"
-                                                            class="btn btn-primary" title="Renovar">
-                                                            {{ \Carbon\Carbon::parse($item->Cuenta->expiration_account)->format('d:m:Y') }}
-                                                        </a>
-                                                        <br>
+                                                        @php
+                                                            $date1 = new DateTime($item->Cuenta->expiration_account);
+                                                            $date2 = new DateTime('now');
+                                                            $diff = $date2->diff($date1);
+                                                            if ($diff->invert != 1) {
+                                                                $horasCuenta = $diff->days * 24 + $diff->h;
+                                                            } else {
+                                                                $horasCuenta = '0';
+                                                            }
+                                                        @endphp
+                                                        <h6
+                                                            style="{{ $horasCuenta <= 72 ? 'background-color: #FF0000 !important' : 'background-color: #09ed3d !important' }}">
+                                                            {{ \Carbon\Carbon::parse($item->Cuenta->expiration_account)->format('d/m/Y') }}
+                                                        </h6>
                                                     @endif
                                                 @endforeach
                                             </h6>
@@ -258,11 +256,12 @@
                                         </td>
                                         <td class="text-center">
                                             <h6 class="text-center" style="font-size: 80%">
-                                                {{ \Carbon\Carbon::parse($p->plan_start)->format('d:m:Y') }} </h6>
+                                                {{ \Carbon\Carbon::parse($p->plan_start)->format('d/m/Y') }} </h6>
                                         </td>
-                                        <td class="text-center">
+                                        <td class="text-center"
+                                            style="{{ $p->horasPlan <= 72 ? 'background-color: #FF0000 !important' : 'background-color: #09ed3d !important' }}">
                                             <h6 class="text-center" style="font-size: 80%">
-                                                {{ \Carbon\Carbon::parse($p->expiration_plan)->format('d:m:Y') }}
+                                                {{ \Carbon\Carbon::parse($p->expiration_plan)->format('d/m/Y') }}
                                             </h6>
                                         </td>
                                         <td class="text-center">
@@ -281,8 +280,8 @@
                                             @endif
                                         </td>
                                         <td class="text-center"
-                                            style="{{ $p->ready == 'NO' ? 'background-color: #d97171 !important' : 'background-color: #09ed3d !important' }}">
-                                            @if ($p->ready == 'NO')
+                                            style="{{ $p->done == 'NO' ? 'background-color: #d97171 !important' : 'background-color: #09ed3d !important' }}">
+                                            @if ($p->done == 'NO')
                                                 <a href="javascript:void(0)" class="btn btn-dark"
                                                     onclick="ConfirmHecho('{{ $p->id }}')">
                                                     <i class="fa-regular fa-circle-exclamation"></i>

@@ -87,7 +87,7 @@
                                             <a href="javascript:void(0)"
                                                 wire:click="AccionesCuenta({{ $acounts->id }})"
                                                 class="btn btn-primary" title="Renovar">
-                                                {{ \Carbon\Carbon::parse($acounts->expiration_account)->format('d:m:Y') }}
+                                                {{ \Carbon\Carbon::parse($acounts->expiration_account)->format('d/m/Y') }}
                                             </a>
                                         </td>
                                         <td>
@@ -164,25 +164,30 @@
                                             <h6 class="text-center">{{ $acounts->password_account }}</h6>
                                         </td>
                                         <td class="text-center"
-                                            style="{{ $acounts->dias <= 5 ? 'background-color: #FF0000 !important' : 'background-color: #09ed3d !important' }}">
-                                            <a href="javascript:void(0)"
-                                                wire:click="AccionesCuenta({{ $acounts->id }})"
-                                                class="btn btn-primary" title="Renovar">
-                                                {{ \Carbon\Carbon::parse($acounts->expiration_account)->format('d:m:Y') }}
-                                            </a>
+                                            @if ($condicional == 'ocupados') style="{{ $acounts->dias <= 5 ? 'background-color: #FF0000 !important' : 'background-color: #09ed3d !important' }}" @endif>
+                                            @if ($condicional == 'ocupados')
+                                                <a href="javascript:void(0)"
+                                                    wire:click="AccionesCuenta({{ $acounts->id }})"
+                                                    class="btn btn-primary" title="Renovar">
+                                                    {{ \Carbon\Carbon::parse($acounts->expiration_account)->format('d/m/Y') }}
+                                                </a>
+                                            @else
+                                                <h6>{{ \Carbon\Carbon::parse($acounts->expiration_account)->format('d/m/Y') }}
+                                                </h6>
+                                            @endif
                                         </td>
                                         <td>
                                             <h6 class="text-center">{{ $acounts->number_profiles }}</h6>
                                         </td>
                                         <td>
                                             <h6 class="text-center">
-                                                {{ \Carbon\Carbon::parse($acounts->plan_start)->format('d:m:Y') }}
+                                                {{ \Carbon\Carbon::parse($acounts->plan_start)->format('d/m/Y') }}
                                             </h6>
                                         </td>
                                         <td
-                                            @if ($condicional == 'ocupados') style="{{ $acounts->horas <= 24 ? 'background-color: #FF0000 !important' : 'background-color: #09ed3d !important' }}" @endif>
+                                            @if ($condicional == 'ocupados') style="{{ $acounts->horas <= 72 ? 'background-color: #FF0000 !important' : 'background-color: #09ed3d !important' }}" @endif>
                                             <h6 class="text-center">
-                                                {{ \Carbon\Carbon::parse($acounts->expiration_plan)->format('d:m:Y') }}
+                                                {{ \Carbon\Carbon::parse($acounts->expiration_plan)->format('d/m/Y') }}
                                             </h6>
                                         </td>
                                         @if ($condicional != 'vencidos')

@@ -101,7 +101,7 @@
                                         </td>
                                         <td class="text-center">
                                             <h6 class="text-center">
-                                                {{ \Carbon\Carbon::parse($p->accexp)->format('d:m:Y') }}</h6>
+                                                {{ \Carbon\Carbon::parse($p->accexp)->format('d/m/Y') }}</h6>
                                         </td>
                                         <td class="text-center">
                                             <h6 class="text-center">{{ $p->nameprofile }} {{ $p->pin }}
@@ -112,11 +112,11 @@
                                         </td>
                                         <td class="text-center">
                                             <h6 class="text-center">
-                                                {{ \Carbon\Carbon::parse($p->planinicio)->format('d:m:Y') }} </h6>
+                                                {{ \Carbon\Carbon::parse($p->planinicio)->format('d/m/Y') }} </h6>
                                         </td>
                                         <td class="text-center">
                                             <h6 class="text-center">
-                                                {{ \Carbon\Carbon::parse($p->planfin)->format('d:m:Y') }} </h6>
+                                                {{ \Carbon\Carbon::parse($p->planfin)->format('d/m/Y') }} </h6>
                                         </td>
                                         <td class="text-center">
                                             <a href="javascript:void(0)"
@@ -186,18 +186,18 @@
                                         </td>
                                         <td class="text-center">
                                             <h6 class="text-center">
-                                                {{ \Carbon\Carbon::parse($p->accexp)->format('d:m:Y') }}</h6>
+                                                {{ \Carbon\Carbon::parse($p->accexp)->format('d/m/Y') }}</h6>
                                         </td>
                                         <td class="text-center">
                                             <h6 class="text-center">{{ $p->importe }}</h6>
                                         </td>
                                         <td class="text-center">
                                             <h6 class="text-center">
-                                                {{ \Carbon\Carbon::parse($p->planinicio)->format('d:m:Y') }} </h6>
+                                                {{ \Carbon\Carbon::parse($p->planinicio)->format('d/m/Y') }} </h6>
                                         </td>
                                         <td class="text-center">
                                             <h6 class="text-center">
-                                                {{ \Carbon\Carbon::parse($p->planfin)->format('d:m:Y') }} </h6>
+                                                {{ \Carbon\Carbon::parse($p->planfin)->format('d/m/Y') }} </h6>
                                         </td>
                                         <td class="text-center">
                                             <a href="javascript:void(0)"
@@ -291,7 +291,7 @@
                                             <h6 class="text-center">
                                                 @foreach ($p->PlanAccounts as $item)
                                                     @if ($item->status == 'ACTIVO')
-                                                        {{ \Carbon\Carbon::parse($item->Cuenta->expiration_account)->format('d:m:Y') }}
+                                                        {{ \Carbon\Carbon::parse($item->Cuenta->expiration_account)->format('d/m/Y') }}
                                                         <br>
                                                     @endif
                                                 @endforeach
@@ -317,11 +317,11 @@
                                         </td>
                                         <td class="text-center">
                                             <h6 class="text-center">
-                                                {{ \Carbon\Carbon::parse($p->plan_start)->format('d:m:Y') }} </h6>
+                                                {{ \Carbon\Carbon::parse($p->plan_start)->format('d/m/Y') }} </h6>
                                         </td>
                                         <td class="text-center">
                                             <h6 class="text-center">
-                                                {{ \Carbon\Carbon::parse($p->expiration_plan)->format('d:m:Y') }}
+                                                {{ \Carbon\Carbon::parse($p->expiration_plan)->format('d/m/Y') }}
                                             </h6>
                                         </td>
                                         <td class="text-center">

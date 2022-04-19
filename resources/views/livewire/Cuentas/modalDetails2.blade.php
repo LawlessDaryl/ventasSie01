@@ -105,7 +105,19 @@
                             </div>
                         </div>
 
-                        <div class="col-sm-12 col-md-12">
+                        <div class="col-sm-12 col-md-4">
+                            <div class="form-group">
+                                <label>
+                                    <h6>Importe</h6>
+                                </label>
+                                <input wire:model.lazy="importe" class="form-control" type="number">
+                                @error('importe')
+                                    <span class="text-danger er">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-8">
                             <div class="form-group">
                                 <h6>Observaciones del plan // Escriba un nuevo comentario si va a renovar o vencer</h6>
                                 <input type="text" wire:model.lazy="observacionesTrans" class="form-control">
@@ -181,7 +193,7 @@
                                                             </td>
                                                             <td class="text-center">
                                                                 <h6 class="text-center">
-                                                                    {{ $cuent->expiration_account }}
+                                                                    {{ \Carbon\Carbon::parse($cuent->expiration_account)->format('d/m/Y') }}
                                                                 </h6>
                                                             </td>
                                                             <td class="text-center">

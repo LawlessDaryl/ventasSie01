@@ -52,7 +52,7 @@ class PlanesController extends Component
         $this->nombre = '';
         $this->celular = '';
         $this->nit = 0;
-        $this->importe = 0;
+        $this->importe = '';
         $this->condicion = 0;
         $this->select = 1;
         $this->mostrartabla = 0;
@@ -421,7 +421,7 @@ class PlanesController extends Component
             } elseif ($this->cuentaperfil == 'PERFIL') {  /* MOSTRAR LOS PERFILES LIBRES */
                 $this->mostrartabla = 0;
                 $this->mostrartabla = 2;
-                /* CUENTAS ENTERAS PARA CREAR UN PERFIL SI ES QUE NO TIENE CREADOS */
+                /* CUENTAS CON PERFILES DISPONIBLES */
                 $this->cuentasEnteras = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                     ->join('emails as e', 'accounts.email_id', 'e.id')
                     ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
@@ -698,6 +698,7 @@ class PlanesController extends Component
     public function CrearCombo()
     {
         $this->resetUI();
+        $this->importe = 35;
         $this->emit('show-modalCombos', '');
     }
 
@@ -755,6 +756,7 @@ class PlanesController extends Component
             'perfil1id' => 'required_if:plataforma1Require,NO',
             'perfil2id' => 'required_if:plataforma2Require,NO',
             'perfil3id' => 'required_if:plataforma3Require,NO',
+            'importe' => 'required|integer|gt:0',
         ];
         $messages = [
             'nombre.required' => 'El nombre del cliente es requerido',
@@ -772,6 +774,9 @@ class PlanesController extends Component
             'perfil1id.required_if' => 'Seleccione una cuenta de la plataforma 1',
             'perfil2id.required_if' => 'Seleccione una cuenta de la plataforma 2',
             'perfil3id.required_if' => 'Seleccione una cuenta de la plataforma 3',
+            'importe.required' => 'El importe es requerido',
+            'importe.integer' => 'El importe debe ser un número',
+            'importe.gt' => 'El importe debe ser mayor a 0',
         ];
 
         $this->validate($rules, $messages);
@@ -833,8 +838,6 @@ class PlanesController extends Component
                     'procedencia_cliente_id' => 1,
                 ]);
             }
-
-            $this->importe = 35;
 
             /* CREAR EL MOVIMIENTO */
             $mv = Movimiento::create([
@@ -1126,6 +1129,7 @@ class PlanesController extends Component
             'expiration_plan' => 'required|not_in:0000-00-00',
             'accounts' => 'required_if:mostrartabla,1',
             'profiles' => 'required_if:mostrartabla,2',
+            'importe' => 'required|integer|gt:0',
         ];
         $messages = [
             'plataforma.required' => 'La Plataforma es requerida',
@@ -1145,6 +1149,9 @@ class PlanesController extends Component
             'expiration_plan.not_in' => 'Seleccione una fecha valida',
             'accounts.required_if' => 'No tiene cuentas seleccionadas',
             'profiles.required_if' => 'Selecciona una cuenta para el perfil',
+            'importe.required' => 'El importe es requerido',
+            'importe.integer' => 'El importe debe ser un número',
+            'importe.gt' => 'El importe debe ser mayor a 0',
         ];
 
         $this->validate($rules, $messages);
@@ -1190,13 +1197,14 @@ class PlanesController extends Component
                 /* SI SE SELECCIONÓ CUENTA ENTERA */
                 foreach ($this->accounts as $accp) {
                     /* CALCULAR EL IMPORTE SEGUN LA PLATAFORMA Y SI ES ENTERA O PERFIL */
-                    $this->importe += $accp->Plataforma->precioEntera;
-                    $this->importe *= $this->meses;
+                    /* $this->importe += $accp->Plataforma->precioEntera;
+                    $this->importe *= $this->meses; */
+                    $importeIndividual = $this->importe / $this->accounts->count();
                     /* CREAR EL MOVIMIENTO */
                     $mv = Movimiento::create([
                         'type' => 'TERMINADO',
                         'status' => 'ACTIVO',
-                        'import' => $this->importe,
+                        'import' => $importeIndividual,
                         'user_id' => Auth()->user()->id,
                     ]);
                     /* PONER LA CUENTA EN OCUPADO */
@@ -1210,16 +1218,13 @@ class PlanesController extends Component
                         ->get()->first();
 
                     $inversioncuenta->type = 'CUENTA';
-                    $inversioncuenta->imports = $this->importe;
-                    $inversioncuenta->ganancia = $this->importe - $inversioncuenta->price;
+                    $inversioncuenta->imports = $importeIndividual;
+                    $inversioncuenta->ganancia = $importeIndividual - $inversioncuenta->price;
                     $inversioncuenta->save();
-
-                    /* OBTENER FECHA ACTUAL */
-                    $DateAndTime = date('Y-m-d h:i:s', time());
 
                     /* CREAR EL PLAN */
                     $plan = Plan::create([
-                        'importe' => $this->importe,
+                        'importe' => $importeIndividual,
                         'plan_start' => $this->fecha_inicio,
                         'expiration_plan' => $this->expiration_plan,
                         'ready' => 'NO',
@@ -1282,25 +1287,24 @@ class PlanesController extends Component
                         'movimiento_id' => $mv->id,
                         'cliente_id' => $cliente->id
                     ]);
-                    $this->importe = 0;
                     $this->condicional = 'cuentas';
                 }
             } elseif ($this->cuentaperfil == 'PERFIL') {
                 /* SI SE SELECCIONÓ PERFIL */
                 foreach ($this->profiles as $accp) {
                     /* CALCULAR EL IMPORTE SEGUN LA PLATAFORMA Y SI ES ENTERA O PERFIL */
-                    foreach ($accp->CuentaPerfil as  $value) {
+                    /* foreach ($accp->CuentaPerfil as  $value) {
                         if ($value->status == 'SinAsignar') {
                             $this->importe += $value->Cuenta->Plataforma->precioPerfil;
                             $this->importe *= $this->meses;
                         }
-                    }
-
+                    } */
+                    $importeIndividual = $this->importe / $this->profiles->count();
                     /* CREAR EL MOVIMIENTO */
                     $mv = Movimiento::create([
                         'type' => 'TERMINADO',
                         'status' => 'ACTIVO',
-                        'import' => $this->importe,
+                        'import' => $importeIndividual,
                         'user_id' => Auth()->user()->id,
                     ]);
 
@@ -1328,15 +1332,13 @@ class PlanesController extends Component
 
                     $inversioncuenta->type = 'PERFILES';
                     $inversioncuenta->sale_profiles += 1;
-                    $inversioncuenta->imports += $this->importe;
+                    $inversioncuenta->imports += $importeIndividual;
                     $inversioncuenta->ganancia = $inversioncuenta->imports - $inversioncuenta->price;
                     $inversioncuenta->save();
 
-                    /* OBTENER FECHA ACTUAL */
-                    $DateAndTime = date('Y-m-d h:i:s', time());
                     /* CREAR EL PLAN */
                     $plan = Plan::create([
-                        'importe' => $this->importe,
+                        'importe' => $importeIndividual,
                         'plan_start' => $this->fecha_inicio,
                         'expiration_plan' => $this->expiration_plan,
                         'ready' => 'NO',
@@ -1417,7 +1419,6 @@ class PlanesController extends Component
                         'cliente_id' => $cliente->id
                     ]);
 
-                    $this->importe = 0;
                     $this->condicional = 'perfiles';
                 }
             }
@@ -1630,7 +1631,7 @@ class PlanesController extends Component
         $this->nombre = '';
         $this->celular = '';
         $this->nit = 0;
-        $this->importe = 0;
+        $this->importe = '';
         $this->condicion = 0;
         $this->select = 1;
         $this->mostrartabla = 0;

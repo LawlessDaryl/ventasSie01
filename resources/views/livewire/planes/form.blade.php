@@ -194,18 +194,6 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-md-12">
-                        <div class="form-group">
-                            <label>
-                                <h6>Observaciones</h6>
-                            </label>
-                            <input wire:model.lazy="observaciones" class="form-control" name="" rows="5">
-                            @error('observaciones')
-                                <span class="text-danger er">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-
                 </div>
 
                 @error('accounts')
@@ -221,12 +209,19 @@
                                         <table class="table table-hover table-sm" style="width:100%">
                                             <thead class="text-white" style="background: #3B3F5C">
                                                 <tr>
-                                                    <th class="table-th text-withe text-center">Email-Nombre Usuario
+                                                    <th class="table-th text-withe text-center" style="font-size: 80%">
+                                                        Email-Nombre Usuario
                                                     </th>
-                                                    <th class="table-th text-withe text-center">Contraseña</th>
-                                                    <th class="table-th text-withe text-center">Vencimiento</th>
-                                                    <th class="table-th text-withe text-center">Precio</th>
-                                                    <th class="table-th text-withe text-center">Seleccionar</th>
+                                                    <th class="table-th text-withe text-center" style="font-size: 80%">
+                                                        Contraseña</th>
+                                                    <th class="table-th text-withe text-center" style="font-size: 80%">
+                                                        Max. perfiles</th>
+                                                    <th class="table-th text-withe text-center" style="font-size: 80%">
+                                                        Vencimiento</th>
+                                                    <th class="table-th text-withe text-center" style="font-size: 80%">
+                                                        Precio</th>
+                                                    <th class="table-th text-withe text-center" style="font-size: 80%">
+                                                        Seleccionar</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -250,8 +245,12 @@
                                                             </h6>
                                                         </td>
                                                         <td class="text-center">
+                                                            <h6 class="text-center">{{ $ap->number_profiles }}
+                                                            </h6>
+                                                        </td>
+                                                        <td class="text-center">
                                                             <h6 class="text-center">
-                                                                {{ \Carbon\Carbon::parse($ap->expiration_account)->format('d:m:Y') }}
+                                                                {{ \Carbon\Carbon::parse($ap->expiration_account)->format('d/m/Y') }}
                                                             </h6>
                                                         </td>
                                                         <td class="text-center">
@@ -280,13 +279,20 @@
                                             <table class="table table-hover table-sm" style="width:100%">
                                                 <thead class="text-white" style="background: #3B3F5C">
                                                     <tr>
-                                                        <th class="table-th text-withe text-center">Email o Nombre
+                                                        <th class="table-th text-withe text-center"
+                                                            style="font-size: 80%">Email o Nombre
                                                             Usuario
                                                         </th>
-                                                        <th class="table-th text-withe text-center">Contraseña</th>
-                                                        <th class="table-th text-withe text-center">Vencimiento</th>
-                                                        <th class="table-th text-withe text-center">Precio</th>
-                                                        <th class="table-th text-withe text-center">Remover</th>
+                                                        <th class="table-th text-withe text-center"
+                                                            style="font-size: 80%">Contraseña</th>
+                                                        <th class="table-th text-withe text-center"
+                                                            style="font-size: 80%">Max. perfiles</th>
+                                                        <th class="table-th text-withe text-center"
+                                                            style="font-size: 80%">Vencimiento</th>
+                                                        <th class="table-th text-withe text-center"
+                                                            style="font-size: 80%">Precio</th>
+                                                        <th class="table-th text-withe text-center"
+                                                            style="font-size: 80%">Remover</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -303,7 +309,12 @@
                                                             </td>
                                                             <td class="text-center">
                                                                 <h6 class="text-center">
-                                                                    {{ \Carbon\Carbon::parse($ap->expiration_account)->format('d:m:Y') }}
+                                                                    {{ $ap->number_profiles }}
+                                                                </h6>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <h6 class="text-center">
+                                                                    {{ \Carbon\Carbon::parse($ap->expiration_account)->format('d/m/Y') }}
                                                                 </h6>
                                                             </td>
                                                             <td class="text-center">
@@ -322,7 +333,7 @@
                                                     @endforeach
                                                 </tbody>
                                             </table>
-                                            <tfoot>
+                                            {{-- <tfoot>
                                                 <tr>
                                                     <td colspan="1" class="text-left">
                                                         <span><b>TOTAL: </b></span>
@@ -336,7 +347,7 @@
                                                             </strong></span>
                                                     </td>
                                                 </tr>
-                                            </tfoot>
+                                            </tfoot> --}}
                                         </div>
                                     </div>
                                 </div>
@@ -386,7 +397,7 @@
                                                     </td>
                                                     <td class="text-center">
                                                         <h6 class="text-center" style="font-size: 100%">
-                                                            {{ \Carbon\Carbon::parse($ap->expiration_account)->format('d:m:Y') }}
+                                                            {{ \Carbon\Carbon::parse($ap->expiration_account)->format('d/m/Y') }}
                                                         </h6>
                                                     </td>
                                                     <td class="text-center">
@@ -430,7 +441,7 @@
                                             <thead class="text-white" style="background: #3B3F5C">
                                                 <tr>
                                                     <th class="table-th text-withe text-center">Email</th>
-                                                    <th class="table-th text-withe text-center">Contraseña</th>
+                                                    <th class="table-th text-withe text-center">Vencimiento</th>
                                                     <th class="table-th text-withe text-center">Nombre Perfil</th>
                                                     <th class="table-th text-withe text-center">Pin</th>
                                                     <th class="table-th text-withe text-center">Precio</th>
@@ -453,7 +464,7 @@
                                                             <h6 class="text-center" style="font-size: 100%">
                                                                 @foreach ($ap->CuentaPerfil as $item)
                                                                     @if ($item->status = 'SinAsignar')
-                                                                        {{ $item->Cuenta->password_account }}
+                                                                        {{ \Carbon\Carbon::parse($item->Cuenta->expiration_account)->format('d/m/Y') }}
                                                                     @endif
                                                                 @endforeach
                                                             </h6>
@@ -491,7 +502,7 @@
                                                     </tr>
                                                 @endforeach
                                             </tbody>
-                                            <tfoot>
+                                            {{-- <tfoot>
                                                 <tr>
                                                     <td colspan="1" class="text-left">
                                                         <span><b>TOTAL: </b></span>
@@ -509,7 +520,7 @@
                                                             </strong></span>
                                                     </td>
                                                 </tr>
-                                            </tfoot>
+                                            </tfoot> --}}
                                         </table>
                                     </div>
                                 </div>
@@ -517,6 +528,30 @@
                             </div>
                         @endif
                     @endif
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 col-md-4">
+                        <div class="form-group">
+                            <label>
+                                <h6>Importe</h6>
+                            </label>
+                            <input wire:model.lazy="importe" class="form-control" type="number">
+                            @error('importe')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-8">
+                        <div class="form-group">
+                            <label>
+                                <h6>Observaciones</h6>
+                            </label>
+                            <input wire:model.lazy="observaciones" class="form-control">
+                            @error('observaciones')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">

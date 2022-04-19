@@ -68,7 +68,7 @@ class CuentasController extends Component
         $this->expirationNueva = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->start_account = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->tipopago = 'EFECTIVO';
-        $this->importe = 0;
+        $this->importe = '';
         $this->correoCuenta = '';
         $this->passCuenta = '';
         $this->nombreCliente = '';
@@ -710,7 +710,6 @@ class CuentasController extends Component
             }
 
             $plataform = Platform::find($this->platform_id);
-            dd($this->start_account);
             if ($plataform->tipo == 'CORREO') {
                 $acc = Account::create([
                     'start_account' => $this->start_account,
@@ -1034,8 +1033,6 @@ class CuentasController extends Component
 
         $cuenta = Account::find($datos->cuentaid);
         /* CALCULAR IMPORTE SEGUN LA PLATAFORMA DE LA CUENTA */
-        $this->importe += $cuenta->Plataforma->precioEntera;
-        $this->importe *= $this->meses;
         DB::beginTransaction();
         try {
             $mv = Movimiento::create([
@@ -1185,22 +1182,27 @@ class CuentasController extends Component
             ->join('platforms as p', 'p.id', 'acc.platform_id')
             ->select(
                 'p.id as platfid',
-                'acc.id as cuentaid'
+                'acc.id as cuentaid',
+                'acc.number_profiles as number_profiles'
             )
             ->where('plans.id', $this->selected_plan)
+            ->where('pa.status', 'ACTIVO')
             ->orderby('plans.id', 'desc')
             ->get()->first();
         $date_now = date('Y-m-d', time());
+
         $this->cuentasEnteras = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
             ->join('emails as e', 'accounts.email_id', 'e.id')
             ->select(
                 'accounts.*'
             )
             ->where('accounts.status', 'ACTIVO')
-            ->where('accounts.expiration_account', '>', $date_now)
+            ->where('accounts.start_account', '<=', $date_now)
+            ->where('accounts.expiration_account', '>=', $date_now)
             ->where('accounts.availability', 'LIBRE')
             ->where('accounts.whole_account', 'ENTERA')
             ->where('p.id', $datos->platfid)
+            ->where('accounts.number_profiles', $datos->number_profiles)
             ->get();
     }
     public function VerCuentas()
@@ -1367,7 +1369,7 @@ class CuentasController extends Component
         $this->expirationNueva = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->start_account = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->tipopago = 'EFECTIVO';
-        $this->importe = 0;
+        $this->importe = '';
         $this->correoCuenta = '';
         $this->passCuenta = '';
         $this->nombreCliente = '';
