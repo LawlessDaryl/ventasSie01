@@ -87,6 +87,7 @@
                     <div class="col-lg-5 align-items-center">
                         <div class="row  justify-content-center ">
                             
+                            @if($detalle!=null)
                             <div class="table-responsive">
                                 <table class="table table-unbordered table-hover mt-2">
                                     <thead class="text-white" style="background: #3B3F5C">
@@ -99,7 +100,6 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @if($ros!=1)
                                         @foreach ($data_m as $datas)
                                         <tr>
                                             <td>
