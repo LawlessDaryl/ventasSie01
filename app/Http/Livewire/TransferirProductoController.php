@@ -114,8 +114,6 @@ class TransferirProductoController extends Component
 
         Transferencia::add($product->id, $product->name, $precio_compra, $cant);
 
-        
-      
         $this->itemsQuantity = Transferencia::getTotalQuantity();
         $this->emit('scan-ok', $title);
        
