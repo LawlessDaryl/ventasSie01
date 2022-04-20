@@ -92,6 +92,6 @@
         </div>
       
     </div>
-    @include('livewire.destino_producto.form')
+   
   
 </div>

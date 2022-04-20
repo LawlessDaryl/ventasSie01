@@ -21,7 +21,7 @@
                                 <select wire:model='selected_origen' class="form-control">
                                     <option value=0>Elegir Origen</option>
                                   @foreach ($data_suc as $data)
-                                  <option value="{{ $data->id }}">{{ $data->sucursal }}-{{$data->destino}}</option>
+                                  <option value="{{ $data->dest_id }}">{{ $data->sucursal }}-{{$data->destino}}</option>
                                   @endforeach
                                 </select>
                               </div>
@@ -33,7 +33,7 @@
                                     <select wire:model='selected_destino' class="form-control">
                                         <option value=0>Elegir Destino</option>
                                       @foreach ($data_suc as $data)
-                                      <option value="{{ $data->id }}">{{ $data->sucursal }}-{{$data->destino}}</option>
+                                      <option value="{{ $data->dest_id }}">{{ $data->sucursal }}-{{$data->destino}}</option>
                                       @endforeach
                                     
                                     </select>
@@ -85,7 +85,7 @@
                                <p class="card-text"> <strong> Stock Disponible:</strong> {{$destino->stock}}</p>
                                <p class="card-text"> <strong>Mobilirio ubicacion</strong> {{$destino->tipo}}-{{$destino->codigo}}</p>
                              
-                               <button wire:click="increaseQty({{$destino->id_prod}})" class="btn btn-success" style="padding: 10px">Agregar</button>
+                               <button wire:click="increaseQty({{$destino->id_prod,}})" class="btn btn-success" style="padding: 10px">Agregar</button>
                              </div>
                            </div>
                            
@@ -180,7 +180,7 @@
                             <div class="col-4 col-lg-4 col-md-4">
                 
                                 <div class="form-group">
-                                    <button class="btn btn-primary m-1" style="color: black">Finalizar<br/>Transferencia</button>
+                                    <button class="btn btn-primary m-1" wire:click="finalizar_tr()" style="color: black">Finalizar<br/>Transferencia</button>
                                 </div>
                             </div>
                            
@@ -194,7 +194,7 @@
                                 <div class="col-4 col-lg-4 col-md-4">
                 
                                     <div class="form-group">
-                                        <button class="btn btn-danger  p-3" style="color: black">Cancelar</button>
+                                        <button wire:click="resetUI()" class="btn btn-danger  p-3" style="color: black">Cancelar</button>
                                     </div>
                                 </div>
         

@@ -46,7 +46,7 @@ class TransferirProductoController extends Component
 
             $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
                                         ->join('destinos as dest','dest.id','productos_destinos.destino_id')
-                                        ->select('productos_destinos.*','p.nombre as name','dest.nombre as nombre_destino','p.id as id_prod')
+                                        ->select('productos_destinos.*','p.nombre as name','dest.nombre as nombre_destino','dest.id as dest_id','p.id as id_prod')
                                         ->where('dest.id',$this->selected_origen)
                                         ->orderBy('p.nombre','desc')
                                         ->paginate($this->pagination);
@@ -73,7 +73,7 @@ class TransferirProductoController extends Component
         ->extends('layouts.theme.app')
         ->section('content');
     }
-    public function increaseQty($productId, $cant = 1,$precio_compra = 0)
+    public function increaseQty($productId,$cant=1)
     {
        
         $product = Product::select('products.id','products.nombre as name')
@@ -87,21 +87,11 @@ class TransferirProductoController extends Component
             $title = "Producto agregado";
         }
 
-        $attributos=[
-            'precio'=>$product->precio_venta,
-            'codigo'=>$product->codigo,
-            'fecha_compra'=>$this->fecha_compra
-        ];
+       
 
-        $products = array(
-            'id'=>$product->id,
-            'name'=>$product->nombre,
-            'price'=>$precio_compra,
-            'quantity'=>$cant,
-            'attributes'=>$attributos
-        );
+     
 
-        Transferencia::add($product->id, $product->name, $precio_compra, $cant);
+        Transferencia::add($product->id, $product->name,0, $cant);
 
         $this->itemsQuantity = Transferencia::getTotalQuantity();
         $this->emit('scan-ok', $title);
@@ -111,12 +101,12 @@ class TransferirProductoController extends Component
 
     public function UpdateQty($productId, $cant =1)
     {
-        $title = '';
+        
         $product = Product::select('products.id','products.nombre as name')
         ->where('products.id',$productId)->first();
        
         $exist = Transferencia::get($productId);
-        $prices=$exist->price;
+        
        
         if ($exist) {
             $title = "cantidad actualizada";
@@ -129,7 +119,7 @@ class TransferirProductoController extends Component
         if ($cant > 0) {
 
           
-            Transferencia::add($product->id, $product->name,$prices, $cant);
+            Transferencia::add($product->id, $product->name,0, $cant);
           
           
             $this->itemsQuantity = Transferencia::getTotalQuantity();
@@ -150,9 +140,13 @@ class TransferirProductoController extends Component
 
     public function resetUI()
     {
-        $this->nombre = '';
-        $this->selected_id=0;
+        
+        $this->selected_origen='Elegir Origen';
+        $this->selected_destino='Elegir Destino';
        
+    }
+    public function verificarStock(){
+
     }
     public function finalizar_tr()
     {
@@ -161,9 +155,10 @@ class TransferirProductoController extends Component
 
         try {
             $Transferencia_encabezado = Transference::create([
-                'fecha_transferencia'=>$this->total_compra,
-                'status'=>$this->descuento,
-                'id_usuario'=>$this->fecha_compra
+               
+                'status'=>2,
+                'estado'=>1,
+                'id_usuario'=>Auth()->user()->id
             ]);
 
             if ($Transferencia_encabezado)
@@ -171,10 +166,10 @@ class TransferirProductoController extends Component
                 $items = Transferencia::getContent();
                 foreach ($items as $item) {
                     DetalleTransferencia::create([
-                        'id_transference' => $Transferencia_encabezado->id,
+                        
                         'product_id' => $item->id,
                         'cantidad' => $item->quantity,
-                        'destino_id'=>$this->destino
+                        'destino_id'=>$this->selected_destino
                     ]);
                     /*DB::table('productos_destinos')
                     ->updateOrInsert(['stock'],$item->quantity, ['product_id' => $item->id, 'destino_id'=>$this->destino]);*/
