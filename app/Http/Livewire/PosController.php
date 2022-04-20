@@ -35,8 +35,8 @@ class PosController extends Component
 
     //Variables para el comprobantes...
     public $idventa, $totalbs, $totalitems;
-    //Variables para Calcular el Desuento en Ventas...
-    public $descuento, $arrayDetalle = Array();
+    //Variables para Calcular el Descuento en Ventas...
+    public $descuento, $totalBsBd;
 
     public function mount()
     {
@@ -50,6 +50,7 @@ class PosController extends Component
         $this->anonimo = 0;
         $this->facturasino = 'No';
         $this->descuento = 0;
+        $this->totalBsBd = 0;
 
     }
     public function render()
@@ -421,11 +422,11 @@ class PosController extends Component
         $exist = Cart::get($productId);
         if ($exist)
         {
-            $title = "cantidad actualizada";
+            $title = "Cantidad Actualizada";
         }
         else
         {
-            $title = "producto agregado";
+            $title = "Producto Agregado";
         }
         if ($exist)
         {
@@ -457,16 +458,46 @@ class PosController extends Component
 
 
 
-            }
-        }
-        $this->removeItem($productId);
-        if ($cant > 0) {
-            Cart::add($product->id, $product->name, $product->price, $cant, $product->image);
-            $this->total = Cart::getTotal();
-            $this->itemsQuantity = Cart::getTotalQuantity();
-            $this->emit('scan-ok', $title);
         }
 
+
+
+
+
+        //Obtenemos los datos ('Precio') del producto del Carrito
+        $precioCarrito = Cart::get($productId);
+        //Obtenemos los datos ('Precio') del producto de la Base de la Datos
+        $precioBD = Product::select("products.id as id","products.nombre as name","products.precio_venta as price")
+        ->where("products.id", $productId)
+        ->get()->first();
+        //Comparamos si hay Alguna diferencia en el Precio del Producto
+        //Precio carrito - Precio Base de Datos
+        $diferencia = $precioCarrito['price'] - $precioBD['price'];
+
+
+        $this->removeItem($productId);
+            if ($cant > 0)
+            {
+                if($diferencia != 0)
+                {
+                    //Si hay Diferencia en el Precio Procedemos con Precio Actualizado
+                    Cart::add($product->id, $product->name, $precioCarrito['price'], $cant, $product->image);
+                    $this->total = Cart::getTotal();
+                    $this->itemsQuantity = Cart::getTotalQuantity();
+                    $this->emit('scan-ok', $title);
+                }
+                else
+                {
+                    //Si no hay Diferencia en el Precio Procedemos Normalmente
+                    Cart::add($product->id, $product->name, $product->price, $cant, $product->image);
+                    $this->total = Cart::getTotal();
+                    $this->itemsQuantity = Cart::getTotalQuantity();
+                    $this->emit('scan-ok', $title);
+                }
+                
+            }
+
+        }
         
     }
     public function removeItem($productId)
@@ -840,7 +871,7 @@ class PosController extends Component
     {
         $this->emit('finalizarventa');
     }
-
+    //Obtener el Id de la Sucursal Donde esta el Usuario
     public function idsucursal()
     {
         //Obteniendo el id de la sucursal del usuario
@@ -853,24 +884,125 @@ class PosController extends Component
         return $idsucursal->id;
     }
     //Aplicar descuento o recargo Dependiendo del valor que se modifique en el Precio de Venta
-    //public function UpdateQty($productId, $cant = 1)
-    public function precioventa(Product $producto, $valor)
+    public function precioventa(Product $producto, $precioactualizado, $cantidad)
     {
 
-        // $arrayDetalle[] = array(
-        //     "idproducto" => $producto->id,
-        //     "precio" => $producto->precio_venta - $valor
-        // );
-
-        // dd($arrayDetalle);
-
-        // for($i = 0; $i < count($arrayDetalle); $i++)
-        // {
-        //     $this->descuento = $arrayDetalle[$i]["precio"] + $this->descuento;
-        // }
         
-        $this->descuento = ($producto->precio_venta - $valor) + $this->descuento;
+        //Eliminamos el Producto del Carrito de Compras
+        $this->removeItem($producto->id);
+    
+        //Lo volvemos a añadir al Carrito con el Precio de Venta Actualizado
+        $this->priceUpdate($producto->id,$cantidad, $precioactualizado);
+        
+        //Obtenemos el Precio Actualizado del Producto
+        //$diferencia = $producto->precio_venta - $precioactualizado;
+
+        $asd = 0;
+        $items = Cart::getContent();
+        foreach ($items as $item)
+        {
+            $asd = ($this->buscarprecio($item->id) * $item->quantity) + $asd;
+        }
+        $this->totalBsBd = $asd;
+        //$this->totalBsBd = $asd;
+        $this->descuento = $this->totalBsBd - $this->total;
+        
+
+
+
+
+
+        //Cart::add($producto->id, $producto->name, $precioactualizado, $cantidad, $producto->image);
+        
+        
+        //$this->descuento = ($producto->precio_venta - $valor) + $this->descuento;
         //dd("El descuento de Venta es: ".$this->descuento);
+        
+        //$asd = Cart::get($producto->id);
+    }
+
+
+    public function buscarprecio($id)
+    {
+        $tiendaproducto = Product::select("products.id as id","products.precio_venta as precio")
+        ->where("products.id", $id)
+        ->get()->first();
+        return $tiendaproducto->precio;
+    }
+
+
+
+    //Para Actualizar el Precio de un Producto en el Carrito de Compras
+    public function priceUpdate($productId, $cant = 1, $precioactualizado)
+    {
+        //Consulta para saber el Stock de los Productos en Tienda
+        $product = Product::join("productos_destinos as pd", "pd.product_id", "products.id")
+        ->join('locations as d', 'd.id', 'pd.location_id')
+        ->join('destinos as des', 'des.id', 'd.destino_id')
+        ->select("products.id as id","products.image as image","des.sucursal_id as sucursal_id","products.nombre as name",
+        "products.precio_venta as price","products.barcode", "pd.stock as stock")
+        ->where("products.id", $productId)
+        ->where("des.nombre", 'TIENDA')
+        ->where("des.sucursal_id", $this->idsucursal())
+        ->get()->first();
+        //---------------------------------------------------------
+        //Para saber si el Producto ya esta en carrrito para cambiar el mensaje de Producto Agregado a Cantidad Actualizada
+        $exist = Cart::get($productId);
+        if ($exist)
+        {
+            $title = 'Cantidad actualizada';
+        }
+        else
+        {
+            $title = "Producto agregado";
+        }
+        
+        
+        if ($exist)
+        {
+            if ($product->stock < ($cant + $exist->quantity))
+            {
+                //Buscar Productos en Almacen
+                $productoalmacen = Product::join("productos_destinos as pd", "pd.product_id", "products.id")
+                ->join('locations as d', 'd.id', 'pd.location_id')
+                ->join('destinos as des', 'des.id', 'd.destino_id')
+                ->select("products.id as id","products.image as image","des.sucursal_id as sucursal_id","products.nombre as name",
+                "products.precio_venta as price","products.barcode", "pd.stock as stock")
+                ->where("products.id", $product->id)
+                ->where("des.nombre", 'ALMACEN')
+                ->where("des.sucursal_id", $this->idsucursal())
+                ->get()->first();
+                try
+                {
+                    if($productoalmacen->stock > 0)
+                    {
+                        $this->stockalmacen = $productoalmacen->stock;
+                        $this->nombrestockproducto = $productoalmacen->name;
+                        $this->idproductoalmacen = $productoalmacen->id;
+                        $this->emit('no-stocktienda');
+                        return;
+                    }
+                    else
+                    {
+                        $this->emit('no-stock', 'stock insuficiente en TIENDA y ALMACEN');
+                        return;
+                    }
+                }
+                catch (Exception $e)
+                {
+                    $this->emit('no-stock', 'Stock en 0, ¡Insuficiente!');
+                    return;
+                }
+            }
+        }
+
+
+
+        Cart::add($product->id, $product->name, $precioactualizado, $cant, $product->image);
+
+        $this->total = Cart::getTotal();
+        $this->itemsQuantity = Cart::getTotalQuantity();
+        $this->emit('scan-ok', $title);
     }
 
     

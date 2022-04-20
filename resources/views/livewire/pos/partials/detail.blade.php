@@ -9,9 +9,9 @@
                 <tr>
                     <th class="table-th text-left text-white">IMAGEN</th>
                     <th class="table-th text-left text-white">DESCRIPCIóN</th>
-                    <th class="table-th text-center text-white">PRECIO</th>
+                    {{-- <th class="table-th text-center text-white">PRECIO</th> --}}
                     
-                    <th width="17%" class="table-th text-center text-white">PRECIO 2</th>
+                    <th width="17%" class="table-th text-center text-white">PRECIO</th>
 
                     <th width="12%" class="table-th text-center text-white">CANTIDAD</th>
                     <th class="table-th text-center text-white">IMPORTE</th>
@@ -35,13 +35,13 @@
                         <td>
                             {{ $item->name }}
                         </td>
-                        {{-- Precio --}}
-                        <td class="text-center">Bs{{ number_format($item->price, 2) }}</td>
+                        {{-- <td class="text-center">Bs{{ number_format($item->price, 2) }}</td> --}}
                         
+                        {{-- Precio --}}
                         <td class="text-center">
                             <input type="number" 
                             id="pp{{$item->id}}" 
-                            wire:change="precioventa({{$item->id}}, $('#pp' + {{$item->id}}).val() )"
+                            wire:change="precioventa({{$item->id}}, $('#pp' + {{$item->id}}).val(), $('#r' + {{$item->id}}).val() )"
                             class="form-control" 
                             value="{{ $item->price }}" max="{{ $item->price }}">
                         </td>
