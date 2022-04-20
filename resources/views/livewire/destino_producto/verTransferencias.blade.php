@@ -43,17 +43,17 @@
 
                                                 @if($data->st =="Pendiente")
                                                 <td>
-                                                    <h6 class="text-center card text-white bg-danger p-1">{{ $data->st }}</h6>
+                                                    <h6 class="text-center btn text-white btn-danger p-1">{{ $data->st }}</h6>
                                                 </td>
 
                                                 @elseif($data->st =="Aprobado")
                                                 <td>
-                                                    <h6 class="text-center card text-white bg-success p-1">{{ $data->st }}</h6>
+                                                    <h6 class="text-center btn text-white btn-success p-1">{{ $data->st }}</h6>
                                                 </td>
 
                                                 @else
                                                 <td>
-                                                    <h6 class="text-center card text-white bg-primary p-1">{{ $data->st }}</h6>
+                                                    <h6 class="text-center btn text-white btn-primary p-1">{{ $data->st }}</h6>
                                                 </td>
                                     
                                                 @endif

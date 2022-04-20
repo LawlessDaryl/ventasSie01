@@ -21,19 +21,19 @@
                                 <select wire:model='selected_origen' class="form-control">
                                     <option value=0>Elegir Origen</option>
                                   @foreach ($data_suc as $data)
-                                  <option value="{{ $data->dest_id }}">{{ $data->sucursal }}-{{$data->destino}}</option>
+                                  <option value="{{ $data->destino_id }}">{{ $data->sucursal }}-{{$data->destino}}</option>
                                   @endforeach
                                 </select>
                               </div>
                             </div> 
-
+s
                             <div class="col-lg-6 col-md-6 col-12">
                                 <div class="form-group">
                                     <label> <strong style="color: black">Destino de transferencia:</strong> </label>
                                     <select wire:model='selected_destino' class="form-control">
-                                        <option value=0>Elegir Destino</option>
+                                        <option value=* >Elegir Destino</option>
                                       @foreach ($data_suc as $data)
-                                      <option value="{{ $data->dest_id }}">{{ $data->sucursal }}-{{$data->destino}}</option>
+                                      <option value="{{ $data->destino_id }}">{{ $data->sucursal }}-{{$data->destino}}</option>
                                       @endforeach
                                     
                                     </select>
@@ -71,8 +71,6 @@
 
                     <div class="col-12 col-lg-12 col-md-4 d-flex flex-lg-wrap flex-wrap flex-md-wrap flex-xl-wrap justify-content-center">
 
-                       
-                      
                             @foreach($destinos_almacen as $destino)
                       
                         <div class="card border-success" style="width: 13rem; margin:2rem">
@@ -85,7 +83,7 @@
                                <p class="card-text"> <strong> Stock Disponible:</strong> {{$destino->stock}}</p>
                                <p class="card-text"> <strong>Mobilirio ubicacion</strong> {{$destino->tipo}}-{{$destino->codigo}}</p>
                              
-                               <button wire:click="increaseQty({{$destino->id_prod,}})" class="btn btn-success" style="padding: 10px">Agregar</button>
+                               <button wire:click="increaseQty({{$destino->prod_id}})" class="btn btn-success" style="padding: 10px">Agregar</button>
                              </div>
                            </div>
                            

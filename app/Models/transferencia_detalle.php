@@ -9,5 +9,5 @@ class transferencia_detalle extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['transferencia_id','detalle_id'];
+    protected $fillable = ['id_transferencia','id_detalle'];
 }
