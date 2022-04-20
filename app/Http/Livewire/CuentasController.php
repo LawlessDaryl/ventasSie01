@@ -305,7 +305,7 @@ class CuentasController extends Component
                     if ($diff->invert != 1) {
                         $c->horas = (($diff->days * 24)) + ($diff->h);
                     } else {
-                        $c->horas = '0';
+                        $c->horas = '-1';
                     }
                     $fecha_actual = date("Y-m-d");
                     $s = strtotime($c->expiration_account) - strtotime($fecha_actual);
@@ -474,11 +474,27 @@ class CuentasController extends Component
                         'e.content as content',
                         'e.pass as pass',
                         'strsp.name as name',
+                        DB::raw('0 as horas'),
+                        DB::raw('0 as dias')
                     )
                     ->where('accounts.status', 'INACTIVO')
                     ->where('accounts.availability', 'LIBRE')
                     ->orderBy('accounts.expiration_account', 'asc')
                     ->paginate($this->pagination);
+                foreach ($cuentas as $c) {
+                    $date1 = new DateTime($c->expiration_plan);
+                    $date2 = new DateTime("now");
+                    $diff = $date2->diff($date1);
+                    if ($diff->invert != 1) {
+                        $c->horas = (($diff->days * 24)) + ($diff->h);
+                    } else {
+                        $c->horas = '-1';
+                    }
+                    $fecha_actual = date("Y-m-d");
+                    $s = strtotime($c->expiration_account) - strtotime($fecha_actual);
+                    $d = intval($s / 86400);
+                    $c->dias = $d;
+                }
             }
         }
 
@@ -569,7 +585,7 @@ class CuentasController extends Component
 
         /* CALCULAR FECHA DE FINALIZACION AL CREAR UNA NUEVA CUENTA */
         if ($this->start_account) {
-            if ($this->mesesComprar > 0 && $this->mostrarRenovar == 0) {
+            if ($this->mesesComprar > 0 && $this->mostrarRenovar != 0) {
                 $dias = $this->mesesComprar * 30;
                 $this->expiration_account = strtotime('+' . $dias . ' day', strtotime($this->start_account));
                 $this->expiration_account = date('Y-m-d', $this->expiration_account);
@@ -659,6 +675,7 @@ class CuentasController extends Component
         $cuenta = Account::find($this->selected_id);
 
         $cuenta->update([
+            'status' => 'ACTIVO',
             'start_account' => $this->start_account_new,
             'expiration_account' => $this->expiration_account_new,
             'number_profiles' => $this->number_profiles,

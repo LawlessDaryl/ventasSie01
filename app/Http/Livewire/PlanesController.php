@@ -410,7 +410,6 @@ class PlanesController extends Component
                         'p.precioEntera'
                     )
                     ->where('accounts.status', 'ACTIVO')
-                    ->where('accounts.start_account', '<=', $date_now)
                     ->where('accounts.expiration_account', '>=', $date_now)
                     ->where('accounts.availability', 'LIBRE')
                     ->where('accounts.whole_account', 'ENTERA')
@@ -436,7 +435,6 @@ class PlanesController extends Component
                     )
                     ->where('accounts.status', 'ACTIVO')
                     ->where('accounts.availability', 'LIBRE')
-                    ->where('accounts.start_account', '<=', $date_now)
                     ->where('accounts.expiration_account', '>=', $date_now)
                     ->where('p.id', $this->plataforma)
                     ->orderBy('accounts.expiration_account', 'asc')

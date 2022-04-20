@@ -216,14 +216,14 @@ class PerfilesController extends Component
                     if ($diff->invert != 1) {
                         $c->horasPlan = (($diff->days * 24)) + ($diff->h);
                     } else {
-                        $c->horasPlan = '0';
+                        $c->horasPlan = '-1';
                     }
                     $date1 = new DateTime($c->expiration);
                     $diff = $date2->diff($date1);
                     if ($diff->invert != 1) {
                         $c->horasCuenta = (($diff->days * 24)) + ($diff->h);
                     } else {
-                        $c->horasCuenta = '0';
+                        $c->horasCuenta = '-1';
                     }
                 }
             }
@@ -329,7 +329,7 @@ class PerfilesController extends Component
                     ->orderBy('plans.expiration_plan', 'desc')
                     ->paginate($this->pagination);
             }
-        } else {
+        } elseif ($this->condicional == 'combos') {
             $prof = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
                 ->select(
                     'plans.*',
@@ -348,7 +348,29 @@ class PerfilesController extends Component
                 if ($diff->invert != 1) {
                     $c->horasPlan = (($diff->days * 24)) + ($diff->h);
                 } else {
-                    $c->horasPlan = '0';
+                    $c->horasPlan = '-1';
+                }
+            }
+        } elseif ($this->condicional == 'combosVencidos') {
+            $prof = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
+                ->select(
+                    'plans.*',
+                    DB::raw('0 as horasPlan'),
+                    DB::raw('0 as horasCuenta')
+                )
+                ->where('plans.status', 'VENCIDO')
+                ->where('plans.type_plan', 'COMBO')
+                /* ->whereColumn('plans.id', '=', 'ap.plan_id') */
+                ->orderBy('plans.created_at', 'desc')
+                ->paginate($this->pagination);
+            foreach ($prof as $c) {
+                $date1 = new DateTime($c->expiration_plan);
+                $date2 = new DateTime("now");
+                $diff = $date2->diff($date1);
+                if ($diff->invert != 1) {
+                    $c->horasPlan = (($diff->days * 24)) + ($diff->h);
+                } else {
+                    $c->horasPlan = '-1';
                 }
             }
         }
