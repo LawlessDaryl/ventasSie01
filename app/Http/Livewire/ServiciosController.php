@@ -494,6 +494,7 @@ class ServiciosController extends Component
         $Ordservice = OrderService::find($this->orderservice);
         session(['tservice' => $this->type_service]);
         $this->typeservice = $this->type_service;
+        /* $this->type_service = session('tservice'); */
 
         $this->emit('tipoServ-updated', 'Servicio Actualizado');
     }
@@ -756,7 +757,7 @@ class ServiciosController extends Component
         $this->typeworkid = 'Elegir';
         $this->catprodservid = 'Elegir';
         $this->selected_id = 0;
-        $this->typeservice = 'NORMAL';
+        /* $this->typeservice = 'NORMAL'; */
         $this->saldo = 0;
         $this->on_account = 0;
         $this->import = 0;
