@@ -313,7 +313,7 @@ class CuentasController extends Component
                     $c->dias = $d;
                 }
             }
-        } else {    /* CUENTAS VENCIDAS */
+        } elseif ($this->condicional == 'vencidos') {    /* CUENTAS VENCIDAS */
             if (strlen($this->search) > 0) {
                 $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                     ->join('emails as e', 'accounts.email_id', 'e.id')
@@ -403,6 +403,81 @@ class CuentasController extends Component
                     ->where('pl.ready', 'SI')
                     ->orderBy('pl.done', 'desc')
                     ->orderBy('pl.expiration_plan', 'desc')
+                    ->paginate($this->pagination);
+            }
+        } elseif ($this->condicional == 'inhabilitadas') {    /* CUENTAS INHABILITADAS */
+            if (strlen($this->search) > 0) {
+                /* $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
+                    ->join('emails as e', 'accounts.email_id', 'e.id')
+                    ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
+                    ->select(
+                        'accounts.id as id',
+                        'accounts.expiration_account as expiration_account',
+                        'accounts.number_profiles',
+                        'accounts.whole_account',
+                        'accounts.account_name',
+                        'accounts.password_account',
+                        'p.nombre as nombre',
+                        'e.content as content',
+                        'e.pass as pass',
+                        'strsp.name as name',
+                        DB::raw('0 as perfActivos'),
+                        DB::raw('0 as perfLibres'),
+                        DB::raw('0 as dias')
+                    )
+                    ->where('p.nombre', 'like', '%' . $this->search . '%')
+                    ->where('accounts.status', 'ACTIVO')
+                    ->where('accounts.availability', 'LIBRE')
+
+                    ->orWhere('accounts.account_name', 'like', '%' . $this->search . '%')
+                    ->where('accounts.status', 'ACTIVO')
+                    ->where('accounts.availability', 'LIBRE')
+
+                    ->orWhere('accounts.whole_account', 'like', '%' . $this->search . '%')
+                    ->where('accounts.status', 'ACTIVO')
+                    ->where('accounts.availability', 'LIBRE')
+
+                    ->orderBy('accounts.expiration_account', 'asc')
+                    ->paginate($this->pagination);
+                foreach ($cuentas as $c) {
+                    $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
+                        ->join('profiles as p', 'ap.profile_id', 'p.id')
+                        ->where('accounts.id', $c->id)
+                        ->where('p.status', 'ACTIVO')->get();
+                    $perfilesLibres = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
+                        ->join('profiles as p', 'ap.profile_id', 'p.id')
+                        ->where('accounts.id', $c->id)
+                        ->where('p.availability', 'LIBRE')
+                        ->where('p.status', 'ACTIVO')->get();
+                    $cantidadActivos = $perfilesActivos->count();
+                    $c->perfActivos = $cantidadActivos;
+                    $cantidadLibres = $perfilesLibres->count();
+                    $c->perfLibres = $cantidadLibres;
+
+                    $fecha_actual = date("Y-m-d");
+                    $s = strtotime($c->expiration_account) - strtotime($fecha_actual);
+                    $d = intval($s / 86400);
+                    $c->dias = $d;
+                } */
+            } else {
+                $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
+                    ->join('emails as e', 'accounts.email_id', 'e.id')
+                    ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
+                    ->select(
+                        'accounts.id as id',
+                        'accounts.expiration_account as expiration_account',
+                        'accounts.number_profiles',
+                        'accounts.whole_account',
+                        'accounts.account_name',
+                        'accounts.password_account',
+                        'p.nombre as nombre',
+                        'e.content as content',
+                        'e.pass as pass',
+                        'strsp.name as name',
+                    )
+                    ->where('accounts.status', 'INACTIVO')
+                    ->where('accounts.availability', 'LIBRE')
+                    ->orderBy('accounts.expiration_account', 'asc')
                     ->paginate($this->pagination);
             }
         }
@@ -540,17 +615,10 @@ class CuentasController extends Component
     }
 
     /* ABRIR MODAL PARA RENOVAR Y VENCER CUENTA CON EL PROVEEDOR */
-    public function AccionesCuenta(Account $cuenta)
+    public function mostrarRenovar(Account $cuenta)
     {
         $this->resetUI();
         $this->selected_id = $cuenta->id;
-        $this->emit('details3-show', 'show modal!');
-    }
-
-    public function mostrarRenovar()
-    {   /* CARGAR DATOS DE LA CUENTA PARA RENOVAR CON EL PROVEEDOR */
-        $this->mostrarRenovar = 1;
-        $cuenta = Account::find($this->selected_id);
         $this->start_account = $cuenta->start_account;
         $this->expiration_account = $cuenta->expiration_account;
         $this->meseRenovarProv = 1;
@@ -559,6 +627,7 @@ class CuentasController extends Component
         $this->price = $cuenta->price;
         $this->password_account = $cuenta->password_account;
         $this->meses_comprados = $cuenta->meses_comprados;
+        $this->emit('details3-show', 'show modal!');
     }
 
     public function RenovarCuenta()
@@ -640,25 +709,6 @@ class CuentasController extends Component
         $this->emit('modal-hide3', 'Cuenta Actualizada');
     }
 
-    public function VencerCuenta()
-    {   /* SI NO RENUEVA CON EL PROVEEDOR LA CUENTA PASA A INACTIVO */
-        $PERFocupados = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
-            ->join('profiles as p', 'ap.profile_id', 'p.id')
-            ->where('accounts.id', $this->selected_id)
-            ->where('ap.status', 'ACTIVO')
-            ->where('p.availability', 'OCUPADO')->get();
-        /* Si no tiene perfiles ocupados se puede vencer la cuenta y poner en inactivo */
-        if ($PERFocupados->count() == 0) {
-            $cuenta = Account::find($this->selected_id);
-            $cuenta->update([
-                'status' => 'INACTIVO',
-            ]);
-            $this->resetUI();
-            $this->emit('modal-hide3', 'Cuenta Actualizada');
-        } else {
-            $this->emit('item-error', 'No puede vencer una cuenta si tiene perfiles ocupados, primero tiene que vencer los planes vigentes de esta cuenta');
-        }
-    }
 
     public function Store()
     {   /* REGISTRAR UNA NUEVA CUENTA */
@@ -881,6 +931,13 @@ class CuentasController extends Component
 
         $this->resetUI();
         $this->emit('item-updated', 'Cuenta Actualizada');
+    }
+
+    public function InhabilitarCuenta(Account $cuenta)
+    {
+        $cuenta->status = 'INACTIVO';
+        $cuenta->save();
+        $this->emit('item-deleted', 'La cuenta se inhabilitó');
     }
 
     public function Crear(Account $acc)
@@ -1279,7 +1336,15 @@ class CuentasController extends Component
         $this->emit('crearperfil-cerrar', 'Se creó el perfil en la cuenta seleccionada');
     }
 
-    protected $listeners = ['deleteRow' => 'Destroy', 'borrarPerfil' => 'BorrarPerfil', 'Renovar' => 'Renovar', 'Vencer' => 'Vencer', 'Realizado' => 'Realizado', 'CambiarAccount' => 'CambiarAccount'];
+    protected $listeners = [
+        'deleteRow' => 'Destroy',
+        'borrarPerfil' => 'BorrarPerfil',
+        'Renovar' => 'Renovar',
+        'Vencer' => 'Vencer',
+        'Realizado' => 'Realizado',
+        'CambiarAccount' => 'CambiarAccount',
+        'InhabilitarCuenta' => 'InhabilitarCuenta'
+    ];
 
     public function CambiarAccount(Account $cuenta)
     {

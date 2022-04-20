@@ -203,14 +203,84 @@
                 <div class='row'>
                     @if ($mostrartabla == 1)
                         <div class="col-sm-12 col-md-12">
-                            <div class="statbox widget box box-shadow">
+                            <div class="widget-content widget-content-area row">
+                                <h6>SELECCIONE LAS CUENTAS</h6>
+                                <div class="table-responsive table-wrapper-scroll-y my-custom-scrollbar">
+                                    <table class="table table-hover table-sm" style="width:100%">
+                                        <thead class="text-white" style="background: #3B3F5C">
+                                            <tr>
+                                                <th class="table-th text-withe text-center" style="font-size: 80%">
+                                                    Email-Nombre Usuario
+                                                </th>
+                                                <th class="table-th text-withe text-center" style="font-size: 80%">
+                                                    Contraseña</th>
+                                                <th class="table-th text-withe text-center" style="font-size: 80%">
+                                                    Max. perfiles</th>
+                                                <th class="table-th text-withe text-center" style="font-size: 80%">
+                                                    Vencimiento</th>
+                                                <th class="table-th text-withe text-center" style="font-size: 80%">
+                                                    Precio</th>
+                                                <th class="table-th text-withe text-center" style="font-size: 80%">
+                                                    Seleccionar</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if ($cuentasLibresEnteras->count() == 0)
+                                                <tr>
+                                                    <td colspan="2">
+                                                        <h6 class="text-center">No tienes cuentas enteras de esa
+                                                            plataforma
+                                                        </h6>
+                                                    </td>
+                                                </tr>
+                                            @endif
+                                            @foreach ($cuentasLibresEnteras as $ap)
+                                                <tr>
+                                                    <td class="text-center">
+                                                        <h6 class="text-center">{{ $ap->account_name }}
+                                                        </h6>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <h6 class="text-center">{{ $ap->password_account }}
+                                                        </h6>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <h6 class="text-center">{{ $ap->number_profiles }}
+                                                        </h6>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <h6 class="text-center">
+                                                            {{ \Carbon\Carbon::parse($ap->expiration_account)->format('d/m/Y') }}
+                                                        </h6>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <h6 class="text-center">{{ $ap->precioEntera }}</h6>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <a href="javascript:void(0)"
+                                                            wire:click="AgregarCuenta({{ $ap->id }})"
+                                                            class="btn btn-dark mtmobile" title="Seleccionar">
+                                                            <i class="fas fa-check"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        @if ($mostrartablaCuenta == 'SI')
+                            <div class="col-sm-12 col-md-12">
                                 <div class="widget-content widget-content-area row">
+                                    <h6>CUENTAS SELECCIONADAS</h6>
                                     <div class="table-responsive table-wrapper-scroll-y my-custom-scrollbar">
                                         <table class="table table-hover table-sm" style="width:100%">
                                             <thead class="text-white" style="background: #3B3F5C">
                                                 <tr>
                                                     <th class="table-th text-withe text-center" style="font-size: 80%">
-                                                        Email-Nombre Usuario
+                                                        Email o Nombre
+                                                        Usuario
                                                     </th>
                                                     <th class="table-th text-withe text-center" style="font-size: 80%">
                                                         Contraseña</th>
@@ -221,31 +291,24 @@
                                                     <th class="table-th text-withe text-center" style="font-size: 80%">
                                                         Precio</th>
                                                     <th class="table-th text-withe text-center" style="font-size: 80%">
-                                                        Seleccionar</th>
+                                                        Remover</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @if ($cuentasLibresEnteras->count() == 0)
-                                                    <tr>
-                                                        <td colspan="2">
-                                                            <h6 class="text-center">No tienes cuentas enteras de esa
-                                                                plataforma
-                                                            </h6>
-                                                        </td>
-                                                    </tr>
-                                                @endif
-                                                @foreach ($cuentasLibresEnteras as $ap)
+                                                @foreach ($accounts as $ap)
                                                     <tr>
                                                         <td class="text-center">
                                                             <h6 class="text-center">{{ $ap->account_name }}
                                                             </h6>
                                                         </td>
                                                         <td class="text-center">
-                                                            <h6 class="text-center">{{ $ap->password_account }}
+                                                            <h6 class="text-center">
+                                                                {{ $ap->password_account }}
                                                             </h6>
                                                         </td>
                                                         <td class="text-center">
-                                                            <h6 class="text-center">{{ $ap->number_profiles }}
+                                                            <h6 class="text-center">
+                                                                {{ $ap->number_profiles }}
                                                             </h6>
                                                         </td>
                                                         <td class="text-center">
@@ -254,86 +317,22 @@
                                                             </h6>
                                                         </td>
                                                         <td class="text-center">
-                                                            <h6 class="text-center">{{ $ap->precioEntera }}</h6>
+                                                            <h6 class="text-center">
+                                                                {{ $ap->Plataforma->precioEntera }}
+                                                            </h6>
                                                         </td>
                                                         <td class="text-center">
                                                             <a href="javascript:void(0)"
-                                                                wire:click="AgregarCuenta({{ $ap->id }})"
-                                                                class="btn btn-dark mtmobile" title="Seleccionar">
-                                                                <i class="fas fa-check"></i>
+                                                                wire:click="QuitarCuenta({{ $ap->id }})"
+                                                                class="btn btn-dark mtmobile" title="Remover">
+                                                                <i class="fa-solid fa-x"></i>
                                                             </a>
                                                         </td>
                                                     </tr>
                                                 @endforeach
                                             </tbody>
                                         </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        @if ($mostrartablaCuenta == 'SI')
-                            <div class="col-sm-12 col-md-12">
-                                <div class="statbox widget box box-shadow">
-                                    <div class="widget-content widget-content-area row">
-                                        <div class="table-responsive table-wrapper-scroll-y my-custom-scrollbar">
-                                            <table class="table table-hover table-sm" style="width:100%">
-                                                <thead class="text-white" style="background: #3B3F5C">
-                                                    <tr>
-                                                        <th class="table-th text-withe text-center"
-                                                            style="font-size: 80%">Email o Nombre
-                                                            Usuario
-                                                        </th>
-                                                        <th class="table-th text-withe text-center"
-                                                            style="font-size: 80%">Contraseña</th>
-                                                        <th class="table-th text-withe text-center"
-                                                            style="font-size: 80%">Max. perfiles</th>
-                                                        <th class="table-th text-withe text-center"
-                                                            style="font-size: 80%">Vencimiento</th>
-                                                        <th class="table-th text-withe text-center"
-                                                            style="font-size: 80%">Precio</th>
-                                                        <th class="table-th text-withe text-center"
-                                                            style="font-size: 80%">Remover</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @foreach ($accounts as $ap)
-                                                        <tr>
-                                                            <td class="text-center">
-                                                                <h6 class="text-center">{{ $ap->account_name }}
-                                                                </h6>
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <h6 class="text-center">
-                                                                    {{ $ap->password_account }}
-                                                                </h6>
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <h6 class="text-center">
-                                                                    {{ $ap->number_profiles }}
-                                                                </h6>
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <h6 class="text-center">
-                                                                    {{ \Carbon\Carbon::parse($ap->expiration_account)->format('d/m/Y') }}
-                                                                </h6>
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <h6 class="text-center">
-                                                                    {{ $ap->Plataforma->precioEntera }}
-                                                                </h6>
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <a href="javascript:void(0)"
-                                                                    wire:click="QuitarCuenta({{ $ap->id }})"
-                                                                    class="btn btn-dark mtmobile" title="Remover">
-                                                                    <i class="fa-solid fa-x"></i>
-                                                                </a>
-                                                            </td>
-                                                        </tr>
-                                                    @endforeach
-                                                </tbody>
-                                            </table>
-                                            {{-- <tfoot>
+                                        {{-- <tfoot>
                                                 <tr>
                                                     <td colspan="1" class="text-left">
                                                         <span><b>TOTAL: </b></span>
@@ -348,7 +347,6 @@
                                                     </td>
                                                 </tr>
                                             </tfoot> --}}
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -359,7 +357,7 @@
                         <div class="col-sm-12 col-md-12">
 
                             <div class="widget-content widget-content-area row">
-                                <h6>SELECCIONE UNA CUENTA</h6>
+                                <h6>SELECCIONE UNA CUENTA PARA SUMAR UN PERFIL</h6>
                                 <div class="table-responsive table-wrapper-scroll-y my-custom-scrollbar">
                                     <table class="table table-hover table-sm" style="width:100%">
                                         <thead class="text-white" style="background: #3B3F5C">

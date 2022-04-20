@@ -12,21 +12,6 @@
             <div class="modal-body">
 
                 <div class="row">
-
-                    <div class="col-sm-12 col-md-6">
-                        <div class="form-group text-center mt-4">
-                            <a href="javascript:void(0)" class="btn btn-dark" wire:click="mostrarRenovar()">Ver datos
-                                Cuenta</a>
-                        </div>
-                    </div>
-
-                    <div class="col-sm-12 col-md-6">
-                        <div class="form-group text-center mt-4">
-                            <a href="javascript:void(0)" class="btn btn-dark" wire:click="VencerCuenta()">Vencer
-                                Cuenta</a>
-                        </div>
-                    </div>
-                    @if ($mostrarRenovar == 1)
                         <div class="col-sm-12 col-md-6">
                             <div class="form-group">
                                 <label>
@@ -150,7 +135,7 @@
                                     Cuenta</a>
                             </div>
                         </div>
-                    @endif
+                    
                 </div>
             </div>
         </div>

@@ -49,23 +49,37 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-sm-12 col-md-3">
+                        <div class="form-group">
+                            <div class="n-chk">
+                                <label class="new-control new-radio radio-classic-primary">
+                                    <input type="radio" class="new-control-input" name="custom-radio-4" id=""
+                                        value="inhabilitadas" wire:model="condicional">
+                                    <span class="new-control-indicator"></span>
+                                    <h6>CUENTAS NO RENOVADAS</h6>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            @if ($condicional == 'cuentas')
+            @if ($condicional == 'cuentas' || $condicional == 'inhabilitadas')
                 <div class="widget-content">
                     <div class="table-responsive">
                         <table class="table table-unbordered table-hover mt-2">
                             <thead class="text-white" style="background: #3B3F5C">
                                 <tr>
-                                    <th class="table-th text-withe">PLATAFORMA Y PROVEEDOR</th>
+                                    <th class="table-th text-withe text-center">PLATAFORMA Y PROVEEDOR</th>
                                     <th class="table-th text-withe text-center">GMAIL O NOMBRE-USUARIO</th>
                                     <th class="table-th text-withe text-center">PASS CUENTA</th>
                                     <th class="table-th text-withe text-center">EXPIRACIÓN CUENTA</th>
                                     <th class="table-th text-withe text-center">TIPO</th>
                                     <th class="table-th text-withe text-center">MAX. PERF</th>
+                                    @if ($condicional == 'cuentas')
                                     <th class="table-th text-withe text-center">PERF. LIBRES</th>
-                                    <th class="table-th text-withe text-center">PERF. OCUPADOS</th>
+                                    <th class="table-th text-withe text-center">PERF. OCUPADOS</th>                                    
                                     <th class="table-th text-withe text-center">ACCIONES</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -81,11 +95,11 @@
                                         </td>
                                         <td>
                                             <h6 class="text-center">{{ $acounts->password_account }}</h6>
-                                        </td>
+                                        </td> {{$acounts->dias}}
                                         <td class="text-center"
-                                            style="{{ $acounts->dias <= 5 ? 'background-color: #FF0000 !important' : 'background-color: #09ed3d !important' }}">
+                                            style="{{ $acounts->dias >= 5 ? 'background-color: #FF0000 !important' : $acounts->dias <= 5 && $acounts->dias >= 0 ? 'background-color: #f1dc08 !important' : 'background-color: #09ed3d !important' }}">
                                             <a href="javascript:void(0)"
-                                                wire:click="AccionesCuenta({{ $acounts->id }})"
+                                                wire:click="mostrarRenovar({{ $acounts->id }})"
                                                 class="btn btn-primary" title="Renovar">
                                                 {{ \Carbon\Carbon::parse($acounts->expiration_account)->format('d/m/Y') }}
                                             </a>
@@ -96,22 +110,31 @@
                                         <td>
                                             <h6 class="text-center">{{ $acounts->number_profiles }}</h6>
                                         </td>
+                                        @if ($condicional == 'cuentas')
                                         <td>
                                             <h6 class="text-center">{{ $acounts->perfLibres }}</h6>
                                         </td>
                                         <td>
                                             <h6 class="text-center">{{ $acounts->perfOcupados }}</h6>
-                                        </td>
+                                        </td>                                        
                                         <td class="text-center">
                                             <a href="javascript:void(0)" wire:click="Crear({{ $acounts->id }})"
-                                                class="btn btn-dark mtmobile" title="Crear Perfil">
-                                                <i class="fa-regular fa-square-plus"></i>
+                                                class="btn btn-dark mtmobile" title="Ver Perfiles">
+                                                <i class="fa-solid fa-user-gear"></i>
                                             </a>
                                             <a href="javascript:void(0)" wire:click="Edit({{ $acounts->id }})"
-                                                class="btn btn-dark mtmobile" title="Edit">
+                                                class="btn btn-dark mtmobile" title="Editar Cuenta">
                                                 <i class="fas fa-edit"></i>
                                             </a>
+                                            @if ($acounts->dias <= 0)
+                                                <a href="javascript:void(0)"
+                                                    onclick="ConfirmarInhabilitar('{{ $acounts->id }}','{{ $acounts->perfOcupados }}')"
+                                                    class="btn btn-dark mtmobile" title="Inhabilitar">
+                                                    <i class="fa-regular fa-trash-can"></i>
+                                                </a>
+                                            @endif
                                         </td>
+                                        @endif
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -309,55 +332,7 @@
             noty(msg)
         }); */
 
-        flatpickr(document.getElementsByClassName('flatpickr'), {
-            enableTime: false,
-            dateFormat: 'Y-m-d',
-            locale: {
-                firstDayofweek: 1,
-                weekdays: {
-                    shorthand: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
-                    longhand: [
-                        "Domingo",
-                        "Lunes",
-                        "Martes",
-                        "Miércoles",
-                        "Jueves",
-                        "Viernes",
-                        "Sábado",
-                    ],
-                },
-                months: {
-                    shorthand: [
-                        "Ene",
-                        "Feb",
-                        "Mar",
-                        "Abr",
-                        "May",
-                        "Jun",
-                        "Jul",
-                        "Ago",
-                        "Sep",
-                        "Oct",
-                        "Nov",
-                        "Dic",
-                    ],
-                    longhand: [
-                        "Enero",
-                        "Febrero",
-                        "Marzo",
-                        "Abril",
-                        "Mayo",
-                        "Junio",
-                        "Julio",
-                        "Agosto",
-                        "Septiembre",
-                        "Octubre",
-                        "Noviembre",
-                        "Diciembre",
-                    ],
-                },
-            }
-        })
+
     });
 
     function ConfirmVencer(cuenta) {
@@ -435,11 +410,19 @@
         })
     }
 
-    function Confirmar(id, name) {
+    function ConfirmarInhabilitar(id, ocupados) {
+        if (ocupados > 0) {
+            swal.fire({
+                title: 'PRECAUCION',
+                icon: 'warning',
+                text: 'No se puede inhabilitar la cuenta porque tiene , ' + ocupados + ' perfil/es ocupado/s.'
+            })
+            return;
+        }
         swal.fire({
             title: 'CONFIRMAR',
             icon: 'warning',
-            text: 'Confirmar eliminar la cuenta ' + '"' + name + '"',
+            text: '¿Confirmar inhabilitar la cuenta?',
             showCancelButton: true,
             cancelButtonText: 'Cerrar',
             cancelButtonColor: '#383838',
@@ -447,7 +430,7 @@
             confirmButtonText: 'Aceptar'
         }).then(function(result) {
             if (result.value) {
-                window.livewire.emit('borrarPerfil', id)
+                window.livewire.emit('InhabilitarCuenta', id)
                 Swal.close()
             }
         })

@@ -3,7 +3,7 @@
         <div class="modal-content">
             <div class="modal-header bg-dark">
                 <h5 class="modal-title text-white">
-                    <b>CREACION DE PERFILES</b>
+                    <b>PERFILES DE ESTA CUENTA</b>
                 </h5>
                 <button class="close" data-dismiss="modal" type="button" aria-label="Close">
                     <span class="text-white">&times;</span>
@@ -99,7 +99,7 @@
                             </tr>
                         </thead>
 
-                        <tbody>                            
+                        <tbody>
                             @foreach ($perfiles as $d)
                                 <tr>
                                     <td class="text-center">
