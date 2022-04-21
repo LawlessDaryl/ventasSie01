@@ -99,7 +99,7 @@ class ReportEntregadoServController extends Component
         ->join('mov_services as ms', 'ms.movimiento_id', 'm.id')
         ->join('services as serv', 'serv.id','ms.service_id')
         ->select('m.*')
-        ->whereBetween('serv.created_at', [$from, $to])
+        ->whereBetween('m.created_at', [$from, $to])
         ->where('m.status', 'ACTIVO')
         ->where('cm.comentario', 'SERVICIOS')
         ->where('carteras.tipo', 'CajaFisica')
@@ -114,7 +114,7 @@ class ReportEntregadoServController extends Component
         ->join('mov_services as ms', 'ms.movimiento_id', 'm.id')
         ->join('services as serv', 'serv.id','ms.service_id')
         ->select('m.*')
-        ->whereBetween('serv.created_at', [$from, $to])
+        ->whereBetween('m.created_at', [$from, $to])
         ->where('m.status', 'ACTIVO')
         ->where('cm.comentario', 'SERVICIOS')
         ->where('carteras.tipo', 'Banco')
@@ -195,6 +195,7 @@ class ReportEntregadoServController extends Component
             }
         } else {
             if ($this->userId == 0) {
+                /* ENTRARA AQUI */
                 $this->data = Service::join('order_services as os', 'os.id', 'services.order_service_id')
                     ->join('mov_services as ms', 'services.id', 'ms.service_id')
                     ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
@@ -207,8 +208,8 @@ class ReportEntregadoServController extends Component
                     ->select(
                         'services.*'
                     )
-                    ->whereBetween('os.created_at', [$from, $to])
-                    ->where('mov.type', $this->estado)
+                    ->where('mov.type', 'ENTREGADO')
+                    ->whereBetween('mov.created_at', [$from, $to])
                     ->orderBy('services.id', 'desc')
                     ->distinct()
                     ->get();

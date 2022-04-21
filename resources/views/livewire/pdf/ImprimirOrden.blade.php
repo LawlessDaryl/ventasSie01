@@ -24,10 +24,20 @@
 
 <body>
 
-
+    @php
+        $x=0
+    @endphp
     @foreach ($datos->services as $key => $item2)
-    @if (count($datos->services)  != $key)
-        <div class="page-break">
+    {{-- @if (count($datos->services) != $key) --}}
+        
+        @if($x==($key-1))
+            <div>
+        @else
+            <div class="page-break">
+        @endif
+        @php
+            $x++
+        @endphp
             <section class="header" style="top: -290px; left:-30px">
 
 
@@ -389,7 +399,7 @@
             </section>
         </div>
   
-    @endif
+   {{--  @endif --}}
 
     @endforeach
 

@@ -40,7 +40,7 @@ class ExportServicioEntregPdfController extends Controller
                 ->select(
                     'services.*'
                 )
-                ->whereBetween('os.created_at', [$from, $to])
+                ->whereBetween('mov.created_at', [$from, $to])
                 ->orderBy('services.id', 'desc')
                 ->distinct()
                 ->get();
@@ -53,7 +53,7 @@ class ExportServicioEntregPdfController extends Controller
         ->join('mov_services as ms', 'ms.movimiento_id', 'm.id')
         ->join('services as serv', 'serv.id','ms.service_id')
         ->select('m.*')
-        ->whereBetween('serv.created_at', [$from, $to])
+        ->whereBetween('m.created_at', [$from, $to])
         ->where('m.status', 'ACTIVO')
         ->where('m.type', 'like', 'ENTREGADO')
         ->where('cm.comentario', 'SERVICIOS')
@@ -69,7 +69,7 @@ class ExportServicioEntregPdfController extends Controller
         ->join('mov_services as ms', 'ms.movimiento_id', 'm.id')
         ->join('services as serv', 'serv.id','ms.service_id')
         ->select('m.*')
-        ->whereBetween('serv.created_at', [$from, $to])
+        ->whereBetween('m.created_at', [$from, $to])
         ->where('m.status', 'ACTIVO')
         ->where('m.type', 'like', 'ENTREGADO')
         ->where('cm.comentario', 'SERVICIOS')

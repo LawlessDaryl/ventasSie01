@@ -181,7 +181,7 @@
                                                         {{-- FECHA --}}
                                                         <div class="col-sm-2">
                                                             <h6 class="table-th text-withe text-center" style="font-size: 100%">
-                                                                {{ $service->fecha_estimada_entrega }}</h6><br />
+                                                                {{ \Carbon\Carbon::parse($service->fecha_estimada_entrega)->format('d/m/Y h:i:s') }}</h6><br />
                                                         </div>
                                                         {{-- SERVICIOS --}}
                                                         <div class="col-sm-4">
@@ -346,7 +346,7 @@
                                                         {{-- FECHA --}}
                                                         <div class="col-sm-2">
                                                             <h6 class="table-th text-withe text-center" style="font-size: 100%">
-                                                                {{ $service->fecha_estimada_entrega }}</h6><br />
+                                                                {{ \Carbon\Carbon::parse($service->fecha_estimada_entrega)->format('d/m/Y h:i:s') }}</h6><br />
                                                         </div>
                                                         {{-- SERVICIOS --}}
                                                         <div class="col-sm-4">
@@ -507,7 +507,7 @@
                                                     {{-- FECHA --}}
                                                     <div class="col-sm-2">
                                                         <h6 class="table-th text-withe text-center" style="font-size: 100%">
-                                                            {{ $service->fecha_estimada_entrega }}</h6><br />
+                                                            {{ \Carbon\Carbon::parse($service->fecha_estimada_entrega)->format('d/m/Y h:i:s') }}</h6><br />
                                                     </div>
                                                     {{-- SERVICIOS --}}
                                                     <div class="col-sm-4">

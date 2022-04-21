@@ -84,7 +84,7 @@
                                             @foreach($d->movservices as $movser)
                                                 @if($movser->movs->type=='ENTREGADO' && $movser->movs->status == 'ACTIVO')
                                                     <td class="text-center">
-                                                        <h6>{{ $movser->movs->created_at }}</h6>
+                                                        <h6>{{ \Carbon\Carbon::parse($movser->movs->created_at)->format('d/m/Y') }}</h6>
                                                     </td>
                                                 @endif
                                             @endforeach

@@ -117,7 +117,7 @@ class ReporteServiceController extends Component
                     ->select(
                         'services.*'
                     )
-                    ->whereBetween('os.created_at', [$this->from, $this->to])
+                    ->whereBetween('mov.created_at', [$this->from, $this->to])
                     ->orderBy('services.id', 'desc')
                     ->distinct()
                     ->get();
@@ -144,7 +144,7 @@ class ReporteServiceController extends Component
                     ->select(
                         'services.*'
                     )
-                    ->whereBetween('os.created_at', [$this->from, $this->to])
+                    ->whereBetween('mov.created_at', [$this->from, $this->to])
                     ->where('mov.user_id', $this->userId)
                     ->orderBy('services.id', 'desc')
                     ->distinct()
@@ -164,7 +164,7 @@ class ReporteServiceController extends Component
                     ->select(
                         'services.*'
                     )
-                    ->whereBetween('os.created_at', [$this->from, $this->to])
+                    ->whereBetween('mov.created_at', [$this->from, $this->to])
                     ->where('mov.type', $this->estado)
                     ->orderBy('services.id', 'desc')
                     ->distinct()
@@ -182,7 +182,7 @@ class ReporteServiceController extends Component
                     ->select(
                         'services.*'
                     )
-                    ->whereBetween('os.created_at', [$this->from, $this->to])
+                    ->whereBetween('mov.created_at', [$this->from, $this->to])
                     ->where('mov.user_id', $this->userId)
                     ->where('mov.type', $this->estado)
                     ->orderBy('services.id', 'desc')

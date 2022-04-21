@@ -122,7 +122,7 @@
                                         </td>
                                         @foreach ($d->movservices as $mv)
                                             <td class="text-center">
-                                                <h6>{{ $d->fecha_estimada_entrega }}</h6>
+                                                <h6>{{ \Carbon\Carbon::parse($d->fecha_estimada_entrega)->format('d/m/Y h:i:s') }}</h6>
                                             </td>
                                             <td class="text-center">
                                                 <h6>{{ $d->horas }}</h6>
@@ -164,7 +164,7 @@
                                         @foreach ($d2->movservices as $mv2)
                                             @if ($mv2->movs->type == 'PROCESO')
                                                 <td class="text-center">
-                                                    <h6>{{ $d2->fecha_estimada_entrega }}</h6>
+                                                    <h6>{{ \Carbon\Carbon::parse($d2->fecha_estimada_entrega)->format('d/m/Y h:i:s') }}</h6>
                                                 </td>
                                                 <td class="text-center">
                                                     <h6>{{ $d2->horas }}</h6>
@@ -205,7 +205,7 @@
                                     @foreach ($d3->movservices as $mv3)
                                         @if ($mv3->movs->type == 'TERMINADO')
                                             <td class="text-center">
-                                                <h6>{{ $d3->fecha_estimada_entrega }}</h6>
+                                                <h6>{{ \Carbon\Carbon::parse($d3->fecha_estimada_entrega)->format('d/m/Y h:i:s') }}</h6>
                                             </td>
                                             <td class="text-center">
                                                 <h6>{{ $mv3->movs->created_at }}</h6>

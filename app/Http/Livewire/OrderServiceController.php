@@ -280,7 +280,7 @@ class OrderServiceController extends Component
                                 ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
                                 ->where('mov.status', 'ACTIVO')
                                 ->select('order_services.*')
-                                ->whereBetween('order_services.created_at', [$from, $to])
+                                ->whereBetween('mov.created_at', [$from, $to])
                                 ->orderBy('order_services.id', 'desc')
                                 ->distinct()
                                 ->paginate($this->pagination);
@@ -525,7 +525,7 @@ class OrderServiceController extends Component
                                 ->where('mov.status', 'ACTIVO')
                                 ->where('suc.id',$this->sucursal)
                                 ->select('order_services.*')
-                                ->whereBetween('order_services.created_at', [$from, $to])
+                                ->whereBetween('mov.created_at', [$from, $to])
                                 ->orderBy('order_services.id', 'desc')
                                 ->distinct()
                                 ->paginate($this->pagination);

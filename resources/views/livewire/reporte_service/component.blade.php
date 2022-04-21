@@ -79,10 +79,10 @@
                         <label><h6 style="font-size: 90%">ESTADO: {{$estadovista}}</h6></label><br/>
                     </div>
                     <div class="col-lg-3">
-                        <label><h6 style="font-size: 90%">FECHA DESDE: {{$fechadesde}}</h6></label><br/>
+                        <label><h6 style="font-size: 90%">FECHA DESDE: {{ \Carbon\Carbon::parse($fechadesde)->format('d/m/Y') }}</h6></label><br/>
                     </div>
                     <div class="col-lg-3">
-                        <label><h6 style="font-size: 90%">FECHA HASTA: {{$fechahasta}}</h6></label><br/>
+                        <label><h6 style="font-size: 90%">FECHA HASTA: {{ \Carbon\Carbon::parse($fechahasta)->format('d/m/Y') }}</h6></label><br/>
                     </div>
                 </div>
 
@@ -129,10 +129,11 @@
                                             <td class="text-center">
                                                 <h6 style="font-size: 70%">{{ $d->order_service_id }}</h6>
                                             </td>
+                                            {{-- FECHA --}}
                                             @foreach ($d->movservices as $mv)
                                                 @if ($mv->movs->type == 'PENDIENTE')
                                                     <td class="text-center">
-                                                        <h6 style="font-size: 70%">{{ $mv->movs->created_at }}</h6>
+                                                        <h6 style="font-size: 70%">{{ \Carbon\Carbon::parse($mv->movs->created_at)->format('d/m/Y') }}</h6>
                                                     </td>
                                                     @if ($mv->movs->status == 'ACTIVO')
                                                         <td class="text-center">
@@ -155,7 +156,7 @@
                                                 @endif
                                                 @if ($mv->movs->type == 'TERMINADO')
                                                     <td class="text-center">
-                                                        <h6 style="font-size: 70%">{{ $mv->movs->created_at }}</h6>
+                                                        <h6 style="font-size: 70%">{{ \Carbon\Carbon::parse($mv->movs->created_at)->format('d/m/Y') }}</h6>
                                                     </td>
                                                     @if ($mv->movs->status == 'ACTIVO')
                                                         <td class="text-center">
@@ -166,7 +167,7 @@
 
                                                 @if ($mv->movs->type == 'ENTREGADO')
                                                     <td class="text-center">
-                                                        <h6 style="font-size: 70%">{{ $mv->movs->created_at }}</h6>
+                                                        <h6 style="font-size: 70%">{{ \Carbon\Carbon::parse($mv->movs->created_at)->format('d/m/Y') }}</h6>
                                                     </td>
                                                 @elseif ($mv->movs->type == 'ABANDONADO')
                                                     <td class="text-center">
@@ -189,25 +190,31 @@
                                                 @endif --}}
 
                                             @endforeach
+                                            {{-- COSTO --}}
                                             <td class="text-center">
                                                 <h6 style="font-size: 70%">{{ number_format($d->costo, 2) }}</h6>
                                             </td>
+                                            {{-- TOTAL --}}
                                             <td class="text-center">
                                                 <h6 style="font-size: 70%">{{ number_format($d->movservices[0]->movs->import, 2) }}</h6>
                                             </td>
+                                            {{-- A CUENTA --}}
                                             <td class="text-center">
                                                 <h6 style="font-size: 70%">{{ number_format($d->movservices[0]->movs->on_account, 2) }}</h6>
                                             </td>
+                                            {{-- SALDO --}}
                                             <td class="text-center">
                                                 <h6 style="font-size: 70%">{{ number_format($d->movservices[0]->movs->saldo, 2) }}</h6>
                                             </td>
-
+                                            {{-- TIPO SERVICIO --}}
                                             <td class="text-center">
                                                 <h6 style="font-size: 70%">{{ $d->OrderServicio->type_service }}</h6>
                                             </td>
+                                            {{-- DETALLE --}}
                                             <td class="text-center">
                                                 <h6 style="font-size: 70%">{{ $d->marca }} {{ $d->categoria->nombre }}</h6>
                                             </td>
+                                            {{-- ESTADO Y TECNICO RESPONSABLE --}}
                                             @foreach ($d->movservices as $mv)
                                                 @if ($mv->movs->type == 'PENDIENTE' && $mv->movs->status == 'ACTIVO')
                                                     <td class="text-center">
