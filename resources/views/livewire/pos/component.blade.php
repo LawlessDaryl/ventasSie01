@@ -223,14 +223,18 @@
                                         <div class="connect-sorting-content mt-4">
                                             <div class="card simple-title-task ui-sortable-handle">
                                                 <div class="card-body">
+                                                    <h5 class="text-center">Total Venta: Bs {{ number_format($total, 2) }}</h5>
                                                     <div class="input-group input-group-md mb-3">
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text input-gp hideonsm" 
-                                                            style="background:#3B3F5C; color:white">Efectivo F8
+                                                            style="background:#3B3F5C; color:white">Efectivo
                                                             </span>
                                                         </div>
-                                                        <input type="number" id="cash" wire:model="efectivo" wire:keydown.enter="saveSale"
-                                                            class="form-control text-center" value="{{ $efectivo }}">
+                                                        <input type="number" id="cash" wire:model="efectivo" wire:keydown.enter="calcularCambio($('#cash').val())"
+                                                            class="form-control text-center">
+
+                                                            {{-- wire:change="precioventa({{$item->id}}, $('#pp' + {{$item->id}}).val(), $('#r' + {{$item->id}}).val() )" --}}
+
                                                         <div class="input-group-append">
                                                             <span wire:click="$set('efectivo',0)" class="input-group-text"
                                                                 style="background:#3B3F5C; color:white">
@@ -239,13 +243,17 @@
 
                                                         </div>
                                                     </div>
-                                                    <h4 class="text-muted text-center">Cambio: Bs {{ number_format($change, 2) }}</h4>
+                                                    @if ($efectivo>=$total&&$total>0)
+                                                        <h5 class="text-center">Cambio: Bs {{ number_format($change, 2) }}</h5>
+                                                    @else
+                                                    {{$this->calcularCambio($total)}}
+                                                    @endif
                                                     <div class="row justify-content-between mt-5">
                                                         <div class="col-sm-12 col-md-12 col-lg-6">
                                                             @if ($total > 0)
                                                                 <button  data-dismiss="modal" onclick="Confirm('','clearCart','¿Seguro de eliminar el carrito?')"
                                                                     class="btn btn-dark mtmobile">
-                                                                    CANCELAR F4
+                                                                    CANCELAR
                                                                 </button>
                                                             @endif
                                                         </div>

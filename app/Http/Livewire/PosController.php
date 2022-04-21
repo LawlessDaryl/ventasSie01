@@ -51,6 +51,7 @@ class PosController extends Component
         $this->facturasino = 'No';
         $this->descuento = 0;
         $this->totalBsBd = 0;
+        $this->actualizardescuento();
 
     }
     public function render()
@@ -190,6 +191,10 @@ class PosController extends Component
     {
         $this->efectivo += ($value == 0 ? $this->total : $value);
         $this->change = ($this->efectivo - $this->total);
+    }
+    public function calcularCambio($value)
+    {
+        $this->change = $value - $this->total;
     }
 
     protected $listeners = [
@@ -910,6 +915,11 @@ class PosController extends Component
     // Llamar al Modal de Monedas Para Finalizar las Ventas
     public function FinalizarVenta()
     {
+
+        //Poner Cambio en 0
+        //$this->calcularCambio($this->total);
+        $this->efectivo = 0;
+        //Llamar al Modal
         $this->emit('finalizarventa');
     }
     //Obtener el Id de la Sucursal Donde esta el Usuario

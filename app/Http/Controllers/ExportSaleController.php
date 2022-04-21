@@ -24,11 +24,11 @@ class ExportSaleController extends Controller
         //Obtener datos de la Venta
         $venta = Sale::join("sale_details as sd", "sd.sale_id", "sales.id")
         ->join("products as p", "p.id", "sd.product_id")
-        ->select("sales.created_at as fechaventa", "p.nombre as nombre", "p.precio_venta as precio","sd.quantity as cantidad")
+        ->select("sales.created_at as fechaventa", "p.nombre as nombre", "sd.price as precio","sd.quantity as cantidad")
         ->where("sales.id", $idventa)
         ->get();
 
-        //Obtener datos del cliente
+        //Obtener Datos del cliente
         $datoscliente = Cliente::join("cliente_movs as cm", "cm.cliente_id", "clientes.id")
         ->join("movimientos as m", "m.id", "cm.movimiento_id")
         ->join("sales as s", "s.movimiento_id", "m.id")
