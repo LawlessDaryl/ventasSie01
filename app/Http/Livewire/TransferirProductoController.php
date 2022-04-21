@@ -6,6 +6,8 @@ use App\Models\Category;
 use App\Models\Compra as ModelsCompra;
 use App\Models\Destino;
 use App\Models\DetalleTransferencia;
+use App\Models\Estado_Transferencia;
+use App\Models\EstadoTrans_Detalle;
 use App\Models\Location;
 use App\Models\Product;
 use App\Models\ProductosDestino;
@@ -27,7 +29,7 @@ class TransferirProductoController extends Component
 
     public $selected_id,$search,
     $itemsQuantity,$selected_3,$selected_origen=0,$selected_destino;
-    private $pagination = 10;
+    private $pagination = 10,$observacion;
     public function paginationView()
     {
         return 'vendor.livewire.bootstrap';
@@ -46,25 +48,21 @@ class TransferirProductoController extends Component
       
         if($this->selected_origen !== 0){
 
-         
-
             $almacen= ProductosDestino::join('products as prod','prod.id','productos_destinos.product_id')
                                         ->join('destinos as dest','dest.id','productos_destinos.destino_id')
                                         ->select('prod.nombre as name','dest.nombre as nombre_destino','dest.id as dest_id','prod.id as prod_id')
                                         ->where('dest.id',$this->selected_origen)
                                         ->orderBy('prod.nombre','desc')
                                         ->paginate($this->pagination);
-               
-                                        
-        }
+                                        }
             
             else{
                
                 $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
-                                            ->join('destinos as dest','dest.id','productos_destinos.destino_id')
-                                            ->select(DB::raw('SUM(productos_destinos.stock) as stock_s'),'p.nombre as name','p.cantidad_minima as cant_min')
-                                            ->groupBy('productos_destinos.product_id')
-                                            ->paginate($this->pagination);
+                                        ->join('destinos as dest','dest.id','productos_destinos.destino_id')
+                                        ->select(DB::raw('SUM(productos_destinos.stock) as stock_s'),'p.nombre as name','p.cantidad_minima as cant_min')
+                                        ->groupBy('productos_destinos.product_id')
+                                        ->paginate($this->pagination);
             }
                  $sucursal_ubicacion=Destino::join('sucursals as suc','suc.id','destinos.sucursal_id')
                                         ->select ('suc.name as sucursal','destinos.nombre as destino','destinos.id as destino_id')
@@ -96,8 +94,6 @@ class TransferirProductoController extends Component
 
         $this->itemsQuantity = Transferencia::getTotalQuantity();
         $this->emit('scan-ok', $title);
-       
-
     }
 
     public function UpdateQty($productId, $cant =1)
@@ -150,9 +146,10 @@ class TransferirProductoController extends Component
 
         try {
             $Transferencia_encabezado = Transference::create([
-                'status'=>2,
+                'observacion'=>'sss',
                 'estado'=>1,
-                'id_usuario'=>Auth()->user()->id
+                'id_destino'=>1,
+                'id_origen'=>2,
             ]);
 
             if ($Transferencia_encabezado)
@@ -163,9 +160,8 @@ class TransferirProductoController extends Component
                    $ss=DetalleTransferencia::create([
                         'product_id' => $item->id,
                         'cantidad' => $item->quantity,
-                        'id_destino'=>$this->selected_destino
+                        'estado'=>1
                     ]);
-
 
                     $q=ProductosDestino::where('product_id',$item->id)
                     ->where('destino_id',$this->selected_origen)->value('stock');
@@ -187,10 +183,16 @@ class TransferirProductoController extends Component
                     /*DB::table('productos_destinos')
                     ->updateOrInsert(['stock'],$item->quantity, ['product_id' => $item->id, 'destino_id'=>$this->destino]);*/
                     
-                    transferencia_detalle::create
-                    ([
-                        'id_transferencia'=> $Transferencia_encabezado->id,
-                        'id_detalle'=>$ss->id
+                    Estado_Transferencia::create([
+                        'estado'=>1,
+                        'id_transferencia'=>3,
+                        'id_usuario'=>'sss'
+
+                    ]);
+
+                    EstadoTrans_Detalle::create([
+                        'estado_id'=>1,
+                        'detalle_id'=>3
                     ]);
                     
                 }

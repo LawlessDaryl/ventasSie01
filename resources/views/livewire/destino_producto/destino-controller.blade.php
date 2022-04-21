@@ -15,7 +15,7 @@
                 <div class="col-12 col-lg-8 col-md-3 ml-3">
 
                     <div class="row">
-                        <div class="col-lg-6 col-md-6 col-12">
+                        <div class="col-lg-4 col-md-6 col-12">
                             <div class="form-group">
                                 <label> <strong style="color: black" >Origen de transferencia:</strong> </label>
                                 <select wire:model='selected_origen' class="form-control">
@@ -26,8 +26,8 @@
                                 </select>
                               </div>
                             </div> 
-s
-                            <div class="col-lg-6 col-md-6 col-12">
+
+                            <div class="col-lg-4 col-md-6 col-12">
                                 <div class="form-group">
                                     <label> <strong style="color: black">Destino de transferencia:</strong> </label>
                                     <select wire:model='selected_destino' class="form-control">
@@ -39,14 +39,17 @@ s
                                     </select>
                                   </div>
                                 </div>
+                                <div class="col-lg-4">
+                                
+                                    <div class="form-group">
+                                        <label> <strong style="color: black">Observacion:</strong> </label>
+                                        <input  wire:model='observacion' class="form-control" type="text">
+                                      </div>
+
+                                </div>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-4 col-12">
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" wire:model='selected_3' type="checkbox" id="flexSwitchCheckChecked">
-                        <label class="form-check-label" for="flexSwitchCheckChecked">Elegir destino/producto</label>
-                      </div>
-                </div>
+               
 
             </div>
           

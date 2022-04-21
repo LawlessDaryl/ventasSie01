@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTransferenciaDetallesTable extends Migration
+class CreateEstadoTransferenciasTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,13 @@ class CreateTransferenciaDetallesTable extends Migration
      */
     public function up()
     {
-        Schema::create('transferencia_detalles', function (Blueprint $table) {
+        Schema::create('estado_transferencias', function (Blueprint $table) {
             $table->id();
+            $table->enum('estado',['Pendiente','Aprobado','Rechazado','En transito','Recibido'])->default('Pendiente');
             $table->unsignedBigInteger('id_transferencia');
             $table->foreign('id_transferencia')->references('id')->on('transferences');
-            $table->unsignedBigInteger('id_detalle');
-            $table->foreign('id_detalle')->references('id')->on('detalle_transferencias');
+            $table->unsignedBigInteger('id_usuario');
+            $table->foreign('id_usuario')->references('id')->on('users');
             $table->timestamps();
         });
     }
@@ -30,6 +31,6 @@ class CreateTransferenciaDetallesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('transferencia_detalles');
+        Schema::dropIfExists('estado_transferencias');
     }
 }

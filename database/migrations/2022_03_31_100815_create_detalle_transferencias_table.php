@@ -21,8 +21,8 @@ class CreateDetalleTransferenciasTable extends Migration
 
             $table->integer('cantidad');
 
-            $table->unsignedBigInteger('id_destino');
-            $table->foreign('id_destino')->references('id')->on('destinos');
+           
+            $table->enum('estado',['Activo','Inactivo'])->default('Activo');
 
             $table->timestamps();
             

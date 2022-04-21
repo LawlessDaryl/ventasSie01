@@ -5,9 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class transferencia_detalle extends Model
+class EstadoTrans_Detalle extends Model
 {
     use HasFactory;
-
-    protected $fillable = ['id_transferencia','id_detalle'];
+    protected $fillable= ['estado_id','detalle_id'];
 }

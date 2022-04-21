@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class Transference extends Model
 {
     use HasFactory;
-    protected $fillable=['fecha_transferencia','status','id_usuario'];
+    protected $fillable=['observacion','estado','id_destino','id_origen'];
 }
