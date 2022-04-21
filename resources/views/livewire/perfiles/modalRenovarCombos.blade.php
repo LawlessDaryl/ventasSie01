@@ -40,7 +40,7 @@
 
                     <div class="col-sm-12 col-md-4">
                         <div class="form-group">
-                            <label>Expiracion cuenta {{ $plataforma1Nombre }}</label>
+                            <h6>Expiracion cuenta {{ $plataforma1Nombre }}</h6>
                             <h6 class="form-control"><strong>
                                     {{ \Carbon\Carbon::parse($expiracionCuenta1)->format('d/m/Y') }}</strong>
                             </h6>
@@ -158,7 +158,7 @@
 
                     <div class="col-sm-12 col-md-4">
                         <div class="form-group">
-                            <label>Expiracion cuenta {{ $plataforma2Nombre }}</label>
+                            <h6>Expiracion cuenta {{ $plataforma2Nombre }}</h6>
                             <h6 class="form-control"><strong>
                                     {{ \Carbon\Carbon::parse($expiracionCuenta2)->format('d/m/Y') }}</strong>
                             </h6>
@@ -276,7 +276,7 @@
 
                     <div class="col-sm-12 col-md-4">
                         <div class="form-group">
-                            <label>Expiracion cuenta {{ $plataforma3Nombre }}</label>
+                            <h6>Expiracion cuenta {{ $plataforma3Nombre }}</h6>
                             <h6 class="form-control"><strong>
                                     {{ \Carbon\Carbon::parse($expiracionCuenta3)->format('d/m/Y') }}</strong>
                             </h6>
@@ -372,27 +372,31 @@
                     <div class="col-sm-12 col-md-6">
                         <div class="form-group">
                             <h6>Nombre Cliente</h6>
-                            <input type="text" disabled wire:model="nombreCliente" class="form-control">
-                            @error('nombreCliente')
-                                <span class="text-danger er">{{ $message }}</span>
-                            @enderror
+                            <h6 class="form-control"><strong> {{ $nombreCliente }}</strong></h6>
                         </div>
                     </div>
 
                     <div class="col-sm-12 col-md-6">
                         <div class="form-group">
                             <h6>Celular</h6>
-                            <input type="text" disabled wire:model="celular" class="form-control">
-                            @error('celular')
+                            <h6 class="form-control"><strong> {{ $celular }}</strong></h6>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-3">
+                        <div class="form-group">
+                            <h6>Dias calculo</h6>
+                            <input type="number" wire:model="diasdePlan" class="form-control">
+                            @error('diasdePlan')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror
                         </div>
                     </div>
-                    <div class="col-sm-12 col-md-6">
+
+                    <div class="col-sm-12 col-md-3">
                         <div class="form-group">
                             <h6>Meses a renovar</h6>
-                            <input type="number" wire:model="meses" class="form-control"
-                                placeholder="PerfilNetflix1">
+                            <input type="number" wire:model="meses" class="form-control">
                             @error('meses')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror

@@ -100,6 +100,7 @@ class PlanesController extends Component
         $this->mostrartablaPerfiles = 'NO';
         $this->arrayCuentas = array();
         $this->arrayPerfiles = array();
+        $this->diasdePlan = 30;
     }
 
     public function render()
@@ -336,14 +337,16 @@ class PlanesController extends Component
                 ->paginate($this->pagination);
         }
 
-        /* CALCULAR LA FECHA DE EXPIRACION SEGUN LA CANTIDAD DE MESES */
-        if ($this->meses > 0) {
-            $date_now = date('Y-m-d h:i:s', time());
-            $dias = $this->meses * 30;
-            $this->expiration_plan = strtotime('+' . $dias . ' day', strtotime($this->fecha_inicio));
-            $this->expiration_plan = date('Y-m-d', $this->expiration_plan);
-        } else {
-            $this->meses = 1;
+        /* CALCULAR LA FECHA DE EXPIRACION SEGUN LA CANTIDAD DE MESES Y DIAS */
+        if ($this->diasdePlan >= 1) {
+            if ($this->meses > 0) {
+                $date_now = date('Y-m-d h:i:s', time());
+                $dias = $this->meses * $this->diasdePlan;
+                $this->expiration_plan = strtotime('+' . $dias . ' day', strtotime($this->fecha_inicio));
+                $this->expiration_plan = date('Y-m-d', $this->expiration_plan);
+            } else {
+                $this->meses = 1;
+            }
         }
 
         /* BUSCAR CLIENTE POR CEDULA EN EL INPUT DEL MODAL */
@@ -480,8 +483,7 @@ class PlanesController extends Component
             $this->perfilPin3 = '';
             $this->plataforma3Require = 'NO';
 
-            $this->plataforma2 = 'Elegir';
-            $this->plataforma3 = 'Elegir';
+
 
             $this->cuentasp2 = [];
             $this->cuentasp3 = [];
@@ -510,8 +512,7 @@ class PlanesController extends Component
             $this->perfilPin3 = '';
             $this->plataforma3Require = 'NO';
 
-            $this->plataforma1 = 'Elegir';
-            $this->plataforma3 = 'Elegir';
+
 
             $this->cuentasp1 = [];
             $this->cuentasp3 = [];
@@ -540,25 +541,35 @@ class PlanesController extends Component
             $this->perfilPin3 = '';
             $this->plataforma3Require = 'NO';
 
-            $this->plataforma1 = 'Elegir';
-            $this->plataforma2 = 'Elegir';
+
 
             $this->cuentasp1 = [];
             $this->cuentasp2 = [];
         }
 
-        $platforms1 = Platform::where('estado', 'Activo')->where('perfiles', 'SI')->get();
+        if ($this->plataforma2 == 'Elegir' && $this->plataforma3 == 'Elegir') {
+            $platforms1 = Platform::where('estado', 'Activo')->where('perfiles', 'SI')->get();
+        } else {
+            $platforms1 = Platform::where('estado', 'Activo')
+                ->where('perfiles', 'SI')
+                ->where('id', '!=', $this->plataforma2)
+                ->where('id', '!=', $this->plataforma3)
+                ->get();
+        }
+
         /* mostrar cuentas de la plataforma 1 */
         if ($this->plataforma1 != 'Elegir') {
             $platforms2 = Platform::where('estado', 'Activo')
                 ->where('perfiles', 'SI')
                 ->where('id', '!=', $this->plataforma1)
+                ->where('id', '!=', $this->plataforma3)
                 ->get();
             $this->cuentasp1 = Account::where('status', 'ACTIVO')
                 ->where('accounts.start_account', '<=', $date_now)
                 ->where('accounts.expiration_account', '>=', $date_now)
                 ->where('availability', 'LIBRE')
-                ->where('platform_id', $this->plataforma1)->get();
+                ->where('platform_id', $this->plataforma1)
+                ->get();
             foreach ($this->cuentasp1 as $c) {
                 $perfilesOcupados = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                     ->join('profiles as p', 'ap.profile_id', 'p.id')
@@ -755,6 +766,8 @@ class PlanesController extends Component
             'perfil2id' => 'required_if:plataforma2Require,NO',
             'perfil3id' => 'required_if:plataforma3Require,NO',
             'importe' => 'required|integer|gt:0',
+            'meses' => 'required|integer|gt:0',
+            'diasdePlan' => 'required|integer|gt:0',
         ];
         $messages = [
             'nombre.required' => 'El nombre del cliente es requerido',
@@ -775,6 +788,12 @@ class PlanesController extends Component
             'importe.required' => 'El importe es requerido',
             'importe.integer' => 'El importe debe ser un número',
             'importe.gt' => 'El importe debe ser mayor a 0',
+            'meses.required' => 'La cantidad de meses es requerido',
+            'meses.integer' => 'La cantidad de meses debe ser un número',
+            'meses.gt' => 'La cantidad de meses debe ser mayor a 0',
+            'diasdePlan.required' => 'La cantidad de dias requerido',
+            'diasdePlan.integer' => 'La cantidad de dias debe ser un número',
+            'diasdePlan.gt' => 'La cantidad de dias debe ser mayor a 0',
         ];
 
         $this->validate($rules, $messages);
@@ -1106,6 +1125,7 @@ class PlanesController extends Component
         }
         $this->emit('show-modal', 'show modal!');
     }
+
     /* Cargar los datos seleccionados de la tabla a los label */
     public function Seleccionar($celular, $nombre)
     {
@@ -1128,6 +1148,8 @@ class PlanesController extends Component
             'accounts' => 'required_if:mostrartabla,1',
             'profiles' => 'required_if:mostrartabla,2',
             'importe' => 'required|integer|gt:0',
+            'meses' => 'required|integer|gt:0',
+            'diasdePlan' => 'required|integer|gt:0',
         ];
         $messages = [
             'plataforma.required' => 'La Plataforma es requerida',
@@ -1150,6 +1172,12 @@ class PlanesController extends Component
             'importe.required' => 'El importe es requerido',
             'importe.integer' => 'El importe debe ser un número',
             'importe.gt' => 'El importe debe ser mayor a 0',
+            'meses.required' => 'La cantidad de meses es requerido',
+            'meses.integer' => 'La cantidad de meses debe ser un número',
+            'meses.gt' => 'La cantidad de meses debe ser mayor a 0',
+            'diasdePlan.required' => 'La cantidad de dias requerido',
+            'diasdePlan.integer' => 'La cantidad de dias debe ser un número',
+            'diasdePlan.gt' => 'La cantidad de dias debe ser mayor a 0',
         ];
 
         $this->validate($rules, $messages);
@@ -1669,8 +1697,14 @@ class PlanesController extends Component
         $this->plataforma2Require = 'NO';
         $this->plataforma3Require = 'NO';
         $this->fecha_inicio = Carbon::parse(Carbon::now())->format('Y-m-d');
+        $this->Reset1Platf = 'INICIO';
+        $this->Reset2Platf = 'INICIO';
+        $this->Reset3Platf = 'INICIO';
+        $this->mostrartablaCuenta = 'NO';
+        $this->mostrartablaPerfiles = 'NO';
         $this->arrayCuentas = array();
         $this->arrayPerfiles = array();
+        $this->diasdePlan = 30;
         $this->resetValidation();
     }
 }

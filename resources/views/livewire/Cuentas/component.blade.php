@@ -9,7 +9,50 @@
                     <a href="javascript:void(0)" class="btn btn-dark" wire:click="Agregar()">Agregar</a>
                 </ul>
             </div>
-            @include('common.searchbox')
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-12">
+                    <div class="input-group mb-4">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text input-gp">
+                                <i class="fas fa-search"></i>
+                            </span>
+                        </div>
+                        <input type="text" wire:model="search" placeholder="Buscar" class="form-control">
+                    </div>
+                </div>
+                @if ($condicional == 'cuentas')
+                    <div class="col-sm-12 col-md-2">
+                        <div class="form-group">
+                            <h6 class="form-control"><strong>TIPO: </strong></h6>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-2">
+                        <div class="form-group">
+                            <select wire:model="EnterasDivididas" class="form-control">
+                                <option value="TODOS">TODOS</option>
+                                <option value="ENTERA">ENTERAS</option>
+                                <option value="DIVIDIDA">DIVIDIDAS</option>
+                            </select>
+                        </div>
+                    </div>
+                @endif
+                <div class="col-sm-12 col-md-2">
+                    <div class="form-group">
+                        <h6 class="form-control"><strong>PLATAFORMA: </strong></h6>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-2">
+                    <div class="form-group">
+                        <select wire:model="PlataformaFiltro" class="form-control">
+                            <option value="TODAS">TODAS</option>
+                            @foreach ($plataformas as $p)
+                                <option value="{{ $p->id }}">{{ $p->nombre }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            </div>
+
 
             <div class="form-group">
                 <div class="row">
@@ -213,7 +256,7 @@
                                             @endif>
                                             @if ($condicional == 'ocupados')
                                                 <a href="javascript:void(0)"
-                                                    wire:click="AccionesCuenta({{ $acounts->id }})"
+                                                    wire:click="mostrarRenovar({{ $acounts->id }})"
                                                     class="btn btn-primary" title="Renovar">
                                                     {{ \Carbon\Carbon::parse($acounts->expiration_account)->format('d/m/Y') }}
                                                 </a>
@@ -291,9 +334,9 @@
         </div>
     </div>
     @include('livewire.cuentas.form')
-    @include('livewire.cuentas.modalDetails')
-    @include('livewire.cuentas.modalDetails2')
-    @include('livewire.cuentas.modalDetails3')
+    @include('livewire.cuentas.modalPerfiles')
+    @include('livewire.cuentas.modalDetailsPlan')
+    @include('livewire.cuentas.modalRenovarProveedor')
 
 </div>
 
@@ -384,22 +427,6 @@
         })
     }
 
-    function ConfirmRenovar(cuenta, meses) {
-        swal.fire({
-            title: 'CONFIRMAR',
-            icon: 'warning',
-            text: '¿Esta seguro de renovar la cuenta ' + cuenta + ' por ' + meses + ' meses?',
-            showCancelButton: true,
-            cancelButtonText: 'Cerrar',
-            cancelButtonColor: '#383838',
-            confirmButtonColor: '#3B3F5C',
-            confirmButtonText: 'Aceptar'
-        }).then(function(result) {
-            if (result.value) {
-                window.livewire.emit('Renovar')
-            }
-        })
-    }
 
     function ConfirmCambiar(id, correo) {
         swal.fire({

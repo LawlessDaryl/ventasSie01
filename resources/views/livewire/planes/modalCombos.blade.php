@@ -33,7 +33,8 @@
                             <label>
                                 <h6>PLATAFORMA 2</h6>
                             </label>
-                            <select wire:model.lazy="plataforma2" class="form-control">
+                            <select @if ($plataforma1 == 'Elegir') disabled @endif wire:model.lazy="plataforma2"
+                                class="form-control">
                                 <option value="Elegir" disabled selected>Elegir</option>
                                 @foreach ($platforms2 as $item)
                                     <option value="{{ $item->id }}">{{ $item->nombre }}</option>
@@ -50,7 +51,8 @@
                             <label>
                                 <h6>PLATAFORMA 3</h6>
                             </label>
-                            <select wire:model.lazy="plataforma3" class="form-control">
+                            <select @if ($plataforma2 == 'Elegir') disabled @endif wire:model.lazy="plataforma3"
+                                class="form-control">
                                 <option value="Elegir" disabled selected>Elegir</option>
                                 @foreach ($platforms3 as $item)
                                     <option value="{{ $item->id }}">{{ $item->nombre }}</option>
@@ -372,20 +374,63 @@
                             </label>
                         </div>
                     </div>
-                    <div class="col-sm-12 col-md-6">
+
+                    <div class="col-sm-12 col-md-3">
+                        <div class="form-group">
+                            <label>
+                                <h6>Dias calculo</h6>
+                            </label>
+                            <input type="number" wire:model="diasdePlan" class="form-control">
+                            @error('diasdePlan')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-3">
+                        <div class="form-group">
+                            <label>
+                                <h6>Meses para el plan</h6>
+                            </label>
+                            <input type="number" wire:model="meses" class="form-control">
+                            @error('meses')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-3">
+                        <h6>Fecha de inicio</h6>
+                        <div class="form-group">
+                            <input type="date" wire:model="fecha_inicio" class="form-control">
+                            @error('fecha_inicio')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-3">
+                        <h6>Fecha de expiración</h6>
+                        <div class="form-group">
+                            <input type="date" wire:model="expiration_plan" class="form-control">
+                            @error('expiration_plan')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-5">
                         <div class="col-sm-12 col-md-12">
                             <div class="form-group">
                                 <label>
                                     <h6>Telefono Cliente</h6>
                                 </label>
-                                <input type="text" wire:model="celular" class="form-control"
-                                    placeholder="ej: 67786522">
+                                <input type="number" wire:model="celular" class="form-control">
                                 @error('celular')
                                     <span class="text-danger er">{{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
-
                         @if ($BuscarCliente != 0)
                             <div class="vertical-scrollable">
                                 <div class="row layout-spacing">
@@ -400,7 +445,7 @@
                                                                 <th class="table-th text-withe text-center">CELULAR
                                                                 </th>
                                                                 <th class="table-th text-withe">NOMBRE</th>
-                                                                <th class="table-th text-withe">SELECIONAR</th>
+                                                                <th class="table-th text-withe">ELEGIR</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -434,18 +479,20 @@
                             </div>
                         @endif
                     </div>
-                    <div class="col-sm-12 col-md-6">
+
+                    <div class="col-sm-12 col-md-4">
                         <div class="form-group">
                             <label>
                                 <h6>Nombre Cliente</h6>
                             </label>
-                            <input type="text" wire:model="nombre" class="form-control" placeholder="ej: Juan Perez">
+                            <input type="text" wire:model="nombre" class="form-control">
                             @error('nombre')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror
                         </div>
                     </div>
-                    <div class="col-sm-12 col-md-4">
+
+                    <div class="col-sm-12 col-md-3">
                         <div class="form-group">
                             <label>
                                 <h6>Tipo de pago</h6>
@@ -456,26 +503,6 @@
                                 <option value="TigoStreaming">TIGO MONEY</option>
                             </select>
                             @error('tipopago')
-                                <span class="text-danger er">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="col-sm-12 col-md-4">
-                        <h6>Fecha de inicio del plan</h6>
-                        <div class="form-group">
-                            <input type="date" wire:model="fecha_inicio" class="form-control">
-                            @error('fecha_inicio')
-                                <span class="text-danger er">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="col-sm-12 col-md-4">
-                        <h6>Fecha de expiración del plan</h6>
-                        <div class="form-group">
-                            <input type="date" wire:model="expiration_plan" class="form-control">
-                            @error('expiration_plan')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror
                         </div>

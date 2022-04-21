@@ -6,7 +6,35 @@
                     <b>{{ $componentName }} | {{ $pageTitle }}</b>
                 </h4>
             </div>
-            @include('common.searchbox')
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-12">
+                    <div class="input-group mb-4">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text input-gp">
+                                <i class="fas fa-search"></i>
+                            </span>
+                        </div>
+                        <input type="text" wire:model="search" placeholder="Buscar" class="form-control">
+                    </div>
+                </div>
+                @if ($condicional == 'ocupados' || $condicional == 'vencidos')
+                    <div class="col-sm-12 col-md-2">
+                        <div class="form-group">
+                            <h6 class="form-control"><strong> PLATAFORMA: </strong></h6>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-2">
+                        <div class="form-group">
+                            <select wire:model="PlataformaFiltro" class="form-control">
+                                <option value="TODAS">TODAS</option>
+                                @foreach ($plataformas as $p)
+                                    <option value="{{ $p->id }}">{{ $p->nombre }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                @endif
+            </div>
 
             <div class="form-group">
                 <div class="row">
@@ -473,23 +501,6 @@
                     'Se venció el perfil ' + nameperfil,
                     'El perfil a pasado a vencido.'
                 )
-            }
-        })
-    }
-
-    function ConfirmRenovar(nameperfil, meses) {
-        swal.fire({
-            title: 'CONFIRMAR',
-            icon: 'warning',
-            text: '¿Esta seguro de renovar el perfil ' + nameperfil + ' por ' + meses + ' meses?',
-            showCancelButton: true,
-            cancelButtonText: 'Cerrar',
-            cancelButtonColor: '#383838',
-            confirmButtonColor: '#3B3F5C',
-            confirmButtonText: 'Aceptar'
-        }).then(function(result) {
-            if (result.value) {
-                window.livewire.emit('Renovar')
             }
         })
     }

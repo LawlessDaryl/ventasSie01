@@ -73,15 +73,32 @@ class InicioController extends Component
         $this->horaActual = date("d-m-y H:i:s ");
 
         $user = User::find(Auth()->user()->id);
-        foreach($user->sucursalusers as $usersuc){
-            if($usersuc->estado == 'ACTIVO'){
-                $this->sucursal= $usersuc->sucursal->id;
+        foreach ($user->sucursalusers as $usersuc) {
+            if ($usersuc->estado == 'ACTIVO') {
+                $this->sucursal = $usersuc->sucursal->id;
             }
+        }
+        
+        $data = Caja::join('sucursals as s', 's.id', 'cajas.sucursal_id')
+            ->join('sucursal_users as su', 'su.sucursal_id', 's.id')
+            ->join('carteras as car', 'cajas.id', 'car.caja_id')
+            ->join('cartera_movs as cartmovs', 'car.id', 'cartmovs.cartera_id')
+            ->join('movimientos as mov', 'mov.id', 'cartmovs.movimiento_id')
+            ->where('mov.user_id', Auth()->user()->id)
+            ->where('mov.status', 'ACTIVO')
+            ->where('mov.type', 'APERTURA')
+            ->select('cajas.*', 's.name as sucursal')
+            ->get()->first();
+
+        if ($data) {
+            session(['sesionCaja' => $data->nombre]);
+        } else {
+            session(['sesionCaja' => null]);
         }
 
         /* dd($horaActual); */
         if ($this->condicional == 'Pendientes') {
-            if($this->condicion == 'Todos'){
+            if ($this->condicion == 'Todos') {
                 if ($this->catprodservid != 'Todos') {
                     $orderservices = Service::join('order_services as os', 'os.id', 'services.order_service_id')
                         ->join('mov_services as ms', 'services.id', 'ms.service_id')
@@ -102,16 +119,16 @@ class InicioController extends Component
                         ->orderBy('services.fecha_estimada_entrega', 'asc')
                         ->distinct()
                         ->paginate($this->pagination);
-                        foreach ($orderservices as $c) {
-                            $date1 = new DateTime($c->fecha_estimada_entrega);
-                            $date2 = new DateTime("now");
-                            $diff = $date2->diff($date1);
-                            if ($diff->invert != 1) {
-                                $c->horas = (($diff->days * 24)) + ($diff->h) . ' horas';
-                            } else {
-                                $c->horas = 'EXPIRADO';
-                            }
+                    foreach ($orderservices as $c) {
+                        $date1 = new DateTime($c->fecha_estimada_entrega);
+                        $date2 = new DateTime("now");
+                        $diff = $date2->diff($date1);
+                        if ($diff->invert != 1) {
+                            $c->horas = (($diff->days * 24)) + ($diff->h) . ' horas';
+                        } else {
+                            $c->horas = 'EXPIRADO';
                         }
+                    }
                 } else {
                     $orderservices = Service::join('order_services as os', 'os.id', 'services.order_service_id')
                         ->join('mov_services as ms', 'services.id', 'ms.service_id')
@@ -127,7 +144,7 @@ class InicioController extends Component
                         ->orderBy('services.fecha_estimada_entrega', 'asc')
                         ->distinct()
                         ->paginate($this->pagination);
-                        
+
                     foreach ($orderservices as $c) {
                         $date1 = new DateTime($c->fecha_estimada_entrega);
                         $date2 = new DateTime("now");
@@ -139,7 +156,7 @@ class InicioController extends Component
                         }
                     }
                 }
-            }elseif($this->condicion == 'MiSucursal'){
+            } elseif ($this->condicion == 'MiSucursal') {
                 if ($this->catprodservid != 'Todos') {
                     $orderservices = Service::join('order_services as os', 'os.id', 'services.order_service_id')
                         ->join('mov_services as ms', 'services.id', 'ms.service_id')
@@ -159,20 +176,20 @@ class InicioController extends Component
                         ->where('mov.status', 'ACTIVO')
                         ->where('cat.id', $this->catprodservid)
                         ->where('os.status', 'ACTIVO')
-                        ->where('suc.id',$this->sucursal)
+                        ->where('suc.id', $this->sucursal)
                         ->orderBy('services.fecha_estimada_entrega', 'asc')
                         ->distinct()
                         ->paginate($this->pagination);
-                        foreach ($orderservices as $c) {
-                            $date1 = new DateTime($c->fecha_estimada_entrega);
-                            $date2 = new DateTime("now");
-                            $diff = $date2->diff($date1);
-                            if ($diff->invert != 1) {
-                                $c->horas = (($diff->days * 24)) + ($diff->h) . ' horas';
-                            } else {
-                                $c->horas = 'EXPIRADO';
-                            }
+                    foreach ($orderservices as $c) {
+                        $date1 = new DateTime($c->fecha_estimada_entrega);
+                        $date2 = new DateTime("now");
+                        $diff = $date2->diff($date1);
+                        if ($diff->invert != 1) {
+                            $c->horas = (($diff->days * 24)) + ($diff->h) . ' horas';
+                        } else {
+                            $c->horas = 'EXPIRADO';
                         }
+                    }
                 } else {
                     $orderservices = Service::join('order_services as os', 'os.id', 'services.order_service_id')
                         ->join('mov_services as ms', 'services.id', 'ms.service_id')
@@ -188,11 +205,11 @@ class InicioController extends Component
                         ->where('mov.type', 'PENDIENTE')
                         ->where('mov.status', 'ACTIVO')
                         ->where('os.status', 'ACTIVO')
-                        ->where('suc.id',$this->sucursal)
+                        ->where('suc.id', $this->sucursal)
                         ->orderBy('services.fecha_estimada_entrega', 'asc')
                         ->distinct()
                         ->paginate($this->pagination);
-                        
+
                     foreach ($orderservices as $c) {
                         $date1 = new DateTime($c->fecha_estimada_entrega);
                         $date2 = new DateTime("now");
@@ -205,11 +222,10 @@ class InicioController extends Component
                     }
                 }
             }
+        } elseif ($this->condicional == 'Terminados') {
 
-        }elseif ($this->condicional == 'Terminados') {
-            
             if ($this->catprodservid != 'Todos') {
-                
+
                 $orderservices = Service::join('order_services as os', 'os.id', 'services.order_service_id')
                     ->join('mov_services as ms', 'services.id', 'ms.service_id')
                     ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
@@ -230,16 +246,16 @@ class InicioController extends Component
                     ->orderBy('services.fecha_estimada_entrega', 'asc')
                     ->distinct()
                     ->paginate($this->pagination);
-                    foreach ($orderservices as $c) {
-                        $date1 = new DateTime($c->fecha_estimada_entrega);
-                        $date2 = new DateTime("now");
-                        $diff = $date2->diff($date1);
-                        if ($diff->invert == 1) {
-                            $c->dias = (($diff->days)) + ($diff->d);
-                        }
+                foreach ($orderservices as $c) {
+                    $date1 = new DateTime($c->fecha_estimada_entrega);
+                    $date2 = new DateTime("now");
+                    $diff = $date2->diff($date1);
+                    if ($diff->invert == 1) {
+                        $c->dias = (($diff->days)) + ($diff->d);
                     }
+                }
             } else {
-                
+
                 $orderservices = Service::join('order_services as os', 'os.id', 'services.order_service_id')
                     ->join('mov_services as ms', 'services.id', 'ms.service_id')
                     ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
@@ -260,17 +276,16 @@ class InicioController extends Component
                     ->orderBy('services.fecha_estimada_entrega', 'asc')
                     ->distinct()
                     ->paginate($this->pagination);
-                    
-                    foreach ($orderservices as $c) {
-                        $date1 = new DateTime($c->fecha_estimada_entrega);
-                        $date2 = new DateTime("now");
-                        $diff = $date2->diff($date1);
-                        
-                        if ($diff->invert == 1) {
-                            $c->dias = (($diff->days)) + ($diff->d);
-                            
-                        }
+
+                foreach ($orderservices as $c) {
+                    $date1 = new DateTime($c->fecha_estimada_entrega);
+                    $date2 = new DateTime("now");
+                    $diff = $date2->diff($date1);
+
+                    if ($diff->invert == 1) {
+                        $c->dias = (($diff->days)) + ($diff->d);
                     }
+                }
             }
         } else {
 
@@ -295,16 +310,16 @@ class InicioController extends Component
                     ->orderBy('services.fecha_estimada_entrega', 'asc')
                     ->distinct()
                     ->paginate($this->pagination);
-                    foreach ($orderservices as $c) {
-                        $date1 = new DateTime($c->fecha_estimada_entrega);
-                        $date2 = new DateTime("now");
-                        $diff = $date2->diff($date1);
-                        if ($diff->invert != 1) {
-                            $c->horas = (($diff->days * 24)) + ($diff->h) . ' horas';
-                        } else {
-                            $c->horas = 'EXPIRADO';
-                        }
+                foreach ($orderservices as $c) {
+                    $date1 = new DateTime($c->fecha_estimada_entrega);
+                    $date2 = new DateTime("now");
+                    $diff = $date2->diff($date1);
+                    if ($diff->invert != 1) {
+                        $c->horas = (($diff->days * 24)) + ($diff->h) . ' horas';
+                    } else {
+                        $c->horas = 'EXPIRADO';
                     }
+                }
             } else {
 
                 $orderservices = Service::join('order_services as os', 'os.id', 'services.order_service_id')
@@ -326,16 +341,16 @@ class InicioController extends Component
                     ->orderBy('services.fecha_estimada_entrega', 'asc')
                     ->distinct()
                     ->paginate($this->pagination);
-                    foreach ($orderservices as $c) {
-                        $date1 = new DateTime($c->fecha_estimada_entrega);
-                        $date2 = new DateTime("now");
-                        $diff = $date2->diff($date1);
-                        if ($diff->invert != 1) {
-                            $c->horas = (($diff->days * 24)) + ($diff->h) . ' horas';
-                        } else {
-                            $c->horas = 'EXPIRADO';
-                        }
+                foreach ($orderservices as $c) {
+                    $date1 = new DateTime($c->fecha_estimada_entrega);
+                    $date2 = new DateTime("now");
+                    $diff = $date2->diff($date1);
+                    if ($diff->invert != 1) {
+                        $c->horas = (($diff->days * 24)) + ($diff->h) . ' horas';
+                    } else {
+                        $c->horas = 'EXPIRADO';
                     }
+                }
             }
         }
         $users = User::all();

@@ -1,10 +1,10 @@
-<div wire:ignore.self id="modal-details" class="modal fade" tabindex="1" role="dialog">
+<div wire:ignore.self id="modal-details2" class="modal fade" tabindex="1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header bg-dark">
                 <h5 class="modal-title text-white">
                     @if ($condicional != 'vencidos')
-                        <b>RENOVACION Y VENCIMIENTO DE PERFILES</b>
+                        <b>RENOVACION Y VENCIMIENTO DE PLANES DE CUENTA</b>
                     @else
                         <b>OBSERVACIONES</b>
                     @endif
@@ -32,21 +32,23 @@
 
                         <div class="col-sm-12 col-md-6">
                             <div class="form-group">
-                                <h6>Nombre del perfil</h6>
-                                <h6 class="form-control"><strong> {{ $nameperfil }}</strong></h6>
+                                <h6>Email o Nombre-Cuenta</h6>
+                                <h6 class="form-control"><strong> {{ $correoCuenta }}</strong></h6>
                             </div>
                         </div>
 
                         <div class="col-sm-12 col-md-6">
                             <div class="form-group">
-                                <h6>Pin</h6>
-                                <h6 class="form-control"><strong> {{ $pin }}</strong></h6>
+                                <h6>Contraseña Cuenta</h6>
+                                <h6 class="form-control"><strong> {{ $passCuenta }}</strong></h6>
                             </div>
                         </div>
 
                         <div class="col-sm-12 col-md-3">
                             <div class="form-group">
-                                <h6>Dias calculo</h6>
+                                <label>
+                                    <h6>Dias a renovar</h6>
+                                </label>
                                 <input type="number" wire:model="diasdePlan" class="form-control">
                                 @error('diasdePlan')
                                     <span class="text-danger er">{{ $message }}</span>
@@ -56,7 +58,9 @@
 
                         <div class="col-sm-12 col-md-3">
                             <div class="form-group">
-                                <h6>Meses a renovar</h6>
+                                <label>
+                                    <h6>Meses a renovar</h6>
+                                </label>
                                 <input type="number" wire:model="meses" class="form-control">
                                 @error('meses')
                                     <span class="text-danger er">{{ $message }}</span>
@@ -86,7 +90,9 @@
 
                         <div class="col-sm-12 col-md-6">
                             <div class="form-group">
-                                <h6>Tipo de pago</h6>
+                                <label>
+                                    <h6>Tipo de pago</h6>
+                                </label>
                                 <select wire:model="tipopago" class="form-control">
                                     <option value="EFECTIVO" selected>EFECTIVO</option>
                                     <option value="Banco">CUENTA BANCARIA</option>
@@ -112,15 +118,17 @@
 
                         <div class="col-sm-12 col-md-8">
                             <div class="form-group">
-                                <h6>Observaciones del plan // Escriba un nuevo comentario si va a renovar, vencer o
-                                    cambiar de cuenta</h6>
-                                <input type="text" wire:model.lazy="observations" class="form-control">
+                                <h6>Observaciones del plan // Escriba un nuevo comentario si va a renovar o vencer</h6>
+                                <input type="text" wire:model.lazy="observacionesTrans" class="form-control">
+                                @error('observacionesTrans')
+                                    <span class="text-danger er">{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
 
                         <div class="col-sm-12 col-md-4">
                             <div class="form-group text-center mt-4">
-                                <button type="button" @if ($meses <= 0) disabled @endif
+                                <button type="button" @if ($meses == 0) disabled @endif
                                     wire:click.prevent="Renovar()" class="btn btn-dark">Renovar
                                     plan</button>
                             </div>
@@ -129,7 +137,7 @@
                         <div class="col-sm-12 col-md-4">
                             <div class="form-group text-center mt-4">
                                 <a href="javascript:void(0)" class="btn btn-dark"
-                                    onclick="ConfirmVencer('{{ $nameperfil }}')">Vencer
+                                    onclick="ConfirmVencer('{{ $correoCuenta }}')">Vencer
                                     plan</a>
                             </div>
                         </div>
@@ -137,8 +145,7 @@
                         <div class="col-sm-12 col-md-4">
                             <div class="form-group text-center mt-4">
                                 <a href="javascript:void(0)" class="btn btn-dark"
-                                    wire:click.prevent="CambiarCuenta()">Buscar
-                                    otra cuenta (Cambiar)</a>
+                                    wire:click.prevent="CambiarCuenta()">Buscar otra cuenta (Cambiar)</a>
                             </div>
                         </div>
 
@@ -151,65 +158,50 @@
                                                 <thead class="text-white" style="background: #3B3F5C">
                                                     <tr>
                                                         <th class="table-th text-withe text-center">Email</th>
-                                                        <th class="table-th text-withe text-center">Max perfiles
-                                                        </th>
-                                                        <th class="table-th text-withe text-center">Fecha vencimiento
-                                                        </th>
-                                                        <th class="table-th text-withe text-center">Espacios</th>
-                                                        <th class="table-th text-withe text-center">Seleccionar</th>
+                                                        <th class="table-th text-withe text-center">Contraseña</th>
+                                                        <th class="table-th text-withe text-center">Cant.Perf</th>
+                                                        <th class="table-th text-withe text-center">Fecha.Exp</th>
+                                                        <th class="table-th text-withe text-center">CAMBIAR</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     @if ($cuentasEnteras->count() == 0)
                                                         <tr>
                                                             <td colspan="5">
-                                                                <h6 class="text-center">No tiene cuentas para hacer
-                                                                    el cambio</h6>
+                                                                <h6 class="text-center">No tienes cuentas de esa
+                                                                    plataforma para hacer el cambio</h6>
                                                             </td>
                                                         </tr>
                                                     @endif
-                                                    @if ($cuentasEnteras)
-                                                        @foreach ($cuentasEnteras as $item)
-                                                            <tr>
-                                                                <td class="text-center">
-                                                                    <h6 class="text-center">
-                                                                        {{ $item->account_name }}
-                                                                    </h6>
-                                                                </td>
-                                                                <td class="text-center">
-                                                                    <h6 class="text-center">
-                                                                        {{ $item->number_profiles }}
-                                                                    </h6>
-                                                                </td>
-                                                                <td class="text-center">
-                                                                    <h6 class="text-center">
-                                                                        {{ \Carbon\Carbon::parse($item->expiration_account)->format('d/m/Y') }}
-                                                                    </h6>
-                                                                </td>
-                                                                <td class="text-center">
-                                                                    <h6 class="text-center">
-                                                                        {{ $item->cantiadadQueSePuedeCrear }}
-                                                                    </h6>
-                                                                </td>
-                                                                <td class="text-center">
-                                                                    <h6 class="text-center">
-                                                                        <a href="javascript:void(0)"
-                                                                            class="btn btn-dark"
-                                                                            onclick="ConfirmCambiar('{{ $item->id }}','{{ $nameperfil }}','{{ $item->account_name }}')">
-                                                                            <i class="fas fa-check"></i>
-                                                                        </a>
-                                                                    </h6>
-                                                                </td>
-                                                            </tr>
-                                                        @endforeach
-                                                    @else
+                                                    @foreach ($cuentasEnteras as $cuent)
                                                         <tr>
-                                                            <td colspan="5">
-                                                                <h6 class="text-center">No tienes perfiles de esa
-                                                                    plataforma</h6>
+                                                            <td class="text-center">
+                                                                <h6 class="text-center">
+                                                                    {{ $cuent->Correo->content }}</h6>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <h6 class="text-center">
+                                                                    {{ $cuent->password_account }}
+                                                                </h6>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <h6 class="text-center">
+                                                                    {{ $cuent->number_profiles }}
+                                                                </h6>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <h6 class="text-center">
+                                                                    {{ \Carbon\Carbon::parse($cuent->expiration_account)->format('d/m/Y') }}
+                                                                </h6>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <h6 class="text-center">
+                                                                    <a href="javascript:void(0)" class="btn btn-dark"
+                                                                        onclick="ConfirmCambiar('{{ $cuent->id }}','{{ $cuent->Correo->content }}')">Seleccionar</a>
+                                                                </h6>
                                                             </td>
                                                         </tr>
-                                                    @endif
+                                                    @endforeach
                                                 </tbody>
                                             </table>
                                         </div>
@@ -217,14 +209,15 @@
                                 </div>
                             </div>
                         @endif
+
                     </div>
                 @else
                     <div class="row">
                         <div class="col-sm-12 col-md-12">
                             <div class="form-group">
                                 <h6>Observaciones de la transacción</h6>
-                                <input type="text" wire:model.lazy="observations" class="form-control">
-                                @error('observations')
+                                <input type="text" wire:model.lazy="observacionesTrans" class="form-control">
+                                @error('observacionesTrans')
                                     <span class="text-danger er">{{ $message }}</span>
                                 @enderror
                             </div>
