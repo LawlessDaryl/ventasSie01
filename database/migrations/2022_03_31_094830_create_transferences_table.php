@@ -21,6 +21,8 @@ class CreateTransferencesTable extends Migration
             $table->dateTime('fecha_transferencia')->default(Carbon::now());
             $table->enum('status',['Pendiente','En transito','Aprobado','Rechazado','Faltante','Recibido'])->default('Pendiente');
             $table->enum('estado',['Activo','Inactivo'])->default('Activo');
+            $table->string('observacion',250);
+            $table->string('referencia',100);
             $table->unsignedBigInteger('id_usuario');
             $table->foreign('id_usuario')->references('id')->on('users');
             $table->timestamps();
