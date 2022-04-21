@@ -330,6 +330,8 @@ class PosController extends Component
             $this->total = Cart::getTotal();
             $this->itemsQuantity = Cart::getTotalQuantity();
             $this->emit('scan-ok', 'Producto agregado');
+            //Para Actualizar el Total Descuento
+            $this->actualizardescuento();
     }
 
     public function increaseQty($productId, $cant = 1)
@@ -395,12 +397,41 @@ class PosController extends Component
             }
         }
 
+        //DESC
+        //Obtenemos los datos ('Precio') del producto del Carrito
+        $precioCarrito = Cart::get($productId);
+        //Obtenemos los datos ('Precio') del producto de la Base de la Datos
+        $precioBD = Product::select("products.id as id","products.nombre as name","products.precio_venta as price")
+        ->where("products.id", $productId)
+        ->get()->first();
+        //Comparamos si hay Alguna diferencia en el Precio del Producto
+        //Precio carrito - Precio Base de Datos
+
+        try
+        {
+            $diferencia = $precioCarrito['price'] - $precioBD['price'];
+        }
+        catch(Exception $e)
+        {
+            $diferencia = 0;
+        }
 
 
-        Cart::add($product->id, $product->name, $product->price, $cant, $product->image);
+        if($diferencia == 0)
+        {
+            Cart::add($product->id, $product->name, $product->price, $cant, $product->image);
+        }
+        else
+        {
+            Cart::add($product->id, $product->name, $precioCarrito['price'], $cant, $product->image);
+        }
+
+
 
         $this->total = Cart::getTotal();
         $this->itemsQuantity = Cart::getTotalQuantity();
+        //Actualizamos el Total Descuento
+        $this->actualizardescuento();
         $this->emit('scan-ok', $title);
     }
 
@@ -463,7 +494,7 @@ class PosController extends Component
 
 
 
-
+        //DESCUENTOS
         //Obtenemos los datos ('Precio') del producto del Carrito
         $precioCarrito = Cart::get($productId);
         //Obtenemos los datos ('Precio') del producto de la Base de la Datos
@@ -499,6 +530,9 @@ class PosController extends Component
 
         }
         
+        //Actualizamos el Total Descuento
+        $this->actualizardescuento();
+        
     }
     public function removeItem($productId)
     {
@@ -507,6 +541,10 @@ class PosController extends Component
         $this->total = Cart::getTotal();
         $this->itemsQuantity = Cart::getTotalQuantity();
         $this->emit('scan-ok', 'Producto eliminado');
+
+        //Actualizamos el Total Descuento
+        $this->actualizardescuento();
+        
     }
     public function decreaseQty($productId)
     {
@@ -527,6 +565,9 @@ class PosController extends Component
             $this->change = 0;
         }
         $this->itemsQuantity = Cart::getTotalQuantity();
+        
+        //Actualizamos el Total Descuento
+        $this->actualizardescuento();
 
     }
 
@@ -886,42 +927,34 @@ class PosController extends Component
     //Aplicar descuento o recargo Dependiendo del valor que se modifique en el Precio de Venta
     public function precioventa(Product $producto, $precioactualizado, $cantidad)
     {
-
-        
         //Eliminamos el Producto del Carrito de Compras
         $this->removeItem($producto->id);
-    
         //Lo volvemos a añadir al Carrito con el Precio de Venta Actualizado
         $this->priceUpdate($producto->id,$cantidad, $precioactualizado);
-        
-        //Obtenemos el Precio Actualizado del Producto
-        //$diferencia = $producto->precio_venta - $precioactualizado;
-
-        $asd = 0;
-        $items = Cart::getContent();
-        foreach ($items as $item)
-        {
-            $asd = ($this->buscarprecio($item->id) * $item->quantity) + $asd;
-        }
-        $this->totalBsBd = $asd;
-        //$this->totalBsBd = $asd;
-        $this->descuento = $this->totalBsBd - $this->total;
-        
-
-
-
-
-
-        //Cart::add($producto->id, $producto->name, $precioactualizado, $cantidad, $producto->image);
-        
-        
-        //$this->descuento = ($producto->precio_venta - $valor) + $this->descuento;
-        //dd("El descuento de Venta es: ".$this->descuento);
-        
-        //$asd = Cart::get($producto->id);
+        //Actualizamos el Total Descuento
+        $this->actualizardescuento();
     }
 
 
+    
+
+    //Buscar el Precio Original de un Producto
+    public function actualizardescuento()
+    {
+        $precio = 0;
+        $items = Cart::getContent();
+        foreach ($items as $item)
+        {
+            $precio = ($this->buscarprecio($item->id) * $item->quantity) + $precio;
+        }
+        $this->totalBsBd = $precio;
+        //$this->totalBsBd = $asd;
+        $this->descuento = $this->totalBsBd - $this->total;
+        
+    }
+    
+
+    //Buscar el Precio Original de un Producto
     public function buscarprecio($id)
     {
         $tiendaproducto = Product::select("products.id as id","products.precio_venta as precio")
