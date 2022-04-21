@@ -47,7 +47,7 @@
                         <div class="col-sm-12 col-md-3">
                             <div class="form-group">
                                 <label>
-                                    <h6>Dias a renovar</h6>
+                                    <h6>Dias calculo</h6>
                                 </label>
                                 <input type="number" wire:model="diasdePlan" class="form-control">
                                 @error('diasdePlan')

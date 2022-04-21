@@ -1791,7 +1791,7 @@ class CuentasController extends Component
         } catch (Exception $e) {
             DB::rollback();
             $this->emit('item-error', 'ERROR' . $e->getMessage());
-            $this->emit('cuenta-renovado-vencida', 'No se pudo renovar el plan porque la cuenta no ha sido renovada con su proveedor');
+            $this->emit('item-error', 'No se pudo renovar el plan porque la cuenta no ha sido renovada con su proveedor');
         }
     }
 

@@ -1963,7 +1963,7 @@ class PerfilesController extends Component
         } catch (Exception $e) {
             DB::rollback();
             $this->emit('item-error', 'ERROR' . $e->getMessage());
-            $this->emit('item-accion', 'No se pudo renovar el plan porque la cuenta de este perfil no ha sido renovada con su proveedor');
+            $this->emit('item-error', 'No se pudo renovar el plan porque la cuenta de este perfil no ha sido renovada con su proveedor');
         }
     }
 

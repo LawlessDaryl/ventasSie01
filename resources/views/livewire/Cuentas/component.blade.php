@@ -335,7 +335,7 @@
     </div>
     @include('livewire.cuentas.form')
     @include('livewire.cuentas.modalPerfiles')
-    @include('livewire.cuentas.modalDetailsPlan')
+    @include('livewire.cuentas.detailsPlan')
     @include('livewire.cuentas.modalRenovarProveedor')
 
 </div>

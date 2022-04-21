@@ -416,7 +416,7 @@
         </div>
     </div>
     @include('livewire.perfiles.form')
-    @include('livewire.perfiles.modalDetails')
+    @include('livewire.perfiles.detailsPlan')
     @include('livewire.perfiles.modalEditCombos')
     @include('livewire.perfiles.modalRenovarCombos')
 

@@ -357,14 +357,14 @@
                     @can('Cuentas_Index')
                         <li>
                             <a href="{{ url('cuentas') }}">
-                                <img src="{{ asset('storage/icons/plan.png') }}" alt="Transacciones" width="25px">
+                                <i class="fa-solid fa-address-book"></i>
                                 Cuentas </a>
                         </li>
                     @endcan
                     @can('Perfiles_Index')
                         <li>
                             <a href="{{ url('perfiles') }}">
-                                <img src="{{ asset('storage/icons/plan.png') }}" alt="perfiles" width="25px">
+                                <i class="fa-solid fa-address-book"></i>
                                 Perfiles </a>
                         </li>
                     @endcan
@@ -378,14 +378,14 @@
                     @can('Proveedor_Index')
                         <li>
                             <a href="{{ url('strproveedores') }}">
-                                <img src="{{ asset('storage/icons/cuentas.png') }}" alt="Origen CRUD" width="25px">
+                                <i class="fa-solid fa-user-pen"></i>
                                 Proveedores </a>
                         </li>
                     @endcan
                     @can('Correos_Index')
                         <li>
                             <a href="{{ url('emails') }}">
-                                <img src="{{ asset('storage/icons/cuentas.png') }}" alt="Origen CRUD" width="25px">
+                                <i class="fa-regular fa-envelope"></i>
                                 Correos </a>
                         </li>
                     @endcan
@@ -409,21 +409,21 @@
                     @can('Planes_Index')
                         <li>
                             <a href="{{ url('planes') }}">
-                                <img src="{{ asset('storage/icons/plan.png') }}" alt="Planes" width="25px">
-                                Planes </a>
+                                <i class="fa-regular fa-calendar-plus"></i>
+                                Nuevo Plan </a>
                         </li>
                     @endcan
                     @can('Cuentas_Index')
                         <li>
                             <a href="{{ url('cuentas') }}">
-                                <img src="{{ asset('storage/icons/plan.png') }}" alt="Transacciones" width="25px">
+                                <i class="fa-solid fa-address-book"></i>
                                 Cuentas </a>
                         </li>
                     @endcan
                     @can('Perfiles_Index')
                         <li>
                             <a href="{{ url('perfiles') }}">
-                                <img src="{{ asset('storage/icons/plan.png') }}" alt="perfiles" width="25px">
+                                <i class="fa-solid fa-address-book"></i>
                                 Perfiles </a>
                         </li>
                     @endcan
@@ -437,14 +437,14 @@
                     @can('Proveedor_Index')
                         <li>
                             <a href="{{ url('strproveedores') }}">
-                                <img src="{{ asset('storage/icons/cuentas.png') }}" alt="Origen CRUD" width="25px">
+                                <i class="fa-solid fa-user-pen"></i>
                                 Proveedores </a>
                         </li>
                     @endcan
                     @can('Correos_Index')
                         <li>
                             <a href="{{ url('emails') }}">
-                                <img src="{{ asset('storage/icons/cuentas.png') }}" alt="Origen CRUD" width="25px">
+                                <i class="fa-regular fa-envelope"></i>
                                 Correos </a>
                         </li>
                     @endcan
