@@ -79,17 +79,7 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-md-3">
-                        <div class="form-group">
-                            <label>
-                                <h6>Precio Compra</h6>
-                            </label>
-                            <input type="number" wire:model.lazy="price" class="form-control" placeholder="ej: 90.0">
-                            @error('price')
-                                <span class="text-danger er">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
+                    
 
                     <div class="col-sm-12 col-md-6">
                         <h6>Fecha de inicio Nueva</h6>
@@ -108,6 +98,18 @@
                             <input disabled wire:model="expiration_account_new" type="date" min="" max=""
                                 class="form-control" placeholder="Click para elegir">
                             @error('expiration_account_new')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                    
+                    <div class="col-sm-12 col-md-3">
+                        <div class="form-group">
+                            <label>
+                                <h6>Precio Compra</h6>
+                            </label>
+                            <input type="number" wire:model.lazy="price" class="form-control" placeholder="ej: 90.0">
+                            @error('price')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror
                         </div>

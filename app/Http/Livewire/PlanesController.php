@@ -876,6 +876,7 @@ class PlanesController extends Component
                         'tipo' => 'INGRESO',
                         'cantidad' => $this->importe / 3,
                         'tipoPlan' => 'COMBO',
+                        'num_meses' => $this->meses,
                         'fecha_realizacion' => $date_now,
                         'account_id' => $account1->id
                     ]);
@@ -896,6 +897,7 @@ class PlanesController extends Component
                         'tipo' => 'INGRESO',
                         'cantidad' => $this->importe / 3,
                         'tipoPlan' => 'COMBO',
+                        'num_meses' => $this->meses,
                         'fecha_realizacion' => $date_now,
                         'account_id' => $account2->id
                     ]);
@@ -914,6 +916,7 @@ class PlanesController extends Component
                         'tipo' => 'INGRESO',
                         'cantidad' => $this->importe / 3,
                         'tipoPlan' => 'COMBO',
+                        'num_meses' => $this->meses,
                         'fecha_realizacion' => $date_now,
                         'account_id' => $account3->id
                     ]);
@@ -972,6 +975,7 @@ class PlanesController extends Component
                 'importe' => $this->importe,
                 'plan_start' => $this->fecha_inicio,
                 'expiration_plan' => $this->expiration_plan,
+                'meses' => $this->meses,
                 'ready' => 'NO',
                 'status' => 'VIGENTE',
                 'type_plan' => 'COMBO',
@@ -1273,6 +1277,7 @@ class PlanesController extends Component
                         'tipo' => 'INGRESO',
                         'cantidad' => $importeIndividual,
                         'tipoPlan' => 'ENTERA',
+                        'num_meses' => $this->meses,
                         'fecha_realizacion' => $date_now,
                         'account_id' => $accp->id
                     ]);
@@ -1293,6 +1298,7 @@ class PlanesController extends Component
                         'importe' => $importeIndividual,
                         'plan_start' => $this->fecha_inicio,
                         'expiration_plan' => $this->expiration_plan,
+                        'meses' => $this->meses,
                         'ready' => 'NO',
                         'status' => 'VIGENTE',
                         'type_plan' => 'CUENTA',
@@ -1387,18 +1393,18 @@ class PlanesController extends Component
                                 'tipo' => 'INGRESO',
                                 'cantidad' => $importeIndividual,
                                 'tipoPlan' => 'PERFIL',
+                                'num_meses' => $this->meses,
                                 'fecha_realizacion' => $date_now,
                                 'account_id' => $account->id
                             ]);
                         }
                     }
 
-
-
                     /* PONER EL PERFIL EN OCUPADO */
-                    /* $accp->availability = 'OCUPADO';
+                    $accp->availability = 'OCUPADO';
                     $accp->save();
-                    foreach ($accp->CuentaPerfil as  $value) {
+
+                    /* foreach ($accp->CuentaPerfil as  $value) {
                         if ($value->status == 'SinAsignar') {
                             
                             $inversioncuenta = CuentaInversion::where('start_date', '<=', $mv->created_at)
@@ -1419,6 +1425,7 @@ class PlanesController extends Component
                         'importe' => $importeIndividual,
                         'plan_start' => $this->fecha_inicio,
                         'expiration_plan' => $this->expiration_plan,
+                        'meses' => $this->meses,
                         'ready' => 'NO',
                         'status' => 'VIGENTE',
                         'type_plan' => 'PERFIL',

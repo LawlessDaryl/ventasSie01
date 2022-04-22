@@ -30,6 +30,27 @@
                             </div>
                         </div>
 
+                        <div class="col-sm-12 col-md-4">
+                            <div class="form-group">
+                                <h6>Plataforma</h6>
+                                <h6 class="form-control"><strong> {{ $plataformaPlan }}</strong></h6>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-4">
+                            <div class="form-group">
+                                <h6>Meses de compra</h6>
+                                <h6 class="form-control"><strong> {{ $mesesPlan }}</strong></h6>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-4">
+                            <div class="form-group">
+                                <h6>Precio Compra</h6>
+                                <h6 class="form-control"><strong> {{ $importePlan }}</strong></h6>
+                            </div>
+                        </div>
+
                         <div class="col-sm-12 col-md-6">
                             <div class="form-group">
                                 <h6>Email o Nombre-Cuenta</h6>
@@ -41,6 +62,43 @@
                             <div class="form-group">
                                 <h6>Contraseña Cuenta</h6>
                                 <h6 class="form-control"><strong> {{ $passCuenta }}</strong></h6>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-6">
+                            <h6>Fecha de inicio de su plan</h6>
+                            <div class="form-group">
+                                <h6 class="form-control"><strong>
+                                        {{ \Carbon\Carbon::parse($inicioPlanActual)->format('d/m/Y') }}
+                                    </strong></h6>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-6">
+                            <h6>Fecha de expiración de su plan</h6>
+                            <div class="form-group">
+                                <h6 class="form-control"><strong>
+                                        {{ \Carbon\Carbon::parse($expirationPlanActual)->format('d/m/Y') }}
+                                    </strong></h6>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-6">
+                            <h6>Fecha de inicio nueva</h6>
+                            <div class="form-group">
+                                <input type="date" wire:model="inicioNueva" class="form-control">
+                                @error('inicioNueva')
+                                    <span class="text-danger er">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-6">
+                            <h6>Fecha de expiración nueva</h6>
+                            <div class="form-group">
+                                <h6 class="form-control"><strong>
+                                        {{ \Carbon\Carbon::parse($expirationNueva)->format('d/m/Y') }}
+                                    </strong></h6>
                             </div>
                         </div>
 
@@ -68,27 +126,7 @@
                             </div>
                         </div>
 
-                        <div class="col-sm-12 col-md-6">
-                            <h6>Fecha de expiración Actual</h6>
-                            <div class="form-group">
-                                <input type="date" wire:model="expirationActual" class="form-control" disabled>
-                                @error('expirationActual')
-                                    <span class="text-danger er">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="col-sm-12 col-md-6">
-                            <h6>Fecha de expiración nueva</h6>
-                            <div class="form-group">
-                                <input type="date" wire:model="expirationNueva" class="form-control" disabled>
-                                @error('expirationNueva')
-                                    <span class="text-danger er">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="col-sm-12 col-md-6">
+                        <div class="col-sm-12 col-md-3">
                             <div class="form-group">
                                 <label>
                                     <h6>Tipo de pago</h6>
@@ -104,7 +142,7 @@
                             </div>
                         </div>
 
-                        <div class="col-sm-12 col-md-4">
+                        <div class="col-sm-12 col-md-3">
                             <div class="form-group">
                                 <label>
                                     <h6>Importe</h6>
@@ -116,7 +154,7 @@
                             </div>
                         </div>
 
-                        <div class="col-sm-12 col-md-8">
+                        <div class="col-sm-12 col-md-12">
                             <div class="form-group">
                                 <h6>Observaciones del plan // Escriba un nuevo comentario si va a renovar o vencer</h6>
                                 <input type="text" wire:model.lazy="observacionesTrans" class="form-control">

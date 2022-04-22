@@ -32,7 +32,7 @@ class CuentasController extends Component
         $pageTitle, $componentName, $proveedor, $nameP, $PIN, $estado, $availability, $Observaciones,
         $perfiles, $correos, $selected, $start_account, $start_account_new, $expiration_account,
         $expiration_account_new, $password_account, $price, $mostrarCampos, $condicional, $meses, $meseRenovarProv,
-        $expirationActual, $expirationNueva, $observations, $selected_plan, $correoCuenta, $passCuenta,
+        $expirationPlanActual, $expirationNueva, $observations, $selected_plan, $correoCuenta, $passCuenta,
         $nombreCliente, $celular, $observacionesTrans, $mostrarRenovar, $meses_comprados, $mesesComprar,
         $nombre_cuenta, $mostrartabla2, $mostrarCorreo, $mostrarNombreCuenta;
     private $pagination = 10;
@@ -63,8 +63,9 @@ class CuentasController extends Component
         $this->price = '';
         $this->mostrarCampos = 0;
         $this->condicional = 'cuentas';
-        $this->meses = 0;
+        $this->meses = 1;
         $this->meseRenovarProv = 1;
+        $this->inicioNueva = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->expirationNueva = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->start_account = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->tipopago = 'EFECTIVO';
@@ -91,6 +92,11 @@ class CuentasController extends Component
         $this->diasdePlan = 30;
         $this->inicioCompra = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->expirationCompra = null;
+        $this->plataformaPlan = '';
+        $this->mesesPlan = '';
+        $this->importePlan = '';
+        $this->expirationPlanActual = null;
+        $this->inicioPlanActual = null;
     }
     public function render()
     {
@@ -1222,10 +1228,10 @@ class CuentasController extends Component
         if ($this->diasdePlan > 0) {
             if ($this->meses > 0) {
                 $dias = $this->meses * $this->diasdePlan;
-                $this->expirationNueva = strtotime('+' . $dias . ' day', strtotime($this->expirationActual));
+                $this->expirationNueva = strtotime('+' . $dias . ' day', strtotime($this->inicioNueva));
                 $this->expirationNueva = date('Y-m-d', $this->expirationNueva);
             } else {
-                $this->expirationNueva = $this->expirationActual;
+                $this->expirationNueva = $this->inicioNueva;
             }
         }
         /* CALCULAR LOS DIAS SEGUN LOS MESES QUE PONGA EL USUARIO PARA RENOVAR CON EL PROVEEDOR */
@@ -1323,6 +1329,7 @@ class CuentasController extends Component
         CuentaInversion::create([
             'tipo' => 'EGRESO',
             'cantidad' => $this->price,
+            'num_meses' => $this->meseRenovarProv,
             'fecha_realizacion' => $date_now,
             'account_id' => $cuenta->id,
         ]);
@@ -1470,6 +1477,7 @@ class CuentasController extends Component
             CuentaInversion::create([
                 'tipo' => 'EGRESO',
                 'cantidad' => $this->price,
+                'num_meses' => $this->mesesComprar,
                 'fecha_realizacion' => $date_now,
                 'account_id' => $acc->id,
             ]);
@@ -1623,6 +1631,7 @@ class CuentasController extends Component
         $this->data = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
             ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
             ->join('accounts as acc', 'acc.id', 'pa.account_id')
+            ->join('platforms as p', 'p.id', 'acc.platform_id')
             ->join('emails as e', 'e.id', 'acc.email_id')
             ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
             ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
@@ -1632,19 +1641,29 @@ class CuentasController extends Component
                 'e.content as correoCuenta',
                 'acc.account_name as account_name',
                 'acc.password_account as password_account',
+                'plans.plan_start as plan_start',
                 'plans.expiration_plan as expiration_plan',
-                'plans.observations as observations'
+                'plans.observations as observations',
+                'plans.importe as importe',
+                'plans.meses as meses',
+                'p.nombre as nombrePlataforma',
             )
             ->where('plans.id', $this->selected_plan)
             ->orderby('plans.id', 'desc')
+            ->where('pa.status', 'ACTIVO')
             ->get()->first();
         $this->nombreCliente = $this->data->nombreCliente;
         $this->celular = $this->data->celular;
         $this->correoCuenta = $this->data->account_name;
         $this->passCuenta = $this->data->password_account;
         $this->observacionesTrans = $this->data->observations;
-        $this->expirationActual = $this->data->expiration_plan;
-
+        $this->inicioPlanActual = $this->data->plan_start;
+        $this->expirationPlanActual = $this->data->expiration_plan;
+        $this->plataformaPlan = $this->data->nombrePlataforma;
+        $this->mesesPlan = $this->data->meses;
+        $this->importePlan = $this->data->importe;
+        $this->inicioNueva = strtotime('+' . 1 . ' day', strtotime($this->expirationPlanActual));
+        $this->inicioNueva = date('Y-m-d', $this->inicioNueva);
         $this->emit('details2-show', 'show modal!');
     }
 
@@ -1701,6 +1720,7 @@ class CuentasController extends Component
                 'pa.id as planAccountid',
             )
             ->where('plans.id', $this->selected_plan)
+            ->where('pa.status', 'ACTIVO')
             ->get()->first();
 
         $cuenta = Account::find($datos->cuentaid);
@@ -1715,8 +1735,8 @@ class CuentasController extends Component
             ]);
 
             /* ENCONTRAR INVERSION */
-            /* $inversioncuenta = CuentaInversion::where('start_date', '<=', $this->expirationActual)
-                ->where('expiration_date', '>=', $this->expirationActual)
+            /* $inversioncuenta = CuentaInversion::where('start_date', '<=', $this->expirationPlanActual)
+                ->where('expiration_date', '>=', $this->expirationPlanActual)
                 ->where('account_id', $cuenta->id)
                 ->get()->first();
 
@@ -1731,14 +1751,16 @@ class CuentasController extends Component
                 'tipo' => 'INGRESO',
                 'cantidad' => $this->importe,
                 'tipoPlan' => 'ENTERA',
+                'num_meses' => $this->meses,
                 'fecha_realizacion' => $date_now,
                 'account_id' => $cuenta->id,
             ]);
 
             $plan = Plan::create([
                 'importe' => $this->importe,
-                'plan_start' => $this->expirationActual,
+                'plan_start' => $this->inicioNueva,
                 'expiration_plan' => $this->expirationNueva,
+                'meses' => $this->meses,
                 'ready' => 'SI',
                 'done' => 'NO',
                 'type_plan' => 'CUENTA',
@@ -1835,6 +1857,7 @@ class CuentasController extends Component
                 'pa.id as paid',
             )
             ->where('plans.id', $this->selected_plan)
+            ->where('pa.status', 'ACTIVO')
             ->get()->first();
         /* PONER EN VENCIDO EL PLAN */
         $plan = Plan::find($this->selected_plan);
@@ -1935,6 +1958,7 @@ class CuentasController extends Component
             )
             ->where('plans.id', $this->selected_plan)
             ->orderby('plans.id', 'desc')
+            ->where('pa.status', 'ACTIVO')
             ->get()->first();
 
         $this->perfil = Profile::join('account_profiles as ap', 'ap.profile_id', 'profiles.id')

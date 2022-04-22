@@ -28,7 +28,7 @@ class PerfilesController extends Component
     use WithFileUploads;
     public $nameperfil, $pin, $status, $availability, $observations,
         $search, $selected_id, $pageTitle, $componentName, $condicional,
-        $meses, $expirationNueva, $expirationActual, $tipopago, $importe,
+        $meses, $expirationNueva, $expirationPlanActual, $tipopago, $importe,
         $mostrartabla2, $perfil, $selected_plan, $nombreCliente, $celular, $cuentasEnteras,
         $nombrePerfil, $pinPerfil, $datos, $perfil1COMBO, $perfil2COMBO, $perfil3COMBO, $PIN1COMBO, $PIN2COMBO, $PIN3COMBO,
         $plataforma1Nombre, $plataforma2Nombre, $plataforma3Nombre, $perfil1ID, $perfil2ID, $perfil3ID;
@@ -47,7 +47,7 @@ class PerfilesController extends Component
         $this->pin = '';
         $this->availability = 'Elegir';
         $this->condicional = 'ocupados';
-        $this->meses = 0;
+        $this->meses = 1;
         $this->expirationNueva = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->tipopago = 'EFECTIVO';
         $this->importe = '';
@@ -94,6 +94,11 @@ class PerfilesController extends Component
         $this->expiracionCuenta3 = '';
         $this->PlataformaFiltro = 'TODAS';
         $this->diasdePlan = 30;
+        $this->inicioPlanActual = null;
+        $this->plataformaPlan = '';
+        $this->mesesPlan = '';
+        $this->importePlan = '';
+        $this->inicioNueva = '';
     }
     public function render()
     {
@@ -622,10 +627,10 @@ class PerfilesController extends Component
         if ($this->diasdePlan > 0) {
             if ($this->meses > 0) {
                 $dias = $this->meses * $this->diasdePlan;
-                $this->expirationNueva = strtotime('+' . $dias . ' day', strtotime($this->expirationActual));
+                $this->expirationNueva = strtotime('+' . $dias . ' day', strtotime($this->inicioNueva));
                 $this->expirationNueva = date('Y-m-d', $this->expirationNueva);
             } else {
-                $this->expirationNueva = $this->expirationActual;
+                $this->expirationNueva = $this->inicioNueva;
             }
         }
 
@@ -740,7 +745,10 @@ class PerfilesController extends Component
                 'c.id as clienteID',
                 'c.nombre as nombreCliente',
                 'c.celular as celular',
-                'plans.expiration_plan as expiration_plan'
+                'plans.plan_start as plan_start',
+                'plans.expiration_plan as expiration_plan',
+                'plans.meses as meses',
+                'plans.importe as importe'
             )
             ->where('plans.id', $this->selected_plan)
             ->get()->first();
@@ -748,9 +756,13 @@ class PerfilesController extends Component
         $this->nombreCliente = $this->data->nombreCliente;
         $this->celular = $this->data->celular;
         $this->observations = $this->data->observations;
-        $this->expirationActual = $this->data->expiration_plan;
+        $this->inicioPlanActual = $this->data->plan_start;
+        $this->expirationPlanActual = $this->data->expiration_plan;
         $this->clienteID = $this->data->clienteID;
-
+        $this->mesesPlan = $this->data->meses;
+        $this->importePlan = $this->data->importe;
+        $this->inicioNueva = strtotime('+' . 1 . ' day', strtotime($this->expirationPlanActual));
+        $this->inicioNueva = date('Y-m-d', $this->inicioNueva);
 
         /* CARGAR NOMBRE DE PERFIL, PIN E ID EN LAS VARIABLES */
         foreach ($plan->PlanAccounts as  $value) {
@@ -1341,12 +1353,13 @@ class PerfilesController extends Component
                         'tipo' => 'INGRESO',
                         'cantidad' => $this->importe / 3,
                         'tipoPlan' => 'COMBO',
+                        'num_meses' => $this->meses,
                         'fecha_realizacion' => $date_now,
                         'account_id' => $value->Cuenta->id
                     ]);
                     /* ENCONTRAR INVERSION */
-                    /* $inversioncuenta = CuentaInversion::where('start_date', '<=', $this->expirationActual)
-                        ->where('expiration_date', '>=', $this->expirationActual)
+                    /* $inversioncuenta = CuentaInversion::where('start_date', '<=', $this->expirationPlanActual)
+                        ->where('expiration_date', '>=', $this->expirationPlanActual)
                         ->where('account_id', $value->Cuenta->id)
                         ->get()->first();
 
@@ -1357,6 +1370,7 @@ class PerfilesController extends Component
                     $inversioncuenta->save(); */
                 }
             }
+
             foreach ($perfil2->CuentaPerfil as  $value) {
                 if ($value->status == 'ACTIVO') {
 
@@ -1366,12 +1380,13 @@ class PerfilesController extends Component
                         'tipo' => 'INGRESO',
                         'cantidad' => $this->importe / 3,
                         'tipoPlan' => 'COMBO',
+                        'num_meses' => $this->meses,
                         'fecha_realizacion' => $date_now,
                         'account_id' => $value->Cuenta->id
                     ]);
                     /* ENCONTRAR INVERSION */
-                    /* $inversioncuenta = CuentaInversion::where('start_date', '<=', $this->expirationActual)
-                        ->where('expiration_date', '>=', $this->expirationActual)
+                    /* $inversioncuenta = CuentaInversion::where('start_date', '<=', $this->expirationPlanActual)
+                        ->where('expiration_date', '>=', $this->expirationPlanActual)
                         ->where('account_id', $value->Cuenta->id)
                         ->get()->first();
 
@@ -1391,12 +1406,13 @@ class PerfilesController extends Component
                         'tipo' => 'INGRESO',
                         'cantidad' => $this->importe / 3,
                         'tipoPlan' => 'COMBO',
+                        'num_meses' => $this->meses,
                         'fecha_realizacion' => $date_now,
                         'account_id' => $value->Cuenta->id
                     ]);
                     /* ENCONTRAR INVERSION */
-                    /* $inversioncuenta = CuentaInversion::where('start_date', '<=', $this->expirationActual)
-                        ->where('expiration_date', '>=', $this->expirationActual)
+                    /* $inversioncuenta = CuentaInversion::where('start_date', '<=', $this->expirationPlanActual)
+                        ->where('expiration_date', '>=', $this->expirationPlanActual)
                         ->where('account_id', $value->Cuenta->id)
                         ->get()->first();
 
@@ -1410,8 +1426,9 @@ class PerfilesController extends Component
             /* CREAR EL PLAN */
             $plan = Plan::create([
                 'importe' => $this->importe,
-                'plan_start' => $this->expirationActual,
+                'plan_start' => $this->inicioNueva,
                 'expiration_plan' => $this->expirationNueva,
+                'meses' => $this->meses,
                 'ready' => 'SI',
                 'done' => 'NO',
                 'status' => 'VIGENTE',
@@ -1778,6 +1795,7 @@ class PerfilesController extends Component
         $this->data = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
             ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
             ->join('accounts as acc', 'acc.id', 'pa.account_id')
+            ->join('platforms as p', 'p.id', 'acc.platform_id')
             ->join('account_profiles as ap', 'acc.id', 'ap.account_id')
             ->join('profiles as prof', 'prof.id', 'ap.profile_id')
             ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
@@ -1789,10 +1807,16 @@ class PerfilesController extends Component
                 'prof.nameprofile as nameprofile',
                 'c.nombre as nombreCliente',
                 'c.celular as celular',
-                'plans.expiration_plan as expiration_plan'
+                'plans.plan_start as plan_start',
+                'plans.expiration_plan as expiration_plan',
+                'plans.meses as meses',
+                'plans.importe as importe',
+                'p.nombre as nombrePlataforma',
             )
             ->where('plans.id', $this->selected_plan)
             ->whereColumn('plans.id', '=', 'ap.plan_id')
+            ->where('pa.status', 'ACTIVO')
+            ->where('ap.status', 'ACTIVO')
             ->orderby('plans.id', 'desc')
             ->get()->first();
 
@@ -1801,7 +1825,13 @@ class PerfilesController extends Component
         $this->nombreCliente = $this->data->nombreCliente;
         $this->celular = $this->data->celular;
         $this->observations = $this->data->observations;
-        $this->expirationActual = $this->data->expiration_plan;
+        $this->inicioPlanActual = $this->data->plan_start;
+        $this->expirationPlanActual = $this->data->expiration_plan;
+        $this->plataformaPlan = $this->data->nombrePlataforma;
+        $this->mesesPlan = $this->data->meses;
+        $this->importePlan = $this->data->importe;
+        $this->inicioNueva = strtotime('+' . 1 . ' day', strtotime($this->expirationPlanActual));
+        $this->inicioNueva = date('Y-m-d', $this->inicioNueva);
         $this->emit('details-show', 'show modal!');
     }
 
@@ -1886,6 +1916,7 @@ class PerfilesController extends Component
                         'tipo' => 'INGRESO',
                         'cantidad' => $this->importe,
                         'tipoPlan' => 'PERFIL',
+                        'num_meses' => $this->meses,
                         'fecha_realizacion' => $date_now,
                         'account_id' => $value->Cuenta->id
                     ]);
@@ -1893,8 +1924,9 @@ class PerfilesController extends Component
             }
             $plan = Plan::create([
                 'importe' => $this->importe,
-                'plan_start' => $this->expirationActual,
+                'plan_start' => $this->inicioNueva,
                 'expiration_plan' => $this->expirationNueva,
+                'meses' => $this->meses,
                 'ready' => 'SI',
                 'done' => 'NO',
                 'type_plan' => 'PERFIL',
@@ -2250,7 +2282,7 @@ class PerfilesController extends Component
         $this->nameperfil = '';
         $this->pin = '';
         $this->availability = 'Elegir';
-        $this->meses = 0;
+        $this->meses = 1;
         $this->expirationNueva = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->tipopago = 'EFECTIVO';
         $this->importe = '';
@@ -2292,23 +2324,16 @@ class PerfilesController extends Component
         $this->cuentaPerfil2 = '';
         $this->cuentaPerfil3 = '';
         $this->clienteID = '';
-        $this->status = 'Elegir';
-        $this->nameperfil = '';
-        $this->pin = '';
-        $this->availability = 'Elegir';
-        $this->meses = 0;
-        $this->expirationNueva = Carbon::parse(Carbon::now())->format('Y-m-d');
-        $this->tipopago = 'EFECTIVO';
-        $this->mostrartabla2 = 0;
-        $this->perfil = [];
-        $this->selected_id = 0;
-        $this->selected_plan = 0;
-        $this->nombreCliente = '';
-        $this->celular = '';
-        $this->cuentasEnteras = [];
-        $this->nombrePerfil = '';
-        $this->pinPerfil = '';
+        $this->expiracionCuenta1 = '';
+        $this->expiracionCuenta2 = '';
+        $this->expiracionCuenta3 = '';
+        $this->PlataformaFiltro = 'TODAS';
         $this->diasdePlan = 30;
+        $this->inicioPlanActual = null;
+        $this->plataformaPlan = '';
+        $this->mesesPlan = '';
+        $this->importePlan = '';
+        $this->inicioNueva = '';
         $this->resetValidation();
     }
 }
