@@ -16,8 +16,11 @@ class TransferenciasController extends Component
     }
     public function render()
     {
-        $data= Transference::join('users','transferences.id_usuario','users.id')
-        ->select('transferences.*','transferences.id as t_id','transferences.status as st','users.*')
+        $data= Transference::join('estado_transferencias','transferences.id','estado_transferencias.id_transferencia')
+        ->join('users','estado_transferencias.id_usuario','users.id')
+        ->join('destinos','transferences.id_destino','destinos.id')
+        ->select('transferences.created_at as fecha_tr','transferences.id as t_id','users.*',
+        'estado_transferencias.estado as estado_tr','destinos.nombre as dest_nom')
         ->where('transferences.estado','Activo')
         ->get(); 
         

@@ -158,5 +158,11 @@ class PermissionSeeder extends Seeder
             'name' => 'Boton_Entregar_Servicio',
             'guard_name' => 'web'
         ]);
+
+        Permission::create([
+            'name' => 'admin_estancia_almacen',
+            'guard_name' =>'web'
+        ]);
+      
     }
 }

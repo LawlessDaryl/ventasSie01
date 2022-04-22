@@ -25,6 +25,8 @@
                                             <th class="table-th text-withe text-center">Fecha</th>
                                             <th class="table-th text-withe text-center">Estado</th>
                                             <th class="table-th text-withe text-center">Usuario</th>
+                                            <th class="table-th text-withe text-center">Origen</th>
+                                            <th class="table-th text-withe text-center">Destino</th>
                                             <th class="table-th text-withe text-center">Acciones</th>
                                         </tr>
                                     </thead>
@@ -38,25 +40,31 @@
                                                     <h6 class="text-center">{{ $data->t_id }}</h6>
                                                 </td>
                                                 <td>
-                                                    <h6 class="text-center">{{ $data->fecha_transferencia }}</h6>
+                                                    <h6 class="text-center" style="font-size: 12px">{{ $data->fecha_tr }}</h6>
                                                 </td>
 
-                                                @if($data->st =="Pendiente")
+                                                @if($data->estado_tr =="Pendiente")
                                                 <td>
-                                                    <h6 class="text-center btn text-white btn-danger p-1">{{ $data->st }}</h6>
+                                                    <h6 class="text-center btn text-white btn-danger p-1">{{ $data->estado_tr }}</h6>
                                                 </td>
 
-                                                @elseif($data->st =="Aprobado")
+                                                @elseif($data->estado_tr =="Aprobado")
                                                 <td>
-                                                    <h6 class="text-center btn text-white btn-success p-1">{{ $data->st }}</h6>
+                                                    <h6 class="text-center btn text-white btn-success p-1">{{ $data->estado_tr }}</h6>
                                                 </td>
 
                                                 @else
                                                 <td>
-                                                    <h6 class="text-center btn text-white btn-primary p-1">{{ $data->st }}</h6>
+                                                    <h6 class="text-center btn text-white btn-primary p-1">{{ $data->estado_tr }}</h6>
                                                 </td>
                                     
                                                 @endif
+                                                <td>
+                                                    <h6 class="text-center">{{ $data->dest_nom }}</h6>
+                                                </td>
+                                                <td>
+                                                    <h6 class="text-center">{{ $data->dest_nom }}</h6>
+                                                </td>
                                                 <td>
                                                     <h6 class="text-center">{{ $data->name }}</h6>
                                                 </td>

@@ -8,6 +8,8 @@ use App\Models\Destino;
 use App\Models\DetalleTransferencia;
 use App\Models\Estado_Transferencia;
 use App\Models\EstadoTrans_Detalle;
+use App\Models\EstadoTransDetalle;
+use App\Models\EstadoTransferencia;
 use App\Models\Location;
 use App\Models\Product;
 use App\Models\ProductosDestino;
@@ -21,6 +23,7 @@ use Illuminate\Support\Facades\DB;
 
 use Darryldecode\Cart\Facades\TransferenciasFacade as Transferencia;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 
 class TransferirProductoController extends Component
 {
@@ -152,18 +155,22 @@ class TransferirProductoController extends Component
     if($this->selected_destino == 0 || $this->selected_origen== null)
     $this->emit('empty_destino_origen', 'No ha seleccionado el destino u origen para la transferencia.');
     }
+
+   
+
     public function finalizar_tr()
     {
-
+       
        $this->verificarDestino();
+
         DB::beginTransaction();
 
         try {
             $Transferencia_encabezado = Transference::create([
-                'observacion'=>'sss',
-                'estado'=>1,
-                'id_destino'=>1,
-                'id_origen'=>2,
+                'observacion'=>$this->observacion,
+                'estado'=>1,//***tiene que depender de modificar la transferencia, esta pendiente
+                'id_origen'=>$this->selected_origen,
+                'id_destino'=>$this->selected_destino,
             ]);
 
             if ($Transferencia_encabezado)
@@ -174,8 +181,9 @@ class TransferirProductoController extends Component
                    $ss=DetalleTransferencia::create([
                         'product_id' => $item->id,
                         'cantidad' => $item->quantity,
-                        'estado'=>1
+                        'estado'=>1//***tiene que depender de modificar la transferencia, esta pendiente
                     ]);
+                    $cc[]=$ss->id;
 
                     $q=ProductosDestino::where('product_id',$item->id)
                     ->where('destino_id',$this->selected_origen)->value('stock');
@@ -186,33 +194,32 @@ class TransferirProductoController extends Component
                     ->update(['stock'=>($q-$item->quantity)]);
                     
 
-                    $q=ProductosDestino::where('product_id',$item->id)
+                    $r=ProductosDestino::where('product_id',$item->id)
                     ->where('destino_id',$this->selected_destino)->value('stock');
                     
                   
                     ProductosDestino::where('product_id',$item->id)
                     ->where('destino_id',$this->selected_destino)
-                    ->update(['stock'=>($q+$item->quantity)]);
+                    ->update(['stock'=>($r+$item->quantity)]);
 
                     /*DB::table('productos_destinos')
                     ->updateOrInsert(['stock'],$item->quantity, ['product_id' => $item->id, 'destino_id'=>$this->destino]);*/
                     
-                    Estado_Transferencia::create([
-                        'estado'=>1,
-                        'id_transferencia'=>3,
-                        'id_usuario'=>'sss'
-
-                    ]);
-
-                    EstadoTrans_Detalle::create([
-                        'estado_id'=>1,
-                        'detalle_id'=>3
-                    ]);
-                    
                 }
                 
-            }
+                   $mm= EstadoTransferencia::create([
+                        'estado'=>1,
+                        'id_transferencia'=>$Transferencia_encabezado->id,
+                        'id_usuario'=>Auth()->user()->id
+                    ]);
 
+                    foreach ($cc as $item) {
+                        EstadoTransDetalle::create([
+                            'estado_id'=>$mm->id,
+                            'detalle_id'=>$item
+                        ]);
+                    }    
+            }
             DB::commit();
             $this->resetUI();
            

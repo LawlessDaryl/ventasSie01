@@ -31,7 +31,7 @@ class RoleSeeder extends Seeder
             'guard_name' => 'web'
         ]);
         Role::create([
-            'name' => 'ENCARGARDO ALMACENES',
+            'name' => 'SUPERVISOR DE VENTAS',
             'guard_name' => 'web'
         ]);
     }
