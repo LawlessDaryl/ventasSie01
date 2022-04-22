@@ -18,7 +18,7 @@ class CreateTransferencesTable extends Migration
         Schema::create('transferences', function (Blueprint $table) {
             
             $table->id();
-            $table->string('observacion',250);
+            $table->string('observacion',250)->nullable();
             $table->enum('estado',['Activo','Inactivo'])->default('Activo');
             $table->unsignedBigInteger('id_destino');
             $table->foreign('id_destino')->references('id')->on('destinos');

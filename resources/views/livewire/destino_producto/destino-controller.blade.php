@@ -18,11 +18,11 @@
                         <div class="col-lg-4 col-md-6 col-12">
                             <div class="form-group">
                                 <label> <strong style="color: black" >Origen de transferencia:</strong> </label>
-                                <select wire:model='selected_origen' class="form-control">
-                                    <option value=0>Elegir Origen</option>
-                                  @foreach ($data_suc as $data)
-                                  <option value="{{ $data->destino_id }}">{{ $data->sucursal }}-{{$data->destino}}</option>
-                                  @endforeach
+                                <select wire:model='selected_origen' {{ ($itemsQuantity>0)? 'disabled':""}} class="form-control">
+                                        <option value=0>Elegir Origen</option>
+                                    @foreach ($data_suc as $data)
+                                    <option value="{{ $data->destino_id }}">{{ $data->sucursal }}-{{$data->destino}}</option>
+                                    @endforeach
                                 </select>
                               </div>
                             </div> 
@@ -72,6 +72,8 @@
                 </div>
                 <div class="row">
 
+                    @if($selected_origen !== 0)
+                   
                     <div class="col-12 col-lg-12 col-md-4 d-flex flex-lg-wrap flex-wrap flex-md-wrap flex-xl-wrap justify-content-center">
 
                             @foreach($destinos_almacen as $destino)
@@ -92,11 +94,10 @@
                            
                           
                       @endforeach
-                        
-
-                      
-
                     </div>
+                    @else
+                    <span>No se encontraron resultados</span>
+                    @endif
                 </div>
 
               </div>
@@ -189,13 +190,13 @@
                                 <div class="col-4 col-lg-4 col-md-4 justify-content-center">
         
                                     <div class="form-group">
-                                        <button class="btn btn-warning" style="color: black">Reset <br/>Transferencia</button>
+                                        <button wire:click="resetUI()" class="btn btn-warning" style="color: black">Reset <br/>Transferencia</button>
                                     </div>
                                 </div>
                                 <div class="col-4 col-lg-4 col-md-4">
                 
                                     <div class="form-group">
-                                        <button wire:click="resetUI()" class="btn btn-danger  p-3" style="color: black">Cancelar</button>
+                                        <button wire:click="exit()" class="btn btn-danger  p-3" style="color: black">Cancelar</button>
                                     </div>
                                 </div>
         
@@ -211,3 +212,17 @@
   
   
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        window.livewire.on('empty_destino', msg => {
+           noty(msg)
+       });
+        window.livewire.on('empty_destino_origen', msg => {
+           noty(msg)
+       });
+    });
+
+ 
+</script>

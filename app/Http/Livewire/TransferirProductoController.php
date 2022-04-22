@@ -28,8 +28,8 @@ class TransferirProductoController extends Component
     use WithPagination;
 
     public $selected_id,$search,
-    $itemsQuantity,$selected_3,$selected_origen=0,$selected_destino;
-    private $pagination = 10,$observacion;
+    $itemsQuantity,$selected_3,$selected_origen=0,$selected_destino,$observacion;
+    private $pagination = 10;
     public function paginationView()
     {
         return 'vendor.livewire.bootstrap';
@@ -37,6 +37,7 @@ class TransferirProductoController extends Component
     
     public function mount()
     {
+        
     
         //$this->itemsQuantity = Cart::getTotalQuantity();
        // $quantity= Transferencia::getTotalQuantity();
@@ -45,6 +46,8 @@ class TransferirProductoController extends Component
 
     public function render()
     {
+   
+        $this->itemsQuantity = Transferencia::getTotalQuantity();
       
         if($this->selected_origen !== 0){
 
@@ -54,16 +57,14 @@ class TransferirProductoController extends Component
                                         ->where('dest.id',$this->selected_origen)
                                         ->orderBy('prod.nombre','desc')
                                         ->paginate($this->pagination);
+                                   
+                                        }
+
+                                        else{
+                                            $almacen=null;
                                         }
             
-            else{
-               
-                $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
-                                        ->join('destinos as dest','dest.id','productos_destinos.destino_id')
-                                        ->select(DB::raw('SUM(productos_destinos.stock) as stock_s'),'p.nombre as name','p.cantidad_minima as cant_min')
-                                        ->groupBy('productos_destinos.product_id')
-                                        ->paginate($this->pagination);
-            }
+         
                  $sucursal_ubicacion=Destino::join('sucursals as suc','suc.id','destinos.sucursal_id')
                                         ->select ('suc.name as sucursal','destinos.nombre as destino','destinos.id as destino_id')
                                         ->orderBy('suc.name','asc');
@@ -131,17 +132,30 @@ class TransferirProductoController extends Component
 
     public function resetUI()
     {
-        
-        $this->selected_origen='Elegir Origen';
-        $this->selected_destino='Elegir Destino';
-       
+        Transferencia::clear();
+        $this->selected_destino = "Elegir Destino";
+        $this->selected_origen = "Elegir Destino";
+
+    }
+
+    public function exit(){
+        $this->resetUI();
+        redirect('/destino_prod');
     }
     public function verificarStock(){
 
     }
+    public function verificarDestino(){
+    if ($this->selected_destino === $this->selected_origen) {
+        $this->emit('empty_destino', 'El destino de la transferencia debe ser diferente al origen');
+    }
+    if($this->selected_destino == 0 || $this->selected_origen== null)
+    $this->emit('empty_destino_origen', 'No ha seleccionado el destino u origen para la transferencia.');
+    }
     public function finalizar_tr()
     {
-       
+
+       $this->verificarDestino();
         DB::beginTransaction();
 
         try {
@@ -200,10 +214,8 @@ class TransferirProductoController extends Component
             }
 
             DB::commit();
-
-            Transferencia::clear();
-            $this->selected_destino = "Elegir Destino";
-            $this->selected_origen = "Elegir Destino";
+            $this->resetUI();
+           
             $this->itemsQuantity = Transferencia::getTotalQuantity();
             redirect('/transferencias');
         
