@@ -132,7 +132,7 @@
                                     <div class="col-sm-12 col-md-12">
                                         <div class="row">
                                             <div class="col-sm-2">CLIENTE</div>
-                                            <div class="col-sm-2">FECHAS</div>
+                                            <div class="col-sm-2">FECHA</div>
                                             <div class="col-sm-4">SERVICIOS</div>
                                             <div class="col-sm-4">ESTADO</div>
                                         </div>
@@ -179,10 +179,15 @@
                                                             @endif
                                                         </div>
                                                         {{-- FECHA --}}
-                                                        <div class="col-sm-2">
-                                                            <h6 class="table-th text-withe text-center" style="font-size: 100%">
-                                                                {{ \Carbon\Carbon::parse($service->fecha_estimada_entrega)->format('d/m/Y h:i:s') }}</h6><br />
-                                                        </div>
+                                                        @foreach ($service->movservices as $mm)
+                                                            @if ($mm->movs->status == 'INACTIVO' && $mm->movs->type == 'ANULADO')
+                                                                <div class="col-sm-2">
+                                                                    <h6 class="table-th text-withe text-center" style="font-size: 100%">
+                                                                        {{ \Carbon\Carbon::parse($mm->movs->created_at)->format('d/m/Y h:i:s') }}</h6><br />
+                                                                </div>
+                                                            @endif
+                                                        @endforeach
+                                                        
                                                         {{-- SERVICIOS --}}
                                                         <div class="col-sm-4">
                                                             <a href="javascript:void(0)"
@@ -344,10 +349,14 @@
                                                             @endif
                                                         </div>
                                                         {{-- FECHA --}}
-                                                        <div class="col-sm-2">
-                                                            <h6 class="table-th text-withe text-center" style="font-size: 100%">
-                                                                {{ \Carbon\Carbon::parse($service->fecha_estimada_entrega)->format('d/m/Y h:i:s') }}</h6><br />
-                                                        </div>
+                                                        @foreach ($service->movservices as $mm)
+                                                            @if ($mm->movs->status == 'ACTIVO' || ($mm->movs->status == 'INACTIVO' && $mm->movs->type == 'ANULADO'))
+                                                                <div class="col-sm-2">
+                                                                    <h6 class="table-th text-withe text-center" style="font-size: 100%">
+                                                                        {{ \Carbon\Carbon::parse($mm->movs->created_at)->format('d/m/Y h:i:s') }}</h6><br />
+                                                                </div>
+                                                            @endif
+                                                        @endforeach
                                                         {{-- SERVICIOS --}}
                                                         <div class="col-sm-4">
                                                             <a href="javascript:void(0)"
@@ -505,10 +514,14 @@
                                                         @endif
                                                     </div>
                                                     {{-- FECHA --}}
-                                                    <div class="col-sm-2">
-                                                        <h6 class="table-th text-withe text-center" style="font-size: 100%">
-                                                            {{ \Carbon\Carbon::parse($service->fecha_estimada_entrega)->format('d/m/Y h:i:s') }}</h6><br />
-                                                    </div>
+                                                    @foreach ($service->movservices as $mm)
+                                                        @if ($mm->movs->status == 'ACTIVO')
+                                                            <div class="col-sm-2">
+                                                                <h6 class="table-th text-withe text-center" style="font-size: 100%">
+                                                                    {{ \Carbon\Carbon::parse($mm->movs->created_at)->format('d/m/Y h:i:s') }}</h6><br />
+                                                            </div>
+                                                        @endif
+                                                    @endforeach
                                                     {{-- SERVICIOS --}}
                                                     <div class="col-sm-4">
                                                         <a href="javascript:void(0)"
