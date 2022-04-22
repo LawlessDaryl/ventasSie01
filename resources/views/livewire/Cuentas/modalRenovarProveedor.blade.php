@@ -91,6 +91,28 @@
                         </div>
                     </div>
 
+                    <div class="col-sm-12 col-md-6">
+                        <h6>Fecha de inicio Nueva</h6>
+                        <div class="form-group">
+                            <input wire:model.lazy="start_account_new" type="date" min="" max="" class="form-control"
+                                placeholder="Click para elegir">
+                            @error('start_account_new')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6">
+                        <h6>Fecha de expiración Nueva</h6>
+                        <div class="form-group">
+                            <input disabled wire:model="expiration_account_new" type="date" min="" max=""
+                                class="form-control" placeholder="Click para elegir">
+                            @error('expiration_account_new')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
                     <div class="col-sm-12 col-md-3">
                         <div class="form-group">
                             <label>
@@ -128,27 +150,7 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-md-6">
-                        <h6>Fecha de inicio Nueva</h6>
-                        <div class="form-group">
-                            <input wire:model.lazy="start_account_new" type="date" min="" max="" class="form-control"
-                                placeholder="Click para elegir">
-                            @error('start_account_new')
-                                <span class="text-danger er">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
 
-                    <div class="col-sm-12 col-md-6">
-                        <h6>Fecha de expiración Nueva</h6>
-                        <div class="form-group">
-                            <input disabled wire:model="expiration_account_new" type="date" min="" max=""
-                                class="form-control" placeholder="Click para elegir">
-                            @error('expiration_account_new')
-                                <span class="text-danger er">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
 
                     <div class="col-sm-12 col-md-12">
                         <div class="form-group text-center mt-4">

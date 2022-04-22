@@ -1334,8 +1334,18 @@ class PerfilesController extends Component
             ]);
             foreach ($perfil1->CuentaPerfil as  $value) {
                 if ($value->status == 'ACTIVO') {
+
+                    $date_now = date('Y-m-d', time());
+
+                    CuentaInversion::create([
+                        'tipo' => 'INGRESO',
+                        'cantidad' => $this->importe / 3,
+                        'tipoPlan' => 'COMBO',
+                        'fecha_realizacion' => $date_now,
+                        'account_id' => $value->Cuenta->id
+                    ]);
                     /* ENCONTRAR INVERSION */
-                    $inversioncuenta = CuentaInversion::where('start_date', '<=', $this->expirationActual)
+                    /* $inversioncuenta = CuentaInversion::where('start_date', '<=', $this->expirationActual)
                         ->where('expiration_date', '>=', $this->expirationActual)
                         ->where('account_id', $value->Cuenta->id)
                         ->get()->first();
@@ -1344,13 +1354,23 @@ class PerfilesController extends Component
                     $inversioncuenta->sale_profiles += 1;
                     $inversioncuenta->imports += $this->importe / 3;
                     $inversioncuenta->ganancia = $inversioncuenta->imports - $inversioncuenta->price;
-                    $inversioncuenta->save();
+                    $inversioncuenta->save(); */
                 }
             }
             foreach ($perfil2->CuentaPerfil as  $value) {
                 if ($value->status == 'ACTIVO') {
+
+                    $date_now = date('Y-m-d', time());
+
+                    CuentaInversion::create([
+                        'tipo' => 'INGRESO',
+                        'cantidad' => $this->importe / 3,
+                        'tipoPlan' => 'COMBO',
+                        'fecha_realizacion' => $date_now,
+                        'account_id' => $value->Cuenta->id
+                    ]);
                     /* ENCONTRAR INVERSION */
-                    $inversioncuenta = CuentaInversion::where('start_date', '<=', $this->expirationActual)
+                    /* $inversioncuenta = CuentaInversion::where('start_date', '<=', $this->expirationActual)
                         ->where('expiration_date', '>=', $this->expirationActual)
                         ->where('account_id', $value->Cuenta->id)
                         ->get()->first();
@@ -1359,13 +1379,23 @@ class PerfilesController extends Component
                     $inversioncuenta->sale_profiles += 1;
                     $inversioncuenta->imports += $this->importe / 3;
                     $inversioncuenta->ganancia = $inversioncuenta->imports - $inversioncuenta->price;
-                    $inversioncuenta->save();
+                    $inversioncuenta->save(); */
                 }
             }
             foreach ($perfil3->CuentaPerfil as  $value) {
                 if ($value->status == 'ACTIVO') {
+
+                    $date_now = date('Y-m-d', time());
+
+                    CuentaInversion::create([
+                        'tipo' => 'INGRESO',
+                        'cantidad' => $this->importe / 3,
+                        'tipoPlan' => 'COMBO',
+                        'fecha_realizacion' => $date_now,
+                        'account_id' => $value->Cuenta->id
+                    ]);
                     /* ENCONTRAR INVERSION */
-                    $inversioncuenta = CuentaInversion::where('start_date', '<=', $this->expirationActual)
+                    /* $inversioncuenta = CuentaInversion::where('start_date', '<=', $this->expirationActual)
                         ->where('expiration_date', '>=', $this->expirationActual)
                         ->where('account_id', $value->Cuenta->id)
                         ->get()->first();
@@ -1374,7 +1404,7 @@ class PerfilesController extends Component
                     $inversioncuenta->sale_profiles += 1;
                     $inversioncuenta->imports += $this->importe / 3;
                     $inversioncuenta->ganancia = $inversioncuenta->imports - $inversioncuenta->price;
-                    $inversioncuenta->save();
+                    $inversioncuenta->save(); */
                 }
             }
             /* CREAR EL PLAN */
@@ -1849,17 +1879,16 @@ class PerfilesController extends Component
             ]);
             foreach ($perfil->CuentaPerfil as  $value) {
                 if ($value->status == 'ACTIVO') {
-                    /* ENCONTRAR INVERSION */
-                    $inversioncuenta = CuentaInversion::where('start_date', '<=', $this->expirationActual)
-                        ->where('expiration_date', '>=', $this->expirationActual)
-                        ->where('account_id', $value->Cuenta->id)
-                        ->get()->first();
 
-                    $inversioncuenta->type = 'PERFILES';
-                    $inversioncuenta->sale_profiles += 1;
-                    $inversioncuenta->imports += $this->importe;
-                    $inversioncuenta->ganancia = $inversioncuenta->imports - $inversioncuenta->price;
-                    $inversioncuenta->save();
+                    $date_now = date('Y-m-d', time());
+
+                    CuentaInversion::create([
+                        'tipo' => 'INGRESO',
+                        'cantidad' => $this->importe,
+                        'tipoPlan' => 'PERFIL',
+                        'fecha_realizacion' => $date_now,
+                        'account_id' => $value->Cuenta->id
+                    ]);
                 }
             }
             $plan = Plan::create([

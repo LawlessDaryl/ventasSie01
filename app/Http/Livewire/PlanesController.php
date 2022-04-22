@@ -869,6 +869,16 @@ class PlanesController extends Component
                     $account1 = Account::find($value->Cuenta->id);
                     $account1->whole_account = 'DIVIDIDA';
                     $account1->save();
+
+                    $date_now = date('Y-m-d', time());
+
+                    CuentaInversion::create([
+                        'tipo' => 'INGRESO',
+                        'cantidad' => $this->importe / 3,
+                        'tipoPlan' => 'COMBO',
+                        'fecha_realizacion' => $date_now,
+                        'account_id' => $account1->id
+                    ]);
                 }
             }
 
@@ -879,6 +889,16 @@ class PlanesController extends Component
                     $account2 = Account::find($value->Cuenta->id);
                     $account2->whole_account = 'DIVIDIDA';
                     $account2->save();
+
+                    $date_now = date('Y-m-d', time());
+
+                    CuentaInversion::create([
+                        'tipo' => 'INGRESO',
+                        'cantidad' => $this->importe / 3,
+                        'tipoPlan' => 'COMBO',
+                        'fecha_realizacion' => $date_now,
+                        'account_id' => $account2->id
+                    ]);
                 }
             }
             foreach ($perfil3->CuentaPerfil as  $value) {
@@ -887,6 +907,16 @@ class PlanesController extends Component
                     $account3 = Account::find($value->Cuenta->id);
                     $account3->whole_account = 'DIVIDIDA';
                     $account3->save();
+
+                    $date_now = date('Y-m-d', time());
+
+                    CuentaInversion::create([
+                        'tipo' => 'INGRESO',
+                        'cantidad' => $this->importe / 3,
+                        'tipoPlan' => 'COMBO',
+                        'fecha_realizacion' => $date_now,
+                        'account_id' => $account3->id
+                    ]);
                 }
             }
 
@@ -901,7 +931,7 @@ class PlanesController extends Component
             $perfil3->save();
 
             /* ENCONTRAR INVERSION de la cuenta del perfil 1 */
-            $inversioncuenta = CuentaInversion::where('start_date', '<=', $mv->created_at)
+            /* $inversioncuenta = CuentaInversion::where('start_date', '<=', $mv->created_at)
                 ->where('expiration_date', '>=', $mv->created_at)
                 ->where('account_id', $account1->id)
                 ->get()->first();
@@ -910,10 +940,10 @@ class PlanesController extends Component
             $inversioncuenta->sale_profiles += 1;
             $inversioncuenta->imports = $this->importe / 3;
             $inversioncuenta->ganancia = $inversioncuenta->imports - $inversioncuenta->price;
-            $inversioncuenta->save();
+            $inversioncuenta->save(); */
 
             /* ENCONTRAR INVERSION de la cuenta del perfil 2 */
-            $inversioncuenta2 = CuentaInversion::where('start_date', '<=', $mv->created_at)
+            /* $inversioncuenta2 = CuentaInversion::where('start_date', '<=', $mv->created_at)
                 ->where('expiration_date', '>=', $mv->created_at)
                 ->where('account_id', $account2->id)
                 ->get()->first();
@@ -922,10 +952,10 @@ class PlanesController extends Component
             $inversioncuenta2->sale_profiles += 1;
             $inversioncuenta2->imports = $this->importe / 3;
             $inversioncuenta2->ganancia = $inversioncuenta2->imports - $inversioncuenta2->price;
-            $inversioncuenta2->save();
+            $inversioncuenta2->save(); */
 
             /* ENCONTRAR INVERSION de la cuenta del perfil 3 */
-            $inversioncuenta3 = CuentaInversion::where('start_date', '<=', $mv->created_at)
+            /* $inversioncuenta3 = CuentaInversion::where('start_date', '<=', $mv->created_at)
                 ->where('expiration_date', '>=', $mv->created_at)
                 ->where('account_id', $account3->id)
                 ->get()->first();
@@ -934,7 +964,7 @@ class PlanesController extends Component
             $inversioncuenta3->sale_profiles += 1;
             $inversioncuenta3->imports = $this->importe / 3;
             $inversioncuenta3->ganancia = $inversioncuenta3->imports - $inversioncuenta3->price;
-            $inversioncuenta3->save();
+            $inversioncuenta3->save(); */
 
 
             /* CREAR EL PLAN */
@@ -1237,8 +1267,18 @@ class PlanesController extends Component
                     $accp->availability = 'OCUPADO';
                     $accp->save();
 
+                    $date_now = date('Y-m-d', time());
+
+                    CuentaInversion::create([
+                        'tipo' => 'INGRESO',
+                        'cantidad' => $importeIndividual,
+                        'tipoPlan' => 'ENTERA',
+                        'fecha_realizacion' => $date_now,
+                        'account_id' => $accp->id
+                    ]);
+
                     /* ENCONTRAR INVERSION */
-                    $inversioncuenta = CuentaInversion::where('start_date', '<=', $mv->created_at)
+                    /* $inversioncuenta = CuentaInversion::where('start_date', '<=', $mv->created_at)
                         ->where('expiration_date', '>=', $mv->created_at)
                         ->where('account_id', $accp->id)
                         ->get()->first();
@@ -1246,7 +1286,7 @@ class PlanesController extends Component
                     $inversioncuenta->type = 'CUENTA';
                     $inversioncuenta->imports = $importeIndividual;
                     $inversioncuenta->ganancia = $importeIndividual - $inversioncuenta->price;
-                    $inversioncuenta->save();
+                    $inversioncuenta->save(); */
 
                     /* CREAR EL PLAN */
                     $plan = Plan::create([
@@ -1340,15 +1380,27 @@ class PlanesController extends Component
                             $account = Account::find($value->Cuenta->id);
                             $account->whole_account = 'DIVIDIDA';
                             $account->save();
+
+                            $date_now = date('Y-m-d', time());
+
+                            CuentaInversion::create([
+                                'tipo' => 'INGRESO',
+                                'cantidad' => $importeIndividual,
+                                'tipoPlan' => 'PERFIL',
+                                'fecha_realizacion' => $date_now,
+                                'account_id' => $account->id
+                            ]);
                         }
                     }
 
+
+
                     /* PONER EL PERFIL EN OCUPADO */
-                    $accp->availability = 'OCUPADO';
+                    /* $accp->availability = 'OCUPADO';
                     $accp->save();
                     foreach ($accp->CuentaPerfil as  $value) {
                         if ($value->status == 'SinAsignar') {
-                            /* ENCONTRAR INVERSION */
+                            
                             $inversioncuenta = CuentaInversion::where('start_date', '<=', $mv->created_at)
                                 ->where('expiration_date', '>=', $mv->created_at)
                                 ->where('account_id', $value->Cuenta->id)
@@ -1360,7 +1412,7 @@ class PlanesController extends Component
                     $inversioncuenta->sale_profiles += 1;
                     $inversioncuenta->imports += $importeIndividual;
                     $inversioncuenta->ganancia = $inversioncuenta->imports - $inversioncuenta->price;
-                    $inversioncuenta->save();
+                    $inversioncuenta->save(); */
 
                     /* CREAR EL PLAN */
                     $plan = Plan::create([

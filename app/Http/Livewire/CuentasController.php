@@ -89,6 +89,8 @@ class CuentasController extends Component
         $this->EnterasDivididas = 'TODOS';
         $this->PlataformaFiltro = 'TODAS';
         $this->diasdePlan = 30;
+        $this->inicioCompra = Carbon::parse(Carbon::now())->format('Y-m-d');
+        $this->expirationCompra = null;
     }
     public function render()
     {
@@ -1210,12 +1212,10 @@ class CuentasController extends Component
 
         /* CALCULAR FECHA DE FINALIZACION AL CREAR UNA NUEVA CUENTA */
         if ($this->start_account) {
-            if ($this->mesesComprar > 0 && $this->mostrarRenovar != 0) {
+            if ($this->mesesComprar > 0 && $this->mostrarRenovar == 0) {
                 $dias = $this->mesesComprar * 30;
                 $this->expiration_account = strtotime('+' . $dias . ' day', strtotime($this->start_account));
                 $this->expiration_account = date('Y-m-d', $this->expiration_account);
-            } else {
-                $this->mesesComprar = 1;
             }
         }
         /* MOSTRAR UNA NUEVA FECHA DE EXPIRACION SEGUN EL NUMERO DE MESES QUE ESCRIBA EL USUARIO EN RENOVAR PLAN*/
@@ -1263,6 +1263,7 @@ class CuentasController extends Component
     public function mostrarRenovar(Account $cuenta)
     {
         $this->resetUI();
+        $this->mostrarRenovar = 1;
         $this->selected_id = $cuenta->id;
         $this->start_account = $cuenta->start_account;
         $this->expiration_account = $cuenta->expiration_account;
@@ -1299,12 +1300,12 @@ class CuentasController extends Component
             'diasdePlan.gt' => 'Los dias a renovar deben ser minimo 1',
         ];
         /* OBTENER FECHA 30 DIAS DESPUES DE LA FECHA INICIO PARA LA PRIMERA INVERSION */
-        $dias = 30;
+        /* $dias = 30;
         $fecha30diasdespues = strtotime('+' . $dias . ' day', strtotime($this->start_account_new));
-        $fecha30diasdespues = date('Y-m-d', $fecha30diasdespues);
+        $fecha30diasdespues = date('Y-m-d', $fecha30diasdespues); */
         /* DIVIDIR EL PRECIO DE LA CUENTA PARA LAS INVERSIONES SEGUN LA CANTIDAD DE MESES */
         $this->validate($rules, $messages);
-        $this->price /= $this->meseRenovarProv;
+        /* $this->price /= $this->meseRenovarProv; */
         $cuenta = Account::find($this->selected_id);
 
         $cuenta->update([
@@ -1316,8 +1317,18 @@ class CuentasController extends Component
             'price' => $this->price,
             'meses_comprados' => $this->meseRenovarProv,
         ]);
+
+        $date_now = date('Y-m-d', time());
+
+        CuentaInversion::create([
+            'tipo' => 'EGRESO',
+            'cantidad' => $this->price,
+            'fecha_realizacion' => $date_now,
+            'account_id' => $cuenta->id,
+        ]);
+
         /* CREAR LA MISMA CANTIDAD DE INVERSIONES QUE DE MESES EN LA RENOVACION */
-        for ($i = 0; $i < $this->meseRenovarProv; $i++) {
+        /* for ($i = 0; $i < $this->meseRenovarProv; $i++) {
             if ($i == 0) {
                 CuentaInversion::create([
                     'start_date' => $this->start_account_new,
@@ -1353,7 +1364,7 @@ class CuentasController extends Component
                     'account_id' => $cuenta->id,
                 ]);
             }
-        }
+        } */
 
         $this->resetUI();
         $this->emit('modal-hide3', 'Cuenta Actualizada');
@@ -1454,7 +1465,16 @@ class CuentasController extends Component
                 ]);
             }
 
-            $this->price /= $this->mesesComprar;
+            $date_now = date('Y-m-d', time());
+
+            CuentaInversion::create([
+                'tipo' => 'EGRESO',
+                'cantidad' => $this->price,
+                'fecha_realizacion' => $date_now,
+                'account_id' => $acc->id,
+            ]);
+
+            /* $this->price /= $this->mesesComprar;
             $dias = 30;
             $fecha30diasdespues = strtotime('+' . $dias . ' day', strtotime($this->start_account));
             $fecha30diasdespues = date('Y-m-d', $fecha30diasdespues);
@@ -1495,7 +1515,7 @@ class CuentasController extends Component
                         'account_id' => $acc->id,
                     ]);
                 }
-            }
+            } */
 
             DB::commit();
             $this->resetUI();
@@ -1695,7 +1715,7 @@ class CuentasController extends Component
             ]);
 
             /* ENCONTRAR INVERSION */
-            $inversioncuenta = CuentaInversion::where('start_date', '<=', $this->expirationActual)
+            /* $inversioncuenta = CuentaInversion::where('start_date', '<=', $this->expirationActual)
                 ->where('expiration_date', '>=', $this->expirationActual)
                 ->where('account_id', $cuenta->id)
                 ->get()->first();
@@ -1703,7 +1723,17 @@ class CuentasController extends Component
             $inversioncuenta->type = 'CUENTA';
             $inversioncuenta->imports = $this->importe;
             $inversioncuenta->ganancia = $this->importe - $inversioncuenta->price;
-            $inversioncuenta->save();
+            $inversioncuenta->save(); */
+
+            $date_now = date('Y-m-d', time());
+
+            CuentaInversion::create([
+                'tipo' => 'INGRESO',
+                'cantidad' => $this->importe,
+                'tipoPlan' => 'ENTERA',
+                'fecha_realizacion' => $date_now,
+                'account_id' => $cuenta->id,
+            ]);
 
             $plan = Plan::create([
                 'importe' => $this->importe,
