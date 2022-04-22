@@ -669,8 +669,13 @@
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trending-up"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
                         Estadísticas </a>
                 </li>
+                <li>
+                    <a href="{{ url('devolucionventa') }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-refresh-ccw"><polyline points="1 4 1 10 7 10"></polyline><polyline points="23 20 23 14 17 14"></polyline><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path></svg>
+                        Devolución Ventas </a>
+                </li>
 
-                <li class="sub-submenu">
+                {{-- <li class="sub-submenu">
                     <a role="menu" class="collapsed" data-toggle="collapse" data-target="#datatables"
                      aria-expanded="false"><div><span class="icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-refresh-ccw"><polyline points="1 4 1 10 7 10"></polyline><polyline points="23 20 23 14 17 14"></polyline><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path></svg>
@@ -681,10 +686,10 @@
                             <a href="{{ url('#') }}"> Por Venta </a>
                         </li>
                         <li>
-                            <a href="table_dt_basic-dark.html"> Por Producto </a>
+                            <a href="{{ url('devolucionventa') }}"> Por Producto </a>
                         </li>
                     </ul>
-                </li>
+                </li> --}}
                 @endif
 
             </ul>

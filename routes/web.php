@@ -61,6 +61,7 @@ use App\Http\Livewire\NotificationController;
 use App\Http\Livewire\DestinoProductoController;
 use App\Http\Livewire\TransferirProductoController;
 use App\Http\Livewire\DestinoController;
+use App\Http\Livewire\SaleDevolutionController;
 use App\Http\Livewire\SaleStatisticController;
 use Illuminate\Support\Facades\Auth;
 
@@ -160,6 +161,7 @@ Route::middleware(['auth'])->group(function () {
     //Lista de Ventas
     Route::get('salelist', SaleListController::class)->name('salelist');
     Route::get('estadisticas', SaleStatisticController::class)->name('estadisticas');
+    Route::get('devolucionventa', SaleDevolutionController::class)->name('devolucionventa');
     Route::get('notificaciones', NotificationController::class)->name('notificaciones');
     Route::get('notificaciones/{idnotificacion}', [NotificacionController::class,'mostrarnotificacion']);
 

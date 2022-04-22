@@ -1,3 +1,8 @@
+@section('css')
+
+
+@endsection
+
 <div class="row sales layout-top-spacing">
     <div class="col-sm-12">
         <div class="widget">

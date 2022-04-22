@@ -5,10 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Devolucion extends Model
+class Devolution extends Model
 {
     use HasFactory;
-
     protected $fillable = ['fecha_devolucion',
     'tipo',
     'tipo_dev',

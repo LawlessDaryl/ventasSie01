@@ -1,11 +1,10 @@
 <?php
 
-use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDetalleDevolucionsTable extends Migration
+class CreateDetailDevolutionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +13,7 @@ class CreateDetalleDevolucionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('detail_devolutions', function (Blueprint $table) {
+        Schema::create('detail__devolutions', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('id_devolutions');
             $table->foreign('id_devolutions')->references('id')->on('devolutions');
@@ -23,17 +22,11 @@ class CreateDetalleDevolucionsTable extends Migration
             $table->integer('cantidad_dev');//{5}
            
 
-            //registro de lo que  devuelvo
+            //Registro de lo que Devuelvo
             $table->decimal('monto_dev');//{30}
             $table->unsignedBigInteger('product_id2');//{carcasas}
             $table->foreign('product_id2')->references('id')->on('products');
             $table->integer('cantidad_dev2');//{5}
-
-
-
-
-
-           
             $table->timestamps();
         });
     }
@@ -45,6 +38,6 @@ class CreateDetalleDevolucionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('detalle__devolucions');
+        Schema::dropIfExists('detail__devolutions');
     }
 }
