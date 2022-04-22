@@ -208,7 +208,7 @@
                                                 <h6>{{ \Carbon\Carbon::parse($d3->fecha_estimada_entrega)->format('d/m/Y h:i:s') }}</h6>
                                             </td>
                                             <td class="text-center">
-                                                <h6>{{ $mv3->movs->created_at }}</h6>
+                                                <h6>{{ \Carbon\Carbon::parse($mv3->movs->created_at)->format('d/m/Y h:i:s') }}</h6>
                                             </td>
                                         @endif
                                     @endforeach

@@ -66,7 +66,7 @@ class UserSeeder extends Seeder
             'name' => 'Andres',
             'phone' => '77448822',
             'email' => 'andres@gmail.com',
-            'profile' => 'SUPERVISOR',
+            'profile' => 'SUPERVISOR_TECNICO',
             'status' => 'ACTIVE',
             'password' => bcrypt('123')
         ]);

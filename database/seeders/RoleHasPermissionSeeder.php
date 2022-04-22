@@ -43,15 +43,15 @@ class RoleHasPermissionSeeder extends Seeder
                 'role_id' => 2,
             ]);
         }
-        for ($x = 32; $x <= 44; $x++) {     /* PERMISOS SERVICIOS ROL SUPERVISOR*/
-            if ($x != 39 && $x != 40) {
+        for ($x = 32; $x <= 44; $x++) {     /* PERMISOS SERVICIOS ROL SUPERVISOR_TECNICO*/
+            if ($x != 39 && $x != 40 && $x != 42) {
                 RoleHasPermissions::create([
                     'permission_id' => $x,
                     'role_id' => 4,
                 ]);
             }
         }
-        RoleHasPermissions::create([    /* PERMISOS SERVICIOS ROL SUPERVISOR */
+        RoleHasPermissions::create([    /* PERMISOS SERVICIOS ROL SUPERVISOR_TECNICO */
             'permission_id' => 61,
             'role_id' => 4,
         ]);

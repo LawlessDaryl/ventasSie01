@@ -27,7 +27,7 @@ class RoleSeeder extends Seeder
             'guard_name' => 'web'
         ]);
         Role::create([  //4
-            'name' => 'SUPERVISOR',
+            'name' => 'SUPERVISOR_TECNICO',
             'guard_name' => 'web'
         ]);
         Role::create([  //5

@@ -21,11 +21,23 @@
                                         <h6 class=""><b>Responsable: </b>{{$nombreUsuario}}</h6>
                                         <p class=""><b>Cliente: </b>{{$nombreCliente}}</p>
                                         <h6><b>Celular: </b>{{$celular}}</h6>
+                                        {{-- <h6><b>Fecha estimada entrega: </b>{{$fecha_estimada_entrega}} {{$hora_entrega}}</h6> --}}
                                     </div>
 
                                     <div class="user-info-list row">
                                         <div class="col-xl-8">
                                             <ul class="contacts-block list-unstyled">
+                                                <li class="contacts-block__item" style="color:rgb(26, 25, 25)">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" 
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" 
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+                                                    class="feather feather-calendar">
+                                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                                </svg><b>Fecha estimada entrega: </b>{{ \Carbon\Carbon::parse($fecha_estimada_entrega)->format('d/m/Y') }} {{ \Carbon\Carbon::parse($hora_entrega)->format('h:i:s') }}
+                                                </li>
                                                 <li class="contacts-block__item" style="color:rgb(26, 25, 25)">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-battery-charging"><path d="M5 18H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h3.19M15 6h2a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-3.19"></path><line x1="23" y1="13" x2="23" y2="11"></line><polyline points="11 6 7 12 13 12 9 18"></polyline></svg><b>Tipo de Trabajo: </b>{{$typeworkid}} 
                                                 </li>
