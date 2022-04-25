@@ -50,4 +50,8 @@ class TransferenciasController extends Component
         ->select('estado_transferencias.estado')->value('estado_transferencias.estado');
         
     }
+
+    public function verificarStock(){
+        
+    }
 }
