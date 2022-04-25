@@ -860,6 +860,7 @@ class PerfilesController extends Component
             $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                 ->join('profiles as p', 'ap.profile_id', 'p.id')
                 ->where('accounts.id', $c->id)
+                ->where('ap.status', '!=', 'VENCIDO')
                 ->where('p.availability', 'OCUPADO')->get();
 
             $cantidadActivos = $perfilesActivos->count();
@@ -1015,6 +1016,7 @@ class PerfilesController extends Component
             $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                 ->join('profiles as p', 'ap.profile_id', 'p.id')
                 ->where('accounts.id', $c->id)
+                ->where('ap.status', '!=', 'VENCIDO')
                 ->where('p.availability', 'OCUPADO')->get();
 
             $cantidadActivos = $perfilesActivos->count();
@@ -1170,6 +1172,7 @@ class PerfilesController extends Component
             $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                 ->join('profiles as p', 'ap.profile_id', 'p.id')
                 ->where('accounts.id', $c->id)
+                ->where('ap.status', '!=', 'VENCIDO')
                 ->where('p.availability', 'OCUPADO')->get();
 
             $cantidadActivos = $perfilesActivos->count();
@@ -1353,6 +1356,7 @@ class PerfilesController extends Component
                         'tipo' => 'INGRESO',
                         'cantidad' => $this->importe / 3,
                         'tipoPlan' => 'COMBO',
+                        'tipoTransac' => 'RENOVACION',
                         'num_meses' => $this->meses,
                         'fecha_realizacion' => $date_now,
                         'account_id' => $value->Cuenta->id
@@ -1380,6 +1384,7 @@ class PerfilesController extends Component
                         'tipo' => 'INGRESO',
                         'cantidad' => $this->importe / 3,
                         'tipoPlan' => 'COMBO',
+                        'tipoTransac' => 'RENOVACION',
                         'num_meses' => $this->meses,
                         'fecha_realizacion' => $date_now,
                         'account_id' => $value->Cuenta->id
@@ -1406,6 +1411,7 @@ class PerfilesController extends Component
                         'tipo' => 'INGRESO',
                         'cantidad' => $this->importe / 3,
                         'tipoPlan' => 'COMBO',
+                        'tipoTransac' => 'RENOVACION',
                         'num_meses' => $this->meses,
                         'fecha_realizacion' => $date_now,
                         'account_id' => $value->Cuenta->id
@@ -1716,14 +1722,12 @@ class PerfilesController extends Component
         }
     }
 
-    public function Edit(Profile $prof)
+    public function Edit(Profile $prof, Plan $plan)
     {
         $this->selected_id = $prof->id;
         $this->nameperfil = $prof->nameprofile;
         $this->pin = $prof->pin;
-        $this->status = $prof->status;
-        $this->availability = $prof->availability;
-        $this->observations = $prof->observations;
+        $this->observations = $plan->observations;
 
         $this->emit('modal-show', 'show modal!');
     }
@@ -1916,6 +1920,7 @@ class PerfilesController extends Component
                         'tipo' => 'INGRESO',
                         'cantidad' => $this->importe,
                         'tipoPlan' => 'PERFIL',
+                        'tipoTransac' => 'RENOVACION',
                         'num_meses' => $this->meses,
                         'fecha_realizacion' => $date_now,
                         'account_id' => $value->Cuenta->id
@@ -2110,6 +2115,7 @@ class PerfilesController extends Component
             ->where('pa.status', 'ACTIVO')
             ->orderby('plans.id', 'desc')
             ->get()->first();
+
         /* MOSTRAR CUENTAS CON ESPACIOS DE PERFILES */
         $date_now = date('Y-m-d', time());
         $this->cuentasEnteras = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
@@ -2136,6 +2142,7 @@ class PerfilesController extends Component
             $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                 ->join('profiles as p', 'ap.profile_id', 'p.id')
                 ->where('accounts.id', $c->id)
+                ->where('ap.status', '!=', 'VENCIDO')
                 ->where('p.availability', 'OCUPADO')->get();
 
             $cantidadActivos = $perfilesActivos->count();

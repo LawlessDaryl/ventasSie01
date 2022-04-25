@@ -9,5 +9,5 @@ class CuentaInversion extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['tipo', 'cantidad', 'tipoPlan', 'num_meses', 'fecha_realizacion', 'account_id'];
+    protected $fillable = ['tipo', 'cantidad', 'tipoPlan', 'tipoTransac', 'num_meses', 'fecha_realizacion', 'account_id'];
 }

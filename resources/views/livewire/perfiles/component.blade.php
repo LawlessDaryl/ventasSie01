@@ -162,7 +162,7 @@
                                                 {{ \Carbon\Carbon::parse($p->expiration_plan)->format('d/m/Y') }}
                                             </h6>
                                         </td>
-                                        @if ($condicional != 'vencidos')
+                                        @if ($condicional == 'ocupados')
                                             <td class="text-center">
                                                 @if ($p->estadoCuentaPerfil == 'ACTIVO')
                                                     <a href="javascript:void(0)"
@@ -182,9 +182,10 @@
                                             </td>
                                         @else
                                             <td class="text-center">
-                                                <a href="javascript:void(0)" wire:click="Acciones({{ $p->planid }})"
-                                                    class="btn btn-dark mtmobile" title="Observaciones">
-                                                    <i class="fa-solid fa-file-signature"></i>
+                                                <a href="javascript:void(0)"
+                                                    wire:click="Edit({{ $p->id }},{{ $p->planid }})"
+                                                    class="btn btn-dark mtmobile" title="Edit">
+                                                    <i class="fas fa-edit"></i>
                                                 </a>
                                             </td>
                                         @endif

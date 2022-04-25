@@ -18,6 +18,7 @@ class CreateCuentaInversionsTable extends Migration
             $table->enum('tipo', ['EGRESO', 'INGRESO']);
             $table->decimal('cantidad', 10, 2);
             $table->enum('tipoPlan', ['ENTERA', 'PERFIL', 'COMBO'])->nullable();
+            $table->enum('tipoTransac', ['COMPRA', 'VENTA', 'RENOVACION'])->nullable();
             $table->integer('num_meses');
             $table->date('fecha_realizacion');
             $table->unsignedBigInteger('account_id');

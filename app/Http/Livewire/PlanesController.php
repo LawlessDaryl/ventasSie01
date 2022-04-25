@@ -332,7 +332,6 @@ class PlanesController extends Component
                 ->whereBetween('plans.created_at', [$from, $to])
                 ->where('m.user_id', $user_id)
                 ->where('plans.type_plan', 'COMBO')
-                /* ->whereColumn('plans.id', '=', 'ap.plan_id') */
                 ->orderBy('plans.created_at', 'desc')
                 ->paginate($this->pagination);
         }
@@ -413,7 +412,7 @@ class PlanesController extends Component
                         'p.precioEntera'
                     )
                     ->where('accounts.status', 'ACTIVO')
-                    ->where('accounts.expiration_account', '>=', $date_now)
+                    ->where('accounts.expiration_account', '>', $date_now)
                     ->where('accounts.availability', 'LIBRE')
                     ->where('accounts.whole_account', 'ENTERA')
                     ->where('p.id', $this->plataforma)
@@ -438,7 +437,7 @@ class PlanesController extends Component
                     )
                     ->where('accounts.status', 'ACTIVO')
                     ->where('accounts.availability', 'LIBRE')
-                    ->where('accounts.expiration_account', '>=', $date_now)
+                    ->where('accounts.expiration_account', '>', $date_now)
                     ->where('p.id', $this->plataforma)
                     ->orderBy('accounts.expiration_account', 'asc')
                     ->get();
@@ -447,6 +446,7 @@ class PlanesController extends Component
                     $perfilesOcupados = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                         ->join('profiles as p', 'ap.profile_id', 'p.id')
                         ->where('accounts.id', $c->id)
+                        ->where('ap.status', '!=', 'VENCIDO')
                         ->where('p.availability', 'OCUPADO')->get();
 
                     $cantidadOcupados = $perfilesOcupados->count();
@@ -876,6 +876,7 @@ class PlanesController extends Component
                         'tipo' => 'INGRESO',
                         'cantidad' => $this->importe / 3,
                         'tipoPlan' => 'COMBO',
+                        'tipoTransac' => 'VENTA',
                         'num_meses' => $this->meses,
                         'fecha_realizacion' => $date_now,
                         'account_id' => $account1->id
@@ -897,6 +898,7 @@ class PlanesController extends Component
                         'tipo' => 'INGRESO',
                         'cantidad' => $this->importe / 3,
                         'tipoPlan' => 'COMBO',
+                        'tipoTransac' => 'VENTA',
                         'num_meses' => $this->meses,
                         'fecha_realizacion' => $date_now,
                         'account_id' => $account2->id
@@ -916,6 +918,7 @@ class PlanesController extends Component
                         'tipo' => 'INGRESO',
                         'cantidad' => $this->importe / 3,
                         'tipoPlan' => 'COMBO',
+                        'tipoTransac' => 'VENTA',
                         'num_meses' => $this->meses,
                         'fecha_realizacion' => $date_now,
                         'account_id' => $account3->id
@@ -1277,6 +1280,7 @@ class PlanesController extends Component
                         'tipo' => 'INGRESO',
                         'cantidad' => $importeIndividual,
                         'tipoPlan' => 'ENTERA',
+                        'tipoTransac' => 'VENTA',
                         'num_meses' => $this->meses,
                         'fecha_realizacion' => $date_now,
                         'account_id' => $accp->id
@@ -1393,6 +1397,7 @@ class PlanesController extends Component
                                 'tipo' => 'INGRESO',
                                 'cantidad' => $importeIndividual,
                                 'tipoPlan' => 'PERFIL',
+                                'tipoTransac' => 'VENTA',
                                 'num_meses' => $this->meses,
                                 'fecha_realizacion' => $date_now,
                                 'account_id' => $account->id

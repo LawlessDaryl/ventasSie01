@@ -760,7 +760,7 @@ class CuentasController extends Component
         } elseif ($this->condicional == 'vencidos') {    /* CUENTAS VENCIDAS */
             if ($this->PlataformaFiltro != 'TODAS') {
                 if (strlen($this->search) > 0) {
-                    $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
+                    /* $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                         ->join('emails as e', 'accounts.email_id', 'e.id')
                         ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
                         ->join('plan_accounts as pa', 'pa.account_id', 'accounts.id')
@@ -813,7 +813,7 @@ class CuentasController extends Component
 
                         ->orderBy('pl.done', 'desc')
                         ->orderBy('pl.expiration_plan', 'desc')
-                        ->paginate($this->pagination);
+                        ->paginate($this->pagination); */
                 } else {
                     $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                         ->join('emails as e', 'accounts.email_id', 'e.id')
@@ -853,7 +853,7 @@ class CuentasController extends Component
                 }
             } else {
                 if (strlen($this->search) > 0) {
-                    $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
+                    /* $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                         ->join('emails as e', 'accounts.email_id', 'e.id')
                         ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
                         ->join('plan_accounts as pa', 'pa.account_id', 'accounts.id')
@@ -906,7 +906,7 @@ class CuentasController extends Component
 
                         ->orderBy('pl.done', 'desc')
                         ->orderBy('pl.expiration_plan', 'desc')
-                        ->paginate($this->pagination);
+                        ->paginate($this->pagination); */
                 } else {
                     $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                         ->join('emails as e', 'accounts.email_id', 'e.id')
@@ -924,6 +924,7 @@ class CuentasController extends Component
                             'accounts.number_profiles',
                             'accounts.whole_account',
                             'accounts.status',
+                            'accounts.account_name',
                             'accounts.password_account',
                             'p.nombre as nombre',
                             'e.content as content',
@@ -1330,6 +1331,7 @@ class CuentasController extends Component
             'tipo' => 'EGRESO',
             'cantidad' => $this->price,
             'num_meses' => $this->meseRenovarProv,
+            'tipoTransac' => 'COMPRA',
             'fecha_realizacion' => $date_now,
             'account_id' => $cuenta->id,
         ]);
@@ -1751,6 +1753,7 @@ class CuentasController extends Component
                 'tipo' => 'INGRESO',
                 'cantidad' => $this->importe,
                 'tipoPlan' => 'ENTERA',
+                'tipoTransac' => 'RENOVACION',
                 'num_meses' => $this->meses,
                 'fecha_realizacion' => $date_now,
                 'account_id' => $cuenta->id,
