@@ -21,7 +21,7 @@ class RoleHasPermissionSeeder extends Seeder
             ]);
         }
             RoleHasPermissions::create([
-                'permission_id'=>38,
+                'permission_id'=>37,
                 'role_id' =>5
             ]);
     }

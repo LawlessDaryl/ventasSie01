@@ -22,11 +22,9 @@
                                         <tr>
                                             <th class="table-th text-withe text-center">#</th>
                                             <th class="table-th text-withe text-center">Cod</th>                              
-                                            <th class="table-th text-withe text-center">Fecha</th>
+                                            <th class="table-th text-withe text-center">Transferencia</th>
                                             <th class="table-th text-withe text-center">Estado</th>
                                             <th class="table-th text-withe text-center">Usuario</th>
-                                            <th class="table-th text-withe text-center">Origen</th>
-                                            <th class="table-th text-withe text-center">Destino</th>
                                             <th class="table-th text-withe text-center">Acciones</th>
                                         </tr>
                                     </thead>
@@ -40,7 +38,11 @@
                                                     <h6 class="text-center">{{ $data->t_id }}</h6>
                                                 </td>
                                                 <td>
-                                                    <h6 class="text-center" style="font-size: 12px">{{ $data->fecha_tr }}</h6>
+                                                    <h6 class="text-left"> <strong>Fecha:</strong> {{ \Carbon\Carbon::parse($data->fecha_tr)->format('Y-m-d')}}</h6>
+                                                    <h6 class="text-left"> <strong>Hora:</strong> {{ \Carbon\Carbon::parse($data->fecha_tr)->format('H:i')}}</h6>
+                                                    <h6 class="text-left"> <strong>Origen:</strong> {{ $data->origen}}-{{$data->origen_name}}</h6>
+                                                    <h6 class="text-left"> <strong>Destino:</strong> {{ $data->dst }}-{{$data->destino_name}}</h6>
+
                                                 </td>
 
                                                 @if($data->estado_tr =="Pendiente")
@@ -59,12 +61,7 @@
                                                 </td>
                                     
                                                 @endif
-                                                <td>
-                                                    <h6 class="text-center">{{ $data->dest_nom }}</h6>
-                                                </td>
-                                                <td>
-                                                    <h6 class="text-center">{{ $data->dest_nom }}</h6>
-                                                </td>
+                                                
                                                 <td>
                                                     <h6 class="text-center">{{ $data->name }}</h6>
                                                 </td>
@@ -103,7 +100,6 @@
                                             <th class="table-th text-withe text-center">#</th>
                                             <th class="table-th text-withe text-center">Descripcion</th>                              
                                             <th class="table-th text-withe text-center">Cantidad</th>
-                                            <th class="table-th text-withe text-center">Destino</th>
                                             <th class="table-th text-withe text-center">Acciones</th>
                                         </tr>
                                     </thead>
