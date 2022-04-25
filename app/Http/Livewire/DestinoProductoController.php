@@ -38,7 +38,7 @@ class DestinoProductoController extends Component
             if($this->selected_id == 'General')
             
               
-            $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
+             $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
                                         ->join('destinos as dest','dest.id','productos_destinos.destino_id')
                                         ->select(DB::raw('SUM(productos_destinos.stock) as stock_s'),'p.nombre as name','p.cantidad_minima as cant_min')
                                         ->groupBy('productos_destinos.product_id')
@@ -46,7 +46,7 @@ class DestinoProductoController extends Component
                                         ->paginate($this->pagination);
             
          else
-            $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
+             $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
                                         
             ->join('destinos as dest','dest.id','productos_destinos.destino_id')
                                         

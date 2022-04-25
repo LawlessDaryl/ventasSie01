@@ -10,9 +10,10 @@ use Livewire\Component;
 
 class TransferenciasController extends Component
 {
-    public $nro,$detalle,$ros;
+    public $nro,$nro_det,$detalle,$estado;
     public function mount(){
         $this->nro=1;
+        $this->nro_det=1;
        
     }
     public function render()
@@ -27,27 +28,26 @@ class TransferenciasController extends Component
         'users.*','suc_origen.name as origen_name',
         'suc_destino.name as destino_name','estado_transferencias.estado as estado_tr',
         'origen.nombre as origen','destino1.nombre as dst')
-        
-      
-        ->where('estado_transferencias.created_at','=','select max(estado_transferencias.created_at) from estado_transferencias' )
-        
-        ->get(); 
+        ->where('estado_transferencias.op','Activo')
+        ->get();
 
-        dd($data);
-        
-        return view('livewire.destino_producto.verTransferencias',['data_t'=>$data,'data_m'=>$this->detalle])
+        return view('livewire.destino_producto.verTransferencias',['data_t'=>$data,'data_m'=>$this->detalle,'data_estado'=>$this->estado])
         ->extends('layouts.theme.app')
         ->section('content');
         
     }
 
-    public function visualizar($id){
-
+    public function visualizar($id)
+    {
         $this->detalle=DetalleTransferencia::join('products','detalle_transferencias.product_id','products.id')
-        ->join('destinos','detalle_transferencias.id_destino','destinos.id')
-        ->join('transferencia_detalles as t_d','detalle_transferencias.id','t_d.id_detalle')
-        ->join('transferences','t_d.id_transferencia','transferences.id')
-        ->select('detalle_transferencias.*','products.nombre as prod_name','destinos.nombre as dest_name')
+        ->join('estado_trans_detalles','detalle_transferencias.id','estado_trans_detalles.detalle_id')
+        ->join('estado_transferencias','estado_trans_detalles.estado_id','estado_transferencias.id')
+        ->join('transferences','estado_transferencias.id_transferencia','transferences.id')
+        ->select('detalle_transferencias.*','products.nombre as prod_name')
         ->where('transferences.id',$id)->get();
+
+        $this->estado= Transference::join('estado_transferencias','transferences.id','estado_transferencias.id_transferencia')
+        ->select('estado_transferencias.estado')->value('estado_transferencias.estado');
+        
     }
 }

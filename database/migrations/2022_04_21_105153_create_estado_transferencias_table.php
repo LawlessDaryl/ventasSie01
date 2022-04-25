@@ -16,6 +16,7 @@ class CreateEstadoTransferenciasTable extends Migration
         Schema::create('estado_transferencias', function (Blueprint $table) {
             $table->id();
             $table->enum('estado',['Pendiente','Aprobado','Rechazado','En transito','Recibido'])->default('Pendiente');
+            $table->enum('op',['Activo','Inactivo'])->default('Activo');
             $table->unsignedBigInteger('id_transferencia');
             $table->foreign('id_transferencia')->references('id')->on('transferences');
             $table->unsignedBigInteger('id_usuario');

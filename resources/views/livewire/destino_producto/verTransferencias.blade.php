@@ -93,6 +93,7 @@
                         <div class="row  justify-content-center ">
                             
                             @if($detalle!=null)
+                         
                             <div class="table-responsive">
                                 <table class="table table-unbordered table-hover mt-2">
                                     <thead class="text-white" style="background: #3B3F5C">
@@ -107,17 +108,13 @@
                                         @foreach ($data_m as $datas)
                                         <tr>
                                             <td>
-                                                <h6 class="text-center">{{ $nro++ }}</h6>
+                                                <h6 class="text-center">{{ $nro_det++ }}</h6>
                                             </td>
                                             <td>
                                                 <h6 class="text-center">{{ $datas->prod_name }}</h6>
                                             </td>
                                             <td>
                                                 <h6 class="text-center">{{ $datas->cantidad }}</h6>
-                                            </td>
-
-                                            <td>
-                                                <h6 class="text-center">{{ $datas->dest_name }}</h6>
                                             </td>
                                             
                                             <td class="text-center">
@@ -131,13 +128,24 @@
                                                 </a>
                                                
                                             </td>
+                                           
                                         </tr>
                                     @endforeach
+                                   
                                     @else
                                     <span>Visualizar Detalles</span>
                                     @endif
-                                       
+                                    <td>
+                                        @if($estado === 'Pendiente' )
+                                        <button class="btn btn-success p-0 col-lg-5">Verificar Stock</button>
+                                        <button class="btn btn-info p-0 col-lg-5">Aceptar Solicitud</button>
+                                        @endif
+                                    </td>
+
+                                   
+
                                     </tbody>
+                                   
                                 </table>
                              
                             </div>

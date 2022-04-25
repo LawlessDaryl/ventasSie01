@@ -209,6 +209,7 @@ class TransferirProductoController extends Component
                 
                    $mm= EstadoTransferencia::create([
                         'estado'=>1,
+                        'op'=>1,
                         'id_transferencia'=>$Transferencia_encabezado->id,
                         'id_usuario'=>Auth()->user()->id
                     ]);
