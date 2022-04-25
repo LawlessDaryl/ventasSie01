@@ -121,10 +121,10 @@
             <div class="modal-footer">
 
                 <ul class="tabs tab-pills">
-                    
-                    <a class="btn btn-dark mb-2" href="{{ url('reporte/pdf' . '/' . $orderservice) }}" 
-                    target="_blank" wire:click="ResetSession">Guardar</a>
-                    
+                    @if (!empty(session('od')))
+                        <a class="btn btn-dark mb-2" href="{{ url('reporte/pdf' . '/' . $orderservice) }}" 
+                        target="_blank" wire:click="ResetSession">Guardar</a>
+                    @endif
                     <button class="btn btn-dark mb-2" wire:click="ResetSession">Salir</button>
                 </ul>
             </div>

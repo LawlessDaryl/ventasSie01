@@ -26,6 +26,92 @@
                         </div>
                     </div>
 
+                    @if (@Auth::user()->hasPermissionTo('Boton_Entregar_Servicio') && @Auth::user()->hasPermissionTo('Recepcionar_Servicio'))
+                    <div class="col-lg-2 col-sm-2 col-md-3 mt-4">
+                        <div class="form-group">
+                            <div class="n-chk">
+                                <label class="new-control new-radio radio-classic-primary">
+                                    <input type="radio" class="new-control-input" name="custom-radio-4" id="libres"
+                                        value="Pendientes" wire:model="condicional">
+                                    <span class="new-control-indicator"></span><h6>SERVICIOS PENDIENTES</h6>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-2 col-md-3 mt-4">
+                        <div class="form-group">
+                            <div class="n-chk">
+                                <label class="new-control new-radio radio-classic-primary">
+                                    <input type="radio" class="new-control-input" name="custom-radio-4" id="ocupados"
+                                        value="Propios" wire:model="condicional" checked>
+                                    <span class="new-control-indicator"></span><h6>SERVICIOS PROPIOS EN PROCESO</h6>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-sm-2 col-md-3 mt-4">
+                        <div class="form-group">
+                            <div class="n-chk">
+                                <label class="new-control new-radio radio-classic-primary">
+                                    <input type="radio" class="new-control-input" name="custom-radio-4" id="terminado"
+                                        value="Terminados" wire:model="condicional" checked>
+                                    <span class="new-control-indicator"></span><h6>SERVICIOS PROPIOS TERMINADOS</h6>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-2 col-md-3 mt-4">
+                            <div class="form-group">
+                                <div class="n-chk">
+                                    <label class="new-control new-radio radio-classic-primary">
+                                        <input type="radio" class="new-control-input" name="sucursales"
+                                            value="MiSucursal" wire:model="condicion">
+                                        <span class="new-control-indicator"></span><h6>MI SUCURSAL</h6>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-2 col-md-3 mt-4">
+                            <div class="form-group">
+                                <div class="n-chk">
+                                    <label class="new-control new-radio radio-classic-primary">
+                                        <input type="radio" class="new-control-input" name="sucursales"
+                                            value="Todos" wire:model="condicion" checked>
+                                        <span class="new-control-indicator"></span><h6>TODAS LAS SUCURSALES</h6>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @elseif(@Auth::user()->hasPermissionTo('Boton_Entregar_Servicio'))
+                    
+                    <div class="col-lg-3 col-sm-2 col-md-3 mt-4">
+                        <div class="form-group">
+                            <div class="n-chk">
+                                <label class="new-control new-radio radio-classic-primary">
+                                    <input type="radio" class="new-control-input" name="opciones_cajero" id="terminado"
+                                        value="TerminadosTodos" wire:model="condicional">
+                                    <span class="new-control-indicator"></span><h6>SERVICIOS TERMINADOS</h6>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-2 col-md-3 mt-4">
+                        <div class="form-group">
+                            <div class="n-chk">
+                                <label class="new-control new-radio radio-classic-primary">
+                                    <input type="radio" class="new-control-input" name="opciones_cajero" id="terminado"
+                                        value="EntregadosPropios" wire:model="condicional" checked>
+                                    <span class="new-control-indicator"></span><h6>SERVICIOS PROPIOS ENTREGADOS</h6>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    @elseif(@Auth::user()->hasPermissionTo('Recepcionar_Servicio'))
 
                     <div class="col-lg-2 col-sm-2 col-md-3 mt-4">
                         <div class="form-group">
@@ -62,6 +148,32 @@
                         </div>
                     </div>
 
+                    <div class="row">
+                        <div class="col-sm-2 col-md-3 mt-4">
+                            <div class="form-group">
+                                <div class="n-chk">
+                                    <label class="new-control new-radio radio-classic-primary">
+                                        <input type="radio" class="new-control-input" name="sucursales"
+                                            value="MiSucursal" wire:model="condicion">
+                                        <span class="new-control-indicator"></span><h6>MI SUCURSAL</h6>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-2 col-md-3 mt-4">
+                            <div class="form-group">
+                                <div class="n-chk">
+                                    <label class="new-control new-radio radio-classic-primary">
+                                        <input type="radio" class="new-control-input" name="sucursales"
+                                            value="Todos" wire:model="condicion" checked>
+                                        <span class="new-control-indicator"></span><h6>TODAS LAS SUCURSALES</h6>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+
                     @if (@Auth::user()->hasPermissionTo('Orden_Servicio_Index'))
                     <div class="col-lg-2 col-sm-2 col-md-3 mt-4">
                         <ul class="tabs tab-pills">
@@ -70,30 +182,8 @@
                     </div>
                     @endif
                 </div>
-                <div class="row">
-                    <div class="col-sm-2 col-md-3 mt-4">
-                        <div class="form-group">
-                            <div class="n-chk">
-                                <label class="new-control new-radio radio-classic-primary">
-                                    <input type="radio" class="new-control-input" name="sucursales"
-                                        value="MiSucursal" wire:model="condicion">
-                                    <span class="new-control-indicator"></span><h6>MI SUCURSAL</h6>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-2 col-md-3 mt-4">
-                        <div class="form-group">
-                            <div class="n-chk">
-                                <label class="new-control new-radio radio-classic-primary">
-                                    <input type="radio" class="new-control-input" name="sucursales"
-                                        value="Todos" wire:model="condicion" checked>
-                                    <span class="new-control-indicator"></span><h6>TODAS LAS SUCURSALES</h6>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
+                
 
             </div>
             <div class="row">
@@ -232,6 +322,90 @@
                                     @endforeach
                                     <td class="text-center">
                                         <h6>{{ $d3->OrderServicio->id }}</h6>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+
+                        @elseif($condicional == 'TerminadosTodos')
+                        <tbody>
+                            @foreach ($data as $d4)
+                                <tr>
+                                    <td class="text-center" style="{{ substr($d4->horas, 0, 3)<=24 ? 'background-color: #FF0000 !important' : 'background-color: #ff851b !important' }}">
+                                        <h6>{{ $loop->iteration }}</h6>
+                                    </td>
+                                    @foreach ($d4->movservices as $mv4)
+                                        @if ($mv4->movs->type == 'TERMINADO')
+                                            <td class="text-center">
+                                                <h6>{{ \Carbon\Carbon::parse($d4->fecha_estimada_entrega)->format('d/m/Y h:i:s') }}</h6>
+                                            </td>
+                                            <td class="text-center">
+                                                <h6>{{ \Carbon\Carbon::parse($mv4->movs->created_at)->format('d/m/Y h:i:s') }}</h6>
+                                            </td>
+                                        @endif
+                                    @endforeach
+                                    <td class="text-center">
+                                        <h6>{{ $d4->categoria->nombre }} {{ $d4->marca }}</h6>
+                                    </td>
+                                    @foreach ($d4->movservices as $mv4)
+                                        @if ($mv4->movs->type == 'TERMINADO' && $mv4->movs->status == 'ACTIVO')
+                                            <td class="text-center">
+                                                <h6>{{ $mv4->movs->type }}</h6>
+                                            </td>
+                                            <td class="text-center">
+                                                <a class="shadow-none badge badge-primary"
+                                                    href="{{ url('idorderservice' . '/' . $d4->OrderServicio->id) }}"
+                                                    style='font-size:18px'>Seleccionar</a>
+                                            </td>
+                                            <td class="text-center">
+                                                <h6>{{ $mv4->movs->usermov->name }}</h6>
+                                            </td>
+                                        @endif
+                                    @endforeach
+                                    <td class="text-center">
+                                        <h6>{{ $d4->OrderServicio->id }}</h6>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+
+                        @elseif($condicional == 'EntregadosPropios')
+                        <tbody>
+                            @foreach ($data as $d5)
+                                <tr>
+                                    <td class="text-center" style="{{ substr($d5->horas, 0, 3)<=24 ? 'background-color: #FF0000 !important' : 'background-color: #ff851b !important' }}">
+                                        <h6>{{ $loop->iteration }}</h6>
+                                    </td>
+                                    @foreach ($d5->movservices as $mv5)
+                                        @if ($mv5->movs->type == 'ENTREGADO')
+                                            <td class="text-center">
+                                                <h6>{{ \Carbon\Carbon::parse($d5->fecha_estimada_entrega)->format('d/m/Y h:i:s') }}</h6>
+                                            </td>
+                                            <td class="text-center">
+                                                <h6>{{ \Carbon\Carbon::parse($mv5->movs->created_at)->format('d/m/Y h:i:s') }}</h6>
+                                            </td>
+                                        @endif
+                                    @endforeach
+                                    <td class="text-center">
+                                        <h6>{{ $d5->categoria->nombre }} {{ $d5->marca }}</h6>
+                                    </td>
+                                    @foreach ($d5->movservices as $mv5)
+                                        @if ($mv5->movs->type == 'ENTREGADO' && $mv5->movs->status == 'ACTIVO')
+                                            <td class="text-center">
+                                                <h6>{{ $mv5->movs->type }}</h6>
+                                            </td>
+                                            <td class="text-center">
+                                                <a class="shadow-none badge badge-primary"
+                                                    href="{{ url('idorderservice' . '/' . $d5->OrderServicio->id) }}"
+                                                    style='font-size:18px'>Seleccionar</a>
+                                            </td>
+                                            <td class="text-center">
+                                                <h6>{{ $mv5->movs->usermov->name }}</h6>
+                                            </td>
+                                        @endif
+                                    @endforeach
+                                    <td class="text-center">
+                                        <h6>{{ $d5->OrderServicio->id }}</h6>
                                     </td>
                                 </tr>
                             @endforeach

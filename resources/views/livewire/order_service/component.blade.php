@@ -198,12 +198,36 @@
                                                                     {{ $service->falla_segun_cliente }}</h6>
                                                             </a>
 
-                                                            @foreach ($service->movservices as $mm)
+                                                            {{-- @foreach ($service->movservices as $mm)
                                                                 @if ($mm->movs->status == 'INACTIVO' && $mm->movs->type == 'ANULADO')
                                                                     <h6 style="font-size: 100%"><b>Responsable:</b>
                                                                         {{ $mm->movs->usermov->name }}</h6>
                                                                 @endif
+                                                            @endforeach --}}
+
+                                                            @php
+                                                                $terminado;
+                                                                $valorbooleano=false;
+                                                            @endphp
+                                                            @foreach ($service->movservices as $mm)
+                                                                @if($mm->movs->type == 'TERMINADO')
+                                                                    @php
+                                                                        $terminado = $mm->movs->usermov->name;
+                                                                        $valorbooleano=true;
+                                                                    @endphp
+                                                                @endif
+                                                                @if ($mm->movs->status == 'ACTIVO' && $valorbooleano == true)
+                                                                    <h6 style="font-size: 100%"><b>Responsable:</b>
+                                                                        {{ $terminado }}</h6>
+                                                                    @php
+                                                                        $valorbooleano = false;
+                                                                    @endphp
+                                                                @elseif($mm->movs->status == 'ACTIVO')
+                                                                    <h6 style="font-size: 100%"><b>Responsable:</b>
+                                                                        {{ $mm->movs->usermov->name }}</h6>
+                                                                @endif
                                                             @endforeach
+
                                                         </div>
                                                         {{-- ESTADO --}}
                                                         <div class="col-sm-4">
@@ -366,9 +390,24 @@
                                                                     | {{ $service->detalle }}&nbsp |
                                                                     {{ $service->falla_segun_cliente }}</h6>
                                                             </a>
-
+                                                            @php
+                                                                $terminado;
+                                                                $valorbooleano=false;
+                                                            @endphp
                                                             @foreach ($service->movservices as $mm)
-                                                                @if ($mm->movs->status == 'ACTIVO' || ($mm->movs->status == 'INACTIVO' && $mm->movs->type == 'ANULADO'))
+                                                                @if($mm->movs->type == 'TERMINADO')
+                                                                    @php
+                                                                        $terminado = $mm->movs->usermov->name;
+                                                                        $valorbooleano=true;
+                                                                    @endphp
+                                                                @endif
+                                                                @if ($mm->movs->status == 'ACTIVO' && $valorbooleano == true)
+                                                                    <h6 style="font-size: 100%"><b>Responsable:</b>
+                                                                        {{ $terminado }}</h6>
+                                                                    @php
+                                                                        $valorbooleano = false;
+                                                                    @endphp
+                                                                @elseif($mm->movs->status == 'ACTIVO')
                                                                     <h6 style="font-size: 100%"><b>Responsable:</b>
                                                                         {{ $mm->movs->usermov->name }}</h6>
                                                                 @endif
@@ -532,12 +571,36 @@
                                                                 {{ $service->falla_segun_cliente }}</h6>
                                                         </a>
 
-                                                        @foreach ($service->movservices as $mm)
+                                                       {{--  @foreach ($service->movservices as $mm)
                                                             @if ($mm->movs->status == 'ACTIVO')
                                                                 <h6 style="font-size: 100%"><b>Responsable:</b>
                                                                     {{ $mm->movs->usermov->name }}</h6>
                                                             @endif
-                                                        @endforeach
+                                                        @endforeach --}}
+
+                                                            @php
+                                                                $terminado;
+                                                                $valorbooleano=false;
+                                                            @endphp
+                                                            @foreach ($service->movservices as $mm)
+                                                                @if($mm->movs->type == 'TERMINADO')
+                                                                    @php
+                                                                        $terminado = $mm->movs->usermov->name;
+                                                                        $valorbooleano=true;
+                                                                    @endphp
+                                                                @endif
+                                                                @if ($mm->movs->status == 'ACTIVO' && $valorbooleano == true)
+                                                                    <h6 style="font-size: 100%"><b>Responsable:</b>
+                                                                        {{ $terminado }}</h6>
+                                                                    @php
+                                                                        $valorbooleano = false;
+                                                                    @endphp
+                                                                @elseif($mm->movs->status == 'ACTIVO')
+                                                                    <h6 style="font-size: 100%"><b>Responsable:</b>
+                                                                        {{ $mm->movs->usermov->name }}</h6>
+                                                                @endif
+                                                            @endforeach
+
                                                     </div>
                                                     {{-- ESTADO --}}
                                                     <div class="col-sm-4">

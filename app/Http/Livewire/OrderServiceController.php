@@ -1190,7 +1190,8 @@ class OrderServiceController extends Component
                             'import' => $movimiento->import,
                             'on_account' => $movimiento->on_account,
                             'saldo' => $movimiento->saldo,
-                            'user_id' => $movimiento->user_id
+                            'user_id' => Auth()->user()->id,
+                            /* 'user_id' => $movimiento->user_id */
                         ]);
                     }
                     $cajaActual = Caja::join('sucursals as s', 's.id', 'cajas.sucursal_id')

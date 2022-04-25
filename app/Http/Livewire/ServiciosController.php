@@ -136,10 +136,16 @@ class ServiciosController extends Component
     public function Seleccionar($id)
     {
         $this->cliente = Cliente::find($id);
+        $this->cliente -> update([
+            'celular' => $this->celular
+        ]);
         session(['clie' =>   $this->cliente]);
+
         $this->resetUI();
         $this->emit('client-selected', 'Cliente Seleccionado');
     }
+
+    
 
     public function ResetSession()
     {
