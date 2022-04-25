@@ -216,13 +216,13 @@
                                                                         $valorbooleano=true;
                                                                     @endphp
                                                                 @endif
-                                                                @if ($mm->movs->status == 'ACTIVO' && $valorbooleano == true)
+                                                                @if (($mm->movs->status == 'INACTIVO' && $mm->movs->type == 'ANULADO') && $valorbooleano == true)
                                                                     <h6 style="font-size: 100%"><b>Responsable:</b>
                                                                         {{ $terminado }}</h6>
                                                                     @php
                                                                         $valorbooleano = false;
                                                                     @endphp
-                                                                @elseif($mm->movs->status == 'ACTIVO')
+                                                                @elseif(($mm->movs->status == 'INACTIVO' && $mm->movs->type == 'ANULADO'))
                                                                     <h6 style="font-size: 100%"><b>Responsable:</b>
                                                                         {{ $mm->movs->usermov->name }}</h6>
                                                                 @endif
@@ -401,13 +401,13 @@
                                                                         $valorbooleano=true;
                                                                     @endphp
                                                                 @endif
-                                                                @if ($mm->movs->status == 'ACTIVO' && $valorbooleano == true)
+                                                                @if (($mm->movs->status == 'ACTIVO' || ($mm->movs->status == 'INACTIVO' && $mm->movs->type == 'ANULADO')) && $valorbooleano == true)
                                                                     <h6 style="font-size: 100%"><b>Responsable:</b>
                                                                         {{ $terminado }}</h6>
                                                                     @php
                                                                         $valorbooleano = false;
                                                                     @endphp
-                                                                @elseif($mm->movs->status == 'ACTIVO')
+                                                                @elseif(($mm->movs->status == 'ACTIVO' || ($mm->movs->status == 'INACTIVO' && $mm->movs->type == 'ANULADO')))
                                                                     <h6 style="font-size: 100%"><b>Responsable:</b>
                                                                         {{ $mm->movs->usermov->name }}</h6>
                                                                 @endif
