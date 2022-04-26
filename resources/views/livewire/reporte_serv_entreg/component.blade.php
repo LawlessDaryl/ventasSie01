@@ -20,6 +20,18 @@
                         </div>
                     </div>
 
+                    <div class="col-sm-3">
+                        <h6>Elige la caja</h6>
+                        <div class="form-group">
+                            <select wire:model="caja" class="form-control" style="font-size: 90%">
+                                <option value="Todos">Todos</option>
+                                @foreach ($cajas as $cajSu)
+                                    <option value="{{ $cajSu->id }}">{{ $cajSu->nombre }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
                     <div class="col-sm-2 ">
                         <h6>Fecha desde</h6>
                         <div class="form-group">
@@ -36,8 +48,6 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-3">
-                    </div>
                     <div class="col-sm-2 mt-4">
 
                         <a class="btn btn-dark btn-block {{ count($data) < 1 ? 'disabled' : '' }}"

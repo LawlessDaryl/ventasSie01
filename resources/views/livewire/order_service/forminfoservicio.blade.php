@@ -18,7 +18,11 @@
                                     </div>
                                     
                                     <div class="text-center user-info">
-                                        <h6 class=""><b>Responsable: </b>{{$nombreUsuario}}</h6>
+                                        @if($variable == true)
+                                            <h6 class=""><b>Responsable: </b>{{$nomUsuTerm}}</h6>
+                                        @elseif($variable == false)
+                                            <h6 class=""><b>Responsable: </b>{{$nombreUsuario}}</h6>
+                                        @endif
                                         <p class=""><b>Cliente: </b>{{$nombreCliente}}</p>
                                         <h6><b>Celular: </b>{{$celular}}</h6>
                                         {{-- <h6><b>Fecha estimada entrega: </b>{{$fecha_estimada_entrega}} {{$hora_entrega}}</h6> --}}

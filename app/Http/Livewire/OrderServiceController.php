@@ -35,7 +35,7 @@ class OrderServiceController extends Component
         $typew, $typeworkid, $catprodservid, $diagnostico, $solucion, $hora_entrega, $proceso,
         $terminado, $costo, $detalle_costo, $nombreUsuario, $modificar, $type_service, $movimiento,
         $opciones, $tipopago, $dateFrom, $dateTo, $reportType, $userId, $estado, $mostrar,
-        $mostrarEliminar,$tipo, $condicion, $fechahoy;
+        $mostrarEliminar,$tipo, $condicion, $fechahoy, $variable, $nomUsuTerm;
 
     private $pagination = null;
     public function paginationView()
@@ -73,6 +73,8 @@ class OrderServiceController extends Component
         $this->tipo= '';
         $this->condicion = 'MiSucursal';
         $this->fechahoy = Carbon::parse(Carbon::now())->format('Y-m-d');
+        $this->variable = false;
+        $this->nomUsuTerm = '';
     }
     public function render()
     {
@@ -960,6 +962,8 @@ class OrderServiceController extends Component
         $this->fecha_estimada_entrega = substr($this->service1->fecha_estimada_entrega, 0, 10);
         $this->hora_entrega = substr($this->service1->fecha_estimada_entrega, 11, 14);
 
+        $this->variable=false;
+
         foreach ($this->service1->movservices as $mm) {
             if ($mm->movs->status == 'ACTIVO') {
                 $this->import = $mm->movs->import;
@@ -969,6 +973,10 @@ class OrderServiceController extends Component
                 $this->celular = $mm->movs->climov->client->celular;
                 $this->usuarioId = $mm->movs->user_id;
                 $this->nombreUsuario = $mm->movs->usermov->name;
+            }
+            if($mm->movs->type == 'TERMINADO'){
+                $this->nomUsuTerm=$mm->movs->usermov->name;
+                $this->variable = true;
             }
         }
         $this->costo = $this->service1->costo;

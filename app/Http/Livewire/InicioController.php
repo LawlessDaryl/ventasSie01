@@ -62,7 +62,15 @@ class InicioController extends Component
         $this->nombreUsuario = '';
         /* $this->opciones = 'PENDIENTE'; */
         $this->tipopago = 'EFECTIVO';
-        $this->condicional = 'Pendientes';
+        if((Auth::user()->hasPermissionTo('Recepcionar_Servicio')) && (Auth::user()->hasPermissionTo('Boton_Entregar_Servicio'))){
+            $this->condicional = 'Pendientes';
+        }elseif(Auth::user()->hasPermissionTo('Boton_Entregar_Servicio'))
+        {
+            $this->condicional = 'TerminadosTodos';
+        }elseif(Auth::user()->hasPermissionTo('Recepcionar_Servicio'))
+        {
+            $this->condicional = 'Pendientes';
+        }
         $this->condicion = 'MiSucursal';
         $this->usuariolog = Auth()->user()->name;
         $this->fechahoy = Carbon::parse(Carbon::now())->format('Y-m-d');

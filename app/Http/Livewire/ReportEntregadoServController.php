@@ -2,14 +2,17 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Caja;
 use App\Models\Cartera;
 use App\Models\ModelHasRoles;
+use App\Models\Movimiento;
 use App\Models\OrderService;
 use App\Models\Service;
 use App\Models\Transaccion;
 use App\Models\User;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
@@ -17,7 +20,7 @@ class ReportEntregadoServController extends Component
 {
     public $componentName, $data, $details, $sumDetails, $countDetails, $reportType,
         $userId, $dateFrom, $dateTo, $transaccionId, $estado, $fechas, $sumaEfectivo,
-        $sumaBanco;
+        $sumaBanco, $cajaSucursal, $caja;
 
     public function mount()
     {
@@ -35,16 +38,23 @@ class ReportEntregadoServController extends Component
         $this->dateTo = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->sumaEfectivo = 0;
         $this->sumaBanco = 0;
+        $this->cajaSucursal = [];
+        $this->caja = 'Todos';
     }
 
     public function render()
     {
+
+
         $user = User::find(Auth()->user()->id);
-        foreach($user->sucursalusers as $usersuc){
-            if($usersuc->estado == 'ACTIVO'){
-                $this->sucursal= $usersuc->sucursal->id;
+        foreach ($user->sucursalusers as $usersuc) {
+            if ($usersuc->estado == 'ACTIVO') {
+                $this->sucursal = $usersuc->sucursal->id;
             }
         }
+
+        $this->cajaSucursal = Caja::where('sucursal_id', $this->sucursal)
+            ->where('nombre', '!=', 'Caja General')->get();
 
         if ($this->reportType == 0) {
             $from = Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00';
@@ -76,50 +86,50 @@ class ReportEntregadoServController extends Component
         ];
 
         $this->validate($rules, $messages); */
-        
+
         $users = User::join('model_has_roles as mr', 'users.id', 'mr.model_id')
-        ->join('roles as r', 'r.id', 'mr.role_id')
-        ->join('role_has_permissions as rp', 'r.id', 'rp.role_id')
-        ->join('permissions as p', 'p.id', 'rp.permission_id')
-        ->where('p.name','Orden_Servicio_Index')
-        ->where('r.name','TECNICO')
-        ->orWhere('r.name', 'SUPERVISOR')
-        ->where('p.name','Orden_Servicio_Index')
-        ->orWhere('r.name', 'ADMIN')
-        ->where('p.name','Orden_Servicio_Index')
-        ->select('users.*')
-        ->orderBy('name', 'asc')
-        ->distinct()
-        ->get();
-        
-        $totalEfectivo = Cartera ::join('cajas as caj','caj.id','carteras.caja_id')
-        ->join('sucursals as s', 's.id', 'caj.sucursal_id')
-        ->join('cartera_movs as cm', 'carteras.id', 'cm.cartera_id')
-        ->join('movimientos as m', 'm.id','cm.movimiento_id')
-        ->join('mov_services as ms', 'ms.movimiento_id', 'm.id')
-        ->join('services as serv', 'serv.id','ms.service_id')
-        ->select('m.*')
-        ->whereBetween('m.created_at', [$from, $to])
-        ->where('m.status', 'ACTIVO')
-        ->where('cm.comentario', 'SERVICIOS')
-        ->where('carteras.tipo', 'CajaFisica')
-        ->where('s.id',$this->sucursal)
-        ->get();
+            ->join('roles as r', 'r.id', 'mr.role_id')
+            ->join('role_has_permissions as rp', 'r.id', 'rp.role_id')
+            ->join('permissions as p', 'p.id', 'rp.permission_id')
+            ->where('p.name', 'Orden_Servicio_Index')
+            ->where('r.name', 'TECNICO')
+            ->orWhere('r.name', 'SUPERVISOR')
+            ->where('p.name', 'Orden_Servicio_Index')
+            ->orWhere('r.name', 'ADMIN')
+            ->where('p.name', 'Orden_Servicio_Index')
+            ->select('users.*')
+            ->orderBy('name', 'asc')
+            ->distinct()
+            ->get();
+
+        $totalEfectivo = Cartera::join('cajas as caj', 'caj.id', 'carteras.caja_id')
+            ->join('sucursals as s', 's.id', 'caj.sucursal_id')
+            ->join('cartera_movs as cm', 'carteras.id', 'cm.cartera_id')
+            ->join('movimientos as m', 'm.id', 'cm.movimiento_id')
+            ->join('mov_services as ms', 'ms.movimiento_id', 'm.id')
+            ->join('services as serv', 'serv.id', 'ms.service_id')
+            ->select('m.*')
+            ->whereBetween('m.created_at', [$from, $to])
+            ->where('m.status', 'ACTIVO')
+            ->where('cm.comentario', 'SERVICIOS')
+            ->where('carteras.tipo', 'CajaFisica')
+            ->where('s.id', $this->sucursal)
+            ->get();
         $this->sumaEfectivo = $totalEfectivo->sum('import');
 
-        $totalBanco = Cartera ::join('cajas as caj','caj.id','carteras.caja_id')
-        ->join('sucursals as s', 's.id', 'caj.sucursal_id')
-        ->join('cartera_movs as cm', 'carteras.id', 'cm.cartera_id')
-        ->join('movimientos as m', 'm.id','cm.movimiento_id')
-        ->join('mov_services as ms', 'ms.movimiento_id', 'm.id')
-        ->join('services as serv', 'serv.id','ms.service_id')
-        ->select('m.*')
-        ->whereBetween('m.created_at', [$from, $to])
-        ->where('m.status', 'ACTIVO')
-        ->where('cm.comentario', 'SERVICIOS')
-        ->where('carteras.tipo', 'Banco')
-        ->where('s.id',$this->sucursal)
-        ->get();
+        $totalBanco = Cartera::join('cajas as caj', 'caj.id', 'carteras.caja_id')
+            ->join('sucursals as s', 's.id', 'caj.sucursal_id')
+            ->join('cartera_movs as cm', 'carteras.id', 'cm.cartera_id')
+            ->join('movimientos as m', 'm.id', 'cm.movimiento_id')
+            ->join('mov_services as ms', 'ms.movimiento_id', 'm.id')
+            ->join('services as serv', 'serv.id', 'ms.service_id')
+            ->select('m.*')
+            ->whereBetween('m.created_at', [$from, $to])
+            ->where('m.status', 'ACTIVO')
+            ->where('cm.comentario', 'SERVICIOS')
+            ->where('carteras.tipo', 'Banco')
+            ->where('s.id', $this->sucursal)
+            ->get();
         $this->sumaBanco = $totalBanco->sum('import');
 
 
@@ -129,7 +139,8 @@ class ReportEntregadoServController extends Component
             }
         } */
         return view('livewire.reporte_serv_entreg.component', [
-            'users'=>$users
+            'users' => $users,
+            'cajas' => $this->cajaSucursal
         ])->extends('layouts.theme.app')
             ->section('content');
     }
@@ -154,84 +165,136 @@ class ReportEntregadoServController extends Component
             return;
         }
 
-        if ($this->estado == 'Todos') {
-            if ($this->userId == 0) {
-                $this->data = Service::join('order_services as os', 'os.id', 'services.order_service_id')
-                    ->join('mov_services as ms', 'services.id', 'ms.service_id')
-                    ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
-                    ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
-                    ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                    ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                    ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
-                    ->join('users as u', 'u.id', 'mov.user_id')
-                    ->where('mov.status', 'like', 'ACTIVO')
-                    ->select(
-                        'services.*'
-                    )
-                    ->whereBetween('os.created_at', [$from, $to])
-                    ->orderBy('services.id', 'desc')
-                    ->distinct()
-                    ->get();
+        if ($this->caja != 'Todos') {
+            $this->data = Service::join('order_services as os', 'os.id', 'services.order_service_id')
+                ->join('mov_services as ms', 'services.id', 'ms.service_id')
+                ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
+                ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
+                ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+                ->join('cartera_movs as cmv', 'cmv.movimiento_id', 'mov.id')
+                ->join('carteras as c', 'c.id', 'cmv.cartera_id')
+                ->join('cajas as ca', 'ca.id', 'c.caja_id')
+                ->join('sucursals as s', 's.id', 'ca.sucursal_id')
+                ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
+                ->join('clientes as cli', 'cli.id', 'cliemov.cliente_id')
+                ->join('users as u', 'u.id', 'mov.user_id')
+                ->join('sucursal_users as su', 'u.id', 'su.user_id')
+                ->where('mov.status', 'like', 'ACTIVO')
+                ->select(
+                    'services.*'
+                )
+                ->where('s.id', $this->sucursal)
+                ->where('ca.id', $this->caja)
+                ->where('mov.type', 'ENTREGADO')
+                ->whereBetween('mov.created_at', [$from, $to])
+                ->orderBy('services.id', 'desc')
+                ->distinct()
+                ->get();
 
-            } else {
+            $banco = Service::join('order_services as os', 'os.id', 'services.order_service_id')
+                ->join('mov_services as ms', 'services.id', 'ms.service_id')
+                ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
+                ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
+                ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+                ->join('cartera_movs as cmv', 'cmv.movimiento_id', 'mov.id')
+                ->join('carteras as c', 'c.id', 'cmv.cartera_id')
+                ->join('cajas as ca', 'ca.id', 'c.caja_id')
+                ->join('sucursals as s', 's.id', 'ca.sucursal_id')
+                ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
+                ->join('clientes as cli', 'cli.id', 'cliemov.cliente_id')
+                ->join('users as u', 'u.id', 'mov.user_id')
+                ->join('sucursal_users as su', 'u.id', 'su.user_id')
+                ->where('mov.status', 'like', 'ACTIVO')
+                ->select(
+                    'u.*',
+                    'u.id as idusuario',
+                    'ca.*',
+                    'cmv.*',
+                    'cmv.created_at as creacion_cartMov',
+                    'mov.*',
+                    'mov.created_at as creacion_Mov'
+                )
+                ->where('s.id', $this->sucursal)
+                ->where('ca.id', '1')
+                ->where('mov.type', 'ENTREGADO')/* 
+                ->whereBetween('mov.created_at', [$from, $to]) */
+                ->distinct()
+                ->get();
 
-                $this->data = Service::join('order_services as os', 'os.id', 'services.order_service_id')
-                    ->join('mov_services as ms', 'services.id', 'ms.service_id')
-                    ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
-                    ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
-                    ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                    ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                    ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
-                    ->join('users as u', 'u.id', 'mov.user_id')
-                    ->where('mov.status', 'like', 'ACTIVO')
-                    ->select(
-                        'services.*'
-                    )
-                    ->whereBetween('os.created_at', [$from, $to])
-                    ->where('mov.user_id', $this->userId)
-                    ->orderBy('services.id', 'desc')
-                    ->distinct()
-                    ->get();
+            /*  dd($banco); */
+
+            $movbancarios = [];
+            $contador = 0;
+            foreach ($banco as  $value) {
+                $aperturasCierres = Caja::join('carteras as car', 'cajas.id', 'car.caja_id')
+                    ->join('cartera_movs as cartmovs', 'car.id', 'cartmovs.cartera_id')
+                    ->join('movimientos as mov', 'mov.id', 'cartmovs.movimiento_id')
+                    ->select('mov.*')
+                    ->where('cajas.id', $this->caja)
+                    ->where('mov.user_id', $value->idusuario)
+                    ->where('mov.type', 'APERTURA')                    
+                    ->orWhere('mov.type', 'CIERRE')                    
+                    ->get();     
+                    
+                    
+                
+
+                $break = 0;
+                $hasta = 0;
+
+                foreach ($aperturasCierres as  $value2) {
+
+                    if ($value2->status == 'ACTIVO' && $value2->type == 'APERTURA' && $value2->created_at <= $value->creacion_Mov) {
+                        array_push($movbancarios, $value);
+                        $break = 1;
+                    } elseif ($value2->type == 'APERTURA' && $value2->created_at <= $value->creacion_Mov) {
+                        $hasta = 1;
+                    } elseif ($hasta == 1 && $value2->type == 'CIERRE' && $value2->created_at >= $value->creacion_Mov) {
+                        array_push($movbancarios, $value);
+                        /* $movbancarios=$value; */
+                        $break = 1;
+                    }elseif ($hasta == 1 &&$value2->type == 'CIERRE'&& $value2->created_at <= $value->creacion_Mov){
+                        $hasta = 0;
+                    }
+
+
+
+
+                    if ($break == 1)
+                        break;
+                }
+                $contador += 1;
             }
+            dd($movbancarios);
+
+            /* 
+                dd($banco); */
         } else {
-            if ($this->userId == 0) {
-                /* ENTRARA AQUI */
-                $this->data = Service::join('order_services as os', 'os.id', 'services.order_service_id')
-                    ->join('mov_services as ms', 'services.id', 'ms.service_id')
-                    ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
-                    ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
-                    ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                    ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                    ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
-                    ->join('users as u', 'u.id', 'mov.user_id')
-                    ->where('mov.status', 'like', 'ACTIVO')
-                    ->select(
-                        'services.*'
-                    )
-                    ->where('mov.type', 'ENTREGADO')
-                    ->whereBetween('mov.created_at', [$from, $to])
-                    ->orderBy('services.id', 'desc')
-                    ->distinct()
-                    ->get();
-            } else {
-                $this->data = Service::join('order_services as os', 'os.id', 'services.order_service_id')
-                    ->join('mov_services as ms', 'services.id', 'ms.service_id')
-                    ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
-                    ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
-                    ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                    ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                    ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
-                    ->join('users as u', 'u.id', 'mov.user_id')
-                    ->where('mov.status', 'like', 'ACTIVO')
-                    ->select(
-                        'services.*'
-                    )
-                    ->whereBetween('os.created_at', [$from, $to])
-                    ->where('mov.user_id', $this->userId)
-                    ->where('mov.type', $this->estado)
-                    ->orderBy('services.id', 'desc')
-                    ->distinct()
-                    ->get();
+            $this->data = Service::join('order_services as os', 'os.id', 'services.order_service_id')
+                ->join('mov_services as ms', 'services.id', 'ms.service_id')
+                ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
+                ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
+                ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+                ->join('cartera_movs as cmv', 'cmv.movimiento_id', 'mov.id')
+                ->join('carteras as c', 'c.id', 'cmv.cartera_id')
+                ->join('cajas as ca', 'ca.id', 'c.caja_id')
+                ->join('sucursals as s', 's.id', 'ca.sucursal_id')
+                ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
+                ->join('clientes as cli', 'cli.id', 'cliemov.cliente_id')
+                ->join('users as u', 'u.id', 'mov.user_id')
+                ->join('sucursal_users as su', 'u.id', 'su.user_id')
+                ->where('mov.status', 'like', 'ACTIVO')
+                ->select(
+                    'services.*'
+                )
+                ->where('s.id', $this->sucursal)
+                ->where('mov.type', 'ENTREGADO')
+                ->whereBetween('mov.created_at', [$from, $to])
+                ->orderBy('services.id', 'desc')
+                ->distinct()
+                ->get();
+
+            foreach ($this->data as $value) {
             }
         }
     }
