@@ -31,7 +31,7 @@ class TransferirProductoController extends Component
     use WithPagination;
 
     public $selected_id,$search,
-    $itemsQuantity,$selected_3,$selected_origen=0,$selected_destino,$observacion;
+    $itemsQuantity,$selected_3,$selected_origen=0,$selected_destino,$observacion,$tipo_tr,$estado;
     private $pagination = 10;
     public function paginationView()
     {
@@ -40,10 +40,13 @@ class TransferirProductoController extends Component
     
     public function mount()
     {
+        $userrole = Auth::user()->role;
+
+        dd($userrole);
+            
         
     
-        //$this->itemsQuantity = Cart::getTotalQuantity();
-       // $quantity= Transferencia::getTotalQuantity();
+        
       
     }
 
@@ -51,6 +54,7 @@ class TransferirProductoController extends Component
     {
    
         $this->itemsQuantity = Transferencia::getTotalQuantity();
+
       
         if($this->selected_origen !== 0){
 
@@ -130,6 +134,7 @@ class TransferirProductoController extends Component
         Transferencia::remove($productId);
         $this->itemsQuantity = Transferencia::getTotalQuantity();
         $this->emit('scan-ok', 'Producto eliminado');
+        $this->tipo_tr ='Elegir operacion';
   
     }
 
@@ -156,7 +161,15 @@ class TransferirProductoController extends Component
     $this->emit('empty_destino_origen', 'No ha seleccionado el destino u origen para la transferencia.');
     }
 
-   
+   public function asignarEstado(){
+       if ($this->tipo_tr == "tr_dir") {
+           $this->estado = 4;
+       }
+       else{
+           $this->estado=1;
+       }
+
+   }
 
     public function finalizar_tr()
     {
@@ -206,9 +219,10 @@ class TransferirProductoController extends Component
                     ->updateOrInsert(['stock'],$item->quantity, ['product_id' => $item->id, 'destino_id'=>$this->destino]);*/
                     
                 }
+
                 
                    $mm= EstadoTransferencia::create([
-                        'estado'=>1,
+                        'estado'=>$this->estado,
                         'op'=>1,
                         'id_transferencia'=>$Transferencia_encabezado->id,
                         'id_usuario'=>Auth()->user()->id

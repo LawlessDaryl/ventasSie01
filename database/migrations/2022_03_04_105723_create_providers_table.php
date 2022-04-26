@@ -16,9 +16,9 @@ class CreateProvidersTable extends Migration
         Schema::create('providers', function (Blueprint $table) {
             $table->id();
             $table->string('nombre',100);
-            $table->string('apellido',100);
-            $table->string('direccion',100);
-            $table->string('telefono',100);
+            $table->string('apellido',100)->nullable();
+            $table->string('direccion',100)->nullable();
+            $table->string('telefono',100)->nullable();
             $table->string('compañia',100)->nullable();
             $table->string('correo',100)->nullable();
             $table->enum('status',['ACTIVO','INACTIVO'])->default('ACTIVO');

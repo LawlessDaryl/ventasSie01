@@ -10,44 +10,100 @@
           
 
             {{--SELECT DE LAS SUCURSALES--}}
-            <div class="row widget widget-chart-one" style="background-color: rgb(195, 214, 248)">
+
+            
+            <div class="row widget widget-chart-one" style="background-color: rgb(243, 244, 246)">
 
                 <div class="col-12 col-lg-8 col-md-3 ml-3">
 
-                    <div class="row">
-                        <div class="col-lg-4 col-md-6 col-12">
-                            <div class="form-group">
-                                <label> <strong style="color: black" >Origen de transferencia:</strong> </label>
-                                <select wire:model='selected_origen' {{ ($itemsQuantity>0)? 'disabled':""}} class="form-control">
-                                        <option value=0>Elegir Origen</option>
-                                    @foreach ($data_suc as $data)
-                                    <option value="{{ $data->destino_id }}">{{ $data->sucursal }}-{{$data->destino}}</option>
-                                    @endforeach
-                                </select>
-                              </div>
-                            </div> 
+                    <div class="col-lg-7 col-md-6 col-12">
+                        <div class="form-group">
+                            <label> <strong style="color: black">TIPO OPERACION:</strong> </label>
+                            <select wire:model='tipo_tr' class="form-control">
+                                <option value=null >Elegir operacion</option>
+                             
+                              <option value="tr_dir">TRANSFERIR PRODUCTOS</option>
+                              <option value="tr_sol">SOLICITAR PRODUCTOS</option>
+                          
+                            
+                            </select>
+                          </div>
+                        </div>
 
+                        @if ($tipo_tr== "tr_dir")
+                        <div class="row">
                             <div class="col-lg-4 col-md-6 col-12">
                                 <div class="form-group">
-                                    <label> <strong style="color: black">Destino de transferencia:</strong> </label>
-                                    <select wire:model='selected_destino' class="form-control">
-                                        <option value=* >Elegir Destino</option>
-                                      @foreach ($data_suc as $data)
-                                      <option value="{{ $data->destino_id }}">{{ $data->sucursal }}-{{$data->destino}}</option>
-                                      @endforeach
-                                    
+                                    <label> <strong style="color: black" >Origen de transferencia:</strong> </label>
+                                    <select wire:model='selected_origen' {{ ($itemsQuantity>0)? 'disabled':""}} class="form-control">
+                                            <option value=0>Elegir Origen</option>
+                                        @foreach ($data_suc as $data)
+                                        <option value="{{ $data->destino_id }}">{{ $data->sucursal }}-{{$data->destino}}</option>
+                                        @endforeach
                                     </select>
                                   </div>
-                                </div>
-                                <div class="col-lg-4">
-                                
+                                </div> 
+    
+                                <div class="col-lg-4 col-md-6 col-12">
                                     <div class="form-group">
-                                        <label> <strong style="color: black">Observacion:</strong> </label>
-                                        <input  wire:model='observacion' class="form-control" type="text">
+                                        <label> <strong style="color: black">Destino de transferencia:</strong> </label>
+                                        <select wire:model='selected_destino' class="form-control">
+                                            <option value=* >Elegir Destino</option>
+                                          @foreach ($data_suc as $data)
+                                          <option value="{{ $data->destino_id }}">{{ $data->sucursal }}-{{$data->destino}}</option>
+                                          @endforeach
+                                        
+                                        </select>
                                       </div>
-
-                                </div>
-                    </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                    
+                                        <div class="form-group">
+                                            <label> <strong style="color: black">Observacion:</strong> </label>
+                                            <input  wire:model='observacion' class="form-control" type="text">
+                                          </div>
+    
+                                    </div>
+                        </div>
+                        @elseif($tipo_tr== "tr_sol")
+                        <div class="row">
+                            <div class="col-lg-4 col-md-6 col-12">
+                                <div class="form-group">
+                                    <label> <strong style="color: black" >Enviar solicitud desde:</strong> </label>
+                                    <select wire:model='selected_origen' {{ ($itemsQuantity>0)? 'disabled':""}} class="form-control">
+                                            <option value=0>Elegir Origen</option>
+                                        @foreach ($data_suc as $data)
+                                        <option value="{{ $data->destino_id }}">{{ $data->sucursal }}-{{$data->destino}}</option>
+                                        @endforeach
+                                    </select>
+                                  </div>
+                                </div> 
+    
+                                <div class="col-lg-4 col-md-6 col-12">
+                                    <div class="form-group">
+                                        <label> <strong style="color: black">Destino de solicitud:</strong> </label>
+                                        <select wire:model='selected_destino' class="form-control">
+                                            <option value=* >Elegir Destino</option>
+                                          @foreach ($data_suc as $data)
+                                          <option value="{{ $data->destino_id }}">{{ $data->sucursal }}-{{$data->destino}}</option>
+                                          @endforeach
+                                        
+                                        </select>
+                                      </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                    
+                                        <div class="form-group">
+                                            <label> <strong style="color: black">Observacion:</strong> </label>
+                                            <input  wire:model='observacion' class="form-control" type="text">
+                                          </div>
+    
+                                    </div>
+                        </div>
+                    
+                            
+                        @endif
+                   
                 </div>
                
 
@@ -182,7 +238,7 @@
                             <div class="col-4 col-lg-4 col-md-4">
                 
                                 <div class="form-group">
-                                    <button class="btn btn-primary m-1" wire:click="finalizar_tr()" style="color: black">Finalizar<br/>Transferencia</button>
+                                    <button class="btn btn-lg btn-primary p-2" wire:click="finalizar_tr()" style="color: black">Finalizar</button>
                                 </div>
                             </div>
                            
@@ -190,13 +246,13 @@
                                 <div class="col-4 col-lg-4 col-md-4 justify-content-center">
         
                                     <div class="form-group">
-                                        <button wire:click="resetUI()" class="btn btn-warning" style="color: black">Reset <br/>Transferencia</button>
+                                        <button wire:click="resetUI()" class="btn btn-lg btn-warning p-2 pr-2 pl-2" style="color: black">Reset</button>
                                     </div>
                                 </div>
                                 <div class="col-4 col-lg-4 col-md-4">
                 
                                     <div class="form-group">
-                                        <button wire:click="exit()" class="btn btn-danger  p-3" style="color: black">Cancelar</button>
+                                        <button wire:click="exit()" class="btn btn-lg btn-danger  p-2" style="color: black">Cancelar</button>
                                     </div>
                                 </div>
         
