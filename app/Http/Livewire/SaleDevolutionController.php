@@ -16,11 +16,11 @@ class SaleDevolutionController extends Component
     public  $search, $nombre, $selected_id, $nombreproducto, $productoentrante;
     public  $pageTitle, $componentName;
     private $pagination = 5;
-    //Array para guardar los Ids y Cantidades de los Productos devueltos
-    public $idproducts = array();
-    public $cantproducts = array();
-
-    public $ids;
+    
+    
+    public $productosaliente;
+    //Ids del Producto que Entra y Producto que sale
+    public $identrante, $idsaliente, $tipodevolucion;
 
     public function paginationView()
     {
@@ -33,11 +33,10 @@ class SaleDevolutionController extends Component
         
         $this->ProductSelectNombre = 1;
         $this->selected_id = 0;
-        $this->ids = null;
+        $this->tipodevolucion = 'monetario';
     }
     public function render()
     {
-
         /* Buscar Productos por el Nombre*/
         $datosnombreproducto = [];
         if (strlen($this->nombreproducto) > 0)
@@ -96,22 +95,34 @@ class SaleDevolutionController extends Component
 
 
 
-        //Buscando Producto a Devolver
-        $nombreproducto = Product::join("productos_destinos as pd", "pd.product_id", "products.id")
+        //Buscando Producto Entrante en La Devolucion
+        $pe = Product::join("productos_destinos as pd", "pd.product_id", "products.id")
         ->join('locations as d', 'd.id', 'pd.location_id')
         ->join('destinos as des', 'des.id', 'd.destino_id')
         ->select("products.id as llaveid","products.nombre as nombre", "products.image as image", "products.precio_venta as precio_venta",
         "products.costo as costoproducto")
         ->where("des.nombre", 'TIENDA')
         ->where("des.sucursal_id", $this->idsucursal())
-        ->where('products.id', $this->ids)
+        ->where('products.id', $this->identrante)
+        ->get();
+
+        //Buscando Producto Saliente en La Devolucion
+        $ps = Product::join("productos_destinos as pd", "pd.product_id", "products.id")
+        ->join('locations as d', 'd.id', 'pd.location_id')
+        ->join('destinos as des', 'des.id', 'd.destino_id')
+        ->select("products.id as llaveid","products.nombre as nombre", "products.image as image", "products.precio_venta as precio_venta",
+        "products.costo as costoproducto")
+        ->where("des.nombre", 'TIENDA')
+        ->where("des.sucursal_id", $this->idsucursal())
+        ->where('products.id', $this->idsaliente)
         ->get();
 
 
         return view('livewire.sales.saledevolution', [
             'datosnombreproducto' => $datosnombreproducto,
+            'ppee' => $pe,
+            'ppss' => $ps,
             'data' => $data,
-            'asd' => $nombreproducto,
         ])
         ->extends('layouts.theme.app')
         ->section('content');
@@ -130,9 +141,31 @@ class SaleDevolutionController extends Component
         return $idsucursal->id;
     }
 
-    public function abrirdetalles($id)
+    public function entry($id)
     {
         $this->productoentrante = 1;
-        $this->ids = $id;
+        $this->identrante = $id;
+        $this->entrada = $this->buscarproducto($this->identrante);
+        
+    }
+    public function exit($id)
+    {
+        $this->productosaliente = 1;
+        $this->idsaliente = $id;
+        $this->salida = $this->buscarproducto($this->idsaliente);
+    }
+    public function buscarproducto($id)
+    {
+        $a = Product::join("productos_destinos as pd", "pd.product_id", "products.id")
+        ->join('locations as d', 'd.id', 'pd.location_id')
+        ->join('destinos as des', 'des.id', 'd.destino_id')
+        ->select("products.id as llaveid","products.nombre as nombre", "products.image as image", "products.precio_venta as precio_venta",
+        "products.costo as costoproducto")
+        ->where("des.nombre", 'TIENDA')
+        ->where("des.sucursal_id", $this->idsucursal())
+        ->where('products.id', $id)
+        ->get()
+        ->first();
+        return $a;
     }
 }
