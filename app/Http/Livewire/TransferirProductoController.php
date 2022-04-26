@@ -31,7 +31,7 @@ class TransferirProductoController extends Component
     use WithPagination;
 
     public $selected_id,$search,
-    $itemsQuantity,$selected_3,$selected_origen=0,$selected_destino,$observacion,$tipo_tr,$estado;
+    $itemsQuantity,$selected_3,$selected_origen=0,$selected_destino,$observacion,$tipo_tr,$estado,$vs=[];
     private $pagination = 10;
     public function paginationView()
     {
@@ -40,40 +40,45 @@ class TransferirProductoController extends Component
     
     public function mount()
     {
-        $userrole = Auth::user()->role;
-
-        dd($userrole);
-            
         
+        $ss= Destino::select('destinos.id','destinos.nombre')->get();
+        $arr=[];
+        foreach ($ss as $item) {
+            $arr[$item->nombre.'_'.$item->id]=($item->id);
+        }
+       foreach ($arr as $key => $value) {
+        if (Auth::user()->hasPermissionTo($key)) {
+            array_push($this->vs,$value);
+        }
+       }
     
-        
-      
-    }
+     
+     
+       
 
+
+        
+
+    }
     public function render()
     {
    
         $this->itemsQuantity = Transferencia::getTotalQuantity();
-
-      
         if($this->selected_origen !== 0){
 
-            $almacen= ProductosDestino::join('products as prod','prod.id','productos_destinos.product_id')
+                                        $almacen= ProductosDestino::join('products as prod','prod.id','productos_destinos.product_id')
                                         ->join('destinos as dest','dest.id','productos_destinos.destino_id')
                                         ->select('prod.nombre as name','dest.nombre as nombre_destino','dest.id as dest_id','prod.id as prod_id')
                                         ->where('dest.id',$this->selected_origen)
                                         ->orderBy('prod.nombre','desc')
                                         ->paginate($this->pagination);
-                                   
                                         }
-
                                         else{
                                             $almacen=null;
                                         }
-            
-         
-                 $sucursal_ubicacion=Destino::join('sucursals as suc','suc.id','destinos.sucursal_id')
+                                        $sucursal_ubicacion=Destino::join('sucursals as suc','suc.id','destinos.sucursal_id')
                                         ->select ('suc.name as sucursal','destinos.nombre as destino','destinos.id as destino_id')
+                                        ->whereIn('destinos.id',$this->vs)
                                         ->orderBy('suc.name','asc');
 
                                     
@@ -83,6 +88,25 @@ class TransferirProductoController extends Component
         ])  
         ->extends('layouts.theme.app')
         ->section('content');
+    }
+    public function verPermisos(){
+       
+        $ss= Destino::select('destinos.id','destinos.nombre')->get();
+        $arr=[];
+        foreach ($ss as $item) {
+            $arr[]=$item->nombre.'_'.$item->id;
+        }
+        $b=[];
+        foreach ($arr as $data) {
+            $b[]=$data;
+        }
+
+        dd($b);
+       /*if (Auth::user()->hasPermissionTo('')) {
+           # code...
+       }*/
+
+
     }
     public function increaseQty($productId)
 
@@ -217,10 +241,9 @@ class TransferirProductoController extends Component
 
                     /*DB::table('productos_destinos')
                     ->updateOrInsert(['stock'],$item->quantity, ['product_id' => $item->id, 'destino_id'=>$this->destino]);*/
-                    
+  
                 }
 
-                
                    $mm= EstadoTransferencia::create([
                         'estado'=>$this->estado,
                         'op'=>1,
