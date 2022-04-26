@@ -1572,6 +1572,21 @@ class CuentasController extends Component
         $this->emit('modal-show', 'show modal!');
     }
 
+    public function EditObservaciones(Plan $plan)
+    {
+        $this->selected_id = $plan->id;
+        $this->observations = $plan->observations;
+        $this->emit('modal-observaciones-show', 'show modal!');
+    }
+
+    public function updateObserv()
+    {
+        $plan = Plan::find($this->selected_id);
+        $plan->observations = $this->observations;
+        $plan->save();
+        $this->emit('modal-observaciones-hide', 'Se actualizaron las observaciones del plan');
+    }
+
     public function Update()
     {
         $rules = [
@@ -1658,7 +1673,6 @@ class CuentasController extends Component
         $this->celular = $this->data->celular;
         $this->correoCuenta = $this->data->account_name;
         $this->passCuenta = $this->data->password_account;
-        $this->observacionesTrans = $this->data->observations;
         $this->inicioPlanActual = $this->data->plan_start;
         $this->expirationPlanActual = $this->data->expiration_plan;
         $this->plataformaPlan = $this->data->nombrePlataforma;

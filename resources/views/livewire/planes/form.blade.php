@@ -84,9 +84,9 @@
                                         <tbody>
                                             @if ($cuentasLibresEnteras->count() == 0)
                                                 <tr>
-                                                    <td colspan="2">
+                                                    <td colspan="6">
                                                         <h6 class="text-center">No tienes cuentas enteras de esa
-                                                            plataforma
+                                                            plataforma.
                                                         </h6>
                                                     </td>
                                                 </tr>
@@ -237,9 +237,9 @@
                                         <tbody>
                                             @if ($cuentasEnteras->count() == 0)
                                                 <tr>
-                                                    <td colspan="5">
+                                                    <td colspan="6">
                                                         <h6 class="text-center">No tienes cuentas con espacios
-                                                            de esta plataforma
+                                                            de esta plataforma.
                                                         </h6>
                                                     </td>
                                                 </tr>

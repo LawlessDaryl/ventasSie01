@@ -216,12 +216,7 @@
                                     <th class="table-th text-withe text-center">MAX PERF</th>
                                     <th class="table-th text-withe text-center">INICIO PLAN</th>
                                     <th class="table-th text-withe text-center">EXPIRACIÓN PLAN</th>
-                                    @if ($condicional != 'vencidos')
-                                        <th class="table-th text-withe text-center">RENOVAR</th>
-                                        <th class="table-th text-withe text-center">EDITAR</th>
-                                    @else
-                                        <th class="table-th text-withe text-center">OBSERV</th>
-                                    @endif
+                                    <th class="table-th text-withe text-center">ACCIONES</th>
                                     <th class="table-th text-withe text-center">REALIZADO</th>
                                 </tr>
                             </thead>
@@ -284,34 +279,24 @@
                                                 {{ \Carbon\Carbon::parse($acounts->expiration_plan)->format('d/m/Y') }}
                                             </h6>
                                         </td>
-                                        @if ($condicional != 'vencidos')
-                                            <td class="text-center">
-                                                @if ($acounts->plan_status == 'VIGENTE')
-                                                    <a href="javascript:void(0)"
-                                                        wire:click="Acciones({{ $acounts->planid }})"
-                                                        class="btn btn-dark mtmobile" title="Renovación">
-                                                        <i class="fa-regular fa-calendar-check"></i>
-                                                    </a>
-                                                @endif
-                                            </td>
-                                            <td>
-                                                @if ($acounts->plan_status == 'VIGENTE')
-                                                    <a href="javascript:void(0)"
-                                                        wire:click="Edit({{ $acounts->id }})"
-                                                        class="btn btn-dark mtmobile" title="Edit">
-                                                        <i class="fas fa-edit"></i>
-                                                    </a>
-                                                @endif
-                                            </td>
-                                        @else
-                                            <td class="text-center">
+                                        <td class="text-center">
+                                            @if ($acounts->plan_status == 'VIGENTE')
                                                 <a href="javascript:void(0)"
                                                     wire:click="Acciones({{ $acounts->planid }})"
-                                                    class="btn btn-dark mtmobile" title="Observaciones">
-                                                    <i class="fa-solid fa-file-signature"></i>
+                                                    class="btn btn-dark mtmobile" title="Renovación">
+                                                    <i class="fa-regular fa-calendar-check"></i>
                                                 </a>
-                                            </td>
-                                        @endif
+                                            @endif
+                                            <a href="javascript:void(0)" wire:click="Edit({{ $acounts->id }})"
+                                                class="btn btn-dark mtmobile" title="Editar">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a href="javascript:void(0)"
+                                                wire:click="EditObservaciones({{ $acounts->planid }})"
+                                                class="btn btn-dark mtmobile" title="Observaciones">
+                                                <i class="fa-solid fa-align-left"></i>
+                                            </a>
+                                        </td>
                                         <td
                                             style="{{ $acounts->done == 'NO' ? 'background-color: #d97171 !important' : 'background-color: #09ed3d !important' }}">
                                             @if ($acounts->done == 'NO')
@@ -337,6 +322,7 @@
     @include('livewire.cuentas.modalPerfiles')
     @include('livewire.cuentas.detailsPlan')
     @include('livewire.cuentas.modalRenovarProveedor')
+    @include('livewire.cuentas.observacionesPlan')
 
 </div>
 
@@ -382,7 +368,6 @@
             $('#modal-details2').modal('hide')
             noty(msg)
         });
-
         window.livewire.on('details3-show', msg => {
             $('#modal-details3').modal('show')
         });
@@ -402,6 +387,13 @@
             $('#modal-details2').modal('hide')
             noty(msg)
         }); */
+        window.livewire.on('modal-observaciones-show', msg => {
+            $('#modal-observaciones').modal('show')
+        });
+        window.livewire.on('modal-observaciones-hide', msg => {
+            $('#modal-observaciones').modal('hide')
+            noty(msg)
+        });
 
 
     });

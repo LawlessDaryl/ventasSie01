@@ -85,7 +85,7 @@ class CorteCajaController extends Component
 
         $this->selected_id = $caja->id;
         $this->carteras = Cartera::where('caja_id', $caja->id)
-            ->orWhere('caja_id', '1')
+            ->orWhere('caja_id', '1')   //orwhere para mostrar las carteras compartidas de la sucursal central
             ->select('id', 'nombre', 'descripcion', DB::raw('0 as monto'))->get();
         if ($this->carteras->count()) {
 
