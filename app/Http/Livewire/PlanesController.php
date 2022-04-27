@@ -1036,6 +1036,7 @@ class PlanesController extends Component
                     ->where('caja_id', $cccc->id)->get()->first();
                 CarteraMov::create([
                     'type' => 'INGRESO',
+                    'tipoDeMovimiento' => 'STREAMING',
                     'comentario' => '',
                     'cartera_id' => $cajaFisica->id,
                     'movimiento_id' => $mv->id
@@ -1044,6 +1045,7 @@ class PlanesController extends Component
                     ->where('caja_id', '1')->get()->first();
                 CarteraMov::create([
                     'type' => 'INGRESO',
+                    'tipoDeMovimiento' => 'STREAMING',
                     'comentario' => '',
                     'cartera_id' => $tigoStreaming->id,
                     'movimiento_id' => $mv->id
@@ -1052,6 +1054,7 @@ class PlanesController extends Component
                     ->where('caja_id', $cccc->id)->get()->first();
                 CarteraMov::create([
                     'type' => 'EGRESO',
+                    'tipoDeMovimiento' => 'STREAMING',
                     'comentario' => '',
                     'cartera_id' => $carteraTelefono->id,
                     'movimiento_id' => $mv->id
@@ -1061,6 +1064,7 @@ class PlanesController extends Component
                     ->where('caja_id', '1')->get()->first();
                 CarteraMov::create([
                     'type' => 'INGRESO',
+                    'tipoDeMovimiento' => 'STREAMING',
                     'comentario' => '',
                     'cartera_id' => $banco->id,
                     'movimiento_id' => $mv->id
@@ -1070,6 +1074,7 @@ class PlanesController extends Component
                     ->where('caja_id', '1')->get()->first();
                 CarteraMov::create([
                     'type' => 'INGRESO',
+                    'tipoDeMovimiento' => 'STREAMING',
                     'comentario' => '',
                     'cartera_id' => $tigoStreaming->id,
                     'movimiento_id' => $mv->id
@@ -1320,6 +1325,7 @@ class PlanesController extends Component
                             ->where('caja_id', $cccc->id)->get()->first();
                         CarteraMov::create([
                             'type' => 'INGRESO',
+                            'tipoDeMovimiento' => 'STREAMING',
                             'comentario' => '',
                             'cartera_id' => $cajaFisica->id,
                             'movimiento_id' => $mv->id
@@ -1328,6 +1334,7 @@ class PlanesController extends Component
                             ->where('caja_id', '1')->get()->first();
                         CarteraMov::create([
                             'type' => 'INGRESO',
+                            'tipoDeMovimiento' => 'STREAMING',
                             'comentario' => '',
                             'cartera_id' => $tigoStreaming->id,
                             'movimiento_id' => $mv->id
@@ -1336,6 +1343,7 @@ class PlanesController extends Component
                             ->where('caja_id', $cccc->id)->get()->first();
                         CarteraMov::create([
                             'type' => 'EGRESO',
+                            'tipoDeMovimiento' => 'STREAMING',
                             'comentario' => '',
                             'cartera_id' => $carteraTelefono->id,
                             'movimiento_id' => $mv->id
@@ -1345,6 +1353,7 @@ class PlanesController extends Component
                             ->where('caja_id', '1')->get()->first();
                         CarteraMov::create([
                             'type' => 'INGRESO',
+                            'tipoDeMovimiento' => 'STREAMING',
                             'comentario' => '',
                             'cartera_id' => $banco->id,
                             'movimiento_id' => $mv->id
@@ -1354,6 +1363,7 @@ class PlanesController extends Component
                             ->where('caja_id', '1')->get()->first();
                         CarteraMov::create([
                             'type' => 'INGRESO',
+                            'tipoDeMovimiento' => 'STREAMING',
                             'comentario' => '',
                             'cartera_id' => $tigoStreaming->id,
                             'movimiento_id' => $mv->id
@@ -1464,6 +1474,7 @@ class PlanesController extends Component
                             ->where('caja_id', $cccc->id)->get()->first();
                         CarteraMov::create([
                             'type' => 'INGRESO',
+                            'tipoDeMovimiento' => 'STREAMING',
                             'comentario' => '',
                             'cartera_id' => $cajaFisica->id,
                             'movimiento_id' => $mv->id
@@ -1472,6 +1483,7 @@ class PlanesController extends Component
                             ->where('caja_id', '1')->get()->first();
                         CarteraMov::create([
                             'type' => 'INGRESO',
+                            'tipoDeMovimiento' => 'STREAMING',
                             'comentario' => '',
                             'cartera_id' => $tigoStreaming->id,
                             'movimiento_id' => $mv->id
@@ -1480,6 +1492,7 @@ class PlanesController extends Component
                             ->where('caja_id', $cccc->id)->get()->first();
                         CarteraMov::create([
                             'type' => 'EGRESO',
+                            'tipoDeMovimiento' => 'STREAMING',
                             'comentario' => '',
                             'cartera_id' => $carteraTelefono->id,
                             'movimiento_id' => $mv->id
@@ -1489,6 +1502,7 @@ class PlanesController extends Component
                             ->where('caja_id', '1')->get()->first();
                         CarteraMov::create([
                             'type' => 'INGRESO',
+                            'tipoDeMovimiento' => 'STREAMING',
                             'comentario' => '',
                             'cartera_id' => $banco->id,
                             'movimiento_id' => $mv->id
@@ -1498,6 +1512,7 @@ class PlanesController extends Component
                             ->where('caja_id', '1')->get()->first();
                         CarteraMov::create([
                             'type' => 'INGRESO',
+                            'tipoDeMovimiento' => 'STREAMING',
                             'comentario' => '',
                             'cartera_id' => $tigoStreaming->id,
                             'movimiento_id' => $mv->id

@@ -54,8 +54,8 @@
                                             class="btn btn-dark mtmobile" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <a href="javascript:void(0)"
-                                            onclick="Confirm('{{ $item->id }}','{{ $item->name }}')"
+                                        <a href="javascript:void(0)" onclick="Confirm('{{ $item->id }}','{{ $item->name }}',
+                                            '{{ $item->cajas->count() }}','{{ $item->usuarios->count() }}')"
                                             class="btn btn-dark" title="Delete">
                                             <i class="fas fa-trash"></i>
                                         </a>
@@ -94,7 +94,25 @@
         });
     });
 
-    function Confirm(id, name) {
+    function Confirm(id, name, cajas, usuarios) {
+        if (cajas > 0) {
+            swal.fire({
+                title: 'PRECAUCION',
+                icon: 'warning',
+                text: 'No se puede eliminar la sucursal "' + name + '" porque tiene ' +
+                    cajas + ' cajas.'
+            })
+            return;
+        }
+        if (usuarios > 0) {
+            swal.fire({
+                title: 'PRECAUCION',
+                icon: 'warning',
+                text: 'No se puede eliminar la sucursal "' + name + '" porque tiene ' +
+                    usuarios + ' usuarios.'
+            })
+            return;
+        }
         swal.fire({
             title: 'CONFIRMAR',
             icon: 'warning',

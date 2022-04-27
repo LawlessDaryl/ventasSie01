@@ -20,19 +20,40 @@
                                                 <div class="task-header">
                                                     <div>
                                                         <h2>ESTADO: {{ $item->estado }}</h2>
-                                                        <input type="hidden" id="hiddenTotal" value="">
                                                     </div>
+                                                    @if ($item->AbiertaPorUsuario != '0')
+                                                        <div>
+                                                            <h2
+                                                                style="{{ $item->AbiertaPorUsuario == auth()->user()->id ? 'background-color: #09ed3d;' : '' }}">
+                                                                Abierta por:
+                                                                {{ $item->UsuarioNombre }}</h2>
+                                                        </div>
+                                                    @endif
                                                 </div>
                                                 <h4 class="mt-3">SUCURSAL: {{ $item->sucursal }}</h4>
                                             </div>
                                         </div>
                                     </div>
                                     <ul class="tabs tab-pills text-center mt-2">
-                                        <a href="javascript:void(0)"
-                                            class="btn btn-dark {{ $item->estado == 'Inactivo' ? 'disabled' : '' }}"
-                                            wire:click.prevent="getDetails({{ $item->id }})"
-                                            style="{{ $item->estado == 'Inactivo' ? 'background-color: #fd1111;' : '' }}">VER
-                                            CAJA</a>
+                                        @if ($item->estado == 'Cerrado')
+                                            <a href="javascript:void(0)"
+                                                class="btn btn-dark {{ session('sesionCaja') != null ? 'disabled' : '' }}"
+                                                wire:click.prevent="getDetails({{ $item->id }})">VER
+                                                CAJA</a>
+                                        @else
+                                            <a href="javascript:void(0)"
+                                                class="btn btn-dark {{ $item->AbiertaPorUsuario != auth()->user()->id ? 'disabled' : '' }}"
+                                                wire:click.prevent="getDetails({{ $item->id }})">VER
+                                                CAJA</a>
+                                        @endif
+                                        @if ($item->estado != 'Cerrado')
+                                            @if ($item->AbiertaPorUsuario != auth()->user()->id)
+                                                <a href="javascript:void(0)" class="btn btn-dark"
+                                                    wire:click.prevent="CerrarCajaDelUsuario({{ $item->id }},{{ $item->AbiertaPorUsuario }})">CERRAR
+                                                    LA CAJA DEL
+                                                    USUARIO</a>
+                                            @endif
+                                        @endif
                                     </ul>
                                 </div>
                             </div>

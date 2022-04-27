@@ -55,6 +55,7 @@ use App\Http\Livewire\ProvidersController;
 use App\Http\Livewire\ReporteGananciaStr;
 use App\Http\Livewire\ReporteGananciaStrController;
 use App\Http\Livewire\ReporteJornadaTMController;
+use App\Http\Livewire\ReporteMovimientoController;
 use App\Http\Livewire\ReportEntregadoServController;
 use App\Http\Livewire\ReporteServiceController;
 use App\Http\Livewire\TransaccionesController;
@@ -82,6 +83,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('cajas', CajasController::class)->name('caja')->middleware('permission:Caja_Index');
     Route::get('carteras', CarteraController::class)->name('cartera')->middleware('permission:Cartera_Index');
     Route::get('cortecajas', CorteCajaController::class)->name('cortecaja')->middleware('permission:Corte_Caja_Index');
+    Route::get('movimientos', ReporteMovimientoController::class)->name('movimiento');
 
     /* TIGO MONEY */
     Route::get('origenes', OrigenController::class)->name('origen')->middleware('permission:Origen_Index');

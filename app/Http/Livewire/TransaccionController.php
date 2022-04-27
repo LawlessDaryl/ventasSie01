@@ -720,7 +720,8 @@ class TransaccionController extends Component
 
                 CarteraMov::create([
                     'type' => 'INGRESO',
-                    'comentario' => 'TIGOMONEY TRANSACCION',
+                    'tipoDeMovimiento' => 'TIGOMONEY',
+                    'comentario' => '',
                     'cartera_id' => $cartera->id,
                     'movimiento_id' => $mv->id
                 ]);
@@ -734,7 +735,8 @@ class TransaccionController extends Component
 
                 CarteraMov::create([
                     'type' => 'EGRESO',
-                    'comentario' => 'TIGOMONEY TRANSACCION',
+                    'tipoDeMovimiento' => 'TIGOMONEY',
+                    'comentario' => '',
                     'cartera_id' => $CajaFisica->id,
                     'movimiento_id' => $mvt->id
                 ]);
@@ -786,7 +788,8 @@ class TransaccionController extends Component
 
                 CarteraMov::create([
                     'type' => 'INGRESO',
-                    'comentario' => 'TIGOMONEY TRANSACCION',
+                    'tipoDeMovimiento' => 'TIGOMONEY',
+                    'comentario' => '',
                     'cartera_id' => $CajaFisica->id,
                     'movimiento_id' => $mv->id
                 ]);
@@ -800,7 +803,8 @@ class TransaccionController extends Component
 
                 CarteraMov::create([
                     'type' => 'EGRESO',
-                    'comentario' => 'TIGOMONEY TRANSACCION',
+                    'tipoDeMovimiento' => 'TIGOMONEY',
+                    'comentario' => '',
                     'cartera_id' => $cartera->id,
                     'movimiento_id' => $mvt->id
                 ]);
@@ -852,7 +856,8 @@ class TransaccionController extends Component
 
                 CarteraMov::create([
                     'type' => 'INGRESO',
-                    'comentario' => 'TIGOMONEY TRANSACCION',
+                    'tipoDeMovimiento' => 'TIGOMONEY',
+                    'comentario' => '',
                     'cartera_id' => $CajaFisica->id,
                     'movimiento_id' => $mv->id
                 ]);
@@ -866,7 +871,8 @@ class TransaccionController extends Component
 
                 CarteraMov::create([
                     'type' => 'EGRESO',
-                    'comentario' => 'TIGOMONEY TRANSACCION',
+                    'tipoDeMovimiento' => 'TIGOMONEY',
+                    'comentario' => '',
                     'cartera_id' => $cartera->id,
                     'movimiento_id' => $mvt->id
                 ]);
@@ -965,6 +971,7 @@ class TransaccionController extends Component
 
         CarteraMov::create([
             'type' => $this->type,
+            'tipoDeMovimiento' => 'EGRESO/INGRESO',
             'comentario' => $this->comentario,
             'cartera_id' => $this->cartera_id,
             'movimiento_id' => $mvt->id
