@@ -37,7 +37,7 @@
                                     <label> <strong style="color: black" >Origen de transferencia:</strong> </label>
                                     <select wire:model='selected_origen' {{ ($itemsQuantity>0)? 'disabled':""}} class="form-control">
                                             <option value=0>Elegir Origen</option>
-                                        @foreach ($data_suc as $data)
+                                        @foreach ($data_origen as $data)
                                         <option value="{{ $data->destino_id }}">{{ $data->sucursal }}-{{$data->destino}}</option>
                                         @endforeach
                                     </select>
@@ -49,7 +49,7 @@
                                         <label> <strong style="color: black">Destino de transferencia:</strong> </label>
                                         <select wire:model='selected_destino' class="form-control">
                                             <option value=* >Elegir Destino</option>
-                                          @foreach ($data_suc as $data)
+                                          @foreach ($data_destino as $data)
                                           <option value="{{ $data->destino_id }}">{{ $data->sucursal }}-{{$data->destino}}</option>
                                           @endforeach
                                         
@@ -72,7 +72,7 @@
                                     <label> <strong style="color: black" >Enviar solicitud desde:</strong> </label>
                                     <select wire:model='selected_origen' {{ ($itemsQuantity>0)? 'disabled':""}} class="form-control">
                                             <option value=0>Elegir Origen</option>
-                                        @foreach ($data_suc as $data)
+                                        @foreach ($data_origen as $data)
                                         <option value="{{ $data->destino_id }}">{{ $data->sucursal }}-{{$data->destino}}</option>
                                         @endforeach
                                     </select>
@@ -84,7 +84,7 @@
                                         <label> <strong style="color: black">Destino de solicitud:</strong> </label>
                                         <select wire:model='selected_destino' class="form-control">
                                             <option value=* >Elegir Destino</option>
-                                          @foreach ($data_suc as $data)
+                                          @foreach ($data_destino as $data)
                                           <option value="{{ $data->destino_id }}">{{ $data->sucursal }}-{{$data->destino}}</option>
                                           @endforeach
                                         

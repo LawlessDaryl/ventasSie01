@@ -41,23 +41,8 @@ class TransferirProductoController extends Component
     public function mount()
     {
         
-        $ss= Destino::select('destinos.id','destinos.nombre')->get();
-        $arr=[];
-        foreach ($ss as $item) {
-            $arr[$item->nombre.'_'.$item->id]=($item->id);
-        }
-       foreach ($arr as $key => $value) {
-        if (Auth::user()->hasPermissionTo($key)) {
-            array_push($this->vs,$value);
-        }
-       }
-    
-     
-     
-       
+     $this->verPermisos();
 
-
-        
 
     }
     public function render()
@@ -80,10 +65,15 @@ class TransferirProductoController extends Component
                                         ->select ('suc.name as sucursal','destinos.nombre as destino','destinos.id as destino_id')
                                         ->whereIn('destinos.id',$this->vs)
                                         ->orderBy('suc.name','asc');
+                                        $sucursal_ubicacion2=Destino::join('sucursals as suc','suc.id','destinos.sucursal_id')
+                                        ->select ('suc.name as sucursal','destinos.nombre as destino','destinos.id as destino_id')
+                                      
+                                        ->orderBy('suc.name','asc');
 
                                     
 
-        return view('livewire.destino_producto.destino-controller',['destinos_almacen'=>$almacen,'data_suc' =>  $sucursal_ubicacion->get(),
+        return view('livewire.destino_producto.destino-controller',['destinos_almacen'=>$almacen,'data_origen' =>  $sucursal_ubicacion->get(),
+        'data_destino' =>  $sucursal_ubicacion2->get(),
         'cart' => Transferencia::getContent(),'data_cat'=>Category::select('categories.name')->where('categories.categoria_padre','0')->get()
         ])  
         ->extends('layouts.theme.app')
@@ -94,18 +84,14 @@ class TransferirProductoController extends Component
         $ss= Destino::select('destinos.id','destinos.nombre')->get();
         $arr=[];
         foreach ($ss as $item) {
-            $arr[]=$item->nombre.'_'.$item->id;
-        }
-        $b=[];
-        foreach ($arr as $data) {
-            $b[]=$data;
+            $arr[$item->nombre.'_'.$item->id]=($item->id);
         }
 
-        dd($b);
-       /*if (Auth::user()->hasPermissionTo('')) {
-           # code...
-       }*/
-
+       foreach ($arr as $key => $value) {
+        if (Auth::user()->hasPermissionTo($key)) {
+            array_push($this->vs,$value);
+        }
+       }
 
     }
     public function increaseQty($productId)
@@ -186,7 +172,7 @@ class TransferirProductoController extends Component
     }
 
    public function asignarEstado(){
-       if ($this->tipo_tr == "tr_dir") {
+       if ($this->tipo_tr === "tr_dir") {
            $this->estado = 4;
        }
        else{
@@ -199,6 +185,7 @@ class TransferirProductoController extends Component
     {
        
        $this->verificarDestino();
+       $this->asignarEstado();
 
         DB::beginTransaction();
 
