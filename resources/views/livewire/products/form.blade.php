@@ -87,7 +87,7 @@
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
             <label>Categoría</label>
-            <select wire:model.lazy='selected_id2' class="form-control">
+            <select wire:model='selected_id2' class="form-control">
                 <option value="Elegir">Elegir</option>
                 @foreach ($categories as $category)
                     <option value="{{ $category->id }}">{{ $category->name }}</option>

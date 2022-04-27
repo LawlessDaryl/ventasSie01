@@ -6,13 +6,16 @@ use App\Models\Compra;
 use App\Models\CompraDetalle;
 use App\Models\Destino;
 use App\Http\Livewire\ProvidersController as Prov;
-
+use App\Http\Livewire\ProductsController as Products;
+use App\Models\Category;
+use App\Models\Marca;
 use App\Models\Movimiento;
 use App\Models\MovimientoCompra;
 use App\Models\Product;
 use App\Models\ProductosDestino;
 use App\Models\Provider;
 use App\Models\Sucursal;
+use App\Models\Unidad;
 use Carbon\Carbon;
 use Livewire\Component;
 
@@ -38,12 +41,14 @@ class DetalleComprasController extends Component
     public $nombre_prov, $apellido_prov, $direccion_prov, $correo_prov,
     $telefono_prov;
 
+    public $nombre,$costo, $precio_venta,$barcode,$codigo,$caracteristicas,$lote,$unidad, $marca, $garantia,$industria,
+    $categoryid,$component,$selected_categoria,$image,$selected_id2=0;
+
     private $pagination = 5;
     public function mount()
     {
-        
-       
-        $this->fecha_compra = Carbon::now();
+        $this->componentName= "Compras";
+        $this->fecha_compra = Carbon::now()->format('Y-m-d');
         $this->usuario = Auth()->user()->name;
         $this->estado_compra = "finalizada";
         $this->selected_id = 0;
@@ -54,7 +59,6 @@ class DetalleComprasController extends Component
         $this->status = "ACTIVO";
         $this->total_compra= $this->subtotal-$this->descuento;
         $this->subtotal = Compras::getTotal();
-        $this->itemsQuantity = Compras::getTotalQuantity();
         $this->porcentaje=0;
 
   
@@ -70,21 +74,24 @@ class DetalleComprasController extends Component
         ->paginate($this->pagination);
         else
         $prod = "cero";
-
+//---------------Select destino de la compra----------------------//
        $data_destino= Sucursal::join('destinos as dest','sucursals.id','dest.sucursal_id')
        ->select('dest.*','dest.id as destino_id','sucursals.*')->get();
 
+//--------------------Select proveedor---------------------------//
        $data_provider= Provider::select('providers.*')->get();
-  
-
         return view('livewire.compras.detalle_compra',['data_prod' => $prod,
         'cart' => Compras::getContent()->sortBy('name'),
         'data_suc'=>$data_destino,
-        'data_prov'=>$data_provider
+        'data_prov'=>$data_provider,
+        'categories'=>Category::where('categories.categoria_padre',0)->orderBy('name', 'asc')->get(),
+        'unidades'=>Unidad::orderBy('nombre','asc')->get(),
+        'marcas'=>Marca::select('nombre')->orderBy('nombre','asc')->get(),
+        'subcat'=>Category::where('categories.categoria_padre',$this->selected_id2)->where('categories.categoria_padre','!=','Elegir')->get()
         ])
         ->extends('layouts.theme.app')
         ->section('content');
-    }
+     }
   
 
     public function increaseQty($productId, $cant = 1,$precio_compra = 0)
@@ -94,6 +101,7 @@ class DetalleComprasController extends Component
         ->where('products.id',$productId)->first();
        
         $exist = Compras::get($product->id);
+
         if ($exist) {
             $title = 'Cantidad actualizada';
         } else {
@@ -140,6 +148,27 @@ class DetalleComprasController extends Component
 
     }
 
+    public function Store(){
+        
+        $prod = new Products;
+        $prod->nombre= $this->nombre;
+        $prod->costo=$this->costo;
+        $prod->precio_venta=$this->precio_venta;
+        $prod->barcode=$this->barcode;
+        $prod->codigo =$this->codigo;
+        $prod->caracteristicas=$this->caracteristicas;
+        $prod->lote =$this->lote;
+        $prod->unidad=$this->unidad;
+        $prod->marca=$this->marca;
+        $prod->garantia =$this->garantia;
+        $prod->industria=$this->industria;
+        $prod->categoryid=$this->categoryid;
+        $prod->Store();
+        $prod->resetUI();
+        $this->emit('product_added', 'Producto Registrado');
+
+    }
+
     public function UpdateQty($productId, $cant = 3)
     {
         $title = '';
@@ -177,16 +206,13 @@ class DetalleComprasController extends Component
                 'attributes'=>$attributos
             );
     
-            
-            
+
             Compras::add($products);
             $this->subtotal = Compras::getTotal();
             $this->itemsQuantity = Compras::getTotalQuantity();
             $this->emit('scan-ok', $title);
             $this->subtotal = Compras::getTotal();
             $this->total_compra= $this->subtotal-$this->descuento;
-
-
 
         }
     }
@@ -256,8 +282,6 @@ class DetalleComprasController extends Component
             $title = "producto agregado";
         }
 
-     
-       
         $this->removeItem($productId);
        
         if ($price > 0) 
@@ -328,7 +352,7 @@ class DetalleComprasController extends Component
         $this->telefono_prov='';
               
     }
-
+    
     public function compraCredito(){
         if ($this->tipo_transaccion == 'CONTADO') {
             $this->saldo_por_pagar =0;
@@ -361,17 +385,15 @@ class DetalleComprasController extends Component
         $rules = [
             'provider'=>'required',
             'destino'=>'required|not_in:Elegir'
-            
         ];
         $messages = [
             'provider.required' => 'El nombre del proveedor es requerido.',
             'destino.required'=>'Elige un destino',
             'destino.not_in'=>'Elija un destino del producto'
-            
         ];
+
         $this->validate($rules, $messages);
         $this->validateCarrito();
-
 
         if ($this->subtotal<= 0) 
         {
@@ -379,7 +401,7 @@ class DetalleComprasController extends Component
             return;
         }
        
-      $this->compraCredito();
+         $this->compraCredito();
 
         DB::beginTransaction();
 
@@ -390,17 +412,15 @@ class DetalleComprasController extends Component
                 'importe_total'=>$this->total_compra,
                 'descuento'=>$this->descuento,
                 'fecha_compra'=>$this->fecha_compra,
-           
                 'transaccion'=>$this->tipo_transaccion,
                 'pago'=>$this->pago_parcial,
                 'tipo_doc'=>$this->tipo_documento,
                 'nro_documento'=>$this->nro_documento,
                 'observacion'=>$this->observacion,
-                'proveedor_id'=>$this->provider,
+                'proveedor_id'=>Provider::select('providers.id')->where('nombre',$this->provider)->value('providers.id'),
                 'estado_compra'=>$this->estado_compra,
                 'status'=>$this->status
             ]);
-
 
             $Movimiento= Movimiento::create([
                 

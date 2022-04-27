@@ -16,13 +16,11 @@
                         
                         <div class="col-lg-1 col-sm-1 col-md-1">
                             <a href="javascript:void(0)" data-toggle="modal"
-                                data-target="#modal_prod" class="btn btn-primary p-1 m-1" > <strong> Registrar Producto</strong></a>
+                                data-target="#theModal" class="btn btn-primary p-1 m-1" > <strong> Registrar Producto</strong></a>
                         </div>
                         
                     </div>
                     <hr style="height:3px;border:none;color:rgb(189, 188, 188);background-color:rgb(230, 152, 64);" />
-                  
-
                         <div class="row">
 
                              <div class="col-12 col-md-4 col-lg-4 card">
@@ -32,19 +30,16 @@
                                          <div class="form-group">
                                              <strong>Proveedor</strong>
                                              <div class="input-group-prepend mb-3">
-    
-                                              
-                                                 
                                                  <input list="provider" wire:model.lazy="provider" class="form-control">
                                                  <datalist id="provider">
                                                     @foreach($data_prov as $data)
-                                                                <option value="{{$data->id}}">{{$data->nombre}}</option>
+                                                                <option value="{{$data->nombre}}">{{$data->nombre}}</option>
                                                     @endforeach 
-                                                            </datalist>
+                                                 </datalist>
                                                 
                                                      <span class="input-group-text input-gp">
                                                          <a href="javascript:void(0)" data-toggle="modal"
-                                                             data-target="#modal_prov" class="fas fa-plus" ></a>
+                                                             data-target="#modal_prov" class="fas fa-plus"></a>
                                                      </span>
                                              </div>
                                              @error('provider')
@@ -52,6 +47,7 @@
                                              @enderror
                                            </div>
                                      </div>
+
                                 <div class="col-lg-12">
                                         
                                         <div class="form-group">
@@ -373,6 +369,7 @@
          </div>
     </div>
     @include('livewire.compras.provider_info')
+    @include('livewire.products.form')
  </div>
  <script>
      document.addEventListener('DOMContentLoaded', function() {

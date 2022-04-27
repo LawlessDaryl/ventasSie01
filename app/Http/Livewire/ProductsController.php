@@ -28,15 +28,14 @@ class ProductsController extends Component
     public function mount()
     {
         $this->pageTitle = 'Listado';
-        $this->componentName = 'Productos';
-        $this->categoryid = 'Elegir';
+        $this->componentName ='Productos';
+        $this->categoryid ='Elegir';
         $this->selected_id2=0;
         $this->cate='Elegir';
         
     }
     public function render()
     {
-
         if (strlen($this->search) > 0) {
             $products = Product::join('categories as c', 'c.id', 'products.category_id')
                 ->select('products.*', 'c.name as category')
@@ -53,14 +52,11 @@ class ProductsController extends Component
                 ->where('c.categoria_padre',$this->selected_categoria)
                 ->orderBy('products.id', 'desc')
                 ->paginate($this->pagination);
-                dd($this->selected_sub);
-               
             }
             else if ($this->selected_categoria != null && $this->selected_sub != null ) {
               
                 $products = Product::join('categories as c', 'c.id', 'products.category_id')
                 ->select('products.*', 'c.*')
-          
                 ->where('c.id',$this->selected_sub)
                 ->orderBy('products.id', 'desc')
                 ->paginate($this->pagination);
@@ -76,7 +72,7 @@ class ProductsController extends Component
             }
            
         }
-        $sub= Category::where('categories.categoria_padre',$this->selected_categoria)
+        $sub= Category::where('categories.categoria_padre',$this->selected_id2)
         ->where('categories.categoria_padre','!=','Elegir')
         ->get();
 
@@ -84,7 +80,7 @@ class ProductsController extends Component
 
         return view('livewire.products.component', [
             'data' => $products,
-            'categories' => Category::where('categories.categoria_padre',0)->orderBy('name', 'asc')->get(),
+            'categories'=>Category::where('categories.categoria_padre',0)->orderBy('name', 'asc')->get(),
             'unidades'=>Unidad::orderBy('nombre','asc')->get(),
             'marcas'=>Marca::select('nombre')->orderBy('nombre','asc')->get(),
             'subcat'=>$sub
@@ -93,6 +89,7 @@ class ProductsController extends Component
     }
     public function Store()
     {
+        
         $rules = [
             'nombre' => 'required|unique:products|min:5',
             'costo' => 'required',
