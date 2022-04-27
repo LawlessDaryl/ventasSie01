@@ -58,7 +58,7 @@
                                         <th class="table-th text-right text-white">COSTO</th>
                                         <th class="table-th text-right text-white">PRECIO</th>
                                         {{-- <th width="12%" class="table-th text-center text-white">Stock</th> --}}
-                                        <th colspan="2" class="table-th text-center text-white">ESCOGER MOVIMIENTO</th>
+                                        <th colspan="2" class="table-th text-center text-white">ACCION</th>
                                         
                                     </tr>
                                 </thead>
@@ -162,10 +162,7 @@
                         @endif
                         
                         @if($productoentrante == 1)
-
-
-
-                            @if($tipodevolucion == 'productoigualitario' || $tipodevolucion == 'productomonetario')
+                            @if($tipodevolucion == 'productoigualitario')
                             
 
                                 <table class="table" style="background-color: rgb(193, 242, 246)">
@@ -208,17 +205,29 @@
 
 
                         @if($productoentrante == 1)
-                            @if($tipodevolucion == 'monetario' || $tipodevolucion == 'productomonetario')
+                            @if($tipodevolucion == 'monetario')
+
+
+
                             <div class="form-row">
-                                <div class="col-md-6 mb-6">
+                                <div class="col-md-3 mb-3">
                                     <label for="validationCustom02">Monto Bs</label>
-                                    <input type="number" class="form-control" placeholder="Ingrese Bs" required>
+                                    <input wire:model="bs" type="number" class="form-control" placeholder="Ingrese Bs" required>
                                 </div>
-                                <div class="col-md-6 mb-6">
+
+
+
+
+
+
+                                <div class="col-md-9 mb-9">
                                     <label for="validationCustom02">Motivo</label>
-                                    <input type="text" class="form-control" placeholder="Ingrese el Motivo de la Devolución..." required>
+                                    <textarea class="form-control" placeholder="Ingrese el Motivo de la Devolución..." aria-label="With textarea" wire:model="observaciondevolucion"></textarea>
                                 </div>
                             </div>
+
+
+
                             <hr style="height:3px;border:none;color:rgb(189, 188, 188);background-color:rgb(230, 152, 64);" />
                             
                             @endif
@@ -230,9 +239,9 @@
 
                     </div>
                     <div class="modal-footer">
-                        @if(1>2)
+                        @if($productoentrante == 1)
                         <button class="btn" data-dismiss="modal"><i class="flaticon-cancel-12"></i> Cancelar Todo</button>
-                        <button type="button" class="btn btn-primary">Guardar Devolución</button>
+                        <button type="button" data-dismiss="modal" wire:click="guardardevolucion()" class="btn btn-primary">Guardar Devolución</button>
                         @endif
                     </div>
                 </div>

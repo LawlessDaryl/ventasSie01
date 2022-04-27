@@ -109,6 +109,7 @@ return array(
     'App\\Models\\Detail_Devolution' => $baseDir . '/app/Models/Detail_Devolution.php',
     'App\\Models\\Detalle_Transferencia' => $baseDir . '/app/Models/Detalle_Transferencia.php',
     'App\\Models\\Devolution' => $baseDir . '/app/Models/Devolution.php',
+    'App\\Models\\DevolutionSale' => $baseDir . '/app/Models/DevolutionSale.php',
     'App\\Models\\Email' => $baseDir . '/app/Models/Email.php',
     'App\\Models\\Estante' => $baseDir . '/app/Models/Estante.php',
     'App\\Models\\Location' => $baseDir . '/app/Models/Location.php',

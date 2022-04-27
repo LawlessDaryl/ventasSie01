@@ -2,25 +2,27 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\Devolution;
+use App\Models\DevolutionSale;
 use App\Models\Product;
 use App\Models\User;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 
+
 class SaleDevolutionController extends Component
 {
     use WithPagination;
     use WithFileUploads;
+
     public  $search, $nombre, $selected_id, $nombreproducto, $productoentrante;
     public  $pageTitle, $componentName;
-    private $pagination = 5;
+    private $pagination = 7;
     
     
-    public $productosaliente;
+    public $productosaliente, $bs;
     //Ids del Producto que Entra y Producto que sale
-    public $identrante, $idsaliente, $tipodevolucion;
+    public $identrante, $idsaliente, $tipodevolucion, $observaciondevolucion;
 
     public function paginationView()
     {
@@ -81,20 +83,6 @@ class SaleDevolutionController extends Component
 
 
 
-
-
-
-        
-        /* Caja en la cual se encuentra el usuario */
-        $data = Devolution::select('devolutions.id as id','devolutions.created_at as ferchadevolucion','devolutions.tipo as tipo')
-            ->get();
-
-
-
-
-
-
-
         //Buscando Producto Entrante en La Devolucion
         $pe = Product::join("productos_destinos as pd", "pd.product_id", "products.id")
         ->join('locations as d', 'd.id', 'pd.location_id')
@@ -105,23 +93,27 @@ class SaleDevolutionController extends Component
         ->where("des.sucursal_id", $this->idsucursal())
         ->where('products.id', $this->identrante)
         ->get();
+        
 
-        //Buscando Producto Saliente en La Devolucion
-        $ps = Product::join("productos_destinos as pd", "pd.product_id", "products.id")
-        ->join('locations as d', 'd.id', 'pd.location_id')
-        ->join('destinos as des', 'des.id', 'd.destino_id')
-        ->select("products.id as llaveid","products.nombre as nombre", "products.image as image", "products.precio_venta as precio_venta",
-        "products.costo as costoproducto")
-        ->where("des.nombre", 'TIENDA')
-        ->where("des.sucursal_id", $this->idsucursal())
-        ->where('products.id', $this->idsaliente)
-        ->get();
-
+        if (strlen($this->search) > 0)
+            $data = DevolutionSale::join("products as p", "p.id", "devolution_sales.product_id")
+            ->select('devolution_sales.id as id', 'p.image as image', 'p.nombre as nombre', 'devolution_sales.monto_dev as monto',
+            'devolution_sales.created_at as fechadevolucion',
+            'devolution_sales.tipo_dev as tipo','devolution_sales.observations as observacion')
+            ->where('nombre', 'like', '%' . $this->search . '%')
+            ->orderBy('devolution_sales.created_at', 'desc')
+            ->paginate($this->pagination);
+        else
+            $data = DevolutionSale::join("products as p", "p.id", "devolution_sales.product_id")
+            ->select('devolution_sales.id as id', 'p.image as image', 'p.nombre as nombre', 'devolution_sales.monto_dev as monto',
+            'devolution_sales.created_at as fechadevolucion',
+            'devolution_sales.tipo_dev as tipo','devolution_sales.observations as observacion')
+            ->orderBy('devolution_sales.created_at', 'desc')
+            ->paginate($this->pagination);
 
         return view('livewire.sales.saledevolution', [
             'datosnombreproducto' => $datosnombreproducto,
             'ppee' => $pe,
-            'ppss' => $ps,
             'data' => $data,
         ])
         ->extends('layouts.theme.app')
@@ -141,11 +133,16 @@ class SaleDevolutionController extends Component
         return $idsucursal->id;
     }
 
+    //Listar el producto que nos estan devolviendo
     public function entry($id)
     {
         $this->productoentrante = 1;
         $this->identrante = $id;
         $this->entrada = $this->buscarproducto($this->identrante);
+
+
+        
+        $this->llenarbs();
         
     }
     public function exit($id)
@@ -168,4 +165,74 @@ class SaleDevolutionController extends Component
         ->first();
         return $a;
     }
+
+    //Poner el Precio Original en el Input
+    public function llenarbs()
+    {
+        $precio = Product::join("productos_destinos as pd", "pd.product_id", "products.id")
+        ->join('locations as d', 'd.id', 'pd.location_id')
+        ->join('destinos as des', 'des.id', 'd.destino_id')
+        ->select("products.id as llaveid","products.nombre as nombre", "products.image as image", "products.precio_venta as precio_venta",
+        "products.costo as costoproducto")
+        ->where("des.nombre", 'TIENDA')
+        ->where("des.sucursal_id", $this->idsucursal())
+        ->where('products.id', $this->identrante)
+        ->get()
+        ->first();
+        $this->bs = $precio->precio_venta;
+    }
+    public function cambiarformatofecha($fecha)
+    {
+        $hora = date("h:i:s a", strtotime($fecha));
+        $fecha = date("d/m/Y", strtotime($fecha));
+
+        
+        return $hora." - ".$this->obtenerdia($fecha)." ".$fecha;
+    }
+    public function obtenerdia($fech)
+    {
+        $datemod = date("D", strtotime($fech));
+        if($datemod == "Wed")
+        {
+            return "Miercoles";
+        }
+        return $datemod;
+    }
+
+    //Guarda la Devolución
+    public function guardardevolucion()
+    {
+        if($this->observaciondevolucion == "")
+        {
+            $this->observaciondevolucion = "Sin Motivo";
+        }
+        if($this->tipodevolucion == 'monetario')
+        {
+            DevolutionSale::create([
+                'tipo_dev' => "MONETARIO",
+                'monto_dev' => $this->bs,
+                'observations' => $this->observaciondevolucion,
+                'product_id' => $this->identrante,
+            ]);
+        }
+        else
+        {
+            DevolutionSale::create([
+                'tipo_dev' => "PRODUCTO",
+                'monto_dev' => $this->bs,
+                'observations' => $this->observaciondevolucion,
+            ]);
+        }
+        $this->resetUI();
+    }
+    protected $listeners = ['deleteRow' => 'Destroy'];
+    public function resetUI()
+    {
+        $this->nombreproducto = "";
+        $this->productoentrante = null;
+        $this->selected_id = 0;
+    }
+
+
+
 }

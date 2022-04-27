@@ -783,6 +783,7 @@ class ComposerStaticInit28b901c8f42efe2e95436386b8faf059
         'App\\Models\\Detail_Devolution' => __DIR__ . '/../..' . '/app/Models/Detail_Devolution.php',
         'App\\Models\\Detalle_Transferencia' => __DIR__ . '/../..' . '/app/Models/Detalle_Transferencia.php',
         'App\\Models\\Devolution' => __DIR__ . '/../..' . '/app/Models/Devolution.php',
+        'App\\Models\\DevolutionSale' => __DIR__ . '/../..' . '/app/Models/DevolutionSale.php',
         'App\\Models\\Email' => __DIR__ . '/../..' . '/app/Models/Email.php',
         'App\\Models\\Estante' => __DIR__ . '/../..' . '/app/Models/Estante.php',
         'App\\Models\\Location' => __DIR__ . '/../..' . '/app/Models/Location.php',

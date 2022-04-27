@@ -1,10 +1,10 @@
 <?php
-use Carbon\Carbon;
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDevolutionsTable extends Migration
+class CreateDevolutionSalesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,12 @@ class CreateDevolutionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('devolutions', function (Blueprint $table) {
+        Schema::create('devolution_sales', function (Blueprint $table) {
             $table->id();
-            $table->dateTime('fecha_devolucion')->default(Carbon::now());
-            $table->enum('tipo',['compras','ventas']);  
-            $table->enum('tipo_dev',['PRODUCTO','MONETARIO','PRODUCTO_MONETARIO']);
-
-            $table->foreignId('sales_id')->constrained();
-            $table->foreignId('compras_id')->constrained();
+            $table->enum('tipo_dev',['PRODUCTO','MONETARIO']);
+            $table->decimal('monto_dev',10,2);
             $table->string('observations',200)->default('Sin Observacion')->nullable();
+            $table->foreignId('product_id')->constrained();
             $table->timestamps();
         });
     }
@@ -33,6 +30,6 @@ class CreateDevolutionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('devolutions');
+        Schema::dropIfExists('devolution_sales');
     }
 }
