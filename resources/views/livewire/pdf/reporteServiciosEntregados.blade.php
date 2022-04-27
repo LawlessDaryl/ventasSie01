@@ -123,6 +123,56 @@
                         </td>
                     </tr>
                 @endforeach
+                @if($caja != 'Todos')
+                    <tr>
+                        <td colspan="9">
+                            <h5 class="text-center">Servicios entregados y pagados por banco</h5>
+                        </td>
+                    </tr>
+                @foreach ($movbancarios as $d)
+                    <tr height="10px">
+                        {{-- # --}}
+                        <td align="center">
+                            <FONT FACE="times new roman" SIZE=1>{{ $loop->iteration+$contador }}
+                            </FONT>
+                        </td>
+                        {{-- FECHA --}}
+                        <td align="center">
+                            <FONT FACE="times new roman" SIZE=1>
+                            {{-- @foreach($d->movservices as $movser)
+                                @if($movser->movs->type=='ENTREGADO' && $movser->movs->status == 'ACTIVO') --}}
+                                    {{ $d->creacion_Mov }}
+                                {{-- @endif
+                            @endforeach --}}
+                            </FONT>
+                        </td>
+                        
+                        {{-- CLIENTE --}}
+                        <td align="center">
+                            <FONT FACE="times new roman" SIZE=1>{{ $d->nomCli }}
+                            </FONT>
+                        </td>
+                        {{-- NUMERO ORDEN --}}
+                        <td align="center">
+                            <FONT FACE="times new roman" SIZE=1>{{ $d->orderId }}</FONT>
+                        </td>
+                        {{-- DETALLE --}}
+                        <td align="center">
+                            <FONT FACE="times new roman" SIZE=1>{{ $d->nomCat }} {{ $d->marca }} {{ $d->detalle }}
+                            </FONT>
+                        </td>
+                        {{-- COSTO --}}
+                        <td align="center">
+                            <FONT FACE="times new roman" SIZE=1>{{ number_format($d->costo, 2) }}</FONT>
+                        </td>
+                        {{-- IMPORTE --}}
+                        <td align="center">
+                            <FONT FACE="times new roman" SIZE=1>
+                                {{ number_format($d->import, 2) }}</FONT>
+                        </td>
+                    </tr>
+                @endforeach
+                @endif
             </tbody>
             <br>
 
@@ -171,7 +221,7 @@
                                     @foreach ($d->movservices as $mv)
                                         @if ($mv->movs->status == 'ACTIVO')
                                             @php
-                                            $mytotal += $mv->movs->import;
+                                                $mytotal = $sumaBanco + $sumaEfectivo;
                                             @endphp                                    
                                         @endif
                                     @endforeach

@@ -85,6 +85,7 @@
                                     @endif
 
                                     @foreach ($data as $d)
+                                       
                                         <tr>
                                             {{-- # --}}
                                             <td width="2%">
@@ -121,6 +122,50 @@
                                             </td>
                                         </tr>
                                     @endforeach
+                                    @if($caja != 'Todos')
+                                    <tr>
+                                        <td colspan="9">
+                                            <h5 class="text-center">Servicios entregados y pagados por banco</h5>
+                                        </td>
+                                    </tr>
+                                    @foreach ($movbancarios as $d)
+                                        <tr>
+                                            {{-- # --}}
+                                            <td width="2%">
+                                                <h6 class="table-th text-withe text-center" style="font-size: 100%">{{ $loop->iteration+$contador }}</h6>
+                                            </td>
+                                            {{-- FECHA --}}
+                                            {{-- @foreach($d->movservices as $movser) --}}
+                                                {{-- @if($d->type=='ENTREGADO' && $d->status == 'ACTIVO') --}}
+                                                    <td class="text-center">
+                                                        <h6>{{ \Carbon\Carbon::parse($d->creacion_Mov)->format('d/m/Y') }}</h6>
+                                                    </td>
+                                                {{-- @endif --}}
+                                            {{-- @endforeach --}}
+                                            {{-- CLIENTE --}}
+                                            <td class="text-center">
+                                                <h6>{{ $d->nomCli }}</h6>
+                                            </td>
+                                            {{-- NÚMERO DE ORDEN --}}
+                                            <td class="text-center">
+                                                <h6>{{ $d->orderId }}</h6>
+                                            </td>
+                                            
+                                            {{-- DETALLE --}}
+                                            <td class="text-center">
+                                                <h6>{{ $d->nomCat }} {{ $d->marca }} {{ $d->detalle }}</h6>
+                                            </td>
+                                            {{-- COSTO --}}
+                                            <td class="text-center">
+                                                <h6>{{ number_format($d->costo, 2) }}</h6>
+                                            </td>
+                                            {{-- IMPORTE --}}
+                                            <td class="text-center">
+                                                <h6>{{ number_format($d->import, 2) }}</h6>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                    @endif
                                 </tbody>
                                 <tfoot>
                                     
@@ -169,7 +214,7 @@
                                                         @foreach ($d->movservices as $mv)
                                                             @if ($mv->movs->status == 'ACTIVO')
                                                                 @php
-                                                                $mytotal += $mv->movs->import;
+                                                                $mytotal = $sumaBanco + $sumaEfectivo;
                                                                 @endphp                                    
                                                             @endif
                                                         @endforeach
