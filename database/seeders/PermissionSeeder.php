@@ -272,5 +272,12 @@ class PermissionSeeder extends Seeder
             'name' => 'Anular_trans_tigomoney_Boton',
             'guard_name' => 'web'
         ]);
+
+        /* SERVICIOS */
+        Permission::create([    /* PERMITIR RECEPCIONAR SERVICIOS */
+            'name' => 'Recepcionar_Servicio',
+            'guard_name' => 'web'
+        ]);
+
     }
 }

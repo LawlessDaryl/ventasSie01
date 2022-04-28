@@ -15,7 +15,8 @@ use Livewire\Component;
 class ReporteServiceController extends Component
 {
     public $componentName, $data, $details, $sumDetails, $countDetails, $reportType,
-        $userId, $dateFrom, $dateTo, $transaccionId, $estado, $fechas;
+        $userId, $dateFrom, $dateTo, $transaccionId, $estado, $fechas, $tecnico,
+        $estadovista, $fechadesde, $fechahasta, $from, $to;
 
     public function mount()
     {
@@ -29,6 +30,10 @@ class ReporteServiceController extends Component
         $this->estado = 'Todos';
         $this->transaccionId = 0;
         $this->fechas = [];
+        $this->tecnico = '';
+        $this->estadovista = '';
+        $this->fechadesde = '';
+        $this->fechahasta = '';
         $this->dateFrom = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->dateTo = Carbon::parse(Carbon::now())->format('Y-m-d');
     }
@@ -53,12 +58,14 @@ class ReporteServiceController extends Component
         ->join('roles as r', 'r.id', 'mr.role_id')
         ->join('role_has_permissions as rp', 'r.id', 'rp.role_id')
         ->join('permissions as p', 'p.id', 'rp.permission_id')
-        ->where('p.name','Orden_Servicio_Index')
-        ->where('r.name','TECNICO')
+        ->where('p.name','Recepcionar_Servicio')
+        /* ->where('r.name','TECNICO')
         ->orWhere('r.name', 'SUPERVISOR')
         ->where('p.name','Orden_Servicio_Index')
         ->orWhere('r.name', 'ADMIN')
-        ->where('p.name','Orden_Servicio_Index')
+        ->where('p.name','Orden_Servicio_Index') */
+       /*  ->orWhere('r.name', 'CAJERO')
+        ->where('p.name','Orden_Servicio_Index') */
         ->select('users.*')
         ->orderBy('name', 'asc')
         ->distinct()
@@ -79,12 +86,12 @@ class ReporteServiceController extends Component
     {
 
         if ($this->reportType == 0) {
-            $from = Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00';
-            $to = Carbon::parse(Carbon::now())->format('Y-m-d')   . ' 23:59:59';
+            $this->from = Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00';
+            $this->to = Carbon::parse(Carbon::now())->format('Y-m-d')   . ' 23:59:59';
         } else {
             try {
-                $from = Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00';
-                $to = Carbon::parse($this->dateTo)->format('Y-m-d')     . ' 23:59:59';
+                $this->from = Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00';
+                $this->to = Carbon::parse($this->dateTo)->format('Y-m-d')     . ' 23:59:59';
             } catch (Exception $e) {
                 DB::rollback();
                 $this->emit('', 'Datos no Validos', $e->getMessage());
@@ -110,7 +117,7 @@ class ReporteServiceController extends Component
                     ->select(
                         'services.*'
                     )
-                    ->whereBetween('os.created_at', [$from, $to])
+                    ->whereBetween('mov.created_at', [$this->from, $this->to])
                     ->orderBy('services.id', 'desc')
                     ->distinct()
                     ->get();
@@ -137,7 +144,7 @@ class ReporteServiceController extends Component
                     ->select(
                         'services.*'
                     )
-                    ->whereBetween('os.created_at', [$from, $to])
+                    ->whereBetween('mov.created_at', [$this->from, $this->to])
                     ->where('mov.user_id', $this->userId)
                     ->orderBy('services.id', 'desc')
                     ->distinct()
@@ -157,7 +164,7 @@ class ReporteServiceController extends Component
                     ->select(
                         'services.*'
                     )
-                    ->whereBetween('os.created_at', [$from, $to])
+                    ->whereBetween('mov.created_at', [$this->from, $this->to])
                     ->where('mov.type', $this->estado)
                     ->orderBy('services.id', 'desc')
                     ->distinct()
@@ -175,7 +182,7 @@ class ReporteServiceController extends Component
                     ->select(
                         'services.*'
                     )
-                    ->whereBetween('os.created_at', [$from, $to])
+                    ->whereBetween('mov.created_at', [$this->from, $this->to])
                     ->where('mov.user_id', $this->userId)
                     ->where('mov.type', $this->estado)
                     ->orderBy('services.id', 'desc')
@@ -183,5 +190,14 @@ class ReporteServiceController extends Component
                     ->get();
             }
         }
+     
+        if($this->userId == 0){
+            $this->tecnico = 'Todos';
+        }else{
+            $this->tecnico = User::find($this->userId)->name;
+        }
+        $this->estadovista = $this->estado;
+        $this->fechadesde = substr($this->from,0,10);
+        $this->fechahasta = substr($this->to,0,10);
     }
 }

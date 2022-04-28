@@ -35,7 +35,7 @@ class OrderServiceController extends Component
         $typew, $typeworkid, $catprodservid, $diagnostico, $solucion, $hora_entrega, $proceso,
         $terminado, $costo, $detalle_costo, $nombreUsuario, $modificar, $type_service, $movimiento,
         $opciones, $tipopago, $dateFrom, $dateTo, $reportType, $userId, $estado, $mostrar,
-        $mostrarEliminar,$tipo, $condicion, $fechahoy;
+        $mostrarEliminar,$tipo, $condicion, $fechahoy, $variable, $nomUsuTerm;
 
     private $pagination = null;
     public function paginationView()
@@ -73,6 +73,8 @@ class OrderServiceController extends Component
         $this->tipo= '';
         $this->condicion = 'MiSucursal';
         $this->fechahoy = Carbon::parse(Carbon::now())->format('Y-m-d');
+        $this->variable = false;
+        $this->nomUsuTerm = '';
     }
     public function render()
     {
@@ -280,7 +282,7 @@ class OrderServiceController extends Component
                                 ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
                                 ->where('mov.status', 'ACTIVO')
                                 ->select('order_services.*')
-                                ->whereBetween('order_services.created_at', [$from, $to])
+                                ->whereBetween('mov.created_at', [$from, $to])
                                 ->orderBy('order_services.id', 'desc')
                                 ->distinct()
                                 ->paginate($this->pagination);
@@ -293,7 +295,7 @@ class OrderServiceController extends Component
                                 ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
     
                                 ->select('order_services.*')
-                                ->whereBetween('order_services.created_at', [$from, $to])
+                                ->whereBetween('mov.created_at', [$from, $to])
                                 ->where('mov.user_id', $this->userId)
                                 ->where('mov.status', 'ACTIVO')
                                 ->orderBy('order_services.id', 'desc')
@@ -309,7 +311,7 @@ class OrderServiceController extends Component
                                 ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
                                 ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
                                 ->select('order_services.*')
-                                ->whereBetween('order_services.created_at', [$from, $to])
+                                ->whereBetween('mov.created_at', [$from, $to])
                                 ->where('mov.type', $this->estado)
                                 ->where('mov.status', 'ACTIVO')
                                 ->orderBy('order_services.id', 'desc')
@@ -323,7 +325,7 @@ class OrderServiceController extends Component
                                 ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
                                 ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
                                 ->select('order_services.*')
-                                ->whereBetween('order_services.created_at', [$from, $to])
+                                ->whereBetween('mov.created_at', [$from, $to])
                                 ->where('mov.user_id', $this->userId)
                                 ->where('mov.type', $this->estado)
                                 ->where('mov.status', 'ACTIVO')
@@ -525,7 +527,7 @@ class OrderServiceController extends Component
                                 ->where('mov.status', 'ACTIVO')
                                 ->where('suc.id',$this->sucursal)
                                 ->select('order_services.*')
-                                ->whereBetween('order_services.created_at', [$from, $to])
+                                ->whereBetween('mov.created_at', [$from, $to])
                                 ->orderBy('order_services.id', 'desc')
                                 ->distinct()
                                 ->paginate($this->pagination);
@@ -540,7 +542,7 @@ class OrderServiceController extends Component
                                 ->join('sucursal_users as suu', 'u.id', 'suu.user_id')
                                 ->join('sucursals as suc', 'suc.id', 'suu.sucursal_id')
                                 ->select('order_services.*')
-                                ->whereBetween('order_services.created_at', [$from, $to])
+                                ->whereBetween('mov.created_at', [$from, $to])
                                 ->where('mov.user_id', $this->userId)
                                 ->where('mov.status', 'ACTIVO')
                                 ->where('suc.id',$this->sucursal)
@@ -560,7 +562,7 @@ class OrderServiceController extends Component
                                 ->join('sucursal_users as suu', 'u.id', 'suu.user_id')
                                 ->join('sucursals as suc', 'suc.id', 'suu.sucursal_id')
                                 ->select('order_services.*')
-                                ->whereBetween('order_services.created_at', [$from, $to])
+                                ->whereBetween('mov.created_at', [$from, $to])
                                 ->where('mov.type', $this->estado)
                                 ->where('mov.status', 'ACTIVO')
                                 ->where('suc.id',$this->sucursal)
@@ -578,7 +580,7 @@ class OrderServiceController extends Component
                                 ->join('sucursal_users as suu', 'u.id', 'suu.user_id')
                                 ->join('sucursals as suc', 'suc.id', 'suu.sucursal_id')
                                 ->select('order_services.*')
-                                ->whereBetween('order_services.created_at', [$from, $to])
+                                ->whereBetween('mov.created_at', [$from, $to])
                                 ->where('mov.user_id', $this->userId)
                                 ->where('mov.type', $this->estado)
                                 ->where('mov.status', 'ACTIVO')
@@ -960,6 +962,8 @@ class OrderServiceController extends Component
         $this->fecha_estimada_entrega = substr($this->service1->fecha_estimada_entrega, 0, 10);
         $this->hora_entrega = substr($this->service1->fecha_estimada_entrega, 11, 14);
 
+        $this->variable=false;
+
         foreach ($this->service1->movservices as $mm) {
             if ($mm->movs->status == 'ACTIVO') {
                 $this->import = $mm->movs->import;
@@ -969,6 +973,10 @@ class OrderServiceController extends Component
                 $this->celular = $mm->movs->climov->client->celular;
                 $this->usuarioId = $mm->movs->user_id;
                 $this->nombreUsuario = $mm->movs->usermov->name;
+            }
+            if($mm->movs->type == 'TERMINADO'){
+                $this->nomUsuTerm=$mm->movs->usermov->name;
+                $this->variable = true;
             }
         }
         $this->costo = $this->service1->costo;
@@ -1190,7 +1198,8 @@ class OrderServiceController extends Component
                             'import' => $movimiento->import,
                             'on_account' => $movimiento->on_account,
                             'saldo' => $movimiento->saldo,
-                            'user_id' => $movimiento->user_id
+                            'user_id' => Auth()->user()->id,
+                            /* 'user_id' => $movimiento->user_id */
                         ]);
                     }
                     $cajaActual = Caja::join('sucursals as s', 's.id', 'cajas.sucursal_id')
@@ -1217,7 +1226,8 @@ class OrderServiceController extends Component
                     }
                     CarteraMov::create([
                         'type' =>'INGRESO',
-                        'comentario' => 'SERVICIOS',
+                        'tipoDeMovimiento' => 'SERVICIOS',
+                        'comentario' => '',
                         'cartera_id' => $cartera->id,
                         'movimiento_id' => $mv->id
                     ]);

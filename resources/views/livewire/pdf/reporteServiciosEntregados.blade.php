@@ -35,12 +35,16 @@
                     @if ($reportType == 0)
                         <span style="font-size: 16px;"><strong>Reporte de Servicios del día</strong></span>
                     @else
-                        <span style="font-size: 16px;"><strong>Reporte de Servicios por fecha</strong></span>
+                        <span style="font-size: 16px;"><strong>Reporte de Servicios 
+                            @if($caja != 'todos')
+                            {{ $nombreCaja }}
+                        @endif
+                            por fecha</strong></span>
                     @endif
                     <br>
                     @if ($reportType != 0)
-                        <span style="font-size: 16px;"><strong>Fecha de consulta: {{ $dateFrom }} al
-                                {{ $dateTo }}</strong></span>
+                        <span style="font-size: 16px;"><strong>Fecha de consulta: {{ \Carbon\Carbon::parse($dateFrom)->format('d/m/Y') }} al
+                            {{ \Carbon\Carbon::parse($dateTo)->format('d/m/Y') }}</strong></span>
                     @else
                         <span style="font-size: 16px;"><strong>Fecha de consulta:
                                 {{ \Carbon\Carbon::now()->format('d-M-Y') }}</strong></span>
@@ -48,7 +52,7 @@
 
                     <br>
 
-                   
+
                 </td>
             </tr>
         </table>
@@ -62,7 +66,7 @@
                     <th width="7%">Fecha</th>
                     <th width="8%">Cliente</th>
                     <th width="4%">Orden</th>
-                   {{--  <th width="12%">Fecha Hora Recep.</th>
+                    {{-- <th width="12%">Fecha Hora Recep.</th>
                     <th width="11%">Fecha Hora Term.</th>
                     <th width="11%">Fecha Hora Entr.</th> --}}
                     <th width="7%">Detalle</th>
@@ -72,10 +76,10 @@
                     <th width="5%">Saldo</th>
                     <th width="8%">Tipo Servicio</th> --}}
 
-                    
+
                     {{-- <th width="6%">Estado</th> --}}
                     {{-- <th width="10%">Tec. Resp.</th> --}}
-                    
+
                 </tr>
             </thead>
 
@@ -90,14 +94,14 @@
                         {{-- FECHA --}}
                         <td align="center">
                             <FONT FACE="times new roman" SIZE=1>
-                                @foreach($d->movservices as $movser)
-                                @if($movser->movs->type=='ENTREGADO' && $movser->movs->status == 'ACTIVO')
-                                    {{ $movser->movs->created_at }}
-                                @endif
-                            @endforeach
+                                @foreach ($d->movservices as $movser)
+                                    @if ($movser->movs->type == 'ENTREGADO' && $movser->movs->status == 'ACTIVO')
+                                        {{ $movser->movs->created_at }}
+                                    @endif
+                                @endforeach
                             </FONT>
                         </td>
-                        
+
                         {{-- CLIENTE --}}
                         <td align="center">
                             <FONT FACE="times new roman" SIZE=1>{{ $d->movservices[0]->movs->climov->client->nombre }}
@@ -109,7 +113,8 @@
                         </td>
                         {{-- DETALLE --}}
                         <td align="center">
-                            <FONT FACE="times new roman" SIZE=1>{{ $d->categoria->nombre }} {{ $d->marca }} {{ $d->detalle }}
+                            <FONT FACE="times new roman" SIZE=1>{{ $d->categoria->nombre }} {{ $d->marca }}
+                                {{ $d->detalle }}
                             </FONT>
                         </td>
                         {{-- COSTO --}}
@@ -123,8 +128,61 @@
                         </td>
                     </tr>
                 @endforeach
+                @if ($caja != 'Todos')
+                    {{-- @if(count($movbancarios) > 1) --}}
+                    <tr>
+                        <th colspan="7">
+                            <span class="text-center">Servicios entregados y pagados por banco</span>
+                        </th>
+                    </tr>
+                    {{-- @endif --}}
+                    @foreach ($movbancarios as $d)
+                        <tr height="10px">
+                            {{-- # --}}
+                            <td align="center">
+                                <FONT FACE="times new roman" SIZE=1>{{ $loop->iteration + $contador }}
+                                </FONT>
+                            </td>
+                            {{-- FECHA --}}
+                            <td align="center">
+                                <FONT FACE="times new roman" SIZE=1>
+                                    {{-- @foreach ($d->movservices as $movser)
+                                @if ($movser->movs->type == 'ENTREGADO' && $movser->movs->status == 'ACTIVO') --}}
+                                    {{ $d->creacion_Mov }}
+                                    {{-- @endif
+                            @endforeach --}}
+                                </FONT>
+                            </td>
+
+                            {{-- CLIENTE --}}
+                            <td align="center">
+                                <FONT FACE="times new roman" SIZE=1>{{ $d->nomCli }}
+                                </FONT>
+                            </td>
+                            {{-- NUMERO ORDEN --}}
+                            <td align="center">
+                                <FONT FACE="times new roman" SIZE=1>{{ $d->orderId }}</FONT>
+                            </td>
+                            {{-- DETALLE --}}
+                            <td align="center">
+                                <FONT FACE="times new roman" SIZE=1>{{ $d->nomCat }} {{ $d->marca }}
+                                    {{ $d->detalle }}
+                                </FONT>
+                            </td>
+                            {{-- COSTO --}}
+                            <td align="center">
+                                <FONT FACE="times new roman" SIZE=1>{{ number_format($d->costo, 2) }}</FONT>
+                            </td>
+                            {{-- IMPORTE --}}
+                            <td align="center">
+                                <FONT FACE="times new roman" SIZE=1>
+                                    {{ number_format($d->import, 2) }}</FONT>
+                            </td>
+                        </tr>
+                    @endforeach
+                @endif
             </tbody>
-            <br>
+            {{-- <br> --}}
 
             <tfoot>
                 <tr>
@@ -133,8 +191,8 @@
                     </td>
                     <td class="text-right" colspan="5">
                         <span>
-                            
-                            {{$sumaEfectivo}}
+
+                            {{ $sumaEfectivo }}
 
                         </span>
                     </td>
@@ -145,8 +203,8 @@
                     </td>
                     <td class="text-right" colspan="5">
                         <span>
-                            
-                            {{$sumaBanco}}
+
+                            {{ $sumaBanco }}
 
                         </span>
                     </td>
@@ -157,22 +215,24 @@
                     </td>
                     <td class="text-right" colspan="4">
                         <span><strong>
-                                
-                            ${{ number_format($data->sum('costo'), 2) }}
-
+                            @if($caja != 'Todos')
+                                ${{$sumaCosto + $sumaCostoEfectivo}}
+                            @else
+                                ${{ number_format($data->sum('costo'), 2) }}
+                            @endif
                             </strong></span>
                     </td>
                     <td class="text-right" colspan="1">
                         <span><strong>
                                 @php
-                                    $mytotal = 0;                                     
+                                    $mytotal = 0;
                                 @endphp
                                 @foreach ($data as $d)
                                     @foreach ($d->movservices as $mv)
                                         @if ($mv->movs->status == 'ACTIVO')
                                             @php
-                                            $mytotal += $mv->movs->import;
-                                            @endphp                                    
+                                                $mytotal = $sumaBanco + $sumaEfectivo;
+                                            @endphp
                                         @endif
                                     @endforeach
                                 @endforeach
@@ -180,7 +240,7 @@
 
                             </strong></span>
                     </td>
-                    
+
                 </tr>
             </tfoot>
         </table>

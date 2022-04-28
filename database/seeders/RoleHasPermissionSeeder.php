@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Http\Livewire\PermisosController;
 use App\Models\Permission;
 use App\Models\RoleHasPermissions;
 use Illuminate\Database\Seeder;
@@ -15,7 +16,7 @@ class RoleHasPermissionSeeder extends Seeder
      */
     public function run()
     {
-        for ($x = 1; $x <= 46; $x++) {  /* TODOS LOS PERMISOS PARA EL ROL ADMIN */
+        for ($x = 1; $x <= 61; $x++) {  /* TODOS LOS PERMISOS PARA EL ROL ADMIN */
             RoleHasPermissions::create([
                 'permission_id' => $x,
                 'role_id' => 1,
@@ -28,6 +29,7 @@ class RoleHasPermissionSeeder extends Seeder
                 'role_id' => 5,
             ]);
         }
+
         RoleHasPermissions::create([    // PERMITIR VER JORNADA AL CAJERO
             'permission_id' => 56,
             'role_id' => 5,
@@ -46,14 +48,18 @@ class RoleHasPermissionSeeder extends Seeder
                 'role_id' => 2,
             ]);
         }
-        for ($x = 32; $x <= 44; $x++) {     /* PERMISOS SERVICIOS ROL SUPERVISOR*/
-            if ($x != 39 && $x != 40) {
+        for ($x = 32; $x <= 44; $x++) {     /* PERMISOS SERVICIOS ROL SUPERVISOR_TECNICO*/
+            if ($x != 39 && $x != 40 && $x != 42) {
                 RoleHasPermissions::create([
                     'permission_id' => $x,
                     'role_id' => 4,
                 ]);
             }
         }
+        RoleHasPermissions::create([    /* PERMISOS SERVICIOS ROL SUPERVISOR_TECNICO */
+            'permission_id' => 61,
+            'role_id' => 4,
+        ]);
         for ($x = 35; $x <= 43; $x++) {     /* PERMISOS SERVICIOS ROL TECNICO*/
             if ($x != 39 && $x != 40 && $x != 41 && $x != 42 && $x != 43) {
                 RoleHasPermissions::create([
@@ -62,6 +68,10 @@ class RoleHasPermissionSeeder extends Seeder
                 ]);
             }
         }
+        RoleHasPermissions::create([    /* PERMISOS SERVICIOS ROL TECNICO */
+            'permission_id' => 61,
+            'role_id' => 3,
+        ]);
         for ($x = 35; $x <= 43; $x++) {     /* PERMISOS SERVICIOS ROL CAJERO*/
             if ($x != 39 && $x != 40 && $x != 41 && $x != 43) {
                 RoleHasPermissions::create([
@@ -98,11 +108,6 @@ class RoleHasPermissionSeeder extends Seeder
             ]);
         }
 
-        RoleHasPermissions::create([    // PERMITIR VER JORNADA AL ADMIN
-            'permission_id' => 56,
-            'role_id' => 6,
-        ]);
-
         RoleHasPermissions::create([    // PERMITIR MODIFICAR CAJA Y SUCURSAL AL ADMIN
             'permission_id' => 57,
             'role_id' => 6,
@@ -119,19 +124,5 @@ class RoleHasPermissionSeeder extends Seeder
             'permission_id' => 60,
             'role_id' => 6,
         ]);
-        for ($x = 35; $x <= 43; $x++) {     /* PERMISOS SERVICIOS ROL CAJERO*/
-            if ($x != 39 && $x != 40 && $x != 41 && $x != 43) {
-                RoleHasPermissions::create([
-                    'permission_id' => $x,
-                    'role_id' => 6,
-                ]);
-            }
-        }
-        for ($x = 9; $x <= 10; $x++) {     /* PERMISOS SERVICIOS ROL CAJERO*/
-            RoleHasPermissions::create([
-                'permission_id' => $x,
-                'role_id' => 6,
-            ]);
-        }
     }
 }

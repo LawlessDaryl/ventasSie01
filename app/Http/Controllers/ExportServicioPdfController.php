@@ -39,7 +39,7 @@ class ExportServicioPdfController extends Controller
                     ->select(
                         'services.*'
                     )
-                    ->whereBetween('os.created_at', [$from, $to])
+                    ->whereBetween('mov.created_at', [$from, $to])
                     ->orderBy('services.id', 'desc')
                     ->distinct()
                     ->get();
@@ -58,7 +58,7 @@ class ExportServicioPdfController extends Controller
                 ->select(
                     'services.*'
                 )
-                    ->whereBetween('os.created_at', [$from, $to])
+                    ->whereBetween('mov.created_at', [$from, $to])
                     ->where('mov.user_id', $userId)
                     ->orderBy('services.id', 'desc')
                     ->distinct()
@@ -78,7 +78,7 @@ class ExportServicioPdfController extends Controller
                 ->select(
                     'services.*'
                 )
-                    ->whereBetween('os.created_at', [$from, $to])
+                    ->whereBetween('mov.created_at', [$from, $to])
                     ->where('mov.type', $estado)
                     ->orderBy('services.id', 'desc')
                     ->distinct()
@@ -96,7 +96,7 @@ class ExportServicioPdfController extends Controller
                 ->select(
                     'services.*'
                 )
-                    ->whereBetween('os.created_at', [$from, $to])
+                    ->whereBetween('mov.created_at', [$from, $to])
                     ->where('mov.user_id', $userId)
                     ->where('mov.type', $estado)
                     ->orderBy('services.id', 'desc')

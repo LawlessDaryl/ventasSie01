@@ -136,10 +136,19 @@ class ServiciosController extends Component
     public function Seleccionar($id)
     {
         $this->cliente = Cliente::find($id);
+        if($this->celular != ''){
+            $this->cliente -> update([
+                'celular' => $this->celular
+            ]);
+        }
+        
         session(['clie' =>   $this->cliente]);
+
         $this->resetUI();
         $this->emit('client-selected', 'Cliente Seleccionado');
     }
+
+    
 
     public function ResetSession()
     {
@@ -167,7 +176,8 @@ class ServiciosController extends Component
                     'celular' => 'numeric',
                     'telefono' => 'numeric',
                     'nit' => 'required|numeric',
-                    'nit' => 'max:9'
+                    'nit' => 'max:9',
+                    'email' => 'unique:clientes|email',
                 ];
                 $messages = [
                     'nombre.required' => 'Nombre es requerido',
@@ -179,7 +189,9 @@ class ServiciosController extends Component
                     'telefono.numeric' => 'No puede ingresar letras',
                     'nit.required' => 'Ingrese 0 si no quiere ingresar ningún nit',
                     'nit.numeric' => 'El nit debe ser un número',
-                    'nit.max' => 'El nit no puede tener más de 9 digitos'
+                    'nit.max' => 'El nit no puede tener más de 9 digitos',
+                    'email.email' => 'Ingresa una dirección de correo válida',
+                    'email.unique' => 'El email ya existe en el sistema',
                 ];
             }else{
                 $rules = [
@@ -188,7 +200,8 @@ class ServiciosController extends Component
                     'celular' => 'numeric',
                     'telefono' => 'numeric|digits:7',
                     'nit' => 'required|numeric',
-                    'nit' => 'max:9'
+                    'nit' => 'max:9',
+                    'email' => 'unique:clientes|email',
                 ];
                 $messages = [
                     'nombre.required' => 'Nombre es requerido',
@@ -201,7 +214,9 @@ class ServiciosController extends Component
                     'telefono.digits' => 'Debe ingresar 7 digitos',
                     'nit.required' => 'Ingrese 0 si no quiere ingresar ningún nit',
                     'nit.numeric' => 'El nit debe ser un número',
-                    'nit.max' => 'El nit no puede tener más de 9 digitos'
+                    'nit.max' => 'El nit no puede tener más de 9 digitos',
+                    'email.email' => 'Ingresa una dirección de correo válida',
+                    'email.unique' => 'El email ya existe en el sistema',
                 ];
             }
 
@@ -234,7 +249,8 @@ class ServiciosController extends Component
                     'celular' => 'required|numeric|digits:8',
                     'telefono' => 'numeric',
                     'nit' => 'required|numeric',
-                    'nit' => 'max:9'
+                    'nit' => 'max:9',
+                    'email' => 'unique:clientes|email',
                 ];
                 $messages = [
                     'nombre.required' => 'Nombre es requerido',
@@ -248,7 +264,9 @@ class ServiciosController extends Component
                     'telefono.numeric' => 'No puede ingresar letras',
                     'nit.required' => 'Ingrese 0 si no quiere ingresar ningún nit',
                     'nit.numeric' => 'El nit debe ser un número',
-                    'nit.max' => 'El nit no puede tener más de 9 digitos'
+                    'nit.max' => 'El nit no puede tener más de 9 digitos',
+                    'email.email' => 'Ingresa una dirección de correo válida',
+                    'email.unique' => 'El email ya existe en el sistema',
                 ];
             }else{
                 $rules = [
@@ -257,7 +275,8 @@ class ServiciosController extends Component
                     'celular' => 'required|numeric|digits:8',
                     'telefono' => 'numeric|digits:7',
                     'nit' => 'required|numeric',
-                    'nit' => 'max:9'
+                    'nit' => 'max:9',
+                    'email' => 'unique:clientes|email',
                 ];
                 $messages = [
                     'nombre.required' => 'Nombre es requerido',
@@ -272,7 +291,9 @@ class ServiciosController extends Component
                     'telefono.digits' => 'Debe ingresar 7 digitos',
                     'nit.required' => 'Ingrese 0 si no quiere ingresar ningún nit',
                     'nit.numeric' => 'El nit debe ser un número',
-                    'nit.max' => 'El nit no puede tener más de 9 digitos'
+                    'nit.max' => 'El nit no puede tener más de 9 digitos',
+                    'email.email' => 'Ingresa una dirección de correo válida',
+                    'email.unique' => 'El email ya existe en el sistema',
                 ];
             }
 
@@ -494,6 +515,7 @@ class ServiciosController extends Component
         $Ordservice = OrderService::find($this->orderservice);
         session(['tservice' => $this->type_service]);
         $this->typeservice = $this->type_service;
+        /* $this->type_service = session('tservice'); */
 
         $this->emit('tipoServ-updated', 'Servicio Actualizado');
     }
@@ -756,7 +778,7 @@ class ServiciosController extends Component
         $this->typeworkid = 'Elegir';
         $this->catprodservid = 'Elegir';
         $this->selected_id = 0;
-        $this->typeservice = 'NORMAL';
+        /* $this->typeservice = 'NORMAL'; */
         $this->saldo = 0;
         $this->on_account = 0;
         $this->import = 0;

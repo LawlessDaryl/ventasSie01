@@ -7,7 +7,9 @@
                 </h4>
                 <ul class="tabs tab-pills">
                     <a href="javascript:void(0)" class="btn btn-dark" wire:click="IrInicio">IR A INICIO</a>
-                    <a href="javascript:void(0)" class="btn btn-dark" wire:click="GoService">AGREGAR</a>
+                    @if(@Auth::user()->hasPermissionTo('Recepcionar_Servicio'))
+                        <a href="javascript:void(0)" class="btn btn-dark" wire:click="GoService">AGREGAR</a>
+                    @endif
                 </ul>
 
             </div>
@@ -130,7 +132,7 @@
                                     <div class="col-sm-12 col-md-12">
                                         <div class="row">
                                             <div class="col-sm-2">CLIENTE</div>
-                                            <div class="col-sm-2">FECHAS</div>
+                                            <div class="col-sm-2">FECHA</div>
                                             <div class="col-sm-4">SERVICIOS</div>
                                             <div class="col-sm-4">ESTADO</div>
                                         </div>
@@ -177,10 +179,15 @@
                                                             @endif
                                                         </div>
                                                         {{-- FECHA --}}
-                                                        <div class="col-sm-2">
-                                                            <h6 class="table-th text-withe text-center" style="font-size: 100%">
-                                                                {{ $service->fecha_estimada_entrega }}</h6><br />
-                                                        </div>
+                                                        @foreach ($service->movservices as $mm)
+                                                            @if ($mm->movs->status == 'INACTIVO' && $mm->movs->type == 'ANULADO')
+                                                                <div class="col-sm-2">
+                                                                    <h6 class="table-th text-withe text-center" style="font-size: 100%">
+                                                                        {{ \Carbon\Carbon::parse($mm->movs->created_at)->format('d/m/Y h:i:s') }}</h6><br />
+                                                                </div>
+                                                            @endif
+                                                        @endforeach
+                                                        
                                                         {{-- SERVICIOS --}}
                                                         <div class="col-sm-4">
                                                             <a href="javascript:void(0)"
@@ -191,12 +198,36 @@
                                                                     {{ $service->falla_segun_cliente }}</h6>
                                                             </a>
 
-                                                            @foreach ($service->movservices as $mm)
+                                                            {{-- @foreach ($service->movservices as $mm)
                                                                 @if ($mm->movs->status == 'INACTIVO' && $mm->movs->type == 'ANULADO')
                                                                     <h6 style="font-size: 100%"><b>Responsable:</b>
                                                                         {{ $mm->movs->usermov->name }}</h6>
                                                                 @endif
+                                                            @endforeach --}}
+
+                                                            @php
+                                                                $terminado;
+                                                                $valorbooleano=false;
+                                                            @endphp
+                                                            @foreach ($service->movservices as $mm)
+                                                                @if($mm->movs->type == 'TERMINADO')
+                                                                    @php
+                                                                        $terminado = $mm->movs->usermov->name;
+                                                                        $valorbooleano=true;
+                                                                    @endphp
+                                                                @endif
+                                                                @if (($mm->movs->status == 'INACTIVO' && $mm->movs->type == 'ANULADO') && $valorbooleano == true)
+                                                                    <h6 style="font-size: 100%"><b>Responsable:</b>
+                                                                        {{ $terminado }}</h6>
+                                                                    @php
+                                                                        $valorbooleano = false;
+                                                                    @endphp
+                                                                @elseif(($mm->movs->status == 'INACTIVO' && $mm->movs->type == 'ANULADO'))
+                                                                    <h6 style="font-size: 100%"><b>Responsable:</b>
+                                                                        {{ $mm->movs->usermov->name }}</h6>
+                                                                @endif
                                                             @endforeach
+
                                                         </div>
                                                         {{-- ESTADO --}}
                                                         <div class="col-sm-4">
@@ -204,11 +235,13 @@
                                                                 <b>{{ $mm->movs->type }}</b>
                                                                 Serv: {{ $item->type_service }}
                                                             </h6>
-                                                            @if ($mm->movs->type == 'PENDIENTE')
-                                                                <a href="javascript:void(0)"
-                                                                    class="btn btn-dark mtmobile"
-                                                                    wire:click="Edit({{ $service->id }})"
-                                                                    title="Cambiar Estado">{{ $mm->movs->type }}</a>
+                                                            @if(@Auth::user()->hasPermissionTo('Recepcionar_Servicio'))
+                                                                @if ($mm->movs->type == 'PENDIENTE')
+                                                                    <a href="javascript:void(0)"
+                                                                        class="btn btn-dark mtmobile"
+                                                                        wire:click="Edit({{ $service->id }})"
+                                                                        title="Cambiar Estado">{{ $mm->movs->type }}</a>
+                                                                @endif
                                                             @endif
 
                                                             @if (!empty(session('sesionCaja')) && @Auth::user()->hasPermissionTo('Boton_Entregar_Servicio'))
@@ -340,10 +373,14 @@
                                                             @endif
                                                         </div>
                                                         {{-- FECHA --}}
-                                                        <div class="col-sm-2">
-                                                            <h6 class="table-th text-withe text-center" style="font-size: 100%">
-                                                                {{ $service->fecha_estimada_entrega }}</h6><br />
-                                                        </div>
+                                                        @foreach ($service->movservices as $mm)
+                                                            @if ($mm->movs->status == 'ACTIVO' || ($mm->movs->status == 'INACTIVO' && $mm->movs->type == 'ANULADO'))
+                                                                <div class="col-sm-2">
+                                                                    <h6 class="table-th text-withe text-center" style="font-size: 100%">
+                                                                        {{ \Carbon\Carbon::parse($mm->movs->created_at)->format('d/m/Y h:i:s') }}</h6><br />
+                                                                </div>
+                                                            @endif
+                                                        @endforeach
                                                         {{-- SERVICIOS --}}
                                                         <div class="col-sm-4">
                                                             <a href="javascript:void(0)"
@@ -353,9 +390,24 @@
                                                                     | {{ $service->detalle }}&nbsp |
                                                                     {{ $service->falla_segun_cliente }}</h6>
                                                             </a>
-
+                                                            @php
+                                                                $terminado;
+                                                                $valorbooleano=false;
+                                                            @endphp
                                                             @foreach ($service->movservices as $mm)
-                                                                @if ($mm->movs->status == 'ACTIVO' || ($mm->movs->status == 'INACTIVO' && $mm->movs->type == 'ANULADO'))
+                                                                @if($mm->movs->type == 'TERMINADO')
+                                                                    @php
+                                                                        $terminado = $mm->movs->usermov->name;
+                                                                        $valorbooleano=true;
+                                                                    @endphp
+                                                                @endif
+                                                                @if (($mm->movs->status == 'ACTIVO' || ($mm->movs->status == 'INACTIVO' && $mm->movs->type == 'ANULADO')) && $valorbooleano == true)
+                                                                    <h6 style="font-size: 100%"><b>Responsable:</b>
+                                                                        {{ $terminado }}</h6>
+                                                                    @php
+                                                                        $valorbooleano = false;
+                                                                    @endphp
+                                                                @elseif(($mm->movs->status == 'ACTIVO' || ($mm->movs->status == 'INACTIVO' && $mm->movs->type == 'ANULADO')))
                                                                     <h6 style="font-size: 100%"><b>Responsable:</b>
                                                                         {{ $mm->movs->usermov->name }}</h6>
                                                                 @endif
@@ -367,11 +419,13 @@
                                                                 <b>{{ $mm->movs->type }}</b>
                                                                 Serv: {{ $item->type_service }}
                                                             </h6>
-                                                            @if ($mm->movs->type == 'PENDIENTE')
-                                                                <a href="javascript:void(0)"
-                                                                    class="btn btn-dark mtmobile"
-                                                                    wire:click="Edit({{ $service->id }})"
-                                                                    title="Cambiar Estado">{{ $mm->movs->type }}</a>
+                                                            @if(@Auth::user()->hasPermissionTo('Recepcionar_Servicio'))
+                                                                @if ($mm->movs->type == 'PENDIENTE')
+                                                                    <a href="javascript:void(0)"
+                                                                        class="btn btn-dark mtmobile"
+                                                                        wire:click="Edit({{ $service->id }})"
+                                                                        title="Cambiar Estado">{{ $mm->movs->type }}</a>
+                                                                @endif
                                                             @endif
 
                                                             @if (!empty(session('sesionCaja')) && @Auth::user()->hasPermissionTo('Boton_Entregar_Servicio'))
@@ -499,10 +553,14 @@
                                                         @endif
                                                     </div>
                                                     {{-- FECHA --}}
-                                                    <div class="col-sm-2">
-                                                        <h6 class="table-th text-withe text-center" style="font-size: 100%">
-                                                            {{ $service->fecha_estimada_entrega }}</h6><br />
-                                                    </div>
+                                                    @foreach ($service->movservices as $mm)
+                                                        @if ($mm->movs->status == 'ACTIVO')
+                                                            <div class="col-sm-2">
+                                                                <h6 class="table-th text-withe text-center" style="font-size: 100%">
+                                                                    {{ \Carbon\Carbon::parse($mm->movs->created_at)->format('d/m/Y h:i:s') }}</h6><br />
+                                                            </div>
+                                                        @endif
+                                                    @endforeach
                                                     {{-- SERVICIOS --}}
                                                     <div class="col-sm-4">
                                                         <a href="javascript:void(0)"
@@ -513,12 +571,36 @@
                                                                 {{ $service->falla_segun_cliente }}</h6>
                                                         </a>
 
-                                                        @foreach ($service->movservices as $mm)
+                                                       {{--  @foreach ($service->movservices as $mm)
                                                             @if ($mm->movs->status == 'ACTIVO')
                                                                 <h6 style="font-size: 100%"><b>Responsable:</b>
                                                                     {{ $mm->movs->usermov->name }}</h6>
                                                             @endif
-                                                        @endforeach
+                                                        @endforeach --}}
+
+                                                            @php
+                                                                $terminado;
+                                                                $valorbooleano=false;
+                                                            @endphp
+                                                            @foreach ($service->movservices as $mm)
+                                                                @if($mm->movs->type == 'TERMINADO')
+                                                                    @php
+                                                                        $terminado = $mm->movs->usermov->name;
+                                                                        $valorbooleano=true;
+                                                                    @endphp
+                                                                @endif
+                                                                @if ($mm->movs->status == 'ACTIVO' && $valorbooleano == true)
+                                                                    <h6 style="font-size: 100%"><b>Responsable:</b>
+                                                                        {{ $terminado }}</h6>
+                                                                    @php
+                                                                        $valorbooleano = false;
+                                                                    @endphp
+                                                                @elseif($mm->movs->status == 'ACTIVO')
+                                                                    <h6 style="font-size: 100%"><b>Responsable:</b>
+                                                                        {{ $mm->movs->usermov->name }}</h6>
+                                                                @endif
+                                                            @endforeach
+
                                                     </div>
                                                     {{-- ESTADO --}}
                                                     <div class="col-sm-4">
@@ -526,11 +608,13 @@
                                                             <b>{{ $mm->movs->type }}</b>
                                                             Serv: {{ $item->type_service }}
                                                         </h6>
-                                                        @if ($mm->movs->type == 'PENDIENTE')
-                                                            <a href="javascript:void(0)"
-                                                                class="btn btn-dark mtmobile"
-                                                                wire:click="Edit({{ $service->id }})"
-                                                                title="Cambiar Estado">{{ $mm->movs->type }}</a>
+                                                        @if(@Auth::user()->hasPermissionTo('Recepcionar_Servicio'))
+                                                            @if ($mm->movs->type == 'PENDIENTE')
+                                                                <a href="javascript:void(0)"
+                                                                    class="btn btn-dark mtmobile"
+                                                                    wire:click="Edit({{ $service->id }})"
+                                                                    title="Cambiar Estado">{{ $mm->movs->type }}</a>
+                                                            @endif
                                                         @endif
 
                                                         @if (!empty(session('sesionCaja')) && @Auth::user()->hasPermissionTo('Boton_Entregar_Servicio'))

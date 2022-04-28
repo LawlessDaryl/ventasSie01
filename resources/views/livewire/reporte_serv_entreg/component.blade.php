@@ -20,6 +20,18 @@
                         </div>
                     </div>
 
+                    <div class="col-sm-3">
+                        <h6>Elige la caja</h6>
+                        <div class="form-group">
+                            <select wire:model="caja" class="form-control" style="font-size: 90%">
+                                <option value="Todos">Todos</option>
+                                @foreach ($cajas as $cajSu)
+                                    <option value="{{ $cajSu->id }}">{{ $cajSu->nombre }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
                     <div class="col-sm-2 ">
                         <h6>Fecha desde</h6>
                         <div class="form-group">
@@ -36,14 +48,16 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-3">
-                    </div>
                     <div class="col-sm-2 mt-4">
-
-                        <a class="btn btn-dark btn-block {{ count($data) < 1 ? 'disabled' : '' }}"
-                            href="{{ url('reporteServicEntreg/pdf' . '/' . $reportType . '/' . $dateFrom . '/' . $dateTo . '/' . $sucursal . '/' . $sumaEfectivo . '/' . $sumaBanco) }}"
+                        
+                        {{-- <a class="btn btn-dark btn-block {{ count($data) < 1 ? 'disabled' : '' }}"
+                            href="{{ url('reporteServicEntreg/pdf' . '/' . $reportType . '/' . $dateFrom . '/' . $dateTo . '/' . $sucursal . '/' . $sumaEfectivo . '/' . $sumaBanco . '/' . $caja) }}"
+                            target="_blank" style='font-size:18px'>Generar PDF</a> --}}
+                        
+                        <a class="btn btn-dark"
+                            href="{{ url('reporteServicEntreg/pdf' . '/' . $reportType . '/' . $dateFrom . '/' . $dateTo . '/' . $sucursal . '/' . $sumaEfectivo . '/' . $sumaBanco . '/' . $caja) }}"
                             target="_blank" style='font-size:18px'>Generar PDF</a>
-
+                        
                     </div>
 
                 </div>
@@ -75,6 +89,7 @@
                                     @endif
 
                                     @foreach ($data as $d)
+                                       
                                         <tr>
                                             {{-- # --}}
                                             <td width="2%">
@@ -84,7 +99,7 @@
                                             @foreach($d->movservices as $movser)
                                                 @if($movser->movs->type=='ENTREGADO' && $movser->movs->status == 'ACTIVO')
                                                     <td class="text-center">
-                                                        <h6>{{ $movser->movs->created_at }}</h6>
+                                                        <h6>{{ \Carbon\Carbon::parse($movser->movs->created_at)->format('d/m/Y') }}</h6>
                                                     </td>
                                                 @endif
                                             @endforeach
@@ -111,6 +126,52 @@
                                             </td>
                                         </tr>
                                     @endforeach
+                                    @if($caja != 'Todos')
+                                        @if(count($movbancarios) > 1)
+                                        <tr>
+                                            <td colspan="9">
+                                                <h5 class="text-center">Servicios entregados y pagados por banco</h5>
+                                            </td>
+                                        </tr>
+                                        @endif
+                                    @foreach ($movbancarios as $d)
+                                        <tr>
+                                            {{-- # --}}
+                                            <td width="2%">
+                                                <h6 class="table-th text-withe text-center" style="font-size: 100%">{{ $loop->iteration+$contador }}</h6>
+                                            </td>
+                                            {{-- FECHA --}}
+                                            {{-- @foreach($d->movservices as $movser) --}}
+                                                {{-- @if($d->type=='ENTREGADO' && $d->status == 'ACTIVO') --}}
+                                                    <td class="text-center">
+                                                        <h6>{{ \Carbon\Carbon::parse($d->creacion_Mov)->format('d/m/Y') }}</h6>
+                                                    </td>
+                                                {{-- @endif --}}
+                                            {{-- @endforeach --}}
+                                            {{-- CLIENTE --}}
+                                            <td class="text-center">
+                                                <h6>{{ $d->nomCli }}</h6>
+                                            </td>
+                                            {{-- NÚMERO DE ORDEN --}}
+                                            <td class="text-center">
+                                                <h6>{{ $d->orderId }}</h6>
+                                            </td>
+                                            
+                                            {{-- DETALLE --}}
+                                            <td class="text-center">
+                                                <h6>{{ $d->nomCat }} {{ $d->marca }} {{ $d->detalle }}</h6>
+                                            </td>
+                                            {{-- COSTO --}}
+                                            <td class="text-center">
+                                                <h6>{{ number_format($d->costo, 2) }}</h6>
+                                            </td>
+                                            {{-- IMPORTE --}}
+                                            <td class="text-center">
+                                                <h6>{{ number_format($d->import, 2) }}</h6>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                    @endif
                                 </tbody>
                                 <tfoot>
                                     
@@ -145,8 +206,12 @@
                                         </td>
                                         <td class="text-right" colspan="4">
                                             <span><strong>
-                                                    
-                                                ${{ number_format($data->sum('costo'), 2) }}
+                                                @if($caja != 'Todos')
+                                                    ${{$sumaCosto + $sumaCostoEfectivo}}
+                                                @else
+                                                    ${{ number_format($data->sum('costo'), 2) }}
+                                                @endif
+                                                
                     
                                                 </strong></span>
                                         </td>
@@ -159,7 +224,7 @@
                                                         @foreach ($d->movservices as $mv)
                                                             @if ($mv->movs->status == 'ACTIVO')
                                                                 @php
-                                                                $mytotal += $mv->movs->import;
+                                                                $mytotal = $sumaBanco + $sumaEfectivo;
                                                                 @endphp                                    
                                                             @endif
                                                         @endforeach

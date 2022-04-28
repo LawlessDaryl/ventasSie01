@@ -45,7 +45,7 @@
                                                         <th class="table-th text-withe text-center ">Cédula</th>
                                                         <th class="table-th text-withe text-center">Nombre</th>
                                                         <th class="table-th text-withe text-center">Teléfono</th>
-                                                        <th class="table-th text-withe text-center">Acccion</th>
+                                                        <th class="table-th text-withe text-center">Acción</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -58,7 +58,10 @@
                                                                 <h6 class="text-center">{{ $d->nombre }}</h6>
                                                             </td>
                                                             <td class="text-center">
-                                                                <h6 class="text-center">{{ $d->celular }}</h6>
+                                                                {{-- <h6 class="text-center">{{ $d->celular }}</h6> --}}
+                                                                <input type="number" wire:model.lazy="celular" class="form-control" 
+                                                                placeholder="{{ $d->celular }}" maxlength="8">
+                                                                @error('celular') <span class="text-danger er">{{ $message }}</span>@enderror
                                                             </td>
                                                             <td class="text-center">
                                                                 <a href="javascript:void(0)"
@@ -66,6 +69,7 @@
                                                                     class="btn btn-dark mtmobile" title="Seleccionar">
                                                                     <i class="fas fa-check"></i>
                                                                 </a>
+                                                                
                                                             </td>
                                                         </tr>
                                                     @endforeach
