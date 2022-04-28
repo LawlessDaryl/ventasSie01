@@ -1226,7 +1226,8 @@ class OrderServiceController extends Component
                     }
                     CarteraMov::create([
                         'type' =>'INGRESO',
-                        'comentario' => 'SERVICIOS',
+                        'tipoDeMovimiento' => 'SERVICIOS',
+                        'comentario' => '',
                         'cartera_id' => $cartera->id,
                         'movimiento_id' => $mv->id
                     ]);

@@ -49,11 +49,15 @@
                     </div>
 
                     <div class="col-sm-2 mt-4">
-
-                        <a class="btn btn-dark btn-block {{ count($data) < 1 ? 'disabled' : '' }}"
-                            href="{{ url('reporteServicEntreg/pdf' . '/' . $reportType . '/' . $dateFrom . '/' . $dateTo . '/' . $sucursal . '/' . $sumaEfectivo . '/' . $sumaBanco) }}"
+                        
+                        {{-- <a class="btn btn-dark btn-block {{ count($data) < 1 ? 'disabled' : '' }}"
+                            href="{{ url('reporteServicEntreg/pdf' . '/' . $reportType . '/' . $dateFrom . '/' . $dateTo . '/' . $sucursal . '/' . $sumaEfectivo . '/' . $sumaBanco . '/' . $caja) }}"
+                            target="_blank" style='font-size:18px'>Generar PDF</a> --}}
+                        
+                        <a class="btn btn-dark"
+                            href="{{ url('reporteServicEntreg/pdf' . '/' . $reportType . '/' . $dateFrom . '/' . $dateTo . '/' . $sucursal . '/' . $sumaEfectivo . '/' . $sumaBanco . '/' . $caja) }}"
                             target="_blank" style='font-size:18px'>Generar PDF</a>
-
+                        
                     </div>
 
                 </div>
@@ -123,11 +127,13 @@
                                         </tr>
                                     @endforeach
                                     @if($caja != 'Todos')
-                                    <tr>
-                                        <td colspan="9">
-                                            <h5 class="text-center">Servicios entregados y pagados por banco</h5>
-                                        </td>
-                                    </tr>
+                                        @if(count($movbancarios) > 1)
+                                        <tr>
+                                            <td colspan="9">
+                                                <h5 class="text-center">Servicios entregados y pagados por banco</h5>
+                                            </td>
+                                        </tr>
+                                        @endif
                                     @foreach ($movbancarios as $d)
                                         <tr>
                                             {{-- # --}}
@@ -200,8 +206,12 @@
                                         </td>
                                         <td class="text-right" colspan="4">
                                             <span><strong>
-                                                    
-                                                ${{ number_format($data->sum('costo'), 2) }}
+                                                @if($caja != 'Todos')
+                                                    ${{$sumaCosto + $sumaCostoEfectivo}}
+                                                @else
+                                                    ${{ number_format($data->sum('costo'), 2) }}
+                                                @endif
+                                                
                     
                                                 </strong></span>
                                         </td>

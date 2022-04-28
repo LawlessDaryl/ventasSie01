@@ -20,7 +20,7 @@ class ReportEntregadoServController extends Component
 {
     public $componentName, $data, $details, $sumDetails, $countDetails, $reportType,
         $userId, $dateFrom, $dateTo, $transaccionId, $estado, $fechas, $sumaEfectivo,
-        $sumaBanco, $cajaSucursal, $caja, $movbancarios, $contador;
+        $sumaBanco, $cajaSucursal, $caja, $movbancarios, $contador, $sumaCosto;
 
     public function mount()
     {
@@ -42,12 +42,14 @@ class ReportEntregadoServController extends Component
         $this->caja = 'Todos';
         $this->movbancarios=[];
         $this->contador = 0;
+        $this->sumaCosto = 0;
     }
 
     public function render()
     {
         $this->sumaEfectivo=0;
         $this->sumaBanco=0;
+        $this->sumaCosto=0;
 
         $user = User::find(Auth()->user()->id);
         foreach ($user->sucursalusers as $usersuc) {
@@ -193,6 +195,8 @@ class ReportEntregadoServController extends Component
                 ->orderBy('services.id', 'desc')
                 ->distinct()
                 ->get();
+                $this->sumaCostoEfectivo = $this->data->sum('costo');
+                
 
                 $data1 = Service::join('order_services as os', 'os.id', 'services.order_service_id')
                 ->join('mov_services as ms', 'services.id', 'ms.service_id')
@@ -260,6 +264,7 @@ class ReportEntregadoServController extends Component
                 ->distinct()
                 ->get();
             $this->contador = $this->data->count();
+            
             /*  dd($banco); */
 
             $this->movbancarios = [];
@@ -286,6 +291,7 @@ class ReportEntregadoServController extends Component
                     if ($value2->status == 'ACTIVO' && $value2->type == 'APERTURA' && $value2->created_at <= $value->creacion_Mov) {
                         array_push($this->movbancarios, $value);
                         $this->sumaBanco+=$value->import;
+                       
                         $break = 1;
                     } elseif ($value2->type == 'APERTURA' && $value2->created_at <= $value->creacion_Mov) {
                         $hasta = 1;
@@ -304,8 +310,9 @@ class ReportEntregadoServController extends Component
                 $contador += 1;
             }
             /* dd($this->movbancarios); */
-            
-          
+            foreach($this->movbancarios as $mB){
+                $this->sumaCosto += $mB->costo;
+            }
             /* 
                 dd($banco); */
         } else {
