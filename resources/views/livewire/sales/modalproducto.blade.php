@@ -13,8 +13,7 @@
                         
                         <div class="row text-center">
                             
-                            @if($productoentrante == 1)
-                            <div class="col-lg-6 col-md-12 col-sm-12">
+                            <div class="col-lg-4 col-md-12 col-sm-12">
                                 <div class="input-group mb-4">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text input-gp">
@@ -24,24 +23,18 @@
                                     <input type="text" wire:model="nombreproducto" placeholder="Buscar Producto..." class="form-control">
                                 </div>
                             </div>
-                            <div class="col-md-6 mb-6">
+                            <div class="col-md-4 mb-6">
                                 <select wire:model="tipodevolucion" class="form-control  basic">
                                     <option value="monetario" selected="selected">Devolución Monetaria</option>
                                     <option value="productoigualitario" >Devolución Cambio Igualitario</option>
                                 </select>
                             </div>
-                            @else
-                            <div class="col-lg-12 col-md-12 col-sm-12">
-                                <div class="input-group mb-4">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text input-gp">
-                                            <i class="fas fa-search"></i>
-                                        </span>
-                                    </div>
-                                    <input type="text" wire:model="nombreproducto" placeholder="Buscar Producto..." class="form-control">
-                                </div>
+                            <div class="col-md-4 mb-6">
+                                <select wire:model="tipovista" class="form-control  basic">
+                                    <option value="devolucion" selected="selected">Mostrar Devolución</option>
+                                    <option value="historial" >Historial de Ventas</option>
+                                </select>
                             </div>
-                            @endif
                         </div>
                         
 
@@ -93,14 +86,6 @@
                                                 Devolver
                                             </button>
                                         </td>
-                                        @if($tipodevolucion == 'producto' || $tipodevolucion == 'productomonetario')
-                                        
-                                        <td>
-                                            <button  wire:click="exit({{ $p->llaveid }})" title="Producto que se devuelve" class="btn btn-dark mbmobile">
-                                                Salida
-                                            </button>
-                                        </td>
-                                        @endif
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -161,10 +146,8 @@
                         
                         @endif
                         
-                        @if($productoentrante == 1)
+                        @if($productoentrante == 1 && $tipovista == "devolucion")
                             @if($tipodevolucion == 'productoigualitario')
-                            
-
                                 <table class="table" style="background-color: rgb(193, 242, 246)">
                                     <tbody>
                                         @foreach ($ppee as $p)
@@ -195,24 +178,12 @@
                                 </table>
                                 <hr style="height:3px;border:none;color:rgb(189, 188, 188);background-color:rgb(230, 152, 64);" />
                         
-
-                            @endif
-
-
-
-
-                        @endif
-
-
-                        @if($productoentrante == 1)
-                            @if($tipodevolucion == 'monetario')
-
-
-
-                            <div class="form-row">
+                            @else
+                            <div class="form-row text-center">
                                 <div class="col-md-3 mb-3">
                                     <label for="validationCustom02">Monto Bs</label>
                                     <input wire:model="bs" type="number" class="form-control" placeholder="Ingrese Bs" required>
+                                    <p style="color: crimson">Se Generará un Egreso de este Monto</p>
                                 </div>
 
 
@@ -224,14 +195,19 @@
                                     <label for="validationCustom02">Motivo</label>
                                     <textarea class="form-control" placeholder="Ingrese el Motivo de la Devolución..." aria-label="With textarea" wire:model="observaciondevolucion"></textarea>
                                 </div>
+
                             </div>
-
-
-
                             <hr style="height:3px;border:none;color:rgb(189, 188, 188);background-color:rgb(230, 152, 64);" />
-                            
                             @endif
+                            
+
+                        @else
+
+                        
+                        asd
+
                         @endif
+
 
 
 
@@ -240,8 +216,13 @@
                     </div>
                     <div class="modal-footer">
                         @if($productoentrante == 1)
-                        <button class="btn" data-dismiss="modal"><i class="flaticon-cancel-12"></i> Cancelar Todo</button>
-                        <button type="button" data-dismiss="modal" wire:click="guardardevolucion()" class="btn btn-primary">Guardar Devolución</button>
+                            <button class="btn" data-dismiss="modal" wire:click.prevent="resetUI()"><i class="flaticon-cancel-12"></i> Cancelar Todo</button>
+
+                            @if($tipodevolucion == 'monetario')
+                            <button type="button" data-dismiss="modal" wire:click.prevent="guardardevolucion()" class="btn btn-primary">Guardar Devolución</button>
+                            @else
+                            <button type="button" data-dismiss="modal" wire:click.prevent="devolverproducto()" class="btn btn-primary">Devolver Producto</button>
+                            @endif
                         @endif
                     </div>
                 </div>

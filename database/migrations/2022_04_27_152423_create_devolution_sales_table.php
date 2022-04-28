@@ -19,6 +19,7 @@ class CreateDevolutionSalesTable extends Migration
             $table->decimal('monto_dev',10,2);
             $table->string('observations',200)->default('Sin Observacion')->nullable();
             $table->foreignId('product_id')->constrained();
+            $table->foreignId('user_id')->constrained();
             $table->timestamps();
         });
     }

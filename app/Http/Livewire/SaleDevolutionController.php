@@ -20,9 +20,7 @@ class SaleDevolutionController extends Component
     private $pagination = 7;
     
     
-    public $productosaliente, $bs;
-    //Ids del Producto que Entra y Producto que sale
-    public $identrante, $idsaliente, $tipodevolucion, $observaciondevolucion;
+    public $identrante, $tipodevolucion, $observaciondevolucion, $bs, $usuarioseleccionado, $tipovista;
 
     public function paginationView()
     {
@@ -32,10 +30,19 @@ class SaleDevolutionController extends Component
     {
         $this->pageTitle = 'Devoluciones';
         $this->componentName = 'Ventas';
-        
+        $this->tipovista = "devolucion";
         $this->ProductSelectNombre = 1;
         $this->selected_id = 0;
         $this->tipodevolucion = 'monetario';
+        if(Auth()->user()->profile == "ADMIN")
+        {
+            $this->usuarioseleccionado = "Todos";
+        }
+        else
+        {
+            $this->usuarioseleccionado = Auth()->user()->id;
+        }
+        
     }
     public function render()
     {
@@ -93,28 +100,76 @@ class SaleDevolutionController extends Component
         ->where("des.sucursal_id", $this->idsucursal())
         ->where('products.id', $this->identrante)
         ->get();
+
+
+        //Listando Todos los Usuarios
+        $listausuarios = User::select("users.id as id","users.name as nombreusuario")
+        ->get();
+
+
         
 
         if (strlen($this->search) > 0)
-            $data = DevolutionSale::join("products as p", "p.id", "devolution_sales.product_id")
+        {
+            $devolucionesusuario = DevolutionSale::join("products as p", "p.id", "devolution_sales.product_id")
+            ->join("users as u", "u.id", "devolution_sales.user_id")
             ->select('devolution_sales.id as id', 'p.image as image', 'p.nombre as nombre', 'devolution_sales.monto_dev as monto',
-            'devolution_sales.created_at as fechadevolucion',
+            'devolution_sales.created_at as fechadevolucion','u.name as nombreusuario',
             'devolution_sales.tipo_dev as tipo','devolution_sales.observations as observacion')
             ->where('nombre', 'like', '%' . $this->search . '%')
             ->orderBy('devolution_sales.created_at', 'desc')
             ->paginate($this->pagination);
-        else
-            $data = DevolutionSale::join("products as p", "p.id", "devolution_sales.product_id")
+
+            $usuarioespecifico = DevolutionSale::join("products as p", "p.id", "devolution_sales.product_id")
+            ->join("users as u", "u.id", "devolution_sales.user_id")
             ->select('devolution_sales.id as id', 'p.image as image', 'p.nombre as nombre', 'devolution_sales.monto_dev as monto',
-            'devolution_sales.created_at as fechadevolucion',
+            'devolution_sales.created_at as fechadevolucion','u.name as nombreusuario',
+            'devolution_sales.tipo_dev as tipo','devolution_sales.observations as observacion')
+            ->where('nombre', 'like', '%' . $this->search . '%')
+            ->where('u.id', $this->usuarioseleccionado)
+            ->orderBy('devolution_sales.created_at', 'desc')
+            ->paginate($this->pagination);
+        }  
+
+        else
+        {
+            $devolucionesusuario = DevolutionSale::join("products as p", "p.id", "devolution_sales.product_id")
+            ->join("users as u", "u.id", "devolution_sales.user_id")
+            ->select('devolution_sales.id as id', 'p.image as image', 'p.nombre as nombre', 'devolution_sales.monto_dev as monto',
+            'devolution_sales.created_at as fechadevolucion','u.name as nombreusuario',
             'devolution_sales.tipo_dev as tipo','devolution_sales.observations as observacion')
             ->orderBy('devolution_sales.created_at', 'desc')
             ->paginate($this->pagination);
 
+            $usuarioespecifico = DevolutionSale::join("products as p", "p.id", "devolution_sales.product_id")
+            ->join("users as u", "u.id", "devolution_sales.user_id")
+            ->select('devolution_sales.id as id', 'p.image as image', 'p.nombre as nombre', 'devolution_sales.monto_dev as monto',
+            'devolution_sales.created_at as fechadevolucion','u.name as nombreusuario',
+            'devolution_sales.tipo_dev as tipo','devolution_sales.observations as observacion')
+            ->where('u.id', $this->usuarioseleccionado)
+            ->orderBy('devolution_sales.created_at', 'desc')
+            ->paginate($this->pagination);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         return view('livewire.sales.saledevolution', [
             'datosnombreproducto' => $datosnombreproducto,
             'ppee' => $pe,
-            'data' => $data,
+            'usuarioespecifico' => $usuarioespecifico,
+            'data' => $devolucionesusuario,
+            'listausuarios' => $listausuarios,
         ])
         ->extends('layouts.theme.app')
         ->section('content');
@@ -187,16 +242,7 @@ class SaleDevolutionController extends Component
         $fecha = date("d/m/Y", strtotime($fecha));
 
         
-        return $hora." - ".$this->obtenerdia($fecha)." ".$fecha;
-    }
-    public function obtenerdia($fech)
-    {
-        $datemod = date("D", strtotime($fech));
-        if($datemod == "Wed")
-        {
-            return "Miercoles";
-        }
-        return $datemod;
+        return $hora." - ".$fecha;
     }
 
     //Guarda la Devolución
@@ -206,28 +252,48 @@ class SaleDevolutionController extends Component
         {
             $this->observaciondevolucion = "Sin Motivo";
         }
-        if($this->tipodevolucion == 'monetario')
-        {
-            DevolutionSale::create([
-                'tipo_dev' => "MONETARIO",
-                'monto_dev' => $this->bs,
-                'observations' => $this->observaciondevolucion,
-                'product_id' => $this->identrante,
-            ]);
-        }
-        else
-        {
-            DevolutionSale::create([
-                'tipo_dev' => "PRODUCTO",
-                'monto_dev' => $this->bs,
-                'observations' => $this->observaciondevolucion,
-            ]);
-        }
+        DevolutionSale::create([
+            'tipo_dev' => "MONETARIO",
+            'monto_dev' => $this->bs,
+            'observations' => $this->observaciondevolucion,
+            'product_id' => $this->identrante,
+            'user_id' => Auth()->user()->id
+        ]);
         $this->resetUI();
     }
-    protected $listeners = ['deleteRow' => 'Destroy'];
+
+    //Guardar una devolucion Cuando se devuelve el mismo Producto
+    public  function devolverproducto()
+    {
+        if($this->observaciondevolucion == "")
+        {
+            $this->observaciondevolucion = "Sin Motivo";
+        }
+        DevolutionSale::create([
+            'tipo_dev' => "PRODUCTO",
+            'monto_dev' => 0,
+            'observations' => $this->observaciondevolucion,
+            'product_id' => $this->identrante,
+            'user_id' => Auth()->user()->id
+        ]);
+        $this->resetUI();
+    }
+
+
+    protected $listeners = ['eliminardevolucion' => 'Destroy'];
+
+    //Eliminar una Devolución
+    public function Destroy(DevolutionSale $id)
+    {
+        $id->delete();
+        $this->resetUI();
+        $this->emit('item-deleted', 'Devolución Eliminada con Éxito');
+    }
+
+
     public function resetUI()
     {
+        $this->observaciondevolucion = "";
         $this->nombreproducto = "";
         $this->productoentrante = null;
         $this->selected_id = 0;
