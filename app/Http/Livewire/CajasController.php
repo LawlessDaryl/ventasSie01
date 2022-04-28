@@ -25,20 +25,19 @@ class CajasController extends Component
         $this->pageTitle = 'Listado';
         $this->componentName = 'Cajas';
         $this->sucursal_id = 'Elegir';
-        $this->estado = 'Elegir';
         $this->selected_id = 0;
     }
     public function render()
     {
         if (strlen($this->search) > 0)
             $caja = Caja::join('sucursals as s', 's.id', 'cajas.sucursal_id')
-            ->select('cajas.*', 's.name as sucursal')
-            ->where('nombre', 'like', '%' . $this->search . '%')
-            ->paginate($this->pagination);
+                ->select('cajas.*', 's.name as sucursal')
+                ->where('nombre', 'like', '%' . $this->search . '%')
+                ->paginate($this->pagination);
         else
-        $caja = Caja::join('sucursals as s', 's.id', 'cajas.sucursal_id')
-        ->select('cajas.*', 's.name as sucursal')
-        ->paginate($this->pagination);
+            $caja = Caja::join('sucursals as s', 's.id', 'cajas.sucursal_id')
+                ->select('cajas.*', 's.name as sucursal')
+                ->paginate($this->pagination);
         return view('livewire.cajas.component', [
             'data' => $caja,
             'sucursales' => Sucursal::orderBy('name', 'asc')->get()
@@ -51,19 +50,17 @@ class CajasController extends Component
         $rules = [
             'nombre' => 'required|unique:cajas',
             'sucursal_id' => 'required|not_in:Elegir',
-            'estado' => 'required|not_in:Elegir'
         ];
         $messages = [
             'nombre.required' => 'El nombre de la caja es requerido.',
             'nombre.unique' => 'Ya existe una caja con ese nombre.',
             'sucursal_id.not_in' => 'Seleccione una sucursal diferente de Elegir',
-            'estado.not_in' => 'Seleccione un estado diferente de Elegir',
         ];
         $this->validate($rules, $messages);
 
         Caja::create([
             'nombre' => $this->nombre,
-            'estado' => $this->estado,
+            'estado' => 'Cerrado',
             'sucursal_id' => $this->sucursal_id
         ]);
 
@@ -74,7 +71,6 @@ class CajasController extends Component
     {
         $this->selected_id = $caja->id;
         $this->nombre = $caja->nombre;
-        $this->estado = $caja->estado;
         $this->sucursal_id = $caja->sucursal_id;
 
         $this->emit('show-modal', 'show modal!');
@@ -84,19 +80,16 @@ class CajasController extends Component
         $rules = [
             'nombre' => "required|unique:cajas,nombre,{$this->selected_id}",
             'sucursal_id' => 'required|not_in:Elegir',
-            'estado' => 'required|not_in:Elegir'
         ];
         $messages = [
             'nombre.required' => 'El nombre de la caja es requerido.',
             'nombre.unique' => 'Ya existe una caja con ese nombre.',
             'sucursal_id.not_in' => 'Seleccione una sucursal diferente de Elegir',
-            'estado.not_in' => 'Seleccione un estado diferente de Elegir',
         ];
         $this->validate($rules, $messages);
         $Caj = Caja::find($this->selected_id);
         $Caj->update([
             'nombre' => $this->nombre,
-            'estado' => $this->estado,
             'sucursal_id' => $this->sucursal_id
         ]);
         $Caj->save();
@@ -116,11 +109,9 @@ class CajasController extends Component
     public function resetUI()
     {
         $this->nombre = '';
-        $this->estado = 'Elegir';
         $this->sucursal_id = 'Elegir';
         $this->search = '';
         $this->selected_id = 0;
         $this->resetValidation();
     }
 }
-

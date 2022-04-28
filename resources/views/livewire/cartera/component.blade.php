@@ -51,7 +51,7 @@
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         <a href="javascript:void(0)"
-                                            onclick="Confirm('{{ $item->id }}','{{ $item->nombre }}')"
+                                            onclick="Confirm('{{ $item->id }}','{{ $item->nombre }}','{{ $item->carteraMovs->count() }}')"
                                             class="btn btn-dark" title="Delete">
                                             <i class="fas fa-trash"></i>
                                         </a>
@@ -90,11 +90,20 @@
         });
     });
 
-    function Confirm(id, name) {
+    function Confirm(id, name, movimientos) {
+        if (carteras > 0) {
+            swal.fire({
+                title: 'PRECAUCION',
+                icon: 'warning',
+                text: 'No se puede eliminar la cartera "' + name + '" porque tiene ' +
+                    movimientos + ' transacciones.'
+            })
+            return;
+        }
         swal.fire({
             title: 'CONFIRMAR',
             icon: 'warning',
-            text: '¿Confirmar eliminar la caja ' + '"' + name + '"?.',
+            text: '¿Confirmar eliminar la cartera ' + '"' + name + '"?.',
             showCancelButton: true,
             cancelButtonText: 'Cerrar',
             cancelButtonColor: '#383838',

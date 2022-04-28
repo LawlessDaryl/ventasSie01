@@ -32,15 +32,11 @@ class CarteraController extends Component
     public function render()
     {
         if (strlen($this->search) > 0)
-            $data = Cartera::join('cajas as c', 'c.id', 'carteras.caja_id')
-                ->select('carteras.*', 'c.nombre as cajanombre')
-                ->where('nombre', 'like', '%' . $this->search . '%')
+            $data = Cartera::where('nombre', 'like', '%' . $this->search . '%')
                 ->orwhere('tipo', 'like', '%' . $this->search . '%')
                 ->paginate($this->pagination);
         else
-            $data = Cartera::join('cajas as c', 'c.id', 'carteras.caja_id')
-                ->select('carteras.*', 'c.nombre as cajanombre')
-                ->orderBy('id', 'desc')
+            $data = Cartera::orderBy('id', 'desc')
                 ->paginate($this->pagination);
 
         if ($this->tipo != 'Elegir') {

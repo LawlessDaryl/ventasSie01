@@ -33,8 +33,6 @@ class TransaccionController extends Component
 
         $cedula, $celular, $codigo_transf, $observaciones,
 
-        $cartera_id, $type, $cantidad, $comentario,
-
         $mostrarCI, $mostrartelf, $mostrarTelfCodigo,
 
         $igualarMontos,
@@ -82,12 +80,7 @@ class TransaccionController extends Component
         $this->cedula = '';
         $this->celular = '';
         $this->codigo_transf = '';
-        $this->observaciones = '';
-
-        $this->cartera_id = 'Elegir';
-        $this->type = 'Elegir';
-        $this->cantidad = '';
-        $this->comentario = '';
+        $this->observaciones = '';        
 
         $this->origMotID = 0;
         $this->OrigenMotivoObjeto = [];
@@ -941,45 +934,7 @@ class TransaccionController extends Component
             $this->emit('item-error', 'ERROR' . $e->getMessage());
         }
     }
-    /* GENERAR INGRESO O EGRESO  */
-    public function Generar()
-    {
-        $rules = [ /* Reglas de validacion */
-            'type' => 'required|not_in:Elegir',
-            'cartera_id' => 'required|not_in:Elegir',
-            'cantidad' => 'required|not_in:0',
-            'comentario' => 'required',
-        ];
-        $messages = [ /* mensajes de validaciones */
-            'type.not_in' => 'Seleccione un valor distinto a Elegir',
-            'type.not_in' => 'Seleccione un valor distinto a Elegir',
-            'cartera_id.not_in' => 'Seleccione un valor distinto a Elegir',
-            'cartera_id.not_in' => 'Seleccione un valor distinto a Elegir',
-            'cantidad.required' => 'Ingrese un monto válido',
-            'cantidad.not_in' => 'Ingrese un monto válido',
-            'comentario.required' => 'El comentario es obligatorio',
-        ];
-
-        $this->validate($rules, $messages);
-
-        $mvt = Movimiento::create([
-            'type' => 'TERMINADO',
-            'status' => 'ACTIVO',
-            'import' => $this->cantidad,
-            'user_id' => Auth()->user()->id,
-        ]);
-
-        CarteraMov::create([
-            'type' => $this->type,
-            'tipoDeMovimiento' => 'EGRESO/INGRESO',
-            'comentario' => $this->comentario,
-            'cartera_id' => $this->cartera_id,
-            'movimiento_id' => $mvt->id
-        ]);
-
-        $this->emit('g-i/e', 'Se generó el ingreso/egreso');
-        $this->resetUI();
-    }
+    
     /* LISTENERS */
     protected $listeners = ['deleteRow' => 'Anular'];
     /* ANULAR TRANSACCION */
@@ -1000,12 +955,7 @@ class TransaccionController extends Component
         $tran->save();
         $this->emit('item-anulado', 'Se anuló la transacción');
     }
-    /* ABRIR MODAL */
-    public function viewDetails()
-    {
-        $this->emit('show-modal2', 'open modal');
-    }
-
+    
     public function VerObservaciones(Transaccion $tr)
     {
         $this->selected_id = $tr->id;
@@ -1051,11 +1001,6 @@ class TransaccionController extends Component
         $this->celular = '';
         $this->codigo_transf = '';
         $this->observaciones = '';
-
-        $this->cartera_id = 'Elegir';
-        $this->type = 'Elegir';
-        $this->cantidad = '';
-        $this->comentario = '';
 
         $this->origMotID = 0;
         $this->OrigenMotivoObjeto = [];

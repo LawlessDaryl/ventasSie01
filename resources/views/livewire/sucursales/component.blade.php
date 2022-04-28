@@ -51,12 +51,12 @@
                                     </td>
                                     <td class="text-center">
                                         <a href="javascript:void(0)" wire:click="Edit({{ $item->id }})"
-                                            class="btn btn-dark mtmobile" title="Edit">
+                                            class="btn btn-dark mtmobile" title="Editar">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         <a href="javascript:void(0)" onclick="Confirm('{{ $item->id }}','{{ $item->name }}',
                                             '{{ $item->cajas->count() }}','{{ $item->usuarios->count() }}')"
-                                            class="btn btn-dark" title="Delete">
+                                            class="btn btn-dark" title="Borrar">
                                             <i class="fas fa-trash"></i>
                                         </a>
                                     </td>

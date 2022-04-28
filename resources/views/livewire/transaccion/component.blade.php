@@ -8,11 +8,6 @@
                 <ul class="tabs tab-pills">
                     <a href="javascript:void(0)" class="btn btn-dark" wire:click="nuevatransaccion()">+
                         Nueva</a>
-                    @can('Ver_Generar_Ingreso_Egreso_Boton')
-                        <a wire:click.prevent="viewDetails()" class="btn btn-dark">
-                            Generar Ingreso/Egreso
-                        </a>
-                    @endcan
 
                 </ul>
             </div>
@@ -102,7 +97,6 @@
             </div>
         </div>
     </div>
-    @include('livewire.transaccion.modalDetails')
     @include('livewire.transaccion.form')
     @include('livewire.transaccion.modalObservaciones')
 </div>
