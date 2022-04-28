@@ -11,7 +11,7 @@ class Cartera extends Model
 
     protected $fillable = ['nombre', 'descripcion', 'tipo', 'telefonoNum', 'caja_id'];
 
-    public function carteraMovs()
+    public function carteraM()
     {
         return $this->hasMany(CarteraMov::class);
     }

@@ -43,16 +43,16 @@
                                         <h6 class="text-center">{{ $item->telefonoNum }}</h6>
                                     </td>
                                     <td>
-                                        <h6 class="text-center">{{ $item->cajanombre }}</h6>
+                                        <h6 class="text-center">{{ $item->caja->nombre }}</h6>
                                     </td>
                                     <td class="text-center">
                                         <a href="javascript:void(0)" wire:click="Edit({{ $item->id }})"
-                                            class="btn btn-dark mtmobile" title="Edit">
+                                            class="btn btn-dark mtmobile" title="Editar">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         <a href="javascript:void(0)"
-                                            onclick="Confirm('{{ $item->id }}','{{ $item->nombre }}','{{ $item->carteraMovs->count() }}')"
-                                            class="btn btn-dark" title="Delete">
+                                            onclick="Confirm('{{ $item->id }}','{{ $item->nombre }}','{{ $item->carteraM->count() }}')"
+                                            class="btn btn-dark" title="Borrar">
                                             <i class="fas fa-trash"></i>
                                         </a>
                                     </td>
@@ -91,7 +91,7 @@
     });
 
     function Confirm(id, name, movimientos) {
-        if (carteras > 0) {
+        if (movimientos > 0) {
             swal.fire({
                 title: 'PRECAUCION',
                 icon: 'warning',
