@@ -25,8 +25,8 @@
                     <div class="form-group">
                         <select wire:model='selected_categoria' class="form-control">
                           <option value="null">Elegir Categoria</option>
-                          @foreach ($categories as $dats)
-                          <option value="{{ $dats->id }}">{{ $dats->name}}</option>
+                          @foreach ($categories as $data)
+                          <option value="{{ $data->id }}">{{ $data->name}}</option>
                           @endforeach
                        
                          
@@ -38,9 +38,9 @@
 
                     <div class="form-group">
                         <select wire:model='selected_sub' class="form-control">
-                          <option value="null">Elegir Categoria</option>
-                          @foreach ($subcat as $dat)
-                          <option value="{{ $dat->id }}">{{ $dat->name}}</option>
+                          <option value="null">Elegir Subcategoria</option>
+                          @foreach ($sub as $data)
+                          <option value="{{ $data->id }}">{{ $data->name}}</option>
                           @endforeach
                        
                          
@@ -58,7 +58,7 @@
                                 <th class="table-th text-withe"> <b>#</b> </th>
                                 <th class="table-th text-withe"> <b>NOMBRE</b> </th>
                                 <th class="table-th text-withe text-center"> <b>CARACTERISTICAS</b> </th>
-                                <th class="table-th text-withe text-center"> <b>PRECIO</b> </th>
+                                <th class="table-th text-withe text-center"> <b>PRECIO<br>Venta</b> </th>
                                 <th class="table-th text-withe text-center"> <b>STATUS</b> </th>
                                 <th class="table-th text-withe text-center"> <b>IMAGEN</b> </th>
                                 <th class="table-th text-withe text-center"> <b>ACCIONES</b> </th>
@@ -71,7 +71,7 @@
                                         <h6>{{ $nro++}}</h6>
                                     </td>
                                     <td>
-                                        <h6>{{ $product->nombre }}</h6>
+                                        <h6>{{ $product->nombre_prod }}</h6>
                                     </td>
                                     <td>
                                         <h6 class="text-center">{{ $product->caracteristicas }}</h6>
@@ -80,16 +80,8 @@
                                         <h6 class="text-center">{{ $product->precio_venta }}</h6>
                                     </td>
                                     <td>
-                                        <h6 class=" text-center">{{ $product->stock }}</h6>
+                                        <h6 class=" text-center">{{ $product->status }}</h6>
                                     </td>
-
-                        
-
-                                    <td>
-                                        <h6 class="text-center">{{ $product->status }}</h6>
-                                    </td>
-                                    
-
                                     <td class="text-center">
                                         <span>
                                             <img src="{{('storage/productos/'.$product->imagen) }}"
@@ -106,10 +98,7 @@
                                             class="btn btn-dark mtmobile p-1 m-0" title="Delete">
                                             <i class="fas fa-trash"></i>
                                         </a>
-                                        <a href="javascript:void(0)" id="btnImprimir" onclick="imprimirElemento()"
-                                            class="btn btn-dark mtmobile p-1 m-0" title="Edit">
-                                            <i class="fas fa-barcode"></i>
-                                        </a>
+                                      
                                     </td>
                                 </tr>
                             @endforeach

@@ -1,21 +1,26 @@
 @include('common.modalHead')
 <div class="row">
-    <div class="col-sm-12 col-md-8">
+    <div class="col-sm-12 col-lg-7 col-md-8">
         <div class="form-group">
             <label>Nombre</label>
-            <input type="text" wire:model.lazy="nombre" class="form-control" placeholder="ej:Celular Samsung Galaxy A01">
-            @error('nombre') <span class="text-danger er">{{ $message }}</span>@enderror
+            <input type="text" wire:model.lazy="nombre_prod" class="form-control" placeholder="ej:Celular Samsung Galaxy A01">
+            @error('nombre_prod') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>
     </div>
   
-  
-    <div class="col-sm-12 col-md-4">
+    <div class="col-sm-12 col-lg-5 col-md-4">
         <div class="form-group">
             <label>Codigo</label>
-            <input type="text" wire:model.lazy="barcode" class="form-control" placeholder="ej: 012020222">
-            @error('barcode') <span class="text-danger er">{{ $message }}</span>@enderror
+            <div class="input-group-prepend mb-3">
+                <input type="text" wire:model.lazy="codigo" class="form-control col-lg-7" placeholder="ej: 012020222">
+                <a href="javascript:void(0)" wire:click="GenerarCodigo()" class="btn btn-dark p-0 m-1 col-lg-4" title="Generar Codigo">
+                        <i> Generar Codigo</i>
+                </a>
+            @error('codigo') <span class="text-danger er">{{ $message }}</span>@enderror
+            </div>
         </div>
     </div>
+
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
             <label>Caracteristicas</label>
@@ -23,6 +28,7 @@
             @error('caracteristicas') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>
     </div>
+
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
             <label>Garantia(en dias)</label>
@@ -107,6 +113,13 @@
                 @endforeach
             </select>
             @error('categoryid') <span class="text-danger er">{{ $message }}</span>@enderror
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-4">
+        <div class="form-group">
+            <label>Cantidad Minima</label>
+                <input type="text" wire:model.lazy="cantidad_minima" class="form-control" placeholder="ej:123">
+            @error('cantidad_minima') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>
     </div>
 

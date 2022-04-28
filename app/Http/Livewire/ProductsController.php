@@ -14,10 +14,10 @@ class ProductsController extends Component
 {
     use WithPagination;
     use WithFileUploads;
-    public $nombre, $costo, $precio_venta,$cantidad_minima,
+    public $nombre_prod, $costo, $precio_venta,$cantidad_minima,
     $codigo,$lote,$unidad,$industria,$caracteristicas,$status,$categoryid, $search,
      $image, $selected_id, $pageTitle, $componentName,$cate,$marca,$garantia,$stock,$stock_v
-     ,$selected_categoria,$selected_sub,$nro=1;
+     ,$selected_categoria,$selected_sub,$nro=1,$sub;
 
     private $pagination = 5;
     public $selected_id2=0;
@@ -39,7 +39,7 @@ class ProductsController extends Component
         if (strlen($this->search) > 0) {
             $products = Product::join('categories as c', 'c.id', 'products.category_id')
                 ->select('products.*', 'c.name as category')
-                ->where('products.nombre', 'like', '%' . $this->search . '%')
+                ->where('products.nombre_prod', 'like', '%' . $this->search . '%')
                 ->orWhere('products.barcode', 'like', '%' . $this->search . '%')
                 ->orWhere('c.name', 'like', '%' . $this->search . '%')
                 ->orderBy('products.id', 'desc')
@@ -63,44 +63,38 @@ class ProductsController extends Component
                 
             }
             else{
+                
                 $products = Product::join('categories as c', 'c.id', 'products.category_id')
-                ->select('products.*', 'c.*')
-                         
+                ->select('products.*', 'c.*')      
                 ->orderBy('products.id', 'desc')
                 ->paginate($this->pagination);
-                
             }
-           
         }
-        $sub= Category::where('categories.categoria_padre',$this->selected_id2)
+        $this->sub= Category::where('categories.categoria_padre',$this->selected_id2)
         ->where('categories.categoria_padre','!=','Elegir')
         ->get();
-
-     
 
         return view('livewire.products.component', [
             'data' => $products,
             'categories'=>Category::where('categories.categoria_padre',0)->orderBy('name', 'asc')->get(),
             'unidades'=>Unidad::orderBy('nombre','asc')->get(),
             'marcas'=>Marca::select('nombre')->orderBy('nombre','asc')->get(),
-            'subcat'=>$sub
-            
+            'subcat'=>$this->sub
         ])->extends('layouts.theme.app')->section('content');
     }
     public function Store()
     {
-        
         $rules = [
-            'nombre' => 'required|unique:products|min:5',
+            'nombre_prod' => 'required|unique:products|min:5',
             'costo' => 'required',
             'precio_venta' => 'required',
             'categoryid' => 'required|not_in:Elegir'
         ];
 
         $messages = [
-            'nombre.required' => 'Nombre del producto requerido',
-            'nombre.unique' => 'Ya existe el nombre del producto',
-            'nombre.min' => 'El nombre debe ser contener al menos 3 caracteres',
+            'nombre_prod.required' => 'Nombre del producto requerido',
+            'nombre_prod.unique' => 'Ya existe el nombre del producto',
+            'nombre_prod.min' => 'El nombre debe ser contener al menos 3 caracteres',
             'costo.required' =>'El costo es requerido',
             'precio_venta.required'=> 'El precio es requerido',
             'categoryid.required' => 'La categoria es requerida',
@@ -110,7 +104,7 @@ class ProductsController extends Component
         $this->validate($rules, $messages);
 
         $product = Product::create([
-            'nombre' => $this->nombre,
+            'nombre_prod' => $this->nombre_prod,
             'costo' => $this->costo,
             'caracteristicas'=>$this->caracteristicas,
             'codigo'=>$this->codigo,
@@ -122,8 +116,6 @@ class ProductsController extends Component
             'industria' => $this->industria,
             'precio_venta' => $this->precio_venta,
             'category_id' => $this->categoryid
-
-
         ]);
         if ($this->image) {
             $customFileName = uniqid() . '_.' . $this->image->extension();
@@ -135,8 +127,9 @@ class ProductsController extends Component
             $product->image='noimage.jpg';
             $product->save();
         }
-        $this->resetUI();
+        
         $this->emit('product-added', 'Producto Registrado');
+        $this->resetUI();
     }
     public function Edit(Product $product)
     {
@@ -149,7 +142,6 @@ class ProductsController extends Component
         $this->barcode = $product->barcode;
         $this->lote = $product->lote;
         $this->unidad = $product->unidad;
-   
         $this->marca = $product->marca;
         $this->garantia = $product->garantia;
         $this->industria = $product->industria;
@@ -179,19 +171,17 @@ class ProductsController extends Component
         $this->validate($rules, $messages);
         $product = Product::find($this->selected_id);
         $product->update([
-            'nombre' => $this->nombre,
-            'stock'=>$this->stock,
+            'nombr_prod' => $this->nombre,
             'costo' => $this->costo,
-            'precio_venta' => $this->precio_venta,
-            'barcode' => $this->barcode,
-            'codigo'=>$this->codigo,
             'caracteristicas'=>$this->caracteristicas,
+            'codigo'=>$this->codigo,
             'lote'=>$this->lote,
             'unidad'=>$this->unidad,
             'marca' => $this->marca,
             'garantia' => $this->garantia,
+            'cantidad_minima' => $this->cantidad_minima,
             'industria' => $this->industria,
-         
+            'precio_venta' => $this->precio_venta,
             'category_id' => $this->categoryid
         ]);
         if ($this->image) {
@@ -227,22 +217,26 @@ class ProductsController extends Component
     }
     public function resetUI()
     {
-        
         $this->selected_id =0;
         $this->selected_id2 =0;
         $this->costo = '';
-        $this->nombre = '';
+        $this->nombre_prod = '';
         $this->precio_venta='';
         $this->caracteristicas='';
-        $this->barcode ='';
+        $this->codigo ='';
         $this->lote = '';
         $this->unidad = 'Elegir';
         $this->marca = 'Elegir';
         $this->industria = '';
         $this->garantia = '';
+        $this->cantidad_minima = '';
         $this->categoryid = 'Elegir';
         $this->image = null;
 
         $this->resetValidation();
+    }
+
+    public function GenerarCodigo(){
+        $this->codigo= rand();
     }
 }
