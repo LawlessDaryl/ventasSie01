@@ -18,9 +18,9 @@ class ProductSeeder extends Seeder
         Product::create([
             'nombre' => 'Cable Usb C Huawei 0.5 Metros',
             'costo' => 40,
-            'barcode' => '11',
+            'caracteristicas'=>'ninguna',
+            'codigo' => '11',
             'garantia' => '2',
-            'stock' => '10',
             'cantidad_minima' => '10',
             'precio_venta' => 70,
             'image' => 'Cable_Usb_C_Huawei_0.5_Metros.png',
@@ -30,7 +30,7 @@ class ProductSeeder extends Seeder
         Product::create([
             'nombre' => 'Cargador Lapto',
             'costo' => 100,
-            'barcode' => '22',
+            'codigo' => '22',
             'garantia' => '2',
             'stock' => '7',
             'cantidad_minima' => '10',
@@ -42,7 +42,7 @@ class ProductSeeder extends Seeder
         Product::create([
             'nombre' => 'Iphone 11',
             'costo' => 4000,
-            'barcode' => '33',
+            'codigo' => '33',
             'garantia' => '2',
             'stock' => '7',
             'cantidad_minima' => '10',
@@ -54,7 +54,7 @@ class ProductSeeder extends Seeder
         Product::create([
             'nombre' => 'PC Gammer',
             'costo' => 5000,
-            'barcode' => '44',
+            'codigo' => '44',
             'garantia' => '2',
             'stock' => '12',
             'cantidad_minima' => '10',
@@ -66,7 +66,7 @@ class ProductSeeder extends Seeder
         Product::create([
             'nombre' => 'Vidrio Templado j5 Prime',
             'costo' => 7,
-            'barcode' => '55',
+            'codigo' => '55',
             'garantia' => '2',
             'stock' => '15',
             'cantidad_minima' => '10',
@@ -78,7 +78,7 @@ class ProductSeeder extends Seeder
         Product::create([
             'nombre' => 'Mouse Gammer',
             'costo' => 70,
-            'barcode' => '66',
+            'codigo' => '66',
             'garantia' => '2',
             'stock' => '4',
             'cantidad_minima' => '10',
@@ -90,7 +90,7 @@ class ProductSeeder extends Seeder
         Product::create([
             'nombre' => 'Teclado Pc',
             'costo' => 60,
-            'barcode' => '77',
+            'codigo' => '77',
             'garantia' => '2',
             'stock' => '20',
             'cantidad_minima' => '10',
@@ -102,7 +102,7 @@ class ProductSeeder extends Seeder
         Product::create([
             'nombre' => 'SSD Kingston 240GB',
             'costo' => 270,
-            'barcode' => '88',
+            'codigo' => '88',
             'garantia' => '2',
             'stock' => '30',
             'cantidad_minima' => '10',
@@ -114,7 +114,7 @@ class ProductSeeder extends Seeder
         Product::create([
             'nombre' => 'Monitor LG 15 Pulgadas',
             'costo' => 1700,
-            'barcode' => '99',
+            'codigo' => '99',
             'garantia' => '2',
             'stock' => '5',
             'cantidad_minima' => '10',

@@ -55,6 +55,7 @@
                     <table class="table table-unbordered table-hover mt-4">
                         <thead class="text-white" style="background: #3B3F5C">
                             <tr>
+                                <th class="table-th text-withe"> <b>#</b> </th>
                                 <th class="table-th text-withe"> <b>NOMBRE</b> </th>
                                 <th class="table-th text-withe text-center"> <b>CARACTERISTICAS</b> </th>
                                 <th class="table-th text-withe text-center"> <b>PRECIO</b> </th>
@@ -66,6 +67,9 @@
                         <tbody id="imprimible" >
                             @foreach ($data as $product)
                                 <tr>
+                                    <td>
+                                        <h6>{{ $nro++}}</h6>
+                                    </td>
                                     <td>
                                         <h6>{{ $product->nombre }}</h6>
                                     </td>

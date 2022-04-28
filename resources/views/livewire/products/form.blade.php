@@ -11,7 +11,7 @@
   
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
-            <label>Codigo de barras</label>
+            <label>Codigo</label>
             <input type="text" wire:model.lazy="barcode" class="form-control" placeholder="ej: 012020222">
             @error('barcode') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>

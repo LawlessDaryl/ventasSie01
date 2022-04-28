@@ -19,13 +19,13 @@ class CreateProductsTable extends Migration
             $table->decimal('costo',10,2);
             $table->string('caracteristicas',255)->nullable();
             $table->string('codigo',45)->nullable();
-            $table->string('barcode',45)->nullable();
             $table->string('lote',255)->nullable();
             $table->string('unidad')->nullable();
             $table->string('marca')->nullable();
             $table->integer('garantia')->nullable();
-            $table->integer('stock')->nullable()->default(0);
-            $table->integer('cantidad_minima');
+           
+       
+            $table->integer('cantidad_minima')->nullable()->default(0);
             $table->string('industria')->nullable();
             $table->decimal('precio_venta',10,2);
             $table->enum('status', ['ACTIVO','INACTIVO'])->default('ACTIVO');

@@ -14,10 +14,10 @@ class ProductsController extends Component
 {
     use WithPagination;
     use WithFileUploads;
-    public $nombre, $barcode, $costo, $precio_venta,$cantidad_minima,
+    public $nombre, $costo, $precio_venta,$cantidad_minima,
     $codigo,$lote,$unidad,$industria,$caracteristicas,$status,$categoryid, $search,
      $image, $selected_id, $pageTitle, $componentName,$cate,$marca,$garantia,$stock,$stock_v
-     ,$selected_categoria,$selected_sub;
+     ,$selected_categoria,$selected_sub,$nro=1;
 
     private $pagination = 5;
     public $selected_id2=0;
@@ -112,16 +112,18 @@ class ProductsController extends Component
         $product = Product::create([
             'nombre' => $this->nombre,
             'costo' => $this->costo,
-            'precio_venta' => $this->precio_venta,
-            'barcode' => $this->barcode,
-            'codigo'=>$this->codigo,
             'caracteristicas'=>$this->caracteristicas,
+            'codigo'=>$this->codigo,
             'lote'=>$this->lote,
             'unidad'=>$this->unidad,
             'marca' => $this->marca,
             'garantia' => $this->garantia,
+            'cantidad_minima' => $this->cantidad_minima,
             'industria' => $this->industria,
+            'precio_venta' => $this->precio_venta,
             'category_id' => $this->categoryid
+
+
         ]);
         if ($this->image) {
             $customFileName = uniqid() . '_.' . $this->image->extension();
