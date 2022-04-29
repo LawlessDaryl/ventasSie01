@@ -146,7 +146,8 @@
                         
                         @endif
                         
-                        @if($productoentrante == 1 && $tipovista == "devolucion")
+                        @if($productoentrante == 1)
+                        
                             @if($tipodevolucion == 'productoigualitario')
                                 <table class="table" style="background-color: rgb(193, 242, 246)">
                                     <tbody>
@@ -200,11 +201,6 @@
                             <hr style="height:3px;border:none;color:rgb(189, 188, 188);background-color:rgb(230, 152, 64);" />
                             @endif
                             
-
-                        @else
-
-                        
-                        asd
 
                         @endif
 

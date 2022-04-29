@@ -4,6 +4,9 @@
 <!-- Estilo ventas Switches en Ventas -->
 <link href="{{ asset('assets/css/scrollspyNav.css') }}" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" type="text/css" href="{{ asset('plugins/bootstrap-select/bootstrap-select.min.css') }}">
+
+<link href="assets/css/scrollspyNav.css" rel="stylesheet" type="text/css" />
+<link href="assets/css/components/tabs-accordian/custom-accordions.css" rel="stylesheet" type="text/css" />
 @endsection
 <div class="row sales layout-top-spacing">
     <div class="col-sm-12" >
@@ -23,6 +26,8 @@
                         
                     <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal" data-target="#devolucionProducto"
                     >Devolución Por Producto</a>
+                    <a href="javascript:void(0)" type="button" class="btn btn-info mb-2 mr-2" data-toggle="modal" data-target="#tabsModal">
+                    Devolución Por Producto Tabs</a>
                 </ul>
                 
             </div>
@@ -241,7 +246,11 @@
                         </tbody>
                         @endif
                     </table>
+                    @if($usuarioseleccionado == "Todos")
                     {{ $data->links() }}
+                    @else
+                    {{ $usuarioespecifico->links() }}
+                    @endif
                 </div>
             </div>
 
@@ -249,6 +258,7 @@
 
 
         @include('livewire.sales.modalproducto')
+        @include('livewire.sales.modaldevolucion')
 
 
     </div>

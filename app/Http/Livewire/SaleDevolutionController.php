@@ -4,6 +4,8 @@ namespace App\Http\Livewire;
 
 use App\Models\DevolutionSale;
 use App\Models\Product;
+use App\Models\Sale;
+use App\Models\SaleDetail;
 use App\Models\User;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -17,10 +19,10 @@ class SaleDevolutionController extends Component
 
     public  $search, $nombre, $selected_id, $nombreproducto, $productoentrante;
     public  $pageTitle, $componentName;
-    private $pagination = 7;
+    private $pagination = 10;
     
     
-    public $identrante, $tipodevolucion, $observaciondevolucion, $bs, $usuarioseleccionado, $tipovista;
+    public $identrante, $tipodevolucion, $observaciondevolucion, $bs, $usuarioseleccionado;
 
     public function paginationView()
     {
@@ -30,18 +32,10 @@ class SaleDevolutionController extends Component
     {
         $this->pageTitle = 'Devoluciones';
         $this->componentName = 'Ventas';
-        $this->tipovista = "devolucion";
         $this->ProductSelectNombre = 1;
         $this->selected_id = 0;
         $this->tipodevolucion = 'monetario';
-        if(Auth()->user()->profile == "ADMIN")
-        {
-            $this->usuarioseleccionado = "Todos";
-        }
-        else
-        {
-            $this->usuarioseleccionado = Auth()->user()->id;
-        }
+        $this->usuarioseleccionado = Auth()->user()->id;
         
     }
     public function render()
@@ -90,7 +84,7 @@ class SaleDevolutionController extends Component
 
 
 
-        //Buscando Producto Entrante en La Devolucion
+        //Buscando Producto Entrante que llega a la Tienda para la Devolucion
         $pe = Product::join("productos_destinos as pd", "pd.product_id", "products.id")
         ->join('locations as d', 'd.id', 'pd.location_id')
         ->join('destinos as des', 'des.id', 'd.destino_id')
@@ -108,7 +102,7 @@ class SaleDevolutionController extends Component
 
 
         
-
+        //Listar, Buscar y filtrar la tabla de Devoluciones por Usuario
         if (strlen($this->search) > 0)
         {
             $devolucionesusuario = DevolutionSale::join("products as p", "p.id", "devolution_sales.product_id")
@@ -152,6 +146,19 @@ class SaleDevolutionController extends Component
         }
 
 
+        //Listar un Historial de Ventas de un Producto Seleccionado
+        $historialventa = Sale::join('sale_details as sd', 'sd.sale_id', 'sales.id')
+        ->join('products as p', 'p.id', 'sd.product_id')
+        ->join('users as u', 'u.id', 'sales.user_id')
+        ->join("movimientos as m", "m.id", "sales.movimiento_id")
+        ->join("cliente_movs as cm", "cm.movimiento_id", "m.id")
+        ->join("clientes as c", "c.id", "cm.cliente_id")
+        ->select('sales.id as id','sales.created_at as fechaventa', 'sales.items as items','sales.cash as totalbs', 'p.image as image'
+        ,'sales.tipopago as tipopago','sales.observacion as ob','sales.items as items',
+        'u.name as nombreusuario')
+        ->where('p.id',$this->identrante)
+        ->orderBy('sales.created_at', 'desc')
+        ->get();
 
 
 
@@ -170,6 +177,7 @@ class SaleDevolutionController extends Component
             'usuarioespecifico' => $usuarioespecifico,
             'data' => $devolucionesusuario,
             'listausuarios' => $listausuarios,
+            'historialventa' => $historialventa,
         ])
         ->extends('layouts.theme.app')
         ->section('content');
@@ -290,6 +298,16 @@ class SaleDevolutionController extends Component
         $this->emit('item-deleted', 'Devolución Eliminada con Éxito');
     }
 
+    //Mostrar Detalles del Historial de una Venta
+    public function venta($idventa)
+    {
+        $venta = Sale::join("sale_details as sd", "sd.sale_id", "sales.id")
+        ->join("products as p", "p.id", "sd.product_id")
+        ->select("sales.created_at as fechaventa", "p.nombre as nombre", "sd.price as precio","sd.quantity as cantidad")
+        ->where("sales.id", $idventa)
+        ->get();
+        return $venta;
+    }
 
     public function resetUI()
     {
