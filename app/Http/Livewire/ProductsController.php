@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Marca;
 use App\Models\Product;
 use App\Models\Unidad;
+use Carbon\Carbon;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -14,7 +15,7 @@ class ProductsController extends Component
 {
     use WithPagination;
     use WithFileUploads;
-    public $nombre_prod, $costo, $precio_venta,$cantidad_minima,
+    public $nombre, $costo, $precio_venta,$cantidad_minima,
     $codigo,$lote,$unidad,$industria,$caracteristicas,$status,$categoryid, $search,
      $image, $selected_id, $pageTitle, $componentName,$cate,$marca,$garantia,$stock,$stock_v
      ,$selected_categoria,$selected_sub,$nro=1,$sub;
@@ -36,42 +37,67 @@ class ProductsController extends Component
     }
     public function render()
     {
-        if (strlen($this->search) > 0) {
+      
+       if ($this->selected_categoria !== null ) {
+
+        if ($this->selected_sub == null) {
             $products = Product::join('categories as c', 'c.id', 'products.category_id')
-                ->select('products.*', 'c.name as category')
-                ->where('products.nombre_prod', 'like', '%' . $this->search . '%')
-                ->orWhere('products.barcode', 'like', '%' . $this->search . '%')
-                ->orWhere('c.name', 'like', '%' . $this->search . '%')
-                ->orderBy('products.id', 'desc')
-                ->paginate($this->pagination);
-        } else {
-            if ($this->selected_categoria != null && $this->selected_sub == null) {
+            ->select('products.*', 'c.name as category')
+            ->where('c.categoria_padre',$this->selected_categoria)
+            ->where(function($query){
+                $query->where('products.nombre_prod', 'like', '%' . $this->search . '%')
+                        ->orWhere('products.codigo', 'like', '%' . $this->search . '%');
+                        
+            })
+            
+            ->orderBy('products.id', 'desc')
+            ->paginate($this->pagination);
+        }
+        else{
+            $products = Product::join('categories as c', 'c.id', 'products.category_id')
+            ->select('products.*', 'c.name as category')
+            ->where('c.id',$this->selected_sub)
+            ->where(function($query){
+                $query->where('products.nombre_prod', 'like', '%' . $this->search . '%')
+                        ->orWhere('products.codigo', 'like', '%' . $this->search . '%');
+                        
+            })
+            
+            ->orderBy('products.id', 'desc')
+            ->paginate($this->pagination);
+        }
+      
+      
+           
+        }
+
+      
+
+         elseif (strlen($this->search) > 0) {
+
+        
+        $products = Product::join('categories as c', 'c.id', 'products.category_id')
+        ->select('products.*', 'c.name as category')
+        ->where('products.nombre_prod', 'like', '%' . $this->search . '%')
+        ->orWhere('products.codigo', 'like', '%' . $this->search . '%')
+        ->orWhere('c.name', 'like', '%' . $this->search . '%')
+        ->orderBy('products.id', 'desc')
+        ->paginate($this->pagination);
+     }
+
+
+        else {
           
-                $products = Product::join('categories as c', 'c.id', 'products.category_id')
-                ->select('products.*', 'c.*')
-                ->where('c.categoria_padre',$this->selected_categoria)
-                ->orderBy('products.id', 'desc')
-                ->paginate($this->pagination);
-            }
-            else if ($this->selected_categoria != null && $this->selected_sub != null ) {
-              
-                $products = Product::join('categories as c', 'c.id', 'products.category_id')
-                ->select('products.*', 'c.*')
-                ->where('c.id',$this->selected_sub)
-                ->orderBy('products.id', 'desc')
-                ->paginate($this->pagination);
-                
-            }
-            else{
-                
+             
                 $products = Product::join('categories as c', 'c.id', 'products.category_id')
                 ->select('products.*', 'c.*')      
                 ->orderBy('products.id', 'desc')
-                ->paginate($this->pagination);
-            }
-        }
-        $this->sub= Category::where('categories.categoria_padre',$this->selected_id2)
-        ->where('categories.categoria_padre','!=','Elegir')
+                ->paginate($this->pagination);}
+            
+        
+        $this->sub= Category::select('categories.*')
+        ->where('categories.categoria_padre',$this->selected_categoria)
+     
         ->get();
 
         return view('livewire.products.component', [
@@ -236,7 +262,10 @@ class ProductsController extends Component
         $this->resetValidation();
     }
 
-    public function GenerarCodigo(){
-        $this->codigo= rand();
+    public function GenerateCode(){
+        
+        $min=10000;
+        $max= 99999;
+        $this->codigo= Carbon::now()->format('ymd').mt_rand($min,$max);
     }
 }

@@ -13,7 +13,7 @@
             <label>Codigo</label>
             <div class="input-group-prepend mb-3">
                 <input type="text" wire:model.lazy="codigo" class="form-control col-lg-7" placeholder="ej: 012020222">
-                <a href="javascript:void(0)" wire:click="GenerarCodigo()" class="btn btn-dark p-0 m-1 col-lg-4" title="Generar Codigo">
+                <a href="javascript:void(0)" wire:click="GenerateCode()" class="btn btn-dark p-0 m-1 col-lg-4" title="Generar Codigo">
                         <i> Generar Codigo</i>
                 </a>
             @error('codigo') <span class="text-danger er">{{ $message }}</span>@enderror

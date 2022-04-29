@@ -21,12 +21,12 @@
                         <input type="text" wire:model="search" placeholder="Buscar" class="form-control">
                     </div>
                 </div>
-                <div class="col-12 col-lg-2 col-md-3">
+                <div class="col-12 col-lg-4 col-md-3">
                     <div class="form-group">
                         <select wire:model='selected_categoria' class="form-control">
                           <option value="null">Elegir Categoria</option>
-                          @foreach ($categories as $data)
-                          <option value="{{ $data->id }}">{{ $data->name}}</option>
+                          @foreach ($categories as $datar)
+                          <option value="{{ $datar->id }}">{{ $datar->name}}</option>
                           @endforeach
                        
                          
@@ -34,13 +34,13 @@
                       </div>
                     
                 </div>
-                <div class="col-12 col-lg-2 col-md-3">
+                <div class="col-12 col-lg-4 col-md-3">
 
                     <div class="form-group">
                         <select wire:model='selected_sub' class="form-control">
                           <option value="null">Elegir Subcategoria</option>
-                          @foreach ($sub as $data)
-                          <option value="{{ $data->id }}">{{ $data->name}}</option>
+                          @foreach ($sub as $datas)
+                          <option value="{{ $datas->id }}">{{ $datas->name}}</option>
                           @endforeach
                        
                          
@@ -71,7 +71,7 @@
                                         <h6>{{ $nro++}}</h6>
                                     </td>
                                     <td>
-                                        <h6>{{ $product->nombre_prod }}</h6>
+                                        <h6>{{ $product->nombre_prod}}</h6>
                                     </td>
                                     <td>
                                         <h6 class="text-center">{{ $product->caracteristicas }}</h6>
