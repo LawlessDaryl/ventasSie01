@@ -90,17 +90,24 @@
         </div>
     </div>
 
-    <div class="col-sm-12 col-md-4">
+    <div class="col-sm-12 col-lg-4 col-md-4">
         <div class="form-group">
             <label>Categoría</label>
-            <select wire:model='selected_id2' class="form-control">
-                <option value="Elegir">Elegir</option>
-                @foreach ($categories as $category)
-                    <option value="{{ $category->id }}">{{ $category->name }}</option>
-                @endforeach
-            </select>
-      
-        </div>
+            <div class="input-group-prepend mb-3">
+                <select wire:model='selected_id2' class="form-control">
+                    <option value="Elegir">Elegir</option>
+                    @foreach ($categories as $category)
+                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                    @endforeach
+                </select>
+                <span class="input-group-text input-gp">
+                    <a href="javascript:void(0)" data-toggle="modal"
+                        data-target="#modalCategory" class="fas fa-plus text-white"></a>
+                </span>
+
+                    @error('selected_id2') <span class="text-danger er">{{ $message }}</span>@enderror
+            </div>
+        </div>       
     </div>
 
     <div class="col-sm-12 col-md-4">
@@ -108,8 +115,8 @@
             <label>Subcategoría</label>
             <select wire:model='categoryid' class="form-control">
                 <option value="Elegir" disabled>Elegir</option>
-                @foreach ($subcat as $category)
-                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                @foreach ($subcat as $cat)
+                    <option value="{{ $cat->id }}">{{ $cat->name }}</option>
                 @endforeach
             </select>
             @error('categoryid') <span class="text-danger er">{{ $message }}</span>@enderror
@@ -131,7 +138,22 @@
             
         </div>
     </div>
-   
+    
 
 </div>
     @include('common.modalFooter')
+    @include('livewire.products.modalcategory')
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function() {
+            window.livewire.on('cat-added', msg => {
+                $('#modalCategory').modal('hide'),
+                noty(msg)
+            });
+            
+        });
+    
+      
+    </script>
+    

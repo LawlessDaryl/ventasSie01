@@ -84,8 +84,6 @@ class CategoriesController extends Component
                 'name' => $this->name,
                 'descripcion'=>$this->descripcion,
                 'categoria_padre'=>$this->categoria_padre
-           
-                
             ]);
         }
         else

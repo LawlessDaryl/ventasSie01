@@ -28,14 +28,10 @@
                           @foreach ($categories as $datar)
                           <option value="{{ $datar->id }}">{{ $datar->name}}</option>
                           @endforeach
-                       
-                         
                         </select>
                       </div>
-                    
                 </div>
                 <div class="col-12 col-lg-4 col-md-3">
-
                     <div class="form-group">
                         <select wire:model='selected_sub' class="form-control">
                           <option value="null">Elegir Subcategoria</option>
@@ -48,8 +44,6 @@
                       </div>
                 </div>
             </div>
-         
-
             <div class="widget-content">
                 <div class="table-responsive">
                     <table class="table table-unbordered table-hover mt-4">
@@ -98,7 +92,6 @@
                                             class="btn btn-dark mtmobile p-1 m-0" title="Delete">
                                             <i class="fas fa-trash"></i>
                                         </a>
-                                      
                                     </td>
                                 </tr>
                             @endforeach

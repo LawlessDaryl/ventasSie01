@@ -15,7 +15,7 @@ class ProductsController extends Component
 {
     use WithPagination;
     use WithFileUploads;
-    public $nombre, $costo, $precio_venta,$cantidad_minima,
+    public $nombre, $costo, $precio_venta,$cantidad_minima,$name,$descripcion,
     $codigo,$lote,$unidad,$industria,$caracteristicas,$status,$categoryid, $search,
      $image, $selected_id, $pageTitle, $componentName,$cate,$marca,$garantia,$stock,$stock_v
      ,$selected_categoria,$selected_sub,$nro=1,$sub;
@@ -88,7 +88,6 @@ class ProductsController extends Component
 
         else {
           
-             
                 $products = Product::join('categories as c', 'c.id', 'products.category_id')
                 ->select('products.*', 'c.*')      
                 ->orderBy('products.id', 'desc')
@@ -100,12 +99,17 @@ class ProductsController extends Component
      
         ->get();
 
+        $sub_cat_form = Category::select('categories.*')
+        ->where('categories.categoria_padre',$this->selected_id2)
+     
+        ->get();
+
         return view('livewire.products.component', [
             'data' => $products,
             'categories'=>Category::where('categories.categoria_padre',0)->orderBy('name', 'asc')->get(),
             'unidades'=>Unidad::orderBy('nombre','asc')->get(),
             'marcas'=>Marca::select('nombre')->orderBy('nombre','asc')->get(),
-            'subcat'=>$this->sub
+            'subcat'=>$sub_cat_form
         ])->extends('layouts.theme.app')->section('content');
     }
     public function Store()
@@ -267,5 +271,32 @@ class ProductsController extends Component
         $min=10000;
         $max= 99999;
         $this->codigo= Carbon::now()->format('ymd').mt_rand($min,$max);
+    }
+
+    public function StoreCategory(){
+
+        $rules = ['name' => 'required|unique:categories|min:3'];
+        $messages = [
+            'name.required' => 'El nombre de la categoría es requerido',
+            'name.unique' => 'Ya existe el nombre de la categoría',
+            'name.min' => 'El nombre de la categoría debe tener al menos 3 caracteres'
+        ];
+        $this->validate($rules, $messages);
+
+        
+            $category = Category::create([
+                'name' => $this->name,
+                'descripcion'=>$this->descripcion,
+                'categoria_padre'=>0
+            ]);
+        
+        $category->save();
+        $this->resetCategory();
+        $this->emit('cat-added', 'Categoría Registrada');
+    }
+
+    public function resetCategory(){
+            $this->name="";
+            $this->descripcion="";
     }
 }
