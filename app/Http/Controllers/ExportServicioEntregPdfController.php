@@ -298,7 +298,7 @@ class ExportServicioEntregPdfController extends Controller
             ->select('m.*')
             ->whereBetween('m.created_at', [$from, $to])
             ->where('m.status', 'ACTIVO')
-            ->where('cm.comentario', 'SERVICIOS')
+            ->where('cm.tipoDeMovimiento', 'SERVICIOS')
             ->where('carteras.tipo', 'CajaFisica')
             ->where('s.id', $sucursal)
             ->get();
@@ -313,7 +313,7 @@ class ExportServicioEntregPdfController extends Controller
             ->select('m.*')
             ->whereBetween('m.created_at', [$from, $to])
             ->where('m.status', 'ACTIVO')
-            ->where('cm.comentario', 'SERVICIOS')
+            ->where('cm.tipoDeMovimiento', 'SERVICIOS')
             ->where('carteras.tipo', 'Banco')
             ->where('s.id', $sucursal)
             ->get();

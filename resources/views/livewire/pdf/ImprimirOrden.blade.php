@@ -107,16 +107,16 @@
                                 @endforeach
                                 <br>
                                 @php
-                                    $today = date('d-m-Y h:i:s', time());
+                                    $today = date('d-m-Y H:i', time());
                                 @endphp
                                 <b>F. RECEPCIÓN:
-                                </b>{{ \Carbon\Carbon::parse($today)->format('d/m/Y - h:i') }}<br>
+                                </b>{{ \Carbon\Carbon::parse($today)->format('d/m/Y - H:i') }}<br>
 
                                 <b>F. ENTREGA: </b>
 
                                 @foreach ($datos->services as $item)
                                     @if ($item->id == $item2->id)
-                                        {{ \Carbon\Carbon::parse($item->fecha_estimada_entrega)->format('d/m/Y - h:i') }}
+                                        {{ \Carbon\Carbon::parse($item->fecha_estimada_entrega)->format('d/m/Y - H:i') }}
                                         {{ $n }}
                                     @endif
                                 @endforeach
@@ -190,7 +190,7 @@
                                                 <!--<font size="2"><b>Nro.:  </b></font>-->
                                                 <span style="font-size: 9px">
                                                     @php
-                                                        $today = date('d-m-Y h:i:s', time());
+                                                        $today = date('d-m-Y H:i', time());
                                                     @endphp
                                                     {{ $today }}
                                                 </span><br>
@@ -231,7 +231,7 @@
                                                 <div style="width: auto;">
                                                     <b>FECHA:
                                                     </b>{{ \Carbon\Carbon::now()->format('Y-m-d') }}&nbsp; -
-                                                    &nbsp;{{ \Carbon\Carbon::now()->format('H:i:s') }}<br>
+                                                    &nbsp;{{ \Carbon\Carbon::now()->format('H:i') }}<br>
 
                                                     <b>CLIENTE: </b>{{ $data[0]->nombreC }}
                                                 </div>
@@ -327,7 +327,7 @@
                                             <b>FECHA ENTREGA APROX.: </b>
                                             @foreach ($datos->services as $item)
                                                 @if ($item->id == $item2->id)
-                                                    {{ \Carbon\Carbon::parse($item->fecha_estimada_entrega)->format('d/m/Y - h:i') }}
+                                                    {{ \Carbon\Carbon::parse($item->fecha_estimada_entrega)->format('d/m/Y - H:i') }}
                                                     {{ $n }}
                                                 @endif
                                             @endforeach
@@ -386,7 +386,7 @@
                             <div style="display: flex; font-size: 9px; width: 100%">
                                 <div style="text-align:center">
                                     @php
-                                        $today = date('d-m-Y h:i:s', time());
+                                        $today = date('d-m-Y H:i', time());
                                     @endphp
                                     CCA: SIS.INF.SOLUCIONES INFORMÁTICAS EMANUEL ( S.I.E. ) | {{ $today }}
                                 </div>

@@ -33,26 +33,32 @@
 
                 <td width="70%" class="text-left text-company" style="vertical-align: top; padding-top:10px;">
                     @if ($reportType == 0)
-                        <span style="font-size: 16px;"><strong>Reporte de Servicios del día</strong></span>
+                        <span style="font-size: 16px;"><strong>Reporte de Servicios
+                                @if ($caja != 'Todos')
+                                    de la {{ $nombreCaja }} del día.
+                                @elseif($caja == 'Todos')
+                                    de todas las cajas del día.
+                                @endif
+                            </strong></span>
                     @else
-                        <span style="font-size: 16px;"><strong>Reporte de Servicios 
-                            @if($caja != 'todos')
-                            {{ $nombreCaja }}
-                        @endif
-                            por fecha</strong></span>
+                        <span style="font-size: 16px;"><strong>Reporte de Servicios
+                                @if ($caja != 'Todos')
+                                    de la {{ $nombreCaja }} por fecha.
+                                @elseif($caja == 'Todos')
+                                    de todas las cajas por fecha.
+                                @endif
+                            </strong></span>
                     @endif
                     <br>
                     @if ($reportType != 0)
-                        <span style="font-size: 16px;"><strong>Fecha de consulta: {{ \Carbon\Carbon::parse($dateFrom)->format('d/m/Y') }} al
-                            {{ \Carbon\Carbon::parse($dateTo)->format('d/m/Y') }}</strong></span>
+                        <span style="font-size: 16px;"><strong>Fecha de consulta:
+                                {{ \Carbon\Carbon::parse($dateFrom)->format('d/m/Y') }} al
+                                {{ \Carbon\Carbon::parse($dateTo)->format('d/m/Y') }}</strong></span>
                     @else
                         <span style="font-size: 16px;"><strong>Fecha de consulta:
-                                {{ \Carbon\Carbon::now()->format('d-M-Y') }}</strong></span>
+                                {{ \Carbon\Carbon::now()->format('d-m-Y') }}</strong></span>
                     @endif
-
                     <br>
-
-
                 </td>
             </tr>
         </table>
@@ -96,7 +102,7 @@
                             <FONT FACE="times new roman" SIZE=1>
                                 @foreach ($d->movservices as $movser)
                                     @if ($movser->movs->type == 'ENTREGADO' && $movser->movs->status == 'ACTIVO')
-                                        {{ $movser->movs->created_at }}
+                                        {{ \Carbon\Carbon::parse($movser->movs->created_at)->format('d/m/Y - H:i') }}
                                     @endif
                                 @endforeach
                             </FONT>
@@ -104,7 +110,8 @@
 
                         {{-- CLIENTE --}}
                         <td align="center">
-                            <FONT FACE="times new roman" SIZE=1>{{ $d->movservices[0]->movs->climov->client->nombre }}
+                            <FONT FACE="times new roman" SIZE=1>
+                                {{ $d->movservices[0]->movs->climov->client->nombre }}
                             </FONT>
                         </td>
                         {{-- NUMERO ORDEN --}}
@@ -129,7 +136,7 @@
                     </tr>
                 @endforeach
                 @if ($caja != 'Todos')
-                    {{-- @if(count($movbancarios) > 1) --}}
+                    {{-- @if (count($movbancarios) > 1) --}}
                     <tr>
                         <th colspan="7">
                             <span class="text-center">Servicios entregados y pagados por banco</span>
@@ -148,7 +155,7 @@
                                 <FONT FACE="times new roman" SIZE=1>
                                     {{-- @foreach ($d->movservices as $movser)
                                 @if ($movser->movs->type == 'ENTREGADO' && $movser->movs->status == 'ACTIVO') --}}
-                                    {{ $d->creacion_Mov }}
+                                    {{ \Carbon\Carbon::parse($d->creacion_Mov)->format('d/m/Y - H:i') }}
                                     {{-- @endif
                             @endforeach --}}
                                 </FONT>
@@ -191,9 +198,7 @@
                     </td>
                     <td class="text-right" colspan="5">
                         <span>
-
-                            {{ $sumaEfectivo }}
-
+                            {{ number_format($sumaEfectivo, 2) }} bs.
                         </span>
                     </td>
                 </tr>
@@ -204,7 +209,7 @@
                     <td class="text-right" colspan="5">
                         <span>
 
-                            {{ $sumaBanco }}
+                            {{ number_format($sumaBanco, 2) }} bs.
 
                         </span>
                     </td>
@@ -215,11 +220,11 @@
                     </td>
                     <td class="text-right" colspan="4">
                         <span><strong>
-                            @if($caja != 'Todos')
-                                ${{$sumaCosto + $sumaCostoEfectivo}}
-                            @else
-                                ${{ number_format($data->sum('costo'), 2) }}
-                            @endif
+                                @if ($caja != 'Todos')
+                                    {{ number_format($sumaCosto + $sumaCostoEfectivo, 2) }} bs.
+                                @else
+                                    {{ number_format($data->sum('costo'), 2) }} bs.
+                                @endif
                             </strong></span>
                     </td>
                     <td class="text-right" colspan="1">
@@ -236,7 +241,7 @@
                                         @endif
                                     @endforeach
                                 @endforeach
-                                ${{ number_format($mytotal, 2) }}
+                                {{ number_format($mytotal, 2) }} bs.
 
                             </strong></span>
                     </td>

@@ -74,6 +74,7 @@ class PlataformasController extends Component
             ->extends('layouts.theme.app')
             ->section('content');
     }
+
     public function updated($propertyName)
     {
         $this->validateOnly($propertyName);
@@ -93,6 +94,7 @@ class PlataformasController extends Component
         'precioEntera.required' => 'El precio de las cuentas Enteras de esta plataforma es requerido',
         'precioPerfil.required' => 'El precio individual de los Perfiles de esta plataforma es requerido',
     ];
+    
     public function Store()
     {
         $this->validate();
