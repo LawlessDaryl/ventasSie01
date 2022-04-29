@@ -18,7 +18,7 @@
                                 <i class="fas fa-search"></i>
                             </span>
                         </div>
-                        <input type="text" wire:model="search" placeholder="Buscar" class="form-control">
+                        <input type="text" wire:model="search" placeholder="Buscars" class="form-control">
                     </div>
                 </div>
                 <div class="col-12 col-lg-4 col-md-3">
