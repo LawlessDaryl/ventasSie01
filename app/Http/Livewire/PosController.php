@@ -925,7 +925,6 @@ class PosController extends Component
     //Obtener el Id de la Sucursal Donde esta el Usuario
     public function idsucursal()
     {
-        //Obteniendo el id de la sucursal del usuario
         $idsucursal = User::join("sucursal_users as su","su.user_id","users.id")
         ->select("su.sucursal_id as id","users.name as n")
         ->where("users.id",Auth()->user()->id)

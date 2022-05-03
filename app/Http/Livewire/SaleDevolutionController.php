@@ -2,8 +2,14 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Caja;
+use App\Models\Cartera;
+use App\Models\CarteraMov;
+use App\Models\ClienteMov;
 use App\Models\DevolutionSale;
+use App\Models\Movimiento;
 use App\Models\Product;
+use App\Models\ProductosDestino;
 use App\Models\Sale;
 use App\Models\SaleDetail;
 use App\Models\User;
@@ -202,21 +208,20 @@ class SaleDevolutionController extends Component
         $this->productoentrante = 1;
         $this->identrante = $id;
         $this->entrada = $this->buscarproducto($this->identrante);
-
-
-        
         $this->llenarbs();
         
     }
+
     public function exit($id)
     {
         $this->productosaliente = 1;
         $this->idsaliente = $id;
         $this->salida = $this->buscarproducto($this->idsaliente);
     }
+    //Buscar Datos de un Producto Buscando por Id
     public function buscarproducto($id)
     {
-        $a = Product::join("productos_destinos as pd", "pd.product_id", "products.id")
+        $datosproducto = Product::join("productos_destinos as pd", "pd.product_id", "products.id")
         ->join('locations as d', 'd.id', 'pd.location_id')
         ->join('destinos as des', 'des.id', 'd.destino_id')
         ->select("products.id as llaveid","products.nombre as nombre", "products.image as image", "products.precio_venta as precio_venta",
@@ -226,7 +231,7 @@ class SaleDevolutionController extends Component
         ->where('products.id', $id)
         ->get()
         ->first();
-        return $a;
+        return $datosproducto;
     }
 
     //Poner el Precio Original en el Input
@@ -256,10 +261,12 @@ class SaleDevolutionController extends Component
     //Guarda la Devolución
     public function guardardevolucion()
     {
+        //Si no puso ningun dato en el Motivo de la Devolución se pondra este mensaje 
         if($this->observaciondevolucion == "")
         {
-            $this->observaciondevolucion = "Sin Motivo";
+            $this->observaciondevolucion = "No se coloco ningún Motivo";
         }
+        //Creando un registro en la tabla devolución
         DevolutionSale::create([
             'tipo_dev' => "MONETARIO",
             'monto_dev' => $this->bs,
@@ -267,6 +274,65 @@ class SaleDevolutionController extends Component
             'product_id' => $this->identrante,
             'user_id' => Auth()->user()->id
         ]);
+        /* Caja en la cual se encuentra el usuario */
+        $cajausuario = Caja::join('sucursals as s', 's.id', 'cajas.sucursal_id')
+        ->join('sucursal_users as su', 'su.sucursal_id', 's.id')
+        ->join('carteras as car', 'cajas.id', 'car.caja_id')
+        ->join('cartera_movs as cartmovs', 'car.id', 'cartmovs.cartera_id')
+        ->join('movimientos as mov', 'mov.id', 'cartmovs.movimiento_id')
+        ->where('mov.user_id', Auth()->user()->id)
+        ->where('mov.status', 'ACTIVO')
+        ->where('mov.type', 'APERTURA')
+        ->select('cajas.id as id')
+        ->get()->first();
+
+
+
+
+        // Creando Movimiento
+        $Movimiento = Movimiento::create([
+            'type' => "DEVOLUCIONVENTA",
+            'import' => $this->bs,
+            'user_id' => Auth()->user()->id,
+        ]);
+        //Creando Movimiento del Cliente
+        ClienteMov::create([
+            'movimiento_id' => $Movimiento->id,
+            'cliente_id' => 1,
+        ]);
+        //Tipo de Pago
+        $cartera = Cartera::where('tipo', 'cajafisica')
+                    ->where('caja_id', $cajausuario->id)
+                    ->get()->first();
+        // Creando Cartera Movimiento
+        CarteraMov::create([
+            'type' => "EGRESO",
+            'comentario' => "Devolución Venta",
+            'cartera_id' => $cartera->id,
+            'movimiento_id' => $Movimiento->id,
+        ]);
+
+
+        //Registrando el Producto Entrante
+
+        //Incrementando el stock en tienda
+        $tiendaproducto = ProductosDestino::join("products as p", "p.id", "productos_destinos.product_id")
+        ->join('locations as d', 'd.id', 'productos_destinos.location_id')
+        ->join('destinos as des', 'des.id', 'd.destino_id')
+        ->select("productos_destinos.id as id","p.nombre as name",
+        "productos_destinos.stock as stock")
+        ->where("p.id", $item->id)
+        ->where("des.nombre", 'TIENDA')
+        ->where("des.sucursal_id", $this->idsucursal())
+        ->get()->first();
+
+
+        $tiendaproducto->update([
+            'stock' => $tiendaproducto->stock - $item->quantity
+        ]);
+
+
+        //Resetenado los datos e información almacenados
         $this->resetUI();
     }
 

@@ -24,10 +24,8 @@
                     {{-- <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
                         data-target="#theModal">Devolución Por Venta</a> --}}
                         
-                    <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal" data-target="#devolucionProducto"
-                    >Devolución Por Producto</a>
                     <a href="javascript:void(0)" type="button" class="btn btn-info mb-2 mr-2" data-toggle="modal" data-target="#tabsModal">
-                    Devolución Por Producto Tabs</a>
+                    Devolución Por Producto</a>
                 </ul>
                 
             </div>
@@ -257,7 +255,6 @@
         </div>
 
 
-        @include('livewire.sales.modalproducto')
         @include('livewire.sales.modaldevolucion')
 
 

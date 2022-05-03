@@ -16,9 +16,6 @@
                   <li class="nav-item">
                       <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Historial de Ventas</a>
                   </li>
-                  <li class="nav-item">
-                      <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Ajustes Historial de Ventas</a>
-                  </li>
               </ul>
               <div class="tab-content" id="myTabContent">
 
@@ -429,70 +426,8 @@
 
 
                 
-                <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-
-
-
-
-
-                    <div class="info">
-                        <div class="row">
-                            <div class="col-md-11 mx-auto">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="country">Filtrar por Usuario</label>
-                                            <select class="form-control" id="country">
-                                                <option>All Countries</option>
-                                                <option selected>United States</option>
-                                                <option>India</option>
-                                                <option>Japan</option>
-                                                <option>China</option>
-                                                <option>Brazil</option>
-                                                <option>Norway</option>
-                                                <option>Canada</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="address">Dia Especifico</label>
-                                            <input type="date" class="form-control mb-4" id="address" placeholder="Address" value="New York" >
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="location">Location</label>
-                                            <input type="text" class="form-control mb-4" id="location" placeholder="Location">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="phone">Phone</label>
-                                            <input type="text" class="form-control mb-4" id="phone" placeholder="Write your phone number here" value="+1 (530) 555-12121">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="email">Email</label>
-                                            <input type="text" class="form-control mb-4" id="email" placeholder="Write your email here" value="Jimmy@gmail.com">
-                                        </div>
-                                    </div>                                    
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="website1">Website</label>
-                                            <input type="text" class="form-control mb-4" id="website1" placeholder="Write your website here">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-              
-              
-                </div>
+                {{-- <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                </div> --}}
           </div>
         
           <div class="modal-footer">
