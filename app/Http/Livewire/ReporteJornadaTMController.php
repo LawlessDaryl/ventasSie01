@@ -89,7 +89,6 @@ class ReporteJornadaTMController extends Component
             ->where('ori.nombre', 'Telefono')
             ->where('mot.tipo', 'Abono')
             ->where('m.status', 'Activo')
-            ->where('m.status', 'Activo')
             ->where('s.id', $this->sucursal)
             ->where('ca.id', $this->caja)
             ->whereBetween('transaccions.created_at', [$from, $to])

@@ -83,7 +83,7 @@ class ReportStreamingController extends Component
                             'prof.nameprofile as nameprofile',
                             'prof.pin as pin',
                             'plans.id as id',
-                            'plans.created_at as planinicio',
+                            'plans.plan_start as planinicio',
                             'plans.expiration_plan as planfin',
                             'plans.observations as obs',
                             'plans.importe as importe',
@@ -121,7 +121,7 @@ class ReportStreamingController extends Component
                             'prof.nameprofile as nameprofile',
                             'prof.pin as pin',
                             'plans.id as id',
-                            'plans.created_at as planinicio',
+                            'plans.plan_start as planinicio',
                             'plans.expiration_plan as planfin',
                             'plans.observations as obs',
                             'plans.importe as importe',
@@ -159,7 +159,7 @@ class ReportStreamingController extends Component
                             'prof.nameprofile as nameprofile',
                             'prof.pin as pin',
                             'plans.id as id',
-                            'plans.created_at as planinicio',
+                            'plans.plan_start as planinicio',
                             'plans.expiration_plan as planfin',
                             'plans.observations as obs',
                             'plans.importe as importe',
@@ -196,7 +196,7 @@ class ReportStreamingController extends Component
                             'prof.nameprofile as nameprofile',
                             'prof.pin as pin',
                             'plans.id as id',
-                            'plans.created_at as planinicio',
+                            'plans.plan_start as planinicio',
                             'plans.expiration_plan as planfin',
                             'plans.observations as obs',
                             'plans.importe as importe',
@@ -214,7 +214,7 @@ class ReportStreamingController extends Component
                         ->get();
                 }
             }
-        } else {
+        } elseif ($this->Perf_Cuenta == 1) {
             if ($this->userId == 0) {
                 if ($this->Vencid_Vigent == 0) { /* cuentas vigentes de todos los usuarios */
                     $this->data = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
@@ -235,7 +235,7 @@ class ReportStreamingController extends Component
                             'acc.password_account as password_account',
                             'acc.status as accstatus',
                             'plans.id as id',
-                            'plans.created_at as planinicio',
+                            'plans.plan_start as planinicio',
                             'plans.expiration_plan as planfin',
                             'plans.observations as obs',
                             'plans.status as estado',
@@ -267,7 +267,7 @@ class ReportStreamingController extends Component
                             'acc.password_account as password_account',
                             'acc.status as accstatus',
                             'plans.id as id',
-                            'plans.created_at as planinicio',
+                            'plans.plan_start as planinicio',
                             'plans.expiration_plan as planfin',
                             'plans.observations as obs',
                             'plans.status as estado',
@@ -301,7 +301,7 @@ class ReportStreamingController extends Component
                             'acc.password_account as password_account',
                             'acc.status as accstatus',
                             'plans.id as id',
-                            'plans.created_at as planinicio',
+                            'plans.plan_start as planinicio',
                             'plans.expiration_plan as planfin',
                             'plans.observations as obs',
                             'plans.status as estado',
@@ -334,7 +334,7 @@ class ReportStreamingController extends Component
                             'acc.password_account as password_account',
                             'acc.status as accstatus',
                             'plans.id as id',
-                            'plans.created_at as planinicio',
+                            'plans.plan_start as planinicio',
                             'plans.expiration_plan as planfin',
                             'plans.observations as obs',
                             'plans.status as estado',
@@ -350,8 +350,64 @@ class ReportStreamingController extends Component
                         ->get();
                 }
             }
+        } elseif ($this->Perf_Cuenta == 2) {
+            if ($this->userId == 0) {
+                if ($this->Vencid_Vigent == 0) { /* combos vigentes de todos los usuarios */
+                    $this->data = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
+                        ->select(
+                            'plans.*'
+                        )
+                        ->whereBetween('plans.created_at', [$from, $to])
+                        ->where('plans.type_plan', 'COMBO')
+                        ->where('plans.ready', 'SI')
+                        ->where('plans.done', 'SI')
+                        ->where('plans.status', 'VIGENTE')
+                        ->orderBy('plans.created_at', 'desc')
+                        ->get();
+                } else {    /* combos vencidos de todos los usuarios */
+                    $this->data = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
+                        ->select(
+                            'plans.*'
+                        )
+                        ->whereBetween('plans.created_at', [$from, $to])
+                        ->where('plans.type_plan', 'COMBO')
+                        ->where('plans.ready', 'SI')
+                        ->where('plans.done', 'SI')
+                        ->where('plans.status', 'VENCIDO')
+                        ->orderBy('plans.created_at', 'desc')
+                        ->get();
+                }
+            } else {
+                if ($this->Vencid_Vigent == 0) {    /* cuentas vigentes de usuario especifico */
+                    $this->data = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
+                        ->select(
+                            'plans.*'
+                        )
+                        ->whereBetween('plans.created_at', [$from, $to])
+                        ->where('plans.type_plan', 'COMBO')
+                        ->where('plans.ready', 'SI')
+                        ->where('plans.done', 'SI')
+                        ->where('plans.status', 'VIGENTE')
+                        ->where('m.user_id', $this->userId)
+                        ->orderBy('plans.created_at', 'desc')
+                        ->get();
+                } else {    /* cuentas vencidas de usuario especifico */
+                    $this->data = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
+                        ->select(
+                            'plans.*'
+                        )
+                        ->whereBetween('plans.created_at', [$from, $to])
+                        ->where('plans.type_plan', 'COMBO')
+                        ->where('plans.ready', 'SI')
+                        ->where('plans.done', 'SI')
+                        ->where('plans.status', 'VENCIDO')
+                        ->where('m.user_id', $this->userId)
+                        ->orderBy('plans.created_at', 'desc')
+                        ->get();
+                }
+            }
         }
-        $gananciaCuentasTotal = Plan::join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
+        /* $gananciaCuentasTotal = Plan::join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
             ->join('accounts as acc', 'acc.id', 'pa.account_id')
             ->select('acc.price', 'plans.importe', DB::raw('0 as ganancia'))
             ->where('plans.type_plan', 'CUENTA')
@@ -370,8 +426,8 @@ class ReportStreamingController extends Component
             $value->ganancia = ($value->price / $value->number_profiles) - $value->importe;
         }
         $total2 = $gananciaPerfilesTotal ? $gananciaPerfilesTotal->sum('ganancia') : 0;
-        /* dd($total2); */
-        $gananciaTotal = $total + $total2;
+        
+        $gananciaTotal = $total + $total2; */
     }
 
     public function getDetails($idplan)

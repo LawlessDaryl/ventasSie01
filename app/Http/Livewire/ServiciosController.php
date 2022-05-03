@@ -46,8 +46,8 @@ class ServiciosController extends Component
         $this->celular = '';
         $this->selected_id = 0;
         $this->marc = '';
-        $this->diagnostico='Revisión';
-        $this->solucion ='Revisión';
+        $this->diagnostico = 'Revisión';
+        $this->solucion = 'Revisión';
         $this->typeservice = 'NORMAL';
         $this->saldo = 0;
         $this->on_account = 0;
@@ -118,7 +118,7 @@ class ServiciosController extends Component
             $this->saldo = $this->import;
         elseif ((strlen($this->import) == 0))
             $this->saldo = 0;
-        
+
 
         return view('livewire.servicio.component', [
             'data' => $services,
@@ -136,19 +136,19 @@ class ServiciosController extends Component
     public function Seleccionar($id)
     {
         $this->cliente = Cliente::find($id);
-        if($this->celular != ''){
-            $this->cliente -> update([
+        if ($this->celular != '') {
+            $this->cliente->update([
                 'celular' => $this->celular
             ]);
         }
-        
+
         session(['clie' =>   $this->cliente]);
 
         $this->resetUI();
         $this->emit('client-selected', 'Cliente Seleccionado');
     }
 
-    
+
 
     public function ResetSession()
     {
@@ -161,165 +161,33 @@ class ServiciosController extends Component
     }
 
     public function StoreClient()
-    {   if($this->nit==''){
-            $this->nit=0;
-        }
-        if($this->celular==''){
-            $this->celular=0;
-            
-            if($this->telefono == ''){
-                $this->telefono=0;
+    {
+        $rules = [
+            'nombre' => 'required|min:1|unique:clientes',
+            'cedula' => 'nullable|max:10',
+            'celular' => 'nullable|digits:8',
+            'telefono' => 'nullable|digits:7',
+            'nit' => 'nullable|max:9',
+            'email' => 'nullable|unique:clientes|email',
+        ];
+        $messages = [
+            'nombre.required' => 'Nombre es requerido',
+            'nombre.min' => 'El nombre debe ser contener al menos 1 caracter',
+            'nombre.unique' => 'Ya existe el mismo Nombre registrado',
+            'cedula.max' => 'La cédula debe tener máximo 10 digitos',
+            'celular.digits' => 'El celular debe tener 8 numeros',
+            'telefono.digits' => 'El telefono debe tener 7 numeros',
+            'nit.max' => 'El nit no puede tener más de 9 digitos',
+            'email.email' => 'Ingresa una dirección de correo válida',
+            'email.unique' => 'El email ya existe en el sistema',
+        ];
 
-                $rules = [
-                    'nombre' => 'required|min:1|unique:clientes',
-                    'cedula' => 'required|max:10',
-                    'celular' => 'numeric',
-                    'telefono' => 'numeric',
-                    'nit' => 'required|numeric',
-                    'nit' => 'max:9',
-                    'email' => 'unique:clientes|email',
-                ];
-                $messages = [
-                    'nombre.required' => 'Nombre es requerido',
-                    'nombre.min' => 'El nombre debe ser contener al menos 1 caracter',
-                    'nombre.unique' => 'Ya existe el mismo Nombre registrado',
-                    'cedula.required' => 'La cédula es requerida',
-                    'cedula.max' => 'La cédula debe tener máximo 10 digitos',
-                    'celular.numeric' => 'No puede ingresar letras',
-                    'telefono.numeric' => 'No puede ingresar letras',
-                    'nit.required' => 'Ingrese 0 si no quiere ingresar ningún nit',
-                    'nit.numeric' => 'El nit debe ser un número',
-                    'nit.max' => 'El nit no puede tener más de 9 digitos',
-                    'email.email' => 'Ingresa una dirección de correo válida',
-                    'email.unique' => 'El email ya existe en el sistema',
-                ];
-            }else{
-                $rules = [
-                    'nombre' => 'required|min:1|unique:clientes',
-                    'cedula' => 'required|max:10',
-                    'celular' => 'numeric',
-                    'telefono' => 'numeric|digits:7',
-                    'nit' => 'required|numeric',
-                    'nit' => 'max:9',
-                    'email' => 'unique:clientes|email',
-                ];
-                $messages = [
-                    'nombre.required' => 'Nombre es requerido',
-                    'nombre.min' => 'El nombre debe ser contener al menos 1 caracter',
-                    'nombre.unique' => 'Ya existe el mismo Nombre registrado',
-                    'cedula.required' => 'La cédula es requerida',
-                    'cedula.max' => 'La cédula debe tener máximo 10 digitos',
-                    'celular.numeric' => 'No puede ingresar letras',
-                    'telefono.numeric' => 'No puede ingresar letras',
-                    'telefono.digits' => 'Debe ingresar 7 digitos',
-                    'nit.required' => 'Ingrese 0 si no quiere ingresar ningún nit',
-                    'nit.numeric' => 'El nit debe ser un número',
-                    'nit.max' => 'El nit no puede tener más de 9 digitos',
-                    'email.email' => 'Ingresa una dirección de correo válida',
-                    'email.unique' => 'El email ya existe en el sistema',
-                ];
-            }
-
-            /* $rules = [
-                'nombre' => 'required|min:1|unique:clientes',
-                'cedula' => 'required|max:10',
-                'celular' => 'numeric',
-                'nit' => 'required|numeric',
-                'nit' => 'max:9'
-            ];
-            $messages = [
-                'nombre.required' => 'Nombre es requerido',
-                'nombre.min' => 'El nombre debe ser contener al menos 1 caracter',
-                'nombre.unique' => 'Ya existe el mismo Nombre registrado',
-                'cedula.required' => 'La cédula es requerida',
-                'cedula.max' => 'La cédula debe tener máximo 10 digitos',
-                'celular.numeric' => 'No puede ingresar letras',
-                'nit.required' => 'Ingrese 0 si no quiere ingresar ningún nit',
-                'nit.numeric' => 'El nit debe ser un número',
-                'nit.max' => 'El nit no puede tener más de 9 digitos'
-            ]; */
-    
-        }else{
-            if($this->telefono == ''){
-                $this->telefono=0;
-
-                $rules = [
-                    'nombre' => 'required|min:1|unique:clientes',
-                    'cedula' => 'required|max:10',
-                    'celular' => 'required|numeric|digits:8',
-                    'telefono' => 'numeric',
-                    'nit' => 'required|numeric',
-                    'nit' => 'max:9',
-                    'email' => 'unique:clientes|email',
-                ];
-                $messages = [
-                    'nombre.required' => 'Nombre es requerido',
-                    'nombre.min' => 'El nombre debe ser contener al menos 1 caracter',
-                    'nombre.unique' => 'Ya existe el mismo Nombre registrado',
-                    'cedula.required' => 'La cédula es requerida',
-                    'cedula.max' => 'La cédula debe tener máximo 10 digitos',
-                    'celular.required' => 'El celular es requerido',
-                    'celular.numeric' => 'No puede ingresar letras',
-                    'celular.digits' => 'Debe ingresar 8 digitos',
-                    'telefono.numeric' => 'No puede ingresar letras',
-                    'nit.required' => 'Ingrese 0 si no quiere ingresar ningún nit',
-                    'nit.numeric' => 'El nit debe ser un número',
-                    'nit.max' => 'El nit no puede tener más de 9 digitos',
-                    'email.email' => 'Ingresa una dirección de correo válida',
-                    'email.unique' => 'El email ya existe en el sistema',
-                ];
-            }else{
-                $rules = [
-                    'nombre' => 'required|min:1|unique:clientes',
-                    'cedula' => 'required|max:10',
-                    'celular' => 'required|numeric|digits:8',
-                    'telefono' => 'numeric|digits:7',
-                    'nit' => 'required|numeric',
-                    'nit' => 'max:9',
-                    'email' => 'unique:clientes|email',
-                ];
-                $messages = [
-                    'nombre.required' => 'Nombre es requerido',
-                    'nombre.min' => 'El nombre debe ser contener al menos 1 caracter',
-                    'nombre.unique' => 'Ya existe el mismo Nombre registrado',
-                    'cedula.required' => 'La cédula es requerida',
-                    'cedula.max' => 'La cédula debe tener máximo 10 digitos',
-                    'celular.required' => 'El celular es requerido',
-                    'celular.numeric' => 'No puede ingresar letras',
-                    'celular.digits' => 'Debe ingresar 8 digitos',
-                    'telefono.numeric' => 'No puede ingresar letras',
-                    'telefono.digits' => 'Debe ingresar 7 digitos',
-                    'nit.required' => 'Ingrese 0 si no quiere ingresar ningún nit',
-                    'nit.numeric' => 'El nit debe ser un número',
-                    'nit.max' => 'El nit no puede tener más de 9 digitos',
-                    'email.email' => 'Ingresa una dirección de correo válida',
-                    'email.unique' => 'El email ya existe en el sistema',
-                ];
-            }
-
-            /* $rules = [
-                'nombre' => 'required|min:1|unique:clientes',
-                'cedula' => 'required|max:10',
-                'celular' => 'required|numeric|digits:8',
-                'nit' => 'required|numeric',
-                'nit' => 'max:9'
-            ];
-            $messages = [
-                'nombre.required' => 'Nombre es requerido',
-                'nombre.min' => 'El nombre debe ser contener al menos 1 caracter',
-                'nombre.unique' => 'Ya existe el mismo Nombre registrado',
-                'cedula.required' => 'La cédula es requerida',
-                'cedula.max' => 'La cédula debe tener máximo 10 digitos',
-                'celular.required' => 'El celular es requerido',
-                'celular.numeric' => 'No puede ingresar letras',
-                'celular.digits' => 'Debe ingresar 8 digitos',
-                'nit.required' => 'Ingrese 0 si no quiere ingresar ningún nit',
-                'nit.numeric' => 'El nit debe ser un número',
-                'nit.max' => 'El nit no puede tener más de 9 digitos'
-            ]; */
-        }
-        
         $this->validate($rules, $messages);
+
+        if ($this->telefono == '') {
+            $this->telefono = 0;
+        }
+
         if ($this->procedencia == 'Nuevo') {
             $procd = ProcedenciaCliente::where('procedencia', 'Nuevo')->get()->first();
             $newclient = Cliente::create([
@@ -352,7 +220,7 @@ class ServiciosController extends Component
     //Store de Agregar Servicio
     public function Store()
     {
-        if($this->on_account <= $this->import){
+        if ($this->on_account <= $this->import) {
             $rules = [
                 'typeworkid' => 'required|not_in:Elegir',
                 'catprodservid' => 'required|not_in:Elegir',
@@ -379,9 +247,9 @@ class ServiciosController extends Component
                 'on_account.required' => 'Si no desea ingresar nada ingrese "0"',
                 'fecha_estimada_entrega.required' => 'La Fecha es requerida'
             ];
-    
+
             $this->validate($rules, $messages);
-        }else{
+        } else {
             $rules = [
                 'typeworkid' => 'required|not_in:Elegir',
                 'catprodservid' => 'required|not_in:Elegir',
@@ -413,7 +281,7 @@ class ServiciosController extends Component
                 'on_account.lt' => 'A cuenta no puede ser mayor al total',
                 'fecha_estimada_entrega.required' => 'La Fecha es requerida'
             ];
-    
+
             $this->validate($rules, $messages);
         }
 
@@ -428,8 +296,8 @@ class ServiciosController extends Component
             } else {
                 $neworder = OrderService::find($this->orderservice);
             }
-            
-            $from = Carbon::parse($this->fecha_estimada_entrega)->format('Y-m-d') ." " . $this->hora_entrega . ':00';
+
+            $from = Carbon::parse($this->fecha_estimada_entrega)->format('Y-m-d') . " " . $this->hora_entrega . ':00';
             $newservice = Service::create([
                 'type_work_id' => $this->typeworkid,
                 'cat_prod_service_id' => $this->catprodservid,
@@ -499,8 +367,8 @@ class ServiciosController extends Component
         $this->emit('modal-show', 'show modal!');
 
         $servicioss = Service::find($this->selected_id);
-        foreach($servicioss->movservices as $mm){
-            if($mm->movs->status == 'ACTIVO'){
+        foreach ($servicioss->movservices as $mm) {
+            if ($mm->movs->status == 'ACTIVO') {
                 $this->estatus = $mm->movs->type;
             }
         }
@@ -522,8 +390,8 @@ class ServiciosController extends Component
     //Update de Servicios
     public function Update()
     {
-        
-        if($this->on_account <= $this->import){
+
+        if ($this->on_account <= $this->import) {
             $rules = [
                 'typeworkid' => 'required|not_in:Elegir',
                 'catprodservid' => 'required|not_in:Elegir',
@@ -550,9 +418,9 @@ class ServiciosController extends Component
                 'on_account.required' => 'Si no desea ingresar nada ingrese "0"',
                 'fecha_estimada_entrega.required' => 'La Fecha es requerida'
             ];
-    
+
             $this->validate($rules, $messages);
-        }else{
+        } else {
             $rules = [
                 'typeworkid' => 'required|not_in:Elegir',
                 'catprodservid' => 'required|not_in:Elegir',
@@ -584,16 +452,16 @@ class ServiciosController extends Component
                 'on_account.lt' => 'A cuenta no puede ser mayor al total',
                 'fecha_estimada_entrega.required' => 'La Fecha es requerida'
             ];
-    
+
             $this->validate($rules, $messages);
         }
 
         DB::beginTransaction();
         /* dd($this->hora_entrega); */
         try {
-            $from = Carbon::parse($this->fecha_estimada_entrega)->format('Y-m-d') ." " . $this->hora_entrega;
+            $from = Carbon::parse($this->fecha_estimada_entrega)->format('Y-m-d') . " " . $this->hora_entrega;
             $service = Service::find($this->selected_id);
-            
+
             $service->update([
                 'type_work_id' => $this->typeworkid,
                 'cat_prod_service_id' => $this->catprodservid,
@@ -604,7 +472,7 @@ class ServiciosController extends Component
                 'solucion' => $this->solucion,
                 'fecha_estimada_entrega' => $from,
             ]);
-            foreach ($service->movservices as $mm){
+            foreach ($service->movservices as $mm) {
                 $mm->movs->update([
                     'import' => $this->import,
                     'on_account' => $this->on_account,
@@ -614,15 +482,15 @@ class ServiciosController extends Component
 
 
             $servicioss = Service::find($this->selected_id);
-            foreach($servicioss->movservices as $mm){
-                if($mm->movs->status == 'ACTIVO'){
+            foreach ($servicioss->movservices as $mm) {
+                if ($mm->movs->status == 'ACTIVO') {
                     $this->estatus = $mm->movs->type;
                 }
             }
-            
-            if($this->estatus == 'TERMINADO' && $this->opciones == 'PENDIENTE'){
-                foreach($servicioss->movservices as $mm){
-                    if($mm->movs->type == 'TERMINADO' || $mm->movs->type == 'PROCESO'){
+
+            if ($this->estatus == 'TERMINADO' && $this->opciones == 'PENDIENTE') {
+                foreach ($servicioss->movservices as $mm) {
+                    if ($mm->movs->type == 'TERMINADO' || $mm->movs->type == 'PROCESO') {
                         $ClienteMov = ClienteMov::find($mm->movs->climov->id);
                         $ClienteMov->delete();
                         $movServ = MovService::find($mm->id);
@@ -630,15 +498,15 @@ class ServiciosController extends Component
                         $movim = Movimiento::find($mm->movs->id);
                         $movim->delete();
                     }
-                    if($mm->movs->type == 'PENDIENTE'){
+                    if ($mm->movs->type == 'PENDIENTE') {
                         $movimi = Movimiento::find($mm->movs->id);
                         $movimi->status = 'ACTIVO';
                         $movimi->save();
                     }
                 }
-            }elseif($this->estatus == 'TERMINADO' && $this->opciones == 'PROCESO'){
-                foreach($servicioss->movservices as $mm){
-                    if($mm->movs->type == 'TERMINADO'){
+            } elseif ($this->estatus == 'TERMINADO' && $this->opciones == 'PROCESO') {
+                foreach ($servicioss->movservices as $mm) {
+                    if ($mm->movs->type == 'TERMINADO') {
                         $ClienteMov = ClienteMov::find($mm->movs->climov->id);
                         $ClienteMov->delete();
                         $movServ = MovService::find($mm->id);
@@ -646,15 +514,15 @@ class ServiciosController extends Component
                         $movim = Movimiento::find($mm->movs->id);
                         $movim->delete();
                     }
-                    if($mm->movs->type == 'PROCESO'){
+                    if ($mm->movs->type == 'PROCESO') {
                         $movimi = Movimiento::find($mm->movs->id);
                         $movimi->status = 'ACTIVO';
                         $movimi->save();
                     }
                 }
-            }elseif($this->estatus == 'PROCESO' && $this->opciones == 'PENDIENTE'){
-                foreach($servicioss->movservices as $mm){
-                    if($mm->movs->type == 'PROCESO'){
+            } elseif ($this->estatus == 'PROCESO' && $this->opciones == 'PENDIENTE') {
+                foreach ($servicioss->movservices as $mm) {
+                    if ($mm->movs->type == 'PROCESO') {
                         $ClienteMov = ClienteMov::find($mm->movs->climov->id);
                         $ClienteMov->delete();
                         $movServ = MovService::find($mm->id);
@@ -662,15 +530,15 @@ class ServiciosController extends Component
                         $movim = Movimiento::find($mm->movs->id);
                         $movim->delete();
                     }
-                    if($mm->movs->type == 'PENDIENTE'){
+                    if ($mm->movs->type == 'PENDIENTE') {
                         $movimi = Movimiento::find($mm->movs->id);
                         $movimi->status = 'ACTIVO';
                         $movimi->save();
                     }
                 }
-            }elseif($this->estatus == 'ABANDONADO' && $this->opciones == 'TERMINADO'){
-                foreach($servicioss->movservices as $mm){
-                    if($mm->movs->type == 'ABANDONADO'){
+            } elseif ($this->estatus == 'ABANDONADO' && $this->opciones == 'TERMINADO') {
+                foreach ($servicioss->movservices as $mm) {
+                    if ($mm->movs->type == 'ABANDONADO') {
                         $ClienteMov = ClienteMov::find($mm->movs->climov->id);
                         $ClienteMov->delete();
                         $movServ = MovService::find($mm->id);
@@ -678,25 +546,7 @@ class ServiciosController extends Component
                         $movim = Movimiento::find($mm->movs->id);
                         $movim->delete();
                     }
-                    if($mm->movs->type == 'TERMINADO'){
-                        $movimi = Movimiento::find($mm->movs->id);
-                        $movimi->status = 'ACTIVO';
-                        $movimi->save();
-                    }
-                }
-                $servicioss->fecha_estimada_entrega = new DateTime("now");
-                $servicioss->save();
-            }elseif($this->estatus == 'ABANDONADO' && $this->opciones == 'PROCESO'){
-                foreach($servicioss->movservices as $mm){
-                    if($mm->movs->type == 'ABANDONADO'  || $mm->movs->type == 'TERMINADO'){
-                        $ClienteMov = ClienteMov::find($mm->movs->climov->id);
-                        $ClienteMov->delete();
-                        $movServ = MovService::find($mm->id);
-                        $movServ->delete();
-                        $movim = Movimiento::find($mm->movs->id);
-                        $movim->delete();
-                    }
-                    if($mm->movs->type == 'PROCESO'){
+                    if ($mm->movs->type == 'TERMINADO') {
                         $movimi = Movimiento::find($mm->movs->id);
                         $movimi->status = 'ACTIVO';
                         $movimi->save();
@@ -704,9 +554,9 @@ class ServiciosController extends Component
                 }
                 $servicioss->fecha_estimada_entrega = new DateTime("now");
                 $servicioss->save();
-            }elseif($this->estatus == 'ABANDONADO' && $this->opciones == 'PENDIENTE'){
-                foreach($servicioss->movservices as $mm){
-                    if($mm->movs->type == 'ABANDONADO'  || $mm->movs->type == 'TERMINADO' || $mm->movs->type == 'PROCESO'){
+            } elseif ($this->estatus == 'ABANDONADO' && $this->opciones == 'PROCESO') {
+                foreach ($servicioss->movservices as $mm) {
+                    if ($mm->movs->type == 'ABANDONADO'  || $mm->movs->type == 'TERMINADO') {
                         $ClienteMov = ClienteMov::find($mm->movs->climov->id);
                         $ClienteMov->delete();
                         $movServ = MovService::find($mm->id);
@@ -714,7 +564,25 @@ class ServiciosController extends Component
                         $movim = Movimiento::find($mm->movs->id);
                         $movim->delete();
                     }
-                    if($mm->movs->type == 'PENDIENTE'){
+                    if ($mm->movs->type == 'PROCESO') {
+                        $movimi = Movimiento::find($mm->movs->id);
+                        $movimi->status = 'ACTIVO';
+                        $movimi->save();
+                    }
+                }
+                $servicioss->fecha_estimada_entrega = new DateTime("now");
+                $servicioss->save();
+            } elseif ($this->estatus == 'ABANDONADO' && $this->opciones == 'PENDIENTE') {
+                foreach ($servicioss->movservices as $mm) {
+                    if ($mm->movs->type == 'ABANDONADO'  || $mm->movs->type == 'TERMINADO' || $mm->movs->type == 'PROCESO') {
+                        $ClienteMov = ClienteMov::find($mm->movs->climov->id);
+                        $ClienteMov->delete();
+                        $movServ = MovService::find($mm->id);
+                        $movServ->delete();
+                        $movim = Movimiento::find($mm->movs->id);
+                        $movim->delete();
+                    }
+                    if ($mm->movs->type == 'PENDIENTE') {
                         $movimi = Movimiento::find($mm->movs->id);
                         $movimi->status = 'ACTIVO';
                         $movimi->save();
@@ -723,13 +591,12 @@ class ServiciosController extends Component
                 $servicioss->fecha_estimada_entrega = new DateTime("now");
                 $servicioss->save();
             }
-            
-            
+
+
 
             DB::commit();
             $this->resetUI();
             $this->emit('service-updated', 'Servicio Actualizado');
-
         } catch (Exception $e) {
             DB::rollback();
             $this->emit('item-error', 'ERROR' . $e->getMessage());
@@ -739,24 +606,16 @@ class ServiciosController extends Component
 
     public function Destroy(Service $service)
     {
-        $ids = Service::join('mov_services as ms', 'ms.service_id', 'services.id')
-            ->join('movimientos as m', 'ms.movimiento_id', 'm.id')
-            ->join('cliente_movs as cm', 'cm.movimiento_id', 'm.id')
-            ->select(
-                'ms.movimiento_id as movimiendoID',
-                'cm.id as clientemovID',
-                'ms.id as servicemovID'
-            )
-            ->where('services.id', $service->id)
-            ->get()->first();
-
-        $movCliente = ClienteMov::find($ids->clientemovID);
-        $movCliente->delete();
-        $movService = MovService::find($ids->servicemovID);
-        $movService->delete();
-        $movimiento = Movimiento::find($ids->movimiendoID);
-        $movimiento->delete();
-        $service->delete();
+        foreach($service->movservices as $mm){
+            $movCliente = ClienteMov::find($mm->movs->climov->id);
+            $movCliente->delete();
+            $movService = MovService::find($mm->id);
+            $movService->delete();
+            $movimiento = Movimiento::find($mm->movs->id);
+            $movimiento->delete();
+            $service->delete();
+        }
+        
 
         if ($this->orderservice  != 0) {
             $neworder = OrderService::find($this->orderservice);
@@ -792,14 +651,13 @@ class ServiciosController extends Component
         $this->celular = '';
         $this->telefono = '';
         $this->email = '';
-        $this->nit = '';
         $this->razon_social = '';
         $this->detalle = '';
-        $this->falla_segun_cliente = '';
-      
+        $this->falla_segun_cliente = '';        
         $this->marc = '';
+        $this->reset(['nit']);
         $this->resetValidation();
-        $this->diagnostico='Revisión';
-        $this->solucion ='Revisión';
+        $this->diagnostico = 'Revisión';
+        $this->solucion = 'Revisión';
     }
 }

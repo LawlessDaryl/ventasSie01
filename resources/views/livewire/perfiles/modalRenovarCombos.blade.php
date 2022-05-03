@@ -17,7 +17,7 @@
                             <h6>{{ $plataforma1Nombre }}</h6>
                         </div>
                     </div>
-                    <div class="col-sm-12 col-md-6">
+                    <div class="col-sm-12 col-md-4">
                         <div class="form-group">
                             <h6>NOMBRE PERFIL</h6>
                             <input type="text" wire:model="perfil1COMBO" class="form-control">
@@ -28,13 +28,22 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-md-6">
+                    <div class="col-sm-12 col-md-4">
                         <div class="form-group">
                             <h6>PIN PERFIL</h6>
                             <input type="text" wire:model="PIN1COMBO" class="form-control">
                             @error('celular')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-4">
+                        <div class="form-group">
+                            <h6>Expiracion cuenta {{ $plataforma1Nombre }}</h6>
+                            <h6 class="form-control"><strong>
+                                    {{ \Carbon\Carbon::parse($expiracionCuenta1)->format('d/m/Y') }}</strong>
+                            </h6>
                         </div>
                     </div>
 
@@ -86,7 +95,7 @@
                                                             </td>
                                                             <td class="text-center">
                                                                 <h6 class="text-center">
-                                                                    {{ $item->expiration_account }}
+                                                                    {{ \Carbon\Carbon::parse($item->expiration_account)->format('d/m/Y') }}
                                                                 </h6>
                                                             </td>
                                                             <td class="text-center">
@@ -127,7 +136,7 @@
                             <h6>{{ $plataforma2Nombre }}</h6>
                         </div>
                     </div>
-                    <div class="col-sm-12 col-md-6">
+                    <div class="col-sm-12 col-md-4">
                         <div class="form-group">
                             <h6>NOMBRE PERFIL</h6>
                             <input type="text" wire:model="perfil2COMBO" class="form-control">
@@ -137,13 +146,22 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-md-6">
+                    <div class="col-sm-12 col-md-4">
                         <div class="form-group">
                             <h6>PIN PERFIL</h6>
                             <input type="text" wire:model="PIN2COMBO" class="form-control">
                             @error('celular')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-4">
+                        <div class="form-group">
+                            <h6>Expiracion cuenta {{ $plataforma2Nombre }}</h6>
+                            <h6 class="form-control"><strong>
+                                    {{ \Carbon\Carbon::parse($expiracionCuenta2)->format('d/m/Y') }}</strong>
+                            </h6>
                         </div>
                     </div>
 
@@ -195,7 +213,7 @@
                                                             </td>
                                                             <td class="text-center">
                                                                 <h6 class="text-center">
-                                                                    {{ $item->expiration_account }}
+                                                                    {{ \Carbon\Carbon::parse($item->expiration_account)->format('d/m/Y') }}
                                                                 </h6>
                                                             </td>
                                                             <td class="text-center">
@@ -236,7 +254,7 @@
                             <h6>{{ $plataforma3Nombre }}</h6>
                         </div>
                     </div>
-                    <div class="col-sm-12 col-md-6">
+                    <div class="col-sm-12 col-md-4">
                         <div class="form-group">
                             <h6>NOMBRE PERFIL</h6>
                             <input type="text" wire:model="perfil3COMBO" class="form-control">
@@ -246,13 +264,22 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-md-6">
+                    <div class="col-sm-12 col-md-4">
                         <div class="form-group">
                             <h6>PIN PERFIL</h6>
                             <input type="text" wire:model="PIN3COMBO" class="form-control">
                             @error('celular')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-4">
+                        <div class="form-group">
+                            <h6>Expiracion cuenta {{ $plataforma3Nombre }}</h6>
+                            <h6 class="form-control"><strong>
+                                    {{ \Carbon\Carbon::parse($expiracionCuenta3)->format('d/m/Y') }}</strong>
+                            </h6>
                         </div>
                     </div>
 
@@ -304,7 +331,7 @@
                                                             </td>
                                                             <td class="text-center">
                                                                 <h6 class="text-center">
-                                                                    {{ $item->expiration_account }}
+                                                                    {{ \Carbon\Carbon::parse($item->expiration_account)->format('d/m/Y') }}
                                                                 </h6>
                                                             </td>
                                                             <td class="text-center">
@@ -345,38 +372,58 @@
                     <div class="col-sm-12 col-md-6">
                         <div class="form-group">
                             <h6>Nombre Cliente</h6>
-                            <input type="text" disabled wire:model="nombreCliente" class="form-control">
-                            @error('nombreCliente')
-                                <span class="text-danger er">{{ $message }}</span>
-                            @enderror
+                            <h6 class="form-control"><strong> {{ $nombreCliente }}</strong></h6>
                         </div>
                     </div>
 
                     <div class="col-sm-12 col-md-6">
                         <div class="form-group">
                             <h6>Celular</h6>
-                            <input type="text" disabled wire:model="celular" class="form-control">
-                            @error('celular')
-                                <span class="text-danger er">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="col-sm-12 col-md-6">
-                        <div class="form-group">
-                            <h6>Meses a renovar</h6>
-                            <input type="number" wire:model="meses" class="form-control"
-                                placeholder="PerfilNetflix1">
-                            @error('meses')
-                                <span class="text-danger er">{{ $message }}</span>
-                            @enderror
+                            <h6 class="form-control"><strong> {{ $celular }}</strong></h6>
                         </div>
                     </div>
 
                     <div class="col-sm-12 col-md-6">
-                        <h6>Fecha de expiración Actual</h6>
                         <div class="form-group">
-                            <input type="date" wire:model="expirationActual" class="form-control" disabled>
-                            @error('expirationActual')
+                            <h6>Meses de compra</h6>
+                            <h6 class="form-control"><strong> {{ $mesesPlan }}</strong></h6>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <h6>Precio Compra</h6>
+                            <h6 class="form-control"><strong> {{ $importePlan }}</strong></h6>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6">
+                        <h6>Fecha de inicio de su plan</h6>
+                        <div class="form-group">
+                            <h6 class="form-control">
+                                <strong>
+                                    {{ \Carbon\Carbon::parse($inicioPlanActual)->format('d/m/Y') }}
+                                </strong>
+                            </h6>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6">
+                        <h6>Fecha de expiración de su plan</h6>
+                        <div class="form-group">
+                            <h6 class="form-control">
+                                <strong>
+                                    {{ \Carbon\Carbon::parse($expirationPlanActual)->format('d/m/Y') }}
+                                </strong>
+                            </h6>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6">
+                        <h6>Fecha de inicio nueva del plan</h6>
+                        <div class="form-group">
+                            <input type="date" wire:model="inicioNueva" class="form-control">
+                            @error('inicioNueva')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror
                         </div>
@@ -385,14 +432,35 @@
                     <div class="col-sm-12 col-md-6">
                         <h6>Fecha de expiración nueva</h6>
                         <div class="form-group">
-                            <input type="date" wire:model="expirationNueva" class="form-control" disabled>
-                            @error('expirationNueva')
+                            <h6 class="form-control">
+                                <strong>
+                                    {{ \Carbon\Carbon::parse($expirationNueva)->format('d/m/Y') }}
+                                </strong>
+                            </h6>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-3">
+                        <div class="form-group">
+                            <h6>Dias calculo</h6>
+                            <input type="number" wire:model="diasdePlan" class="form-control">
+                            @error('diasdePlan')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-md-6">
+                    <div class="col-sm-12 col-md-3">
+                        <div class="form-group">
+                            <h6>Meses a renovar</h6>
+                            <input type="number" wire:model="meses" class="form-control">
+                            @error('meses')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-3">
                         <div class="form-group">
                             <h6>Tipo de pago</h6>
                             <select wire:model="tipopago" class="form-control">
@@ -401,6 +469,18 @@
                                 <option value="TigoStreaming">TIGO MONEY</option>
                             </select>
                             @error('tipopago')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-3">
+                        <div class="form-group">
+                            <label>
+                                <h6>Importe</h6>
+                            </label>
+                            <input wire:model.lazy="importe" class="form-control" type="number">
+                            @error('importe')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror
                         </div>

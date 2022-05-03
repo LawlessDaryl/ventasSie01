@@ -9,5 +9,14 @@ class Cartera extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nombre', 'descripcion','tipo','telefonoNum','caja_id'];
+    protected $fillable = ['nombre', 'descripcion', 'tipo', 'telefonoNum', 'caja_id'];
+
+    public function carteraM()
+    {
+        return $this->hasMany(CarteraMov::class);
+    }
+    public function caja()
+    {
+        return $this->belongsTo(Caja::class);
+    }
 }

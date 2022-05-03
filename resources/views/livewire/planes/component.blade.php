@@ -70,16 +70,18 @@
                             <thead class="text-white" style="background: #3B3F5C">
                                 <tr>
                                     <th class="table-th text-withe text-center" style="font-size: 80%">PLATAFORMA</th>
-                                    <th class="table-th text-withe text-center"style="font-size: 80%">CLIENTE</th>
-                                    <th class="table-th text-withe text-center"style="font-size: 80%">EMAIL</th>
-                                    <th class="table-th text-withe text-center"style="font-size: 80%">CONTRASEÑA CUENTA</th>
-                                    <th class="table-th text-withe text-center"style="font-size: 80%">VENCIMIENTO CUENTA</th>
-                                    <th class="table-th text-withe text-center"style="font-size: 80%">PERFIL</th>
-                                    <th class="table-th text-withe text-center"style="font-size: 80%">IMPORTE</th>
-                                    <th class="table-th text-withe text-center"style="font-size: 80%">PLAN INICIO</th>
-                                    <th class="table-th text-withe text-center"style="font-size: 80%">PLAN FIN</th>
-                                    <th class="table-th text-withe text-center"style="font-size: 80%">ACCIONES</th>
-                                    <th class="table-th text-withe text-center"style="font-size: 80%">REALIZADO</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">CLIENTE</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">EMAIL</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">CONTRASEÑA CUENTA
+                                    </th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">VENCIMIENTO
+                                        CUENTA</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">PERFIL</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">IMPORTE</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">PLAN INICIO</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">PLAN FIN</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">ACCIONES</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">REALIZADO</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -98,7 +100,8 @@
                                             <h6 class="text-center">{{ $p->password_account }}</h6>
                                         </td>
                                         <td class="text-center">
-                                            <h6 class="text-center">{{ $p->accexp }}</h6>
+                                            <h6 class="text-center">
+                                                {{ \Carbon\Carbon::parse($p->accexp)->format('d/m/Y') }}</h6>
                                         </td>
                                         <td class="text-center">
                                             <h6 class="text-center">{{ $p->nameprofile }} {{ $p->pin }}
@@ -109,11 +112,11 @@
                                         </td>
                                         <td class="text-center">
                                             <h6 class="text-center">
-                                                {{ \Carbon\Carbon::parse($p->planinicio)->format('d:m:Y') }} </h6>
+                                                {{ \Carbon\Carbon::parse($p->planinicio)->format('d/m/Y') }} </h6>
                                         </td>
                                         <td class="text-center">
                                             <h6 class="text-center">
-                                                {{ \Carbon\Carbon::parse($p->planfin)->format('d:m:Y') }} </h6>
+                                                {{ \Carbon\Carbon::parse($p->planfin)->format('d/m/Y') }} </h6>
                                         </td>
                                         <td class="text-center">
                                             <a href="javascript:void(0)"
@@ -182,18 +185,19 @@
                                             <h6 class="text-center">{{ $p->password_account }}</h6>
                                         </td>
                                         <td class="text-center">
-                                            <h6 class="text-center">{{ $p->accexp }}</h6>
+                                            <h6 class="text-center">
+                                                {{ \Carbon\Carbon::parse($p->accexp)->format('d/m/Y') }}</h6>
                                         </td>
                                         <td class="text-center">
                                             <h6 class="text-center">{{ $p->importe }}</h6>
                                         </td>
                                         <td class="text-center">
                                             <h6 class="text-center">
-                                                {{ \Carbon\Carbon::parse($p->planinicio)->format('d:m:Y') }} </h6>
+                                                {{ \Carbon\Carbon::parse($p->planinicio)->format('d/m/Y') }} </h6>
                                         </td>
                                         <td class="text-center">
                                             <h6 class="text-center">
-                                                {{ \Carbon\Carbon::parse($p->planfin)->format('d:m:Y') }} </h6>
+                                                {{ \Carbon\Carbon::parse($p->planfin)->format('d/m/Y') }} </h6>
                                         </td>
                                         <td class="text-center">
                                             <a href="javascript:void(0)"
@@ -233,16 +237,18 @@
                             <thead class="text-white" style="background: #3B3F5C">
                                 <tr>
                                     <th class="table-th text-withe text-center" style="font-size: 80%">PLATAFORMAS</th>
-                                    <th class="table-th text-withe text-center"style="font-size: 80%">CLIENTE</th>
-                                    <th class="table-th text-withe text-center"style="font-size: 80%">EMAILS</th>
-                                    <th class="table-th text-withe text-center"style="font-size: 80%">CONTRASEÑAS CUENTAS</th>
-                                    <th class="table-th text-withe text-center"style="font-size: 80%">VENCIMIENTO CUENTAS</th>
-                                    <th class="table-th text-withe text-center"style="font-size: 80%">PERFILES</th>
-                                    <th class="table-th text-withe text-center"style="font-size: 80%">IMPORTE</th>
-                                    <th class="table-th text-withe text-center"style="font-size: 80%">PLAN INICIO</th>
-                                    <th class="table-th text-withe text-center"style="font-size: 80%">PLAN FIN</th>
-                                    <th class="table-th text-withe text-center"style="font-size: 80%">ACCIONES</th>
-                                    <th class="table-th text-withe text-center"style="font-size: 80%">REALIZADO</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">CLIENTE</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">EMAILS</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">CONTRASEÑAS
+                                        CUENTAS</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">VENCIMIENTO
+                                        CUENTAS</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">PERFILES</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">IMPORTE</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">PLAN INICIO</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">PLAN FIN</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">ACCIONES</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">REALIZADO</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -285,7 +291,7 @@
                                             <h6 class="text-center">
                                                 @foreach ($p->PlanAccounts as $item)
                                                     @if ($item->status == 'ACTIVO')
-                                                        {{ $item->Cuenta->expiration_account }}
+                                                        {{ \Carbon\Carbon::parse($item->Cuenta->expiration_account)->format('d/m/Y') }}
                                                         <br>
                                                     @endif
                                                 @endforeach
@@ -311,11 +317,11 @@
                                         </td>
                                         <td class="text-center">
                                             <h6 class="text-center">
-                                                {{ \Carbon\Carbon::parse($p->plan_start)->format('d:m:Y') }} </h6>
+                                                {{ \Carbon\Carbon::parse($p->plan_start)->format('d/m/Y') }} </h6>
                                         </td>
                                         <td class="text-center">
                                             <h6 class="text-center">
-                                                {{ \Carbon\Carbon::parse($p->expiration_plan)->format('d:m:Y') }}
+                                                {{ \Carbon\Carbon::parse($p->expiration_plan)->format('d/m/Y') }}
                                             </h6>
                                         </td>
                                         <td class="text-center">

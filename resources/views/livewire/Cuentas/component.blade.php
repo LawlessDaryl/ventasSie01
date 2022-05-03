@@ -9,7 +9,50 @@
                     <a href="javascript:void(0)" class="btn btn-dark" wire:click="Agregar()">Agregar</a>
                 </ul>
             </div>
-            @include('common.searchbox')
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-12">
+                    <div class="input-group mb-4">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text input-gp">
+                                <i class="fas fa-search"></i>
+                            </span>
+                        </div>
+                        <input type="text" wire:model="search" placeholder="Buscar" class="form-control">
+                    </div>
+                </div>
+                @if ($condicional == 'cuentas')
+                    <div class="col-sm-12 col-md-2">
+                        <div class="form-group">
+                            <h6 class="form-control"><strong>TIPO: </strong></h6>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-2">
+                        <div class="form-group">
+                            <select wire:model="EnterasDivididas" class="form-control">
+                                <option value="TODOS">TODOS</option>
+                                <option value="ENTERA">ENTERAS</option>
+                                <option value="DIVIDIDA">DIVIDIDAS</option>
+                            </select>
+                        </div>
+                    </div>
+                @endif
+                <div class="col-sm-12 col-md-2">
+                    <div class="form-group">
+                        <h6 class="form-control"><strong>PLATAFORMA: </strong></h6>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-2">
+                    <div class="form-group">
+                        <select wire:model="PlataformaFiltro" class="form-control">
+                            <option value="TODAS">TODAS</option>
+                            @foreach ($plataformas as $p)
+                                <option value="{{ $p->id }}">{{ $p->nombre }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            </div>
+
 
             <div class="form-group">
                 <div class="row">
@@ -49,23 +92,37 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-sm-12 col-md-3">
+                        <div class="form-group">
+                            <div class="n-chk">
+                                <label class="new-control new-radio radio-classic-primary">
+                                    <input type="radio" class="new-control-input" name="custom-radio-4" id=""
+                                        value="inhabilitadas" wire:model="condicional">
+                                    <span class="new-control-indicator"></span>
+                                    <h6>CUENTAS NO RENOVADAS</h6>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            @if ($condicional == 'cuentas')
+            @if ($condicional == 'cuentas' || $condicional == 'inhabilitadas')
                 <div class="widget-content">
                     <div class="table-responsive">
                         <table class="table table-unbordered table-hover mt-2">
                             <thead class="text-white" style="background: #3B3F5C">
                                 <tr>
-                                    <th class="table-th text-withe">PLATAFORMA Y PROVEEDOR</th>
+                                    <th class="table-th text-withe text-center">PLATAFORMA Y PROVEEDOR</th>
                                     <th class="table-th text-withe text-center">GMAIL O NOMBRE-USUARIO</th>
                                     <th class="table-th text-withe text-center">PASS CUENTA</th>
                                     <th class="table-th text-withe text-center">EXPIRACIÓN CUENTA</th>
                                     <th class="table-th text-withe text-center">TIPO</th>
                                     <th class="table-th text-withe text-center">MAX. PERF</th>
-                                    <th class="table-th text-withe text-center">PERF. LIBRES</th>
-                                    <th class="table-th text-withe text-center">PERF. OCUPADOS</th>
-                                    <th class="table-th text-withe text-center">ACCIONES</th>
+                                    @if ($condicional == 'cuentas')
+                                        <th class="table-th text-withe text-center">PERF. LIBRES</th>
+                                        <th class="table-th text-withe text-center">PERF. OCUPADOS</th>
+                                        <th class="table-th text-withe text-center">ACCIONES</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -82,36 +139,62 @@
                                         <td>
                                             <h6 class="text-center">{{ $acounts->password_account }}</h6>
                                         </td>
-                                        <td class="text-center"
-                                            style="{{ $acounts->dias <= 5 ? 'background-color: #FF0000 !important' : 'background-color: #09ed3d !important' }}">
-                                            <a href="javascript:void(0)"
-                                                wire:click="AccionesCuenta({{ $acounts->id }})"
-                                                class="btn btn-primary" title="Renovar">
-                                                {{ $acounts->expiration_account }}
-                                            </a>
-                                        </td>
+                                        @if ($acounts->dias > 5)
+                                            <td class="text-center" style="background-color: #09ed3d !important">
+                                                <a href="javascript:void(0)"
+                                                    wire:click="mostrarRenovar({{ $acounts->id }})"
+                                                    class="btn btn-primary" title="Renovar">
+                                                    {{ \Carbon\Carbon::parse($acounts->expiration_account)->format('d/m/Y') }}
+                                                </a>
+                                            </td>
+                                        @elseif($acounts->dias >= 0 && $acounts->dias <= 5)
+                                            <td class="text-center" style="background-color: #f1dc08 !important">
+                                                <a href="javascript:void(0)"
+                                                    wire:click="mostrarRenovar({{ $acounts->id }})"
+                                                    class="btn btn-primary" title="Renovar">
+                                                    {{ \Carbon\Carbon::parse($acounts->expiration_account)->format('d/m/Y') }}
+                                                </a>
+                                            </td>
+                                        @else
+                                            <td class="text-center" style="background-color: #FF0000 !important">
+                                                <a href="javascript:void(0)"
+                                                    wire:click="mostrarRenovar({{ $acounts->id }})"
+                                                    class="btn btn-primary" title="Renovar">
+                                                    {{ \Carbon\Carbon::parse($acounts->expiration_account)->format('d/m/Y') }}
+                                                </a>
+                                            </td>
+                                        @endif
                                         <td>
                                             <h6 class="text-center">{{ $acounts->whole_account }}</h6>
                                         </td>
                                         <td>
                                             <h6 class="text-center">{{ $acounts->number_profiles }}</h6>
                                         </td>
-                                        <td>
-                                            <h6 class="text-center">{{ $acounts->perfLibres }}</h6>
-                                        </td>
-                                        <td>
-                                            <h6 class="text-center">{{ $acounts->perfOcupados }}</h6>
-                                        </td>
-                                        <td class="text-center">
-                                            <a href="javascript:void(0)" wire:click="Crear({{ $acounts->id }})"
-                                                class="btn btn-dark mtmobile" title="Crear Perfil">
-                                                <i class="fa-regular fa-square-plus"></i>
-                                            </a>
-                                            <a href="javascript:void(0)" wire:click="Edit({{ $acounts->id }})"
-                                                class="btn btn-dark mtmobile" title="Edit">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                        </td>
+                                        @if ($condicional == 'cuentas')
+                                            <td>
+                                                <h6 class="text-center">{{ $acounts->perfLibres }}</h6>
+                                            </td>
+                                            <td>
+                                                <h6 class="text-center">{{ $acounts->perfOcupados }}</h6>
+                                            </td>
+                                            <td class="text-center">
+                                                <a href="javascript:void(0)" wire:click="Crear({{ $acounts->id }})"
+                                                    class="btn btn-dark mtmobile" title="Ver Perfiles">
+                                                    <i class="fa-solid fa-user-gear"></i>
+                                                </a>
+                                                <a href="javascript:void(0)" wire:click="Edit({{ $acounts->id }})"
+                                                    class="btn btn-dark mtmobile" title="Editar Cuenta">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                @if ($acounts->dias <= 3)
+                                                    <a href="javascript:void(0)"
+                                                        onclick="ConfirmarInhabilitar('{{ $acounts->id }}','{{ $acounts->perfOcupados }}')"
+                                                        class="btn btn-dark mtmobile" title="Inhabilitar">
+                                                        <i class="fa-regular fa-trash-can"></i>
+                                                    </a>
+                                                @endif
+                                            </td>
+                                        @endif
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -133,12 +216,7 @@
                                     <th class="table-th text-withe text-center">MAX PERF</th>
                                     <th class="table-th text-withe text-center">INICIO PLAN</th>
                                     <th class="table-th text-withe text-center">EXPIRACIÓN PLAN</th>
-                                    @if ($condicional != 'vencidos')
-                                        <th class="table-th text-withe text-center">RENOVAR</th>
-                                        <th class="table-th text-withe text-center">EDITAR</th>
-                                    @else
-                                        <th class="table-th text-withe text-center">OBSERV</th>
-                                    @endif
+                                    <th class="table-th text-withe text-center">ACCIONES</th>
                                     <th class="table-th text-withe text-center">REALIZADO</th>
                                 </tr>
                             </thead>
@@ -164,51 +242,61 @@
                                             <h6 class="text-center">{{ $acounts->password_account }}</h6>
                                         </td>
                                         <td class="text-center"
-                                            style="{{ $acounts->dias <= 5 ? 'background-color: #FF0000 !important' : 'background-color: #09ed3d !important' }}">
-                                            <a href="javascript:void(0)"
-                                                wire:click="AccionesCuenta({{ $acounts->id }})"
-                                                class="btn btn-primary" title="Renovar">
-                                                {{ $acounts->expiration_account }}
-                                            </a>
+                                            @if ($condicional == 'ocupados') @if ($acounts->dias > 5)
+                                            style="background-color: #09ed3d !important"
+                                            @elseif($acounts->dias >= 0 && $acounts->dias <= 5)
+                                            style="background-color: #f1dc08 !important"
+                                            @else
+                                            style="background-color: #FF0000 !important" @endif
+                                            @endif>
+                                            @if ($condicional == 'ocupados')
+                                                <a href="javascript:void(0)"
+                                                    wire:click="mostrarRenovar({{ $acounts->id }})"
+                                                    class="btn btn-primary" title="Renovar">
+                                                    {{ \Carbon\Carbon::parse($acounts->expiration_account)->format('d/m/Y') }}
+                                                </a>
+                                            @else
+                                                <h6>{{ \Carbon\Carbon::parse($acounts->expiration_account)->format('d/m/Y') }}
+                                                </h6>
+                                            @endif
                                         </td>
                                         <td>
                                             <h6 class="text-center">{{ $acounts->number_profiles }}</h6>
                                         </td>
                                         <td>
-                                            <h6 class="text-center">{{ $acounts->plan_start }}</h6>
+                                            <h6 class="text-center">
+                                                {{ \Carbon\Carbon::parse($acounts->plan_start)->format('d/m/Y') }}
+                                            </h6>
                                         </td>
-                                        <td
-                                            @if ($condicional == 'ocupados') style="{{ $acounts->horas <= 24 ? 'background-color: #FF0000 !important' : 'background-color: #09ed3d !important' }}" @endif>
-                                            <h6 class="text-center">{{ $acounts->expiration_plan }}</h6>
+                                        <td @if ($condicional == 'ocupados') @if ($acounts->horas > 72)
+                                            style="background-color: #09ed3d !important"
+                                            @elseif($acounts->horas >= 0 && $acounts->horas <= 72)
+                                            style="background-color: #f1dc08 !important"
+                                            @else
+                                            style="background-color: #FF0000 !important" @endif
+                                            @endif>
+                                            <h6 class="text-center">
+                                                {{ \Carbon\Carbon::parse($acounts->expiration_plan)->format('d/m/Y') }}
+                                            </h6>
                                         </td>
-                                        @if ($condicional != 'vencidos')
-                                            <td class="text-center">
-                                                @if ($acounts->plan_status == 'VIGENTE')
-                                                    <a href="javascript:void(0)"
-                                                        wire:click="Acciones({{ $acounts->planid }})"
-                                                        class="btn btn-dark mtmobile" title="Renovación">
-                                                        <i class="fa-regular fa-calendar-check"></i>
-                                                    </a>
-                                                @endif
-                                            </td>
-                                            <td>
-                                                @if ($acounts->plan_status == 'VIGENTE')
-                                                    <a href="javascript:void(0)"
-                                                        wire:click="Edit({{ $acounts->id }})"
-                                                        class="btn btn-dark mtmobile" title="Edit">
-                                                        <i class="fas fa-edit"></i>
-                                                    </a>
-                                                @endif
-                                            </td>
-                                        @else
-                                            <td class="text-center">
+                                        <td class="text-center">
+                                            @if ($acounts->plan_status == 'VIGENTE')
                                                 <a href="javascript:void(0)"
                                                     wire:click="Acciones({{ $acounts->planid }})"
-                                                    class="btn btn-dark mtmobile" title="Observaciones">
-                                                    <i class="fa-solid fa-file-signature"></i>
+                                                    class="btn btn-dark mtmobile" title="Renovación">
+                                                    <i class="fa-regular fa-calendar-check"></i>
                                                 </a>
-                                            </td>
-                                        @endif
+                                            @endif
+                                            <a href="javascript:void(0)" wire:click="Edit({{ $acounts->id }})"
+                                                class="btn btn-dark mtmobile" title="Editar">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a href="javascript:void(0)"
+                                                wire:click="EditObservaciones({{ $acounts->planid }})"
+                                                class="btn btn-dark mtmobile" title="Observaciones">
+                                                <i class="fa-solid fa-align-left"></i>
+                                            </a>
+                                        </td>
                                         <td
                                             style="{{ $acounts->done == 'NO' ? 'background-color: #d97171 !important' : 'background-color: #09ed3d !important' }}">
                                             @if ($acounts->done == 'NO')
@@ -231,9 +319,10 @@
         </div>
     </div>
     @include('livewire.cuentas.form')
-    @include('livewire.cuentas.modalDetails')
-    @include('livewire.cuentas.modalDetails2')
-    @include('livewire.cuentas.modalDetails3')
+    @include('livewire.cuentas.modalPerfiles')
+    @include('livewire.cuentas.detailsPlan')
+    @include('livewire.cuentas.modalRenovarProveedor')
+    @include('livewire.cuentas.observacionesPlan')
 
 </div>
 
@@ -279,7 +368,6 @@
             $('#modal-details2').modal('hide')
             noty(msg)
         });
-
         window.livewire.on('details3-show', msg => {
             $('#modal-details3').modal('show')
         });
@@ -299,56 +387,15 @@
             $('#modal-details2').modal('hide')
             noty(msg)
         }); */
+        window.livewire.on('modal-observaciones-show', msg => {
+            $('#modal-observaciones').modal('show')
+        });
+        window.livewire.on('modal-observaciones-hide', msg => {
+            $('#modal-observaciones').modal('hide')
+            noty(msg)
+        });
 
-        flatpickr(document.getElementsByClassName('flatpickr'), {
-            enableTime: false,
-            dateFormat: 'Y-m-d',
-            locale: {
-                firstDayofweek: 1,
-                weekdays: {
-                    shorthand: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
-                    longhand: [
-                        "Domingo",
-                        "Lunes",
-                        "Martes",
-                        "Miércoles",
-                        "Jueves",
-                        "Viernes",
-                        "Sábado",
-                    ],
-                },
-                months: {
-                    shorthand: [
-                        "Ene",
-                        "Feb",
-                        "Mar",
-                        "Abr",
-                        "May",
-                        "Jun",
-                        "Jul",
-                        "Ago",
-                        "Sep",
-                        "Oct",
-                        "Nov",
-                        "Dic",
-                    ],
-                    longhand: [
-                        "Enero",
-                        "Febrero",
-                        "Marzo",
-                        "Abril",
-                        "Mayo",
-                        "Junio",
-                        "Julio",
-                        "Agosto",
-                        "Septiembre",
-                        "Octubre",
-                        "Noviembre",
-                        "Diciembre",
-                    ],
-                },
-            }
-        })
+
     });
 
     function ConfirmVencer(cuenta) {
@@ -372,22 +419,6 @@
         })
     }
 
-    function ConfirmRenovar(cuenta, meses) {
-        swal.fire({
-            title: 'CONFIRMAR',
-            icon: 'warning',
-            text: '¿Esta seguro de renovar la cuenta ' + cuenta + ' por ' + meses + ' meses?',
-            showCancelButton: true,
-            cancelButtonText: 'Cerrar',
-            cancelButtonColor: '#383838',
-            confirmButtonColor: '#3B3F5C',
-            confirmButtonText: 'Aceptar'
-        }).then(function(result) {
-            if (result.value) {
-                window.livewire.emit('Renovar')                
-            }
-        })
-    }
 
     function ConfirmCambiar(id, correo) {
         swal.fire({
@@ -426,11 +457,19 @@
         })
     }
 
-    function Confirmar(id, name) {
+    function ConfirmarInhabilitar(id, ocupados) {
+        if (ocupados > 0) {
+            swal.fire({
+                title: 'PRECAUCION',
+                icon: 'warning',
+                text: 'No se puede inhabilitar la cuenta porque tiene , ' + ocupados + ' perfil/es ocupado/s.'
+            })
+            return;
+        }
         swal.fire({
             title: 'CONFIRMAR',
             icon: 'warning',
-            text: 'Confirmar eliminar la cuenta ' + '"' + name + '"',
+            text: '¿Confirmar inhabilitar la cuenta?',
             showCancelButton: true,
             cancelButtonText: 'Cerrar',
             cancelButtonColor: '#383838',
@@ -438,7 +477,7 @@
             confirmButtonText: 'Aceptar'
         }).then(function(result) {
             if (result.value) {
-                window.livewire.emit('borrarPerfil', id)
+                window.livewire.emit('InhabilitarCuenta', id)
                 Swal.close()
             }
         })

@@ -52,7 +52,7 @@ class PlanesController extends Component
         $this->nombre = '';
         $this->celular = '';
         $this->nit = 0;
-        $this->importe = 0;
+        $this->importe = '';
         $this->condicion = 0;
         $this->select = 1;
         $this->mostrartabla = 0;
@@ -100,6 +100,7 @@ class PlanesController extends Component
         $this->mostrartablaPerfiles = 'NO';
         $this->arrayCuentas = array();
         $this->arrayPerfiles = array();
+        $this->diasdePlan = 30;
     }
 
     public function render()
@@ -331,19 +332,20 @@ class PlanesController extends Component
                 ->whereBetween('plans.created_at', [$from, $to])
                 ->where('m.user_id', $user_id)
                 ->where('plans.type_plan', 'COMBO')
-                /* ->whereColumn('plans.id', '=', 'ap.plan_id') */
                 ->orderBy('plans.created_at', 'desc')
                 ->paginate($this->pagination);
         }
 
-        /* CALCULAR LA FECHA DE EXPIRACION SEGUN LA CANTIDAD DE MESES */
-        if ($this->meses > 0) {
-            $date_now = date('Y-m-d h:i:s', time());
-            $dias = $this->meses * 30;
-            $this->expiration_plan = strtotime('+' . $dias . ' day', strtotime($this->fecha_inicio));
-            $this->expiration_plan = date('Y-m-d', $this->expiration_plan);
-        } else {
-            $this->meses = 1;
+        /* CALCULAR LA FECHA DE EXPIRACION SEGUN LA CANTIDAD DE MESES Y DIAS */
+        if ($this->diasdePlan >= 1) {
+            if ($this->meses > 0) {
+                $date_now = date('Y-m-d h:i:s', time());
+                $dias = $this->meses * $this->diasdePlan;
+                $this->expiration_plan = strtotime('+' . $dias . ' day', strtotime($this->fecha_inicio));
+                $this->expiration_plan = date('Y-m-d', $this->expiration_plan);
+            } else {
+                $this->meses = 1;
+            }
         }
 
         /* BUSCAR CLIENTE POR CEDULA EN EL INPUT DEL MODAL */
@@ -410,7 +412,7 @@ class PlanesController extends Component
                         'p.precioEntera'
                     )
                     ->where('accounts.status', 'ACTIVO')
-                    ->where('accounts.start_account', '<=', $date_now)
+                    ->where('accounts.expiration_account', '>', $date_now)
                     ->where('accounts.availability', 'LIBRE')
                     ->where('accounts.whole_account', 'ENTERA')
                     ->where('p.id', $this->plataforma)
@@ -420,7 +422,7 @@ class PlanesController extends Component
             } elseif ($this->cuentaperfil == 'PERFIL') {  /* MOSTRAR LOS PERFILES LIBRES */
                 $this->mostrartabla = 0;
                 $this->mostrartabla = 2;
-                /* CUENTAS ENTERAS PARA CREAR UN PERFIL SI ES QUE NO TIENE CREADOS */
+                /* CUENTAS CON PERFILES DISPONIBLES */
                 $this->cuentasEnteras = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                     ->join('emails as e', 'accounts.email_id', 'e.id')
                     ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
@@ -435,7 +437,7 @@ class PlanesController extends Component
                     )
                     ->where('accounts.status', 'ACTIVO')
                     ->where('accounts.availability', 'LIBRE')
-                    ->where('accounts.start_account', '<=', $date_now)
+                    ->where('accounts.expiration_account', '>', $date_now)
                     ->where('p.id', $this->plataforma)
                     ->orderBy('accounts.expiration_account', 'asc')
                     ->get();
@@ -444,6 +446,7 @@ class PlanesController extends Component
                     $perfilesOcupados = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                         ->join('profiles as p', 'ap.profile_id', 'p.id')
                         ->where('accounts.id', $c->id)
+                        ->where('ap.status', '!=', 'VENCIDO')
                         ->where('p.availability', 'OCUPADO')->get();
 
                     $cantidadOcupados = $perfilesOcupados->count();
@@ -480,8 +483,7 @@ class PlanesController extends Component
             $this->perfilPin3 = '';
             $this->plataforma3Require = 'NO';
 
-            $this->plataforma2 = 'Elegir';
-            $this->plataforma3 = 'Elegir';
+
 
             $this->cuentasp2 = [];
             $this->cuentasp3 = [];
@@ -510,8 +512,7 @@ class PlanesController extends Component
             $this->perfilPin3 = '';
             $this->plataforma3Require = 'NO';
 
-            $this->plataforma1 = 'Elegir';
-            $this->plataforma3 = 'Elegir';
+
 
             $this->cuentasp1 = [];
             $this->cuentasp3 = [];
@@ -540,25 +541,35 @@ class PlanesController extends Component
             $this->perfilPin3 = '';
             $this->plataforma3Require = 'NO';
 
-            $this->plataforma1 = 'Elegir';
-            $this->plataforma2 = 'Elegir';
+
 
             $this->cuentasp1 = [];
             $this->cuentasp2 = [];
         }
 
-        $platforms1 = Platform::where('estado', 'Activo')->where('perfiles', 'SI')->get();
+        if ($this->plataforma2 == 'Elegir' && $this->plataforma3 == 'Elegir') {
+            $platforms1 = Platform::where('estado', 'Activo')->where('perfiles', 'SI')->get();
+        } else {
+            $platforms1 = Platform::where('estado', 'Activo')
+                ->where('perfiles', 'SI')
+                ->where('id', '!=', $this->plataforma2)
+                ->where('id', '!=', $this->plataforma3)
+                ->get();
+        }
+
         /* mostrar cuentas de la plataforma 1 */
         if ($this->plataforma1 != 'Elegir') {
             $platforms2 = Platform::where('estado', 'Activo')
                 ->where('perfiles', 'SI')
                 ->where('id', '!=', $this->plataforma1)
+                ->where('id', '!=', $this->plataforma3)
                 ->get();
             $this->cuentasp1 = Account::where('status', 'ACTIVO')
                 ->where('accounts.start_account', '<=', $date_now)
                 ->where('accounts.expiration_account', '>=', $date_now)
                 ->where('availability', 'LIBRE')
-                ->where('platform_id', $this->plataforma1)->get();
+                ->where('platform_id', $this->plataforma1)
+                ->get();
             foreach ($this->cuentasp1 as $c) {
                 $perfilesOcupados = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                     ->join('profiles as p', 'ap.profile_id', 'p.id')
@@ -696,6 +707,7 @@ class PlanesController extends Component
     public function CrearCombo()
     {
         $this->resetUI();
+        $this->importe = 35;
         $this->emit('show-modalCombos', '');
     }
 
@@ -753,6 +765,9 @@ class PlanesController extends Component
             'perfil1id' => 'required_if:plataforma1Require,NO',
             'perfil2id' => 'required_if:plataforma2Require,NO',
             'perfil3id' => 'required_if:plataforma3Require,NO',
+            'importe' => 'required|integer|gt:0',
+            'meses' => 'required|integer|gt:0',
+            'diasdePlan' => 'required|integer|gt:0',
         ];
         $messages = [
             'nombre.required' => 'El nombre del cliente es requerido',
@@ -770,6 +785,15 @@ class PlanesController extends Component
             'perfil1id.required_if' => 'Seleccione una cuenta de la plataforma 1',
             'perfil2id.required_if' => 'Seleccione una cuenta de la plataforma 2',
             'perfil3id.required_if' => 'Seleccione una cuenta de la plataforma 3',
+            'importe.required' => 'El importe es requerido',
+            'importe.integer' => 'El importe debe ser un número',
+            'importe.gt' => 'El importe debe ser mayor a 0',
+            'meses.required' => 'La cantidad de meses es requerido',
+            'meses.integer' => 'La cantidad de meses debe ser un número',
+            'meses.gt' => 'La cantidad de meses debe ser mayor a 0',
+            'diasdePlan.required' => 'La cantidad de dias requerido',
+            'diasdePlan.integer' => 'La cantidad de dias debe ser un número',
+            'diasdePlan.gt' => 'La cantidad de dias debe ser mayor a 0',
         ];
 
         $this->validate($rules, $messages);
@@ -832,8 +856,6 @@ class PlanesController extends Component
                 ]);
             }
 
-            $this->importe = 35;
-
             /* CREAR EL MOVIMIENTO */
             $mv = Movimiento::create([
                 'type' => 'TERMINADO',
@@ -847,6 +869,18 @@ class PlanesController extends Component
                     $account1 = Account::find($value->Cuenta->id);
                     $account1->whole_account = 'DIVIDIDA';
                     $account1->save();
+
+                    $date_now = date('Y-m-d', time());
+
+                    CuentaInversion::create([
+                        'tipo' => 'INGRESO',
+                        'cantidad' => $this->importe / 3,
+                        'tipoPlan' => 'COMBO',
+                        'tipoTransac' => 'VENTA',
+                        'num_meses' => $this->meses,
+                        'fecha_realizacion' => $date_now,
+                        'account_id' => $account1->id
+                    ]);
                 }
             }
 
@@ -857,6 +891,18 @@ class PlanesController extends Component
                     $account2 = Account::find($value->Cuenta->id);
                     $account2->whole_account = 'DIVIDIDA';
                     $account2->save();
+
+                    $date_now = date('Y-m-d', time());
+
+                    CuentaInversion::create([
+                        'tipo' => 'INGRESO',
+                        'cantidad' => $this->importe / 3,
+                        'tipoPlan' => 'COMBO',
+                        'tipoTransac' => 'VENTA',
+                        'num_meses' => $this->meses,
+                        'fecha_realizacion' => $date_now,
+                        'account_id' => $account2->id
+                    ]);
                 }
             }
             foreach ($perfil3->CuentaPerfil as  $value) {
@@ -865,6 +911,18 @@ class PlanesController extends Component
                     $account3 = Account::find($value->Cuenta->id);
                     $account3->whole_account = 'DIVIDIDA';
                     $account3->save();
+
+                    $date_now = date('Y-m-d', time());
+
+                    CuentaInversion::create([
+                        'tipo' => 'INGRESO',
+                        'cantidad' => $this->importe / 3,
+                        'tipoPlan' => 'COMBO',
+                        'tipoTransac' => 'VENTA',
+                        'num_meses' => $this->meses,
+                        'fecha_realizacion' => $date_now,
+                        'account_id' => $account3->id
+                    ]);
                 }
             }
 
@@ -879,7 +937,7 @@ class PlanesController extends Component
             $perfil3->save();
 
             /* ENCONTRAR INVERSION de la cuenta del perfil 1 */
-            $inversioncuenta = CuentaInversion::where('start_date', '<=', $mv->created_at)
+            /* $inversioncuenta = CuentaInversion::where('start_date', '<=', $mv->created_at)
                 ->where('expiration_date', '>=', $mv->created_at)
                 ->where('account_id', $account1->id)
                 ->get()->first();
@@ -888,10 +946,10 @@ class PlanesController extends Component
             $inversioncuenta->sale_profiles += 1;
             $inversioncuenta->imports = $this->importe / 3;
             $inversioncuenta->ganancia = $inversioncuenta->imports - $inversioncuenta->price;
-            $inversioncuenta->save();
+            $inversioncuenta->save(); */
 
             /* ENCONTRAR INVERSION de la cuenta del perfil 2 */
-            $inversioncuenta2 = CuentaInversion::where('start_date', '<=', $mv->created_at)
+            /* $inversioncuenta2 = CuentaInversion::where('start_date', '<=', $mv->created_at)
                 ->where('expiration_date', '>=', $mv->created_at)
                 ->where('account_id', $account2->id)
                 ->get()->first();
@@ -900,10 +958,10 @@ class PlanesController extends Component
             $inversioncuenta2->sale_profiles += 1;
             $inversioncuenta2->imports = $this->importe / 3;
             $inversioncuenta2->ganancia = $inversioncuenta2->imports - $inversioncuenta2->price;
-            $inversioncuenta2->save();
+            $inversioncuenta2->save(); */
 
             /* ENCONTRAR INVERSION de la cuenta del perfil 3 */
-            $inversioncuenta3 = CuentaInversion::where('start_date', '<=', $mv->created_at)
+            /* $inversioncuenta3 = CuentaInversion::where('start_date', '<=', $mv->created_at)
                 ->where('expiration_date', '>=', $mv->created_at)
                 ->where('account_id', $account3->id)
                 ->get()->first();
@@ -912,7 +970,7 @@ class PlanesController extends Component
             $inversioncuenta3->sale_profiles += 1;
             $inversioncuenta3->imports = $this->importe / 3;
             $inversioncuenta3->ganancia = $inversioncuenta3->imports - $inversioncuenta3->price;
-            $inversioncuenta3->save();
+            $inversioncuenta3->save(); */
 
 
             /* CREAR EL PLAN */
@@ -920,6 +978,7 @@ class PlanesController extends Component
                 'importe' => $this->importe,
                 'plan_start' => $this->fecha_inicio,
                 'expiration_plan' => $this->expiration_plan,
+                'meses' => $this->meses,
                 'ready' => 'NO',
                 'status' => 'VIGENTE',
                 'type_plan' => 'COMBO',
@@ -977,6 +1036,7 @@ class PlanesController extends Component
                     ->where('caja_id', $cccc->id)->get()->first();
                 CarteraMov::create([
                     'type' => 'INGRESO',
+                    'tipoDeMovimiento' => 'STREAMING',
                     'comentario' => '',
                     'cartera_id' => $cajaFisica->id,
                     'movimiento_id' => $mv->id
@@ -985,6 +1045,7 @@ class PlanesController extends Component
                     ->where('caja_id', '1')->get()->first();
                 CarteraMov::create([
                     'type' => 'INGRESO',
+                    'tipoDeMovimiento' => 'STREAMING',
                     'comentario' => '',
                     'cartera_id' => $tigoStreaming->id,
                     'movimiento_id' => $mv->id
@@ -993,6 +1054,7 @@ class PlanesController extends Component
                     ->where('caja_id', $cccc->id)->get()->first();
                 CarteraMov::create([
                     'type' => 'EGRESO',
+                    'tipoDeMovimiento' => 'STREAMING',
                     'comentario' => '',
                     'cartera_id' => $carteraTelefono->id,
                     'movimiento_id' => $mv->id
@@ -1002,6 +1064,7 @@ class PlanesController extends Component
                     ->where('caja_id', '1')->get()->first();
                 CarteraMov::create([
                     'type' => 'INGRESO',
+                    'tipoDeMovimiento' => 'STREAMING',
                     'comentario' => '',
                     'cartera_id' => $banco->id,
                     'movimiento_id' => $mv->id
@@ -1011,6 +1074,7 @@ class PlanesController extends Component
                     ->where('caja_id', '1')->get()->first();
                 CarteraMov::create([
                     'type' => 'INGRESO',
+                    'tipoDeMovimiento' => 'STREAMING',
                     'comentario' => '',
                     'cartera_id' => $tigoStreaming->id,
                     'movimiento_id' => $mv->id
@@ -1103,6 +1167,7 @@ class PlanesController extends Component
         }
         $this->emit('show-modal', 'show modal!');
     }
+
     /* Cargar los datos seleccionados de la tabla a los label */
     public function Seleccionar($celular, $nombre)
     {
@@ -1124,6 +1189,9 @@ class PlanesController extends Component
             'expiration_plan' => 'required|not_in:0000-00-00',
             'accounts' => 'required_if:mostrartabla,1',
             'profiles' => 'required_if:mostrartabla,2',
+            'importe' => 'required|integer|gt:0',
+            'meses' => 'required|integer|gt:0',
+            'diasdePlan' => 'required|integer|gt:0',
         ];
         $messages = [
             'plataforma.required' => 'La Plataforma es requerida',
@@ -1143,6 +1211,15 @@ class PlanesController extends Component
             'expiration_plan.not_in' => 'Seleccione una fecha valida',
             'accounts.required_if' => 'No tiene cuentas seleccionadas',
             'profiles.required_if' => 'Selecciona una cuenta para el perfil',
+            'importe.required' => 'El importe es requerido',
+            'importe.integer' => 'El importe debe ser un número',
+            'importe.gt' => 'El importe debe ser mayor a 0',
+            'meses.required' => 'La cantidad de meses es requerido',
+            'meses.integer' => 'La cantidad de meses debe ser un número',
+            'meses.gt' => 'La cantidad de meses debe ser mayor a 0',
+            'diasdePlan.required' => 'La cantidad de dias requerido',
+            'diasdePlan.integer' => 'La cantidad de dias debe ser un número',
+            'diasdePlan.gt' => 'La cantidad de dias debe ser mayor a 0',
         ];
 
         $this->validate($rules, $messages);
@@ -1183,41 +1260,54 @@ class PlanesController extends Component
                     'procedencia_cliente_id' => 1,
                 ]);
             }
+
             if ($this->cuentaperfil == 'ENTERA') {
                 /* SI SE SELECCIONÓ CUENTA ENTERA */
                 foreach ($this->accounts as $accp) {
                     /* CALCULAR EL IMPORTE SEGUN LA PLATAFORMA Y SI ES ENTERA O PERFIL */
-                    $this->importe += $accp->Plataforma->precioEntera;
-                    $this->importe *= $this->meses;
+                    /* $this->importe += $accp->Plataforma->precioEntera;
+                    $this->importe *= $this->meses; */
+                    $importeIndividual = $this->importe / $this->accounts->count();
                     /* CREAR EL MOVIMIENTO */
                     $mv = Movimiento::create([
                         'type' => 'TERMINADO',
                         'status' => 'ACTIVO',
-                        'import' => $this->importe,
+                        'import' => $importeIndividual,
                         'user_id' => Auth()->user()->id,
                     ]);
                     /* PONER LA CUENTA EN OCUPADO */
                     $accp->availability = 'OCUPADO';
                     $accp->save();
+
+                    $date_now = date('Y-m-d', time());
+
+                    CuentaInversion::create([
+                        'tipo' => 'INGRESO',
+                        'cantidad' => $importeIndividual,
+                        'tipoPlan' => 'ENTERA',
+                        'tipoTransac' => 'VENTA',
+                        'num_meses' => $this->meses,
+                        'fecha_realizacion' => $date_now,
+                        'account_id' => $accp->id
+                    ]);
+
                     /* ENCONTRAR INVERSION */
-                    $inversioncuenta = CuentaInversion::where('start_date', '<=', $mv->created_at)
+                    /* $inversioncuenta = CuentaInversion::where('start_date', '<=', $mv->created_at)
                         ->where('expiration_date', '>=', $mv->created_at)
                         ->where('account_id', $accp->id)
                         ->get()->first();
 
                     $inversioncuenta->type = 'CUENTA';
-                    $inversioncuenta->imports = $this->importe;
-                    $inversioncuenta->ganancia = $this->importe - $inversioncuenta->price;
-                    $inversioncuenta->save();
-
-                    /* OBTENER FECHA ACTUAL */
-                    $DateAndTime = date('Y-m-d h:i:s', time());
+                    $inversioncuenta->imports = $importeIndividual;
+                    $inversioncuenta->ganancia = $importeIndividual - $inversioncuenta->price;
+                    $inversioncuenta->save(); */
 
                     /* CREAR EL PLAN */
                     $plan = Plan::create([
-                        'importe' => $this->importe,
+                        'importe' => $importeIndividual,
                         'plan_start' => $this->fecha_inicio,
                         'expiration_plan' => $this->expiration_plan,
+                        'meses' => $this->meses,
                         'ready' => 'NO',
                         'status' => 'VIGENTE',
                         'type_plan' => 'CUENTA',
@@ -1235,6 +1325,7 @@ class PlanesController extends Component
                             ->where('caja_id', $cccc->id)->get()->first();
                         CarteraMov::create([
                             'type' => 'INGRESO',
+                            'tipoDeMovimiento' => 'STREAMING',
                             'comentario' => '',
                             'cartera_id' => $cajaFisica->id,
                             'movimiento_id' => $mv->id
@@ -1243,6 +1334,7 @@ class PlanesController extends Component
                             ->where('caja_id', '1')->get()->first();
                         CarteraMov::create([
                             'type' => 'INGRESO',
+                            'tipoDeMovimiento' => 'STREAMING',
                             'comentario' => '',
                             'cartera_id' => $tigoStreaming->id,
                             'movimiento_id' => $mv->id
@@ -1251,6 +1343,7 @@ class PlanesController extends Component
                             ->where('caja_id', $cccc->id)->get()->first();
                         CarteraMov::create([
                             'type' => 'EGRESO',
+                            'tipoDeMovimiento' => 'STREAMING',
                             'comentario' => '',
                             'cartera_id' => $carteraTelefono->id,
                             'movimiento_id' => $mv->id
@@ -1260,6 +1353,7 @@ class PlanesController extends Component
                             ->where('caja_id', '1')->get()->first();
                         CarteraMov::create([
                             'type' => 'INGRESO',
+                            'tipoDeMovimiento' => 'STREAMING',
                             'comentario' => '',
                             'cartera_id' => $banco->id,
                             'movimiento_id' => $mv->id
@@ -1269,6 +1363,7 @@ class PlanesController extends Component
                             ->where('caja_id', '1')->get()->first();
                         CarteraMov::create([
                             'type' => 'INGRESO',
+                            'tipoDeMovimiento' => 'STREAMING',
                             'comentario' => '',
                             'cartera_id' => $tigoStreaming->id,
                             'movimiento_id' => $mv->id
@@ -1278,25 +1373,24 @@ class PlanesController extends Component
                         'movimiento_id' => $mv->id,
                         'cliente_id' => $cliente->id
                     ]);
-                    $this->importe = 0;
                     $this->condicional = 'cuentas';
                 }
             } elseif ($this->cuentaperfil == 'PERFIL') {
                 /* SI SE SELECCIONÓ PERFIL */
                 foreach ($this->profiles as $accp) {
                     /* CALCULAR EL IMPORTE SEGUN LA PLATAFORMA Y SI ES ENTERA O PERFIL */
-                    foreach ($accp->CuentaPerfil as  $value) {
+                    /* foreach ($accp->CuentaPerfil as  $value) {
                         if ($value->status == 'SinAsignar') {
                             $this->importe += $value->Cuenta->Plataforma->precioPerfil;
                             $this->importe *= $this->meses;
                         }
-                    }
-
+                    } */
+                    $importeIndividual = $this->importe / $this->profiles->count();
                     /* CREAR EL MOVIMIENTO */
                     $mv = Movimiento::create([
                         'type' => 'TERMINADO',
                         'status' => 'ACTIVO',
-                        'import' => $this->importe,
+                        'import' => $importeIndividual,
                         'user_id' => Auth()->user()->id,
                     ]);
 
@@ -1306,15 +1400,28 @@ class PlanesController extends Component
                             $account = Account::find($value->Cuenta->id);
                             $account->whole_account = 'DIVIDIDA';
                             $account->save();
+
+                            $date_now = date('Y-m-d', time());
+
+                            CuentaInversion::create([
+                                'tipo' => 'INGRESO',
+                                'cantidad' => $importeIndividual,
+                                'tipoPlan' => 'PERFIL',
+                                'tipoTransac' => 'VENTA',
+                                'num_meses' => $this->meses,
+                                'fecha_realizacion' => $date_now,
+                                'account_id' => $account->id
+                            ]);
                         }
                     }
 
                     /* PONER EL PERFIL EN OCUPADO */
                     $accp->availability = 'OCUPADO';
                     $accp->save();
-                    foreach ($accp->CuentaPerfil as  $value) {
+
+                    /* foreach ($accp->CuentaPerfil as  $value) {
                         if ($value->status == 'SinAsignar') {
-                            /* ENCONTRAR INVERSION */
+                            
                             $inversioncuenta = CuentaInversion::where('start_date', '<=', $mv->created_at)
                                 ->where('expiration_date', '>=', $mv->created_at)
                                 ->where('account_id', $value->Cuenta->id)
@@ -1324,17 +1431,16 @@ class PlanesController extends Component
 
                     $inversioncuenta->type = 'PERFILES';
                     $inversioncuenta->sale_profiles += 1;
-                    $inversioncuenta->imports += $this->importe;
+                    $inversioncuenta->imports += $importeIndividual;
                     $inversioncuenta->ganancia = $inversioncuenta->imports - $inversioncuenta->price;
-                    $inversioncuenta->save();
+                    $inversioncuenta->save(); */
 
-                    /* OBTENER FECHA ACTUAL */
-                    $DateAndTime = date('Y-m-d h:i:s', time());
                     /* CREAR EL PLAN */
                     $plan = Plan::create([
-                        'importe' => $this->importe,
+                        'importe' => $importeIndividual,
                         'plan_start' => $this->fecha_inicio,
                         'expiration_plan' => $this->expiration_plan,
+                        'meses' => $this->meses,
                         'ready' => 'NO',
                         'status' => 'VIGENTE',
                         'type_plan' => 'PERFIL',
@@ -1368,6 +1474,7 @@ class PlanesController extends Component
                             ->where('caja_id', $cccc->id)->get()->first();
                         CarteraMov::create([
                             'type' => 'INGRESO',
+                            'tipoDeMovimiento' => 'STREAMING',
                             'comentario' => '',
                             'cartera_id' => $cajaFisica->id,
                             'movimiento_id' => $mv->id
@@ -1376,6 +1483,7 @@ class PlanesController extends Component
                             ->where('caja_id', '1')->get()->first();
                         CarteraMov::create([
                             'type' => 'INGRESO',
+                            'tipoDeMovimiento' => 'STREAMING',
                             'comentario' => '',
                             'cartera_id' => $tigoStreaming->id,
                             'movimiento_id' => $mv->id
@@ -1384,6 +1492,7 @@ class PlanesController extends Component
                             ->where('caja_id', $cccc->id)->get()->first();
                         CarteraMov::create([
                             'type' => 'EGRESO',
+                            'tipoDeMovimiento' => 'STREAMING',
                             'comentario' => '',
                             'cartera_id' => $carteraTelefono->id,
                             'movimiento_id' => $mv->id
@@ -1393,6 +1502,7 @@ class PlanesController extends Component
                             ->where('caja_id', '1')->get()->first();
                         CarteraMov::create([
                             'type' => 'INGRESO',
+                            'tipoDeMovimiento' => 'STREAMING',
                             'comentario' => '',
                             'cartera_id' => $banco->id,
                             'movimiento_id' => $mv->id
@@ -1402,6 +1512,7 @@ class PlanesController extends Component
                             ->where('caja_id', '1')->get()->first();
                         CarteraMov::create([
                             'type' => 'INGRESO',
+                            'tipoDeMovimiento' => 'STREAMING',
                             'comentario' => '',
                             'cartera_id' => $tigoStreaming->id,
                             'movimiento_id' => $mv->id
@@ -1413,7 +1524,6 @@ class PlanesController extends Component
                         'cliente_id' => $cliente->id
                     ]);
 
-                    $this->importe = 0;
                     $this->condicional = 'perfiles';
                 }
             }
@@ -1545,11 +1655,18 @@ class PlanesController extends Component
 
     public function Modificar()
     {
-        $plan = Plan::find($this->selected_id);
-        $plan->observations = $this->observaciones;
-        $plan->save();
-        $this->resetUI();
-        $this->emit('item-actualizado', 'Se actulizó la información');
+        DB::beginTransaction();
+        try {
+            $plan = Plan::find($this->selected_id);
+            $plan->observations = $this->observaciones;
+            $plan->save();
+            $this->resetUI();
+            $this->emit('item-actualizado', 'Se actulizó la información');
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollback();
+            $this->emit('item-error', 'ERROR' . $e->getMessage());
+        }
     }
 
     public function EditarPerf(Profile $perf)
@@ -1571,26 +1688,41 @@ class PlanesController extends Component
             'nombrePerfil.required' => 'El nombre del perfil es requerido',
             'pinPerfil.required' => 'El pin es requerido',
         ];
-
         $this->validate($rules, $messages);
-        $perfil = Profile::find($this->selected_perf);
-        $perfil->nameprofile = $this->nombrePerfil;
-        $perfil->pin = $this->pinPerfil;
-        $perfil->save();
-        $this->nombrePerfil = '';
-        $this->pinPerfil = '';
-        $this->emit('perf-actualizado', 'Se actulizó el perfil');
+
+        DB::beginTransaction();
+        try {
+            $perfil = Profile::find($this->selected_perf);
+            $perfil->nameprofile = $this->nombrePerfil;
+            $perfil->pin = $this->pinPerfil;
+            $perfil->save();
+            $this->nombrePerfil = '';
+            $this->pinPerfil = '';
+            $this->profiles = Profile::find($this->arrayPerfiles);
+            DB::commit();
+            $this->emit('perf-actualizado', 'Se actualizó el perfil');
+        } catch (Exception $e) {
+            DB::rollback();
+            $this->emit('item-error', 'ERROR' . $e->getMessage());
+        }
     }
 
     protected $listeners = ['deleteRow' => 'Anular', 'Realizado' => 'Realizado'];
 
     public function Realizado(Plan $plan)
     {
-        $plan->ready = 'SI';
-        $plan->done = 'SI';
-        $plan->save();
-        $this->resetUI();
-        $this->emit('perf-actualizado', 'Se cambió a realizado');
+        DB::beginTransaction();
+        try {
+            $plan->ready = 'SI';
+            $plan->done = 'SI';
+            $plan->save();
+            $this->resetUI();
+            DB::commit();
+            $this->emit('perf-actualizado', 'Se cambió a realizado');
+        } catch (Exception $e) {
+            DB::rollback();
+            $this->emit('item-error', 'ERROR' . $e->getMessage());
+        }
     }
 
     public function resetUI()
@@ -1604,7 +1736,7 @@ class PlanesController extends Component
         $this->nombre = '';
         $this->celular = '';
         $this->nit = 0;
-        $this->importe = 0;
+        $this->importe = '';
         $this->condicion = 0;
         $this->select = 1;
         $this->mostrartabla = 0;
@@ -1644,8 +1776,14 @@ class PlanesController extends Component
         $this->plataforma2Require = 'NO';
         $this->plataforma3Require = 'NO';
         $this->fecha_inicio = Carbon::parse(Carbon::now())->format('Y-m-d');
+        $this->Reset1Platf = 'INICIO';
+        $this->Reset2Platf = 'INICIO';
+        $this->Reset3Platf = 'INICIO';
+        $this->mostrartablaCuenta = 'NO';
+        $this->mostrartablaPerfiles = 'NO';
         $this->arrayCuentas = array();
         $this->arrayPerfiles = array();
+        $this->diasdePlan = 30;
         $this->resetValidation();
     }
 }

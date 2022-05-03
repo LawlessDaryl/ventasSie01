@@ -52,7 +52,10 @@ use App\Http\Livewire\StrProveedorController;
 use App\Http\Livewire\ReporGananciaTgController;
 use App\Http\Livewire\ProcedenciaController;
 use App\Http\Livewire\ProvidersController;
+use App\Http\Livewire\ReporteGananciaStr;
+use App\Http\Livewire\ReporteGananciaStrController;
 use App\Http\Livewire\ReporteJornadaTMController;
+use App\Http\Livewire\ReporteMovimientoController;
 use App\Http\Livewire\ReportEntregadoServController;
 use App\Http\Livewire\ReporteServiceController;
 use App\Http\Livewire\TransaccionesController;
@@ -80,6 +83,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('cajas', CajasController::class)->name('caja')->middleware('permission:Caja_Index');
     Route::get('carteras', CarteraController::class)->name('cartera')->middleware('permission:Cartera_Index');
     Route::get('cortecajas', CorteCajaController::class)->name('cortecaja')->middleware('permission:Corte_Caja_Index');
+    Route::get('movimientos', ReporteMovimientoController::class)->name('movimiento');
 
     /* TIGO MONEY */
     Route::get('origenes', OrigenController::class)->name('origen')->middleware('permission:Origen_Index');
@@ -114,6 +118,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('reporteStreaming/pdf/{user}/{cuePerf}/{vencVig}/{fechas}/{f1}/{f2}', [ExportStreamingPdfController::class, 'reporteStrPDF']);
         Route::get('reporteStreaming/pdf/{user}/{cuePerf}/{vencVig}/{fechas}', [ExportStreamingPdfController::class, 'reporteStrPDF']);
     });
+    Route::get('reportGananciaStreaming', ReporteGananciaStrController::class)->name('reportGananciaStr');
 
     /* NOTIFICACIONES */
     Route::get('telefonos', PhonesController::class)->name('telefonos');
@@ -154,7 +159,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('reporteServicio/pdf/{user}/{estado}/{type}/{f1}/{f2}', [ExportServicioPdfController::class, 'reporteServPDF']);
         Route::get('reporteServicio/pdf/{user}/{estado}/{type}', [ExportServicioPdfController::class, 'reporteServPDF']);
     });
-    Route::get('reportentregservices', ReportEntregadoServController ::class)->name('res')->middleware('permission:Boton_Entregar_Servicio');
+    Route::get('reportentregservices', ReportEntregadoServController::class)->name('res')->middleware('permission:Boton_Entregar_Servicio');
     Route::get('reporteServicEntreg/pdf/{type}/{f1}/{f2}/{sucursal}/{sE}/{sB}/{caja}', [ExportServicioEntregPdfController::class, 'reporteServPDF']);
     Route::get('reporteServicEntreg/pdf/{type}/{sucursal}', [ExportServicioEntregPdfController::class, 'reporteServPDF']);
 });

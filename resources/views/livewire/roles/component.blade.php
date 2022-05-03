@@ -6,10 +6,10 @@
                     <b>{{ $componentName }} | {{ $pageTitle }}</b>
                 </h4>
                 <ul class="tabs tab-pills">
-                    
-                        <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
+
+                    <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
                         data-target="#theModal">Agregar</a>
-                    
+
                 </ul>
             </div>
             @include('common.searchbox')
@@ -20,7 +20,7 @@
                         <thead class="text-white" style="background: #3B3F5C">
                             <tr>
                                 <th class="table-th text-withe">ID</th>
-                                <th class="table-th text-withe text-center">DESCRIPCION</th>                                                             
+                                <th class="table-th text-withe text-center">DESCRIPCION</th>
                                 <th class="table-th text-withe text-center">ACCIONES</th>
                             </tr>
                         </thead>
@@ -31,15 +31,15 @@
                                         <h6>{{ $rol->id }}</h6>
                                     </td>
                                     <td>
-                                        <h6 class="text-center">{{ ($rol->name) }}</h6>
-                                    </td>                           
-                                    
+                                        <h6 class="text-center">{{ $rol->name }}</h6>
+                                    </td>
                                     <td class="text-center">
                                         <a href="javascript:void(0)" wire:click="Edit({{ $rol->id }})"
                                             class="btn btn-dark mtmobile" title="Editar registro">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <a href="javascript:void(0)" onclick="Confirm('{{ $rol->id }}')" 
+                                        <a href="javascript:void(0)"
+                                            onclick="Confirm('{{ $rol->id }}','{{ $rol->name }}','{{ $rol->usuarios->count() }}')"
                                             class="btn btn-dark" title="Eliminar registro">
                                             <i class="fas fa-trash"></i>
                                         </a>
@@ -81,13 +81,21 @@
         })
         window.livewire.on('modal-hide', Msg => {
             $('#theModal').modal('hide')
-        })      
-              
+        })
+
 
     });
 
-    function Confirm(id, name) {
-        
+    function Confirm(id, name, usuarios) {
+        if (usuarios > 0) {
+            swal.fire({
+                title: 'PRECAUCION',
+                icon: 'warning',
+                text: 'No se puede eliminar el role "' + name + '" porque hay ' +
+                    usuarios + ' usuarios con ese role.'
+            })
+            return;
+        }
         swal.fire({
             title: 'CONFIRMAR',
             icon: 'warning',

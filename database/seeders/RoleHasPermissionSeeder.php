@@ -30,6 +30,11 @@ class RoleHasPermissionSeeder extends Seeder
             ]);
         }
 
+        RoleHasPermissions::create([    // PERMITIR VER JORNADA AL CAJERO
+            'permission_id' => 56,
+            'role_id' => 5,
+        ]);
+
         for ($x = 23; $x <= 31; $x++) {     /* PERMISOS STREAMING */
             RoleHasPermissions::create([
                 'permission_id' => $x,
@@ -103,15 +108,6 @@ class RoleHasPermissionSeeder extends Seeder
             ]);
         }
 
-        RoleHasPermissions::create([    // PERMITIR VER JORNADA AL ADMIN
-            'permission_id' => 56,
-            'role_id' => 6,
-        ]);
-
-        RoleHasPermissions::create([    // PERMITIR VER JORNADA AL CAJERO
-            'permission_id' => 56,
-            'role_id' => 5,
-        ]);
         RoleHasPermissions::create([    // PERMITIR MODIFICAR CAJA Y SUCURSAL AL ADMIN
             'permission_id' => 57,
             'role_id' => 6,

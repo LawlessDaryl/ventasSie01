@@ -32,15 +32,11 @@ class CarteraController extends Component
     public function render()
     {
         if (strlen($this->search) > 0)
-            $data = Cartera::join('cajas as c', 'c.id', 'carteras.caja_id')
-                ->select('carteras.*', 'c.nombre as cajanombre')
-                ->where('nombre', 'like', '%' . $this->search . '%')
+            $data = Cartera::where('nombre', 'like', '%' . $this->search . '%')
                 ->orwhere('tipo', 'like', '%' . $this->search . '%')
                 ->paginate($this->pagination);
         else
-            $data = Cartera::join('cajas as c', 'c.id', 'carteras.caja_id')
-                ->select('carteras.*', 'c.nombre as cajanombre')
-                ->orderBy('id', 'desc')
+            $data = Cartera::orderBy('id', 'desc')
                 ->paginate($this->pagination);
 
         if ($this->tipo != 'Elegir') {
@@ -50,6 +46,9 @@ class CarteraController extends Component
                 $this->variable = 0;
             }
         }
+        /* $cartera1 = Cartera::find(1);
+        $cantidad=$cartera1->carteraM->count();
+        dd($cantidad); */
         return view('livewire.cartera.component', [
             'data' => $data,
             'cajas' => Caja::orderBy('nombre', 'asc')->get()

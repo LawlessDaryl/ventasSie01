@@ -24,7 +24,7 @@ class SucursalSeeder extends Seeder
         ]);
         Sucursal::create([
             'name' => 'Sucursal Ferrufino',
-            'adress' => 'Av. America casi Billing',
+            'adress' => 'Av. America y Andres Ferrufino',
             'telefono' => '470080',
             'celular' => '7108080',
             'nit_id' => '908877',
@@ -32,7 +32,7 @@ class SucursalSeeder extends Seeder
         ]);
         Sucursal::create([
             'name' => 'Sucursal Perú',
-            'adress' => 'Av. America casi Billing',
+            'adress' => 'Av. Perú casi Plazuela Vicuna',
             'telefono' => '470080',
             'celular' => '7108080',
             'nit_id' => '908877',

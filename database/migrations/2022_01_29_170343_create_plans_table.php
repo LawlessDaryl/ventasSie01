@@ -18,6 +18,7 @@ class CreatePlansTable extends Migration
             $table->integer('importe');
             $table->date('plan_start');
             $table->date('expiration_plan');
+            $table->integer('meses');
             $table->enum('ready', ['SI', 'NO'])->default('NO');
             $table->enum('done', ['SI', 'NO'])->default('NO');
             $table->enum('type_plan', ['CUENTA', 'PERFIL', 'COMBO']);

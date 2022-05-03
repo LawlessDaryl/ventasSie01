@@ -20,7 +20,7 @@
 
                     <div class="col-sm-12 col-md-6">
                         <div class="form-group">
-                            <label><h6>Cédula *</h6></label>
+                            <label><h6>Cédula</h6></label>
                             <input type="number" wire:model.lazy="cedula" class="form-control" placeholder="12121212" maxlength="10">
                             @error('cedula') <span class="text-danger er">{{ $message }}</span>@enderror
                         </div>

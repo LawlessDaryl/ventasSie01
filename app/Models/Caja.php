@@ -9,5 +9,10 @@ class Caja extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nombre','estado','sucursal_id'];
+    protected $fillable = ['nombre', 'estado', 'sucursal_id'];
+
+    public function carteras()
+    {
+        return $this->hasMany(Cartera::class);
+    }
 }

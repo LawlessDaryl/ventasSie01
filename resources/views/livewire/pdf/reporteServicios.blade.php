@@ -43,7 +43,7 @@
                                 {{ $dateTo }}</strong></span>
                     @else
                         <span style="font-size: 16px;"><strong>Fecha de consulta:
-                                {{ \Carbon\Carbon::now()->format('d-M-Y') }}</strong></span>
+                                {{ \Carbon\Carbon::now()->format('d-m-Y') }}</strong></span>
                     @endif
 
                     <br>
@@ -72,7 +72,7 @@
                     <th width="7%">Detalle</th>
                     <th width="6%">Estado</th>
                     <th width="10%">Tec. Resp.</th>
-                    
+
                 </tr>
             </thead>
 
@@ -89,7 +89,9 @@
                         @foreach ($d->movservices as $mv)
                             @if ($mv->movs->type == 'PENDIENTE')
                                 <td align="center">
-                                    <FONT FACE="times new roman" SIZE=1>{{ $mv->movs->created_at }}</FONT>
+                                    <FONT FACE="times new roman" SIZE=1>
+                                        {{ \Carbon\Carbon::parse($mv->movs->created_at)->format('d/m/Y - H:i') }}
+                                    </FONT>
                                 </td>
                                 @if ($mv->movs->status == 'ACTIVO')
                                     <td align="center">
@@ -112,7 +114,9 @@
                             @endif
                             @if ($mv->movs->type == 'TERMINADO')
                                 <td align="center">
-                                    <FONT FACE="times new roman" SIZE=1>{{ $mv->movs->created_at }}</FONT>
+                                    <FONT FACE="times new roman" SIZE=1>
+                                        {{ \Carbon\Carbon::parse($mv->movs->created_at)->format('d/m/Y - H:i') }}
+                                    </FONT>
                                 </td>
                                 @if ($mv->movs->status == 'ACTIVO')
                                     <td align="center">
@@ -123,7 +127,9 @@
 
                             @if ($mv->movs->type == 'ENTREGADO')
                                 <td align="center">
-                                    <FONT FACE="times new roman" SIZE=1>{{ $mv->movs->created_at }}</FONT>
+                                    <FONT FACE="times new roman" SIZE=1>
+                                        {{ \Carbon\Carbon::parse($mv->movs->created_at)->format('d/m/Y - H:i') }}
+                                    </FONT>
                                 </td>
                             @elseif ($mv->movs->type == 'ABANDONADO')
                                 <td align="center">
@@ -144,7 +150,6 @@
                                     </td>
                                 @endif
                             @endif --}}
-
                         @endforeach
                         <td align="center">
                             <FONT FACE="times new roman" SIZE=1>{{ number_format($d->costo, 2) }}</FONT>
@@ -225,30 +230,30 @@
                     </td>
                     <td class="text-right" colspan="4">
                         <span><strong>
-                                
-                            ${{ number_format($data->sum('costo'), 2) }}
+
+                                {{ number_format($data->sum('costo'), 2) }} bs.
 
                             </strong></span>
                     </td>
                     <td class="text-right" colspan="1">
                         <span><strong>
                                 @php
-                                    $mytotal = 0;                                     
+                                    $mytotal = 0;
                                 @endphp
                                 @foreach ($data as $d)
                                     @foreach ($d->movservices as $mv)
                                         @if ($mv->movs->status == 'ACTIVO')
                                             @php
-                                            $mytotal += $mv->movs->import;
-                                            @endphp                                    
+                                                $mytotal += $mv->movs->import;
+                                            @endphp
                                         @endif
                                     @endforeach
                                 @endforeach
-                                ${{ number_format($mytotal, 2) }}
+                                {{ number_format($mytotal, 2) }} bs.
 
                             </strong></span>
                     </td>
-                    
+
                 </tr>
             </tfoot>
         </table>

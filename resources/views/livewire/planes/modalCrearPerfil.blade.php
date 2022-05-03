@@ -49,7 +49,8 @@
                                                 <h6 class="text-center">{{ $c->content }}</h6>
                                             </td>
                                             <td class="text-center">
-                                                <h6 class="text-center">{{ $c->expiration_account }}</h6>
+                                                <h6 class="text-center">
+                                                    {{ \Carbon\Carbon::parse($c->expiration_account)->format('d/m/Y') }}
                                             </td>
                                             <td class="text-center">
                                                 <h6 class="text-center">{{ $c->number_profiles }}</h6>

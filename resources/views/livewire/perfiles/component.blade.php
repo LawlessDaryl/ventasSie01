@@ -6,23 +6,39 @@
                     <b>{{ $componentName }} | {{ $pageTitle }}</b>
                 </h4>
             </div>
-            @include('common.searchbox')
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-12">
+                    <div class="input-group mb-4">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text input-gp">
+                                <i class="fas fa-search"></i>
+                            </span>
+                        </div>
+                        <input type="text" wire:model="search" placeholder="Buscar" class="form-control">
+                    </div>
+                </div>
+                @if ($condicional == 'ocupados' || $condicional == 'vencidos')
+                    <div class="col-sm-12 col-md-2">
+                        <div class="form-group">
+                            <h6 class="form-control"><strong> PLATAFORMA: </strong></h6>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-2">
+                        <div class="form-group">
+                            <select wire:model="PlataformaFiltro" class="form-control">
+                                <option value="TODAS">TODAS</option>
+                                @foreach ($plataformas as $p)
+                                    <option value="{{ $p->id }}">{{ $p->nombre }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                @endif
+            </div>
 
             <div class="form-group">
                 <div class="row">
-                    {{-- <div class="col-sm-12 col-md-2">
-                        <div class="form-group">
-                            <div class="n-chk">
-                                <label class="new-control new-radio radio-classic-primary">
-                                    <input type="radio" class="new-control-input" name="custom-radio-4" id="libres"
-                                        value="libres" wire:model="condicional">
-                                    <span class="new-control-indicator"></span>
-                                    <h6>LIBRES</h6>
-                                </label>
-                            </div>
-                        </div>
-                    </div> --}}
-                    <div class="col-sm-12 col-md-2">
+                    <div class="col-sm-12 col-md-3">
                         <div class="form-group">
                             <div class="n-chk">
                                 <label class="new-control new-radio radio-classic-primary">
@@ -34,7 +50,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-12 col-md-2">
+                    <div class="col-sm-12 col-md-3">
                         <div class="form-group">
                             <div class="n-chk">
                                 <label class="new-control new-radio radio-classic-primary">
@@ -46,14 +62,26 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-12 col-md-2">
+                    <div class="col-sm-12 col-md-3">
                         <div class="form-group">
                             <div class="n-chk">
                                 <label class="new-control new-radio radio-classic-primary">
                                     <input type="radio" class="new-control-input" name="custom-radio-4" id="combos"
                                         value="combos" wire:model="condicional" checked>
                                     <span class="new-control-indicator"></span>
-                                    <h6>COMBO PERFILES</h6>
+                                    <h6>COMBOS VIGENTES DE PERFILES </h6>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-3">
+                        <div class="form-group">
+                            <div class="n-chk">
+                                <label class="new-control new-radio radio-classic-primary">
+                                    <input type="radio" class="new-control-input" name="custom-radio-4" id="combos"
+                                        value="combosVencidos" wire:model="condicional" checked>
+                                    <span class="new-control-indicator"></span>
+                                    <h6>COMBO VENCIDOS DE PERFILES</h6>
                                 </label>
                             </div>
                         </div>
@@ -61,60 +89,7 @@
                 </div>
             </div>
 
-            @if ($condicional == 'libres')
-                <div class="widget-content">
-                    <div class="table-responsive">
-                        <table class="table table-unbordered table-hover mt-2">
-                            <thead class="text-white" style="background: #3B3F5C">
-                                <tr>
-                                    <th class="table-th text-withe">PLATAFORMA</th>
-                                    <th class="table-th text-withe text-center">GMAIL</th>
-                                    <th class="table-th text-withe text-center">CONTRASEÑA CUENTA</th>
-                                    <th class="table-th text-withe text-center">PERFIL</th>
-                                    <th class="table-th text-withe text-center">EXPIRACION CUENTA</th>
-
-                                    <th class="table-th text-withe text-center">ACCIONES</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($profiles as $p)
-                                    <tr>
-                                        <td>
-                                            <h6 class="text-center">{{ $p->nombre }}</h6>
-                                        </td>
-                                        <td>
-                                            <h6 class="text-center">{{ $p->content }} <br> {{ $p->pass }}</h6>
-                                        </td>
-                                        <td>
-                                            <h6 class="text-center">{{ $p->passAccount }}</h6>
-                                        </td>
-                                        <td>
-                                            <h6 class="text-center"><strong> Nombre: </strong>{{ $p->namep }}
-                                                <strong>PIN: </strong>{{ $p->pin }}
-                                            </h6>
-                                        </td>
-                                        <td>
-                                            <h6 class="text-center">{{ $p->expiration }}</h6>
-                                        </td>
-                                        <td class="text-center">
-                                            <a href="javascript:void(0)" wire:click="Edit({{ $p->id }})"
-                                                class="btn btn-dark mtmobile" title="Edit">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            <a href="javascript:void(0)"
-                                                onclick="Confirm('{{ $p->id }}','{{ $p->correo }}')"
-                                                class="btn btn-dark" title="Delete">
-                                                <i class="fas fa-trash"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                        {{ $profiles->links() }}
-                    </div>
-                </div>
-            @elseif($condicional == 'ocupados' || $condicional == 'vencidos')
+            @if ($condicional == 'ocupados' || $condicional == 'vencidos')
                 <div class="widget-content">
                     <div class="table-responsive">
                         <table class="table table-unbordered table-hover mt-2">
@@ -160,17 +135,34 @@
                                                 <strong>PIN: </strong>{{ $p->pin }}
                                             </h6>
                                         </td>
-                                        <td>
-                                            <h6 class="text-center">{{ $p->expiration }}</h6>
+                                        <td @if ($condicional == 'ocupados') @if ($p->horasCuenta > 72)
+                                            style="background-color: #09ed3d !important"
+                                            @elseif($p->horasCuenta >= 0 && $p->horasCuenta <= 72)
+                                            style="background-color: #f1dc08 !important"
+                                            @else
+                                            style="background-color: #FF0000 !important" @endif
+                                            @endif>
+                                            <h6 class="text-center">
+                                                {{ \Carbon\Carbon::parse($p->expiration)->format('d/m/Y') }}
+                                            </h6>
                                         </td>
                                         <td>
-                                            <h6 class="text-center">{{ $p->plan_start }}</h6>
+                                            <h6 class="text-center">
+                                                {{ \Carbon\Carbon::parse($p->plan_start)->format('d/m/Y') }}
+                                            </h6>
                                         </td>
-                                        <td
-                                            @if ($condicional == 'ocupados') style="{{ $p->horas <= 24 ? 'background-color: #FF0000 !important' : 'background-color: #09ed3d !important' }}" @endif>
-                                            <h6 class="text-center">{{ $p->expiration_plan }}</h6>
+                                        <td @if ($condicional == 'ocupados') @if ($p->horasPlan > 72)
+                                            style="background-color: #09ed3d !important"
+                                            @elseif($p->horasPlan >= 0 && $p->horasPlan <= 72)
+                                            style="background-color: #f1dc08 !important"
+                                            @else
+                                            style="background-color: #FF0000 !important" @endif
+                                            @endif>
+                                            <h6 class="text-center">
+                                                {{ \Carbon\Carbon::parse($p->expiration_plan)->format('d/m/Y') }}
+                                            </h6>
                                         </td>
-                                        @if ($condicional != 'vencidos')
+                                        @if ($condicional == 'ocupados')
                                             <td class="text-center">
                                                 @if ($p->estadoCuentaPerfil == 'ACTIVO')
                                                     <a href="javascript:void(0)"
@@ -190,9 +182,10 @@
                                             </td>
                                         @else
                                             <td class="text-center">
-                                                <a href="javascript:void(0)" wire:click="Acciones({{ $p->planid }})"
-                                                    class="btn btn-dark mtmobile" title="Observaciones">
-                                                    <i class="fa-solid fa-file-signature"></i>
+                                                <a href="javascript:void(0)"
+                                                    wire:click="Edit({{ $p->id }},{{ $p->planid }})"
+                                                    class="btn btn-dark mtmobile" title="Edit">
+                                                    <i class="fas fa-edit"></i>
                                                 </a>
                                             </td>
                                         @endif
@@ -232,8 +225,10 @@
                                     <th class="table-th text-withe text-center" style="font-size: 80%">IMPORT</th>
                                     <th class="table-th text-withe text-center" style="font-size: 80%">PLAN INICIO</th>
                                     <th class="table-th text-withe text-center" style="font-size: 80%">PLAN FIN</th>
-                                    <th class="table-th text-withe text-center" style="font-size: 80%">ACCIONES</th>
-                                    <th class="table-th text-withe text-center" style="font-size: 80%"></th>
+                                    @if ($condicional == 'combos')
+                                        <th class="table-th text-withe text-center" style="font-size: 80%">ACCIONES</th>
+                                    @endif
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">REALIZADO</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -241,11 +236,19 @@
                                     <tr>
                                         <td class="text-center">
                                             <h6 class="text-center">
-                                                @foreach ($p->PlanAccounts as $item)
-                                                    @if ($item->status == 'ACTIVO')
-                                                        {{ $item->Cuenta->Plataforma->nombre }} <br>
-                                                    @endif
-                                                @endforeach
+                                                @if ($condicional == 'combos')
+                                                    @foreach ($p->PlanAccounts as $item)
+                                                        @if ($item->status == 'ACTIVO')
+                                                            {{ $item->Cuenta->Plataforma->nombre }} <br>
+                                                        @endif
+                                                    @endforeach
+                                                @elseif($condicional == 'combosVencidos')
+                                                    @foreach ($p->PlanAccounts as $item)
+                                                        @if ($item->status == 'VENCIDO')
+                                                            {{ $item->Cuenta->Plataforma->nombre }} <br>
+                                                        @endif
+                                                    @endforeach
+                                                @endif
                                             </h6>
                                         </td>
                                         <td class="text-center">
@@ -254,50 +257,106 @@
                                         </td>
                                         <td class="text-center">
                                             <h6 class="text-center" style="font-size: 80%">
-                                                @foreach ($p->PlanAccounts as $item)
-                                                    @if ($item->status == 'ACTIVO')
-                                                        {{ $item->Cuenta->account_name }}
-                                                        <br>
-                                                    @endif
-                                                @endforeach
+                                                @if ($condicional == 'combos')
+                                                    @foreach ($p->PlanAccounts as $item)
+                                                        @if ($item->status == 'ACTIVO')
+                                                            {{ $item->Cuenta->account_name }}
+                                                            <br>
+                                                        @endif
+                                                    @endforeach
+                                                @elseif($condicional == 'combosVencidos')
+                                                    @foreach ($p->PlanAccounts as $item)
+                                                        @if ($item->status == 'VENCIDO')
+                                                            {{ $item->Cuenta->account_name }}
+                                                            <br>
+                                                        @endif
+                                                    @endforeach
+                                                @endif
                                             </h6>
                                         </td>
                                         <td class="text-center">
                                             <h6 class="text-center">
-                                                @foreach ($p->PlanAccounts as $item)
-                                                    @if ($item->status == 'ACTIVO')
-                                                        {{ $item->Cuenta->password_account }}
-                                                        <br>
-                                                    @endif
-                                                @endforeach
+                                                @if ($condicional == 'combos')
+                                                    @foreach ($p->PlanAccounts as $item)
+                                                        @if ($item->status == 'ACTIVO')
+                                                            {{ $item->Cuenta->password_account }}
+                                                            <br>
+                                                        @endif
+                                                    @endforeach
+                                                @elseif($condicional == 'combosVencidos')
+                                                    @foreach ($p->PlanAccounts as $item)
+                                                        @if ($item->status == 'VENCIDO')
+                                                            {{ $item->Cuenta->password_account }}
+                                                            <br>
+                                                        @endif
+                                                    @endforeach
+                                                @endif
                                             </h6>
                                         </td>
                                         <td class="text-center">
                                             <h6 class="text-center" style="font-size: 80%">
-                                                @foreach ($p->PlanAccounts as $item)
-                                                    @if ($item->status == 'ACTIVO')
-                                                        <a href="javascript:void(0)" wire:click="AccionesCuenta()"
-                                                            class="btn btn-primary" title="Renovar">
-                                                            {{ $item->Cuenta->expiration_account }}
-                                                        </a>
-                                                        <br>
-                                                    @endif
-                                                @endforeach
+                                                @if ($condicional == 'combos')
+                                                    @foreach ($p->PlanAccounts as $item)
+                                                        @if ($item->status == 'ACTIVO')
+                                                            @php
+                                                                $date1 = new DateTime($item->Cuenta->expiration_account);
+                                                                $date2 = new DateTime('now');
+                                                                $diff = $date2->diff($date1);
+                                                                if ($diff->invert != 1) {
+                                                                    $horasCuenta = $diff->days * 24 + $diff->h;
+                                                                } else {
+                                                                    $horasCuenta = '-1';
+                                                                }
+                                                            @endphp
+                                                            <h6
+                                                                @if ($horasCuenta > 120) style="background-color: #09ed3d !important"
+                                                            @elseif($horasCuenta >= 0 && $horasCuenta <= 120)
+                                                            style="background-color: #f1dc08 !important"
+                                                            @else
+                                                            style="background-color: #FF0000 !important" @endif>
+                                                                {{ \Carbon\Carbon::parse($item->Cuenta->expiration_account)->format('d/m/Y') }}
+                                                            </h6>
+                                                        @endif
+                                                    @endforeach
+                                                @elseif($condicional == 'combosVencidos')
+                                                    @foreach ($p->PlanAccounts as $item)
+                                                        @if ($item->status == 'VENCIDO')
+                                                            <h6>
+                                                                {{ \Carbon\Carbon::parse($item->Cuenta->expiration_account)->format('d/m/Y') }}
+                                                            </h6>
+                                                        @endif
+                                                    @endforeach
+                                                @endif
                                             </h6>
                                         </td>
                                         <td class="text-center">
                                             <h6 class="text-center">
-                                                @foreach ($p->PlanAccounts as $item)
-                                                    @if ($item->status == 'ACTIVO')
-                                                        @foreach ($item->Cuenta->CuentaPerfiles as $acprof)
-                                                            @if ($acprof->status == 'ACTIVO' && $acprof->plan_id == $p->id)
-                                                                {{ $acprof->Perfil->nameprofile }} <br>
-                                                                {{ $acprof->Perfil->pin }}
-                                                            @endif
-                                                        @endforeach
-                                                        <br>
-                                                    @endif
-                                                @endforeach
+                                                @if ($condicional == 'combos')
+                                                    @foreach ($p->PlanAccounts as $item)
+                                                        @if ($item->status == 'ACTIVO')
+                                                            @foreach ($item->Cuenta->CuentaPerfiles as $acprof)
+                                                                @if ($acprof->status == 'ACTIVO' && $acprof->plan_id == $p->id)
+                                                                    {{ $acprof->Perfil->nameprofile }} <br>
+                                                                    {{ $acprof->Perfil->pin }}
+                                                                @endif
+                                                            @endforeach
+                                                            <br>
+                                                        @endif
+                                                    @endforeach
+                                                @elseif($condicional == 'combosVencidos')
+                                                    @foreach ($p->PlanAccounts as $item)
+                                                        @if ($item->status == 'VENCIDO')
+                                                            @foreach ($item->Cuenta->CuentaPerfiles as $acprof)
+                                                                @if ($acprof->status == 'VENCIDO' && $acprof->plan_id == $p->id)
+                                                                    {{ $acprof->Perfil->nameprofile }} <br>
+                                                                    {{ $acprof->Perfil->pin }}
+                                                                @endif
+                                                            @endforeach
+                                                            <br>
+                                                        @endif
+                                                    @endforeach
+                                                @endif
+
                                             </h6>
                                         </td>
                                         <td class="text-center">
@@ -305,31 +364,39 @@
                                         </td>
                                         <td class="text-center">
                                             <h6 class="text-center" style="font-size: 80%">
-                                                {{ \Carbon\Carbon::parse($p->plan_start)->format('d:m:Y') }} </h6>
-                                        </td>
-                                        <td class="text-center">
-                                            <h6 class="text-center" style="font-size: 80%">
-                                                {{ \Carbon\Carbon::parse($p->expiration_plan)->format('d:m:Y') }}
-                                            </h6>
-                                        </td>
-                                        <td class="text-center">
-                                            @if ($condicional == 'combos')
-                                                <a href="javascript:void(0)"
-                                                    wire:click="AccionesCombo({{ $p->id }})"
-                                                    class="btn btn-dark mtmobile" title="Renovación">
-                                                    <i class="fa-regular fa-calendar-check"></i>
-                                                </a>
-
-                                                <a href="javascript:void(0)"
-                                                    wire:click="EditCombo({{ $p->id }})"
-                                                    class="btn btn-dark mtmobile" title="Edit">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                            @endif
+                                                {{ \Carbon\Carbon::parse($p->plan_start)->format('d/m/Y') }} </h6>
                                         </td>
                                         <td class="text-center"
-                                            style="{{ $p->ready == 'NO' ? 'background-color: #d97171 !important' : 'background-color: #09ed3d !important' }}">
-                                            @if ($p->ready == 'NO')
+                                            @if ($condicional == 'combos') @if ($p->horasPlan > 72) style="background-color: #09ed3d !important"
+                                                                @elseif($p->horasPlan >= 0 && $p->horasPlan <= 72)
+                                                                style="background-color: #f1dc08 !important"
+                                                                @else
+                                                                style="background-color: #FF0000 !important" @endif
+                                            @endif>
+                                            <h6 class="text-center" style="font-size: 80%">
+                                                {{ \Carbon\Carbon::parse($p->expiration_plan)->format('d/m/Y') }}
+                                            </h6>
+                                        </td>
+                                        @if ($condicional == 'combos')
+                                            <td class="text-center">
+                                                @if ($condicional == 'combos')
+                                                    <a href="javascript:void(0)"
+                                                        wire:click="AccionesCombo({{ $p->id }})"
+                                                        class="btn btn-dark mtmobile" title="Renovación">
+                                                        <i class="fa-regular fa-calendar-check"></i>
+                                                    </a>
+
+                                                    <a href="javascript:void(0)"
+                                                        wire:click="EditCombo({{ $p->id }})"
+                                                        class="btn btn-dark mtmobile" title="Edit">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                @endif
+                                            </td>
+                                        @endif
+                                        <td class="text-center"
+                                            style="{{ $p->done == 'NO' ? 'background-color: #d97171 !important' : 'background-color: #09ed3d !important' }}">
+                                            @if ($p->done == 'NO')
                                                 <a href="javascript:void(0)" class="btn btn-dark"
                                                     onclick="ConfirmHecho('{{ $p->id }}')">
                                                     <i class="fa-regular fa-circle-exclamation"></i>
@@ -350,7 +417,7 @@
         </div>
     </div>
     @include('livewire.perfiles.form')
-    @include('livewire.perfiles.modalDetails')
+    @include('livewire.perfiles.detailsPlan')
     @include('livewire.perfiles.modalEditCombos')
     @include('livewire.perfiles.modalRenovarCombos')
 
@@ -416,56 +483,6 @@
             noty(msg)
         });
 
-
-        flatpickr(document.getElementsByClassName('flatpickr'), {
-            enableTime: false,
-            dateFormat: 'Y-m-d',
-            locale: {
-                firstDayofweek: 1,
-                weekdays: {
-                    shorthand: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
-                    longhand: [
-                        "Domingo",
-                        "Lunes",
-                        "Martes",
-                        "Miércoles",
-                        "Jueves",
-                        "Viernes",
-                        "Sábado",
-                    ],
-                },
-                months: {
-                    shorthand: [
-                        "Ene",
-                        "Feb",
-                        "Mar",
-                        "Abr",
-                        "May",
-                        "Jun",
-                        "Jul",
-                        "Ago",
-                        "Sep",
-                        "Oct",
-                        "Nov",
-                        "Dic",
-                    ],
-                    longhand: [
-                        "Enero",
-                        "Febrero",
-                        "Marzo",
-                        "Abril",
-                        "Mayo",
-                        "Junio",
-                        "Julio",
-                        "Agosto",
-                        "Septiembre",
-                        "Octubre",
-                        "Noviembre",
-                        "Diciembre",
-                    ],
-                },
-            }
-        })
     });
 
     function ConfirmVencer(nameperfil) {
@@ -489,24 +506,7 @@
         })
     }
 
-    function ConfirmRenovar(nameperfil, meses) {
-        swal.fire({
-            title: 'CONFIRMAR',
-            icon: 'warning',
-            text: '¿Esta seguro de renovar el perfil ' + nameperfil + ' por ' + meses + ' meses?',
-            showCancelButton: true,
-            cancelButtonText: 'Cerrar',
-            cancelButtonColor: '#383838',
-            confirmButtonColor: '#3B3F5C',
-            confirmButtonText: 'Aceptar'
-        }).then(function(result) {
-            if (result.value) {
-                window.livewire.emit('Renovar')
-            }
-        })
-    }
-
-    function ConfirmCambiar(id, nameperfil, pin, email, password) {
+    function ConfirmCambiar(id, nameperfil, email) {
         swal.fire({
             title: 'CONFIRMAR',
             icon: 'warning',
@@ -518,11 +518,11 @@
             confirmButtonText: 'Aceptar'
         }).then(function(result) {
             if (result.value) {
-                window.livewire.emit('CambiarAccount', id)
+                window.livewire.emit('SeleccionarCuenta', id)
                 swal.fire(
                     'Los datos del perfil actual se cambiaran por los del nuevo automaticamente',
-                    'Se cambio de cuenta el perfil ' + nameperfil + ' de pin ' +
-                    pin + ' a la cuenta ' + email + ' de contraseña ' + password
+                    'Se cambio de cuenta el perfil ' + nameperfil + ' de pin a la cuenta ' +
+                    email
                 )
             }
         })
