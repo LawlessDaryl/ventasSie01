@@ -127,6 +127,8 @@ class InicioController extends Component
                 ->orderBy('order_services.id', 'desc')
                 ->distinct()
                 ->paginate($this->pagination);
+
+               
         }
         $users = User::all();
         $typew = TypeWork::orderBy('name', 'asc')->get();

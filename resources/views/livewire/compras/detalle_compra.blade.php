@@ -39,7 +39,7 @@
                                                 
                                                      <span class="input-group-text input-gp">
                                                          <a href="javascript:void(0)" data-toggle="modal"
-                                                             data-target="#modal_prov" class="fas fa-plus"></a>
+                                                             data-target="#modal_prov" class="fas fa-plus text-white"></a>
                                                      </span>
                                              </div>
                                              @error('provider')
@@ -276,7 +276,7 @@
                                                         <h6 style="font-size: 0.90rem" >{{$prod->name}}</h6>
                                                     </td>
                                                     <td>
-                                                        <h6> {{$prod->attributes->codigo}}</h6>
+                                                        <strong><h6> {{$prod->attributes->codigo}}</h6></strong>
                                                     </td>
                                                     <td>
                                                          <input type="text" 

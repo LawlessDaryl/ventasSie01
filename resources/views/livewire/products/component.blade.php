@@ -21,23 +21,36 @@
                         <input type="text" wire:model="search" placeholder="Buscars" class="form-control">
                     </div>
                 </div>
-                <div class="col-12 col-lg-4 col-md-3">
+                <div class="col-12 col-lg-3 col-md-3">
                     <div class="form-group">
                         <select wire:model='selected_categoria' class="form-control">
-                          <option value="null">Elegir Categoria</option>
-                          @foreach ($categories as $datar)
-                          <option value="{{ $datar->id }}">{{ $datar->name}}</option>
+                          <option value="null" disabled>Elegir Categoria</option>
+                          @foreach ($categories as $key => $category)
+                          <option value="{{ $category->id }}">{{ $category->name}}-{{$category->id}}-{{$key}}</option>
                           @endforeach
                         </select>
                       </div>
                 </div>
-                <div class="col-12 col-lg-4 col-md-3">
+                <div class="col-12 col-lg-3 col-md-3">
                     <div class="form-group">
                         <select wire:model='selected_sub' class="form-control">
-                          <option value="null">Elegir Subcategoria</option>
-                          @foreach ($sub as $datas)
-                          <option value="{{ $datas->id }}">{{ $datas->name}}</option>
+                          <option value="null" disabled>Elegir Subcategoria</option>
+                          @foreach ($sub as $subcategoria)
+                          <option value="{{ $subcategoria->id }}">{{ $subcategoria->name}}</option>
                           @endforeach
+                       
+                         
+                        </select>
+                      </div>
+                </div>
+                <div class="col-12 col-lg-2 col-md-3">
+                    <div class="form-group">
+                        <select wire:model='estados' class="form-control">
+                          <option value="null" disabled>Estado</option>
+                       
+                          <option value="ACTIVO">ACTIVO</option>
+                          <option value="INACTIVO">INACTIVO</option>
+                          
                        
                          
                         </select>
@@ -58,14 +71,14 @@
                                 <th class="table-th text-withe text-center"> <b>ACCIONES</b> </th>
                             </tr>
                         </thead>
-                        <tbody id="imprimible" >
+                        <tbody>
                             @foreach ($data as $product)
                                 <tr>
                                     <td>
                                         <h6>{{ $nro++}}</h6>
                                     </td>
                                     <td>
-                                        <h6>{{ $product->nombre_prod}}</h6>
+                                        <h6>{{ $product->nombre}}</h6>
                                     </td>
                                     <td>
                                         <h6 class="text-center">{{ $product->caracteristicas }}</h6>
@@ -88,10 +101,11 @@
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         <a href="javascript:void(0)"
-                                            onclick="Confirm('{{ $product->id }}','{{ $product->nombre }}')"
+                                            onclick="Confirm('{{ $product->id }}','{{ $product->nombre }}',{{$product->destino->count()}})"
                                             class="btn btn-dark mtmobile p-1 m-0" title="Delete">
                                             <i class="fas fa-trash"></i>
                                         </a>
+                                    
                                     </td>
                                 </tr>
                             @endforeach
@@ -134,36 +148,48 @@
         });
     });
 
-    document.querySelector("#btnImprimir").addEventListener("click", function() {
-                var div = document.querySelector("#imprimible");
-                imprimirElemento(div);
-            });
 
-    function Confirm(id, name, products) {
-        if (products > 0) {
+
+        function Confirm(id, name, products) {
+        if (products > 0)
+        {
+            console.log(products);
             swal.fire({
                 title: 'PRECAUCION',
                 icon: 'warning',
-                text: 'No se puede eliminar el producto, ' + name + ' porque tiene ' +
-                    products + ' ventas relacionadas'
-            })
-            return;
-        }
-        swal.fire({
-            title: 'CONFIRMAR',
-            icon: 'warning',
-            text: 'Confirmar eliminar el prouducto ' + '"' + name + '"',
-            showCancelButton: true,
-            cancelButtonText: 'Cerrar',
-            cancelButtonColor: '#383838',
-            confirmButtonColor: '#3B3F5C',
-            confirmButtonText: 'Aceptar'
-        }).then(function(result) {
+                text: 'El producto' + name + ' tiene relacion con otros registros del sistema, desea proseguir con la eliminacion de este ITEM?',
+                showCancelButton: true,
+                cancelButtonText: 'Cerrar',
+                cancelButtonColor: '#383838',
+                confirmButtonColor: '#3B3F5C',
+                confirmButtonText: 'Aceptar'
+            }).then(function(result){
             if (result.value) {
                 window.livewire.emit('deleteRow', id)
                 Swal.close()
             }
         })
+            
+            //este producto tiene varias relaciones activas con otros registros del sistema
+        }
+
+        else{
+            swal.fire({
+                title: 'CONFIRMAR',
+                icon: 'warning',
+                text: 'Este producto no tiene relacion con ningun registro del sistema, pasara a ser eliminado permanentemente. ',
+                showCancelButton: true,
+                cancelButtonText: 'Cerrar',
+                cancelButtonColor: '#383838',
+                confirmButtonColor: '#3B3F5C',
+                confirmButtonText: 'Aceptar'
+            }).then(function(result){
+                if(result.value){
+                    window.livewire.emit('deleteRowPermanently',id).Swal.close()
+                }
+            })
+        }
+       
     }
     function imprimirElemento(elemento){
             var ventana = window.open('', 'PRINT', 'height=400,width=600');

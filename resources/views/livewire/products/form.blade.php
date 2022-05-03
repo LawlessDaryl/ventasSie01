@@ -3,8 +3,8 @@
     <div class="col-sm-12 col-lg-7 col-md-8">
         <div class="form-group">
             <label>Nombre</label>
-            <input type="text" wire:model.lazy="nombre_prod" class="form-control" placeholder="ej:Celular Samsung Galaxy A01">
-            @error('nombre_prod') <span class="text-danger er">{{ $message }}</span>@enderror
+            <input type="text" wire:model.lazy="nombre" class="form-control" placeholder="ej:Celular Samsung Galaxy A01">
+            @error('nombre') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>
     </div>
   
@@ -38,8 +38,8 @@
     </div>
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
-            <label>Lote de produccion</label>
-            <input type="text" wire:model.lazy="lote" class="form-control" placeholder="ej: 012020222">
+            <label>Numero de Lote</label>
+            <input type="text" wire:model.lazy="lote" class="form-control" placeholder="ej: L001">
             @error('lote') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>
     </div>
@@ -96,7 +96,7 @@
             <div class="input-group-prepend mb-3">
                 <select wire:model='selected_id2' class="form-control">
                     <option value="Elegir">Elegir</option>
-                    @foreach ($categories as $category)
+                    @foreach ($categories as $Key => $category)
                         <option value="{{ $category->id }}">{{ $category->name }}</option>
                     @endforeach
                 </select>
@@ -105,8 +105,9 @@
                         data-target="#modalCategory" class="fas fa-plus text-white"></a>
                 </span>
 
-                    @error('selected_id2') <span class="text-danger er">{{ $message }}</span>@enderror
+
             </div>
+            @error('selected_id2') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>       
     </div>
 
@@ -114,8 +115,8 @@
         <div class="form-group">
             <label>Subcategoría</label>
             <select wire:model='categoryid' class="form-control">
-                <option value="Elegir" disabled>Elegir</option>
-                @foreach ($subcat as $cat)
+                <option value= "null"  selected>Elegir</option>
+                @foreach ($subcat as $Key => $cat)
                     <option value="{{ $cat->id }}">{{ $cat->name }}</option>
                 @endforeach
             </select>
@@ -129,6 +130,24 @@
             @error('cantidad_minima') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>
     </div>
+
+    @if ($selected_id)
+        
+    <div class="col-sm-12 col-md-4">
+        <div class="form-group">
+            <label>Estado</label>
+            <select wire:model='estado' class="form-control">
+                <option value="Elegir" disabled>Elegir</option>
+                <option value="Activo">Activo</option>
+                <option value="Inactivo">Inactivo</option>
+            </select>
+            @error('estado') <span class="text-danger er">{{ $message }}</span>@enderror
+        </div>
+    </div>
+        
+    @endif
+
+   
 
     <div class="col-sm-12 col-md-8">
         <div class="form-group custom-file">

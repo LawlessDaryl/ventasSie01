@@ -16,7 +16,7 @@ class ProductSeeder extends Seeder
     {
         //ID=1
         Product::create([
-            'nombre_prod' => 'Cable Usb C Huawei 0.5 Metros',
+            'nombre' => 'Cable Usb C Huawei 0.5 Metros',
             'costo' => 45,
             'caracteristicas'=>'Nuevo',
             'codigo' => '88',
@@ -29,7 +29,7 @@ class ProductSeeder extends Seeder
         ]);
         //ID=2
         Product::create([
-            'nombre_prod' => 'Cargador Lapto',
+            'nombre' => 'Cargador Lapto',
             'costo' => 148,
             'caracteristicas'=>'Usado',
             'codigo' => '88',
@@ -42,7 +42,7 @@ class ProductSeeder extends Seeder
         ]);
         //ID=3
         Product::create([
-            'nombre_prod' => 'Iphone 11',
+            'nombre' => 'Iphone 11',
             'costo' => 240,
             'caracteristicas'=>'Usado',
             'codigo' => '88',
@@ -55,7 +55,7 @@ class ProductSeeder extends Seeder
         ]);
         //ID=4
         Product::create([
-            'nombre_prod' => 'PC Gammer',
+            'nombre' => 'PC Gammer',
             'costo' => 136,
             'caracteristicas'=>'Usado',
             'codigo' => '88',
@@ -68,7 +68,7 @@ class ProductSeeder extends Seeder
         ]);
         //ID=5
         Product::create([
-            'nombre_prod' => 'Vidrio Templado j5 Prime',
+            'nombre' => 'Vidrio Templado j5 Prime',
             'costo' => 320,
             'caracteristicas'=>'Usado',
             'codigo' => '88',
@@ -81,7 +81,7 @@ class ProductSeeder extends Seeder
         ]);
         //ID=6
         Product::create([
-            'nombre_prod' => 'Mouse Gammer',
+            'nombre' => 'Mouse Gammer',
             'costo' => 53,
             'caracteristicas'=>'Nuevo',
             'codigo' => '88',
@@ -94,7 +94,7 @@ class ProductSeeder extends Seeder
         ]);
         //ID=7
         Product::create([
-            'nombre_prod' => 'Teclado Pc',
+            'nombre' => 'Teclado Pc',
             'costo' => 120,
             'caracteristicas'=>'Nuevo',
             'codigo' => '88',
@@ -107,7 +107,7 @@ class ProductSeeder extends Seeder
         ]);
         //ID=8
         Product::create([
-            'nombre_prod' => 'SSD Kingston 240GB',
+            'nombre' => 'SSD Kingston 240GB',
             'costo' => 350,
             'caracteristicas'=>'Usado',
             'codigo' => '88',
@@ -120,7 +120,7 @@ class ProductSeeder extends Seeder
         ]);
         //ID=9
         Product::create([
-            'nombre_prod' => 'Monitor LG 15 Pulgadas',
+            'nombre' => 'Monitor LG 15 Pulgadas',
             'costo' => 130,
             'caracteristicas'=>'Nuevo',
             'codigo' => '88',

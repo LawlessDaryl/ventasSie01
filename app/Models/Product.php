@@ -4,12 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
-    protected $fillable = ['nombre_prod','costo','caracteristicas','codigo','lote',
+    protected $fillable = ['nombre','costo','caracteristicas','codigo','lote',
     'unidad','marca','garantia','cantidad_minima','industria','precio_venta',
                          'status','image', 'category_id'];
 
@@ -23,9 +25,9 @@ class Product extends Model
         return $this->belongsTo(Provider::class);
     }
 
-    public function location()
+    public function destino()
     {
-        return $this->belongsToMany(Location::class,'productos_destinos');
+        return $this->hasMany(ProductosDestino::class);
     }
 
 

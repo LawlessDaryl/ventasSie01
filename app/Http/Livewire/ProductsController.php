@@ -16,12 +16,12 @@ class ProductsController extends Component
     use WithPagination;
     use WithFileUploads;
     public $nombre, $costo, $precio_venta,$cantidad_minima,$name,$descripcion,
-    $codigo,$lote,$unidad,$industria,$caracteristicas,$status,$categoryid, $search,
+    $codigo,$lote,$unidad,$industria,$caracteristicas,$status,$categoryid=null, $search,$estado,
      $image, $selected_id, $pageTitle, $componentName,$cate,$marca,$garantia,$stock,$stock_v
-     ,$selected_categoria,$selected_sub,$nro=1,$sub;
+     ,$selected_categoria,$selected_sub,$nro=1,$sub,$change=[],$estados;
 
     private $pagination = 5;
-    public $selected_id2=0;
+    public $selected_id2;
     public function paginationView()
     {
         return 'vendor.livewire.bootstrap';
@@ -30,57 +30,77 @@ class ProductsController extends Component
     {
         $this->pageTitle = 'Listado';
         $this->componentName ='Productos';
-        $this->categoryid ='Elegir';
-        $this->selected_id2=0;
+       
+        $this->estados ='Activo';
+   
         $this->cate='Elegir';
         
     }
+
+    public function updatedSelectedCategoria(){
+        
+        array_push($this->change,$this->selected_categoria);
+       
+        if ($this->selected_sub!==null and count($this->change)>1) {
+            $this->selected_sub=null;
+           
+        }
+      
+        
+    }
+
     public function render()
     {
-      
+     
        if ($this->selected_categoria !== null ) {
-
+          
         if ($this->selected_sub == null) {
-            $products = Product::join('categories as c', 'c.id', 'products.category_id')
+            $prod = Product::join('categories as c', 'products.category_id','c.id')
             ->select('products.*', 'c.name as category')
-            ->where('c.categoria_padre',$this->selected_categoria)
+            ->where('products.status',$this->estados)
+
             ->where(function($query){
-                $query->where('products.nombre_prod', 'like', '%' . $this->search . '%')
-                        ->orWhere('products.codigo', 'like', '%' . $this->search . '%');
-                        
+                $query->where('c.categoria_padre',$this->selected_categoria)
+                      ->orWhere('c.id',$this->selected_categoria);
             })
+
+           
             
+            ->where(function($query){
+                $query->where('products.nombre', 'like', '%' . $this->search . '%')
+                        ->orWhere('products.codigo', 'like', '%' . $this->search . '%');  
+                          
+            })
             ->orderBy('products.id', 'desc')
             ->paginate($this->pagination);
         }
         else{
-            $products = Product::join('categories as c', 'c.id', 'products.category_id')
+           
+            $prod = Product::join('categories as c', 'products.category_id','c.id')
             ->select('products.*', 'c.name as category')
             ->where('c.id',$this->selected_sub)
+            ->where('products.status',$this->estados)
             ->where(function($query){
-                $query->where('products.nombre_prod', 'like', '%' . $this->search . '%')
-                        ->orWhere('products.codigo', 'like', '%' . $this->search . '%');
-                        
+                $query->where('products.nombre', 'like', '%' . $this->search . '%')
+                        ->orWhere('products.codigo', 'like', '%' . $this->search . '%')
+                        ->orWhere('products.status', 'like', '%' . $this->estados . '%');
+                       
             })
             
             ->orderBy('products.id', 'desc')
             ->paginate($this->pagination);
         }
-      
-      
-           
         }
-
-      
-
          elseif (strlen($this->search) > 0) {
 
         
-        $products = Product::join('categories as c', 'c.id', 'products.category_id')
+        $prod = Product::join('categories as c', 'products.category_id','c.id')
         ->select('products.*', 'c.name as category')
-        ->where('products.nombre_prod', 'like', '%' . $this->search . '%')
+        ->where('products.status',$this->estados)
+        ->where('products.nombre', 'like', '%' . $this->search . '%')
         ->orWhere('products.codigo', 'like', '%' . $this->search . '%')
         ->orWhere('c.name', 'like', '%' . $this->search . '%')
+        
         ->orderBy('products.id', 'desc')
         ->paginate($this->pagination);
      }
@@ -88,53 +108,62 @@ class ProductsController extends Component
 
         else {
           
-                $products = Product::join('categories as c', 'c.id', 'products.category_id')
-                ->select('products.*', 'c.*')      
+                $prod = Product::join('categories as c', 'products.category_id','c.id')
+                ->select('products.*', 'c.name as category')
+                ->where('products.status',$this->estados)
                 ->orderBy('products.id', 'desc')
                 ->paginate($this->pagination);}
             
         
         $this->sub= Category::select('categories.*')
         ->where('categories.categoria_padre',$this->selected_categoria)
-     
         ->get();
+        
 
-        $sub_cat_form = Category::select('categories.*')
-        ->where('categories.categoria_padre',$this->selected_id2)
+        $ss = Category::select('categories.*')
+        ->where('categories.categoria_padre',$this->selected_id2)->get();
      
-        ->get();
+      
 
         return view('livewire.products.component', [
-            'data' => $products,
+            'data' => $prod,
             'categories'=>Category::where('categories.categoria_padre',0)->orderBy('name', 'asc')->get(),
             'unidades'=>Unidad::orderBy('nombre','asc')->get(),
             'marcas'=>Marca::select('nombre')->orderBy('nombre','asc')->get(),
-            'subcat'=>$sub_cat_form
+            'subcat'=>$ss
         ])->extends('layouts.theme.app')->section('content');
     }
     public function Store()
     {
+        if ($this->categoryid === "null") {
+            
+            
+            $this->categoryid =$this->selected_id2;
+            
+        }
         $rules = [
-            'nombre_prod' => 'required|unique:products|min:5',
+            'nombre' => 'required|unique:products|min:5',
             'costo' => 'required',
             'precio_venta' => 'required',
-            'categoryid' => 'required|not_in:Elegir'
+            'selected_id2' => 'required|not_in:Elegir'
         ];
 
         $messages = [
-            'nombre_prod.required' => 'Nombre del producto requerido',
-            'nombre_prod.unique' => 'Ya existe el nombre del producto',
-            'nombre_prod.min' => 'El nombre debe ser contener al menos 3 caracteres',
+            'nombre.required' => 'Nombre del producto requerido',
+            'nombre.unique' => 'Ya existe el nombre del producto',
+            'nombre.min' => 'El nombre debe  contener al menos 5 caracteres',
             'costo.required' =>'El costo es requerido',
             'precio_venta.required'=> 'El precio es requerido',
-            'categoryid.required' => 'La categoria es requerida',
-            'categoryid.not_in' => 'Elegir un nombre de categoria diferente de Elegir'
+            'selected_id2.required' => 'La categoria es requerida',
+            'selected_id2.not_in' => 'Elegir un nombre de categoria diferente de Elegir'
         ];
 
         $this->validate($rules, $messages);
 
+        
+       
         $product = Product::create([
-            'nombre_prod' => $this->nombre_prod,
+            'nombre' => $this->nombre,
             'costo' => $this->costo,
             'caracteristicas'=>$this->caracteristicas,
             'codigo'=>$this->codigo,
@@ -163,8 +192,19 @@ class ProductsController extends Component
     }
     public function Edit(Product $product)
     {
+        $rr= Category::where('id',$product->category_id)->first()->value('categoria_padre');
+
+        if($rr===0){
+            $this->selected_id2 = $product->category_id;
+            $this->categoryid = "null";
+        }
+        else{
+            $this->selected_id2 = $product->category->categoria_padre;
+            $this->categoryid = $product->category_id;
+        }
+        
         $this->selected_id = $product->id;
-        $this->selected_id2 = $product->category->categoria_padre;
+        
         $this->costo = $product->costo;
         $this->nombre = $product->nombre;
         $this->precio_venta=$product->precio_venta;
@@ -175,7 +215,11 @@ class ProductsController extends Component
         $this->marca = $product->marca;
         $this->garantia = $product->garantia;
         $this->industria = $product->industria;
-        $this->categoryid = $product->category_id;
+        
+        $this->cantidad_minima= $product->cantidad_minima;
+        $this->codigo=$product->codigo;
+        $this->estado=$product->status;
+
         $this->image = null;
    
 
@@ -185,6 +229,7 @@ class ProductsController extends Component
     {
         $rules = [
             'nombre' => "required|min:3|unique:products,nombre,{$this->selected_id}",
+            'codigo'=>"required|min:6|unique:products",
             'costo' => 'required',
             'precio_venta' => 'required',
             'categoryid' => 'required|not_in:Elegir'
@@ -192,7 +237,7 @@ class ProductsController extends Component
         $messages = [
             'nombre.required' => 'Nombre del producto requerido',
             'nombre.unique' => 'Ya existe el nombre del producto',
-            'nombre.min' => 'El nombre debe ser contener al menos 3 caracteres',
+            'nombre.min' => 'El nombre debe  contener al menos 5 caracteres',
             'costo.required' =>'El costo es requerido',
             'precio_venta.required'=> 'El precio es requerido',
             'categoryid.required' => 'La categoria es requerida',
@@ -212,7 +257,8 @@ class ProductsController extends Component
             'cantidad_minima' => $this->cantidad_minima,
             'industria' => $this->industria,
             'precio_venta' => $this->precio_venta,
-            'category_id' => $this->categoryid
+            'category_id' => $this->categoryid,
+            'status'=>$this->estado
         ]);
         if ($this->image) {
             $customFileName = uniqid() . '_.' . $this->image->extension();
@@ -230,7 +276,7 @@ class ProductsController extends Component
         $this->resetUI();
         $this->emit('product-updated', 'Producto Actualizado');
     }
-    protected $listeners = ['deleteRow' => 'Destroy'];
+    protected $listeners = ['deleteRow' => 'Destroy','deleteRowPermanently' => 'DestroyPermanently'];
 
     public function Destroy(Product $product)
     {
@@ -245,15 +291,31 @@ class ProductsController extends Component
         $this->resetUI();
         $this->emit('product-deleted', 'Producto Eliminado');
     }
+
+    public function DestroyPermanently(Product $product)
+    {
+        $imageTemp = $product->image;
+        $product->forceDelete();
+
+        if ($imageTemp != null) {
+            if (file_exists('storage/productos/' . $imageTemp)) {
+                unlink('storage/productos/' . $imageTemp);
+            }
+        }
+        $this->resetUI();
+        $this->emit('product-deleted', 'Producto Eliminado');
+    }
+
     public function resetUI()
     {
         $this->selected_id =0;
         $this->selected_id2 =0;
         $this->costo = '';
-        $this->nombre_prod = '';
+        $this->nombre = '';
         $this->precio_venta='';
         $this->caracteristicas='';
         $this->codigo ='';
+        $this->estado ='Elegir';
         $this->lote = '';
         $this->unidad = 'Elegir';
         $this->marca = 'Elegir';
@@ -263,7 +325,7 @@ class ProductsController extends Component
         $this->categoryid = 'Elegir';
         $this->image = null;
 
-        $this->resetValidation();
+        $this->resetValidation();//clear the error bag
     }
 
     public function GenerateCode(){

@@ -45,6 +45,7 @@ class DetalleComprasController extends Component
     $categoryid,$component,$selected_categoria,$image,$selected_id2=0;
 
     private $pagination = 5;
+   
     public function mount()
     {
         $this->componentName= "Compras";
@@ -68,7 +69,7 @@ class DetalleComprasController extends Component
         if (strlen($this->search) > 0)
         $prod = Product::select('products.*')
         ->where('nombre', 'like', '%' . $this->search . '%')
-        ->orWhere('barcode','like','%'.$this->search.'%')
+        ->orWhere('codigo','like','%'.$this->search.'%')
         ->orWhere('marca','like','%'.$this->search.'%')
         ->orWhere('id','like','%'.$this->search.'%')
         ->paginate($this->pagination);
@@ -339,8 +340,23 @@ class DetalleComprasController extends Component
 
     public function resetUI()
     {
+       
+        $this->costo = '';
         $this->nombre = '';
-        $this->selected_id=0;
+        $this->precio_venta='';
+        $this->caracteristicas='';
+        $this->codigo ='';
+       
+        $this->lote = '';
+        $this->unidad = '';
+        $this->marca = '';
+        $this->industria = '';
+        $this->garantia = '';
+        $this->cantidad_minima = '';
+        $this->categoryid = 'Elegir';
+        $this->image = null;
+
+        $this->resetValidation();
        
     }
     public function resetProv()
@@ -350,7 +366,7 @@ class DetalleComprasController extends Component
         $this->direccion_prov='';
         $this->correo_prov='';
         $this->telefono_prov='';
-              
+        $this->resetValidation();
     }
     
     public function compraCredito(){

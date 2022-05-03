@@ -11,10 +11,8 @@ class ProductosDestino extends Model
 
     protected $fillable=['product_id','destino_id','stock'];
 
+    
     public function productos(){
-       $this->hasOne(Product::class);  
-    }
-    public function locations(){
-       $this->hasOne(Location::class);  
+       $this->belongsTo(Product::class);  
     }
 }

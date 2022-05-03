@@ -16,7 +16,7 @@ class ProviderSeeder extends Seeder
     public function run()
     {
         Provider::create([
-            'nombre'=>'Gustavo',
+            'nombre_prov'=>'Gustavo',
             'apellido'=>'Quisberth',
             'direccion'=>'Av.America nro.150',
             'telefono'=>'78444562',
@@ -26,7 +26,7 @@ class ProviderSeeder extends Seeder
         ]);
 
         Provider::create([
-            'nombre'=>'Alejandro',
+            'nombre_prov'=>'Alejandro',
             'apellido'=>'Ramirez',
             'direccion'=>'C/Colombia nro.365',
             'telefono'=>'4741213',

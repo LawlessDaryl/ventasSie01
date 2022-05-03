@@ -3,9 +3,9 @@
     <div class="col-sm-12 col-md-6">
         <div class="form-group">
             <label>Nombre</label>
-            <input type="text" wire:model.lazy="nombre" class="form-control" placeholder="nombre proveedor"
+            <input type="text" wire:model.lazy="nombre_prov" class="form-control" placeholder="nombre proveedor"
             maxlenght="25">
-            @error('nombre') <span class="text-danger er">{{ $message }}</span>@enderror
+            @error('nombre_prov') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>
         <div class="form-group">
             <label>Apellidos</label>
