@@ -7,17 +7,12 @@
                     <b>Compras</b>
                 </h4>
                 <ul class="tabs tab-pills">
-                    
                         <a href="detalle_compras" class="btn btn-dark" >Registrar<br/>Compra</a>
-                      
-                    
                 </ul>
                 <ul class="tabs tab-pills">
                     
                         <a href="{{ url('reporteCompras/pdf' . '/' . $filtro . '/' . $fecha .'/'
                         . $from. '/' . $to . '/' .$search)}}" class="btn btn-dark" >Imprimir</a>
-                      
-                    
                 </ul>
             </div>
 
@@ -32,13 +27,11 @@
                             <div class="col-lg-8">
 
                                 <select wire:model="fecha" class="form-control">
-                                                               
                                         <option value='hoy' selected>Hoy</option>
                                         <option value='ayer'>Ayer</option>
                                         <option value='semana'>Semana</option>
                                         <option value='fechas'>Entre Fechas</option>
-                                   
-                                 </select>
+                                </select>
                             </div>
 
 

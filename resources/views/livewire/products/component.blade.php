@@ -38,8 +38,6 @@
                           @foreach ($sub as $subcategoria)
                           <option value="{{ $subcategoria->id }}">{{ $subcategoria->name}}</option>
                           @endforeach
-                       
-                         
                         </select>
                       </div>
                 </div>
@@ -47,12 +45,8 @@
                     <div class="form-group">
                         <select wire:model='estados' class="form-control">
                           <option value="null" disabled>Estado</option>
-                       
                           <option value="ACTIVO">ACTIVO</option>
                           <option value="INACTIVO">INACTIVO</option>
-                          
-                       
-                         
                         </select>
                       </div>
                 </div>
@@ -63,45 +57,60 @@
                         <thead class="text-white" style="background: #3B3F5C">
                             <tr>
                                 <th class="table-th text-withe"> <b>#</b> </th>
-                                <th class="table-th text-withe"> <b>NOMBRE</b> </th>
-                                <th class="table-th text-withe text-center"> <b>CARACTERISTICAS</b> </th>
-                                <th class="table-th text-withe text-center"> <b>PRECIO<br>Venta</b> </th>
+                                <th class="table-th text-withe" style="width: 20%"> <b>NOMBRE</b> </th>
+                                <th class="table-th text-withe text-center"> <b>CATEGORIA</b> </th>
+                                <th class="table-th text-withe text-center"> <b>CODIGO/<br>CODIGO BARRA</b></th>
+                                <th class="table-th text-withe text-center"> <b>PRECIO</b> </th>
                                 <th class="table-th text-withe text-center"> <b>STATUS</b> </th>
                                 <th class="table-th text-withe text-center"> <b>IMAGEN</b> </th>
                                 <th class="table-th text-withe text-center"> <b>ACCIONES</b> </th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($data as $product)
+                            @foreach ($data as $products)
                                 <tr>
                                     <td>
-                                        <h6>{{ $nro++}}</h6>
+                                        <h6>{{$nro++}}</h6>
                                     </td>
                                     <td>
-                                        <h6>{{ $product->nombre}}</h6>
+                                        <h5> <strong>{{$products->nombre}}</strong> </h5>
+                                        <label>{{ $products->unidad}}</label>|<label>{{ $products->marca}}</label>|<label>{{ $products->industria }}</label>
+                                        <h6>{{ $products->caracteristicas }}</h6>
+
                                     </td>
                                     <td>
-                                        <h6 class="text-center">{{ $product->caracteristicas }}</h6>
+                                         <h6 class="text-center">{{ $products->category}}</h6>
                                     </td>
                                     <td>
-                                        <h6 class="text-center">{{ $product->precio_venta }}</h6>
+                                         <h6 class="text-center">{{ $products->codigo}}</h6>
                                     </td>
                                     <td>
-                                        <h6 class=" text-center">{{ $product->status }}</h6>
+                                        <h6 class="text-center"> <strong>Costo:</strong> {{ $products->costo}}</h6>
+                                        <h6 class="text-center"> <strong>Precio:</strong> {{ $products->precio_venta }}</h6>
                                     </td>
+                                    @if ($products->status == "ACTIVO")
+                                    <td style="background-color: rgb(100, 175, 25)">
+                                        <h6 class=" text-center  text-white"> <strong>{{ $products->status }}</strong> </h6>
+                                    </td>
+                                    @else
+                                    <td style="background-color: rgb(231, 59, 88)">
+                                        <h6 class=" text-center text-white"> <strong>{{ $products->status }}</strong></h6>
+                                    </td>
+                                    @endif
+                                    
                                     <td class="text-center">
                                         <span>
-                                            <img src="{{('storage/productos/'.$product->imagen) }}"
+                                            <img src="{{('storage/productos/'.$products->imagen) }}"
                                                 alt="imagen de ejemplo" height="40" width="50" class="rounded">
                                         </span>
                                     </td>
                                     <td class="text-center">
-                                        <a href="javascript:void(0)" wire:click="Edit({{ $product->id }})"
+                                        <a href="javascript:void(0)" wire:click="Edit({{ $products->id }})"
                                             class="btn btn-dark mtmobile p-1 m-0" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         <a href="javascript:void(0)"
-                                            onclick="Confirm('{{ $product->id }}','{{ $product->nombre }}',{{$product->destino->count()}})"
+                                            onclick="Confirm('{{ $products->id }}','{{ $products->nombre }}',{{$products->destino->count()}})"
                                             class="btn btn-dark mtmobile p-1 m-0" title="Delete">
                                             <i class="fas fa-trash"></i>
                                         </a>

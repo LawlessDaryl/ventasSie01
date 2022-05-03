@@ -20,7 +20,7 @@ class ProductsController extends Component
      $image, $selected_id, $pageTitle, $componentName,$cate,$marca,$garantia,$stock,$stock_v
      ,$selected_categoria,$selected_sub,$nro=1,$sub,$change=[],$estados;
 
-    private $pagination = 5;
+    private $pagination = 15;
     public $selected_id2;
     public function paginationView()
     {
@@ -37,7 +37,8 @@ class ProductsController extends Component
         
     }
 
-    public function updatedSelectedCategoria(){
+    public function updatedSelectedCategoria()
+    {
         
         array_push($this->change,$this->selected_categoria);
        
@@ -63,9 +64,6 @@ class ProductsController extends Component
                 $query->where('c.categoria_padre',$this->selected_categoria)
                       ->orWhere('c.id',$this->selected_categoria);
             })
-
-           
-            
             ->where(function($query){
                 $query->where('products.nombre', 'like', '%' . $this->search . '%')
                         ->orWhere('products.codigo', 'like', '%' . $this->search . '%');  
@@ -135,11 +133,8 @@ class ProductsController extends Component
     }
     public function Store()
     {
-        if ($this->categoryid === "null") {
-            
-            
+        if ($this->categoryid === null) {
             $this->categoryid =$this->selected_id2;
-            
         }
         $rules = [
             'nombre' => 'required|unique:products|min:5',
@@ -160,8 +155,6 @@ class ProductsController extends Component
 
         $this->validate($rules, $messages);
 
-        
-       
         $product = Product::create([
             'nombre' => $this->nombre,
             'costo' => $this->costo,
@@ -192,19 +185,16 @@ class ProductsController extends Component
     }
     public function Edit(Product $product)
     {
-        $rr= Category::where('categories.id',$product->category_id)->first()->value('categoria_padre');
-
-        if($rr===0){
-            $this->selected_id2 = $product->category_id;
-            $this->categoryid = "null";
+       
+        if($product->category->categoria_padre === 0)
+        { $this->selected_id2 = $product->category_id;
+          $this->categoryid = "null";
         }
         else{
-            $this->selected_id2 = $product->category->categoria_padre;
-            $this->categoryid = $product->category_id;
+        $this->selected_id2 = $product->category->categoria_padre;
+        $this->categoryid = $product->category_id;
         }
-        
         $this->selected_id = $product->id;
-        
         $this->costo = $product->costo;
         $this->nombre = $product->nombre;
         $this->precio_venta=$product->precio_venta;
@@ -215,21 +205,17 @@ class ProductsController extends Component
         $this->marca = $product->marca;
         $this->garantia = $product->garantia;
         $this->industria = $product->industria;
-        
         $this->cantidad_minima= $product->cantidad_minima;
         $this->codigo=$product->codigo;
         $this->estado=$product->status;
-
         $this->image = null;
-   
-
         $this->emit('modal-show', 'show modal!');
     }
     public function Update()
     {
         $rules = [
             'nombre' => "required|min:3|unique:products,nombre,{$this->selected_id}",
-            'codigo'=>"required|min:6|unique:products",
+            'codigo'=>"required|min:6|unique:products,codigo,{$this->selected_id}",
             'costo' => 'required',
             'precio_venta' => 'required',
             'categoryid' => 'required|not_in:Elegir'

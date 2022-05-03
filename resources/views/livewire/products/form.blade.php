@@ -115,7 +115,7 @@
         <div class="form-group">
             <label>Subcategoría</label>
             <select wire:model='categoryid' class="form-control">
-                <option value= "null"  selected>Elegir</option>
+                <option value= null  selected>Elegir</option>
                 @foreach ($subcat as $Key => $cat)
                     <option value="{{ $cat->id }}">{{ $cat->name }}</option>
                 @endforeach
