@@ -20,7 +20,7 @@ class CatProdServiceController extends Component
     public function mount()
     {
         $this->pageTitle = 'LISTADO';
-        $this->componentName = 'CATEGORÍAS DE PRODUCTOS EN EL SERVICIO';
+        $this->componentName = 'CATEGORÍAS DE EQUIPOS EN EL SERVICIO';
         $this->estado = 'Elegir';
         $this->selected_id = 0;
     }
