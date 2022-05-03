@@ -658,10 +658,6 @@ class ComposerStaticInit28b901c8f42efe2e95436386b8faf059
             array (
                 0 => __DIR__ . '/..' . '/mockery/mockery/library',
             ),
-            'Milon\\Barcode' => 
-            array (
-                0 => __DIR__ . '/..' . '/milon/barcode/src',
-            ),
         ),
         'H' => 
         array (
@@ -775,8 +771,8 @@ class ComposerStaticInit28b901c8f42efe2e95436386b8faf059
         'App\\Models\\DetalleTransferencia' => __DIR__ . '/../..' . '/app/Models/DetalleTransferencia.php',
         'App\\Models\\Devolucion' => __DIR__ . '/../..' . '/app/Models/Devolucion.php',
         'App\\Models\\Email' => __DIR__ . '/../..' . '/app/Models/Email.php',
-        'App\\Models\\EstadoTrans_Detalle' => __DIR__ . '/../..' . '/app/Models/EstadoTrans_Detalle.php',
-        'App\\Models\\Estado_Transferencia' => __DIR__ . '/../..' . '/app/Models/Estado_Transferencia.php',
+        'App\\Models\\EstadoTransDetalle' => __DIR__ . '/../..' . '/app/Models/EstadoTransDetalle.php',
+        'App\\Models\\EstadoTransferencia' => __DIR__ . '/../..' . '/app/Models/EstadoTransferencia.php',
         'App\\Models\\Estante' => __DIR__ . '/../..' . '/app/Models/Estante.php',
         'App\\Models\\Location' => __DIR__ . '/../..' . '/app/Models/Location.php',
         'App\\Models\\Marca' => __DIR__ . '/../..' . '/app/Models/Marca.php',
@@ -818,7 +814,6 @@ class ComposerStaticInit28b901c8f42efe2e95436386b8faf059
         'App\\Models\\TypeWork' => __DIR__ . '/../..' . '/app/Models/TypeWork.php',
         'App\\Models\\Unidad' => __DIR__ . '/../..' . '/app/Models/Unidad.php',
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
-        'App\\Models\\transferencia_detalle' => __DIR__ . '/../..' . '/app/Models/transferencia_detalle.php',
         'App\\Providers\\AppServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AppServiceProvider.php',
         'App\\Providers\\AuthServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AuthServiceProvider.php',
         'App\\Providers\\BroadcastServiceProvider' => __DIR__ . '/../..' . '/app/Providers/BroadcastServiceProvider.php',
@@ -3845,15 +3840,6 @@ class ComposerStaticInit28b901c8f42efe2e95436386b8faf059
         'Matrix\\Operators\\Multiplication' => __DIR__ . '/..' . '/markbaker/matrix/classes/src/Operators/Multiplication.php',
         'Matrix\\Operators\\Operator' => __DIR__ . '/..' . '/markbaker/matrix/classes/src/Operators/Operator.php',
         'Matrix\\Operators\\Subtraction' => __DIR__ . '/..' . '/markbaker/matrix/classes/src/Operators/Subtraction.php',
-        'Milon\\Barcode\\BarcodeServiceProvider' => __DIR__ . '/..' . '/milon/barcode/src/Milon/Barcode/BarcodeServiceProvider.php',
-        'Milon\\Barcode\\DNS1D' => __DIR__ . '/..' . '/milon/barcode/src/Milon/Barcode/DNS1D.php',
-        'Milon\\Barcode\\DNS2D' => __DIR__ . '/..' . '/milon/barcode/src/Milon/Barcode/DNS2D.php',
-        'Milon\\Barcode\\Datamatrix' => __DIR__ . '/..' . '/milon/barcode/src/Milon/Barcode/Datamatrix.php',
-        'Milon\\Barcode\\Facades\\DNS1DFacade' => __DIR__ . '/..' . '/milon/barcode/src/Milon/Barcode/Facades/DNS1DFacade.php',
-        'Milon\\Barcode\\Facades\\DNS2DFacade' => __DIR__ . '/..' . '/milon/barcode/src/Milon/Barcode/Facades/DNS2DFacade.php',
-        'Milon\\Barcode\\PDF417' => __DIR__ . '/..' . '/milon/barcode/src/Milon/Barcode/PDF417.php',
-        'Milon\\Barcode\\QRcode' => __DIR__ . '/..' . '/milon/barcode/src/Milon/Barcode/QRcode.php',
-        'Milon\\Barcode\\WrongCheckDigitException' => __DIR__ . '/..' . '/milon/barcode/src/Milon/Barcode/WrongCheckDigitException.php',
         'Mockery' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery.php',
         'Mockery\\Adapter\\Phpunit\\MockeryPHPUnitIntegration' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery/Adapter/Phpunit/MockeryPHPUnitIntegration.php',
         'Mockery\\Adapter\\Phpunit\\MockeryPHPUnitIntegrationAssertPostConditions' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery/Adapter/Phpunit/MockeryPHPUnitIntegrationAssertPostConditions.php',
