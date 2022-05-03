@@ -35,7 +35,7 @@ class DetalleComprasController extends Component
     use WithFileUploads;
     public  $nro_compra,$search,$provider,$fecha_compra,
     $usuario,$metodo_pago,$pago_parcial,$tipo_documento,$nro_documento,$observacion
-    ,$selected_id,$descuento=0,$saldo_por_pagar,$subtotal,
+    ,$selected_id,$descuento=0,$saldo_por_pagar,$subtotal,$cantidad_minima,
     $estado_compra,$total_compra,$itemsQuantity,$price,$status,$tipo_transaccion,$destino,$porcentaje;
 
     public $nombre_prov, $apellido_prov, $direccion_prov, $correo_prov,
@@ -148,9 +148,16 @@ class DetalleComprasController extends Component
         $this->emit('prov_added', 'Proveedor Registrado');
 
     }
+    public function GenerateCode(){
+        
+        $min=10000;
+        $max= 99999;
+        $this->codigo= Carbon::now()->format('ymd').mt_rand($min,$max);
+    }
 
     public function Store(){
         
+        dd($this->selected_id2);
         $prod = new Products;
         $prod->nombre= $this->nombre;
         $prod->costo=$this->costo;
@@ -161,6 +168,7 @@ class DetalleComprasController extends Component
         $prod->lote =$this->lote;
         $prod->unidad=$this->unidad;
         $prod->marca=$this->marca;
+        $prod->cantidad_minima=$this->cantidad_minima;
         $prod->garantia =$this->garantia;
         $prod->industria=$this->industria;
         $prod->categoryid=$this->categoryid;

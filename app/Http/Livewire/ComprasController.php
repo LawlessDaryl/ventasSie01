@@ -13,8 +13,7 @@ class ComprasController extends Component
     use WithPagination;
     use WithFileUploads;
     private $pagination = 5;
-    public $fromDate,
-            $toDate,
+    public $fromDate,$toDate,
             $from,
             $to,
             $filtro,
@@ -42,30 +41,25 @@ class ComprasController extends Component
 
     public function render()
     {
-        
         $this->consultar();
-       
-
         $this->datas_compras= Compra::join('movimiento_compras as mov_compra','compras.id','mov_compra.id')
         ->join('movimientos as mov','mov_compra.id','mov.id')
         ->join('users','mov.user_id','users.id')
         ->join('providers as prov','compras.proveedor_id','prov.id')
-        ->select('compras.*','compras.id as compra_id','compras.status as status_compra','mov.*','prov.nombre as nombre_prov','users.name')
+        ->select('compras.*','compras.id as compra_id','compras.status as status_compra','mov.*','prov.nombre_prov as nombre_prov','users.name')
         ->whereBetween('compras.created_at',[$this->from,$this->to])
         ->where('compras.transaccion',$this->filtro)
         ->orderBy('compras.fecha_compra')
         ->get();
 
         $this->totales = $this->datas_compras->sum('importe_total');
-       
-
 
         if (strlen($this->search) > 0){
             $this->datas_compras = Compra::join('movimiento_compras as mov_compra','compras.id','mov_compra.id')
             ->join('movimientos as mov','mov_compra.id','mov.id')
             ->join('users','mov.user_id','users.id')
             ->join('providers as prov','compras.proveedor_id','prov.id')
-            ->select('compras.*','compras.status as status_compra','mov.*','prov.nombre as nombre_prov','users.name')
+            ->select('compras.*','compras.status as status_compra','mov.*','prov.nombre_prov as nombre_prov','users.name')
             ->whereBetween('compras.created_at',[$this->from,$this->to])
             ->where('compras.transaccion',$this->filtro)
             ->where('nombre', 'like', '%' . $this->search . '%')
@@ -110,8 +104,6 @@ class ComprasController extends Component
             $this->fromDate = $this->toDate->subWeeks(1);
             $this->from = Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00';
             $this->to = Carbon::parse(Carbon::now())->format('Y-m-d')     . ' 23:59:59';
-
-
 
         }
 

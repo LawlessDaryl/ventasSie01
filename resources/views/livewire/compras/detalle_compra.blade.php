@@ -41,7 +41,7 @@
                                                          <a href="javascript:void(0)" data-toggle="modal"
                                                              data-target="#modal_prov" class="fas fa-plus text-white"></a>
                                                      </span>
-                                             </div>
+                                              </div>
                                              @error('provider')
                                                  <span class="text-danger er">{{ $message }}</span>
                                              @enderror
