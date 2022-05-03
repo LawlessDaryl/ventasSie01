@@ -103,12 +103,7 @@
                                     <th class="table-th text-withe text-center">EXPIRACION CUENTA</th>
                                     <th class="table-th text-withe text-center">INICIO PLAN</th>
                                     <th class="table-th text-withe text-center">EXPIRACION PLAN</th>
-                                    @if ($condicional != 'vencidos')
-                                        <th class="table-th text-withe text-center">RENOVAR</th>
-                                        <th class="table-th text-withe text-center">EDITAR</th>
-                                    @else
-                                        <th class="table-th text-withe text-center">OBSERV</th>
-                                    @endif
+                                    <th class="table-th text-withe text-center">ACCIONES</th>
                                     <th class="table-th text-withe text-center">REALIZADO</th>
                                 </tr>
                             </thead>
@@ -162,33 +157,27 @@
                                                 {{ \Carbon\Carbon::parse($p->expiration_plan)->format('d/m/Y') }}
                                             </h6>
                                         </td>
-                                        @if ($condicional == 'ocupados')
-                                            <td class="text-center">
+
+                                        <td class="text-center">
+                                            @if ($condicional == 'ocupados')
                                                 @if ($p->estadoCuentaPerfil == 'ACTIVO')
                                                     <a href="javascript:void(0)"
                                                         wire:click="Acciones({{ $p->planid }})"
                                                         class="btn btn-dark mtmobile" title="Renovación">
                                                         <i class="fa-regular fa-calendar-check"></i>
                                                     </a>
-                                                @endif
-                                            </td>
-                                            <td>
-                                                @if ($p->estadoCuentaPerfil == 'ACTIVO')
-                                                    <a href="javascript:void(0)" wire:click="Edit({{ $p->id }})"
-                                                        class="btn btn-dark mtmobile" title="Edit">
+                                                    {{-- <a href="javascript:void(0)" wire:click="Edit({{ $p->id }})"
+                                                        class="btn btn-dark mtmobile" title="Editar">
                                                         <i class="fas fa-edit"></i>
+                                                    </a> --}}
+                                                    <a href="javascript:void(0)"
+                                                        wire:click="EditObservaciones('{{ $p->planid }}','{{ $p->id }}')"
+                                                        class="btn btn-dark mtmobile" title="Observaciones">
+                                                        <i class="fa-solid fa-align-left"></i>
                                                     </a>
                                                 @endif
-                                            </td>
-                                        @else
-                                            <td class="text-center">
-                                                <a href="javascript:void(0)"
-                                                    wire:click="Edit({{ $p->id }},{{ $p->planid }})"
-                                                    class="btn btn-dark mtmobile" title="Edit">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                            </td>
-                                        @endif
+                                            @endif
+                                        </td>
 
                                         <td
                                             style="{{ $p->done == 'NO' ? 'background-color: #d97171 !important' : 'background-color: #09ed3d !important' }}">
@@ -420,6 +409,7 @@
     @include('livewire.perfiles.detailsPlan')
     @include('livewire.perfiles.modalEditCombos')
     @include('livewire.perfiles.modalRenovarCombos')
+    @include('livewire.perfiles.observacionesPlan')
 
 </div>
 
@@ -480,6 +470,13 @@
         });
         window.livewire.on('acciones-combo-hide', msg => {
             $('#modal-acciones-combo').modal('hide')
+            noty(msg)
+        });
+        window.livewire.on('modal-observaciones-show', msg => {
+            $('#modal-observaciones').modal('show')
+        });
+        window.livewire.on('modal-observaciones-hide', msg => {
+            $('#modal-observaciones').modal('hide')
             noty(msg)
         });
 

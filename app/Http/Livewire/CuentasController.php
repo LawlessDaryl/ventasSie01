@@ -67,7 +67,7 @@ class CuentasController extends Component
         $this->meseRenovarProv = 1;
         $this->inicioNueva = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->expirationNueva = Carbon::parse(Carbon::now())->format('Y-m-d');
-        $this->start_account = Carbon::parse(Carbon::now())->format('Y-m-d');
+        $this->start_account = null;
         $this->tipopago = 'EFECTIVO';
         $this->importe = '';
         $this->correoCuenta = '';
@@ -100,6 +100,7 @@ class CuentasController extends Component
     }
     public function render()
     {
+
         if ($this->condicional == 'cuentas') {  /* cuentas libres y ocupadas */
             if ($this->EnterasDivididas != 'TODOS') {
                 if ($this->PlataformaFiltro != 'TODAS') {
@@ -1218,13 +1219,13 @@ class CuentasController extends Component
         }
 
         /* CALCULAR FECHA DE FINALIZACION AL CREAR UNA NUEVA CUENTA */
-        if ($this->start_account) {
+        /* if ($this->start_account) {
             if ($this->mesesComprar > 0 && $this->mostrarRenovar == 0) {
                 $dias = $this->mesesComprar * 30;
                 $this->expiration_account = strtotime('+' . $dias . ' day', strtotime($this->start_account));
                 $this->expiration_account = date('Y-m-d', $this->expiration_account);
             }
-        }
+        } */
         /* MOSTRAR UNA NUEVA FECHA DE EXPIRACION SEGUN EL NUMERO DE MESES QUE ESCRIBA EL USUARIO EN RENOVAR PLAN*/
         if ($this->diasdePlan > 0) {
             if ($this->meses > 0) {
@@ -1559,6 +1560,7 @@ class CuentasController extends Component
 
         $this->selected_id = $acc->id;
         $this->selected = $acc->email_id;
+        $this->start_account = $acc->start_account;
         $this->expiration_account = $acc->expiration_account;
         $this->estado = $acc->status;
         $this->number_profiles = $acc->number_profiles;
@@ -1572,31 +1574,18 @@ class CuentasController extends Component
         $this->emit('modal-show', 'show modal!');
     }
 
-    public function EditObservaciones(Plan $plan)
-    {
-        $this->selected_id = $plan->id;
-        $this->observations = $plan->observations;
-        $this->emit('modal-observaciones-show', 'show modal!');
-    }
-
-    public function updateObserv()
-    {
-        $plan = Plan::find($this->selected_id);
-        $plan->observations = $this->observations;
-        $plan->save();
-        $this->emit('modal-observaciones-hide', 'Se actualizaron las observaciones del plan');
-    }
-
     public function Update()
     {
         $rules = [
+            'start_account' => 'required',
+            'expiration_account' => 'required',
             'password_account' => 'required',
-            'passwordGmail' => 'required_if:mostrarCorreo,SI',
         ];
 
         $messages = [
+            'start_account.required' => 'La fecha de inicio es requerida',
+            'expiration_account.required' => 'La fecha de fin es requerida',
             'password_account.required' => 'La contraseña de la cuenta es requerida',
-            'passwordGmail.required_if' => 'La contraseña del correo es requerida',
         ];
 
         $this->validate($rules, $messages);
@@ -1612,11 +1601,15 @@ class CuentasController extends Component
 
         if ($plataform->tipo == 'CORREO') {
             $acc->update([
+                'start_account' => $this->start_account,
+                'expiration_account' => $this->expiration_account,
                 'password_account' => $this->password_account,
             ]);
             $acc->save();
         } else {
             $acc->update([
+                'start_account' => $this->start_account,
+                'expiration_account' => $this->expiration_account,
                 'account_name' => $this->nombre_cuenta,
                 'password_account' => $this->password_account,
             ]);
@@ -1625,6 +1618,25 @@ class CuentasController extends Component
 
         $this->resetUI();
         $this->emit('item-updated', 'Cuenta Actualizada');
+    }
+
+    public function EditObservaciones(Plan $plan)
+    {
+        $this->selected_id = $plan->id;
+        $this->observations = $plan->observations;
+        $this->start_account = $plan->plan_start;
+        $this->expiration_account = $plan->expiration_plan;
+        $this->emit('modal-observaciones-show', 'show modal!');
+    }
+
+    public function updateObserv()
+    {
+        $plan = Plan::find($this->selected_id);
+        $plan->observations = $this->observations;
+        $plan->plan_start = $this->start_account;
+        $plan->expiration_plan = $this->expiration_account;
+        $plan->save();
+        $this->emit('modal-observaciones-hide', 'Se actualizaron los datos del plan');
     }
 
     public function InhabilitarCuenta(Account $cuenta)
@@ -2101,7 +2113,7 @@ class CuentasController extends Component
         $this->meses = 0;
         $this->meseRenovarProv = 1;
         $this->expirationNueva = Carbon::parse(Carbon::now())->format('Y-m-d');
-        $this->start_account = Carbon::parse(Carbon::now())->format('Y-m-d');
+        $this->start_account = null;
         $this->tipopago = 'EFECTIVO';
         $this->importe = '';
         $this->correoCuenta = '';

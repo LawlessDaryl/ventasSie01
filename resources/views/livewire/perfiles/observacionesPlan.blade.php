@@ -36,6 +36,30 @@
                         </div>
                     </div>
 
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <label>
+                                <h6>Perfil</h6>
+                            </label>
+                            <input type="text" wire:model="nameperfil" class="form-control">
+                            @error('nameperfil')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <label>
+                                <h6>Pin</h6>
+                            </label>
+                            <input type="text" wire:model="pin" class="form-control">
+                            @error('pin')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
                     <div class="col-sm-12 col-md-12">
                         <div class="form-group">
                             <h6>Observaciones</h6>

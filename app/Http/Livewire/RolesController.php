@@ -13,8 +13,8 @@ use GuzzleHttp\Promise\Create;
 class RolesController extends Component
 {
     use WithPagination;
-    public $roleName,$search,$selected_id,$pageTitle,$componentName;
-    private $pagination=5;
+    public $roleName, $search, $selected_id, $pageTitle, $componentName;
+    private $pagination = 10;
 
     public function paginationView()
     {
@@ -25,21 +25,20 @@ class RolesController extends Component
     {
         $this->pageTitle = 'Listado';
         $this->componentName = 'Roles';
-        
     }
 
     public function render()
     {
-        if(strlen($this->search)>0){
-            $roles=Role::where('name','like','%'.$this->search.'%')->paginate($this->pagination);            
-        }else{
-            $roles=Role::orderBy('name','asc')->paginate($this->pagination);
+        if (strlen($this->search) > 0) {
+            $roles = Role::where('name', 'like', '%' . $this->search . '%')->paginate($this->pagination);
+        } else {
+            $roles = Role::orderBy('name', 'asc')->paginate($this->pagination);
         }
-        return view('livewire.roles.component',[
-            'data'=>$roles,
+        return view('livewire.roles.component', [
+            'data' => $roles,
         ])
-        ->extends('layouts.theme.app')
-        ->section('content');
+            ->extends('layouts.theme.app')
+            ->section('content');
     }
 
     public function CreateRole()
@@ -93,8 +92,7 @@ class RolesController extends Component
     public function Destroy($id)
     {
         $permissionsCount = Role::find($id)->permissions->count();
-        if($permissionsCount > 0)
-        {
+        if ($permissionsCount > 0) {
             $this->emit('role-error', 'No se puede eliminar el eol por que tiene permisos asociados');
             return;
         }

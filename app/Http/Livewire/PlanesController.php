@@ -92,7 +92,11 @@ class PlanesController extends Component
         $this->plataforma1Require = 'NO';
         $this->plataforma2Require = 'NO';
         $this->plataforma3Require = 'NO';
-        $this->fecha_inicio = Carbon::parse(Carbon::now())->format('Y-m-d');
+        /* $this->fecha_inicio = Carbon::parse(Carbon::now())->format('Y-m-d'); */
+        $this->fecha_inicio = null;
+        $this->expiration_plan = null;
+        $this->PerfilCliente = '';
+        $this->PinCliente = '';
         $this->Reset1Platf = 'INICIO';
         $this->Reset2Platf = 'INICIO';
         $this->Reset3Platf = 'INICIO';
@@ -101,6 +105,8 @@ class PlanesController extends Component
         $this->arrayCuentas = array();
         $this->arrayPerfiles = array();
         $this->diasdePlan = 30;
+        $this->perfilId = 0;
+        $this->clienteId = 0;
     }
 
     public function render()
@@ -337,17 +343,20 @@ class PlanesController extends Component
         }
 
         /* CALCULAR LA FECHA DE EXPIRACION SEGUN LA CANTIDAD DE MESES Y DIAS */
-        if ($this->diasdePlan >= 1) {
-            if ($this->meses > 0) {
-                $date_now = date('Y-m-d h:i:s', time());
-                $dias = $this->meses * $this->diasdePlan;
-                $this->expiration_plan = strtotime('+' . $dias . ' day', strtotime($this->fecha_inicio));
-                $this->expiration_plan = date('Y-m-d', $this->expiration_plan);
-            } else {
-                $this->meses = 1;
+        if ($this->selected_id == 0) {
+            if ($this->fecha_inicio) {
+                if ($this->diasdePlan >= 1) {
+                    if ($this->meses > 0) {
+                        $date_now = date('Y-m-d h:i:s', time());
+                        $dias = $this->meses * $this->diasdePlan;
+                        $this->expiration_plan = strtotime('+' . $dias . ' day', strtotime($this->fecha_inicio));
+                        $this->expiration_plan = date('Y-m-d', $this->expiration_plan);
+                    } else {
+                        $this->meses = 1;
+                    }
+                }
             }
         }
-
         /* BUSCAR CLIENTE POR CEDULA EN EL INPUT DEL MODAL */
         $datos = [];
         if ($this->celular != '') {
@@ -1162,9 +1171,7 @@ class PlanesController extends Component
 
     public function Agregar()
     {
-        if ($this->selected_id != 0) {
-            $this->resetUI();
-        }
+        $this->resetUI();
         $this->emit('show-modal', 'show modal!');
     }
 
@@ -1647,9 +1654,72 @@ class PlanesController extends Component
 
     public function VerObservaciones(Plan $plan)
     {
+        if ($this->condicional == 'perfiles') {
+            $datosPlan = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
+                ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
+                ->join('accounts as acc', 'acc.id', 'pa.account_id')
+                ->join('platforms as p', 'p.id', 'acc.platform_id')
+                ->join('account_profiles as ap', 'acc.id', 'ap.account_id')
+                ->join('profiles as prof', 'prof.id', 'ap.profile_id')
+                ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
+                ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
+                ->select(
+                    'prof.nameprofile as nameprofile',
+                    'prof.pin as pin',
+                    'plans.observations as observations',
+                    'c.nombre as nombreCliente',
+                    'c.celular as celular',
+                    'plans.plan_start as plan_start',
+                    'plans.expiration_plan as expiration_plan',
+                    'c.id as clienteId',
+                    'prof.id as perfilId',
+                )
+                ->where('plans.id', $plan->id)
+                ->whereColumn('plans.id', '=', 'ap.plan_id')
+                ->where('pa.status', 'ACTIVO')
+                ->where('ap.status', 'ACTIVO')
+                ->orderby('plans.id', 'desc')
+                ->get()->first();
+
+            $this->nombre = $datosPlan->nombreCliente;
+            $this->celular = $datosPlan->celular;
+            $this->PerfilCliente = $datosPlan->nameprofile;
+            $this->PinCliente = $datosPlan->pin;
+            $this->perfilId = $datosPlan->perfilId;
+            $this->clienteId = $datosPlan->clienteId;
+        } else {
+            $datosPlan = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
+                ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
+                ->join('accounts as acc', 'acc.id', 'pa.account_id')
+                ->join('platforms as p', 'p.id', 'acc.platform_id')
+                ->join('emails as e', 'e.id', 'acc.email_id')
+                ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
+                ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
+                ->select(
+                    'c.nombre as nombreCliente',
+                    'c.celular as celular',
+                    'e.content as correoCuenta',
+                    'acc.account_name as account_name',
+                    'acc.password_account as password_account',
+                    'plans.plan_start as plan_start',
+                    'plans.expiration_plan as expiration_plan',
+                    'plans.observations as observations',
+                    'c.id as clienteId',
+                )
+                ->where('plans.id', $plan->id)
+                ->orderby('plans.id', 'desc')
+                ->where('pa.status', 'ACTIVO')
+                ->get()->first();
+
+            $this->nombre = $datosPlan->nombreCliente;
+            $this->celular = $datosPlan->celular;
+            $this->clienteId = $datosPlan->clienteId;
+        }
         $this->selected_id = $plan->id;
-        $this->ready = $plan->ready;
         $this->observaciones = $plan->observations;
+        $this->fecha_inicio = $plan->plan_start;
+        $this->expiration_plan = $plan->expiration_plan;
+
         $this->emit('show-modal3', 'open modal');
     }
 
@@ -1657,11 +1727,36 @@ class PlanesController extends Component
     {
         DB::beginTransaction();
         try {
-            $plan = Plan::find($this->selected_id);
-            $plan->observations = $this->observaciones;
-            $plan->save();
+            if ($this->condicional == 'perfiles') {
+                $plan = Plan::find($this->selected_id);
+                $plan->observations = $this->observaciones;
+                $plan->plan_start = $this->fecha_inicio;
+                $plan->expiration_plan = $this->expiration_plan;
+                $plan->save();
+
+                $cliente = Cliente::find($this->clienteId);
+                $cliente->nombre = $this->nombre;
+                $cliente->celular = $this->celular;
+                $cliente->save();
+
+                $perfil = Profile::find($this->perfilId);
+                $perfil->nameprofile = $this->PerfilCliente;
+                $perfil->pin = $this->PinCliente;
+                $perfil->save();
+            } else {
+                $plan = Plan::find($this->selected_id);
+                $plan->observations = $this->observaciones;
+                $plan->plan_start = $this->fecha_inicio;
+                $plan->expiration_plan = $this->expiration_plan;
+                $plan->save();
+
+                $cliente = Cliente::find($this->clienteId);
+                $cliente->nombre = $this->nombre;
+                $cliente->celular = $this->celular;
+                $cliente->save();
+            }
             $this->resetUI();
-            $this->emit('item-actualizado', 'Se actulizó la información');
+            $this->emit('item-actualizado', 'Se actualizó la información');
             DB::commit();
         } catch (Exception $e) {
             DB::rollback();
@@ -1775,7 +1870,9 @@ class PlanesController extends Component
         $this->plataforma1Require = 'NO';
         $this->plataforma2Require = 'NO';
         $this->plataforma3Require = 'NO';
-        $this->fecha_inicio = Carbon::parse(Carbon::now())->format('Y-m-d');
+        /* $this->fecha_inicio = Carbon::parse(Carbon::now())->format('Y-m-d'); */
+        $this->fecha_inicio = null;
+        $this->expiration_plan = null;
         $this->Reset1Platf = 'INICIO';
         $this->Reset2Platf = 'INICIO';
         $this->Reset3Platf = 'INICIO';
