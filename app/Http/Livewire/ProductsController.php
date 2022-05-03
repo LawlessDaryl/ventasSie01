@@ -192,7 +192,7 @@ class ProductsController extends Component
     }
     public function Edit(Product $product)
     {
-        $rr= Category::where('id',$product->category_id)->first()->value('categoria_padre');
+        $rr= Category::where('categories.id',$product->category_id)->first()->value('categoria_padre');
 
         if($rr===0){
             $this->selected_id2 = $product->category_id;
