@@ -129,22 +129,22 @@ class ProductoDestinoSeeder extends Seeder
         //Agregando Productos a la Segunda Sucursal
         ProductosDestino::create([
             'product_id'=> 1,
-            'location_id' => 3,
+            'location_id' => 4,
             'stock' => '9',
         ]);
         ProductosDestino::create([
             'product_id'=> 2,
-            'location_id' => 3,
+            'location_id' => 4,
             'stock' => '1',
         ]);
         ProductosDestino::create([
             'product_id'=> 3,
-            'location_id' => 3,
+            'location_id' => 4,
             'stock' => '2',
         ]);
         ProductosDestino::create([
             'product_id'=> 4,
-            'location_id' => 3,
+            'location_id' => 4,
             'stock' => '11',
         ]);
 

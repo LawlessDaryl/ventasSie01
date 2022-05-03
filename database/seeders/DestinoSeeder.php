@@ -25,7 +25,7 @@ class DestinoSeeder extends Seeder
             'sucursal_id'=>'1'           
         ]);
         Destino::create([
-            'nombre'=>'Deposito',
+            'nombre'=>'Almacen Devoluciones',
             'observacion'=>'ninguna',
             'sucursal_id'=>'1'
         ]);
@@ -33,6 +33,11 @@ class DestinoSeeder extends Seeder
             'nombre'=>'Tienda',
             'observacion'=>'ninguna',
             'sucursal_id'=>'2'           
+        ]);
+        Destino::create([
+            'nombre'=>'Almacen Devoluciones',
+            'observacion'=>'ninguna',
+            'sucursal_id'=>'2'
         ]);
     }
 }

@@ -42,7 +42,7 @@ class LocationSeeder extends Seeder
         //     'destino_id' => '1'
         // ]);//
 
-        //Almacén
+        //Almacén Sucursal 1
         Location::create([
             
             'codigo' => '0001',
@@ -50,19 +50,36 @@ class LocationSeeder extends Seeder
             'tipo' => 'ESTANTE',
             'destino_id' => '1'
         ]);
-        //Tienda
+        //Tienda Sucursal 1
         Location::create([
             'codigo' => '0002',
             'descripcion' => 'Lugar de Ventas Sucursal: Av. América',
             'tipo' => 'VITRINA',
             'destino_id' => '2'
         ]);
-        //2DA Sucursal Tienda
+        //Almacen Devoluciones Sucursal 1
+        Location::create([
+            'codigo' => '0002',
+            'descripcion' => 'Lugar de Devolución Ventas Sucursal: Av. América',
+            'tipo' => 'VITRINA',
+            'destino_id' => '3'
+        ]);
+
+
+
+        //Sucursal Tienda Sucursal 2
         Location::create([
             'codigo' => '0003',
             'descripcion' => 'Lugar de Ventas Sucursal: Av. Pando',
             'tipo' => 'ESTANTE',
             'destino_id' => '4'
+        ]);
+        //Almacen Devoluciones Sucursal 2
+        Location::create([
+            'codigo' => '0002',
+            'descripcion' => 'Lugar de Devolución Ventas Sucursal: Av. Pando',
+            'tipo' => 'VITRINA',
+            'destino_id' => '5'
         ]);
     }
 }

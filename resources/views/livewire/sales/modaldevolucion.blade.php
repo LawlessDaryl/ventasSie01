@@ -223,9 +223,16 @@
                                     
                                         <button type="button" data-dismiss="modal" wire:click.prevent="guardardevolucion()" 
                                         class="btn btn-primary">Guardar Devolución</button>
-                                        @else
+                                @else
+                                    {{-- Verificamos si existe stock del producto que queremos devolver --}}
+                                        @if($this->verificarstock() == true)
                                         <button type="button" data-dismiss="modal" wire:click.prevent="devolverproducto()" 
                                         class="btn btn-primary">Devolver Producto</button>
+                                        @else
+                                        <br>
+                                        <br>
+                                        <h4>No  Existe Stock en Tienda Disponible para Devolver</h4>
+                                        @endif
                                 @endif
                         
                     {{-- --------------- --}}
@@ -391,7 +398,7 @@
                             <br>
                             <br>
                             <br>
-                            <p class="text-center">¡No Existen Ventas del Producto Seleccionado!</p>
+                            <p class="text-center">¡No Existen Ventas del Producto Seleccionado en los Últimos 30 Días!</p>
                             <br>
                             <br>
                             <br>
