@@ -2,75 +2,91 @@
 <div class="row">
     <div class="col-sm-12 col-md-6">
         <div class="form-group">
-            <label>Nombre</label>
+            <h6>Nombre</h6>
             <input type="text" wire:model.lazy="nombre" class="form-control" placeholder="ej: Fenris">
-            @error('nombre') <span class="text-danger er">{{ $message }}</span>@enderror
+            @error('nombre')
+                <span class="text-danger er">{{ $message }}</span>
+            @enderror
         </div>
     </div>
 
     <div class="col-sm-12 col-md-6">
         <div class="form-group">
-            <label>Cédula</label>
+            <h6>Cédula</h6>
             <input type="text" wire:model.lazy="cedula" class="form-control" placeholder="12121212">
-            @error('cedula') <span class="text-danger er">{{ $message }}</span>@enderror
+            @error('cedula')
+                <span class="text-danger er">{{ $message }}</span>
+            @enderror
         </div>
     </div>
 
     <div class="col-sm-12 col-md-6">
         <div class="form-group">
-            <label>Celular</label>
+            <h6>Celular</h6>
             <input type="text" wire:model.lazy="celular" class="form-control" placeholder="ej: 79564859"
                 maxlength="8">
-            @error('celular') <span class="text-danger er">{{ $message }}</span>@enderror
+            @error('celular')
+                <span class="text-danger er">{{ $message }}</span>
+            @enderror
         </div>
     </div>
 
     <div class="col-sm-12 col-md-6">
         <div class="form-group">
-            <label>Email</label>
+            <h6>Email</h6>
             <input type="text" wire:model.lazy="email" class="form-control" placeholder="ej: correo@correo.com">
-            @error('email') <span class="text-danger er">{{ $message }}</span>@enderror
+            @error('email')
+                <span class="text-danger er">{{ $message }}</span>
+            @enderror
         </div>
     </div>
 
     <div class="col-sm-12 col-md-6">
         <div class="form-group">
-            <label>Fecha de Nacimiento</label>
+            <h6>Fecha de Nacimiento</h6>
             <input type="text" wire:model="fnacim" class="form-control flatpickr" placeholder="Click para elegir">
-            @error('fnacim') <span class="text-danger er">{{ $message }}</span>@enderror
+            @error('fnacim')
+                <span class="text-danger er">{{ $message }}</span>
+            @enderror
         </div>
     </div>
 
     <div class="col-sm-12 col-md-6">
         <div class="form-group">
-            <label>Dirección</label>
+            <h6>Dirección</h6>
             <input type="text" date-type='currency' wire:model.lazy="direccion" class="form-control"
                 placeholder="ej: Av. Ayacucho">
-            @error('direccion') <span class="text-danger er">{{ $message }}</span>@enderror
+            @error('direccion')
+                <span class="text-danger er">{{ $message }}</span>
+            @enderror
         </div>
     </div>
 
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
-            <label>nit</label>
+            <h6>nit</h6>
             <input type="text" date-type='currency' wire:model.lazy="nit" class="form-control"
                 placeholder="ej: 1515151515">
-            @error('nit') <span class="text-danger er">{{ $message }}</span>@enderror
+            @error('nit')
+                <span class="text-danger er">{{ $message }}</span>
+            @enderror
         </div>
     </div>
 
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
-            <label>Razón Social</label>
+            <h6>Razón Social</h6>
             <input type="text" date-type='currency' wire:model.lazy="razonsocial" class="form-control"
                 placeholder="ej: S.A.">
-            @error('razonsocial') <span class="text-danger er">{{ $message }}</span>@enderror
+            @error('razonsocial')
+                <span class="text-danger er">{{ $message }}</span>
+            @enderror
         </div>
     </div>
 
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
-            <label>Procedencia</label>
+            <h6>Procedencia</h6>
             <select wire:model='procedencia' class="form-control">
                 <option value="Nuevo" selected>Nuevo</option>
                 @foreach ($procedenciaClientes as $item)
@@ -79,7 +95,9 @@
                     @endif
                 @endforeach
             </select>
-            @error('procedencia') <span class="text-danger er">{{ $message }}</span>@enderror
+            @error('procedencia')
+                <span class="text-danger er">{{ $message }}</span>
+            @enderror
         </div>
     </div>
 
@@ -87,7 +105,7 @@
         <div class="form-group custom-file">
             <input type="file" class="custom-file-input form-control" wire:model="image"
                 accept="image/x-png,image/gif,image/jpeg">
-            <label class="custom-file-label">Imagen {{ $image }}</label>
+            <h6 class="custom-file-h6">Imagen {{ $image }}</h6>
         </div>
     </div>
 </div>

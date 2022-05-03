@@ -39,7 +39,7 @@
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         <a href="javascript:void(0)"
-                                            onclick="Confirm('{{ $rol->id }}','{{ $rol->name }}','{{ $rol->usuarios->count() }}')"
+                                            onclick="Confirm('{{ $rol->id }}','{{ $rol->name }}')"
                                             class="btn btn-dark" title="Eliminar registro">
                                             <i class="fas fa-trash"></i>
                                         </a>

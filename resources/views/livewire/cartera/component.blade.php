@@ -51,7 +51,7 @@
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         <a href="javascript:void(0)"
-                                            onclick="Confirm('{{ $item->id }}','{{ $item->nombre }}','{{ $item->carteraM->count() }}')"
+                                            onclick="Confirm('{{ $item->id }}','{{ $item->nombre }}','{{ $item->carteraMovimientos->count() }}')"
                                             class="btn btn-dark" title="Borrar">
                                             <i class="fas fa-trash"></i>
                                         </a>

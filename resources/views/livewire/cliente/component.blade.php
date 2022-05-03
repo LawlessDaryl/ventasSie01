@@ -6,10 +6,10 @@
                     <b>{{ $componentName }} | {{ $pageTitle }}</b>
                 </h4>
                 <ul class="tabs tab-pills">
-                    
-                        <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
+
+                    <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
                         data-target="#theModal">Agregar</a>
-                    
+
                 </ul>
             </div>
             @include('common.searchbox')
@@ -47,7 +47,9 @@
                                         <h6 class="text-center">{{ $c->email }}</h6>
                                     </td>
                                     <td class="text-center">
-                                        <h6 class="text-center">{{ $c->fecha_nacim }}</h6>
+                                        <h6 class="text-center">
+                                            {{$c->fecha_nacim }}
+                                        </h6>
                                     </td>
                                     <td class="text-center">
                                         <h6 class="text-center">{{ $c->nit }}</h6>
@@ -66,11 +68,11 @@
                                             class="btn btn-dark mtmobile" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <a href="javascript:void(0)" onclick="Confirm('{{ $c->id }}')" 
-                                        class="btn btn-dark"
-                                            title="Delete">
+                                        {{-- <a href="javascript:void(0)"
+                                            onclick="Confirm('{{ $c->id }}','{{ $c->nombre }}')"
+                                            class="btn btn-dark" title="Delete">
                                             <i class="fas fa-trash"></i>
-                                        </a>
+                                        </a> --}}
                                     </td>
                                 </tr>
                             @endforeach
@@ -88,7 +90,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         flatpickr(document.getElementsByClassName('flatpickr'), {
             enableTime: false,
-            dateFormat: 'Y-m-d',
+            dateFormat: 'd-m-Y',
             locale: {
                 firstDayofweek: 1,
                 weekdays: {
@@ -135,7 +137,7 @@
                 },
             }
         })
-        
+
         window.livewire.on('item-added', Msg => {
             $('#theModal').modal('hide')
             noty(Msg)
@@ -158,12 +160,11 @@
         })
     });
 
-    function Confirm(id) {
-        
+    function Confirm(id, name) {
         swal.fire({
             title: 'CONFIRMAR',
             icon: 'warning',
-            text: 'Confirmar eliminar el usuario ' + '"' + id + '"',
+            text: 'Confirmar eliminar el usuario ' + '"' + name + '"',
             showCancelButton: true,
             cancelButtonText: 'Cerrar',
             cancelButtonColor: '#383838',
@@ -177,4 +178,3 @@
         })
     }
 </script>
-

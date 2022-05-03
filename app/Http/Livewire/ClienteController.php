@@ -32,7 +32,6 @@ class ClienteController extends Component
         $this->direccion = '';
         $this->email = '';
         $this->razonsocial = '';
-        $this->nit = '';
         $this->image = '';
     }
 
@@ -63,17 +62,17 @@ class ClienteController extends Component
     public function Store()
     {
         $rules = [
+            'nombre' => 'required',
             'cedula' => 'required|min:5,unique|unique:clientes',
             'celular' => 'required|min:8',
-            'nit' => 'required'
         ];
         $messages = [
+            'nombre.required' => 'El nombre es requerido.',
             'cedula.required' => 'Numero de cédula es requerido.',
             'cedula.min' => 'Ingrese un numero de cédula superior a 5 dígitos.',
             'cedula.unique' => 'El CI ya existe',
             'celular.required' => 'Numero de celular es requerido.',
             'celular.min' => 'Ingrese un celular superior a 7 dígitos.',
-            'nit.required' => 'El Nit es requerido'
         ];
         $this->validate($rules, $messages);
 
@@ -191,7 +190,7 @@ class ClienteController extends Component
         $this->celular = '';
         $this->email = '';
         $this->fnacim = '';
-        $this->nit = '';
+        $this->reset(['nit']);
         $this->procedencia = 'Nuevo';
         $this->direccion = '';
         $this->razonsocial = '';

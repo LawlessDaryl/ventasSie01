@@ -46,8 +46,8 @@ class CarteraController extends Component
                 $this->variable = 0;
             }
         }
-        /* $cartera1 = Cartera::find(1);
-        $cantidad=$cartera1->carteraM->count();
+        /* $cartera1 = Cartera::find(3);
+        $cantidad=$cartera1->carteraMovimientos->count();
         dd($cantidad); */
         return view('livewire.cartera.component', [
             'data' => $data,

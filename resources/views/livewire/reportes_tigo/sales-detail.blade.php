@@ -1,10 +1,13 @@
 <div wire:ignore.self class="modal fade" id="modalDetails" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header" style="background: #414141">
                 <h5 class="modal-title text-white">
-                    <b style="color:black">Detalle de Transacción # {{ $transaccionId }}</b>
+                    <b>Detalle de Transacción # {{ $transaccionId }}</b>
                 </h5>
+                <button class="close" data-dismiss="modal" type="button" aria-label="Close">
+                    <span class="text-white">&times;</span>
+                </button>
                 <h6 class="text-center text-warning" wire:loading>POR FAVOR ESPERE</h6>
             </div>
             <div class="modal-body">
@@ -36,19 +39,18 @@
                     </table>
                     <div class="col-sm-12 col-md-6">
                         <div class="form-group">
-                            <label>Observaciones: </label><br>
-                            <label>
+                            <h6>Observaciones de la transacción: </h6><br>
+                            <h6>
                                 @if (!empty($details))
                                     {{ $details[0]->observaciones }}
                                 @endif
-                            </label>
-                            @error('estado') <span class="text-danger er">{{ $message }}</span>@enderror
+                            </h6>
+                            @error('estado')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-dark close-btn text-info" data-dismiss="modal">CANCELAR</button>
             </div>
         </div>
     </div>
