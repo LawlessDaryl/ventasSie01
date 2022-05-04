@@ -24,12 +24,9 @@
                         <div class="form-group">
                             <label>Responsable:</label>
                             <select wire:model.lazy="users1" class="form-control">
-                               
                                 @foreach ($users as $usuario)
-                                
                                     <option value="{{ $usuario->id }}" >{{ $usuario->name }}</option>
                                 @endforeach
-
                             </select>
                             @error('users1') <span class="text-danger er">{{ $message }}</span>@enderror
                         </div>

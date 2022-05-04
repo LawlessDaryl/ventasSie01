@@ -6,6 +6,12 @@
                     <b>{{ $componentName }} | {{ $pageTitle }}</b>
                 </h4>
                 <ul class="tabs tab-pills">
+                    
+                    {{-- @if(@Auth::user()->hasPermissionTo('Modificar_Detalle_Serv_Entregado'))
+                    <a href="javascript:void(0)" class="btn btn-dark" 
+                    wire:click="DeleteAllServices()">VACIAR BD SERVICIOS</a>
+                    @endif --}}
+
                     <a href="javascript:void(0)" class="btn btn-dark" wire:click="IrInicio">IR A INICIO</a>
                     @if(@Auth::user()->hasPermissionTo('Recepcionar_Servicio'))
                         <a href="javascript:void(0)" class="btn btn-dark" wire:click="GoService">AGREGAR</a>
@@ -264,7 +270,7 @@
                                                                 <a href="javascript:void(0)"
                                                                     class="btn btn-dark mtmobile"
                                                                     wire:click="DetalleEntregado({{ $service->id }})"
-                                                                    title="Ver Detalle">Detalle Entregado</a>
+                                                                    title="Ver Detalle">Detalle</a>
                                                             @endif
 
                                                             @if (count($item->services) - 1 != $key)
@@ -448,7 +454,7 @@
                                                                 <a href="javascript:void(0)"
                                                                     class="btn btn-dark mtmobile"
                                                                     wire:click="DetalleEntregado({{ $service->id }})"
-                                                                    title="Ver Detalle">Detalle Entregado</a>
+                                                                    title="Ver Detalle">Detalle</a>
                                                             @endif
 
                                                             @if (count($item->services) - 1 != $key)
@@ -637,7 +643,7 @@
                                                             <a href="javascript:void(0)"
                                                                 class="btn btn-dark mtmobile"
                                                                 wire:click="DetalleEntregado({{ $service->id }})"
-                                                                title="Ver Detalle">Detalle Entregado</a>
+                                                                title="Ver Detalle">Detalle</a>
                                                         @endif
 
                                                         @if (count($item->services) - 1 != $key)
@@ -946,9 +952,5 @@
         })
     }
 
-    function ChangeStates() {
 
-    }
-
-    
 </script>

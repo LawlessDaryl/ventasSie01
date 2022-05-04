@@ -775,6 +775,40 @@ class OrderServiceController extends Component
         $this->emit('show-deletemodal', 'show modal!');
     }
 
+    public function DeleteAllServices()
+    {
+
+        $orderservice = OrderService::select('order_services.*')->get();
+
+        DB::beginTransaction();
+        try {
+            foreach($orderservice as $os){
+                foreach ($os->services as $servicio) {
+                    foreach ($servicio->movservices as $movimientoservicio) {
+                        foreach ($movimientoservicio->movs->cartmov as $cmov){
+                            $carteraMovimiento = $cmov;
+                            $carteraMovimiento->delete();
+                        }
+                        $movimientoservicio->movs->climov->delete();
+                        $movimiento = $movimientoservicio->movs;
+                        $movimientoservicio->delete();
+                        $movimiento->delete();
+                    }
+                    $servicio->delete();
+                }
+                $os->delete();
+            }
+            
+            DB::commit();
+
+            $this->resetUI();
+            $this->emit('item', 'Servicios eliminados correctamente');
+        } catch (Exception $e) {
+            DB::rollback();
+            $this->emit('item-error', 'ERROR' . $e->getMessage());
+        }
+    }
+
     public function Delete($id)
     {
         $orderservice = OrderService::find($id);

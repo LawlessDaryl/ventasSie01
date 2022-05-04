@@ -208,6 +208,12 @@
                                             </div>
                                         </div>
                                     </td>
+
+                                    {{-- LOGO --}}
+                                    {{-- <td width="30%" align="center" style="vertical-align: top; padding-top:10px; position:relative;">
+                                        <img src="{{ asset('assets/img/Vertical.png') }}" alt="" class="invoice-logo">   
+                                    </td> --}}
+
                                 </tr>
 
                             </table>

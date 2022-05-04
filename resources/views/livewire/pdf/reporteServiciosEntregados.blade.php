@@ -76,8 +76,12 @@
                     <th width="11%">Fecha Hora Term.</th>
                     <th width="11%">Fecha Hora Entr.</th> --}}
                     <th width="7%">Detalle</th>
+                    @if (@Auth::user()->hasPermissionTo('Ver_Costo_Reportes_Entregados'))
                     <th width="5%">Costo</th>
                     <th width="8%">Utilidad</th>
+                    @else
+                    <th width="8%">Utilidad</th>
+                    @endif
                     {{-- <th width="5%">A cuenta</th>
                     <th width="5%">Saldo</th>
                     <th width="8%">Tipo Servicio</th> --}}
@@ -125,9 +129,11 @@
                             </FONT>
                         </td>
                         {{-- COSTO --}}
+                        @if (@Auth::user()->hasPermissionTo('Ver_Costo_Reportes_Entregados'))
                         <td align="center">
                             <FONT FACE="times new roman" SIZE=1>{{ number_format($d->costo, 2) }}</FONT>
                         </td>
+                        @endif
                         {{-- IMPORTE --}}
                         <td align="center">
                             <FONT FACE="times new roman" SIZE=1>
@@ -177,9 +183,11 @@
                                 </FONT>
                             </td>
                             {{-- COSTO --}}
+                            @if (@Auth::user()->hasPermissionTo('Ver_Costo_Reportes_Entregados'))
                             <td align="center">
                                 <FONT FACE="times new roman" SIZE=1>{{ number_format($d->costo, 2) }}</FONT>
                             </td>
+                            @endif
                             {{-- IMPORTE --}}
                             <td align="center">
                                 <FONT FACE="times new roman" SIZE=1>
@@ -196,28 +204,43 @@
                     <td colspan="2" class="text-left">
                         <span><b>EFECTIVO</b></span>
                     </td>
+                    @if (@Auth::user()->hasPermissionTo('Ver_Costo_Reportes_Entregados'))
                     <td class="text-right" colspan="5">
                         <span>
                             {{ number_format($sumaEfectivo, 2) }} bs.
                         </span>
                     </td>
+                    @else
+                    <td class="text-right" colspan="4">
+                        <span>
+                            {{ number_format($sumaEfectivo, 2) }} bs.
+                        </span>
+                    </td>
+                    @endif
                 </tr>
                 <tr>
                     <td colspan="2" class="text-left">
                         <span><b>TRANSFERENCIA BANCARIA</b></span>
                     </td>
+                    @if (@Auth::user()->hasPermissionTo('Ver_Costo_Reportes_Entregados'))
                     <td class="text-right" colspan="5">
                         <span>
-
                             {{ number_format($sumaBanco, 2) }} bs.
-
                         </span>
                     </td>
+                    @else
+                    <td class="text-right" colspan="4">
+                        <span>
+                            {{ number_format($sumaBanco, 2) }} bs.
+                        </span>
+                    </td>
+                    @endif
                 </tr>
                 <tr>
                     <td colspan="2" class="text-left">
                         <span><b>TOTALES</b></span>
                     </td>
+                    @if (@Auth::user()->hasPermissionTo('Ver_Costo_Reportes_Entregados'))
                     <td class="text-right" colspan="4">
                         <span><strong>
                                 @if ($caja != 'Todos')
@@ -227,6 +250,10 @@
                                 @endif
                             </strong></span>
                     </td>
+                    @else
+                    <td class="text-right" colspan="3">
+                    </td>
+                    @endif
                     <td class="text-right" colspan="1">
                         <span><strong>
                                 @php
