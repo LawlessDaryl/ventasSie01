@@ -94,6 +94,12 @@ class PlataformasController extends Component
         'precioEntera.required' => 'El precio de las cuentas Enteras de esta plataforma es requerido',
         'precioPerfil.required' => 'El precio individual de los Perfiles de esta plataforma es requerido',
     ];
+
+    public function Agregar()
+    {
+        $this->resetUI();
+        $this->emit('show-modal', 'show modal!');
+    }
     
     public function Store()
     {

@@ -11,6 +11,7 @@ class CoinsController extends Component
 {
     use WithPagination;
     use WithFileUploads;
+    
     public  $search, $image, $selected_id, $type, $value;
     public  $pageTitle, $componentName;
     private $pagination = 5;

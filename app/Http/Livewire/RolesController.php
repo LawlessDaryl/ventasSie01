@@ -7,8 +7,8 @@ use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Livewire\WithPagination;
 use App\Models\User;
-use DB;
 use GuzzleHttp\Promise\Create;
+use Illuminate\Support\Facades\DB;
 
 class RolesController extends Component
 {
@@ -32,13 +32,28 @@ class RolesController extends Component
         if (strlen($this->search) > 0) {
             $roles = Role::where('name', 'like', '%' . $this->search . '%')->paginate($this->pagination);
         } else {
-            $roles = Role::orderBy('name', 'asc')->paginate($this->pagination);
+            $roles = Role::select('roles.*', DB::raw('0 as usuarios'))->orderBy('name', 'asc')->paginate($this->pagination);
         }
+
+        foreach ($roles as $value) {
+            $usuarios = Role::join('model_has_roles as mhr', 'mhr.role_id', 'roles.id')
+                ->join('users as u', 'mhr.model_id', 'u.id')
+                ->where('roles.id', $value->id)
+                ->get();                
+            $value->usuarios = $usuarios->count();
+        }
+
         return view('livewire.roles.component', [
             'data' => $roles,
         ])
             ->extends('layouts.theme.app')
             ->section('content');
+    }
+    
+    public function Agregar()
+    {
+        $this->resetUI();
+        $this->emit('show-modal', 'show modal!');
     }
 
     public function CreateRole()
@@ -93,7 +108,7 @@ class RolesController extends Component
     {
         $permissionsCount = Role::find($id)->permissions->count();
         if ($permissionsCount > 0) {
-            $this->emit('role-error', 'No se puede eliminar el eol por que tiene permisos asociados');
+            $this->emit('role-deleted', 'No se puede eliminar el Rol por que tiene permisos asociados');
             return;
         }
 

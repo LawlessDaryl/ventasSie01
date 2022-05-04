@@ -105,7 +105,7 @@
         <div class="form-group custom-file">
             <input type="file" class="custom-file-input form-control" wire:model="image"
                 accept="image/x-png,image/gif,image/jpeg">
-            <h6 class="custom-file-h6">Imagen {{ $image }}</h6>
+            <h6 class="custom-file-label">Imagen {{ $image }}</h6>
         </div>
     </div>
 </div>

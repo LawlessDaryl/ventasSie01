@@ -3,9 +3,8 @@
         <div class="widget widget-chart-one">
             <div class="widget-heading">
                 <h4 class="card-title">
-                    <b>{{ $componentName }} |</b>
+                    <b>{{ $componentName }}</b>
                 </h4>
-
             </div>
 
             <div class="widget-content">

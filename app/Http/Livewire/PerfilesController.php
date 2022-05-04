@@ -2066,7 +2066,7 @@ class PerfilesController extends Component
             $Cuenta->save();
         }
         $this->resetUI();
-        $this->emit('item-accion', 'No se renovó este perfil y ahora esta inactivo');
+        $this->emit('item-accion', 'Se plan fue vencido');
     }
 
     public function CambiarCuenta()
@@ -2344,7 +2344,6 @@ class PerfilesController extends Component
         $this->expiracionCuenta1 = '';
         $this->expiracionCuenta2 = '';
         $this->expiracionCuenta3 = '';
-        $this->PlataformaFiltro = 'TODAS';
         $this->diasdePlan = 30;
         $this->inicioPlanActual = null;
         $this->plataformaPlan = '';

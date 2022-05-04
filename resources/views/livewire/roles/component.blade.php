@@ -7,8 +7,7 @@
                 </h4>
                 <ul class="tabs tab-pills">
 
-                    <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
-                        data-target="#theModal">Agregar</a>
+                    <a href="javascript:void(0)" class="btn btn-dark" wire:click="Agregar()">Agregar</a>
 
                 </ul>
             </div>
@@ -31,7 +30,8 @@
                                         <h6>{{ $rol->id }}</h6>
                                     </td>
                                     <td>
-                                        <h6 class="text-center">{{ $rol->name }}</h6>
+                                        <h6 class="text-center">{{ $rol->name }}
+                                        </h6>
                                     </td>
                                     <td class="text-center">
                                         <a href="javascript:void(0)" wire:click="Edit({{ $rol->id }})"
@@ -39,7 +39,7 @@
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         <a href="javascript:void(0)"
-                                            onclick="Confirm('{{ $rol->id }}','{{ $rol->name }}')"
+                                            onclick="Confirm('{{ $rol->id }}','{{ $rol->name }}','{{ $rol->usuarios }}')"
                                             class="btn btn-dark" title="Eliminar registro">
                                             <i class="fas fa-trash"></i>
                                         </a>

@@ -7,8 +7,7 @@
                 </h4>
                 <ul class="tabs tab-pills">
 
-                    <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
-                        data-target="#theModal">Agregar</a>
+                    <a href="javascript:void(0)" class="btn btn-dark" wire:click="Agregar()">Agregar</a>
 
                 </ul>
             </div>
@@ -51,7 +50,7 @@
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         <a href="javascript:void(0)"
-                                            onclick="Confirm('{{ $item->id }}','{{ $item->nombre }}')"
+                                            onclick="Confirm('{{ $item->id }}','{{ $item->nombre }}','{{ $item->movimientos }}')"
                                             class="btn btn-dark" title="Borrar">
                                             <i class="fas fa-trash"></i>
                                         </a>

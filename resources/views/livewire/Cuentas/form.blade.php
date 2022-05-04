@@ -153,7 +153,7 @@
                                 <h6>Número de Perfiles para la venta</h6>
                             </label>
                             <input @if ($mostrarNumPerf == 'NO') disabled @endif
-                                @if ($selected_id > 0) disabled @endif type="number"
+                                 type="number"
                                 wire:model.lazy="number_profiles" class="form-control">
                             @error('number_profiles')
                                 <span class="text-danger er">{{ $message }}</span>

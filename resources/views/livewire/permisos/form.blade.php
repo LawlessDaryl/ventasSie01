@@ -1,7 +1,7 @@
 <div wire:ignore.self class="modal fade" id="theModal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header bg-dark">
                 <h5 class="modal-title text-white">
                     <b>{{ $componentName }}</b> | {{ $selected_id > 0 ? 'EDITAR' : 'CREAR' }}
                 </h5>
@@ -29,8 +29,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" wire:click.prevent="resetUI()" class="btn btn-dark close-btn text-info"
-                    data-dismiss="modal">CANCELAR</button>
-
+                    data-dismiss="modal" style="background: #3b3f5c">CANCELAR</button>
                 @if ($selected_id < 1)
                     <button type="button" wire:click.prevent="CreatePermission()"
                         class="btn btn-dark close-btn text-info">GUARDAR</button>

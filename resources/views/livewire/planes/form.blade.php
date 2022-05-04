@@ -1,4 +1,4 @@
-<div wire:ignore.self class="modal fade" id="theModal" tabindex="-1" role="dialog">
+<div wire:ignore.self class="modal fade" id="theModal" tabindex="-1" role="dialog" style="overflow-y: scroll;">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header" style="background: #414141">
@@ -245,37 +245,39 @@
                                                 </tr>
                                             @endif
                                             @foreach ($cuentasEnteras as $ap)
-                                                <tr>
-                                                    <td class="text-center">
-                                                        <h6 class="text-center" style="font-size: 100%">
-                                                            {{ $ap->account_name }}</h6>
-                                                    </td>
-                                                    <td class="text-center">
-                                                        <h6 class="text-center" style="font-size: 100%">
-                                                            {{ \Carbon\Carbon::parse($ap->expiration_account)->format('d/m/Y') }}
-                                                        </h6>
-                                                    </td>
-                                                    <td class="text-center">
-                                                        <h6 class="text-center" style="font-size: 100%">
-                                                            {{ $ap->number_profiles }}
-                                                        </h6>
-                                                    </td>
-                                                    <td class="text-center">
-                                                        <h6 class="text-center" style="font-size: 100%">
-                                                            {{ $ap->perfOcupados }}</h6>
-                                                    </td>
-                                                    <td class="text-center">
-                                                        <h6 class="text-center" style="font-size: 100%">
-                                                            {{ $ap->espacios }}</h6>
-                                                    </td>
-                                                    <td>
-                                                        <a href="javascript:void(0)"
-                                                            wire:click="AgregarPerfil({{ $ap->id }})"
-                                                            class="btn btn-dark mtmobile" title="Seleccionar">
-                                                            <i class="fas fa-check"></i>
-                                                        </a>
-                                                    </td>
-                                                </tr>
+                                                @if ($ap->number_profiles != $ap->perfOcupados)
+                                                    <tr>
+                                                        <td class="text-center">
+                                                            <h6 class="text-center" style="font-size: 100%">
+                                                                {{ $ap->account_name }}</h6>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <h6 class="text-center" style="font-size: 100%">
+                                                                {{ \Carbon\Carbon::parse($ap->expiration_account)->format('d/m/Y') }}
+                                                            </h6>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <h6 class="text-center" style="font-size: 100%">
+                                                                {{ $ap->number_profiles }}
+                                                            </h6>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <h6 class="text-center" style="font-size: 100%">
+                                                                {{ $ap->perfOcupados }}</h6>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <h6 class="text-center" style="font-size: 100%">
+                                                                {{ $ap->espacios }}</h6>
+                                                        </td>
+                                                        <td>
+                                                            <a href="javascript:void(0)"
+                                                                wire:click="AgregarPerfil({{ $ap->id }})"
+                                                                class="btn btn-dark mtmobile" title="Seleccionar">
+                                                                <i class="fas fa-check"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                @endif
                                             @endforeach
 
                                         </tbody>
@@ -538,6 +540,14 @@
                             @error('observaciones')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group custom-file">
+                            <input type="file" class="custom-file-input form-control" wire:model="comprobante"
+                                accept="image/x-png,image/gif,image/jpeg">
+                            <label class="custom-file-label">Comprobante {{ $comprobante }}</label>
+
                         </div>
                     </div>
                 </div>

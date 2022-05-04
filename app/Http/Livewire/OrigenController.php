@@ -36,6 +36,13 @@ class OrigenController extends Component
             ->extends('layouts.theme.app')
             ->section('content');
     }
+
+    public function Agregar()
+    {
+        $this->resetUI();
+        $this->emit('show-modal', 'show modal!');
+    }
+    
     public function Store()
     {
         $rules = [
