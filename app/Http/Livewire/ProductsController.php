@@ -133,7 +133,8 @@ class ProductsController extends Component
     }
     public function Store()
     {
-        if ($this->categoryid === null) {
+        if ($this->categoryid === null) 
+        {
             $this->categoryid =$this->selected_id2;
         }
         $rules = [

@@ -7,7 +7,9 @@ use App\Models\Category;
 use App\Models\Destino;
 use App\Models\Sucursal;
 use App\Models\Location;
+use App\Models\LocationProducto;
 use App\Models\Product;
+use App\Models\ProductosDestino;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -17,8 +19,8 @@ class LocalizacionController extends Component
 {
     use WithPagination;
     use WithFileUploads;
-    public $sucursal, $codigo, $descripcion,$ubicacion, $aparador,$producto,
-    $selected_id, $categoria,$subcategoria,$mobiliario, $pageTitle, $componentName,$search,$destino;
+    public $sucursal, $codigo, $descripcion,$ubicacion, $tipo,$product,
+    $selected_id, $categoria,$subcategoria,$location, $pageTitle, $componentName,$search,$destino;
     private $pagination = 8;
     public function paginationView()
     {
@@ -76,13 +78,13 @@ class LocalizacionController extends Component
 
     
         return view('livewire.localizacion.component', [
-            'data_locations' => $locations,
-            'data_suc' => $suc_data->get(),
-            'data_categoria'=> $data_categoria,
-            'data_subcategoria'=> $data_subcategoria,
-            'data_destino'=>$data_destino,
-            'data_mobiliario'=> $data_mobiliario,
-            'data_producto'=>$data_producto
+                    'data_locations' => $locations,
+                    'data_suc' => $suc_data->get(),
+                    'data_categoria'=> $data_categoria,
+                    'data_subcategoria'=> $data_subcategoria,
+                    'data_destino'=>$data_destino,
+                    'data_mobiliario'=> $data_mobiliario,
+                    'data_producto'=>$data_producto
 
            
         
@@ -91,25 +93,22 @@ class LocalizacionController extends Component
     public function Store()
     {
         $rules = [
-         
+            'tipo' => 'required|not_in:Elegir',
             'codigo' => 'required|unique:locations|min:4',
-            'aparador' => 'required|not_in:Elegir',
             'destino' => 'required|not_in:Elegir',
-            'descripcion' => 'required|min:5',
-            
+            'descripcion' => 'required|min:5'
         ];
         $messages = [
             
             'codigo.required' => 'Codigo de la locacion es requerido',
             'codigo.unique' => 'Ya existe el codigo de la locacion',
             'codigo.min' => 'El codigo debe contener al menos 4 caracteres',
-            'aparador.required' => 'El codigo debe contener al menos 4 caracteres',
-            'aparador.not_in' => 'El codigo debe contener al menos 4 caracteres',
+            'tipo.required' => 'El tipo de aparador es requerido',
+            'tipo.not_in' => 'Escoja una opcion diferente de elegir',
             'destino.required' => 'La ubicacion es requerida',
             'destino.not_in' => 'Elegir una ubicacion  diferente de Elegir',
-            
             'descripcion.required' => 'La descripcion es requerida',
-            'descripcion.min' => 'La descripcion debe contener al menos 10 caracteres',
+            'descripcion.min' => 'La descripcion debe contener al menos 5 caracteres',
         ];
 
         $this->validate($rules, $messages);
@@ -118,7 +117,7 @@ class LocalizacionController extends Component
             'codigo' => $this->codigo,
             'descripcion' => $this->descripcion,
             'destino_id' => $this->destino,
-            'tipo' => $this->aparador
+            'tipo' => $this->tipo
             
         ]);
         
@@ -180,9 +179,22 @@ class LocalizacionController extends Component
 
     public function asignarMobiliario()
     {
-        Categoria_estante::create([
-            'product_id'=>$this->producto,
-            'location_id'=>$this->mobiliario
+        
+        
+        $rules = [
+            'product' => "required|not_in:Elegir|unique:location_productos,product,NULL,NULL,location,{$this->location}",
+            'location' => "required|not_in:Elegir|unique:location_productos,location,NULL,NULL,product,{$this->product}"
+        ];
+        $messages = [
+            'product.not_in' => 'Elija una opcion diferente de elejir',
+            'product.unique' => 'Este producto ya esta asignado a este mobiliario.',
+            'location.unique' => 'Este mobiliario ya esta asignado a este producto',
+            'location.required' => 'El nombre de tipo aparador es requerido'
+        ];
+        $this->validate($rules, $messages);
+        LocationProducto::create([
+            'product'=>$this->product,
+            'location'=>$this->location
         ]);
         $this->resetUI();
 
@@ -190,14 +202,15 @@ class LocalizacionController extends Component
     }
     public function resetUI()
     {
-        
-        $this->categoria = 'Elegir';
-        $this->subcategoria = 'Elegir';
-        $this->mobiliario = 'Elegir';
+        $this->tipo ='Elegir';
+        $this->codigo ='';
+        $this->descripcion ='Elegir';
+        $this->sucursal= 'Elegir';
+        $this->categoria= 'Elegir';
+        $this->subcategoria= 'Elegir';
         $this->producto= 'Elegir';
-        
-       
-
+        $this->destino= 'Elegir';
+        $this->location= 'Elegir';
         $this->resetValidation();
     }
 }

@@ -35,43 +35,43 @@ class DestinoProductoController extends Component
     {
         if($this->selected_id !== null){
 
-            if($this->selected_id == 'General')
-            
-              
+            if($this->selected_id === 'General')
+
              $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
                                         ->join('destinos as dest','dest.id','productos_destinos.destino_id')
-                                        ->select(DB::raw('SUM(productos_destinos.stock) as stock_s'),'p.nombre as name','p.cantidad_minima as cant_min')
+                                        ->select(DB::raw('SUM(productos_destinos.stock) as stock_s'),'p.nombre as name',
+                                        'p.cantidad_minima as cant_min')
                                         ->groupBy('productos_destinos.product_id')
-                                      
                                         ->paginate($this->pagination);
-            
-         else
+            else
              $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
-                                        
-            ->join('destinos as dest','dest.id','productos_destinos.destino_id')
-                                        
-                                        ->select('productos_destinos.*','p.nombre as name','dest.nombre as nombre_destino','p.id as id_prod')
-                                    
+                                        ->join('destinos as dest','dest.id','productos_destinos.destino_id')
+                                        ->select('productos_destinos.*','p.nombre as name','dest.nombre as nombre_destino',
+                                        'p.id as id_prod')
                                         ->where('dest.id',$this->selected_id)
                                         ->orderBy('p.nombre','desc')
-                                        ->paginate($this->pagination);
-                                        
-        }
+                                        ->paginate($this->pagination);  
+
+                                        /*hacer una coleccion de la siguiente consulta y que sea leido de acuerdo al tipo de sucursal*/
+
+                                        /*select products.nombre, locations.codigo,locations.tipo, destinos.nombre, sucursals.name from ventassie.location_productos 
+                                        join products on location_productos.product = products.id 
+                                        join locations on location_productos.location = locations.id
+                                        join destinos on locations.destino_id= destinos.id
+                                        join sucursals on destinos.sucursal_id = sucursals.id;*/
+    }
             
             else{
                
-                $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
-                
-                ->join('destinos as dest','dest.id','productos_destinos.destino_id')
-                
-                ->select(DB::raw('SUM(productos_destinos.stock) as stock_s'),'p.nombre as name','p.cantidad_minima as cant_min')
-                ->groupBy('productos_destinos.product_id')
-              
-                ->paginate($this->pagination);
+             $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
+                                            ->join('destinos as dest','dest.id','productos_destinos.destino_id')
+                                            ->select(DB::raw('SUM(productos_destinos.stock) as stock_s'),'p.nombre as name',
+                                            'p.cantidad_minima as cant_min')
+                                            ->groupBy('productos_destinos.product_id')
+                                            ->paginate($this->pagination);
             }
-            $sucursal_ubicacion=Destino::join('sucursals as suc','suc.id','destinos.sucursal_id')
+             $sucursal_ubicacion=Destino::join('sucursals as suc','suc.id','destinos.sucursal_id')
                                         ->select ('suc.name as sucursal','destinos.nombre as destino','destinos.id')
-                                       
                                         ->orderBy('suc.name','asc');
 
                                     

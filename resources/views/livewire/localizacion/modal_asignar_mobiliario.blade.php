@@ -28,26 +28,24 @@
                         <select wire:model='subcategoria' class="form-control">
                             <option value="Elegir">Elegir</option>
                             @foreach ($data_subcategoria as $data)
-            
                                 <option value="{{$data->id}}">{{ $data->name}}</option>
                             @endforeach
                           
                         </select>
                     </div>
                 </div>
-</div>
+             </div>
             <div class="row">
                 <div class="col-sm-12 col-md-8 col-lg-12">
                     <div class="form-group">
                         <label>Productos</label>
-                        <select wire:model='producto' class="form-control">
+                        <select wire:model='product' class="form-control">
                             <option value="Elegir">Elegir</option>
                             @foreach ($data_producto as $data)
-
                                 <option value="{{$data->id}}">{{ $data->nombre}}</option>
                             @endforeach
-                        
                         </select>
+                        @error('product') <span class="text-danger er">{{ $message }}</span>@enderror
                     </div>
                 </div>
             </div>
@@ -68,25 +66,23 @@
                     <div class="col-sm-12 col-md-8 col-lg-6">
                         <div class="form-group">
                             <label>Mobiliario</label>
-                            <select wire:model='mobiliario' class="form-control">
+                            <select wire:model='location' class="form-control">
                                 <option value="Elegir">Elegir</option>
                                 @foreach ($data_mobiliario as $data)
                                 
                                     <option value="{{$data->id}}">{{ $data->tipo}}-{{$data->codigo}}</option>
                                 @endforeach
-                              
                             </select>
+                            @error('location') <span class="text-danger er">{{ $message }}</span>@enderror
                         </div>
                     </div>
                 </div>
 
-               
-            
-            
      </div>
      <div class="modal-footer" style="background: #f0ecec">
          <button type="button" wire:click.prevent="resetUI()" class="btn btn-dark close-btn text-info"
              data-dismiss="modal" style="background: #3b3f5c">CANCELAR</button>
+        
              <button type="button" wire:click.prevent="asignarMobiliario()"
                  class="btn btn-dark close-btn text-info">GUARDAR</button>
      </div>
