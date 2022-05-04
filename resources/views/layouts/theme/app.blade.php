@@ -62,6 +62,7 @@
     <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM SCRIPTS -->
 
     @yield('javascript')
+    {{-- @stack('custom-scripts') --}}
 
 </body>
 
