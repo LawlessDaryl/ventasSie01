@@ -107,7 +107,7 @@ class ProductsController extends Component
         else {
           
                 $prod = Product::join('categories as c', 'products.category_id','c.id')
-                ->select('products.*', 'c.name as category')
+                ->select('products.*', 'c.name as cate')
                 ->where('products.status',$this->estados)
                 ->orderBy('products.id', 'desc')
                 ->paginate($this->pagination);}
@@ -185,6 +185,7 @@ class ProductsController extends Component
     }
     public function Edit(Product $product)
     {
+        
        
         if($product->category->categoria_padre === 0)
         { $this->selected_id2 = $product->category_id;

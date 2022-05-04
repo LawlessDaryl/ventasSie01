@@ -78,8 +78,19 @@
                                         <h6>{{ $products->caracteristicas }}</h6>
 
                                     </td>
+                                    @if ($products->category->categoria_padre === 0)
                                     <td>
-                                         <h6 class="text-center">{{ $products->category}}</h6>
+                                        <h6 class="text-center"> <strong>Categoria:</strong> {{ $products->category->name}}</h6>
+                                        <h6 class="text-center"> <strong>Subcategoria:</strong>No definido</h6>
+                                   </td>
+                                    @else
+                                    <td>
+                                        <h6 class="text-center"> <strong>Categoria:</strong> {{ $products->category->name}}</h6>
+                                        <h6 class="text-center"> <strong>Subcategoria:</strong>No definido</h6>
+                                   </td>
+                                    @endif
+                                    <td>
+                                         <h6 class="text-center">{{ $products->category->categoria_padre}}-{{ $products->category->id}}</h6>
                                     </td>
                                     <td>
                                          <h6 class="text-center">{{ $products->codigo}}</h6>
@@ -109,6 +120,7 @@
                                             class="btn btn-dark mtmobile p-1 m-0" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
+
                                         <a href="javascript:void(0)"
                                             onclick="Confirm('{{ $products->id }}','{{ $products->nombre }}',{{$products->destino->count()}})"
                                             class="btn btn-dark mtmobile p-1 m-0" title="Delete">
