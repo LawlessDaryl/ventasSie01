@@ -12,7 +12,7 @@ class SubCatProdServiceController extends Component
 {
     use WithPagination;
     use WithFileUploads;
-    public $name, $status,  $price,  $categoryid, $search,  $selected_id, $pageTitle, $componentName;
+    public $name, $status/* ,  $price */,  $categoryid, $search,  $selected_id, $pageTitle, $componentName;
     private $pagination = 5;
     public function paginationView()
     {
@@ -31,7 +31,7 @@ class SubCatProdServiceController extends Component
             $products = SubCatProdService::join('cat_prod_services as c', 'c.id', 'sub_cat_prod_services.cat_prod_service_id')
                 ->select('sub_cat_prod_services.*', 'c.nombre as categoria')
                 ->where('sub_cat_prod_services.name', 'like', '%' . $this->search . '%')
-                ->orWhere('sub_cat_prod_services.price', 'like', '%' . $this->search . '%')
+                /* ->orWhere('sub_cat_prod_services.price', 'like', '%' . $this->search . '%') */
                 ->orWhere('c.nombre', 'like', '%' . $this->search . '%')
                 ->orderBy('sub_cat_prod_services.id', 'desc')
                 ->paginate($this->pagination);
@@ -52,8 +52,8 @@ class SubCatProdServiceController extends Component
     {
         $rules = [
             'name' => "required|min:1|exclude_if:sub_cat_prod_services,name,{$this->selected_id}",
-            'price' => 'required',
-            'price' => 'required|numeric',
+            /* 'price' => 'required',
+            'price' => 'required|numeric', */
             'status' => 'required|not_in:Elegir',
             'categoryid' => 'required|not_in:Elegir'
         ];
@@ -61,8 +61,8 @@ class SubCatProdServiceController extends Component
             'name.required' => 'Nombre de la sub categoria requerida',
             'name.unique' => 'Ya existe el nombre de la sub categoria ',
             'name.min' => 'El nombre debe ser contener al menos 3 caracteres',
-            'price.required' => 'El precio es requerido',
-            'price.numeric' => 'No puede ingresar letras',
+            /* 'price.required' => 'El precio es requerido',
+            'price.numeric' => 'No puede ingresar letras', */
             'status.required' => 'Selecciona el estado de la categoria',
             'categoryid.not_in' => 'Elegir un nombre de categoria diferente de Elegir'
         ];
@@ -71,7 +71,7 @@ class SubCatProdServiceController extends Component
 
         $product = SubCatProdService::create([
             'name' => $this->name,
-            'price' => $this->price,
+            /* 'price' => $this->price, */
             'status' => $this->status,
             'cat_prod_service_id' => $this->categoryid
         ]);
@@ -83,7 +83,7 @@ class SubCatProdServiceController extends Component
     {
         $this->selected_id = $product->id;
         $this->name = $product->name;
-        $this->price = $product->price;
+        /* $this->price = $product->price; */
         $this->status = $product->status;
         $this->categoryid = $product->cat_prod_service_id;
       
@@ -92,8 +92,8 @@ class SubCatProdServiceController extends Component
     public function Update()
     { $rules = [
         'name' => "required|min:1|unique:sub_cat_prod_services,name,{$this->selected_id}",
-        'price' => 'required',
-        'price' => 'required|numeric',
+        /* 'price' => 'required',
+        'price' => 'required|numeric', */
         'status' => 'required|not_in:Elegir',
         'categoryid' => 'required|not_in:Elegir'
     ];
@@ -101,8 +101,8 @@ class SubCatProdServiceController extends Component
         'name.required' => 'Nombre de la sub categoria requerida',
         'name.unique' => 'Ya existe el nombre de la sub categoria ',
         'name.min' => 'El nombre debe ser contener al menos 1 caracter',
-        'price.required' => 'El precio es requerido',
-        'price.numeric' => 'No puede ingresar letras',
+        /* 'price.required' => 'El precio es requerido',
+        'price.numeric' => 'No puede ingresar letras', */
         'status.required' => 'Selecciona el estado de la categoria',
         'categoryid.not_in' => 'Elegir un nombre de categoria diferente de Elegir'
     ];
@@ -111,7 +111,7 @@ class SubCatProdServiceController extends Component
         $product = SubCatProdService::find($this->selected_id);
         $product->update([
             'name' => $this->name,
-            'price' => $this->price,
+            /* 'price' => $this->price, */
             'status' => $this->status,
             'cat_prod_service_id' => $this->categoryid
         ]);
@@ -131,7 +131,7 @@ class SubCatProdServiceController extends Component
     {
         $this->categoryid = 'Elegir';
         $this->name = '';
-        $this->price = '';
+        /* $this->price = ''; */
         $this->status = 'Elegir';
         $this->search = '';
         $this->selected_id = 0;

@@ -278,6 +278,17 @@ class PermissionSeeder extends Seeder
             'name' => 'Recepcionar_Servicio',
             'guard_name' => 'web'
         ]);
-
+        Permission::create([    /* PERMITIR VER COSTOS EN REPORTES ENTREGADOS SERVICIOS */
+            'name' => 'Ver_Costo_Reportes_Entregados',
+            'guard_name' => 'web'
+        ]);
+        Permission::create([    /* PERMITIR MODIFICAR LOS SERVICIOS ENTREGADOS */
+            'name' => 'Modificar_Detalle_Serv_Entregado',
+            'guard_name' => 'web'
+        ]);
+        Permission::create([    /* PERMITIR MODIFICAR LOS SERVICIOS */
+            'name' => 'Modificar_Detalle_Serv',
+            'guard_name' => 'web'
+        ]);
     }
 }

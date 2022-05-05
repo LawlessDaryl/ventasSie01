@@ -20,4 +20,9 @@ class Movimiento extends Model
     {
         return $this->belongsTo(User::class,'user_id','id');
     }
+
+    public function cartmov()
+    {
+        return $this->hasMany(CarteraMov::class);
+    }
 }

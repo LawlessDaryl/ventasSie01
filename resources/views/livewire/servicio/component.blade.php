@@ -105,11 +105,13 @@
                                             class="btn btn-dark mtmobile" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
+                                        @if($item->tipo != 'TERMINADO' && $item->tipo != 'ENTREGADO')
                                         <a href="javascript:void(0)"
                                             onclick="Confirm('{{ $item->id }}','{{ $item->category }}','{{ $item->marca }}')"
                                             class="btn btn-dark" title="Delete">
                                             <i class="fas fa-trash"></i>
                                         </a>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach

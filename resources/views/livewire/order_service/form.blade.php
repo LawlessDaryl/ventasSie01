@@ -24,12 +24,9 @@
                         <div class="form-group">
                             <label>Responsable:</label>
                             <select wire:model.lazy="users1" class="form-control">
-                               
                                 @foreach ($users as $usuario)
-                                
                                     <option value="{{ $usuario->id }}" >{{ $usuario->name }}</option>
                                 @endforeach
-
                             </select>
                             @error('users1') <span class="text-danger er">{{ $message }}</span>@enderror
                         </div>
@@ -40,7 +37,7 @@
             <div class="modal-footer">
                 <button type="button" wire:click.prevent="resetUI()" class="btn btn-dark close-btn text-info"
                     data-dismiss="modal" style="background: #3b3f5c">CANCELAR</button>
-                <a type="button" href="{{ url('abrirnuevo' . '/' . 'PROCESO') }}"
+                <a type="button" {{-- href="{{ url('abrirnuevo' . '/' . 'PROCESO') }}" --}}
                  {{-- target="_blank" --}} 
                     wire:click="Cambio({{$service1}})" 
                     class="btn btn-dark close-btn text-info">REGISTRAR PROCESO</a>

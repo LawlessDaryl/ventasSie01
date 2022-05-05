@@ -20,8 +20,8 @@
                         <thead class="text-white" style="background: #3B3F5C">
                             <tr>
                                 <th class="table-th text-withe text-center">NOMBRE</th>
-                                <th class="table-th text-withe text-center">PRECIO</th>
                                 <th class="table-th text-withe text-center">CATEGORÍA</th>
+                                {{-- <th class="table-th text-withe text-center">PRECIO</th> --}}
                                 <th class="table-th text-withe text-center">ESTADO</th>
                                 <th class="table-th text-withe text-center">ACCIONES</th>
                             </tr>
@@ -33,9 +33,9 @@
                                         <h6 class="text-center">{{ $item->name }}</h6>
                                     </td>
 
-                                    <td>
+                                    {{-- <td>
                                         <h6 class="text-center">{{ $item->price }}</h6>
-                                    </td>
+                                    </td> --}}
 
                                     <td>
                                         <h6 class="text-center">{{ $item->categoria}}</h6>

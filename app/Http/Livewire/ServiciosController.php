@@ -17,6 +17,7 @@ use Carbon\Carbon;
 use DateTime;
 use Dompdf\Renderer\Text;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -30,7 +31,7 @@ class ServiciosController extends Component
         $movimiento, $typeworkid, $detalle, $categoryid, $from, $usuariolog, $catprodservid, $marc, $typeservice,
         $falla_segun_cliente, $diagnostico, $solucion, $saldo, $on_account, $import, $fecha_estimada_entrega,
         $search,  $condicion, $selected_id, $pageTitle, $buscarCliente, $service, $type_service, $procedencia,
-        $opciones, $estatus;
+        $opciones, $estatus, $userId;
     private $pagination = 5;
     public function paginationView()
     {
@@ -58,6 +59,7 @@ class ServiciosController extends Component
         $this->fecha_estimada_entrega = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->estatus = '';
         $this->procedencia = 'Nuevo';
+        $this->userId = 0;
 
         $this->hora_entrega = Carbon::parse(Carbon::now())->format('H:i');
         $this->usuariolog = Auth()->user()->name;
@@ -74,6 +76,13 @@ class ServiciosController extends Component
     }
     public function render()
     {
+        $user = User::find(Auth()->user()->id);
+        foreach ($user->sucursalusers as $usersuc) {
+            if ($usersuc->estado == 'ACTIVO') {
+                $this->sucursal = $usersuc->sucursal->id;
+            }
+        }
+
         //$this->ResetSession();
         $services = Service::join('mov_services as ms', 'services.id', 'ms.service_id')
             ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
@@ -85,6 +94,28 @@ class ServiciosController extends Component
             ->orderBy('services.id', 'desc')
             ->paginate($this->pagination);
 
+        $users = User::join('model_has_roles as mr', 'users.id', 'mr.model_id')
+            ->join('roles as r', 'r.id', 'mr.role_id')
+            ->join('role_has_permissions as rp', 'r.id', 'rp.role_id')
+            ->join('permissions as p', 'p.id', 'rp.permission_id')
+            ->join('sucursal_users as suu', 'users.id', 'suu.user_id')
+            ->join('sucursals as suc', 'suc.id', 'suu.sucursal_id')
+            ->where('p.name', 'Recepcionar_Servicio')
+            ->where('suc.id', $this->sucursal)
+            /* ->where('r.name', 'TECNICO')
+            ->orWhere('r.name', 'SUPERVISOR_TECNICO')
+            ->where('p.name', 'Orden_Servicio_Index')
+            ->orWhere('r.name', 'ADMIN')
+            ->where('p.name', 'Orden_Servicio_Index') */
+            ->select('users.*')
+            ->orderBy('name', 'asc')
+            ->distinct()
+            ->get();
+            
+            if($this->userId == 0){
+                $this->userId = Auth()->user()->id;
+            }
+            
 
         $datos = [];
         if (strlen($this->buscarCliente) > 0) {
@@ -126,6 +157,7 @@ class ServiciosController extends Component
             'work' => $typew,
             'cate' => $dato1,
             'marcas' => $marca,
+            'users' => $users,
             'procedenciaClientes' => ProcedenciaCliente::orderBy('id', 'asc')->get()
 
         ])
@@ -285,6 +317,7 @@ class ServiciosController extends Component
             $this->validate($rules, $messages);
         }
 
+        
 
         DB::beginTransaction();
         try {
@@ -316,7 +349,8 @@ class ServiciosController extends Component
                 'import' => $this->import,
                 'on_account' => $this->on_account,
                 'saldo' => $this->saldo,
-                'user_id' => Auth()->user()->id,
+                'user_id' => $this->userId
+                /* 'user_id' => Auth()->user()->id */
             ]);
 
             MovService::create([
@@ -329,6 +363,9 @@ class ServiciosController extends Component
             ]);
 
             DB::commit();
+
+            
+            
             $this->orderservice = $neworder->id;
             session(['od' => $this->orderservice]);
             $this->resetUI();
@@ -606,24 +643,16 @@ class ServiciosController extends Component
 
     public function Destroy(Service $service)
     {
-        $ids = Service::join('mov_services as ms', 'ms.service_id', 'services.id')
-            ->join('movimientos as m', 'ms.movimiento_id', 'm.id')
-            ->join('cliente_movs as cm', 'cm.movimiento_id', 'm.id')
-            ->select(
-                'ms.movimiento_id as movimiendoID',
-                'cm.id as clientemovID',
-                'ms.id as servicemovID'
-            )
-            ->where('services.id', $service->id)
-            ->get()->first();
-
-        $movCliente = ClienteMov::find($ids->clientemovID);
-        $movCliente->delete();
-        $movService = MovService::find($ids->servicemovID);
-        $movService->delete();
-        $movimiento = Movimiento::find($ids->movimiendoID);
-        $movimiento->delete();
-        $service->delete();
+        foreach($service->movservices as $mm){
+            $movCliente = ClienteMov::find($mm->movs->climov->id);
+            $movCliente->delete();
+            $movService = MovService::find($mm->id);
+            $movService->delete();
+            $movimiento = Movimiento::find($mm->movs->id);
+            $movimiento->delete();
+            $service->delete();
+        }
+        
 
         if ($this->orderservice  != 0) {
             $neworder = OrderService::find($this->orderservice);
@@ -667,5 +696,6 @@ class ServiciosController extends Component
         $this->resetValidation();
         $this->diagnostico = 'Revisión';
         $this->solucion = 'Revisión';
+        $this->userId = 0;
     }
 }

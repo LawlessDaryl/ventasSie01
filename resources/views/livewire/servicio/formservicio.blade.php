@@ -96,14 +96,14 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-4 col-sm-12 col-md-4">
+                    <div class="col-lg-3 col-sm-12 col-md-4">
                         <div class="form-group">
                             <label><h6>Total</h6></label>
                             <input type="number" wire:model="import" class="form-control" placeholder="ej: 0.0">
                             @error('import') <span class="text-danger er">{{ $message }}</span>@enderror
                         </div>
                     </div>
-                    <div class="col-sm-12 col-md-4">
+                    <div class="col-lg-2 col-sm-12 col-md-4">
                         <div class="form-group">
                             <label><h6>A Cuenta</h6></label>
                             <input type="number" wire:model="on_account" class="form-control"
@@ -112,7 +112,7 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-4 col-sm-12 col-md-4">
+                    <div class="col-lg-3 col-sm-12 col-md-4">
                         <div class="form-group">
                             <label><h6>Saldo</h6></label>
                             <input type="number" wire:model.lazy="saldo" class="form-control" placeholder="ej: 0.0" disabled>
@@ -120,6 +120,17 @@
                         </div>
                     </div>
 
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label><h6>Responsable técnico</h6></label>
+                            <select wire:model="userId" class="form-control" style="font-size: 90%">
+                                <option value="0" disabled selected>Seleccione técnico</option>
+                                @foreach ($users as $user)
+                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
 
                     <div class="col-lg-4 col-sm-12 col-md-4">
                         <div class="form-group">

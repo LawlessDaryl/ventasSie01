@@ -72,10 +72,10 @@
                                         <th class="table-th text-withe text-center">FECHA</th>
                                         <th class="table-th text-withe text-center">CLIENTE</th>
                                         <th class="table-th text-withe text-center">ORDEN</th>
-
-
                                         <th class="table-th text-withe text-center">DETALLE</th>
+                                        @if (@Auth::user()->hasPermissionTo('Ver_Costo_Reportes_Entregados'))
                                         <th class="table-th text-withe text-center">COSTO</th>
+                                        @endif
                                         <th class="table-th text-withe text-center">IMPORTE</th>
                                     </tr>
                                 </thead>
@@ -99,7 +99,7 @@
                                             @foreach ($d->movservices as $movser)
                                                 @if ($movser->movs->type == 'ENTREGADO' && $movser->movs->status == 'ACTIVO')
                                                     <td class="text-center">
-                                                        <h6>{{ \Carbon\Carbon::parse($movser->movs->created_at)->format('d/m/Y') }}
+                                                        <h6>{{ \Carbon\Carbon::parse($movser->movs->created_at)->format('d/m/Y H:i') }}
                                                         </h6>
                                                     </td>
                                                 @endif
@@ -119,9 +119,11 @@
                                                     {{ $d->detalle }}</h6>
                                             </td>
                                             {{-- COSTO --}}
+                                            @if (@Auth::user()->hasPermissionTo('Ver_Costo_Reportes_Entregados'))
                                             <td class="text-center">
                                                 <h6>{{ number_format($d->costo, 2) }}</h6>
                                             </td>
+                                            @endif
                                             {{-- IMPORTE --}}
                                             <td class="text-center">
                                                 <h6>{{ number_format($d->movservices[0]->movs->import, 2) }}</h6>
@@ -168,9 +170,11 @@
                                                     </h6>
                                                 </td>
                                                 {{-- COSTO --}}
+                                                @if (@Auth::user()->hasPermissionTo('Ver_Costo_Reportes_Entregados'))
                                                 <td class="text-center">
                                                     <h6>{{ number_format($d->costo, 2) }}</h6>
                                                 </td>
+                                                @endif
                                                 {{-- IMPORTE --}}
                                                 <td class="text-center">
                                                     <h6>{{ number_format($d->import, 2) }}</h6>
@@ -206,6 +210,7 @@
                                         <td colspan="2" class="text-left">
                                             <span><b>TOTALES</b></span>
                                         </td>
+                                        @if (@Auth::user()->hasPermissionTo('Ver_Costo_Reportes_Entregados'))
                                         <td class="text-right" colspan="4">
                                             <span><strong>
                                                     @if ($caja != 'Todos')
@@ -215,6 +220,10 @@
                                                     @endif
                                                 </strong></span>
                                         </td>
+                                        @else
+                                        <td class="text-right" colspan="3">
+                                        </td>
+                                        @endif
                                         <td class="text-right" colspan="0">
                                             <span><strong>
                                                     @php
