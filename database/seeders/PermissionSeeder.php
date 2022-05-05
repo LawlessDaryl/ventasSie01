@@ -286,6 +286,9 @@ class PermissionSeeder extends Seeder
             'name' => 'Modificar_Detalle_Serv_Entregado',
             'guard_name' => 'web'
         ]);
-
+        Permission::create([    /* PERMITIR MODIFICAR LOS SERVICIOS */
+            'name' => 'Modificar_Detalle_Serv',
+            'guard_name' => 'web'
+        ]);
     }
 }

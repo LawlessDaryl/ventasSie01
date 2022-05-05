@@ -22,6 +22,95 @@
                 <div class="row mt-3 container">
                     <div class="col-sm-12 col-md-12">
                         <table cellpadding="2" cellspacing="2" width="100%">
+                            @if(@Auth::user()->hasPermissionTo('Modificar_Detalle_Serv'))
+                            <tr>
+                                <td class="text-right" colspan="1">
+                                    <label>
+                                        <h6>Tipo de Trabajo: </h6>
+                                    </label>
+                                </td>
+                                <td class="text-center" colspan="2">
+                                    <select wire:model.lazy="typeworkid" class="form-control">
+                                        <option value="Elegir" disabled selected>Elegir</option>
+
+                                        @foreach ($work as $wor)
+                                            <option value="{{ $wor->id }}" selected>{{ $wor->name }}</option>
+                                        @endforeach
+
+                                    </select>
+                                    @error('typeworkid')
+                                        <span class="text-danger er">{{ $message }}</span>
+                                    @enderror
+
+                                </td>
+                                <td class="text-right" colspan="1">
+                                    <label>
+                                        <h6>Tipo de equipo: </h6>
+                                    </label>
+                                </td>
+                                <td class="text-center" colspan="2">
+                                    <select wire:model.lazy="catprodservid" class="form-control">
+                                        <option value="Elegir" disabled selected>Elegir</option>
+                                        @foreach ($cate as $cat)
+                                            <option value="{{ $cat->id }}" selected>{{ $cat->nombre }}</option>
+                                        @endforeach
+
+                                    </select>
+                                    @error('catprodservid')
+                                        <span class="text-danger er">{{ $message }}</span>
+                                    @enderror
+
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text-right" colspan="1">
+                                    <label>
+                                        <h6>Marca/Modelo</h6>
+                                    </label>
+                                </td>
+                                <td class="text-left" colspan="5">
+                                    <datalist id="colores">
+                                        @foreach ($marcas as $cat)
+                                            <option value="{{ $cat->name }}" selected>{{ $cat->name }}</option>
+                                        @endforeach
+                                    </datalist>
+                                    <input list="colores" wire:model.lazy="marca" name="colores" type="text"
+                                        class="form-control">
+
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text-right">
+                                    <label>
+                                        <h6>Estado del Equipo</h6>
+                                    </label>
+                                </td>
+                                <td class="text-left" colspan="5">
+                                    <input type="text" wire:model.lazy="detalle" class="form-control"
+                                        placeholder="ej: Note 7 con protector de pantalla">
+                                    @error('detalle')
+                                        <span class="text-danger er">{{ $message }}</span>
+                                    @enderror
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text-right">
+                                    <label>
+                                        <h6>Falla según el cliente</h6>
+                                    </label>
+                                </td>
+                                <td class="text-left" colspan="5">
+                                    <input type="text" wire:model.lazy="falla_segun_cliente"
+                                        class="form-control" placeholder="ej: Revisión">
+                                    @error('falla_segun_cliente')
+                                        <span class="text-danger er">{{ $message }}</span>
+                                    @enderror
+                                </td>
+                            </tr>
+                            @else
                             <tr>
                                 <td class="text-right" colspan="1">
                                     <label>
@@ -109,6 +198,7 @@
                                     @enderror
                                 </td>
                             </tr>
+                            @endif
                             @if((@Auth::user()->id == $this->usuarioId) || (@Auth::user()->hasPermissionTo('Ver_Modificar_Eliminar_Servicio')))
                             <tr>
                                 <td class="text-right">
