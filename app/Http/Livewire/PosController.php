@@ -792,6 +792,9 @@ class PosController extends Component
 
             $this->emit('save-ok', 'venta registrada con exito');
 
+            
+            //Llamar al Modal de Espera
+            $this->emit('modalespera');
             //Redireccionando para crear el comprobante con sus respectvas variables
             return redirect::to('report/pdf' . '/' . $this->totalbs. '/' . $this->idventa . '/' . $this->totalitems);
 

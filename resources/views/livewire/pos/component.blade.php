@@ -317,7 +317,50 @@
 
 
 @section('javascript')
+<script src="assets/js/scrollspyNav.js"></script>
+<script src="plugins/sweetalerts/sweetalert2.min.js"></script>
+<script src="plugins/sweetalerts/custom-sweetalert.js"></script>
 
+<script>
+
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    
+        // Mètodo JavaScript para llamar al modal de Espera
+        window.livewire.on('modalespera', Msg => {
+            
+            swal({
+                    title: 'Por Favor Espere a que la Venta Termine',
+                    text: 'Generando Comprobante...',
+                    timer: 7000,
+                    padding: '2em',
+                    onOpen: function () {
+                    swal.showLoading()
+                    }
+                }).then(function (result) {
+                    if (
+                    // Read more about handling dismissals
+                    result.dismiss === swal.DismissReason.timer
+                    ) {
+                    console.log('I was closed by the timer')
+                    }
+                })
+
+        });
+
+
+
+    })
+
+
+
+
+
+
+    
+</script>
 
 
 @endsection
