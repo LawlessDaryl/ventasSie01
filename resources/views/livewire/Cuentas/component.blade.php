@@ -292,7 +292,7 @@
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                             <a href="javascript:void(0)"
-                                                wire:click="EditObservaciones({{ $acounts->planid }})"
+                                                wire:click="EditObservaciones('{{ $acounts->planid }}','{{ $acounts->clienteID }}')"
                                                 class="btn btn-dark mtmobile" title="Observaciones">
                                                 <i class="fa-solid fa-align-left"></i>
                                             </a>

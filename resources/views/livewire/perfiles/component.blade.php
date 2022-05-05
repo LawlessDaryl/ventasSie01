@@ -159,24 +159,17 @@
                                         </td>
 
                                         <td class="text-center">
-                                            @if ($condicional == 'ocupados')
-                                                @if ($p->estadoCuentaPerfil == 'ACTIVO')
-                                                    <a href="javascript:void(0)"
-                                                        wire:click="Acciones({{ $p->planid }})"
-                                                        class="btn btn-dark mtmobile" title="Renovación">
-                                                        <i class="fa-regular fa-calendar-check"></i>
-                                                    </a>
-                                                    {{-- <a href="javascript:void(0)" wire:click="Edit({{ $p->id }})"
-                                                        class="btn btn-dark mtmobile" title="Editar">
-                                                        <i class="fas fa-edit"></i>
-                                                    </a> --}}
-                                                    <a href="javascript:void(0)"
-                                                        wire:click="EditObservaciones('{{ $p->planid }}','{{ $p->id }}')"
-                                                        class="btn btn-dark mtmobile" title="Observaciones">
-                                                        <i class="fa-solid fa-align-left"></i>
-                                                    </a>
-                                                @endif
+                                            @if ($p->estadoCuentaPerfil == 'ACTIVO')
+                                                <a href="javascript:void(0)" wire:click="Acciones({{ $p->planid }})"
+                                                    class="btn btn-dark mtmobile" title="Renovación">
+                                                    <i class="fa-regular fa-calendar-check"></i>
+                                                </a>
                                             @endif
+                                            <a href="javascript:void(0)"
+                                                wire:click="EditObservaciones('{{ $p->planid }}','{{ $p->id }}','{{ $p->clienteID }}')"
+                                                class="btn btn-dark mtmobile" title="Observaciones">
+                                                <i class="fa-solid fa-align-left"></i>
+                                            </a>
                                         </td>
 
                                         <td
@@ -214,9 +207,7 @@
                                     <th class="table-th text-withe text-center" style="font-size: 80%">IMPORT</th>
                                     <th class="table-th text-withe text-center" style="font-size: 80%">PLAN INICIO</th>
                                     <th class="table-th text-withe text-center" style="font-size: 80%">PLAN FIN</th>
-                                    @if ($condicional == 'combos')
-                                        <th class="table-th text-withe text-center" style="font-size: 80%">ACCIONES</th>
-                                    @endif
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">ACCIONES</th>
                                     <th class="table-th text-withe text-center" style="font-size: 80%">REALIZADO</th>
                                 </tr>
                             </thead>
@@ -366,23 +357,21 @@
                                                 {{ \Carbon\Carbon::parse($p->expiration_plan)->format('d/m/Y') }}
                                             </h6>
                                         </td>
-                                        @if ($condicional == 'combos')
-                                            <td class="text-center">
-                                                @if ($condicional == 'combos')
-                                                    <a href="javascript:void(0)"
-                                                        wire:click="AccionesCombo({{ $p->id }})"
-                                                        class="btn btn-dark mtmobile" title="Renovación">
-                                                        <i class="fa-regular fa-calendar-check"></i>
-                                                    </a>
+                                        <td class="text-center">
+                                            @if ($condicional == 'combos')
+                                                <a href="javascript:void(0)"
+                                                    wire:click="AccionesCombo({{ $p->id }})"
+                                                    class="btn btn-dark mtmobile" title="Renovación">
+                                                    <i class="fa-regular fa-calendar-check"></i>
+                                                </a>
+                                            @endif
+                                            <a href="javascript:void(0)"
+                                                wire:click="EditCombo('{{ $p->id }}',{{ $p->Mov->climov->client->id }})"
+                                                class="btn btn-dark mtmobile" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        </td>
 
-                                                    <a href="javascript:void(0)"
-                                                        wire:click="EditCombo({{ $p->id }})"
-                                                        class="btn btn-dark mtmobile" title="Edit">
-                                                        <i class="fas fa-edit"></i>
-                                                    </a>
-                                                @endif
-                                            </td>
-                                        @endif
                                         <td class="text-center"
                                             style="{{ $p->done == 'NO' ? 'background-color: #d97171 !important' : 'background-color: #09ed3d !important' }}">
                                             @if ($p->done == 'NO')

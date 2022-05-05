@@ -116,6 +116,7 @@
                                             </thead>
                                             <tbody>
                                                 @if ($cuentasp1)
+
                                                     @if ($cuentasp1->count() == 0)
                                                         <tr>
                                                             <td colspan="2">
@@ -125,31 +126,36 @@
                                                         </tr>
                                                     @endif
                                                     @foreach ($cuentasp1 as $ap)
-                                                        <tr>
-                                                            <td class="text-center">
-                                                                <h6 class="text-center">{{ $ap->account_name }}
-                                                                </h6>
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <h6 class="text-center">
-                                                                    {{ \Carbon\Carbon::parse($ap->expiration_account)->format('d/m/Y') }}
-                                                                </h6>
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <h6 class="text-center">{{ $ap->number_profiles }}
-                                                                </h6>
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <h6 class="text-center">{{ $ap->espacios }}</h6>
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <a href="javascript:void(0)"
-                                                                    wire:click="PrimerPerfil({{ $ap->id }})"
-                                                                    class="btn btn-dark mtmobile">
-                                                                    <i class="fas fa-check"></i>
-                                                                </a>
-                                                            </td>
-                                                        </tr>
+                                                        @if ($ap->espacios > 0)
+                                                            <tr>
+                                                                <td class="text-center">
+                                                                    <h6 class="text-center">
+                                                                        {{ $ap->account_name }}
+                                                                    </h6>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <h6 class="text-center">
+                                                                        {{ \Carbon\Carbon::parse($ap->expiration_account)->format('d/m/Y') }}
+                                                                    </h6>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <h6 class="text-center">
+                                                                        {{ $ap->number_profiles }}
+                                                                    </h6>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <h6 class="text-center">{{ $ap->espacios }}
+                                                                    </h6>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <a href="javascript:void(0)"
+                                                                        wire:click="PrimerPerfil({{ $ap->id }})"
+                                                                        class="btn btn-dark mtmobile">
+                                                                        <i class="fas fa-check"></i>
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                        @endif
                                                     @endforeach
                                                 @endif
                                             </tbody>
@@ -228,31 +234,36 @@
                                                     @endif
 
                                                     @foreach ($cuentasp2 as $c2)
-                                                        <tr>
-                                                            <td class="text-center">
-                                                                <h6 class="text-center">{{ $c2->account_name }}
-                                                                </h6>
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <h6 class="text-center">
-                                                                    {{ \Carbon\Carbon::parse($c2->expiration_account)->format('d/m/Y') }}
-                                                                </h6>
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <h6 class="text-center">{{ $c2->number_profiles }}
-                                                                </h6>
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <h6 class="text-center">{{ $c2->espacios }}</h6>
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <a href="javascript:void(0)"
-                                                                    wire:click="SegundoPerfil({{ $c2->id }})"
-                                                                    class="btn btn-dark mtmobile">
-                                                                    <i class="fas fa-check"></i>
-                                                                </a>
-                                                            </td>
-                                                        </tr>
+                                                        @if ($c2->espacios > 0)
+                                                            <tr>
+                                                                <td class="text-center">
+                                                                    <h6 class="text-center">
+                                                                        {{ $c2->account_name }}
+                                                                    </h6>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <h6 class="text-center">
+                                                                        {{ \Carbon\Carbon::parse($c2->expiration_account)->format('d/m/Y') }}
+                                                                    </h6>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <h6 class="text-center">
+                                                                        {{ $c2->number_profiles }}
+                                                                    </h6>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <h6 class="text-center">{{ $c2->espacios }}
+                                                                    </h6>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <a href="javascript:void(0)"
+                                                                        wire:click="SegundoPerfil({{ $c2->id }})"
+                                                                        class="btn btn-dark mtmobile">
+                                                                        <i class="fas fa-check"></i>
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                        @endif
                                                     @endforeach
                                                 @endif
                                             </tbody>
@@ -332,32 +343,36 @@
                                                     @endif
 
                                                     @foreach ($cuentasp3 as $c3)
-                                                        <tr>
-                                                            <td class="text-center">
-                                                                <h6 class="text-center">{{ $c3->account_name }}
-                                                                </h6>
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <h6 class="text-center">
-                                                                    {{ \Carbon\Carbon::parse($c3->expiration_account)->format('d/m/Y') }}
-                                                                </h6>
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <h6 class="text-center">
-                                                                    {{ $c3->number_profiles }}
-                                                                </h6>
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <h6 class="text-center">{{ $c3->espacios }}</h6>
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <a href="javascript:void(0)"
-                                                                    wire:click="TercerPerfil({{ $c3->id }})"
-                                                                    class="btn btn-dark mtmobile">
-                                                                    <i class="fas fa-check"></i>
-                                                                </a>
-                                                            </td>
-                                                        </tr>
+                                                        @if ($c3->espacios > 0)
+                                                            <tr>
+                                                                <td class="text-center">
+                                                                    <h6 class="text-center">
+                                                                        {{ $c3->account_name }}
+                                                                    </h6>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <h6 class="text-center">
+                                                                        {{ \Carbon\Carbon::parse($c3->expiration_account)->format('d/m/Y') }}
+                                                                    </h6>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <h6 class="text-center">
+                                                                        {{ $c3->number_profiles }}
+                                                                    </h6>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <h6 class="text-center">{{ $c3->espacios }}
+                                                                    </h6>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <a href="javascript:void(0)"
+                                                                        wire:click="TercerPerfil({{ $c3->id }})"
+                                                                        class="btn btn-dark mtmobile">
+                                                                        <i class="fas fa-check"></i>
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                        @endif
                                                     @endforeach
                                                 @endif
                                             </tbody>
@@ -519,6 +534,7 @@
                             @enderror
                         </div>
                     </div>
+                    
                     <div class="col-sm-12 col-md-8">
                         <div class="form-group">
                             <label>
@@ -528,6 +544,15 @@
                             @error('observaciones')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12">
+                        <div class="form-group custom-file">
+                            <input type="file" class="custom-file-input form-control" wire:model="comprobante"
+                                accept="image/x-png,image/gif,image/jpeg">
+                            <label class="custom-file-label">Comprobante {{ $comprobante }}</label>
+
                         </div>
                     </div>
 

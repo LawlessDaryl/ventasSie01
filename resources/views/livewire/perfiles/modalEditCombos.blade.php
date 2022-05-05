@@ -11,6 +11,72 @@
             </div>
             <div class="modal-body">
                 <div class="row">
+
+                    <div class="col-sm-12 col-md-12">
+                        <div class="form-group">
+                            <span>
+                                <img src="{{ asset('storage/planesComprobantes/' . $comprobante) }}"
+                                    alt="No tiene comprobante" height="500" width="750">
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12">
+                        <div class="form-group custom-file">
+                            <input type="file" class="custom-file-input form-control" wire:model="comprobante"
+                                accept="image/x-png,image/gif,image/jpeg">
+                            <label class="custom-file-label">Comprobante {{ $comprobante }}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <label>
+                                <h6>Nombre Cliente</h6>
+                            </label>
+                            <input type="text" wire:model="nombreCliente" class="form-control">
+                            @error('nombreCliente')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <label>
+                                <h6>Telefono Cliente</h6>
+                            </label>
+                            <input type="number" wire:model="celular" class="form-control">
+                            @error('celular')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <label>
+                                <h6>Fecha inicio del plan</h6>
+                            </label>
+                            <input type="date" wire:model="start_account" class="form-control">
+                            @error('start_account')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <label>
+                                <h6>Fecha fin del plan</h6>
+                            </label>
+                            <input type="date" wire:model="expiration_account" class="form-control">
+                            @error('expiration_account')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
                     <div class="col-sm-12 col-md-12">
                         <div class="form-group">
                             <h6>{{ $plataforma1Nombre }}</h6>
@@ -86,6 +152,16 @@
                         </div>
                     </div>
 
+                    <div class="col-sm-12 col-md-12">
+                        <div class="form-group">
+                            <h6>Observaciones</h6>
+                            <textarea wire:model.lazy="observations" class="form-control" name="" rows="5"></textarea>
+                            @error('observations')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
                     <div class="col-sm-12 col-md-4">
                         <div class="form-group text-center mt-4">
                             <a href="javascript:void(0)" class="btn btn-dark"
@@ -93,7 +169,7 @@
                                 datos</a>
                         </div>
                     </div>
-                    
+
                 </div>
             </div>
         </div>

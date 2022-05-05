@@ -13,6 +13,23 @@
             <div class="modal-body">
                 <div class="row">
 
+                    <div class="col-sm-12 col-md-12">
+                        <div class="form-group">
+                            <span>
+                                <img src="{{ asset('storage/planesComprobantes/' . $comprobante) }}"
+                                    alt="No tiene comprobante" height="500" width="750">
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12">
+                        <div class="form-group custom-file">
+                            <input type="file" class="custom-file-input form-control" wire:model="comprobante"
+                                accept="image/x-png,image/gif,image/jpeg">
+                            <label class="custom-file-label">Comprobante {{ $comprobante }}</label>
+                        </div>
+                    </div>
+
                     <div class="col-sm-12 col-md-6">
                         <div class="form-group">
                             <label>
@@ -85,25 +102,114 @@
                                 @enderror
                             </div>
                         </div>
+                    @elseif ($condicional == 'combos')
+                        <div class="col-sm-12 col-md-4">
+                            <div class="form-group">
+                                <label>
+                                    <h6>Plataforma 1</h6>
+                                </label>
+                                <input type="text" disabled wire:model="plataforma1Nombre" class="form-control">
+                                @error('plataforma1Nombre')
+                                    <span class="text-danger er">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-4">
+                            <div class="form-group">
+                                <label>
+                                    <h6>Nombre perfil 1</h6>
+                                </label>
+                                <input type="text" wire:model="perfil1COMBO" class="form-control">
+                                @error('perfil1COMBO')
+                                    <span class="text-danger er">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-4">
+                            <div class="form-group">
+                                <label>
+                                    <h6>Pin perfil 1</h6>
+                                </label>
+                                <input type="text" wire:model="PIN1COMBO" class="form-control">
+                                @error('PIN1COMBO')
+                                    <span class="text-danger er">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-4">
+                            <div class="form-group">
+                                <label>
+                                    <h6>Plataforma 2</h6>
+                                </label>
+                                <input type="text" disabled wire:model="plataforma2Nombre" class="form-control">
+                                @error('plataforma2Nombre')
+                                    <span class="text-danger er">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-4">
+                            <div class="form-group">
+                                <label>
+                                    <h6>Nombre perfil 2</h6>
+                                </label>
+                                <input type="text" wire:model="perfil2COMBO" class="form-control">
+                                @error('perfil2COMBO')
+                                    <span class="text-danger er">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-4">
+                            <div class="form-group">
+                                <label>
+                                    <h6>Pin perfil 2</h6>
+                                </label>
+                                <input type="text" wire:model="PIN2COMBO" class="form-control">
+                                @error('PIN2COMBO')
+                                    <span class="text-danger er">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-4">
+                            <div class="form-group">
+                                <label>
+                                    <h6>Plataforma 3</h6>
+                                </label>
+                                <input type="text" disabled wire:model="plataforma3Nombre" class="form-control">
+                                @error('plataforma3Nombre')
+                                    <span class="text-danger er">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-4">
+                            <div class="form-group">
+                                <label>
+                                    <h6>Nombre perfil 3</h6>
+                                </label>
+                                <input type="text" wire:model="perfil3COMBO" class="form-control">
+                                @error('perfil3COMBO')
+                                    <span class="text-danger er">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-4">
+                            <div class="form-group">
+                                <label>
+                                    <h6>Pin perfil 3</h6>
+                                </label>
+                                <input type="text" wire:model="PIN3COMBO" class="form-control">
+                                @error('PIN3COMBO')
+                                    <span class="text-danger er">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
                     @endif
-
-                    <div class="col-sm-12 col-md-12">
-                        <div class="form-group">
-                            <span>
-                                <img src="{{ asset('storage/planesComprobantes/' . $comprobante) }}"
-                                    alt="No tiene comprobante" height="500" width="750">
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="col-sm-12">
-                        <div class="form-group custom-file">
-                            <input type="file" class="custom-file-input form-control" wire:model="comprobante"
-                                accept="image/x-png,image/gif,image/jpeg">
-                            <label class="custom-file-label">Comprobante {{ $comprobante }}</label>
-
-                        </div>
-                    </div>
 
                     <div class="col-sm-12 col-md-12">
                         <div class="form-group">

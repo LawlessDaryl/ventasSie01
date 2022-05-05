@@ -143,6 +143,14 @@
                         </div>
                     </div>
 
+                    <div class="col-sm-12">
+                        <div class="form-group custom-file">
+                            <input type="file" class="custom-file-input form-control" wire:model="comprobante"
+                                accept="image/x-png,image/gif,image/jpeg">
+                            <label class="custom-file-label">Comprobante {{ $comprobante }}</label>
+                        </div>
+                    </div>
+
                     <div class="col-sm-12 col-md-12">
                         <div class="form-group">
                             <h6>Observaciones del plan // Escriba un nuevo comentario si va a renovar, vencer o
@@ -203,36 +211,39 @@
                                                 @endif
                                                 @if ($cuentasEnteras)
                                                     @foreach ($cuentasEnteras as $item)
-                                                        <tr>
-                                                            <td class="text-center">
-                                                                <h6 class="text-center">
-                                                                    {{ $item->account_name }}
-                                                                </h6>
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <h6 class="text-center">
-                                                                    {{ $item->number_profiles }}
-                                                                </h6>
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <h6 class="text-center">
-                                                                    {{ \Carbon\Carbon::parse($item->expiration_account)->format('d/m/Y') }}
-                                                                </h6>
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <h6 class="text-center">
-                                                                    {{ $item->cantiadadQueSePuedeCrear }}
-                                                                </h6>
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <h6 class="text-center">
-                                                                    <a href="javascript:void(0)" class="btn btn-dark"
-                                                                        onclick="ConfirmCambiar('{{ $item->id }}','{{ $nameperfil }}','{{ $item->account_name }}')">
-                                                                        <i class="fas fa-check"></i>
-                                                                    </a>
-                                                                </h6>
-                                                            </td>
-                                                        </tr>
+                                                        @if ($item->cantiadadQueSePuedeCrear > 0)
+                                                            <tr>
+                                                                <td class="text-center">
+                                                                    <h6 class="text-center">
+                                                                        {{ $item->account_name }}
+                                                                    </h6>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <h6 class="text-center">
+                                                                        {{ $item->number_profiles }}
+                                                                    </h6>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <h6 class="text-center">
+                                                                        {{ \Carbon\Carbon::parse($item->expiration_account)->format('d/m/Y') }}
+                                                                    </h6>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <h6 class="text-center">
+                                                                        {{ $item->cantiadadQueSePuedeCrear }}
+                                                                    </h6>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <h6 class="text-center">
+                                                                        <a href="javascript:void(0)"
+                                                                            class="btn btn-dark"
+                                                                            onclick="ConfirmCambiar('{{ $item->id }}','{{ $nameperfil }}','{{ $item->account_name }}')">
+                                                                            <i class="fas fa-check"></i>
+                                                                        </a>
+                                                                    </h6>
+                                                                </td>
+                                                            </tr>
+                                                        @endif
                                                     @endforeach
                                                 @else
                                                     <tr>

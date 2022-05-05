@@ -7,6 +7,7 @@ use App\Models\AccountProfile;
 use App\Models\Caja;
 use App\Models\Cartera;
 use App\Models\CarteraMov;
+use App\Models\Cliente;
 use App\Models\ClienteMov;
 use App\Models\CuentaInversion;
 use App\Models\Email;
@@ -31,7 +32,7 @@ class CuentasController extends Component
     public $platform_id, $email_id, $expiration, $status, $number_profiles, $search, $selected_id,
         $pageTitle, $componentName, $proveedor, $nameP, $PIN, $estado, $availability, $Observaciones,
         $perfiles, $correos, $selected, $start_account, $start_account_new, $expiration_account,
-        $expiration_account_new, $password_account, $price, $mostrarCampos, $condicional, $meses, $meseRenovarProv,
+        $expiration_account_new, $password_account, $price, $mostrarCampos, $condicional = 'cuentas', $meses, $meseRenovarProv,
         $expirationPlanActual, $expirationNueva, $observations, $selected_plan, $correoCuenta, $passCuenta,
         $nombreCliente, $celular, $observacionesTrans, $mostrarRenovar, $meses_comprados, $mesesComprar,
         $nombre_cuenta, $mostrartabla2, $mostrarCorreo, $mostrarNombreCuenta;
@@ -62,7 +63,6 @@ class CuentasController extends Component
         $this->password_account = '';
         $this->price = '';
         $this->mostrarCampos = 0;
-        $this->condicional = 'cuentas';
         $this->meses = 1;
         $this->meseRenovarProv = 1;
         $this->inicioNueva = Carbon::parse(Carbon::now())->format('Y-m-d');
@@ -97,6 +97,8 @@ class CuentasController extends Component
         $this->importePlan = '';
         $this->expirationPlanActual = null;
         $this->inicioPlanActual = null;
+        $this->comprobante = null;
+        $this->clienteId = 0;
     }
     public function render()
     {
@@ -533,6 +535,7 @@ class CuentasController extends Component
                             'pl.status as plan_status',
                             'c.nombre as clienteNombre',
                             'c.celular as clienteCelular',
+                            'c.id as clienteID',
                             DB::raw('0 as horas'),
                             DB::raw('0 as dias')
                         )
@@ -605,6 +608,7 @@ class CuentasController extends Component
                             'pl.status as plan_status',
                             'c.nombre as clienteNombre',
                             'c.celular as clienteCelular',
+                            'c.id as clienteID',
                             DB::raw('0 as horas'),
                             DB::raw('0 as dias')
                         )
@@ -660,6 +664,7 @@ class CuentasController extends Component
                             'pl.status as plan_status',
                             'c.nombre as clienteNombre',
                             'c.celular as clienteCelular',
+                            'c.id as clienteID',
                             DB::raw('0 as horas'),
                             DB::raw('0 as dias')
                         )
@@ -732,6 +737,7 @@ class CuentasController extends Component
                             'pl.status as plan_status',
                             'c.nombre as clienteNombre',
                             'c.celular as clienteCelular',
+                            'c.id as clienteID',
                             DB::raw('0 as horas'),
                             DB::raw('0 as dias')
                         )
@@ -787,6 +793,7 @@ class CuentasController extends Component
                             'pl.status as plan_status',
                             'c.nombre as clienteNombre',
                             'c.celular as clienteCelular',
+                            'c.id as clienteID',
                         )
                         ->where('p.nombre', 'like', '%' . $this->search . '%')
                         ->where('pl.status', 'VENCIDO')
@@ -842,6 +849,7 @@ class CuentasController extends Component
                             'pl.status as plan_status',
                             'c.nombre as clienteNombre',
                             'c.celular as clienteCelular',
+                            'c.id as clienteID',
                         )
                         ->where('pl.status', 'VENCIDO')
                         ->where('pa.status', 'VENCIDO')
@@ -880,6 +888,7 @@ class CuentasController extends Component
                             'pl.status as plan_status',
                             'c.nombre as clienteNombre',
                             'c.celular as clienteCelular',
+                            'c.id as clienteID',
                         )
                         ->where('p.nombre', 'like', '%' . $this->search . '%')
                         ->where('pl.status', 'VENCIDO')
@@ -936,6 +945,7 @@ class CuentasController extends Component
                             'pl.status as plan_status',
                             'c.nombre as clienteNombre',
                             'c.celular as clienteCelular',
+                            'c.id as clienteID',
                         )
                         ->where('pl.status', 'VENCIDO')
                         ->where('pa.status', 'VENCIDO')
@@ -1611,22 +1621,66 @@ class CuentasController extends Component
         }
     }
 
-    public function EditObservaciones(Plan $plan)
+    public function EditObservaciones(Plan $plan, Cliente $cliente)
     {
         $this->selected_id = $plan->id;
         $this->observations = $plan->observations;
         $this->start_account = $plan->plan_start;
         $this->expiration_account = $plan->expiration_plan;
+        $this->comprobante = $plan->comprobante;
+
+        $this->clienteId = $cliente->id;
+        $this->nombreCliente = $cliente->nombre;
+        $this->celular = $cliente->celular;
+
         $this->emit('modal-observaciones-show', 'show modal!');
     }
 
     public function updateObserv()
     {
+        $rules = [
+            'nombreCliente' => 'required|min:4',
+            'celular' => 'required|integer|min:8',
+            'start_account' => 'required|not_in:0000-00-00',
+            'expiration_account' => 'required|not_in:0000-00-00',
+        ];
+        $messages = [
+            'nombreCliente.required' => 'El nombre del cliente es requerido',
+            'nombreCliente.min' => 'El nombre debe tener al menos 4 caracteres',
+            'celular.required' => 'El numero de celular del cliente es requerido',
+            'celular.integer' => 'El celular debe ser un número',
+            'celular.min' => 'El celular debe tener 8 dígitos',
+            'start_account.required' => 'Seleccione una fecha valida',
+            'start_account.not_in' => 'Seleccione una fecha valida',
+            'expiration_account.required' => 'Seleccione una fecha valida',
+            'expiration_account.not_in' => 'Seleccione una fecha valida',
+        ];
+        $this->validate($rules, $messages);
+
         $plan = Plan::find($this->selected_id);
         $plan->observations = $this->observations;
         $plan->plan_start = $this->start_account;
         $plan->expiration_plan = $this->expiration_account;
         $plan->save();
+
+        if ($this->comprobante != $plan->comprobante) {
+            $customFileName = uniqid() . '_.' . $this->comprobante->extension();
+            $this->comprobante->storeAs('public/planesComprobantes', $customFileName);
+            $imageTemp = $plan->comprobante;
+            $plan->comprobante = $customFileName;
+            $plan->save();
+            if ($imageTemp != null) {
+                if (file_exists('storage/planesComprobantes/' . $imageTemp)) {
+                    unlink('storage/planesComprobantes/' . $imageTemp);
+                }
+            }
+        }
+
+        $cliente = Cliente::find($this->clienteId);
+        $cliente->nombre = $this->nombreCliente;
+        $cliente->celular = $this->celular;
+        $cliente->save();
+
         $this->emit('modal-observaciones-hide', 'Se actualizaron los datos del plan');
     }
 
@@ -1753,17 +1807,6 @@ class CuentasController extends Component
                 'user_id' => Auth()->user()->id,
             ]);
 
-            /* ENCONTRAR INVERSION */
-            /* $inversioncuenta = CuentaInversion::where('start_date', '<=', $this->expirationPlanActual)
-                ->where('expiration_date', '>=', $this->expirationPlanActual)
-                ->where('account_id', $cuenta->id)
-                ->get()->first();
-
-            $inversioncuenta->type = 'CUENTA';
-            $inversioncuenta->imports = $this->importe;
-            $inversioncuenta->ganancia = $this->importe - $inversioncuenta->price;
-            $inversioncuenta->save(); */
-
             $date_now = date('Y-m-d', time());
 
             CuentaInversion::create([
@@ -1789,6 +1832,13 @@ class CuentasController extends Component
                 'observations' => $this->observacionesTrans,
                 'movimiento_id' => $mv->id
             ]);
+
+            if ($this->comprobante) {
+                $customFileName = uniqid() . '_.' . $this->comprobante->extension();
+                $this->comprobante->storeAs('public/planesComprobantes', $customFileName);
+                $plan->comprobante = $customFileName;
+                $plan->save();
+            }
 
             PlanAccount::create([
                 'status' => 'ACTIVO',
@@ -2084,6 +2134,8 @@ class CuentasController extends Component
 
     public function resetUI()
     {
+        $this->componentName = 'Cuentas';
+        $this->pageTitle = 'Listado';
         $this->selected_id = 0;
         $this->selected_plan = 0;
         $this->selected = 0;
@@ -2102,8 +2154,9 @@ class CuentasController extends Component
         $this->password_account = '';
         $this->price = '';
         $this->mostrarCampos = 0;
-        $this->meses = 0;
+        $this->meses = 1;
         $this->meseRenovarProv = 1;
+        $this->inicioNueva = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->expirationNueva = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->start_account = null;
         $this->tipopago = 'EFECTIVO';
@@ -2125,7 +2178,18 @@ class CuentasController extends Component
         $this->mostrarCorreo = 'NO';
         $this->mostrarNombreCuenta = 'NO';
         $this->mostrarNumPerf = 'NO';
+        $this->EnterasDivididas = 'TODOS';
+        $this->PlataformaFiltro = 'TODAS';
         $this->diasdePlan = 30;
+        $this->inicioCompra = Carbon::parse(Carbon::now())->format('Y-m-d');
+        $this->expirationCompra = null;
+        $this->plataformaPlan = '';
+        $this->mesesPlan = '';
+        $this->importePlan = '';
+        $this->expirationPlanActual = null;
+        $this->inicioPlanActual = null;
+        $this->comprobante = null;
+        $this->clienteId = 0;
         $this->resetValidation();
     }
 }
