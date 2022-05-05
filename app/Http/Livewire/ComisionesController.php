@@ -41,6 +41,12 @@ class ComisionesController extends Component
             ->section('content');
     }
 
+    public function Agregar()
+    {
+        $this->resetUI();
+        $this->emit('modal-show', 'show modal!');
+    }
+
     public function Store()
     {
         $rules = [
@@ -95,7 +101,6 @@ class ComisionesController extends Component
         $this->monto_final = $comision->monto_final;
         $this->comision = $comision->comision;
         $this->porcentaje = $comision->porcentaje;
-
 
         $this->emit('modal-show', 'show modal!');
     }

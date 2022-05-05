@@ -395,7 +395,6 @@
             noty(msg)
         });
 
-
     });
 
     function ConfirmVencer(cuenta) {

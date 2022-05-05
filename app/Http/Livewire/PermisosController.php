@@ -11,8 +11,8 @@ use App\Models\User;
 class PermisosController extends Component
 {
     use WithPagination;
-    public $permissionName,$search,$selected_id,$pageTitle,$componentName;
-    private $pagination=10;
+    public $permissionName, $search, $selected_id, $pageTitle, $componentName;
+    private $pagination = 20;
 
     public function paginationView()
     {
@@ -23,21 +23,26 @@ class PermisosController extends Component
     {
         $this->pageTitle = 'Listado';
         $this->componentName = 'Permisos';
-        
     }
 
     public function render()
     {
-        if(strlen($this->search)>0){
-            $permisos=Permission::where('name','like','%'.$this->search.'%')->paginate($this->pagination);            
-        }else{
-            $permisos=Permission::orderBy('name','asc')->paginate($this->pagination);
+        if (strlen($this->search) > 0) {
+            $permisos = Permission::where('name', 'like', '%' . $this->search . '%')->paginate($this->pagination);
+        } else {
+            $permisos = Permission::orderBy('name', 'asc')->paginate($this->pagination);
         }
-        return view('livewire.permisos.component',[
-            'data'=>$permisos,
+        return view('livewire.permisos.component', [
+            'data' => $permisos,
         ])
-        ->extends('layouts.theme.app')
-        ->section('content');
+            ->extends('layouts.theme.app')
+            ->section('content');
+    }
+    
+    public function Agregar()
+    {
+        $this->resetUI();
+        $this->emit('show-modal', 'show modal!');
     }
 
     public function CreatePermission()
@@ -91,9 +96,9 @@ class PermisosController extends Component
     public function Destroy($id)
     {
         $rolesCount = Permission::find($id)->getRoleNames()->count();
-        if($rolesCount > 0)
-        {
-            $this->emit('item-error', 'No se puede eliminar el permiso por que tiene permisos asociados');
+
+        if ($rolesCount > 0) {
+            $this->emit('item-error', 'No se puede eliminar el permiso por que tiene roles asociados');
             return;
         }
 

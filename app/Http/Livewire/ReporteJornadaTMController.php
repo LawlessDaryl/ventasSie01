@@ -54,7 +54,8 @@ class ReporteJornadaTMController extends Component
 
         $this->sucursales = Sucursal::orderBy('id')->get();
 
-        $this->cajasSucursal = Caja::where('sucursal_id', $this->sucursal)->where('nombre', '!=', 'Caja General')->get();
+        $this->cajasSucursal = Caja::where('sucursal_id', $this->sucursal)
+            ->where('nombre', '!=', 'Caja General')->get();
 
         //revisar el cabmio de cajas y sucursales
         if ($this->sucursal != $this->condicionalCaja) {
@@ -84,7 +85,7 @@ class ReporteJornadaTMController extends Component
             ->join('origens as ori', 'ori.id', 'om.origen_id')
             ->join('motivos as mot', 'mot.id', 'om.motivo_id')
             ->join('sucursals as s', 's.id', 'ca.sucursal_id')
-            ->where('cmv.comentario', 'TIGOMONEY TRANSACCION')
+            ->where('cmv.tipoDeMovimiento', 'TIGOMONEY')
             ->where('cmv.type', 'INGRESO')
             ->where('ori.nombre', 'Telefono')
             ->where('mot.tipo', 'Abono')
@@ -104,7 +105,7 @@ class ReporteJornadaTMController extends Component
             ->join('origens as ori', 'ori.id', 'om.origen_id')
             ->join('motivos as mot', 'mot.id', 'om.motivo_id')
             ->join('sucursals as s', 's.id', 'ca.sucursal_id')
-            ->where('cmv.comentario', 'TIGOMONEY TRANSACCION')
+            ->where('cmv.tipoDeMovimiento', 'TIGOMONEY')
             ->where('cmv.type', 'EGRESO')
             ->where('ori.nombre', 'Telefono')
             ->where('mot.tipo', 'Retiro')
@@ -126,7 +127,7 @@ class ReporteJornadaTMController extends Component
             ->join('origens as ori', 'ori.id', 'om.origen_id')
             ->join('motivos as mot', 'mot.id', 'om.motivo_id')
             ->join('sucursals as s', 's.id', 'ca.sucursal_id')
-            ->where('cmv.comentario', 'TIGOMONEY TRANSACCION')
+            ->where('cmv.tipoDeMovimiento', 'TIGOMONEY')
             ->where('cmv.type', 'INGRESO')
             ->where('ori.nombre', 'Sistema')
             ->where('mot.tipo', 'Abono')
@@ -146,7 +147,7 @@ class ReporteJornadaTMController extends Component
             ->join('origens as ori', 'ori.id', 'om.origen_id')
             ->join('motivos as mot', 'mot.id', 'om.motivo_id')
             ->join('sucursals as s', 's.id', 'ca.sucursal_id')
-            ->where('cmv.comentario', 'TIGOMONEY TRANSACCION')
+            ->where('cmv.tipoDeMovimiento', 'TIGOMONEY')
             ->where('cmv.type', 'EGRESO')
             ->where('ori.nombre', 'Sistema')
             ->where('mot.tipo', 'Retiro')

@@ -7,8 +7,7 @@
                 </h4>
                 <ul class="tabs tab-pills">
                     
-                        <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
-                        data-target="#theModal">Agregar</a>
+                    <a href="javascript:void(0)" class="btn btn-dark" wire:click="Agregar()">Agregar</a>
                     
                 </ul>
             </div>
@@ -39,7 +38,7 @@
                                             class="btn btn-dark mtmobile" title="Editar registro">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <a href="javascript:void(0)" onclick="Confirm('{{ $permiso->id }}')" 
+                                        <a href="javascript:void(0)" onclick="Confirm('{{ $permiso->id }}','{{ $permiso->name }}')" 
                                             class="btn btn-dark" title="Eliminar registro">
                                             <i class="fas fa-trash"></i>
                                         </a>
@@ -91,7 +90,7 @@
         swal.fire({
             title: 'CONFIRMAR',
             icon: 'warning',
-            text: 'Confirmar eliminar el role ' + '"' + name + '"',
+            text: 'Confirmar eliminar el permiso ' + '"' + name + '"',
             showCancelButton: true,
             cancelButtonText: 'Cerrar',
             cancelButtonColor: '#383838',

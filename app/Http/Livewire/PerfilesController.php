@@ -99,6 +99,8 @@ class PerfilesController extends Component
         $this->mesesPlan = '';
         $this->importePlan = '';
         $this->inicioNueva = '';
+        $this->start_account = null;
+        $this->expiration_account = null;
     }
     public function render()
     {
@@ -1727,49 +1729,6 @@ class PerfilesController extends Component
         }
     }
 
-    public function Edit(Profile $prof, Plan $plan)
-    {
-        $this->selected_id = $prof->id;
-        $this->nameperfil = $prof->nameprofile;
-        $this->pin = $prof->pin;
-        $this->observations = $plan->observations;
-
-        $this->emit('modal-show', 'show modal!');
-    }
-
-    public function Update()
-    {
-        $rules = [
-            'nameperfil' => 'required',
-            'pin' => 'required',
-            'status' => 'required|not_in:Elegir',
-            'availability' => 'required|not_in:Elegir'
-        ];
-        $messages = [
-            'nameperfil.required' => 'El nombre del perfil es requerido',
-            'pin.required' => 'El pin del perfil es requerido',
-            'status.required' => 'El estado es requerido',
-            'status.not_in' => 'Elija un estado distinto a Elegir',
-            'availability.required' => 'La disponibilidad es requerida',
-            'availability.not_in' => 'Elija una plataforma distinta a Elegir'
-        ];
-
-        $this->validate($rules, $messages);
-
-        $prof = Profile::find($this->selected_id);
-
-        $prof->update([
-            'nameprofile' => $this->nameperfil,
-            'pin' => $this->pin,
-            'status' => $this->status,
-            'availability' => $this->availability,
-            'observations' => $this->observations
-        ]);
-
-        $this->resetUI();
-        $this->emit('item-updated', 'Perfil Actualizado');
-    }
-
     public function Destroy(Profile $perf)
     {
         /* PONER EN INACTIVO EL ACCOUNTPROFILE */
@@ -2107,7 +2066,7 @@ class PerfilesController extends Component
             $Cuenta->save();
         }
         $this->resetUI();
-        $this->emit('item-accion', 'No se renovó este perfil y ahora esta inactivo');
+        $this->emit('item-accion', 'Se plan fue vencido');
     }
 
     public function CambiarCuenta()
@@ -2278,6 +2237,47 @@ class PerfilesController extends Component
         }
     }
 
+    public function EditObservaciones(Plan $plan, Profile $perfil)
+    {
+        $this->selected_plan = $plan->id;
+        $this->observations = $plan->observations;
+        $this->start_account = $plan->plan_start;
+        $this->expiration_account = $plan->expiration_plan;
+
+        $this->selected_id = $perfil->id;
+        $this->nameperfil = $perfil->nameprofile;
+        $this->pin = $perfil->pin;
+
+        $this->emit('modal-observaciones-show', 'show modal!');
+    }
+
+    public function updateObserv()
+    {
+        $rules = [
+            'nameperfil' => 'required',
+            'pin' => 'required',
+        ];
+        $messages = [
+            'nameperfil.required' => 'El nombre del perfil es requerido',
+            'pin.required' => 'El pin del perfil es requerido',
+        ];
+
+        $this->validate($rules, $messages);
+
+        $plan = Plan::find($this->selected_plan);
+        $plan->observations = $this->observations;
+        $plan->plan_start = $this->start_account;
+        $plan->expiration_plan = $this->expiration_account;
+        $plan->save();
+
+        $perfil = Profile::find($this->selected_id);
+        $perfil->nameprofile = $this->nameperfil;
+        $perfil->pin = $this->pin;
+        $perfil->save();
+
+        $this->emit('modal-observaciones-hide', 'Se actualizaron los datos del plan');
+    }
+
 
     protected $listeners = [
         'deleteRow' => 'Destroy',
@@ -2344,13 +2344,14 @@ class PerfilesController extends Component
         $this->expiracionCuenta1 = '';
         $this->expiracionCuenta2 = '';
         $this->expiracionCuenta3 = '';
-        $this->PlataformaFiltro = 'TODAS';
         $this->diasdePlan = 30;
         $this->inicioPlanActual = null;
         $this->plataformaPlan = '';
         $this->mesesPlan = '';
         $this->importePlan = '';
         $this->inicioNueva = '';
+        $this->start_account = null;
+        $this->expiration_account = null;
         $this->resetValidation();
     }
 }

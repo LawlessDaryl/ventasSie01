@@ -21,7 +21,7 @@ class UsersController extends Component
     use WithPagination;
     use WithFileUploads;
 
-    public $name, $phone, $email, $status, $image, $password, $selected_id, $fileLoaded, $profile,
+    public $name, $phone, $email, $image, $password, $selected_id, $fileLoaded, $profile,
         $sucursal_id, $fecha_inicio, $fechafin, $idsucursalUser, $details, $sucurid, $sucurname;
     public $pageTitle, $componentName, $search, $sucur;
     private $pagination = 5;
@@ -38,7 +38,6 @@ class UsersController extends Component
         $this->toDate = null;
         $this->pageTitle = 'Listado';
         $this->componentName = 'Usuarios';
-        $this->status = 'Elegir';
         $this->profile = 'Elegir';
         $this->sucursal_id = 'Elegir';
         $this->sucur = 'Elegir';
@@ -89,13 +88,18 @@ class UsersController extends Component
             ->section('content');
     }
 
+    public function Agregar()
+    {
+        $this->resetUI();
+        $this->emit('show-modal', 'show modal!');
+    }
+
 
     public function Store()
     {
         $rules = [
             'name' => 'required|min:3',
             'email' => 'required|unique:users|email',
-            'status' => 'required|not_in:Elegir',
             'profile' => 'required|not_in:Elegir',
             'password' => 'required|min:3',
             'sucursal_id' => 'required|not_in:Elegir',
@@ -106,8 +110,6 @@ class UsersController extends Component
             'email.required' => 'Ingresa una direccion de correo electrónico',
             'email.email' => 'Ingresa una dirección de correo válida',
             'email.unique' => 'El email ya existe en el sistema',
-            'status.required' => 'Selecciona el estatus del usuario',
-            'status.not_in' => 'Seleccine un estado distinto a Elegir',
             'profile.required' => 'Selecciona el perfil/rol del usuario',
             'profile.not_in' => 'Seleccioa un perfil/rol distinto a Elegir',
             'password.required' => 'Ingresa el password',
@@ -119,14 +121,16 @@ class UsersController extends Component
 
         DB::beginTransaction();
         try {   /* REGISTRO DEL USUARIO "DOS TABLAS" */
+
             $user = User::create([
                 'name' => $this->name,
                 'email' => $this->email,
                 'phone' => $this->phone,
-                'status' => $this->status,
+                'status' => 'ACTIVE',
                 'profile' => $this->profile,
                 'password' => bcrypt($this->password)
             ]);
+
             $user->syncRoles($this->profile);
 
             if ($this->image) {
@@ -165,7 +169,6 @@ class UsersController extends Component
         $this->name = $user->name;
         $this->phone = $user->phone;
         $this->profile = $user->profile;
-        $this->status = $user->status;
         $this->email = $user->email;
         $this->password = '';
 
@@ -177,9 +180,8 @@ class UsersController extends Component
         $rules = [
             'email' => "required|email|unique:users,email,{$this->selected_id}",
             'name' => 'required|min:3',
-            'status' => 'required|not_in:Elegir',
             'profile' => 'required|not_in:Elegir',
-            'password' => 'required|min:3',
+            'password' => 'nullable|min:3',
         ];
         $messages = [
             'name.required' => 'Ingresa el nombre del usuario',
@@ -187,25 +189,29 @@ class UsersController extends Component
             'email.required' => 'Ingresa una direccion de correo electrónico',
             'email.email' => 'Ingresa una dirección de correo válida',
             'email.unique' => 'El email ya existe en el sistema',
-            'status.required' => 'Selecciona el estatus del usuario',
-            'status.not_in' => 'Seleccine un estado distinto a Elegir',
             'profile.required' => 'Selecciona el perfil/rol del usuario',
             'profile.not_in' => 'Seleccioa un perfil/rol distinto a Elegir',
-            'password.required' => 'Ingresa el password',
             'password.min' => 'El password debe tener al menos 3 caracteres',
         ];
         $this->validate($rules, $messages);
 
         $user = User::find($this->selected_id);
-        /* EDITAR DATOS DEL USUARIO */
-        $user->update([
-            'name' => $this->name,
-            'email' => $this->email,
-            'phone' => $this->phone,
-            'status' => $this->status,
-            'profile' => $this->profile,
-            'password' => bcrypt($this->password)
-        ]);
+        if ($this->password != null) {
+            $user->update([
+                'name' => $this->name,
+                'email' => $this->email,
+                'phone' => $this->phone,
+                'profile' => $this->profile,
+                'password' => bcrypt($this->password)
+            ]);
+        } else {
+            $user->update([
+                'name' => $this->name,
+                'email' => $this->email,
+                'phone' => $this->phone,
+                'profile' => $this->profile
+            ]);
+        }
         $user->syncRoles($this->profile);
         if ($this->image) {
             $customFileName = uniqid() . '_.' . $this->image->extension();
@@ -323,7 +329,6 @@ class UsersController extends Component
         $this->image = '';
         $this->fecha_inicio = '';
         $this->fecha_fin = '';
-        $this->status = 'Elegir';
         $this->profile = 'Elegir';
         $this->sucursal_id = 'Elegir';
         $this->selected_id = 0;

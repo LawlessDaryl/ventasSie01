@@ -19,18 +19,20 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 
 class PlanesController extends Component
 {
     use WithPagination;
+    use WithFileUploads;
 
     public $expiration_plan, $status,  $importe, $pageTitle, $componentName, $selected_id, $hora, $search,
         $condicion, $type, $nombre, $celular, $plataforma, $cuentaperfil, $accounts, $profiles, $cantidaperf,
         $mostrartabla, $tipopago, $condicional, $meses, $observaciones, $ready, $selected_perf, $totalCobrar,
         $BuscarCliente, $ClienteSelect, $cuentasEnteras, $nombrePerfil, $pinPerfil, $CantidadPerfilesCrear,
         $fecha_inicio, $plataforma1, $plataforma2, $plataforma3, $perfilplataforma1, $perfilplataforma2,
-        $perfilplataforma3, $telefonoAnterior, $NombreAnterior;
+        $perfilplataforma3, $telefonoAnterior, $NombreAnterior, $comprobante;
 
     private $pagination = 10;
 
@@ -92,7 +94,11 @@ class PlanesController extends Component
         $this->plataforma1Require = 'NO';
         $this->plataforma2Require = 'NO';
         $this->plataforma3Require = 'NO';
-        $this->fecha_inicio = Carbon::parse(Carbon::now())->format('Y-m-d');
+        /* $this->fecha_inicio = Carbon::parse(Carbon::now())->format('Y-m-d'); */
+        $this->fecha_inicio = null;
+        $this->expiration_plan = null;
+        $this->PerfilCliente = '';
+        $this->PinCliente = '';
         $this->Reset1Platf = 'INICIO';
         $this->Reset2Platf = 'INICIO';
         $this->Reset3Platf = 'INICIO';
@@ -101,6 +107,8 @@ class PlanesController extends Component
         $this->arrayCuentas = array();
         $this->arrayPerfiles = array();
         $this->diasdePlan = 30;
+        $this->perfilId = 0;
+        $this->clienteId = 0;
     }
 
     public function render()
@@ -337,14 +345,18 @@ class PlanesController extends Component
         }
 
         /* CALCULAR LA FECHA DE EXPIRACION SEGUN LA CANTIDAD DE MESES Y DIAS */
-        if ($this->diasdePlan >= 1) {
-            if ($this->meses > 0) {
-                $date_now = date('Y-m-d h:i:s', time());
-                $dias = $this->meses * $this->diasdePlan;
-                $this->expiration_plan = strtotime('+' . $dias . ' day', strtotime($this->fecha_inicio));
-                $this->expiration_plan = date('Y-m-d', $this->expiration_plan);
-            } else {
-                $this->meses = 1;
+        if ($this->selected_id == 0) {
+            if ($this->fecha_inicio) {
+                if ($this->diasdePlan >= 1) {
+                    if ($this->meses > 0) {
+                        $date_now = date('Y-m-d h:i:s', time());
+                        $dias = $this->meses * $this->diasdePlan;
+                        $this->expiration_plan = strtotime('+' . $dias . ' day', strtotime($this->fecha_inicio));
+                        $this->expiration_plan = date('Y-m-d', $this->expiration_plan);
+                    } else {
+                        $this->meses = 1;
+                    }
+                }
             }
         }
 
@@ -483,8 +495,6 @@ class PlanesController extends Component
             $this->perfilPin3 = '';
             $this->plataforma3Require = 'NO';
 
-
-
             $this->cuentasp2 = [];
             $this->cuentasp3 = [];
         }
@@ -512,8 +522,6 @@ class PlanesController extends Component
             $this->perfilPin3 = '';
             $this->plataforma3Require = 'NO';
 
-
-
             $this->cuentasp1 = [];
             $this->cuentasp3 = [];
         }
@@ -540,8 +548,6 @@ class PlanesController extends Component
             $this->perfilNombre3 = '';
             $this->perfilPin3 = '';
             $this->plataforma3Require = 'NO';
-
-
 
             $this->cuentasp1 = [];
             $this->cuentasp2 = [];
@@ -684,8 +690,8 @@ class PlanesController extends Component
         $this->mostrartablaPerfiles = 'SI';
 
         $perfilCuenta = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
-            ->select('p.*')
             ->join('profiles as p', 'p.id', 'ap.profile_id')
+            ->select('p.*')
             ->where('accounts.id', $cuenta->id)
             ->whereNotIn('p.id', $this->arrayPerfiles)
             ->where('p.availability', 'LIBRE')
@@ -1162,9 +1168,7 @@ class PlanesController extends Component
 
     public function Agregar()
     {
-        if ($this->selected_id != 0) {
-            $this->resetUI();
-        }
+        $this->resetUI();
         $this->emit('show-modal', 'show modal!');
     }
 
@@ -1176,7 +1180,7 @@ class PlanesController extends Component
         $this->ClienteSelect = 0;
     }
 
-    /* Registrar una transaccion */
+    /* Registrar un nuevo plan */
     public function Store()
     {
         $rules = [
@@ -1315,6 +1319,13 @@ class PlanesController extends Component
                         'observations' => $this->observaciones,
                         'movimiento_id' => $mv->id,
                     ]);
+
+                    if ($this->comprobante) {
+                        $customFileName = uniqid() . '_.' . $this->comprobante->extension();
+                        $this->comprobante->storeAs('public/planesComprobantes', $customFileName);
+                        $plan->comprobante = $customFileName;
+                        $plan->save();
+                    }
                     PlanAccount::create([
                         'status' => 'ACTIVO',
                         'plan_id' => $plan->id,
@@ -1448,6 +1459,13 @@ class PlanesController extends Component
                         'observations' => $this->observaciones,
                         'movimiento_id' => $mv->id
                     ]);
+
+                    if ($this->comprobante) {
+                        $customFileName = uniqid() . '_.' . $this->comprobante->extension();
+                        $this->comprobante->storeAs('public/planesComprobantes', $customFileName);
+                        $plan->comprobante = $customFileName;
+                        $plan->save();
+                    }
 
                     foreach ($accp->CuentaPerfil as  $value) {
                         if ($value->status == 'SinAsignar') {
@@ -1647,9 +1665,73 @@ class PlanesController extends Component
 
     public function VerObservaciones(Plan $plan)
     {
+        if ($this->condicional == 'perfiles') {
+            $datosPlan = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
+                ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
+                ->join('accounts as acc', 'acc.id', 'pa.account_id')
+                ->join('platforms as p', 'p.id', 'acc.platform_id')
+                ->join('account_profiles as ap', 'acc.id', 'ap.account_id')
+                ->join('profiles as prof', 'prof.id', 'ap.profile_id')
+                ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
+                ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
+                ->select(
+                    'prof.nameprofile as nameprofile',
+                    'prof.pin as pin',
+                    'plans.observations as observations',
+                    'c.nombre as nombreCliente',
+                    'c.celular as celular',
+                    'plans.plan_start as plan_start',
+                    'plans.expiration_plan as expiration_plan',
+                    'c.id as clienteId',
+                    'prof.id as perfilId',
+                )
+                ->where('plans.id', $plan->id)
+                ->whereColumn('plans.id', '=', 'ap.plan_id')
+                ->where('pa.status', 'ACTIVO')
+                ->where('ap.status', 'ACTIVO')
+                ->orderby('plans.id', 'desc')
+                ->get()->first();
+
+            $this->nombre = $datosPlan->nombreCliente;
+            $this->celular = $datosPlan->celular;
+            $this->PerfilCliente = $datosPlan->nameprofile;
+            $this->PinCliente = $datosPlan->pin;
+            $this->perfilId = $datosPlan->perfilId;
+            $this->clienteId = $datosPlan->clienteId;
+        } else {
+            $datosPlan = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
+                ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
+                ->join('accounts as acc', 'acc.id', 'pa.account_id')
+                ->join('platforms as p', 'p.id', 'acc.platform_id')
+                ->join('emails as e', 'e.id', 'acc.email_id')
+                ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
+                ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
+                ->select(
+                    'c.nombre as nombreCliente',
+                    'c.celular as celular',
+                    'e.content as correoCuenta',
+                    'acc.account_name as account_name',
+                    'acc.password_account as password_account',
+                    'plans.plan_start as plan_start',
+                    'plans.expiration_plan as expiration_plan',
+                    'plans.observations as observations',
+                    'c.id as clienteId',
+                )
+                ->where('plans.id', $plan->id)
+                ->orderby('plans.id', 'desc')
+                ->where('pa.status', 'ACTIVO')
+                ->get()->first();
+
+            $this->nombre = $datosPlan->nombreCliente;
+            $this->celular = $datosPlan->celular;
+            $this->clienteId = $datosPlan->clienteId;
+        }
         $this->selected_id = $plan->id;
-        $this->ready = $plan->ready;
         $this->observaciones = $plan->observations;
+        $this->fecha_inicio = $plan->plan_start;
+        $this->expiration_plan = $plan->expiration_plan;
+        $this->comprobante = $plan->comprobante;
+
         $this->emit('show-modal3', 'open modal');
     }
 
@@ -1659,9 +1741,37 @@ class PlanesController extends Component
         try {
             $plan = Plan::find($this->selected_id);
             $plan->observations = $this->observaciones;
+            $plan->plan_start = $this->fecha_inicio;
+            $plan->expiration_plan = $this->expiration_plan;
             $plan->save();
+
+            if ($this->comprobante) {
+                $customFileName = uniqid() . '_.' . $this->comprobante->extension();
+                $this->comprobante->storeAs('public/planesComprobantes', $customFileName);
+                $imageTemp = $plan->comprobante;
+                $plan->comprobante = $customFileName;
+                $plan->save();
+                if ($imageTemp != null) {
+                    if (file_exists('storage/planesComprobantes/' . $imageTemp)) {
+                        unlink('storage/planesComprobantes/' . $imageTemp);
+                    }
+                }
+            }
+
+            $cliente = Cliente::find($this->clienteId);
+            $cliente->nombre = $this->nombre;
+            $cliente->celular = $this->celular;
+            $cliente->save();
+
+            if ($this->condicional == 'perfiles') {
+                $perfil = Profile::find($this->perfilId);
+                $perfil->nameprofile = $this->PerfilCliente;
+                $perfil->pin = $this->PinCliente;
+                $perfil->save();
+            }
+            
             $this->resetUI();
-            $this->emit('item-actualizado', 'Se actulizó la información');
+            $this->emit('item-actualizado', 'Se actualizó la información');
             DB::commit();
         } catch (Exception $e) {
             DB::rollback();
@@ -1775,7 +1885,9 @@ class PlanesController extends Component
         $this->plataforma1Require = 'NO';
         $this->plataforma2Require = 'NO';
         $this->plataforma3Require = 'NO';
-        $this->fecha_inicio = Carbon::parse(Carbon::now())->format('Y-m-d');
+        /* $this->fecha_inicio = Carbon::parse(Carbon::now())->format('Y-m-d'); */
+        $this->fecha_inicio = null;
+        $this->expiration_plan = null;
         $this->Reset1Platf = 'INICIO';
         $this->Reset2Platf = 'INICIO';
         $this->Reset3Platf = 'INICIO';
@@ -1784,6 +1896,8 @@ class PlanesController extends Component
         $this->arrayCuentas = array();
         $this->arrayPerfiles = array();
         $this->diasdePlan = 30;
+        $this->comprobante = null;
+
         $this->resetValidation();
     }
 }

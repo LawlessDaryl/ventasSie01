@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\Caja;
 use App\Models\Cartera;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -14,11 +15,13 @@ class CarteraController extends Component
     use WithFileUploads;
     public  $search, $nombre, $descripcion, $tipo, $telefonoNum, $selected_id, $caja_id;
     public  $pageTitle, $componentName, $variable;
-    private $pagination = 5;
+    private $pagination = 10;
+
     public function paginationView()
     {
         return 'vendor.livewire.bootstrap';
     }
+
     public function mount()
     {
         $this->pageTitle = 'Listado';
@@ -29,26 +32,43 @@ class CarteraController extends Component
         $this->telefonoNum = 0;
         $this->selected_id = 0;
     }
+
     public function render()
     {
-        if (strlen($this->search) > 0)
-            $data = Cartera::where('nombre', 'like', '%' . $this->search . '%')
+        if (strlen($this->search) > 0) {
+            $data = Cartera::select(
+                'carteras.*',
+                DB::raw('0 as movimientos')
+            )
+                ->where('nombre', 'like', '%' . $this->search . '%')
                 ->orwhere('tipo', 'like', '%' . $this->search . '%')
                 ->paginate($this->pagination);
-        else
-            $data = Cartera::orderBy('id', 'desc')
+        } else {
+            $data = Cartera::select(
+                'carteras.*',
+                DB::raw('0 as movimientos')
+            )
+                ->orderBy('id', 'desc')
                 ->paginate($this->pagination);
+        }
+        // CONTAR MOVIMIENTOS DE LA CARTERA PARA PERMITIR O NO PERMITIR ELIMINARLA
+        foreach ($data as $value) {
+            $movimientos = Cartera::join('cartera_movs as cm', 'cm.cartera_id', 'carteras.id')
+                ->where('carteras.id', $value->id)
+                ->where('cm.tipoDeMovimiento', '!=', 'EGRESO/INGRESO')
+                ->where('cm.tipoDeMovimiento', '!=', 'CORTE')
+                ->get();
+            $value->movimientos = $movimientos->count();
+        }
 
         if ($this->tipo != 'Elegir') {
-            if ($this->tipo == 'Telefono') {
+            if ($this->tipo == 'Telefono' || $this->tipo == 'Sistema') {
                 $this->variable = 1;
             } else {
                 $this->variable = 0;
             }
         }
-        /* $cartera1 = Cartera::find(1);
-        $cantidad=$cartera1->carteraM->count();
-        dd($cantidad); */
+
         return view('livewire.cartera.component', [
             'data' => $data,
             'cajas' => Caja::orderBy('nombre', 'asc')->get()
@@ -56,13 +76,20 @@ class CarteraController extends Component
             ->extends('layouts.theme.app')
             ->section('content');
     }
+
+    public function Agregar()
+    {
+        $this->resetUI();
+        $this->emit('show-modal', 'show modal!');
+    }
+    
     public function Store()
     {
         $rules = [
             'nombre' => 'required|unique:carteras',
             'caja_id' => 'required|not_in:Elegir',
             'tipo' => 'required|not_in:Elegir',
-            'telefonoNum' => 'required_if:tipo,==,Telefono',
+            'telefonoNum' => 'required_if:variable,==,1',
         ];
         $messages = [
             'nombre.required' => 'Nombre de la cartera requerido.',
@@ -145,6 +172,7 @@ class CarteraController extends Component
         $this->tipo = 'Elegir';
         $this->telefonoNum = '';
         $this->selected_id = 0;
+        $this->variable = 0;
         $this->resetValidation();
     }
 }

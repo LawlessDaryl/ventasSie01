@@ -67,7 +67,7 @@ class CuentasController extends Component
         $this->meseRenovarProv = 1;
         $this->inicioNueva = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->expirationNueva = Carbon::parse(Carbon::now())->format('Y-m-d');
-        $this->start_account = Carbon::parse(Carbon::now())->format('Y-m-d');
+        $this->start_account = null;
         $this->tipopago = 'EFECTIVO';
         $this->importe = '';
         $this->correoCuenta = '';
@@ -100,6 +100,7 @@ class CuentasController extends Component
     }
     public function render()
     {
+
         if ($this->condicional == 'cuentas') {  /* cuentas libres y ocupadas */
             if ($this->EnterasDivididas != 'TODOS') {
                 if ($this->PlataformaFiltro != 'TODAS') {
@@ -1196,35 +1197,16 @@ class CuentasController extends Component
                 ->where('profiles.status', 'ACTIVO')
                 ->where('a.id', $this->selected_id)
                 ->get();
-
-            $cuenta = Account::find($this->selected_id);
-            /* CONTAR LOS PERFILES ACTIVOS Y DE LA CUENTA */
-            $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
-                ->join('profiles as p', 'ap.profile_id', 'p.id')
-                ->where('accounts.id', $this->selected_id)
-                ->where('p.status', 'ACTIVO')->get();
-            /* SI LA CUENTA TIENE LA CANTIDAD DE PERFILES MAXIMO DE ESA CUENTA - NO MOSTRAR CAMPOS */
-            if ($perfilesActivos->count() == $cuenta->number_profiles) {
-                $this->mostrarCampos = 1;
-            }
-            /* SI LA CUENTA TIENE MENOS DE LA CANTIDAD MAXIMA DE PERF - MOSTRAR CAMPOS */
-            if ($perfilesActivos->count() < $cuenta->number_profiles) {
-                $this->mostrarCampos = 0;
-            }
-            /* SI LA CUENTA TIENE CERO PERFILES - MOSTRAR CAMPOS */
-            if ($perfilesActivos->count() == 0) {
-                $this->mostrarCampos = 0;
-            }
         }
 
         /* CALCULAR FECHA DE FINALIZACION AL CREAR UNA NUEVA CUENTA */
-        if ($this->start_account) {
+        /* if ($this->start_account) {
             if ($this->mesesComprar > 0 && $this->mostrarRenovar == 0) {
                 $dias = $this->mesesComprar * 30;
                 $this->expiration_account = strtotime('+' . $dias . ' day', strtotime($this->start_account));
                 $this->expiration_account = date('Y-m-d', $this->expiration_account);
             }
-        }
+        } */
         /* MOSTRAR UNA NUEVA FECHA DE EXPIRACION SEGUN EL NUMERO DE MESES QUE ESCRIBA EL USUARIO EN RENOVAR PLAN*/
         if ($this->diasdePlan > 0) {
             if ($this->meses > 0) {
@@ -1484,49 +1466,6 @@ class CuentasController extends Component
                 'account_id' => $acc->id,
             ]);
 
-            /* $this->price /= $this->mesesComprar;
-            $dias = 30;
-            $fecha30diasdespues = strtotime('+' . $dias . ' day', strtotime($this->start_account));
-            $fecha30diasdespues = date('Y-m-d', $fecha30diasdespues);
-            for ($i = 0; $i < $this->mesesComprar; $i++) {
-                if ($i == 0) {
-                    CuentaInversion::create([
-                        'start_date' => $this->start_account,
-                        'expiration_date' => $fecha30diasdespues,
-                        'price' => $this->price,
-                        'number_profiles' => $this->number_profiles,
-                        'sale_profiles' => 0,
-                        'imports' => 0,
-                        'ganancia' => - ($this->price),
-                        'account_id' => $acc->id,
-                    ]);
-                } else {
-                    if ($i == 1) {
-                        $this->start_account = strtotime('+' . 1 . ' day', strtotime($fecha30diasdespues));
-                        $this->start_account = date('Y-m-d', $this->start_account);
-                    } else {
-                        $this->start_account = strtotime('+' . 1 . ' day', strtotime($this->expiration_account));
-                        $this->start_account = date('Y-m-d', $this->start_account);
-                    }
-
-                    $dias = 30;
-
-                    $this->expiration_account = strtotime('+' . $dias . ' day', strtotime($this->start_account));
-                    $this->expiration_account = date('Y-m-d', $this->expiration_account);
-
-                    CuentaInversion::create([
-                        'start_date' => $this->start_account,
-                        'expiration_date' => $this->expiration_account,
-                        'price' => $this->price,
-                        'number_profiles' => $this->number_profiles,
-                        'sale_profiles' => 0,
-                        'imports' => 0,
-                        'ganancia' => - ($this->price),
-                        'account_id' => $acc->id,
-                    ]);
-                }
-            } */
-
             DB::commit();
             $this->resetUI();
             $this->emit('item-added', 'Cuenta Registrada');
@@ -1559,6 +1498,7 @@ class CuentasController extends Component
 
         $this->selected_id = $acc->id;
         $this->selected = $acc->email_id;
+        $this->start_account = $acc->start_account;
         $this->expiration_account = $acc->expiration_account;
         $this->estado = $acc->status;
         $this->number_profiles = $acc->number_profiles;
@@ -1572,10 +1512,111 @@ class CuentasController extends Component
         $this->emit('modal-show', 'show modal!');
     }
 
+    public function Update()
+    {
+        $rules = [
+            'start_account' => 'required',
+            'expiration_account' => 'required',
+            'password_account' => 'required',
+            'number_profiles' => 'required|integer|gt:0',
+        ];
+
+        $messages = [
+            'start_account.required' => 'La fecha de inicio es requerida',
+            'expiration_account.required' => 'La fecha de fin es requerida',
+            'password_account.required' => 'La contraseña de la cuenta es requerida',
+            'number_profiles.required' => 'El numero de perfiles es requerido',
+            'number_profiles.integer' => 'El numero de perfiles debe ser un numero',
+            'number_profiles.gt' => 'El numero de perfiles debe ser mayor a 0',
+        ];
+
+        $this->validate($rules, $messages);
+
+        $acc = Account::find($this->selected_id);
+
+        $plataform = Platform::find($this->platform_id);
+
+        $correo = Email::find($acc->Correo->id);
+
+        DB::beginTransaction();
+        try {
+            $correo->update([
+                'pass' => $this->passwordGmail,
+            ]);
+            $correo->save();
+            // INCREMENTAR EL NUMERO DE PERFILES
+            if ($this->number_profiles > $acc->number_profiles) {
+                $cantidadCrear = $this->number_profiles - $acc->number_profiles;
+                /* CREAR PERFILES VACIOS */
+                for ($i = 0; $i < $cantidadCrear; $i++) {
+                    $perfil = Profile::create([
+                        'nameprofile' => 'emanuel' . rand(100, 999),
+                        'pin' => rand(1000, 9999),
+                    ]);
+                    AccountProfile::create([
+                        'status' => 'SinAsignar',
+                        'account_id' => $acc->id,
+                        'profile_id' => $perfil->id,
+                    ]);
+                }
+            } else {    //REDUCIR EL NUMERO DE PERFILES
+                $perfilBorrar = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
+                    ->join('profiles as p', 'p.id', 'ap.profile_id')
+                    ->select(
+                        'p.id as perfilID',
+                        'ap.id as apID'
+                    )
+                    ->where('accounts.id', $acc->id)
+                    ->where('p.availability', 'LIBRE')
+                    ->where('p.status', 'ACTIVO')
+                    ->orderBy('p.id', 'desc')
+                    ->get()->first();
+                try {
+                    $variable = $perfilBorrar->perfilID;
+                } catch (Exception $e) {
+                    $this->emit('item-error', "No puede reducir el numero de perfiles si todos los perfiles estan ocupados");
+                    return;
+                }
+                $accounProfB = AccountProfile::find($perfilBorrar->apID);
+                $accounProfB->delete();
+
+                $perfilB = Profile::find($perfilBorrar->perfilID);
+                $perfilB->delete();
+            }
+
+            if ($plataform->tipo == 'CORREO') {
+                $acc->update([
+                    'number_profiles' => $this->number_profiles,
+                    'start_account' => $this->start_account,
+                    'expiration_account' => $this->expiration_account,
+                    'password_account' => $this->password_account,
+                ]);
+                $acc->save();
+            } else {
+                $acc->update([
+                    'number_profiles' => $this->number_profiles,
+                    'start_account' => $this->start_account,
+                    'expiration_account' => $this->expiration_account,
+                    'password_account' => $this->password_account,
+                ]);
+                $acc->save();
+            }
+
+            DB::commit();
+            $this->resetUI();
+            $this->emit('item-updated', 'Cuenta Actualizada');
+        } catch (Exception $e) {
+            DB::rollback();
+            $this->emit('item-error', 'ERROR' . $e->getMessage());
+        }
+    }
+
     public function EditObservaciones(Plan $plan)
     {
         $this->selected_id = $plan->id;
         $this->observations = $plan->observations;
+        $this->start_account = $plan->plan_start;
+        $this->expiration_account = $plan->expiration_plan;
         $this->emit('modal-observaciones-show', 'show modal!');
     }
 
@@ -1583,48 +1624,10 @@ class CuentasController extends Component
     {
         $plan = Plan::find($this->selected_id);
         $plan->observations = $this->observations;
+        $plan->plan_start = $this->start_account;
+        $plan->expiration_plan = $this->expiration_account;
         $plan->save();
-        $this->emit('modal-observaciones-hide', 'Se actualizaron las observaciones del plan');
-    }
-
-    public function Update()
-    {
-        $rules = [
-            'password_account' => 'required',
-            'passwordGmail' => 'required_if:mostrarCorreo,SI',
-        ];
-
-        $messages = [
-            'password_account.required' => 'La contraseña de la cuenta es requerida',
-            'passwordGmail.required_if' => 'La contraseña del correo es requerida',
-        ];
-
-        $this->validate($rules, $messages);
-
-        $acc = Account::find($this->selected_id);
-        $plataform = Platform::find($this->platform_id);
-
-        $correo = Email::find($acc->Correo->id);
-        $correo->update([
-            'pass' => $this->passwordGmail,
-        ]);
-        $correo->save();
-
-        if ($plataform->tipo == 'CORREO') {
-            $acc->update([
-                'password_account' => $this->password_account,
-            ]);
-            $acc->save();
-        } else {
-            $acc->update([
-                'account_name' => $this->nombre_cuenta,
-                'password_account' => $this->password_account,
-            ]);
-            $acc->save();
-        }
-
-        $this->resetUI();
-        $this->emit('item-updated', 'Cuenta Actualizada');
+        $this->emit('modal-observaciones-hide', 'Se actualizaron los datos del plan');
     }
 
     public function InhabilitarCuenta(Account $cuenta)
@@ -1897,7 +1900,7 @@ class CuentasController extends Component
         $plancuenta->save();
 
         $this->resetUI();
-        $this->emit('cuenta-renovado-vencida', 'No se renovó esta cuenta y ahora esta libre');
+        $this->emit('cuenta-renovado-vencida', 'Se venció este plan');
     }
 
     public function CambiarCuenta()
@@ -1932,6 +1935,7 @@ class CuentasController extends Component
             ->where('accounts.number_profiles', $datos->number_profiles)
             ->get();
     }
+
     public function VerCuentas()
     {
         $this->emit('show-crearPerfil', 'show modal!');
@@ -2101,7 +2105,7 @@ class CuentasController extends Component
         $this->meses = 0;
         $this->meseRenovarProv = 1;
         $this->expirationNueva = Carbon::parse(Carbon::now())->format('Y-m-d');
-        $this->start_account = Carbon::parse(Carbon::now())->format('Y-m-d');
+        $this->start_account = null;
         $this->tipopago = 'EFECTIVO';
         $this->importe = '';
         $this->correoCuenta = '';

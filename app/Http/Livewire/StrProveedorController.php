@@ -52,6 +52,11 @@ class StrProveedorController extends Component
             ->section('content');
     }
 
+    public function Agregar()
+    {
+        $this->resetUI();
+        $this->emit('show-modal', 'show modal!');
+    }
 
     public function Store()
     {
