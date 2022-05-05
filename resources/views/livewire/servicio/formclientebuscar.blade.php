@@ -44,7 +44,7 @@
                                                     <tr>
                                                         <th class="table-th text-withe text-center ">Cédula</th>
                                                         <th class="table-th text-withe text-center">Nombre</th>
-                                                        <th class="table-th text-withe text-center">Teléfono</th>
+                                                        <th class="table-th text-withe text-center">Celular</th>
                                                         <th class="table-th text-withe text-center">Acción</th>
                                                     </tr>
                                                 </thead>

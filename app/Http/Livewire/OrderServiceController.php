@@ -962,6 +962,7 @@ class OrderServiceController extends Component
     public function buscarid($id)
     {
         session(['orderserv' => $id]);
+        $this->opciones = 'TODOS';
         /* $this->redirect('orderservice'); */
         return redirect()->intended("orderservice");
     }

@@ -531,14 +531,14 @@
                     <li>
                         <a href="{{ url('catprodservice') }}">
                             <i class="fa-solid fa-laptop"></i>
-                            Categoria Producto Servicio </a>
+                            Categoria Equipo </a>
                     </li>
                 @endcan
                 @can('SubCat_Prod_Service_Index')
                     <li>
                         <a href="{{ url('subcatprodservice') }}">
                             <i class="fa-solid fa-mobile-screen-button"></i>
-                            Sub Categoria Producto Servicio </a>
+                            Sub Categ. Equipo </a>
                     </li>
                 @endcan
                 @can('Type_Work_Index')

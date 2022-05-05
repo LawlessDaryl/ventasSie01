@@ -297,7 +297,15 @@
                                 @foreach ($data as $d)
                                     <tr>
                                         <td class="text-center"
-                                            style="{{ substr($d->horas, 0, 3) <= 24? 'background-color: #FF0000 !important': 'background-color: #ff851b !important' }}">
+                                            @if (substr($d->horas, 0, 3) <= 2)
+                                                style="background-color: #FF0000 !important">
+                                            @elseif(substr($d->horas, 0, 3) == 3)
+                                                style="background-color: #d6ec02 !important">
+                                            @elseif(substr($d->horas, 0, 3) >= 4)
+                                                style="background-color: #00eb15 !important">
+                                            @endif
+
+                                            {{-- style="{{ substr($d->horas, 0, 3) <= 24? 'background-color: #FF0000 !important': 'background-color: #d6ec02 !important' }}"> --}}
                                             <h6>{{ $loop->iteration }}</h6>
                                         </td>
                                         @foreach ($d->movservices as $mv)
@@ -306,7 +314,24 @@
                                                 </h6>
                                             </td>
                                             <td class="text-center">
-                                                <h6>{{ $d->horas }}</h6>
+                                                @php
+                                                    $x=0;
+                                                @endphp
+                                                @if ($d->horas >= 24)
+                                                @php
+                                                    $x= ($d->horas) / 24;
+                                                     
+                                                @endphp
+                                                <h6>{{ intval($x) }} días<h6>
+                                                @else
+                                                     @if ($d->horas == 'EXPIRADO')
+                                                     <h6>{{ $d->horas }}</h6>
+                                                     @else
+                                                     <h6>{{ $d->horas }} horas</h6>
+                                                     @endif
+                                                
+                                                @endif
+                                                
                                             </td>
                                             {{-- <td class="text-center">
                                                 <h6>{{ $d->minutos }}</h6>
@@ -339,7 +364,14 @@
                                 @foreach ($data as $d2)
                                     <tr>
                                         <td class="text-center"
-                                            style="{{ substr($d2->horas, 0, 3) <= 24? 'background-color: #FF0000 !important': 'background-color: #ff851b !important' }}">
+                                        @if (substr($d2->horas, 0, 3) <= 2)
+                                            style="background-color: #FF0000 !important">
+                                        @elseif(substr($d2->horas, 0, 3) == 3)
+                                            style="background-color: #d6ec02 !important">
+                                        @elseif(substr($d2->horas, 0, 3) >= 4)
+                                            style="background-color: #00eb15 !important">
+                                        @endif
+                                        {{-- style="{{ substr($d2->horas, 0, 3) <= 24? 'background-color: #FF0000 !important': 'background-color: #d6ec02 !important' }}"> --}}
                                             <h6>{{ $loop->iteration }}</h6>
                                         </td>
                                         @foreach ($d2->movservices as $mv2)
@@ -349,7 +381,22 @@
                                                     </h6>
                                                 </td>
                                                 <td class="text-center">
-                                                    <h6>{{ $d2->horas }}</h6>
+                                                    @php
+                                                    $x=0;
+                                                @endphp
+                                                @if ($d2->horas >= 24)
+                                                @php
+                                                    $x= ($d2->horas) / 24;
+                                                @endphp
+                                                <h6>{{ intval($x) }} días<h6>
+                                                @else
+                                                     @if ($d2->horas == 'EXPIRADO')
+                                                     <h6>{{ $d2->horas }}</h6>
+                                                     @else
+                                                     <h6>{{ $d2->horas }} horas</h6>
+                                                     @endif
+                                                
+                                                @endif
                                                 </td>
                                             @endif
                                         @endforeach
@@ -382,7 +429,14 @@
                                 @foreach ($data as $d3)
                                     <tr>
                                         <td class="text-center"
-                                            style="{{ substr($d3->horas, 0, 3) <= 24? 'background-color: #FF0000 !important': 'background-color: #ff851b !important' }}">
+                                            @if (substr($d3->horas, 0, 3) <= 2)
+                                                style="background-color: #FF0000 !important">
+                                            @elseif(substr($d3->horas, 0, 3) == 3)
+                                                style="background-color: #d6ec02 !important">
+                                            @elseif(substr($d3->horas, 0, 3) >= 4)
+                                                style="background-color: #00eb15 !important">
+                                            @endif    
+                                            {{-- style="{{ substr($d3->horas, 0, 3) <= 24? 'background-color: #FF0000 !important': 'background-color: #d6ec02 !important' }}"> --}}
                                             <h6>{{ $loop->iteration }}</h6>
                                         </td>
                                         @foreach ($d3->movservices as $mv3)
@@ -429,7 +483,14 @@
                                 @foreach ($data as $d4)
                                     <tr>
                                         <td class="text-center"
-                                            style="{{ substr($d4->horas, 0, 3) <= 24? 'background-color: #FF0000 !important': 'background-color: #ff851b !important' }}">
+                                        @if (substr($d4->horas, 0, 3) <= 2)
+                                            style="background-color: #FF0000 !important">
+                                        @elseif(substr($d4->horas, 0, 3) == 3)
+                                            style="background-color: #d6ec02 !important">
+                                        @elseif(substr($d4->horas, 0, 3) >= 4)
+                                            style="background-color: #00eb15 !important">
+                                        @endif
+                                            {{-- style="{{ substr($d4->horas, 0, 3) <= 24? 'background-color: #FF0000 !important': 'background-color: #d6ec02 !important' }}"> --}}
                                             <h6>{{ $loop->iteration }}</h6>
                                         </td>
                                         @foreach ($d4->movservices as $mv4)
@@ -476,7 +537,14 @@
                                 @foreach ($data as $d5)
                                     <tr>
                                         <td class="text-center"
-                                            style="{{ substr($d5->horas, 0, 3) <= 24? 'background-color: #FF0000 !important': 'background-color: #ff851b !important' }}">
+                                        @if (substr($d5->horas, 0, 3) <= 2)
+                                            style="background-color: #FF0000 !important">
+                                        @elseif(substr($d5->horas, 0, 3) == 3)
+                                            style="background-color: #d6ec02 !important">
+                                        @elseif(substr($d5->horas, 0, 3) >= 4)
+                                            style="background-color: #00eb15 !important">
+                                        @endif
+                                            {{-- style="{{ substr($d5->horas, 0, 3) <= 24? 'background-color: #FF0000 !important': 'background-color: #d6ec02 !important' }}"> --}}
                                             <h6>{{ $loop->iteration }}</h6>
                                         </td>
                                         @foreach ($d5->movservices as $mv5)

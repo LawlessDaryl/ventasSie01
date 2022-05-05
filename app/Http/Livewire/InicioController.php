@@ -236,7 +236,7 @@ class InicioController extends Component
                             $date2 = new DateTime("now");
                             $diff = $date2->diff($date1);
                             if ($diff->invert != 1) {
-                                $c->horas = (($diff->days * 24)) + ($diff->h) . ' horas';
+                                $c->horas = (($diff->days * 24)) + ($diff->h) /* . ' horas' */;
                             } else {
                                 $c->horas = 'EXPIRADO';
                             }
@@ -262,7 +262,7 @@ class InicioController extends Component
                         $date2 = new DateTime("now");
                         $diff = $date2->diff($date1);
                         if ($diff->invert != 1) {
-                            $c->horas = (($diff->days * 24)) + ($diff->h) . ' horas';
+                            $c->horas = (($diff->days * 24)) + ($diff->h) /* . ' horas' */;
                         } else {
                             $c->horas = 'EXPIRADO';
                         }
@@ -297,7 +297,7 @@ class InicioController extends Component
                             $date2 = new DateTime("now");
                             $diff = $date2->diff($date1);
                             if ($diff->invert != 1) {
-                                $c->horas = (($diff->days * 24)) + ($diff->h) . ' horas';
+                                $c->horas = (($diff->days * 24)) + ($diff->h) /* . ' horas' */;
                             } else {
                                 $c->horas = 'EXPIRADO';
                             }
@@ -327,7 +327,7 @@ class InicioController extends Component
                         $date2 = new DateTime("now");
                         $diff = $date2->diff($date1);
                         if ($diff->invert != 1) {
-                            $c->horas = (($diff->days * 24)) + ($diff->h) . ' horas';
+                            $c->horas = (($diff->days * 24)) + ($diff->h)/*  . ' horas' */;
                         } else {
                             $c->horas = 'EXPIRADO';
                         }
@@ -551,7 +551,7 @@ class InicioController extends Component
                         $date2 = new DateTime("now");
                         $diff = $date2->diff($date1);
                         if ($diff->invert != 1) {
-                            $c->horas = (($diff->days * 24)) + ($diff->h) . ' horas';
+                            $c->horas = (($diff->days * 24)) + ($diff->h) /* . ' horas' */;
                         } else {
                             $c->horas = 'EXPIRADO';
                         }
@@ -582,7 +582,7 @@ class InicioController extends Component
                         $date2 = new DateTime("now");
                         $diff = $date2->diff($date1);
                         if ($diff->invert != 1) {
-                            $c->horas = (($diff->days * 24)) + ($diff->h) . ' horas';
+                            $c->horas = (($diff->days * 24)) + ($diff->h) /* . ' horas' */;
                         } else {
                             $c->horas = 'EXPIRADO';
                         }
@@ -617,7 +617,7 @@ class InicioController extends Component
                         $date2 = new DateTime("now");
                         $diff = $date2->diff($date1);
                         if ($diff->invert != 1) {
-                            $c->horas = (($diff->days * 24)) + ($diff->h) . ' horas';
+                            $c->horas = (($diff->days * 24)) + ($diff->h) /* . ' horas' */;
                         } else {
                             $c->horas = 'EXPIRADO';
                         }
@@ -648,7 +648,7 @@ class InicioController extends Component
                         $date2 = new DateTime("now");
                         $diff = $date2->diff($date1);
                         if ($diff->invert != 1) {
-                            $c->horas = (($diff->days * 24)) + ($diff->h) . ' horas';
+                            $c->horas = (($diff->days * 24)) + ($diff->h) /* . ' horas' */;
                         } else {
                             $c->horas = 'EXPIRADO';
                         }

@@ -167,6 +167,16 @@ class ServiciosController extends Component
 
     public function Seleccionar($id)
     {
+
+        $rules = [
+            'celular' => 'nullable|digits:8'
+        ];
+        $messages = [
+            'celular.digits' => 'El celular debe tener 8 numeros'
+        ];
+
+        $this->validate($rules, $messages);
+
         $this->cliente = Cliente::find($id);
         if ($this->celular != '') {
             $this->cliente->update([
