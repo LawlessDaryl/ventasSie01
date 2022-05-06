@@ -102,6 +102,7 @@ class ServiciosController extends Component
             ->join('sucursals as suc', 'suc.id', 'suu.sucursal_id')
             ->where('p.name', 'Recepcionar_Servicio')
             ->where('suc.id', $this->sucursal)
+            ->where('users.status','ACTIVE')
             /* ->where('r.name', 'TECNICO')
             ->orWhere('r.name', 'SUPERVISOR_TECNICO')
             ->where('p.name', 'Orden_Servicio_Index')

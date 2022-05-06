@@ -27,8 +27,8 @@
                 </td>
             </tr>
             <tr>
-                <td width="30%" align="center" style="vertical-align: top; padding-top:10px; position:relative;">
-                    <img src="{{ asset('assets/img/sie.png') }}" alt="" class="invoice-logo">
+                <td width="30%" align="center" style="vertical-align: top; padding-top:-10px; position:relative;">
+                    <img src="{{ asset('assets/img/sie.png') }}" alt="" class="invoice-logo" width="70" height="70">
                 </td>
 
                 <td width="70%" class="text-left text-company" style="vertical-align: top; padding-top:10px;">
@@ -54,7 +54,7 @@
         </table>
     </section>
 
-    <section style="margin-top: -110px;">
+    <section style="margin-top: -160px;">
         <table cellpadding="0" cellspacing="-1" class="table-items" width="100%" height="50%">
             <thead>
                 <tr>

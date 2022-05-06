@@ -59,6 +59,7 @@ class ReporteServiceController extends Component
         ->join('role_has_permissions as rp', 'r.id', 'rp.role_id')
         ->join('permissions as p', 'p.id', 'rp.permission_id')
         ->where('p.name','Recepcionar_Servicio')
+        ->where('users.status','ACTIVE')
         /* ->where('r.name','TECNICO')
         ->orWhere('r.name', 'SUPERVISOR')
         ->where('p.name','Orden_Servicio_Index')

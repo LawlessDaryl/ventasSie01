@@ -63,7 +63,7 @@ class OrderServiceController extends Component
         $this->costo = 0;
         $this->detalle_costo = '';
         $this->nombreUsuario = '';
-        $this->opciones = 'PENDIENTE';
+        $this->opciones = 'TODOS';
         $this->tipopago = 'EFECTIVO';
         $this->dateFrom = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->dateTo = Carbon::parse(Carbon::now())->format('Y-m-d');
