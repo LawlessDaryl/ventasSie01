@@ -393,7 +393,7 @@ class ServiciosController extends Component
     {
         $movimiento_Serv = Service::join('mov_services as ms', 'ms.service_id', 'services.id')
             ->join('movimientos as m', 'ms.movimiento_id', 'm.id')
-            ->select('m.on_account as on_account', 'm.saldo as saldo', 'm.import as import', 'm.type')
+            ->select('m.on_account as on_account', 'm.saldo as saldo', 'm.import as import', 'm.type', 'm.user_id as user_id')
             ->where('services.id', $service->id)
             ->where('m.status', 'ACTIVO')
             ->get()->first();
@@ -411,6 +411,7 @@ class ServiciosController extends Component
         $this->import = $movimiento_Serv->import;
         $this->on_account = $movimiento_Serv->on_account;
         $this->saldo = $movimiento_Serv->saldo;
+        $this->userId = $movimiento_Serv->user_id;
         $this->opciones = $movimiento_Serv->type;
         $this->emit('modal-show', 'show modal!');
 
@@ -525,6 +526,7 @@ class ServiciosController extends Component
                     'import' => $this->import,
                     'on_account' => $this->on_account,
                     'saldo' => $this->saldo,
+                    'user_id' => $this->userId
                 ]);
             }
 

@@ -63,7 +63,7 @@ class OrderServiceController extends Component
         $this->costo = 0;
         $this->detalle_costo = '';
         $this->nombreUsuario = '';
-        $this->opciones = 'TODOS';
+        $this->opciones = 'PENDIENTE';
         $this->tipopago = 'EFECTIVO';
         $this->dateFrom = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->dateTo = Carbon::parse(Carbon::now())->format('Y-m-d');
@@ -334,10 +334,12 @@ class OrderServiceController extends Component
             if (!empty(session('orderserv'))) {
                 $this->search = session('orderserv');
                 session(['orderserv' => null]);
+                $this->opciones = 'TODOS';
                 $orderservices = OrderService::where('id', $this->search)
                     ->orderBy('order_services.id', 'desc')
                     ->paginate($this->pagination);
             } else {
+                /* $this->opciones = 'PENDIENTE'; */
                 if (strlen($this->search) > 0) {
                     if ($this->opciones == 'TODOS') {
                         $orderservices = OrderService::join('services as s', 'order_services.id', 's.order_service_id')
@@ -663,12 +665,13 @@ class OrderServiceController extends Component
             ->join('roles as r', 'r.id', 'mr.role_id')
             ->join('role_has_permissions as rp', 'r.id', 'rp.role_id')
             ->join('permissions as p', 'p.id', 'rp.permission_id')
-            ->where('p.name', 'Orden_Servicio_Index')
-            ->where('r.name', 'TECNICO')
+            ->where('p.name', 'Recepcionar_Servicio')
+            ->where('users.status','ACTIVE')
+            /* ->where('r.name', 'TECNICO')
             ->orWhere('r.name', 'SUPERVISOR')
             ->where('p.name', 'Orden_Servicio_Index')
             ->orWhere('r.name', 'ADMIN')
-            ->where('p.name', 'Orden_Servicio_Index')
+            ->where('p.name', 'Orden_Servicio_Index') */
             ->select('users.*')
             ->orderBy('name', 'asc')
             ->distinct()
@@ -962,7 +965,7 @@ class OrderServiceController extends Component
     public function buscarid($id)
     {
         session(['orderserv' => $id]);
-        $this->opciones = 'TODOS';
+        /* $this->opciones = 'TODOS'; */
         /* $this->redirect('orderservice'); */
         return redirect()->intended("orderservice");
     }

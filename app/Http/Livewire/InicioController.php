@@ -328,8 +328,10 @@ class InicioController extends Component
                         $diff = $date2->diff($date1);
                         if ($diff->invert != 1) {
                             $c->horas = (($diff->days * 24)) + ($diff->h)/*  . ' horas' */;
+                            /* $c->minutos = (($diff->days * 24* 60)) + ($diff->i); */
                         } else {
                             $c->horas = 'EXPIRADO';
+                            /* $c->minutos = 'EXPIRADO'; */
                         }
                     }
                 }

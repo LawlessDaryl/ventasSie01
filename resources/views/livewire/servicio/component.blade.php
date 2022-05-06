@@ -125,9 +125,9 @@
                 <ul class="tabs tab-pills">
                     @if (!empty(session('od')))
                         <a class="btn btn-dark mb-2" href="{{ url('reporte/pdf' . '/' . $orderservice) }}" 
-                        target="_blank" wire:click="ResetSession">Guardar</a>
+                        target="_blank" wire:click="ResetSession">IMPRIMIR</a>
                     @endif
-                    <button class="btn btn-dark mb-2" wire:click="ResetSession">Salir</button>
+                    <button class="btn btn-dark mb-2" wire:click="ResetSession">IR A SERVICIOS</button>
                 </ul>
             </div>
         </div>
