@@ -46,8 +46,6 @@ class ProductsController extends Component
             $this->selected_sub=null;
            
         }
-      
-        
     }
 
     public function render()
@@ -57,7 +55,7 @@ class ProductsController extends Component
           
         if ($this->selected_sub == null) {
             $prod = Product::join('categories as c', 'products.category_id','c.id')
-            ->select('products.*', 'c.name as category')
+            ->select('products.*', 'c.name as cate')
             ->where('products.status',$this->estados)
 
             ->where(function($query){
@@ -75,7 +73,7 @@ class ProductsController extends Component
         else{
            
             $prod = Product::join('categories as c', 'products.category_id','c.id')
-            ->select('products.*', 'c.name as category')
+            ->select('products.*', 'c.name as cate')
             ->where('c.id',$this->selected_sub)
             ->where('products.status',$this->estados)
             ->where(function($query){
@@ -93,7 +91,7 @@ class ProductsController extends Component
 
         
         $prod = Product::join('categories as c', 'products.category_id','c.id')
-        ->select('products.*', 'c.name as category')
+        ->select('products.*', 'c.name as cate')
         ->where('products.status',$this->estados)
         ->where('products.nombre', 'like', '%' . $this->search . '%')
         ->orWhere('products.codigo', 'like', '%' . $this->search . '%')

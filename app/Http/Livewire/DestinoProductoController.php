@@ -25,7 +25,7 @@ class DestinoProductoController extends Component
     
     public function mount()
     {
-        $this->selected_id=0;
+        $this->selected_id="General";
         $this->componentName='crear';
         $this->title='ssss';
       
@@ -37,12 +37,28 @@ class DestinoProductoController extends Component
 
             if($this->selected_id === 'General')
 
-             $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
-                                        ->join('destinos as dest','dest.id','productos_destinos.destino_id')
-                                        ->select(DB::raw('SUM(productos_destinos.stock) as stock_s'),'p.nombre as name',
-                                        'p.cantidad_minima as cant_min')
-                                        ->groupBy('productos_destinos.product_id')
-                                        ->paginate($this->pagination);
+            if (strlen($this->search) > 0) {
+                $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
+                ->join('destinos as dest','dest.id','productos_destinos.destino_id')
+                ->select(DB::raw('SUM(productos_destinos.stock) as stock_s'),'p.nombre as name',
+                'p.cantidad_minima as cant_min')
+                ->where('p.nombre', 'like', '%' . $this->search . '%')
+                ->groupBy('productos_destinos.product_id')
+                
+                ->paginate($this->pagination);
+
+            }
+            else{
+                $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
+                ->join('destinos as dest','dest.id','productos_destinos.destino_id')
+                ->select(DB::raw('SUM(productos_destinos.stock) as stock_s'),'p.nombre as name',
+                'p.cantidad_minima as cant_min')
+                ->groupBy('productos_destinos.product_id')
+                
+                ->paginate($this->pagination);
+            }
+
+             
             else
              $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
                                         ->join('destinos as dest','dest.id','productos_destinos.destino_id')
@@ -74,7 +90,7 @@ class DestinoProductoController extends Component
                                         ->select ('suc.name as sucursal','destinos.nombre as destino','destinos.id')
                                         ->orderBy('suc.name','asc');
 
-                                    
+                           
 
         return view('livewire.destino_producto.almacen_productos',['destinos_almacen'=>$almacen,'data_suc' =>  $sucursal_ubicacion->get(),
         'data_cat'=>Category::select('categories.name')->where('categories.categoria_padre','0')->get()

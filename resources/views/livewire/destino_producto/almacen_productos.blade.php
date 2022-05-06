@@ -32,7 +32,7 @@
                             </div>
                 </div>
                 
-                <div class="col-12 col-lg-2 col-md-3">
+                <div class="col-12 col-lg-5 col-md-3">
 
                     <div class="form-group">
                         <select wire:model='selected_id' class="form-control">
@@ -45,46 +45,61 @@
                         </select>
                       </div>
                 </div>
-                <div class="col-12 col-lg-2 col-md-3">
-
-                    <div class="form-group">
-                        <select wire:model='selected_categoria' class="form-control">
-                          <option value="null">Elegir Categoria</option>
-                          @foreach ($data_cat as $data)
-                          <option value="{{ $data->id }}">{{ $data->name}}</option>
-                          @endforeach
-                       
-                         
-                        </select>
-                      </div>
-                </div>
             </div>
           
             <div class="row" >
-                    <div class="col-12 col-lg-12 col-md-4 d-flex flex-lg-wrap flex-wrap flex-md-wrap flex-xl-wrap flex-sm-wrap">
 
-                      @foreach($destinos_almacen as $destino)
-                      
-                        <div class="card border-success" style="width: 13rem; margin:0.1rem">
-                        
-                            <div class="card-header"><h6> {{$destino->name}}</h6></div>
-                            <div class="card-body text-success">
-
-                             {{--<h5 class="card-title">{{$destino->tipo}}-{{$destino->codigo}}</h5>--}} 
-                             @if($selected_id == 'General' || $selected_id == null)
-                             <p class="card-text"> <strong> Stock total Disponible:</strong> {{$destino->stock_s }}</p>
-                             <p class="card-text"> <strong>Cantidad minima:</strong> {{$destino->cant_min}}</p>
-                             @else
-                               <p class="card-text"> <strong> Stock Disponible:</strong> {{$destino->stock}}</p>
-                               <p class="card-text"> <strong>Mobilirio ubicacion</strong> {{$destino->tipo}}-{{$destino->codigo}}</p>
-                             @endif
-                             </div>
-                           </div>
-                           
-                          
-                      @endforeach
-
-                    </div>
+             
+                <div class="table-responsive">
+                    <table class="table table-unbordered table-hover mt-2">
+                        <thead class="text-white" style="background: #3B3F5C">
+                            <tr>
+                                <th class="table-th text-withe text-center">ITEM</th>
+                                <th class="table-th text-withe text-center">PRODUCTO</th>                              
+                                <th class="table-th text-withe text-center">STOCK</th>   
+                                @if ($selected_id == 'General' || $selected_id == null)
+                                <th class="table-th text-withe text-center">CANT.MIN</th>                                       
+                                @endif                           
+                                <th class="table-th text-withe text-center">ACCIONES</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($destinos_almacen as $destino)
+                                <tr>
+                                    <td>
+                                        <h6 class="text-center">{{ $loop->iteration}}</h6>
+                                    </td>
+                                    <td>
+                                        <h6 class="text-center">{{ $destino->name}}</h6>
+                                    </td>
+                                    @if ($selected_id == 'General' || $selected_id == null)
+                                    <td>
+                                      <h6 class="text-center">{{ $destino->stock_s }}</h6>
+                                  </td>
+                                    <td>
+                                      <h6 class="text-center">{{ $destino->cant_min }}</h6>
+                                  </td>
+                                    @else
+                                    <td>
+                                      <h6 class="text-center">{{ $destino->stock }}</h6>
+                                  </td>
+                                    @endif
+                                    
+                                    
+                                    <td class="text-center">
+                                        <a href="javascript:void(0)" wire:click="verMobiliario({{ $data->id }})"
+                                            class="btn btn-dark mtmobile" title="Edit">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    {{$destinos_almacen->links() }}
+                
+            </div>
+                 
                     </div>
                   
             </div>
