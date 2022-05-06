@@ -658,6 +658,7 @@ class PerfilesController extends Component
 
     public function EditCombo(Plan $plan, Cliente $cliente)
     {
+        $this->resetUI();
         $this->selected_id = $plan->id;
         $this->observations = $plan->observations;
         $this->start_account = $plan->plan_start;
@@ -830,6 +831,7 @@ class PerfilesController extends Component
 
     public function AccionesCombo(Plan $plan)
     {
+        $this->resetUI();
         $this->selected_plan = $plan->id;
 
         $this->data = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
@@ -1815,6 +1817,7 @@ class PerfilesController extends Component
 
     public function Acciones(Plan $plan)
     {
+        $this->resetUI();
         $this->selected_plan = $plan->id;
         /* OBTENER FECHA DE EXPIRACION DEL PLAN PARA CALCULAR LA FECHA DE EXPIRACION NUEVA */
         $this->data = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
@@ -2304,6 +2307,7 @@ class PerfilesController extends Component
 
     public function EditObservaciones(Plan $plan, Profile $perfil, Cliente $cliente)
     {
+        $this->resetUI();
         $this->selected_plan = $plan->id;
         $this->observations = $plan->observations;
         $this->start_account = $plan->plan_start;

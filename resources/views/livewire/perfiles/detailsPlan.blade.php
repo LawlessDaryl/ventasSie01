@@ -142,7 +142,9 @@
                             @enderror
                         </div>
                     </div>
+                </div>
 
+                <div class="row">
                     <div class="col-sm-12">
                         <div class="form-group custom-file">
                             <input type="file" class="custom-file-input form-control" wire:model="comprobante"
@@ -150,7 +152,6 @@
                             <label class="custom-file-label">Comprobante {{ $comprobante }}</label>
                         </div>
                     </div>
-
                     <div class="col-sm-12 col-md-12">
                         <div class="form-group">
                             <h6>Observaciones del plan // Escriba un nuevo comentario si va a renovar, vencer o
@@ -158,6 +159,9 @@
                             <input type="text" wire:model.lazy="observations" class="form-control">
                         </div>
                     </div>
+                </div>
+
+                <div class="row">
 
                     <div class="col-sm-12 col-md-4">
                         <div class="form-group text-center mt-4">
@@ -182,84 +186,85 @@
                                 otra cuenta (Cambiar)</a>
                         </div>
                     </div>
-
-                    @if ($mostrartabla2 == 1)
-                        <div class="col-sm-12 col-md-12">
-                            <div class="statbox widget box box-shadow">
-                                <div class="widget-content widget-content-area row">
-                                    <div class="table-responsive table-wrapper-scroll-y my-custom-scrollbar">
-                                        <table class="table table-hover table-sm" style="width:100%">
-                                            <thead class="text-white" style="background: #3B3F5C">
-                                                <tr>
-                                                    <th class="table-th text-withe text-center">Email</th>
-                                                    <th class="table-th text-withe text-center">Max perfiles
-                                                    </th>
-                                                    <th class="table-th text-withe text-center">Fecha vencimiento
-                                                    </th>
-                                                    <th class="table-th text-withe text-center">Espacios</th>
-                                                    <th class="table-th text-withe text-center">Seleccionar</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @if ($cuentasEnteras->count() == 0)
+                    <div class="row">
+                        @if ($mostrartabla2 == 1)
+                            <div class="col-sm-12 col-md-12">
+                                <div class="statbox widget box box-shadow">
+                                    <div class="widget-content widget-content-area row">
+                                        <div class="table-responsive table-wrapper-scroll-y my-custom-scrollbar">
+                                            <table class="table table-hover table-sm" style="width:100%">
+                                                <thead class="text-white" style="background: #3B3F5C">
                                                     <tr>
-                                                        <td colspan="5">
-                                                            <h6 class="text-center">No tiene cuentas para hacer
-                                                                el cambio</h6>
-                                                        </td>
+                                                        <th class="table-th text-withe text-center">Email</th>
+                                                        <th class="table-th text-withe text-center">Max perfiles
+                                                        </th>
+                                                        <th class="table-th text-withe text-center">Fecha vencimiento
+                                                        </th>
+                                                        <th class="table-th text-withe text-center">Espacios</th>
+                                                        <th class="table-th text-withe text-center">Seleccionar</th>
                                                     </tr>
-                                                @endif
-                                                @if ($cuentasEnteras)
-                                                    @foreach ($cuentasEnteras as $item)
-                                                        @if ($item->cantiadadQueSePuedeCrear > 0)
-                                                            <tr>
-                                                                <td class="text-center">
-                                                                    <h6 class="text-center">
-                                                                        {{ $item->account_name }}
-                                                                    </h6>
-                                                                </td>
-                                                                <td class="text-center">
-                                                                    <h6 class="text-center">
-                                                                        {{ $item->number_profiles }}
-                                                                    </h6>
-                                                                </td>
-                                                                <td class="text-center">
-                                                                    <h6 class="text-center">
-                                                                        {{ \Carbon\Carbon::parse($item->expiration_account)->format('d/m/Y') }}
-                                                                    </h6>
-                                                                </td>
-                                                                <td class="text-center">
-                                                                    <h6 class="text-center">
-                                                                        {{ $item->cantiadadQueSePuedeCrear }}
-                                                                    </h6>
-                                                                </td>
-                                                                <td class="text-center">
-                                                                    <h6 class="text-center">
-                                                                        <a href="javascript:void(0)"
-                                                                            class="btn btn-dark"
-                                                                            onclick="ConfirmCambiar('{{ $item->id }}','{{ $nameperfil }}','{{ $item->account_name }}')">
-                                                                            <i class="fas fa-check"></i>
-                                                                        </a>
-                                                                    </h6>
-                                                                </td>
-                                                            </tr>
-                                                        @endif
-                                                    @endforeach
-                                                @else
-                                                    <tr>
-                                                        <td colspan="5">
-                                                            <h6 class="text-center">No tienes perfiles de esa
-                                                                plataforma</h6>
-                                                        </td>
-                                                    </tr>
-                                                @endif
-                                            </tbody>
-                                        </table>
+                                                </thead>
+                                                <tbody>
+                                                    @if ($cuentasEnteras->count() == 0)
+                                                        <tr>
+                                                            <td colspan="5">
+                                                                <h6 class="text-center">No tiene cuentas para hacer
+                                                                    el cambio</h6>
+                                                            </td>
+                                                        </tr>
+                                                    @endif
+                                                    @if ($cuentasEnteras)
+                                                        @foreach ($cuentasEnteras as $item)
+                                                            @if ($item->cantiadadQueSePuedeCrear > 0)
+                                                                <tr>
+                                                                    <td class="text-center">
+                                                                        <h6 class="text-center">
+                                                                            {{ $item->account_name }}
+                                                                        </h6>
+                                                                    </td>
+                                                                    <td class="text-center">
+                                                                        <h6 class="text-center">
+                                                                            {{ $item->number_profiles }}
+                                                                        </h6>
+                                                                    </td>
+                                                                    <td class="text-center">
+                                                                        <h6 class="text-center">
+                                                                            {{ \Carbon\Carbon::parse($item->expiration_account)->format('d/m/Y') }}
+                                                                        </h6>
+                                                                    </td>
+                                                                    <td class="text-center">
+                                                                        <h6 class="text-center">
+                                                                            {{ $item->cantiadadQueSePuedeCrear }}
+                                                                        </h6>
+                                                                    </td>
+                                                                    <td class="text-center">
+                                                                        <h6 class="text-center">
+                                                                            <a href="javascript:void(0)"
+                                                                                class="btn btn-dark"
+                                                                                onclick="ConfirmCambiar('{{ $item->id }}','{{ $nameperfil }}','{{ $item->account_name }}')">
+                                                                                <i class="fas fa-check"></i>
+                                                                            </a>
+                                                                        </h6>
+                                                                    </td>
+                                                                </tr>
+                                                            @endif
+                                                        @endforeach
+                                                    @else
+                                                        <tr>
+                                                            <td colspan="5">
+                                                                <h6 class="text-center">No tienes perfiles de esa
+                                                                    plataforma</h6>
+                                                            </td>
+                                                        </tr>
+                                                    @endif
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    @endif
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>

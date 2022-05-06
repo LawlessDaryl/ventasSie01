@@ -189,30 +189,13 @@
                                                 @endforeach
                                             </tbody>
                                         </table>
-                                        {{-- <tfoot>
-                                                <tr>
-                                                    <td colspan="1" class="text-left">
-                                                        <span><b>TOTAL: </b></span>
-                                                    </td>
-                                                    <td class="text-right " colspan="2">
-                                                        <span><strong>
-                                                                @if ($accounts->count() > 0)
-                                                                    Bs.
-                                                                    {{ number_format($accounts[0]->Plataforma->precioEntera, 2) * $accounts->Count() * $meses }}
-                                                                @endif
-                                                            </strong></span>
-                                                    </td>
-                                                </tr>
-                                            </tfoot> --}}
                                     </div>
                                 </div>
                             </div>
                         @endif
                     @endif
                     @if ($mostrartabla == 2)
-
                         <div class="col-sm-12 col-md-12">
-
                             <div class="widget-content widget-content-area row">
                                 <h6>SELECCIONE UNA CUENTA PARA SUMAR UN PERFIL</h6>
                                 <div class="table-responsive table-wrapper-scroll-y my-custom-scrollbar">
@@ -359,25 +342,6 @@
                                                     </tr>
                                                 @endforeach
                                             </tbody>
-                                            {{-- <tfoot>
-                                                <tr>
-                                                    <td colspan="1" class="text-left">
-                                                        <span><b>TOTAL: </b></span>
-                                                    </td>
-                                                    <td class="text-right " colspan="4">
-                                                        <span><strong>
-                                                                @if ($profiles->count() > 0)
-                                                                    Bs.
-                                                                    @foreach ($profiles[0]->CuentaPerfil as $item)
-                                                                        @if ($item->status = 'SinAsignar')
-                                                                            {{ number_format($item->Cuenta->Plataforma->precioPerfil * $profiles->Count() * $meses) }}
-                                                                        @endif
-                                                                    @endforeach
-                                                                @endif
-                                                            </strong></span>
-                                                    </td>
-                                                </tr>
-                                            </tfoot> --}}
                                         </table>
                                     </div>
                                 </div>
@@ -542,6 +506,8 @@
                             @enderror
                         </div>
                     </div>
+                </div>
+                <div class="row">
                     <div class="col-sm-12">
                         <div class="form-group custom-file">
                             <input type="file" class="custom-file-input form-control" wire:model="comprobante"

@@ -29,6 +29,7 @@ class CuentasController extends Component
 {
     use WithPagination;
     use WithFileUploads;
+
     public $platform_id, $email_id, $expiration, $status, $number_profiles, $search, $selected_id,
         $pageTitle, $componentName, $proveedor, $nameP, $PIN, $estado, $availability, $Observaciones,
         $perfiles, $correos, $selected, $start_account, $start_account_new, $expiration_account,
@@ -37,6 +38,7 @@ class CuentasController extends Component
         $nombreCliente, $celular, $observacionesTrans, $mostrarRenovar, $meses_comprados, $mesesComprar,
         $nombre_cuenta, $mostrartabla2, $mostrarCorreo, $mostrarNombreCuenta;
     private $pagination = 10;
+
     public function paginationView()
     {
         return 'vendor.livewire.bootstrap';
@@ -1493,6 +1495,7 @@ class CuentasController extends Component
 
     public function Edit(Account $acc)
     {
+        $this->resetUI();
         /* MOSTRAR CORREO O NOMBRE DE LA CUENTA DEPENDIENDO LA PLATAFORMA */
         $platform = Platform::find($acc->Plataforma->id);
         if ($platform->tipo == 'USUARIO') {
@@ -1623,6 +1626,7 @@ class CuentasController extends Component
 
     public function EditObservaciones(Plan $plan, Cliente $cliente)
     {
+        $this->resetUI();
         $this->selected_id = $plan->id;
         $this->observations = $plan->observations;
         $this->start_account = $plan->plan_start;
@@ -1700,6 +1704,7 @@ class CuentasController extends Component
 
     public function Acciones(Plan $plan)
     {
+        $this->resetUI();
         $this->selected_plan = $plan->id;
         /* OBTENER FECHA DE EXPIRACION DEL PLAN PARA CALCULAR LA FECHA DE EXPIRACION NUEVA */
         $this->data = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')

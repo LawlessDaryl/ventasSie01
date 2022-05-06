@@ -12,29 +12,29 @@
 
             <div class="modal-body">
                 <div class="row">
+
                     <div class="col-sm-12 col-md-6">
                         <div class="form-group">
-                            <label>Cambiar de sucursal</label>
+                            <h6>Cambiar de sucursal</h6>
                             <select wire:model='sucur' class="form-control">
                                 <option value="Elegir" disabled>Elegir</option>
                                 @foreach ($sucursales as $s)
-                                
-                                        <option value="{{ $s->id }}">{{ $s->name }}</option>
-                                    
+                                    <option value="{{ $s->id }}">{{ $s->name }}</option>
                                 @endforeach
                             </select>
-                            @error('sucur') <span class="text-danger er">{{ $message }}</span>@enderror
+                            @error('sucur')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-md-6">
-                        <div class="form-group text-center mt-4">
-                            <a href="javascript:void(0)" class="btn btn-dark"
-                                wire:click.prevent="Cambiar()" >CAMBIAR</a>
-                        </div>
+                    <div class="col-sm-12 col-md-6 mt-4">
+                        <a href="javascript:void(0)" class="btn btn-dark" wire:click.prevent="Cambiar()">CAMBIAR DE
+                            SUCURSAL</a>
                     </div>
 
                 </div>
+
                 <div class="table-responsive">
                     <table class="table table-bordered table-hover mt-1">
                         <thead class="text-white" style="background: #3b3ff5;">
@@ -44,10 +44,10 @@
                                 <th class="table-th text-center text-white">SUCURSAL</th>
                             </tr>
                         </thead>
-
                         <tbody>
                             @foreach ($details as $d)
-                                <tr style="{{$d->fecha_fin == '' ? 'background-color: lightgreen !important':'  '}}">
+                                <tr
+                                    style="{{ $d->fecha_fin == '' ? 'background-color: lightgreen !important' : '  ' }}">
                                     <td class="text-center">
                                         <h6>{{ $d->created_at }}</h6>
                                     </td>
@@ -60,16 +60,19 @@
                                 </tr>
                             @endforeach
                         </tbody>
-
                         <tfoot>
                             <td class="text-right">
-                                <a href="javascript:void(0)" class="btn btn-dark"
-                                wire:click.prevent="finalizar()" >DAR DE BAJA AL USUARIO</a>
+                                <a href="javascript:void(0)" class="btn btn-dark" wire:click.prevent="finalizar()">DAR
+                                    DE BAJA AL USUARIO</a>
+                            </td>
+                            <td class="text-left">
+                                <a href="javascript:void(0)" class="btn btn-dark" wire:click.prevent="Activar()">PONER
+                                    ACTIVO AL USUARIO</a>
                             </td>
                         </tfoot>
-
                     </table>
                 </div>
+
             </div>
         </div>
     </div>

@@ -301,9 +301,25 @@ class UsersController extends Component
                         'estado' => 'FINALIZADO'
                     ]);
                 }
+
+                $usuario = User::find($this->selected_id);
+                $usuario->update([
+                    'status' => 'ACTIVE',
+                ]);
+                $usuario->save();
+
                 $this->emit('sucursal-actualizada', 'Se cambio al usuario de sucursal');
             }
         }
+    }
+    public function Activar()
+    {
+        $usuario = User::find($this->selected_id);
+        $usuario->update([
+            'status' => 'ACTIVE',
+        ]);
+        $usuario->save();
+        $this->emit('user-fin', 'Se puso activo al usuario');
     }
     public function finalizar()
     {

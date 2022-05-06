@@ -11,15 +11,8 @@
             </div>
             <div class="modal-body">
 
-                <div class="col-sm-12">
-                    <div class="form-group custom-file">
-                        <input type="file" class="custom-file-input form-control" wire:model="comprobante"
-                            accept="image/x-png,image/gif,image/jpeg">
-                        <label class="custom-file-label">Comprobante {{ $comprobante }}</label>
-                    </div>
-                </div>
-                
                 <div class="row">
+
                     <div class="col-sm-12 col-md-12">
                         <div class="form-group">
                             <h6>{{ $plataforma1Nombre }}</h6>
@@ -492,7 +485,7 @@
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror
                         </div>
-                    </div>                    
+                    </div>
 
                     <div class="col-sm-12 col-md-12">
                         <div class="form-group">
@@ -504,6 +497,17 @@
                             @enderror
                         </div>
                     </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group custom-file">
+                            <input type="file" class="custom-file-input form-control" wire:model="comprobante"
+                                accept="image/x-png,image/gif,image/jpeg">
+                            <label class="custom-file-label">Comprobante {{ $comprobante }}</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col-sm-12 col-md-4">
                         <div class="form-group text-center mt-4">
                             <a href="javascript:void(0)" class="btn btn-dark"
@@ -524,7 +528,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>

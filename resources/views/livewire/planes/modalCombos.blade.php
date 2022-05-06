@@ -534,8 +534,9 @@
                             @enderror
                         </div>
                     </div>
-                    
-                    <div class="col-sm-12 col-md-8">
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 col-md-12">
                         <div class="form-group">
                             <label>
                                 <h6>Observaciones</h6>
@@ -562,8 +563,8 @@
                                 class="btn btn-dark close-btn text-info">VENDER</button>
                         </div>
                     </div>
-
                 </div>
+                
             </div>
         </div>
     </div>

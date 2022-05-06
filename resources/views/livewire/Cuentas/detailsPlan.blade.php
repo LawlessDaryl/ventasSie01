@@ -149,7 +149,8 @@
                             @enderror
                         </div>
                     </div>
-
+                </div>
+                <div class="row">
                     <div class="col-sm-12">
                         <div class="form-group custom-file">
                             <input type="file" class="custom-file-input form-control" wire:model="comprobante"
@@ -167,7 +168,8 @@
                             @enderror
                         </div>
                     </div>
-
+                </div>
+                <div class="row">
                     <div class="col-sm-12 col-md-4">
                         <div class="form-group text-center mt-4">
                             <button type="button" @if ($meses == 0) disabled @endif
@@ -190,7 +192,8 @@
                                 wire:click.prevent="CambiarCuenta()">Buscar otra cuenta (Cambiar)</a>
                         </div>
                     </div>
-
+                </div>
+                <div class="row">
                     @if ($mostrartabla2 == 1)
                         <div class="col-sm-12 col-md-12">
                             <div class="statbox widget box box-shadow">
@@ -251,7 +254,6 @@
                             </div>
                         </div>
                     @endif
-
                 </div>
             </div>
         </div>
