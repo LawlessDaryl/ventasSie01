@@ -159,7 +159,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('report/pdf/{total}/{idventa}/{totalitems}', [ExportSaleController::class, 'reportPDFVenta']);
     });
     //Lista de Ventas
-    Route::get('salelist', SaleListController::class)->name('salelist');
+    Route::get('salelist', SaleListController::class)->name('salelist')->middleware('permission:VentasLista_Index');
     Route::get('estadisticas', SaleStatisticController::class)->name('estadisticas');
     Route::get('devolucionventa', SaleDevolutionController::class)->name('devolucionventa');
     Route::get('notificaciones', NotificationController::class)->name('notificaciones');

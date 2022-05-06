@@ -2,9 +2,13 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\RoleHasPermissions;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 use Livewire\WithPagination;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Sale;
 use App\Models\SaleDetail;
@@ -28,6 +32,7 @@ class SaleListController extends Component
         $this->listardetalleventas();
         $this->idventa = 1;
         $this->usuarioseleccionado = Auth()->user()->id;
+
     }
 
 
@@ -35,17 +40,31 @@ class SaleListController extends Component
     {
 
 
-
-        $data = Sale::join('users as u', 'u.id', 'sales.user_id')
-        ->join("movimientos as m", "m.id", "sales.movimiento_id")
-        ->join("cliente_movs as cm", "cm.movimiento_id", "m.id")
-        ->join("clientes as c", "c.id", "cm.cliente_id")
-        ->select('sales.id as id','sales.cash as totalbs','sales.created_at as fecha',
-        'sales.tipopago as tipopago','sales.change as cambio',
-        'u.name as user','c.razon_social as rz','c.cedula as ci','c.celular as celular')
-        ->where('u.id', $this->usuarioseleccionado)
-        ->orderBy('sales.id', 'desc')
-        ->paginate(10);
+        if($this->usuarioseleccionado > 1)
+        {
+            $data = Sale::join('users as u', 'u.id', 'sales.user_id')
+            ->join("movimientos as m", "m.id", "sales.movimiento_id")
+            ->join("cliente_movs as cm", "cm.movimiento_id", "m.id")
+            ->join("clientes as c", "c.id", "cm.cliente_id")
+            ->select('sales.id as id','sales.cash as totalbs','sales.created_at as fecha','sales.observacion as obs',
+            'sales.tipopago as tipopago','sales.change as cambio','sales.factura as factura',
+            'u.name as user','c.razon_social as rz','c.cedula as ci','c.celular as celular')
+            ->where('u.id', $this->usuarioseleccionado)
+            ->orderBy('sales.id', 'desc')
+            ->paginate(5);
+        }
+        else
+        {
+            $data = Sale::join('users as u', 'u.id', 'sales.user_id')
+            ->join("movimientos as m", "m.id", "sales.movimiento_id")
+            ->join("cliente_movs as cm", "cm.movimiento_id", "m.id")
+            ->join("clientes as c", "c.id", "cm.cliente_id")
+            ->select('sales.id as id','sales.cash as totalbs','sales.created_at as fecha','sales.observacion as obs',
+            'sales.tipopago as tipopago','sales.change as cambio','sales.factura as factura',
+            'u.name as user','c.razon_social as rz','c.cedula as ci','c.celular as celular')
+            ->orderBy('sales.id', 'desc')
+            ->paginate(5);
+        }
 
         //Listando Todos los Usuarios
         $listausuarios = User::select("users.id as id","users.name as nombreusuario")
@@ -147,8 +166,20 @@ class SaleListController extends Component
         }
         return $totalbs;
     }
+    //Metodo para Anular una Venta
     public function anularventa()
     {
         $this->emit('show-anular', 'show modal!');
+    }
+
+    //Metodo para Verificar si el usuario tiene el Permiso para Ver la
+    //lista de Ventas de Manera Completa, filtrar Informacion en la lista, fecha, etc...
+    public function verificarpermiso()
+    {
+        if(Auth::user()->hasPermissionTo('VentasListaMasFiltros_Index'))
+        {
+            return true;
+        }
+        return false;
     }
 }

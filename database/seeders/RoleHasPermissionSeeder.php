@@ -20,5 +20,16 @@ class RoleHasPermissionSeeder extends Seeder
                 'role_id' => 1,
             ]);
         }
+
+        // //Ventas=> Dando Permisos a un Cajero de Ejemplo:Corte de Caja
+        // RoleHasPermissions::create([
+        //     'permission_id' => 12,
+        //     'role_id' => 6,
+        // ]);
+        // //Ventas=> Dando Permisos a un Cajero de Ejemplo:Corte de Caja
+        // RoleHasPermissions::create([
+        //     'permission_id' => 12,
+        //     'role_id' => 6,
+        // ]);
     }
 }

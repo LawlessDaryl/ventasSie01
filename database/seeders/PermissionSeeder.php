@@ -158,5 +158,16 @@ class PermissionSeeder extends Seeder
             'name' => 'Boton_Entregar_Servicio',
             'guard_name' => 'web'
         ]);
+        //PERMISOS VENTAS
+        //lista de Ventas Completa: Anular Venta, Filtrar por Usuarios, etc.
+        Permission::create([
+            'name' => 'VentasLista_Index',
+            'guard_name' => 'web'
+        ]);
+        //lista de Ventas Limitada
+        Permission::create([
+            'name' => 'VentasListaMasFiltros_Index',
+            'guard_name' => 'web'
+        ]);
     }
 }

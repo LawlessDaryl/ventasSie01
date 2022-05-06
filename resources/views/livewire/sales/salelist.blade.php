@@ -69,7 +69,7 @@ a{
                 </div>
 
 
-                @if(Auth()->user()->profile == "ADMIN")
+                @if($this->verificarpermiso())
                 <div class="col-lg-2 col-md-12 col-sm-12">
                         <div>
                             <h6>Seleccionar Usuario</h6>
@@ -98,9 +98,12 @@ a{
                             <th class="table-th text-withe text-center">Usuario</th>
                             <th class="table-th text-withe text-center">Tipo Pago</th>
                             <th class="table-th text-withe text-center">¿Factura?</th>
+                            <th class="table-th text-withe text-center">Observación</th>
                             <th class="table-th text-withe text-center">Fecha</th>
                             <th class="table-th text-withe text-center">Detalles</th>
+                            @if($this->verificarpermiso())
                             <th class="table-th text-withe text-center" width="50px"> Acciònes</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -127,7 +130,10 @@ a{
                                     <h6>{{ $d->tipopago }}</h6>
                                 </td>
                                 <td style="padding: 0%" class="table-th text-withe text-center">
-                                    <h6>Sin Definir</h6>
+                                    <h6>{{ $d->factura }}</h6>
+                                </td>
+                                <td style="padding: 0%" class="table-th text-withe text-center">
+                                    <h6>{{ $d->obs }}</h6>
                                 </td>
                                 <td style="padding: 0%" class="table-th text-withe text-center">
                                     <h6>
@@ -143,6 +149,7 @@ a{
                                         </button>
                                       </div>
                                 </td>
+                                @if($this->verificarpermiso())
                                 <td style="padding: 0%"  class="table-th text-withe text-center">
                                     <div class="btn-group" role="group" aria-label="Basic example">
                                         <button wire:click="anularventa()" title="Anular Venta" type="button" class="btn btn-secondary" style="background-color: crimson">
@@ -153,6 +160,7 @@ a{
                                         </button>
                                     </div>
                                 </td>
+                                @endif
                             </tr>
                             @endforeach
                     </tbody>

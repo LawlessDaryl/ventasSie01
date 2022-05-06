@@ -6,6 +6,11 @@ use Livewire\Component;
 
 class SaleStatisticController extends Component
 {
+    public $numero;
+    public function mount()
+    {
+        $this->numero = 40;
+    }
     public function render()
     {
         return view('livewire.sales.salestatistic')
