@@ -9,7 +9,7 @@ class Provider extends Model
 {
 
     use HasFactory;
-    protected $fillable = ['nombre', 'apellido','direccion',
+    protected $fillable = ['nombre_prov', 'apellido','direccion',
     'telefono','Compañia','correo','status'];
     public function products()
     {

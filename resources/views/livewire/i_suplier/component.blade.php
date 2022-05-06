@@ -29,7 +29,7 @@
                                 <tr>
                                     <td>
                                         <h5>Nombre</h5>
-                                        <label class="text-center">{{ $data->nombre }}</label>
+                                        <label class="text-center">{{ $data->nombre_prov }}</label>
                                         <h5>Apellido</h5>
                                         <label class="text-center">{{ $data->apellido }}</label>
                                     </td>

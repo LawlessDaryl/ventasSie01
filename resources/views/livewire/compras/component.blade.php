@@ -8,12 +8,10 @@
                 </h4>
                 <ul class="tabs tab-pills">
                         <a href="detalle_compras" class="btn btn-dark" >Registrar<br/>Compra</a>
-                </ul>
-                <ul class="tabs tab-pills">
-                    
                         <a href="{{ url('reporteCompras/pdf' . '/' . $filtro . '/' . $fecha .'/'
-                        . $from. '/' . $to . '/' .$search)}}" class="btn btn-dark" >Imprimir</a>
+                        . $from. '/' . $to . '/' .$search)}}" class="btn btn-dark p-3" >Imprimir</a>
                 </ul>
+               
             </div>
 
             <div class="widget-body">

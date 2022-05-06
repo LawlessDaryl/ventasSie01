@@ -34,7 +34,7 @@ class TransferenciasController extends Component
         ->whereIn('origen.id',$this->vs)
         
         ->get();
-        $sol_ent= $data= Transference::join('estado_transferencias','transferences.id','estado_transferencias.id_transferencia')
+       /* $data= Transference::join('estado_transferencias','transferences.id','estado_transferencias.id_transferencia')
         ->join('users','estado_transferencias.id_usuario','users.id')
         ->join('destinos as origen','origen.id','transferences.id_origen')
         ->join('sucursals as suc_origen','suc_origen.id','origen.sucursal_id')
@@ -47,7 +47,7 @@ class TransferenciasController extends Component
         ->where('estado_transferencias.op','Activo')
         ->whereIn('.id',$this->vs)
         
-        ->get();
+        ->get();*/
 
         return view('livewire.destino_producto.verTransferencias',['data_t'=>$data,'data_m'=>$this->detalle,'data_estado'=>$this->estado])
         ->extends('layouts.theme.app')

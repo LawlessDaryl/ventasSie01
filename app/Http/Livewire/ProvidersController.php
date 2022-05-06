@@ -32,7 +32,7 @@ class ProvidersController extends Component
         
             if (strlen($this->search) > 0)
                 $suplier = Provider::select('providers.*')
-                ->where('nombre', 'like', '%' . $this->search . '%')
+                ->where('nombre_prov', 'like', '%' . $this->search . '%')
                 ->orWhere('apellido','like','%'.$this->search.'%')
                 ->orWhere('direccion','like','%'.$this->search.'%')
                 ->orWhere('status','like','%'.$this->search.'%')
@@ -77,7 +77,7 @@ class ProvidersController extends Component
     public function Edit(Provider $sup)
     {
         $this->selected_id = $sup->id;
-        $this->nombre = $sup->nombre;
+        $this->nombre_prov = $sup->nombre_prov;
         $this->apellido = $sup->apellido;
         $this->direccion = $sup->direccion;
         $this->telefono = $sup->telefono;

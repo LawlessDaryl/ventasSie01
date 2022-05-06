@@ -190,11 +190,12 @@ class TransferirProductoController extends Component
         DB::beginTransaction();
 
         try {
+
             $Transferencia_encabezado = Transference::create([
                 'observacion'=>$this->observacion,
                 'estado'=>1,//***tiene que depender de modificar la transferencia, esta pendiente
                 'id_origen'=>$this->selected_origen,
-                'id_destino'=>$this->selected_destino,
+                'id_destino'=>$this->selected_destino
             ]);
 
             if ($Transferencia_encabezado)

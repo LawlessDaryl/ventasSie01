@@ -26,12 +26,12 @@
                 <td width="70%" class="text-left text-company" style="vertical-align: top; padding-top:8px;">
                         <span style="font-size: 16px;"><strong>COMPRA N°</strong>{{$data->id}}</span>
                         <br>
-                        <span style="font-size: 16px;"><strong>Proveedor:</strong>{{$data->nombre}} </span>
-                        <br>
+                        <span style="font-size: 16px;"><strong>Proveedor:</strong>{{$data->nombre_prov}} </span>
+                        <br>    
                         <span style="font-size: 16px;"><strong>Fecha de Compra:</strong>{{$data->fecha_compra}}</span>
                     <br>
 
-                    <span style="font-size: 14px;">Usuario: {{ Auth()->user()->name }}</span>
+                    <span style="font-size: 14px;">Usuario: {{ Auth()->user()->name }}</span>}}
                     <br>
                 </td>
             </tr>

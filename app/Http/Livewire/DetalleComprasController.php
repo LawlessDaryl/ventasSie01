@@ -137,7 +137,7 @@ class DetalleComprasController extends Component
     }
     public function addProvider(){
         $obj= new Prov;
-        $obj->nombre = $this->nombre_prov;
+        $obj->nombre_prov = $this->nombre_prov;
         $obj->apellido = $this->apellido_prov;
         $obj->direccion = $this->direccion_prov;
         $obj->correo = $this->correo_prov;
@@ -441,7 +441,7 @@ class DetalleComprasController extends Component
                 'tipo_doc'=>$this->tipo_documento,
                 'nro_documento'=>$this->nro_documento,
                 'observacion'=>$this->observacion,
-                'proveedor_id'=>Provider::select('providers.id')->where('nombre',$this->provider)->value('providers.id'),
+                'proveedor_id'=>Provider::select('providers.id')->where('nombre_prov',$this->provider)->value('providers.id'),
                 'estado_compra'=>$this->estado_compra,
                 'status'=>$this->status
             ]);

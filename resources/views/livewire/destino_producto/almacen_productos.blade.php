@@ -8,14 +8,11 @@
                 <ul class="tabs tab-pills">
                     
                         <a href="transferencia" class="btn btn-dark" >Transferir <br/>Productos</a>
-                      
-                    
-                </ul>
-                <ul class="tabs tab-pills">
-                    
                         <a href="transferencias" class="btn btn-dark">Ver<br/>Transferencias</a>
                       
+                    
                 </ul>
+               
             </div>
           
 

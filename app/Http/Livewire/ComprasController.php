@@ -62,7 +62,7 @@ class ComprasController extends Component
             ->select('compras.*','compras.status as status_compra','mov.*','prov.nombre_prov as nombre_prov','users.name')
             ->whereBetween('compras.created_at',[$this->from,$this->to])
             ->where('compras.transaccion',$this->filtro)
-            ->where('nombre', 'like', '%' . $this->search . '%')
+            ->where('nombre_prov', 'like', '%' . $this->search . '%')
             ->orWhere('users.name', 'like', '%' . $this->search . '%')
             ->orWhere('compras.id', 'like', '%' . $this->search . '%')
             ->orWhere('compras.created_at', 'like', '%' . $this->search . '%')
