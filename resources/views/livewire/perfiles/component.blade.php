@@ -160,13 +160,14 @@
 
                                         <td class="text-center">
                                             @if ($p->estadoCuentaPerfil == 'ACTIVO')
-                                                <a href="javascript:void(0)" wire:click="Acciones({{ $p->planid }})"
+                                                <a href="javascript:void(0)"
+                                                    wire:click="Acciones('{{ $p->IDperfil }}','{{ $p->IDaccountProfile }}','{{ $p->IDaccount }}','{{ $p->IDplanAccount }}','{{ $p->planid }}','{{ $p->clienteID }}','{{ $p->IDplatf }}')"
                                                     class="btn btn-dark mtmobile" title="Renovación">
                                                     <i class="fa-regular fa-calendar-check"></i>
                                                 </a>
                                             @endif
                                             <a href="javascript:void(0)"
-                                                wire:click="EditObservaciones('{{ $p->planid }}','{{ $p->id }}','{{ $p->clienteID }}')"
+                                                wire:click="EditObservaciones('{{ $p->planid }}','{{ $p->IDperfil }}','{{ $p->clienteID }}')"
                                                 class="btn btn-dark mtmobile" title="Observaciones">
                                                 <i class="fa-solid fa-align-left"></i>
                                             </a>

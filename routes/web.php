@@ -65,7 +65,6 @@ use Illuminate\Support\Facades\Auth;
 
 Auth::routes();
 
-
 Route::middleware(['auth'])->group(function () {
     Route::get('/', InicioController::class)->name('home');
     Route::get('/home', InicioController::class);
@@ -164,9 +163,3 @@ Route::middleware(['auth'])->group(function () {
     Route::get('reporteServicEntreg/pdf/{type}/{sucursal}', [ExportServicioEntregPdfController::class, 'reporteServPDF']);
 });
 
-
-
-
-
-
-//reportes EXCEL

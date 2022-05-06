@@ -101,6 +101,10 @@ class CuentasController extends Component
         $this->inicioPlanActual = null;
         $this->comprobante = null;
         $this->clienteId = 0;
+        $this->selected_account = 0;
+        $this->selected_planAccount = 0;
+        $this->selected_platf = 0;
+        $this->selected_cliente = 0;
     }
     public function render()
     {
@@ -113,7 +117,7 @@ class CuentasController extends Component
                             ->join('emails as e', 'accounts.email_id', 'e.id')
                             ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
                             ->select(
-                                'accounts.id as id',
+                                'accounts.id as IDaccount',
                                 'accounts.expiration_account as expiration_account',
                                 'accounts.number_profiles',
                                 'accounts.whole_account',
@@ -166,7 +170,7 @@ class CuentasController extends Component
                             ->join('emails as e', 'accounts.email_id', 'e.id')
                             ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
                             ->select(
-                                'accounts.id as id',
+                                'accounts.id as IDaccount',
                                 'accounts.expiration_account as expiration_account',
                                 'accounts.number_profiles',
                                 'accounts.whole_account',
@@ -213,7 +217,7 @@ class CuentasController extends Component
                             ->join('emails as e', 'accounts.email_id', 'e.id')
                             ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
                             ->select(
-                                'accounts.id as id',
+                                'accounts.id as IDaccount',
                                 'accounts.expiration_account as expiration_account',
                                 'accounts.number_profiles',
                                 'accounts.whole_account',
@@ -266,7 +270,7 @@ class CuentasController extends Component
                             ->join('emails as e', 'accounts.email_id', 'e.id')
                             ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
                             ->select(
-                                'accounts.id as id',
+                                'accounts.id as IDaccount',
                                 'accounts.expiration_account as expiration_account',
                                 'accounts.number_profiles',
                                 'accounts.whole_account',
@@ -314,7 +318,7 @@ class CuentasController extends Component
                             ->join('emails as e', 'accounts.email_id', 'e.id')
                             ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
                             ->select(
-                                'accounts.id as id',
+                                'accounts.id as IDaccount',
                                 'accounts.expiration_account as expiration_account',
                                 'accounts.number_profiles',
                                 'accounts.whole_account',
@@ -367,7 +371,7 @@ class CuentasController extends Component
                             ->join('emails as e', 'accounts.email_id', 'e.id')
                             ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
                             ->select(
-                                'accounts.id as id',
+                                'accounts.id as IDaccount',
                                 'accounts.expiration_account as expiration_account',
                                 'accounts.number_profiles',
                                 'accounts.whole_account',
@@ -413,7 +417,7 @@ class CuentasController extends Component
                             ->join('emails as e', 'accounts.email_id', 'e.id')
                             ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
                             ->select(
-                                'accounts.id as id',
+                                'accounts.id as IDaccount',
                                 'accounts.expiration_account as expiration_account',
                                 'accounts.number_profiles',
                                 'accounts.whole_account',
@@ -466,7 +470,7 @@ class CuentasController extends Component
                             ->join('emails as e', 'accounts.email_id', 'e.id')
                             ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
                             ->select(
-                                'accounts.id as id',
+                                'accounts.id as IDaccount',
                                 'accounts.expiration_account as expiration_account',
                                 'accounts.number_profiles',
                                 'accounts.whole_account',
@@ -510,7 +514,7 @@ class CuentasController extends Component
         } elseif ($this->condicional == 'ocupados') { /* cuentas ocupadas enteras */
             if ($this->PlataformaFiltro != 'TODAS') {
                 if (strlen($this->search) > 0) {
-                    $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
+                    /* $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                         ->join('emails as e', 'accounts.email_id', 'e.id')
                         ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
                         ->join('plan_accounts as pa', 'pa.account_id', 'accounts.id')
@@ -521,7 +525,7 @@ class CuentasController extends Component
                         ->select(
                             'pl.id as planid',
                             'pl.done as done',
-                            'accounts.id as id',
+                            'accounts.id as IDaccount',
                             'accounts.expiration_account as expiration_account',
                             'accounts.number_profiles',
                             'accounts.whole_account',
@@ -581,7 +585,7 @@ class CuentasController extends Component
                         $s = strtotime($c->expiration_account) - strtotime($fecha_actual);
                         $d = intval($s / 86400);
                         $c->dias = $d;
-                    }
+                    } */
                 } else {
                     $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                         ->join('emails as e', 'accounts.email_id', 'e.id')
@@ -594,23 +598,24 @@ class CuentasController extends Component
                         ->select(
                             'pl.id as planid',
                             'pl.done as done',
-                            'accounts.id as id',
+                            'pl.expiration_plan as expiration_plan',
+                            'pl.plan_start as plan_start',
+                            'pl.status as plan_status',
+                            'accounts.id as IDaccount',
                             'accounts.expiration_account as expiration_account',
                             'accounts.number_profiles',
                             'accounts.whole_account',
                             'accounts.status',
                             'accounts.account_name',
                             'accounts.password_account',
+                            'p.id as IDplatf',
                             'p.nombre as nombre',
                             'e.content as content',
                             'e.pass as pass',
                             'strsp.name as name',
-                            'pl.expiration_plan as expiration_plan',
-                            'pl.plan_start as plan_start',
-                            'pl.status as plan_status',
+                            'c.id as clienteID',
                             'c.nombre as clienteNombre',
                             'c.celular as clienteCelular',
-                            'c.id as clienteID',
                             DB::raw('0 as horas'),
                             DB::raw('0 as dias')
                         )
@@ -639,7 +644,7 @@ class CuentasController extends Component
                 }
             } else {
                 if (strlen($this->search) > 0) {
-                    $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
+                    /* $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                         ->join('emails as e', 'accounts.email_id', 'e.id')
                         ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
                         ->join('plan_accounts as pa', 'pa.account_id', 'accounts.id')
@@ -650,7 +655,7 @@ class CuentasController extends Component
                         ->select(
                             'pl.id as planid',
                             'pl.done as done',
-                            'accounts.id as id',
+                            'accounts.id as IDaccount',
                             'accounts.expiration_account as expiration_account',
                             'accounts.number_profiles',
                             'accounts.whole_account',
@@ -710,7 +715,7 @@ class CuentasController extends Component
                         $s = strtotime($c->expiration_account) - strtotime($fecha_actual);
                         $d = intval($s / 86400);
                         $c->dias = $d;
-                    }
+                    } */
                 } else {
                     $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                         ->join('emails as e', 'accounts.email_id', 'e.id')
@@ -723,23 +728,24 @@ class CuentasController extends Component
                         ->select(
                             'pl.id as planid',
                             'pl.done as done',
-                            'accounts.id as id',
+                            'pl.expiration_plan as expiration_plan',
+                            'pl.plan_start as plan_start',
+                            'pl.status as plan_status',
+                            'accounts.id as IDaccount',
                             'accounts.expiration_account as expiration_account',
                             'accounts.number_profiles',
                             'accounts.whole_account',
                             'accounts.status',
                             'accounts.account_name',
                             'accounts.password_account',
+                            'p.id as IDplatf',
                             'p.nombre as nombre',
                             'e.content as content',
                             'e.pass as pass',
                             'strsp.name as name',
-                            'pl.expiration_plan as expiration_plan',
-                            'pl.plan_start as plan_start',
-                            'pl.status as plan_status',
+                            'c.id as clienteID',
                             'c.nombre as clienteNombre',
                             'c.celular as clienteCelular',
-                            'c.id as clienteID',
                             DB::raw('0 as horas'),
                             DB::raw('0 as dias')
                         )
@@ -780,7 +786,7 @@ class CuentasController extends Component
                         ->select(
                             'pl.id as planid',
                             'pl.done as done',
-                            'accounts.id as id',
+                            'accounts.id as IDaccount',
                             'accounts.expiration_account as expiration_account',
                             'accounts.number_profiles',
                             'accounts.whole_account',
@@ -836,22 +842,24 @@ class CuentasController extends Component
                         ->select(
                             'pl.id as planid',
                             'pl.done as done',
-                            'accounts.id as id',
+                            'pl.expiration_plan as expiration_plan',
+                            'pl.plan_start as plan_start',
+                            'pl.status as plan_status',
+                            'accounts.id as IDaccount',
                             'accounts.expiration_account as expiration_account',
                             'accounts.number_profiles',
                             'accounts.whole_account',
                             'accounts.status',
+                            'accounts.account_name',
                             'accounts.password_account',
+                            'p.id as IDplatf',
                             'p.nombre as nombre',
                             'e.content as content',
                             'e.pass as pass',
                             'strsp.name as name',
-                            'pl.expiration_plan as expiration_plan',
-                            'pl.plan_start as plan_start',
-                            'pl.status as plan_status',
+                            'c.id as clienteID',
                             'c.nombre as clienteNombre',
                             'c.celular as clienteCelular',
-                            'c.id as clienteID',
                         )
                         ->where('pl.status', 'VENCIDO')
                         ->where('pa.status', 'VENCIDO')
@@ -875,7 +883,7 @@ class CuentasController extends Component
                         ->select(
                             'pl.id as planid',
                             'pl.done as done',
-                            'accounts.id as id',
+                            'accounts.id as IDaccount',
                             'accounts.expiration_account as expiration_account',
                             'accounts.number_profiles',
                             'accounts.whole_account',
@@ -931,23 +939,24 @@ class CuentasController extends Component
                         ->select(
                             'pl.id as planid',
                             'pl.done as done',
-                            'accounts.id as id',
+                            'pl.expiration_plan as expiration_plan',
+                            'pl.plan_start as plan_start',
+                            'pl.status as plan_status',
+                            'accounts.id as IDaccount',
                             'accounts.expiration_account as expiration_account',
                             'accounts.number_profiles',
                             'accounts.whole_account',
                             'accounts.status',
                             'accounts.account_name',
                             'accounts.password_account',
+                            'p.id as IDplatf',
                             'p.nombre as nombre',
                             'e.content as content',
                             'e.pass as pass',
                             'strsp.name as name',
-                            'pl.expiration_plan as expiration_plan',
-                            'pl.plan_start as plan_start',
-                            'pl.status as plan_status',
+                            'c.id as clienteID',
                             'c.nombre as clienteNombre',
                             'c.celular as clienteCelular',
-                            'c.id as clienteID',
                         )
                         ->where('pl.status', 'VENCIDO')
                         ->where('pa.status', 'VENCIDO')
@@ -965,7 +974,7 @@ class CuentasController extends Component
                     ->join('emails as e', 'accounts.email_id', 'e.id')
                     ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
                     ->select(
-                        'accounts.id as id',
+                        'accounts.id as IDaccount',
                         'accounts.expiration_account as expiration_account',
                         'accounts.number_profiles',
                         'accounts.whole_account',
@@ -1018,7 +1027,7 @@ class CuentasController extends Component
                         ->join('emails as e', 'accounts.email_id', 'e.id')
                         ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
                         ->select(
-                            'accounts.id as id',
+                            'accounts.id as IDaccount',
                             'accounts.expiration_account as expiration_account',
                             'accounts.number_profiles',
                             'accounts.whole_account',
@@ -1057,7 +1066,7 @@ class CuentasController extends Component
                     ->join('emails as e', 'accounts.email_id', 'e.id')
                     ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
                     ->select(
-                        'accounts.id as id',
+                        'accounts.id as IDaccount',
                         'accounts.expiration_account as expiration_account',
                         'accounts.number_profiles',
                         'accounts.whole_account',
@@ -1110,7 +1119,7 @@ class CuentasController extends Component
                         ->join('emails as e', 'accounts.email_id', 'e.id')
                         ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
                         ->select(
-                            'accounts.id as id',
+                            'accounts.id as IDaccount',
                             'accounts.expiration_account as expiration_account',
                             'accounts.number_profiles',
                             'accounts.whole_account',
@@ -1702,12 +1711,16 @@ class CuentasController extends Component
         $this->emit('details-show', 'show modal!');
     }
 
-    public function Acciones(Plan $plan)
+    public function Acciones(Plan $plan, Account $cuenta, Platform $plataforma, Cliente $cliente)
     {
         $this->resetUI();
         $this->selected_plan = $plan->id;
+        $this->selected_account = $cuenta->id;
+        $this->selected_planAccount = $cuenta->id;
+        $this->selected_platf = $plataforma->id;
+        $this->selected_cliente = $cliente->id;
         /* OBTENER FECHA DE EXPIRACION DEL PLAN PARA CALCULAR LA FECHA DE EXPIRACION NUEVA */
-        $this->data = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
+        /* $this->data = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
             ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
             ->join('accounts as acc', 'acc.id', 'pa.account_id')
             ->join('platforms as p', 'p.id', 'acc.platform_id')
@@ -1730,7 +1743,7 @@ class CuentasController extends Component
             ->where('plans.id', $this->selected_plan)
             ->orderby('plans.id', 'desc')
             ->where('pa.status', 'ACTIVO')
-            ->get()->first();
+            ->get()->first(); */
         $this->nombreCliente = $this->data->nombreCliente;
         $this->celular = $this->data->celular;
         $this->correoCuenta = $this->data->account_name;

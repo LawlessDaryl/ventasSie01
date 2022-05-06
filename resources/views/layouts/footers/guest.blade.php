@@ -12,16 +12,6 @@
                         {{ __('Ubicación') }}
                     </a>
                 </li>
-                <li>
-                    <a href="https://www.emanuelsie.com">
-                        {{ __('Blog') }}
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        {{ __('Licencia') }}
-                    </a>
-                </li>
             </ul>
         </nav>
         <div class="copyright float-right">

@@ -11,17 +11,7 @@
                     <a href="https://goo.gl/maps/3Vt1NzHDF6MTY6mCA">
                         {{ __('Ubicación') }}
                     </a>
-                </li>
-                <li>
-                    <a href="https://www.emanuelsie.com">
-                        {{ __('Blog') }}
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        {{ __('Licencia') }}
-                    </a>
-                </li>
+                </li>                
             </ul>
         </nav>
         <div class="copyright float-right">

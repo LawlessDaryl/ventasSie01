@@ -142,7 +142,7 @@
                                         @if ($acounts->dias > 5)
                                             <td class="text-center" style="background-color: #09ed3d !important">
                                                 <a href="javascript:void(0)"
-                                                    wire:click="mostrarRenovar({{ $acounts->id }})"
+                                                    wire:click="mostrarRenovar({{ $acounts->IDaccount }})"
                                                     class="btn btn-primary" title="Renovar">
                                                     {{ \Carbon\Carbon::parse($acounts->expiration_account)->format('d/m/Y') }}
                                                 </a>
@@ -150,7 +150,7 @@
                                         @elseif($acounts->dias >= 0 && $acounts->dias <= 5)
                                             <td class="text-center" style="background-color: #f1dc08 !important">
                                                 <a href="javascript:void(0)"
-                                                    wire:click="mostrarRenovar({{ $acounts->id }})"
+                                                    wire:click="mostrarRenovar({{ $acounts->IDaccount }})"
                                                     class="btn btn-primary" title="Renovar">
                                                     {{ \Carbon\Carbon::parse($acounts->expiration_account)->format('d/m/Y') }}
                                                 </a>
@@ -158,7 +158,7 @@
                                         @else
                                             <td class="text-center" style="background-color: #FF0000 !important">
                                                 <a href="javascript:void(0)"
-                                                    wire:click="mostrarRenovar({{ $acounts->id }})"
+                                                    wire:click="mostrarRenovar({{ $acounts->IDaccount }})"
                                                     class="btn btn-primary" title="Renovar">
                                                     {{ \Carbon\Carbon::parse($acounts->expiration_account)->format('d/m/Y') }}
                                                 </a>
@@ -178,17 +178,19 @@
                                                 <h6 class="text-center">{{ $acounts->perfOcupados }}</h6>
                                             </td>
                                             <td class="text-center">
-                                                <a href="javascript:void(0)" wire:click="Crear({{ $acounts->id }})"
+                                                <a href="javascript:void(0)"
+                                                    wire:click="Crear({{ $acounts->IDaccount }})"
                                                     class="btn btn-dark mtmobile" title="Ver Perfiles">
                                                     <i class="fa-solid fa-user-gear"></i>
                                                 </a>
-                                                <a href="javascript:void(0)" wire:click="Edit({{ $acounts->id }})"
+                                                <a href="javascript:void(0)"
+                                                    wire:click="Edit({{ $acounts->IDaccount }})"
                                                     class="btn btn-dark mtmobile" title="Editar Cuenta">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
                                                 @if ($acounts->dias <= 3)
                                                     <a href="javascript:void(0)"
-                                                        onclick="ConfirmarInhabilitar('{{ $acounts->id }}','{{ $acounts->perfOcupados }}')"
+                                                        onclick="ConfirmarInhabilitar('{{ $acounts->IDaccount }}','{{ $acounts->perfOcupados }}')"
                                                         class="btn btn-dark mtmobile" title="Inhabilitar">
                                                         <i class="fa-regular fa-trash-can"></i>
                                                     </a>
@@ -251,7 +253,7 @@
                                             @endif>
                                             @if ($condicional == 'ocupados')
                                                 <a href="javascript:void(0)"
-                                                    wire:click="mostrarRenovar({{ $acounts->id }})"
+                                                    wire:click="mostrarRenovar({{ $acounts->IDaccount }})"
                                                     class="btn btn-primary" title="Renovar">
                                                     {{ \Carbon\Carbon::parse($acounts->expiration_account)->format('d/m/Y') }}
                                                 </a>
@@ -282,12 +284,12 @@
                                         <td class="text-center">
                                             @if ($acounts->plan_status == 'VIGENTE')
                                                 <a href="javascript:void(0)"
-                                                    wire:click="Acciones({{ $acounts->planid }})"
+                                                    wire:click="Acciones('{{ $acounts->planid }}','{{ $acounts->IDaccount }}','{{ $acounts->IDplatf }}','{{ $acounts->clienteID }}')"
                                                     class="btn btn-dark mtmobile" title="Renovación">
                                                     <i class="fa-regular fa-calendar-check"></i>
                                                 </a>
                                             @endif
-                                            <a href="javascript:void(0)" wire:click="Edit({{ $acounts->id }})"
+                                            <a href="javascript:void(0)" wire:click="Edit({{ $acounts->IDaccount }})"
                                                 class="btn btn-dark mtmobile" title="Editar">
                                                 <i class="fas fa-edit"></i>
                                             </a>

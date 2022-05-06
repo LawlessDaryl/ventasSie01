@@ -49,10 +49,14 @@
                                 <tr
                                     style="{{ $d->fecha_fin == '' ? 'background-color: lightgreen !important' : '  ' }}">
                                     <td class="text-center">
-                                        <h6>{{ $d->created_at }}</h6>
+                                        <h6>
+                                            {{ \Carbon\Carbon::parse($d->created_at)->format('d/m/Y H:i:s') }}
+                                        </h6>
                                     </td>
                                     <td class="text-center">
-                                        <h6>{{ $d->fecha_fin }}</h6>
+                                        <h6>
+                                            {{ \Carbon\Carbon::parse($d->fecha_fin)->format('d/m/Y H:i:s') }}
+                                        </h6>
                                     </td>
                                     <td class="text-center">
                                         <h6>{{ $d->name }}</h6>

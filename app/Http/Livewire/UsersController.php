@@ -319,7 +319,7 @@ class UsersController extends Component
             'status' => 'ACTIVE',
         ]);
         $usuario->save();
-        $this->emit('user-fin', 'Se puso activo al usuario');
+        $this->emit('user-fin', 'El usuario ahora esta activo, registre una nueva contraseña para el usuario');
     }
     public function finalizar()
     {
@@ -327,6 +327,7 @@ class UsersController extends Component
         $usuario = User::find($this->selected_id);
         $usuario->update([
             'status' => 'LOCKED',
+            'password' => bcrypt(uniqid()),
         ]);
         $usuario->save();
         $su = SucursalUser::find($this->idsucursalUser);

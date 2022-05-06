@@ -79,6 +79,7 @@
                             <table class="table table-unbordered table-hover mt-1">
                                 <thead class="text-white" style="background: #3B3F5C">
                                     <tr>
+                                        <th class="table-th text-withe text-center">Nº</th>
                                         <th class="table-th text-withe text-center">PLATAFORMA</th>
                                         <th class="table-th text-withe text-center">CLIENTE</th>
                                         <th class="table-th text-withe text-center">CELULAR</th>
@@ -104,6 +105,9 @@
 
                                     @foreach ($data as $p)
                                         <tr>
+                                            <td class="text-center">
+                                                <h6 class="text-center">{{ $loop->iteration }}</h6>
+                                            </td>
                                             <td class="text-center">
                                                 <h6 class="text-center">{{ $p->plataforma }}</h6>
                                             </td>
@@ -150,6 +154,7 @@
                             <table class="table table-unbordered table-hover mt-1">
                                 <thead class="text-white" style="background: #3B3F5C">
                                     <tr>
+                                        <th class="table-th text-withe text-center">Nº</th>
                                         <th class="table-th text-withe text-center">PLATAFORMA</th>
                                         <th class="table-th text-withe text-center">CLIENTE</th>
                                         <th class="table-th text-withe text-center">CELULAR</th>
@@ -173,6 +178,9 @@
 
                                     @foreach ($data as $p)
                                         <tr>
+                                            <td class="text-center">
+                                                <h6 class="text-center">{{ $loop->iteration }}</h6>
+                                            </td>
                                             <td class="text-center">
                                                 <h6 class="text-center">{{ $p->plataforma }}</h6>
                                             </td>
