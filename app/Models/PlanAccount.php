@@ -9,7 +9,7 @@ class PlanAccount extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['status', 'plan_id', 'account_id'];
+    protected $fillable = ['status', 'COMBO', 'plan_id', 'account_id'];
 
     public function Plan()
     {

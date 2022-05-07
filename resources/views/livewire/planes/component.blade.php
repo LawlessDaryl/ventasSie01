@@ -120,12 +120,12 @@
                                         </td>
                                         <td class="text-center">
                                             <a href="javascript:void(0)"
-                                                wire:click="VerObservaciones({{ $p->id }})"
+                                                wire:click="VerObservacionesPerfil('{{ $p->planid }}','{{ $p->IDperfil }}','{{ $p->clienteID }}')"
                                                 class="btn btn-dark mtmobile" title="Observaciones">
                                                 <i class="fa-solid fa-file-signature"></i>
                                             </a>
                                             @if ($p->estado != 'ANULADO')
-                                                <a href="javascript:void(0)" onclick="Confirm({{ $p->id }})"
+                                                <a href="javascript:void(0)" onclick="Confirm({{ $p->planid }})"
                                                     class="btn btn-dark mtmobile" title="Anular">
                                                     <i class="fas fa-trash"></i>
                                                 </a>
@@ -135,7 +135,7 @@
                                             style="{{ $p->ready == 'NO' ? 'background-color: #d97171 !important' : 'background-color: #09ed3d !important' }}">
                                             @if ($p->ready == 'NO')
                                                 <a href="javascript:void(0)" class="btn btn-dark"
-                                                    onclick="ConfirmHecho('{{ $p->id }}')">
+                                                    onclick="ConfirmHecho('{{ $p->planid }}')">
                                                     <i class="fa-regular fa-circle-exclamation"></i>
                                                 </a>
                                             @else
@@ -201,12 +201,12 @@
                                         </td>
                                         <td class="text-center">
                                             <a href="javascript:void(0)"
-                                                wire:click="VerObservaciones({{ $p->id }})"
+                                                wire:click="VerObservacionesCuenta('{{ $p->planid }}','{{ $p->clienteID }}')"
                                                 class="btn btn-dark mtmobile" title="Observaciones">
                                                 <i class="fa-solid fa-file-signature"></i>
                                             </a>
                                             @if ($p->estado != 'ANULADO')
-                                                <a href="javascript:void(0)" onclick="Confirm({{ $p->id }})"
+                                                <a href="javascript:void(0)" onclick="Confirm({{ $p->planid }})"
                                                     class="btn btn-dark mtmobile" title="Anular">
                                                     <i class="fas fa-trash"></i>
                                                 </a>
@@ -216,7 +216,7 @@
                                             style="{{ $p->ready == 'NO' ? 'background-color: #d97171 !important' : 'background-color: #09ed3d !important' }}">
                                             @if ($p->ready == 'NO')
                                                 <a href="javascript:void(0)" class="btn btn-dark"
-                                                    onclick="ConfirmHecho('{{ $p->id }}')">
+                                                    onclick="ConfirmHecho('{{ $p->planid }}')">
                                                     <i class="fa-regular fa-circle-exclamation"></i>
                                                 </a>
                                             @else
@@ -257,8 +257,21 @@
                                         <td class="text-center">
                                             <h6 class="text-center">
                                                 @foreach ($p->PlanAccounts as $item)
-                                                    @if ($item->status == 'ACTIVO')
+                                                    @if ($item->status == 'ACTIVO' && $item->COMBO == 'PERFIL1')
                                                         {{ $item->Cuenta->Plataforma->nombre }} <br>
+                                                        @php
+                                                            $plataforma1 = $item->Cuenta->Plataforma->id;
+                                                        @endphp
+                                                    @elseif ($item->status == 'ACTIVO' && $item->COMBO == 'PERFIL2')
+                                                        {{ $item->Cuenta->Plataforma->nombre }} <br>
+                                                        @php
+                                                            $plataforma2 = $item->Cuenta->Plataforma->id;
+                                                        @endphp
+                                                    @elseif ($item->status == 'ACTIVO' && $item->COMBO == 'PERFIL3')
+                                                        {{ $item->Cuenta->Plataforma->nombre }} <br>
+                                                        @php
+                                                            $plataforma3 = $item->Cuenta->Plataforma->id;
+                                                        @endphp
                                                     @endif
                                                 @endforeach
                                             </h6>
@@ -267,12 +280,18 @@
                                             <h6 class="text-center">{{ $p->Mov->climov->client->nombre }} <br>
                                                 {{ $p->Mov->climov->client->celular }}</h6>
                                         </td>
+                                        @php
+                                            $IDcliente = $p->Mov->climov->client->id;
+                                        @endphp
                                         <td class="text-center">
                                             <h6 class="text-center">
                                                 @foreach ($p->PlanAccounts as $item)
-                                                    @if ($item->status == 'ACTIVO')
-                                                        {{ $item->Cuenta->account_name }}
-                                                        <br>
+                                                    @if ($item->status == 'ACTIVO' && $item->COMBO == 'PERFIL1')
+                                                        {{ $item->Cuenta->account_name }} <br>
+                                                    @elseif ($item->status == 'ACTIVO' && $item->COMBO == 'PERFIL2')
+                                                        {{ $item->Cuenta->account_name }} <br>
+                                                    @elseif ($item->status == 'ACTIVO' && $item->COMBO == 'PERFIL3')
+                                                        {{ $item->Cuenta->account_name }} <br>
                                                     @endif
                                                 @endforeach
                                             </h6>
@@ -280,9 +299,12 @@
                                         <td class="text-center">
                                             <h6 class="text-center">
                                                 @foreach ($p->PlanAccounts as $item)
-                                                    @if ($item->status == 'ACTIVO')
-                                                        {{ $item->Cuenta->password_account }}
-                                                        <br>
+                                                    @if ($item->status == 'ACTIVO' && $item->COMBO == 'PERFIL1')
+                                                        {{ $item->Cuenta->password_account }} <br>
+                                                    @elseif ($item->status == 'ACTIVO' && $item->COMBO == 'PERFIL2')
+                                                        {{ $item->Cuenta->password_account }} <br>
+                                                    @elseif ($item->status == 'ACTIVO' && $item->COMBO == 'PERFIL3')
+                                                        {{ $item->Cuenta->password_account }} <br>
                                                     @endif
                                                 @endforeach
                                             </h6>
@@ -290,7 +312,13 @@
                                         <td class="text-center">
                                             <h6 class="text-center">
                                                 @foreach ($p->PlanAccounts as $item)
-                                                    @if ($item->status == 'ACTIVO')
+                                                    @if ($item->status == 'ACTIVO' && $item->COMBO == 'PERFIL1')
+                                                        {{ \Carbon\Carbon::parse($item->Cuenta->expiration_account)->format('d/m/Y') }}
+                                                        <br>
+                                                    @elseif ($item->status == 'ACTIVO' && $item->COMBO == 'PERFIL2')
+                                                        {{ \Carbon\Carbon::parse($item->Cuenta->expiration_account)->format('d/m/Y') }}
+                                                        <br>
+                                                    @elseif ($item->status == 'ACTIVO' && $item->COMBO == 'PERFIL3')
                                                         {{ \Carbon\Carbon::parse($item->Cuenta->expiration_account)->format('d/m/Y') }}
                                                         <br>
                                                     @endif
@@ -300,11 +328,36 @@
                                         <td class="text-center">
                                             <h6 class="text-center">
                                                 @foreach ($p->PlanAccounts as $item)
-                                                    @if ($item->status == 'ACTIVO')
+                                                    @if ($item->status == 'ACTIVO' && $item->COMBO == 'PERFIL1')
                                                         @foreach ($item->Cuenta->CuentaPerfiles as $acprof)
-                                                            @if ($acprof->status == 'ACTIVO' && $acprof->plan_id == $p->id)
+                                                            @if ($acprof->status == 'ACTIVO' && $acprof->COMBO == 'PERFIL1' && $acprof->plan_id == $p->id)
                                                                 {{ $acprof->Perfil->nameprofile }} <br>
                                                                 {{ $acprof->Perfil->pin }}
+                                                                @php
+                                                                    $perfil1 = $acprof->Perfil->id;
+                                                                @endphp
+                                                            @endif
+                                                        @endforeach
+                                                        <br>
+                                                    @elseif ($item->status == 'ACTIVO' && $item->COMBO == 'PERFIL2')
+                                                        @foreach ($item->Cuenta->CuentaPerfiles as $acprof)
+                                                            @if ($acprof->status == 'ACTIVO' && $acprof->COMBO == 'PERFIL2' && $acprof->plan_id == $p->id)
+                                                                {{ $acprof->Perfil->nameprofile }} <br>
+                                                                {{ $acprof->Perfil->pin }}
+                                                                @php
+                                                                    $perfil2 = $acprof->Perfil->id;
+                                                                @endphp
+                                                            @endif
+                                                        @endforeach
+                                                        <br>
+                                                    @elseif ($item->status == 'ACTIVO' && $item->COMBO == 'PERFIL3')
+                                                        @foreach ($item->Cuenta->CuentaPerfiles as $acprof)
+                                                            @if ($acprof->status == 'ACTIVO' && $acprof->COMBO == 'PERFIL3' && $acprof->plan_id == $p->id)
+                                                                {{ $acprof->Perfil->nameprofile }} <br>
+                                                                {{ $acprof->Perfil->pin }}
+                                                                @php
+                                                                    $perfil3 = $acprof->Perfil->id;
+                                                                @endphp
                                                             @endif
                                                         @endforeach
                                                         <br>
@@ -326,7 +379,7 @@
                                         </td>
                                         <td class="text-center">
                                             <a href="javascript:void(0)"
-                                                wire:click="VerObservaciones({{ $p->id }})"
+                                                wire:click="VerObservacionesCombo('{{ $p->id }}','{{ $IDcliente }}','{{ $perfil1 }}','{{ $perfil2 }}','{{ $perfil3 }}','{{ $plataforma1 }}','{{ $plataforma2 }}','{{ $plataforma3 }}')"
                                                 class="btn btn-dark mtmobile" title="Observaciones">
                                                 <i class="fa-solid fa-file-signature"></i>
                                             </a>
@@ -362,7 +415,6 @@
     @include('livewire.planes.form')
     @include('livewire.planes.modalObservaciones')
     @include('livewire.planes.modalPerfil')
-    @include('livewire.planes.modalCrearPerfil')
     @include('livewire.planes.modalCombos')
 
 </div>
@@ -370,14 +422,16 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
-        window.livewire.on('item-added', Msg => {
-            $('#theModal').modal('hide')
-            noty(Msg)
-        })
+
         window.livewire.on('item-anulado', Msg => {
             noty(Msg)
         })
         window.livewire.on('item-error', Msg => {
+            noty(Msg)
+        })
+
+        window.livewire.on('item-added', Msg => {
+            $('#theModal').modal('hide')
             noty(Msg)
         })
         window.livewire.on('show-modal', Msg => {
@@ -386,13 +440,7 @@
         window.livewire.on('hide-modal', Msg => {
             $('#theModal').modal('hide')
         })
-        window.livewire.on('show-modal2', Msg => {
-            $('#modal-detailes').modal('show')
-        })
-        window.livewire.on('g-i/e', Msg => {
-            $('#modal-detailes').modal('hide')
-            noty(Msg)
-        })
+
         window.livewire.on('item-actualizado', Msg => {
             $('#Modal_Observaciones').modal('hide')
             noty(Msg)
@@ -409,73 +457,12 @@
             noty(Msg)
         })
 
-        window.livewire.on('show-crearPerfil', Msg => {
-            $('#Modal_crear_perfil').modal('show')
-        })
-        window.livewire.on('mensajeCrearPerf', Msg => {
-            noty(Msg)
-        })
-        window.livewire.on('crearperfil-cerrar', Msg => {
-            $('#Modal_crear_perfil').modal('hide')
-            noty(Msg)
-        })
-
         window.livewire.on('show-modalCombos', Msg => {
             $('#Modal_combos').modal('show')
         })
         window.livewire.on('hide-modalCombos', Msg => {
             $('#Modal_combos').modal('hide')
             noty(Msg)
-        })
-
-        flatpickr(document.getElementsByClassName('flatpickr'), {
-            enableTime: false,
-            dateFormat: 'Y-m-d',
-            locale: {
-                firstDayofweek: 1,
-                weekdays: {
-                    shorthand: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
-                    longhand: [
-                        "Domingo",
-                        "Lunes",
-                        "Martes",
-                        "Miércoles",
-                        "Jueves",
-                        "Viernes",
-                        "Sábado",
-                    ],
-                },
-                months: {
-                    shorthand: [
-                        "Ene",
-                        "Feb",
-                        "Mar",
-                        "Abr",
-                        "May",
-                        "Jun",
-                        "Jul",
-                        "Ago",
-                        "Sep",
-                        "Oct",
-                        "Nov",
-                        "Dic",
-                    ],
-                    longhand: [
-                        "Enero",
-                        "Febrero",
-                        "Marzo",
-                        "Abril",
-                        "Mayo",
-                        "Junio",
-                        "Julio",
-                        "Agosto",
-                        "Septiembre",
-                        "Octubre",
-                        "Noviembre",
-                        "Diciembre",
-                    ],
-                },
-            }
         })
 
     });

@@ -179,7 +179,7 @@
                                             </td>
                                             <td class="text-center">
                                                 <a href="javascript:void(0)"
-                                                    wire:click="Crear({{ $acounts->IDaccount }})"
+                                                    wire:click="VerPerfiles({{ $acounts->IDaccount }})"
                                                     class="btn btn-dark mtmobile" title="Ver Perfiles">
                                                     <i class="fa-solid fa-user-gear"></i>
                                                 </a>
@@ -284,7 +284,7 @@
                                         <td class="text-center">
                                             @if ($acounts->plan_status == 'VIGENTE')
                                                 <a href="javascript:void(0)"
-                                                    wire:click="Acciones('{{ $acounts->planid }}','{{ $acounts->IDaccount }}','{{ $acounts->IDplatf }}','{{ $acounts->clienteID }}')"
+                                                    wire:click="Acciones('{{ $acounts->planid }}','{{ $acounts->IDplanAccount }}','{{ $acounts->IDaccount }}','{{ $acounts->IDplatf }}','{{ $acounts->clienteID }}')"
                                                     class="btn btn-dark mtmobile" title="Renovación">
                                                     <i class="fa-regular fa-calendar-check"></i>
                                                 </a>

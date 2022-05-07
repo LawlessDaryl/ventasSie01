@@ -17,9 +17,7 @@
                             <tr>
                                 <th class="table-th text-center text-white">NOMBRE PERFIL</th>
                                 <th class="table-th text-center text-white">PIN</th>
-                                <th class="table-th text-center text-white">STATUS</th>
                                 <th class="table-th text-center text-white">DISPONIBILIDAD</th>
-                                <th class="table-th text-center text-white">OBSERVACIONES</th>
                             </tr>
                         </thead>
 
@@ -33,13 +31,7 @@
                                         <h6>{{ $d->PIN }}</h6>
                                     </td>
                                     <td class="text-center">
-                                        <h6>{{ $d->estado }}</h6>
-                                    </td>
-                                    <td class="text-center">
                                         <h6>{{ $d->availability }}</h6>
-                                    </td>
-                                    <td class="text-center">
-                                        <h6>{{ $d->Observaciones }}</h6>
                                     </td>
                                 </tr>
                             @endforeach

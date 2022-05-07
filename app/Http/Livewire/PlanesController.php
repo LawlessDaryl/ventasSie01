@@ -121,6 +121,13 @@ class PlanesController extends Component
         $this->PIN3COMBO = 0;
         $this->perfil3ID = 0;
         $this->comprobante = null;
+        $this->selected_plan = 0;
+        $this->selected_planAccount = 0;
+        $this->selected_account = 0;
+        $this->selected_accountProf = 0;
+        $this->selected_perfil = 0;
+        $this->selected_platf = 0;
+        $this->selected_cliente = 0;
     }
 
     public function render()
@@ -233,22 +240,30 @@ class PlanesController extends Component
                     ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
                     ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
                     ->select(
-                        'plat.nombre as plataforma',
+                        'plans.id as planid',
+                        'plans.plan_start as planinicio',
+                        'plans.expiration_plan as planfin',
+                        'plans.observations as obs',
+                        'plans.status as estado',
+                        'plans.ready as ready',
+                        'plans.importe as importe',
+                        'pa.id as IDplanAccount',
+                        'acc.id as IDaccount',
+                        'acc.account_name as account_name',
+                        'acc.password_account as password_account',
+                        'acc.status as accstatus',
                         'acc.expiration_account as accexp',
+                        'plat.id as IDplatf',
+                        'plat.nombre as plataforma',
+                        'c.id as clienteID',
                         'c.nombre as cliente',
                         'c.celular as celular',
                         'e.content as correo',
                         'e.pass as passCorreo',
-                        'acc.password_account as password_account',
+                        'ap.id as IDaccountProfile',
+                        'prof.id as IDperfil',
                         'prof.nameprofile as nameprofile',
                         'prof.pin as pin',
-                        'plans.id as id',
-                        'plans.plan_start as planinicio',
-                        'plans.expiration_plan as planfin',
-                        'plans.observations as obs',
-                        'plans.importe as importe',
-                        'plans.status as estado',
-                        'plans.ready as ready',
                     )
                     ->whereBetween('plans.created_at', [$from, $to])
                     ->where('m.user_id', $user_id)
@@ -320,22 +335,26 @@ class PlanesController extends Component
                     ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
                     ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
                     ->select(
-                        'plat.nombre as plataforma',
-                        'acc.expiration_account as accexp',
-                        'c.nombre as cliente',
-                        'c.celular as celular',
-                        'e.content as correo',
-                        'e.pass as passCorreo',
-                        'plans.importe as importe',
-                        'acc.account_name as account_name',
-                        'acc.password_account as password_account',
-                        'acc.status as accstatus',
-                        'plans.id as id',
+                        'plans.id as planid',
                         'plans.plan_start as planinicio',
                         'plans.expiration_plan as planfin',
                         'plans.observations as obs',
                         'plans.status as estado',
                         'plans.ready as ready',
+                        'plans.importe as importe',
+                        'pa.id as IDplanAccount',
+                        'acc.id as IDaccount',
+                        'acc.account_name as account_name',
+                        'acc.password_account as password_account',
+                        'acc.status as accstatus',
+                        'acc.expiration_account as accexp',
+                        'plat.id as IDplatf',
+                        'plat.nombre as plataforma',
+                        'c.id as clienteID',
+                        'c.nombre as cliente',
+                        'c.celular as celular',
+                        'e.content as correo',
+                        'e.pass as passCorreo',
                     )
                     ->whereBetween('plans.created_at', [$from, $to])
                     ->where('m.user_id', $user_id)
@@ -344,7 +363,7 @@ class PlanesController extends Component
                     ->orderBy('plans.created_at', 'desc')
                     ->paginate($this->pagination);
             }
-        } else {
+        } elseif ($this->condicional == 'combos') {
             $data = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
                 ->select(
                     'plans.*'
@@ -680,6 +699,21 @@ class PlanesController extends Component
             ->section('content');
     }
 
+    /* Cargar los datos del cliente seleccionado de la tabla a los label */
+    public function Seleccionar($celular, $nombre)
+    {
+        $this->celular = $celular;
+        $this->nombre = $nombre;
+        $this->ClienteSelect = 0;
+    }
+
+    public function CargarAnterior()
+    {
+        $this->celular = $this->telefonoAnterior;
+        $this->nombre = $this->NombreAnterior;
+        $this->ClienteSelect = 0;
+    }
+
     /* PONER LA CUENTA SELECCIONADA EN EL SEGUNDA TABLA PARA LA VENTA AÑADIENDO A UN ARREGLO*/
     public function AgregarCuenta(Account $cuenta)
     {
@@ -944,13 +978,13 @@ class PlanesController extends Component
                 }
             }
 
-            // PONER EL PERFIL 1 EN OCUPADO 
+            // PONER EL PERFIL 1 EN OCUPADO
             $perfil1->availability = 'OCUPADO';
             $perfil1->save();
-            // PONER EL PERFIL 2 EN OCUPADO 
+            // PONER EL PERFIL 2 EN OCUPADO
             $perfil2->availability = 'OCUPADO';
             $perfil2->save();
-            // PONER EL PERFIL 3 EN OCUPADO 
+            // PONER EL PERFIL 3 EN OCUPADO
             $perfil3->availability = 'OCUPADO';
             $perfil3->save();
 
@@ -978,16 +1012,19 @@ class PlanesController extends Component
             /* crear plan account para los 3 perfiles con las 3 cuentas */
             PlanAccount::create([
                 'status' => 'ACTIVO',
+                'COMBO' => 'PERFIL1',
                 'plan_id' => $plan->id,
                 'account_id' => $account1->id,
             ]);
             PlanAccount::create([
                 'status' => 'ACTIVO',
+                'COMBO' => 'PERFIL2',
                 'plan_id' => $plan->id,
                 'account_id' => $account2->id,
             ]);
             PlanAccount::create([
                 'status' => 'ACTIVO',
+                'COMBO' => 'PERFIL3',
                 'plan_id' => $plan->id,
                 'account_id' => $account3->id,
             ]);
@@ -1086,80 +1123,10 @@ class PlanesController extends Component
         }
     }
 
-    public function VerCuentas()
-    {
-        $this->emit('show-crearPerfil', 'show modal!');
-    }
-
-    public function SeleccionarCuenta(Account $cuenta)
-    {
-        $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
-            ->join('profiles as p', 'ap.profile_id', 'p.id')
-            ->where('accounts.id', $cuenta->id)
-            ->where('p.status', 'ACTIVO')->get();
-        $cantidadActivos = $perfilesActivos->count();
-        $cantiadadQueSePuedeCrear = $cuenta->number_profiles - $cantidadActivos;
-
-        if ($this->CantidadPerfilesCrear <= $cantiadadQueSePuedeCrear) {
-            for ($i = 0; $i < $this->CantidadPerfilesCrear; $i++) {
-                $perfil = Profile::create([
-                    'nameprofile' => $this->nombre . rand(1000, 9999),
-                    'pin' => rand(1000, 9999),
-                    'status' => 'ACTIVO',
-                    'availability' => 'LIBRE',
-                    'observations' => '',
-                ]);
-                AccountProfile::create([
-                    'status' => 'SinAsignar',
-                    'account_id' => $cuenta->id,
-                    'profile_id' => $perfil->id,
-                ]);
-                /* LA CUENTA PASA A DIVIDIDA */
-                $cuenta->whole_account = 'DIVIDIDA';
-                $cuenta->save();
-
-                /* ACTUALIZAR LISTADO PERFILES Y MOSTAR EL CREADO */
-                $this->profiles = Profile::join('account_profiles as ap', 'ap.profile_id', 'profiles.id')
-                    ->join('accounts as a', 'ap.account_id', 'a.id')
-                    ->join('platforms as p', 'a.platform_id', 'p.id')
-                    ->join('emails as e', 'a.email_id', 'e.id')
-                    ->select(
-                        'profiles.id as id',
-                        'p.precioPerfil as precioPerfil',
-                        'a.id as cuentaid',
-                        'e.content as email',
-                        'profiles.nameprofile as nombre_perfil',
-                        'profiles.pin as pin',
-                        'a.password_account as password_account'
-                    )
-                    ->where('profiles.availability', 'LIBRE')
-                    ->where('profiles.status', 'ACTIVO')
-                    ->where('a.status', 'ACTIVO')
-                    ->orderBy('a.expiration_account', 'desc')
-                    ->where('p.id', $this->plataforma)
-                    ->get()->take($this->cantidaperf);
-            }
-            $this->emit('mensajeCrearPerf', 'Se crearon los ' . $this->CantidadPerfilesCrear . ' Perfiles');
-        } else {
-            $this->emit('mensajeCrearPerf', 'No tiene la cantidad suficiente de perfiles que usted quiere crear');
-        }
-
-
-        /* $this->emit('crearperfil-cerrar', 'Se creó el perfil en la cuenta seleccionada'); */
-    }
-
     public function Agregar()
     {
         $this->resetUI();
         $this->emit('show-modal', 'show modal!');
-    }
-
-    /* Cargar los datos seleccionados de la tabla a los label */
-    public function Seleccionar($celular, $nombre)
-    {
-        $this->celular = $celular;
-        $this->nombre = $nombre;
-        $this->ClienteSelect = 0;
     }
 
     /* Registrar un nuevo plan */
@@ -1505,13 +1472,6 @@ class PlanesController extends Component
         }
     }
 
-    public function CargarAnterior()
-    {
-        $this->celular = $this->telefonoAnterior;
-        $this->nombre = $this->NombreAnterior;
-        $this->ClienteSelect = 0;
-    }
-
     /* Anular una transacción */
     public function Anular(Plan $plan)
     {
@@ -1607,132 +1567,66 @@ class PlanesController extends Component
         }
     }
 
-    public function viewDetails()
-    {
-        $this->emit('show-modal2', 'open modal');
-    }
-
-    public function VerObservaciones(Plan $plan)
+    public function VerObservacionesPerfil(Plan $plan, Profile $perfil, Cliente $cliente)
     {
         $this->resetUI();
-        if ($this->condicional == 'perfiles') {
-            $datosPlan = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
-                ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
-                ->join('accounts as acc', 'acc.id', 'pa.account_id')
-                ->join('platforms as p', 'p.id', 'acc.platform_id')
-                ->join('account_profiles as ap', 'acc.id', 'ap.account_id')
-                ->join('profiles as prof', 'prof.id', 'ap.profile_id')
-                ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
-                ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
-                ->select(
-                    'prof.nameprofile as nameprofile',
-                    'prof.pin as pin',
-                    'plans.observations as observations',
-                    'c.nombre as nombreCliente',
-                    'c.celular as celular',
-                    'plans.plan_start as plan_start',
-                    'plans.expiration_plan as expiration_plan',
-                    'c.id as clienteId',
-                    'prof.id as perfilId',
-                )
-                ->where('plans.id', $plan->id)
-                ->whereColumn('plans.id', '=', 'ap.plan_id')
-                ->where('pa.status', 'ACTIVO')
-                ->where('ap.status', 'ACTIVO')
-                ->orderby('plans.id', 'desc')
-                ->get()->first();
 
-            $this->nombre = $datosPlan->nombreCliente;
-            $this->celular = $datosPlan->celular;
-            $this->PerfilCliente = $datosPlan->nameprofile;
-            $this->PinCliente = $datosPlan->pin;
-            $this->perfilId = $datosPlan->perfilId;
-            $this->clienteId = $datosPlan->clienteId;
-        } elseif ($this->condicional == 'cuentas') {
-            $datosPlan = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
-                ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
-                ->join('accounts as acc', 'acc.id', 'pa.account_id')
-                ->join('platforms as p', 'p.id', 'acc.platform_id')
-                ->join('emails as e', 'e.id', 'acc.email_id')
-                ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
-                ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
-                ->select(
-                    'c.nombre as nombreCliente',
-                    'c.celular as celular',
-                    'e.content as correoCuenta',
-                    'acc.account_name as account_name',
-                    'acc.password_account as password_account',
-                    'plans.plan_start as plan_start',
-                    'plans.expiration_plan as expiration_plan',
-                    'plans.observations as observations',
-                    'c.id as clienteId',
-                )
-                ->where('plans.id', $plan->id)
-                ->orderby('plans.id', 'desc')
-                ->where('pa.status', 'ACTIVO')
-                ->get()->first();
-            $this->nombre = $datosPlan->nombreCliente;
-            $this->celular = $datosPlan->celular;
-            $this->clienteId = $datosPlan->clienteId;
-        } elseif ($this->condicional == 'combos') {
-            $datosPlan = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
-                ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
-                ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
-                ->select(
-                    'plans.observations as observations',
-                    'plans.plan_start as plan_start',
-                    'plans.expiration_plan as expiration_plan',
-                    'c.id as clienteId',
-                    'c.nombre as nombreCliente',
-                    'c.celular as celular',
-                )
-                ->where('plans.id', $plan->id)
-                ->orderby('plans.id', 'desc')
-                ->get()->first();
+        $this->selected_plan = $plan->id;
+        $this->observaciones = $plan->observations;
+        $this->fecha_inicio = $plan->plan_start;
+        $this->expiration_plan = $plan->expiration_plan;
+        $this->comprobante = $plan->comprobante;
 
-            $this->nombre = $datosPlan->nombreCliente;
-            $this->celular = $datosPlan->celular;
-            $this->clienteId = $datosPlan->clienteId;
+        $this->selected_cliente = $cliente->id;
+        $this->nombre = $cliente->nombre;
+        $this->celular = $cliente->celular;
 
-            /* CARGAR NOMBRE DE PERFIL, PIN E ID EN LAS VARIABLES */
-            foreach ($plan->PlanAccounts as  $value) {
-                if ($value->status == 'ACTIVO') {
-                    foreach ($value->Cuenta->CuentaPerfiles as  $v) {
-                        if ($v->status == 'ACTIVO' && $v->COMBO == 'PERFIL1') {
-                            $this->plataforma1Nombre = $v->Cuenta->Plataforma->nombre;
-                            $this->perfil1COMBO =  $v->Perfil->nameprofile;
-                            $this->PIN1COMBO = $v->Perfil->pin;
-                            $this->perfil1ID = $v->Perfil->id;
-                        }
-                    }
-                }
-            }
-            foreach ($plan->PlanAccounts as  $value) {
-                if ($value->status == 'ACTIVO') {
-                    foreach ($value->Cuenta->CuentaPerfiles as  $v) {
-                        if ($v->status == 'ACTIVO' && $v->COMBO == 'PERFIL2') {
-                            $this->plataforma2Nombre = $v->Cuenta->Plataforma->nombre;
-                            $this->perfil2COMBO =  $v->Perfil->nameprofile;
-                            $this->PIN2COMBO = $v->Perfil->pin;
-                            $this->perfil2ID = $v->Perfil->id;
-                        }
-                    }
-                }
-            }
-            foreach ($plan->PlanAccounts as  $value) {
-                if ($value->status == 'ACTIVO') {
-                    foreach ($value->Cuenta->CuentaPerfiles as  $v) {
-                        if ($v->status == 'ACTIVO' && $v->COMBO == 'PERFIL3') {
-                            $this->plataforma3Nombre = $v->Cuenta->Plataforma->nombre;
-                            $this->perfil3COMBO =  $v->Perfil->nameprofile;
-                            $this->PIN3COMBO = $v->Perfil->pin;
-                            $this->perfil3ID = $v->Perfil->id;
-                        }
-                    }
-                }
-            }
-        }
-        $this->selected_id = $plan->id;
+        $this->selected_perfil = $perfil->id;
+        $this->PerfilCliente = $perfil->nameprofile;
+        $this->PinCliente = $perfil->pin;
+
+        $this->emit('show-modal3', 'open modal');
+    }
+    public function VerObservacionesCuenta(Plan $plan, Cliente $cliente)
+    {
+        $this->resetUI();
+
+        $this->selected_plan = $plan->id;
+        $this->observaciones = $plan->observations;
+        $this->fecha_inicio = $plan->plan_start;
+        $this->expiration_plan = $plan->expiration_plan;
+        $this->comprobante = $plan->comprobante;
+
+        $this->selected_cliente = $cliente->id;
+        $this->nombre = $cliente->nombre;
+        $this->celular = $cliente->celular;
+
+        $this->emit('show-modal3', 'open modal');
+    }
+    public function VerObservacionesCombo(Plan $plan, Cliente $cliente, Profile $perfil1, Profile $perfil2, Profile $perfil3, Platform $plataforma1, Platform $plataforma2, Platform $plataforma3)
+    {
+        $this->resetUI();
+
+        $this->selected_cliente = $cliente->id;
+        $this->nombre = $cliente->nombre;
+        $this->celular = $cliente->celular;
+
+        $this->plataforma1Nombre = $plataforma1->nombre;
+        $this->perfil1COMBO =  $perfil1->nameprofile;
+        $this->PIN1COMBO = $perfil1->pin;
+        $this->perfil1ID = $perfil1->id;
+
+        $this->plataforma2Nombre = $plataforma2->nombre;
+        $this->perfil2COMBO =  $perfil2->nameprofile;
+        $this->PIN2COMBO = $perfil2->pin;
+        $this->perfil2ID = $perfil2->id;
+
+        $this->plataforma3Nombre = $plataforma3->nombre;
+        $this->perfil3COMBO =  $perfil3->nameprofile;
+        $this->PIN3COMBO = $perfil3->pin;
+        $this->perfil3ID = $perfil3->id;
+
+        $this->selected_plan = $plan->id;
         $this->observaciones = $plan->observations;
         $this->fecha_inicio = $plan->plan_start;
         $this->expiration_plan = $plan->expiration_plan;
@@ -1818,8 +1712,7 @@ class PlanesController extends Component
 
         DB::beginTransaction();
         try {
-
-            $plan = Plan::find($this->selected_id);
+            $plan = Plan::find($this->selected_plan);
             $plan->observations = $this->observaciones;
             $plan->plan_start = $this->fecha_inicio;
             $plan->expiration_plan = $this->expiration_plan;
@@ -1838,13 +1731,13 @@ class PlanesController extends Component
                 }
             }
 
-            $cliente = Cliente::find($this->clienteId);
+            $cliente = Cliente::find($this->selected_cliente);
             $cliente->nombre = $this->nombre;
             $cliente->celular = $this->celular;
             $cliente->save();
 
             if ($this->condicional == 'perfiles') {
-                $perfil = Profile::find($this->perfilId);
+                $perfil = Profile::find($this->selected_perfil);
                 $perfil->nameprofile = $this->PerfilCliente;
                 $perfil->pin = $this->PinCliente;
                 $perfil->save();
