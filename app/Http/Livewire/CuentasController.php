@@ -111,8 +111,8 @@ class CuentasController extends Component
     public function render()
     {
         if ($this->condicional == 'cuentas') {  /* cuentas libres y ocupadas */
-            if ($this->EnterasDivididas != 'TODOS') {
-                if ($this->PlataformaFiltro != 'TODAS') {
+            if ($this->EnterasDivididas != 'TODOS') {   // solo enteras o solo divididas
+                if ($this->PlataformaFiltro != 'TODAS') {   // solo una plataforma
                     if (strlen($this->search) > 0) {
                         $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                             ->join('emails as e', 'accounts.email_id', 'e.id')
@@ -128,36 +128,29 @@ class CuentasController extends Component
                                 'e.content as content',
                                 'e.pass as pass',
                                 'strsp.name as name',
-                                DB::raw('0 as perfActivos'),
+                                DB::raw('0 as perfOcupados'),
                                 DB::raw('0 as perfLibres'),
                                 DB::raw('0 as dias')
                             )
-                            ->where('p.nombre', 'like', '%' . $this->search . '%')
+                            ->where('accounts.account_name', 'like', '%' . $this->search . '%')
                             ->where('accounts.status', 'ACTIVO')
+                            ->where('accounts.whole_account', $this->EnterasDivididas)
+                            ->where('p.id', $this->PlataformaFiltro)
                             ->where('accounts.availability', 'LIBRE')
-
-                            ->orWhere('accounts.account_name', 'like', '%' . $this->search . '%')
-                            ->where('accounts.status', 'ACTIVO')
-                            ->where('accounts.availability', 'LIBRE')
-
-                            ->orWhere('accounts.whole_account', 'like', '%' . $this->search . '%')
-                            ->where('accounts.status', 'ACTIVO')
-                            ->where('accounts.availability', 'LIBRE')
-
                             ->orderBy('accounts.expiration_account', 'asc')
                             ->paginate($this->pagination);
                         foreach ($cuentas as $c) {
-                            $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
+                            $perfilesOcupado = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                                 ->join('profiles as p', 'ap.profile_id', 'p.id')
-                                ->where('accounts.id', $c->id)
-                                ->where('p.status', 'ACTIVO')->get();
+                                ->where('accounts.id', $c->IDaccount)
+                                ->where('p.availability', 'OCUPADO')->get();
                             $perfilesLibres = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                                 ->join('profiles as p', 'ap.profile_id', 'p.id')
-                                ->where('accounts.id', $c->id)
+                                ->where('accounts.id', $c->IDaccount)
                                 ->where('p.availability', 'LIBRE')
                                 ->where('p.status', 'ACTIVO')->get();
-                            $cantidadActivos = $perfilesActivos->count();
-                            $c->perfActivos = $cantidadActivos;
+                            $cantidadOcupados = $perfilesOcupado->count();
+                            $c->perfOcupados = $cantidadOcupados;
                             $cantidadLibres = $perfilesLibres->count();
                             $c->perfLibres = $cantidadLibres;
 
@@ -194,11 +187,11 @@ class CuentasController extends Component
                         foreach ($cuentas as $c) {
                             $perfilesOcupado = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                                 ->join('profiles as p', 'ap.profile_id', 'p.id')
-                                ->where('accounts.id', $c->id)
+                                ->where('accounts.id', $c->IDaccount)
                                 ->where('p.availability', 'OCUPADO')->get();
                             $perfilesLibres = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                                 ->join('profiles as p', 'ap.profile_id', 'p.id')
-                                ->where('accounts.id', $c->id)
+                                ->where('accounts.id', $c->IDaccount)
                                 ->where('p.availability', 'LIBRE')
                                 ->where('p.status', 'ACTIVO')->get();
                             $cantidadOcupados = $perfilesOcupado->count();
@@ -212,7 +205,7 @@ class CuentasController extends Component
                             $c->dias = $d;
                         }
                     }
-                } else {
+                } else {    // todas las plataformas
                     if (strlen($this->search) > 0) {
                         $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                             ->join('emails as e', 'accounts.email_id', 'e.id')
@@ -228,36 +221,28 @@ class CuentasController extends Component
                                 'e.content as content',
                                 'e.pass as pass',
                                 'strsp.name as name',
-                                DB::raw('0 as perfActivos'),
+                                DB::raw('0 as perfOcupados'),
                                 DB::raw('0 as perfLibres'),
                                 DB::raw('0 as dias')
                             )
-                            ->where('p.nombre', 'like', '%' . $this->search . '%')
+                            ->where('accounts.account_name', 'like', '%' . $this->search . '%')
                             ->where('accounts.status', 'ACTIVO')
+                            ->where('accounts.whole_account', $this->EnterasDivididas)
                             ->where('accounts.availability', 'LIBRE')
-
-                            ->orWhere('accounts.account_name', 'like', '%' . $this->search . '%')
-                            ->where('accounts.status', 'ACTIVO')
-                            ->where('accounts.availability', 'LIBRE')
-
-                            ->orWhere('accounts.whole_account', 'like', '%' . $this->search . '%')
-                            ->where('accounts.status', 'ACTIVO')
-                            ->where('accounts.availability', 'LIBRE')
-
                             ->orderBy('accounts.expiration_account', 'asc')
                             ->paginate($this->pagination);
                         foreach ($cuentas as $c) {
-                            $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
+                            $perfilesOcupado = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                                 ->join('profiles as p', 'ap.profile_id', 'p.id')
-                                ->where('accounts.id', $c->id)
-                                ->where('p.status', 'ACTIVO')->get();
+                                ->where('accounts.id', $c->IDaccount)
+                                ->where('p.availability', 'OCUPADO')->get();
                             $perfilesLibres = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                                 ->join('profiles as p', 'ap.profile_id', 'p.id')
-                                ->where('accounts.id', $c->id)
+                                ->where('accounts.id', $c->IDaccount)
                                 ->where('p.availability', 'LIBRE')
                                 ->where('p.status', 'ACTIVO')->get();
-                            $cantidadActivos = $perfilesActivos->count();
-                            $c->perfActivos = $cantidadActivos;
+                            $cantidadOcupados = $perfilesOcupado->count();
+                            $c->perfOcupados = $cantidadOcupados;
                             $cantidadLibres = $perfilesLibres->count();
                             $c->perfLibres = $cantidadLibres;
 
@@ -293,11 +278,11 @@ class CuentasController extends Component
                         foreach ($cuentas as $c) {
                             $perfilesOcupado = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                                 ->join('profiles as p', 'ap.profile_id', 'p.id')
-                                ->where('accounts.id', $c->id)
+                                ->where('accounts.id', $c->IDaccount)
                                 ->where('p.availability', 'OCUPADO')->get();
                             $perfilesLibres = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                                 ->join('profiles as p', 'ap.profile_id', 'p.id')
-                                ->where('accounts.id', $c->id)
+                                ->where('accounts.id', $c->IDaccount)
                                 ->where('p.availability', 'LIBRE')
                                 ->where('p.status', 'ACTIVO')->get();
                             $cantidadOcupados = $perfilesOcupado->count();
@@ -312,8 +297,8 @@ class CuentasController extends Component
                         }
                     }
                 }
-            } else {
-                if ($this->PlataformaFiltro != 'TODAS') {
+            } else {    // enteras y divididas
+                if ($this->PlataformaFiltro != 'TODAS') {   // solo una plataforma
                     if (strlen($this->search) > 0) {
                         $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                             ->join('emails as e', 'accounts.email_id', 'e.id')
@@ -329,36 +314,28 @@ class CuentasController extends Component
                                 'e.content as content',
                                 'e.pass as pass',
                                 'strsp.name as name',
-                                DB::raw('0 as perfActivos'),
+                                DB::raw('0 as perfOcupados'),
                                 DB::raw('0 as perfLibres'),
                                 DB::raw('0 as dias')
                             )
-                            ->where('p.nombre', 'like', '%' . $this->search . '%')
+                            ->where('accounts.account_name', 'like', '%' . $this->search . '%')
                             ->where('accounts.status', 'ACTIVO')
+                            ->where('p.id', $this->PlataformaFiltro)
                             ->where('accounts.availability', 'LIBRE')
-
-                            ->orWhere('accounts.account_name', 'like', '%' . $this->search . '%')
-                            ->where('accounts.status', 'ACTIVO')
-                            ->where('accounts.availability', 'LIBRE')
-
-                            ->orWhere('accounts.whole_account', 'like', '%' . $this->search . '%')
-                            ->where('accounts.status', 'ACTIVO')
-                            ->where('accounts.availability', 'LIBRE')
-
                             ->orderBy('accounts.expiration_account', 'asc')
                             ->paginate($this->pagination);
                         foreach ($cuentas as $c) {
-                            $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
+                            $perfilesOcupado = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                                 ->join('profiles as p', 'ap.profile_id', 'p.id')
-                                ->where('accounts.id', $c->id)
-                                ->where('p.status', 'ACTIVO')->get();
+                                ->where('accounts.id', $c->IDaccount)
+                                ->where('p.availability', 'OCUPADO')->get();
                             $perfilesLibres = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                                 ->join('profiles as p', 'ap.profile_id', 'p.id')
-                                ->where('accounts.id', $c->id)
+                                ->where('accounts.id', $c->IDaccount)
                                 ->where('p.availability', 'LIBRE')
                                 ->where('p.status', 'ACTIVO')->get();
-                            $cantidadActivos = $perfilesActivos->count();
-                            $c->perfActivos = $cantidadActivos;
+                            $cantidadOcupados = $perfilesOcupado->count();
+                            $c->perfOcupados = $cantidadOcupados;
                             $cantidadLibres = $perfilesLibres->count();
                             $c->perfLibres = $cantidadLibres;
 
@@ -394,11 +371,11 @@ class CuentasController extends Component
                         foreach ($cuentas as $c) {
                             $perfilesOcupado = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                                 ->join('profiles as p', 'ap.profile_id', 'p.id')
-                                ->where('accounts.id', $c->id)
+                                ->where('accounts.id', $c->IDaccount)
                                 ->where('p.availability', 'OCUPADO')->get();
                             $perfilesLibres = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                                 ->join('profiles as p', 'ap.profile_id', 'p.id')
-                                ->where('accounts.id', $c->id)
+                                ->where('accounts.id', $c->IDaccount)
                                 ->where('p.availability', 'LIBRE')
                                 ->where('p.status', 'ACTIVO')->get();
                             $cantidadOcupados = $perfilesOcupado->count();
@@ -412,7 +389,7 @@ class CuentasController extends Component
                             $c->dias = $d;
                         }
                     }
-                } else {
+                } else {    // todas las plataformas
                     if (strlen($this->search) > 0) {
                         $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                             ->join('emails as e', 'accounts.email_id', 'e.id')
@@ -428,36 +405,27 @@ class CuentasController extends Component
                                 'e.content as content',
                                 'e.pass as pass',
                                 'strsp.name as name',
-                                DB::raw('0 as perfActivos'),
+                                DB::raw('0 as perfOcupados'),
                                 DB::raw('0 as perfLibres'),
                                 DB::raw('0 as dias')
                             )
-                            ->where('p.nombre', 'like', '%' . $this->search . '%')
+                            ->where('accounts.account_name', 'like', '%' . $this->search . '%')
                             ->where('accounts.status', 'ACTIVO')
                             ->where('accounts.availability', 'LIBRE')
-
-                            ->orWhere('accounts.account_name', 'like', '%' . $this->search . '%')
-                            ->where('accounts.status', 'ACTIVO')
-                            ->where('accounts.availability', 'LIBRE')
-
-                            ->orWhere('accounts.whole_account', 'like', '%' . $this->search . '%')
-                            ->where('accounts.status', 'ACTIVO')
-                            ->where('accounts.availability', 'LIBRE')
-
                             ->orderBy('accounts.expiration_account', 'asc')
                             ->paginate($this->pagination);
                         foreach ($cuentas as $c) {
-                            $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
+                            $perfilesOcupado = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                                 ->join('profiles as p', 'ap.profile_id', 'p.id')
-                                ->where('accounts.id', $c->id)
-                                ->where('p.status', 'ACTIVO')->get();
+                                ->where('accounts.id', $c->IDaccount)
+                                ->where('p.availability', 'OCUPADO')->get();
                             $perfilesLibres = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                                 ->join('profiles as p', 'ap.profile_id', 'p.id')
-                                ->where('accounts.id', $c->id)
+                                ->where('accounts.id', $c->IDaccount)
                                 ->where('p.availability', 'LIBRE')
                                 ->where('p.status', 'ACTIVO')->get();
-                            $cantidadActivos = $perfilesActivos->count();
-                            $c->perfActivos = $cantidadActivos;
+                            $cantidadOcupados = $perfilesOcupado->count();
+                            $c->perfOcupados = $cantidadOcupados;
                             $cantidadLibres = $perfilesLibres->count();
                             $c->perfLibres = $cantidadLibres;
 
@@ -492,11 +460,11 @@ class CuentasController extends Component
                         foreach ($cuentas as $c) {
                             $perfilesOcupado = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                                 ->join('profiles as p', 'ap.profile_id', 'p.id')
-                                ->where('accounts.id', $c->id)
+                                ->where('accounts.id', $c->IDaccount)
                                 ->where('p.availability', 'OCUPADO')->get();
                             $perfilesLibres = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                                 ->join('profiles as p', 'ap.profile_id', 'p.id')
-                                ->where('accounts.id', $c->id)
+                                ->where('accounts.id', $c->IDaccount)
                                 ->where('p.availability', 'LIBRE')
                                 ->where('p.status', 'ACTIVO')->get();
                             $cantidadOcupados = $perfilesOcupado->count();
@@ -515,7 +483,7 @@ class CuentasController extends Component
         } elseif ($this->condicional == 'ocupados') { /* cuentas ocupadas enteras */
             if ($this->PlataformaFiltro != 'TODAS') {
                 if (strlen($this->search) > 0) {
-                    /* $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
+                    $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                         ->join('emails as e', 'accounts.email_id', 'e.id')
                         ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
                         ->join('plan_accounts as pa', 'pa.account_id', 'accounts.id')
@@ -526,6 +494,10 @@ class CuentasController extends Component
                         ->select(
                             'pl.id as planid',
                             'pl.done as done',
+                            'pl.expiration_plan as expiration_plan',
+                            'pl.plan_start as plan_start',
+                            'pl.status as plan_status',
+                            'pa.id as IDplanAccount',
                             'accounts.id as IDaccount',
                             'accounts.expiration_account as expiration_account',
                             'accounts.number_profiles',
@@ -533,42 +505,37 @@ class CuentasController extends Component
                             'accounts.status',
                             'accounts.account_name',
                             'accounts.password_account',
+                            'p.id as IDplatf',
                             'p.nombre as nombre',
                             'e.content as content',
                             'e.pass as pass',
                             'strsp.name as name',
-                            'pl.expiration_plan as expiration_plan',
-                            'pl.plan_start as plan_start',
-                            'pl.status as plan_status',
+                            'c.id as clienteID',
                             'c.nombre as clienteNombre',
                             'c.celular as clienteCelular',
-                            'c.id as clienteID',
                             DB::raw('0 as horas'),
                             DB::raw('0 as dias')
                         )
-                        ->where('p.nombre', 'like', '%' . $this->search . '%')
+                        ->where('c.nombre', 'like', '%' . $this->search . '%')
                         ->where('pl.status', 'VIGENTE')
-                        ->where('pa.status', 'ACTIVO')
                         ->where('pl.type_plan', 'CUENTA')
-                        ->where('pl.ready', 'SI')
-
-                        ->orWhere('c.nombre', 'like', '%' . $this->search . '%')
-                        ->where('pl.status', 'VIGENTE')
                         ->where('pa.status', 'ACTIVO')
-                        ->where('pl.type_plan', 'CUENTA')
                         ->where('pl.ready', 'SI')
+                        ->where('p.id', $this->PlataformaFiltro)
 
                         ->orWhere('c.celular', 'like', '%' . $this->search . '%')
                         ->where('pl.status', 'VIGENTE')
-                        ->where('pa.status', 'ACTIVO')
                         ->where('pl.type_plan', 'CUENTA')
+                        ->where('pa.status', 'ACTIVO')
                         ->where('pl.ready', 'SI')
+                        ->where('p.id', $this->PlataformaFiltro)
 
                         ->orWhere('accounts.account_name', 'like', '%' . $this->search . '%')
                         ->where('pl.status', 'VIGENTE')
-                        ->where('pa.status', 'ACTIVO')
                         ->where('pl.type_plan', 'CUENTA')
+                        ->where('pa.status', 'ACTIVO')
                         ->where('pl.ready', 'SI')
+                        ->where('p.id', $this->PlataformaFiltro)
 
                         ->orderBy('pl.done', 'desc')
                         ->orderBy('pl.expiration_plan', 'asc')
@@ -580,13 +547,13 @@ class CuentasController extends Component
                         if ($diff->invert != 1) {
                             $c->horas = (($diff->days * 24)) + ($diff->h);
                         } else {
-                            $c->horas = '0';
+                            $c->horas = '-1';
                         }
                         $fecha_actual = date("Y-m-d");
                         $s = strtotime($c->expiration_account) - strtotime($fecha_actual);
                         $d = intval($s / 86400);
                         $c->dias = $d;
-                    } */
+                    }
                 } else {
                     $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                         ->join('emails as e', 'accounts.email_id', 'e.id')
@@ -625,8 +592,9 @@ class CuentasController extends Component
                         ->where('pl.type_plan', 'CUENTA')
                         ->where('pa.status', 'ACTIVO')
                         ->where('pl.ready', 'SI')
-                        ->orderBy('pl.done', 'desc')
                         ->where('p.id', $this->PlataformaFiltro)
+
+                        ->orderBy('pl.done', 'desc')
                         ->orderBy('pl.expiration_plan', 'asc')
                         ->paginate($this->pagination);
                     foreach ($cuentas as $c) {
@@ -646,7 +614,7 @@ class CuentasController extends Component
                 }
             } else {
                 if (strlen($this->search) > 0) {
-                    /* $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
+                    $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                         ->join('emails as e', 'accounts.email_id', 'e.id')
                         ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
                         ->join('plan_accounts as pa', 'pa.account_id', 'accounts.id')
@@ -657,6 +625,10 @@ class CuentasController extends Component
                         ->select(
                             'pl.id as planid',
                             'pl.done as done',
+                            'pl.expiration_plan as expiration_plan',
+                            'pl.plan_start as plan_start',
+                            'pl.status as plan_status',
+                            'pa.id as IDplanAccount',
                             'accounts.id as IDaccount',
                             'accounts.expiration_account as expiration_account',
                             'accounts.number_profiles',
@@ -664,41 +636,33 @@ class CuentasController extends Component
                             'accounts.status',
                             'accounts.account_name',
                             'accounts.password_account',
+                            'p.id as IDplatf',
                             'p.nombre as nombre',
                             'e.content as content',
                             'e.pass as pass',
                             'strsp.name as name',
-                            'pl.expiration_plan as expiration_plan',
-                            'pl.plan_start as plan_start',
-                            'pl.status as plan_status',
+                            'c.id as clienteID',
                             'c.nombre as clienteNombre',
                             'c.celular as clienteCelular',
-                            'c.id as clienteID',
                             DB::raw('0 as horas'),
                             DB::raw('0 as dias')
                         )
-                        ->where('p.nombre', 'like', '%' . $this->search . '%')
+                        ->where('c.nombre', 'like', '%' . $this->search . '%')
                         ->where('pl.status', 'VIGENTE')
-                        ->where('pa.status', 'ACTIVO')
                         ->where('pl.type_plan', 'CUENTA')
-                        ->where('pl.ready', 'SI')
-
-                        ->orWhere('c.nombre', 'like', '%' . $this->search . '%')
-                        ->where('pl.status', 'VIGENTE')
                         ->where('pa.status', 'ACTIVO')
-                        ->where('pl.type_plan', 'CUENTA')
                         ->where('pl.ready', 'SI')
 
                         ->orWhere('c.celular', 'like', '%' . $this->search . '%')
                         ->where('pl.status', 'VIGENTE')
-                        ->where('pa.status', 'ACTIVO')
                         ->where('pl.type_plan', 'CUENTA')
+                        ->where('pa.status', 'ACTIVO')
                         ->where('pl.ready', 'SI')
 
                         ->orWhere('accounts.account_name', 'like', '%' . $this->search . '%')
                         ->where('pl.status', 'VIGENTE')
-                        ->where('pa.status', 'ACTIVO')
                         ->where('pl.type_plan', 'CUENTA')
+                        ->where('pa.status', 'ACTIVO')
                         ->where('pl.ready', 'SI')
 
                         ->orderBy('pl.done', 'desc')
@@ -711,13 +675,13 @@ class CuentasController extends Component
                         if ($diff->invert != 1) {
                             $c->horas = (($diff->days * 24)) + ($diff->h);
                         } else {
-                            $c->horas = '0';
+                            $c->horas = '-1';
                         }
                         $fecha_actual = date("Y-m-d");
                         $s = strtotime($c->expiration_account) - strtotime($fecha_actual);
                         $d = intval($s / 86400);
                         $c->dias = $d;
-                    } */
+                    }
                 } else {
                     $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                         ->join('emails as e', 'accounts.email_id', 'e.id')
@@ -778,7 +742,7 @@ class CuentasController extends Component
         } elseif ($this->condicional == 'vencidos') {    /* CUENTAS VENCIDAS */
             if ($this->PlataformaFiltro != 'TODAS') {
                 if (strlen($this->search) > 0) {
-                    /* $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
+                    $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                         ->join('emails as e', 'accounts.email_id', 'e.id')
                         ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
                         ->join('plan_accounts as pa', 'pa.account_id', 'accounts.id')
@@ -789,50 +753,50 @@ class CuentasController extends Component
                         ->select(
                             'pl.id as planid',
                             'pl.done as done',
+                            'pl.expiration_plan as expiration_plan',
+                            'pl.plan_start as plan_start',
+                            'pl.status as plan_status',
+                            'pa.id as IDplanAccount',
                             'accounts.id as IDaccount',
                             'accounts.expiration_account as expiration_account',
                             'accounts.number_profiles',
                             'accounts.whole_account',
                             'accounts.status',
+                            'accounts.account_name',
                             'accounts.password_account',
+                            'p.id as IDplatf',
                             'p.nombre as nombre',
                             'e.content as content',
                             'e.pass as pass',
                             'strsp.name as name',
-                            'pl.expiration_plan as expiration_plan',
-                            'pl.plan_start as plan_start',
-                            'pl.status as plan_status',
+                            'c.id as clienteID',
                             'c.nombre as clienteNombre',
                             'c.celular as clienteCelular',
-                            'c.id as clienteID',
                         )
-                        ->where('p.nombre', 'like', '%' . $this->search . '%')
+                        ->where('c.nombre', 'like', '%' . $this->search . '%')
                         ->where('pl.status', 'VENCIDO')
                         ->where('pa.status', 'VENCIDO')
                         ->where('pl.type_plan', 'CUENTA')
                         ->where('pl.ready', 'SI')
-
-                        ->orWhere('c.nombre', 'like', '%' . $this->search . '%')
-                        ->where('pl.status', 'VENCIDO')
-                        ->where('pa.status', 'VENCIDO')
-                        ->where('pl.type_plan', 'CUENTA')
-                        ->where('pl.ready', 'SI')
+                        ->where('p.id', $this->PlataformaFiltro)
 
                         ->orWhere('c.celular', 'like', '%' . $this->search . '%')
                         ->where('pl.status', 'VENCIDO')
                         ->where('pa.status', 'VENCIDO')
                         ->where('pl.type_plan', 'CUENTA')
                         ->where('pl.ready', 'SI')
+                        ->where('p.id', $this->PlataformaFiltro)
 
-                        ->orWhere('e.content', 'like', '%' . $this->search . '%')
+                        ->orWhere('accounts.account_name', 'like', '%' . $this->search . '%')
                         ->where('pl.status', 'VENCIDO')
                         ->where('pa.status', 'VENCIDO')
                         ->where('pl.type_plan', 'CUENTA')
                         ->where('pl.ready', 'SI')
+                        ->where('p.id', $this->PlataformaFiltro)
 
                         ->orderBy('pl.done', 'desc')
                         ->orderBy('pl.expiration_plan', 'desc')
-                        ->paginate($this->pagination); */
+                        ->paginate($this->pagination);
                 } else {
                     $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                         ->join('emails as e', 'accounts.email_id', 'e.id')
@@ -876,7 +840,7 @@ class CuentasController extends Component
                 }
             } else {
                 if (strlen($this->search) > 0) {
-                    /* $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
+                    $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                         ->join('emails as e', 'accounts.email_id', 'e.id')
                         ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
                         ->join('plan_accounts as pa', 'pa.account_id', 'accounts.id')
@@ -887,30 +851,27 @@ class CuentasController extends Component
                         ->select(
                             'pl.id as planid',
                             'pl.done as done',
+                            'pl.expiration_plan as expiration_plan',
+                            'pl.plan_start as plan_start',
+                            'pl.status as plan_status',
+                            'pa.id as IDplanAccount',
                             'accounts.id as IDaccount',
                             'accounts.expiration_account as expiration_account',
                             'accounts.number_profiles',
                             'accounts.whole_account',
                             'accounts.status',
+                            'accounts.account_name',
                             'accounts.password_account',
+                            'p.id as IDplatf',
                             'p.nombre as nombre',
                             'e.content as content',
                             'e.pass as pass',
                             'strsp.name as name',
-                            'pl.expiration_plan as expiration_plan',
-                            'pl.plan_start as plan_start',
-                            'pl.status as plan_status',
+                            'c.id as clienteID',
                             'c.nombre as clienteNombre',
                             'c.celular as clienteCelular',
-                            'c.id as clienteID',
                         )
-                        ->where('p.nombre', 'like', '%' . $this->search . '%')
-                        ->where('pl.status', 'VENCIDO')
-                        ->where('pa.status', 'VENCIDO')
-                        ->where('pl.type_plan', 'CUENTA')
-                        ->where('pl.ready', 'SI')
-
-                        ->orWhere('c.nombre', 'like', '%' . $this->search . '%')
+                        ->where('c.nombre', 'like', '%' . $this->search . '%')
                         ->where('pl.status', 'VENCIDO')
                         ->where('pa.status', 'VENCIDO')
                         ->where('pl.type_plan', 'CUENTA')
@@ -922,7 +883,7 @@ class CuentasController extends Component
                         ->where('pl.type_plan', 'CUENTA')
                         ->where('pl.ready', 'SI')
 
-                        ->orWhere('e.content', 'like', '%' . $this->search . '%')
+                        ->orWhere('accounts.account_name', 'like', '%' . $this->search . '%')
                         ->where('pl.status', 'VENCIDO')
                         ->where('pa.status', 'VENCIDO')
                         ->where('pl.type_plan', 'CUENTA')
@@ -930,7 +891,7 @@ class CuentasController extends Component
 
                         ->orderBy('pl.done', 'desc')
                         ->orderBy('pl.expiration_plan', 'desc')
-                        ->paginate($this->pagination); */
+                        ->paginate($this->pagination);
                 } else {
                     $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                         ->join('emails as e', 'accounts.email_id', 'e.id')
@@ -973,60 +934,36 @@ class CuentasController extends Component
                 }
             }
         } elseif ($this->condicional == 'inhabilitadas') {    /* CUENTAS INHABILITADAS */
-            if ($this->PlataformaFiltro != 'TODAS') {
+            if ($this->PlataformaFiltro != 'TODAS') {   // solo una plataforma
                 if (strlen($this->search) > 0) {
-                    /* $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
-                    ->join('emails as e', 'accounts.email_id', 'e.id')
-                    ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
-                    ->select(
-                        'accounts.id as IDaccount',
-                        'accounts.expiration_account as expiration_account',
-                        'accounts.number_profiles',
-                        'accounts.whole_account',
-                        'accounts.account_name',
-                        'accounts.password_account',
-                        'p.nombre as nombre',
-                        'e.content as content',
-                        'e.pass as pass',
-                        'strsp.name as name',
-                        DB::raw('0 as perfActivos'),
-                        DB::raw('0 as perfLibres'),
-                        DB::raw('0 as dias')
-                    )
-                    ->where('p.nombre', 'like', '%' . $this->search . '%')
-                    ->where('accounts.status', 'ACTIVO')
-                    ->where('accounts.availability', 'LIBRE')
-
-                    ->orWhere('accounts.account_name', 'like', '%' . $this->search . '%')
-                    ->where('accounts.status', 'ACTIVO')
-                    ->where('accounts.availability', 'LIBRE')
-
-                    ->orWhere('accounts.whole_account', 'like', '%' . $this->search . '%')
-                    ->where('accounts.status', 'ACTIVO')
-                    ->where('accounts.availability', 'LIBRE')
-
-                    ->orderBy('accounts.expiration_account', 'asc')
-                    ->paginate($this->pagination);
-                foreach ($cuentas as $c) {
-                    $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
-                        ->join('profiles as p', 'ap.profile_id', 'p.id')
-                        ->where('accounts.id', $c->id)
-                        ->where('p.status', 'ACTIVO')->get();
-                    $perfilesLibres = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
-                        ->join('profiles as p', 'ap.profile_id', 'p.id')
-                        ->where('accounts.id', $c->id)
-                        ->where('p.availability', 'LIBRE')
-                        ->where('p.status', 'ACTIVO')->get();
-                    $cantidadActivos = $perfilesActivos->count();
-                    $c->perfActivos = $cantidadActivos;
-                    $cantidadLibres = $perfilesLibres->count();
-                    $c->perfLibres = $cantidadLibres;
-
-                    $fecha_actual = date("Y-m-d");
-                    $s = strtotime($c->expiration_account) - strtotime($fecha_actual);
-                    $d = intval($s / 86400);
-                    $c->dias = $d;
-                } */
+                    $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
+                        ->join('emails as e', 'accounts.email_id', 'e.id')
+                        ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
+                        ->select(
+                            'accounts.id as IDaccount',
+                            'accounts.expiration_account as expiration_account',
+                            'accounts.number_profiles',
+                            'accounts.whole_account',
+                            'accounts.account_name',
+                            'accounts.password_account',
+                            'p.nombre as nombre',
+                            'e.content as content',
+                            'e.pass as pass',
+                            'strsp.name as name',
+                            DB::raw('0 as dias')
+                        )
+                        ->where('accounts.account_name', 'like', '%' . $this->search . '%')
+                        ->where('accounts.status', 'INACTIVO')
+                        ->where('p.id', $this->PlataformaFiltro)
+                        ->where('accounts.availability', 'LIBRE')
+                        ->orderBy('accounts.expiration_account', 'asc')
+                        ->paginate($this->pagination);
+                    foreach ($cuentas as $c) {
+                        $fecha_actual = date("Y-m-d");
+                        $s = strtotime($c->expiration_account) - strtotime($fecha_actual);
+                        $d = intval($s / 86400);
+                        $c->dias = $d;
+                    }
                 } else {
                     $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                         ->join('emails as e', 'accounts.email_id', 'e.id')
@@ -1042,83 +979,49 @@ class CuentasController extends Component
                             'e.content as content',
                             'e.pass as pass',
                             'strsp.name as name',
-                            DB::raw('0 as horas'),
                             DB::raw('0 as dias')
                         )
                         ->where('accounts.status', 'INACTIVO')
-                        ->where('accounts.availability', 'LIBRE')
                         ->where('p.id', $this->PlataformaFiltro)
+                        ->where('accounts.availability', 'LIBRE')
                         ->orderBy('accounts.expiration_account', 'asc')
                         ->paginate($this->pagination);
                     foreach ($cuentas as $c) {
-                        $date1 = new DateTime($c->expiration_plan);
-                        $date2 = new DateTime("now");
-                        $diff = $date2->diff($date1);
-                        if ($diff->invert != 1) {
-                            $c->horas = (($diff->days * 24)) + ($diff->h);
-                        } else {
-                            $c->horas = '-1';
-                        }
                         $fecha_actual = date("Y-m-d");
                         $s = strtotime($c->expiration_account) - strtotime($fecha_actual);
                         $d = intval($s / 86400);
                         $c->dias = $d;
                     }
                 }
-            } else {
+            } else {    // todas las plataformas
                 if (strlen($this->search) > 0) {
-                    /* $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
-                    ->join('emails as e', 'accounts.email_id', 'e.id')
-                    ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
-                    ->select(
-                        'accounts.id as IDaccount',
-                        'accounts.expiration_account as expiration_account',
-                        'accounts.number_profiles',
-                        'accounts.whole_account',
-                        'accounts.account_name',
-                        'accounts.password_account',
-                        'p.nombre as nombre',
-                        'e.content as content',
-                        'e.pass as pass',
-                        'strsp.name as name',
-                        DB::raw('0 as perfActivos'),
-                        DB::raw('0 as perfLibres'),
-                        DB::raw('0 as dias')
-                    )
-                    ->where('p.nombre', 'like', '%' . $this->search . '%')
-                    ->where('accounts.status', 'ACTIVO')
-                    ->where('accounts.availability', 'LIBRE')
-
-                    ->orWhere('accounts.account_name', 'like', '%' . $this->search . '%')
-                    ->where('accounts.status', 'ACTIVO')
-                    ->where('accounts.availability', 'LIBRE')
-
-                    ->orWhere('accounts.whole_account', 'like', '%' . $this->search . '%')
-                    ->where('accounts.status', 'ACTIVO')
-                    ->where('accounts.availability', 'LIBRE')
-
-                    ->orderBy('accounts.expiration_account', 'asc')
-                    ->paginate($this->pagination);
-                foreach ($cuentas as $c) {
-                    $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
-                        ->join('profiles as p', 'ap.profile_id', 'p.id')
-                        ->where('accounts.id', $c->id)
-                        ->where('p.status', 'ACTIVO')->get();
-                    $perfilesLibres = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
-                        ->join('profiles as p', 'ap.profile_id', 'p.id')
-                        ->where('accounts.id', $c->id)
-                        ->where('p.availability', 'LIBRE')
-                        ->where('p.status', 'ACTIVO')->get();
-                    $cantidadActivos = $perfilesActivos->count();
-                    $c->perfActivos = $cantidadActivos;
-                    $cantidadLibres = $perfilesLibres->count();
-                    $c->perfLibres = $cantidadLibres;
-
-                    $fecha_actual = date("Y-m-d");
-                    $s = strtotime($c->expiration_account) - strtotime($fecha_actual);
-                    $d = intval($s / 86400);
-                    $c->dias = $d;
-                } */
+                    $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
+                        ->join('emails as e', 'accounts.email_id', 'e.id')
+                        ->join('str_suppliers as strsp', 'accounts.str_supplier_id', 'strsp.id')
+                        ->select(
+                            'accounts.id as IDaccount',
+                            'accounts.expiration_account as expiration_account',
+                            'accounts.number_profiles',
+                            'accounts.whole_account',
+                            'accounts.account_name',
+                            'accounts.password_account',
+                            'p.nombre as nombre',
+                            'e.content as content',
+                            'e.pass as pass',
+                            'strsp.name as name',
+                            DB::raw('0 as dias')
+                        )
+                        ->where('accounts.account_name', 'like', '%' . $this->search . '%')
+                        ->where('accounts.status', 'INACTIVO')
+                        ->where('accounts.availability', 'LIBRE')
+                        ->orderBy('accounts.expiration_account', 'asc')
+                        ->paginate($this->pagination);
+                    foreach ($cuentas as $c) {
+                        $fecha_actual = date("Y-m-d");
+                        $s = strtotime($c->expiration_account) - strtotime($fecha_actual);
+                        $d = intval($s / 86400);
+                        $c->dias = $d;
+                    }
                 } else {
                     $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                         ->join('emails as e', 'accounts.email_id', 'e.id')
@@ -1134,7 +1037,6 @@ class CuentasController extends Component
                             'e.content as content',
                             'e.pass as pass',
                             'strsp.name as name',
-                            DB::raw('0 as horas'),
                             DB::raw('0 as dias')
                         )
                         ->where('accounts.status', 'INACTIVO')
@@ -1142,14 +1044,6 @@ class CuentasController extends Component
                         ->orderBy('accounts.expiration_account', 'asc')
                         ->paginate($this->pagination);
                     foreach ($cuentas as $c) {
-                        $date1 = new DateTime($c->expiration_plan);
-                        $date2 = new DateTime("now");
-                        $diff = $date2->diff($date1);
-                        if ($diff->invert != 1) {
-                            $c->horas = (($diff->days * 24)) + ($diff->h);
-                        } else {
-                            $c->horas = '-1';
-                        }
                         $fecha_actual = date("Y-m-d");
                         $s = strtotime($c->expiration_account) - strtotime($fecha_actual);
                         $d = intval($s / 86400);

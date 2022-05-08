@@ -253,6 +253,10 @@ class PlanesController extends Component
                         'acc.password_account as password_account',
                         'acc.status as accstatus',
                         'acc.expiration_account as accexp',
+                        'ap.id as IDaccountProfile',
+                        'prof.id as IDperfil',
+                        'prof.nameprofile as nameprofile',
+                        'prof.pin as pin',
                         'plat.id as IDplatf',
                         'plat.nombre as plataforma',
                         'c.id as clienteID',
@@ -260,10 +264,6 @@ class PlanesController extends Component
                         'c.celular as celular',
                         'e.content as correo',
                         'e.pass as passCorreo',
-                        'ap.id as IDaccountProfile',
-                        'prof.id as IDperfil',
-                        'prof.nameprofile as nameprofile',
-                        'prof.pin as pin',
                     )
                     ->whereBetween('plans.created_at', [$from, $to])
                     ->where('m.user_id', $user_id)
@@ -359,7 +359,6 @@ class PlanesController extends Component
                     ->whereBetween('plans.created_at', [$from, $to])
                     ->where('m.user_id', $user_id)
                     ->where('plans.type_plan', 'CUENTA')
-                    ->where('m.status', 'ACTIVO')
                     ->orderBy('plans.created_at', 'desc')
                     ->paginate($this->pagination);
             }
@@ -376,7 +375,7 @@ class PlanesController extends Component
         }
 
         /* CALCULAR LA FECHA DE EXPIRACION SEGUN LA CANTIDAD DE MESES Y DIAS */
-        if ($this->selected_id == 0) {
+        if ($this->selected_plan == 0) {
             if ($this->fecha_inicio) {
                 if ($this->diasdePlan >= 1) {
                     if ($this->meses > 0) {
@@ -410,7 +409,7 @@ class PlanesController extends Component
             }
         }
 
-        /* MOSTRAR SOLO CUENTA ENTERA O CUENTA ENTERA Y PERFILES SEGUN LA PLATAFORMA SELECCIONADA */
+        /* MOSTRAR SOLO CUENTA ENTERA O CUENTA ENTERA Y PERFILES SEGUN LA PLATAFORMA SELECCIONADA EN EL MODAL*/
         if ($this->plataforma != 'Elegir') {
             $PLATF = Platform::find($this->plataforma);
             if ($PLATF->perfiles == 'SI') {
@@ -627,6 +626,7 @@ class PlanesController extends Component
             $this->cuentasp1 = [];
             $platforms2 = [];
         }
+
         /* mostrar cuentas de la plataforma 2 */
         if ($this->plataforma1 != 'Elegir' && $this->plataforma2 != 'Elegir') {
             $platforms3 = Platform::where('estado', 'Activo')
@@ -1217,9 +1217,7 @@ class PlanesController extends Component
             if ($this->cuentaperfil == 'ENTERA') {
                 /* SI SE SELECCIONÓ CUENTA ENTERA */
                 foreach ($this->accounts as $accp) {
-                    /* CALCULAR EL IMPORTE SEGUN LA PLATAFORMA Y SI ES ENTERA O PERFIL */
-                    /* $this->importe += $accp->Plataforma->precioEntera;
-                    $this->importe *= $this->meses; */
+
                     $importeIndividual = $this->importe / $this->accounts->count();
                     /* CREAR EL MOVIMIENTO */
                     $mv = Movimiento::create([
@@ -1472,91 +1470,201 @@ class PlanesController extends Component
         }
     }
 
-    /* Anular una transacción */
-    public function Anular(Plan $plan)
+    /* Anular una transacción DE PERFIL */
+    public function AnularPerfil(Plan $plan, PlanAccount $planAccount, Account $cuenta, AccountProfile $accountProfile, Profile $perfil)
     {
-        /* SABER SI ES UN PERFIL O UNA CUENTA */
-        $cuentaPerf = AccountProfile::where('plan_id', $plan->id)->get();
-
         DB::beginTransaction();
         try {
-            if ($cuentaPerf->count() > 0) {  /* CUANDO ES UN PERFIL */
-                /* OBTENER IDS */
-                $anular = Plan::join('movimientos as m', 'plans.movimiento_id', 'm.id')
-                    ->join('plan_accounts as pa', 'pa.plan_id', 'plans.id')
-                    ->join('accounts as a', 'pa.account_id', 'a.id')
-                    ->join('account_profiles as ap', 'ap.account_id', 'a.id')
-                    ->join('profiles as p', 'ap.profile_id', 'p.id')
-                    ->select(
-                        'm.*',
-                        'pa.id as paid',
-                        'a.id as cuentaid',
-                        'p.id as perfilid',
-                        'ap.id as apid'
-                    )
-                    ->whereColumn('plans.id', '=', 'ap.plan_id')
-                    ->where('plans.id', $plan->id)
-                    ->where('pa.status', 'ACTIVO')
-                    ->where('ap.status', 'ACTIVO')
-                    ->get()->first();
+            /* PONER EN INACTIVO EL MOVIMIENTO */
+            $movimiento = Movimiento::find($plan->movimiento_id);
+            $movimiento->status = 'INACTIVO';
+            $movimiento->save();
 
-                /* PONER EN INACTIVO EL MOVIMIENTO */
-                $movimiento = Movimiento::find($anular->id);
-                $movimiento->status = 'INACTIVO';
-                $movimiento->save();
-                /* ANULAR PLAN */
-                $plan->status = 'ANULADO';
-                $plan->save();
-                /* PONER EN INACTIVO PLANACCOUNT */
-                $planCuenta = PlanAccount::find($anular->paid);
-                $planCuenta->status = 'ANULADO';
-                $planCuenta->save();
+            /* ANULAR PLAN */
+            $plan->status = 'ANULADO';
+            $plan->save();
 
-                $cuenta = Account::find($anular->cuentaid);
-                /* PONER EN NULL PLAN_ID DE ACCOUNTPROFILE */
-                $CuentaPerf = AccountProfile::find($anular->apid);
-                $CuentaPerf->plan_id = null;
-                $CuentaPerf->save();
-                /* PONER EN LIBRE EL PERFIL Y PONER NUEVA CONTRASEÑA */
-                $perf = Profile::find($anular->perfilid);
-                $perf->availability = 'LIBRE';
-                $perf->pin = $perf->pin . rand(100, 999);
-                $perf->save();
+            /* PONER EN ANULADO PLANACCOUNT */
+            $planAccount->status = 'ANULADO';
+            $planAccount->save();
 
-                /* CONTAR LOS PERFILES ACTIVOS DE ESA CUENTA */
-                $PERFocupados = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
-                    ->join('profiles as p', 'ap.profile_id', 'p.id')
-                    ->where('accounts.id', $anular->cuentaid)
-                    ->where('ap.status', 'ACTIVO')
-                    ->where('p.availability', 'OCUPADO')->get();
-                if ($PERFocupados->count() == 0) {
-                    $cuenta->whole_account = 'ENTERA';
-                    $cuenta->save();
-                }
-            } else {  /* CUANDO ES UNA CUENTA */
-                /* OBTENER IDS */
-                $anular = Plan::join('movimientos as m', 'plans.movimiento_id', 'm.id')
-                    ->join('plan_accounts as pa', 'pa.plan_id', 'plans.id')
-                    ->join('accounts as a', 'pa.account_id', 'a.id')
-                    ->select('m.*', 'pa.id as paid', 'a.id as cuentaid')
-                    ->where('plans.id', $plan->id)
-                    ->get()->first();
-                /* PONER EN INACTIVO EL MOVIMIENTO */
-                $movimiento = Movimiento::find($anular->id);
-                $movimiento->status = 'INACTIVO';
-                $movimiento->save();
-                /* PONER EN ANULADO EL PLAN */
-                $plan->status = 'ANULADO';
-                $plan->save();
-                /* PONER EN INACTIVO EL PLANACCOUNT */
-                $planCuenta = PlanAccount::find($anular->paid);
-                $planCuenta->status = 'ANULADO';
-                $planCuenta->save();
-                /* PONER LA CUENTA EN LIBRE Y PONER NUEVA CONTRASEÑA */
-                $cuenta = Account::find($anular->cuentaid);
-                $cuenta->availability = 'LIBRE';
-                $cuenta->password_account = $cuenta->password_account . rand(100, 999);
+            /* PONER EN ANULADO ACCOUNTPROFILE */
+            $accountProfile->status = 'ANULADO';
+            $accountProfile->save();
+
+            /* PONER EN ANULADO E INACTIVO EL PERFIL */
+            $perfil->status = 'INACTIVO';
+            $perfil->availability = 'ANULADO';
+            $perfil->save();
+
+            /* crear un nuevo perfil libre en la cuenta donde se anula el plan */
+            $perfilNuevo = Profile::create([
+                'nameprofile' => 'emanuel' . rand(100, 999),
+                'pin' => rand(1000, 9999),
+            ]);
+            AccountProfile::create([
+                'status' => 'SinAsignar',
+                'account_id' => $cuenta->id,
+                'profile_id' => $perfilNuevo->id,
+            ]);
+
+            /* CONTAR LOS PERFILES ACTIVOS DE ESA CUENTA */
+            $PERFocupados = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
+                ->join('profiles as p', 'ap.profile_id', 'p.id')
+                ->where('accounts.id', $cuenta->id)
+                ->where('ap.status', 'ACTIVO')
+                ->where('p.availability', 'OCUPADO')->get();
+            if ($PERFocupados->count() == 0) {
+                $cuenta->whole_account = 'ENTERA';
                 $cuenta->save();
+            }
+
+            DB::commit();
+            $this->resetUI();
+            $this->emit('item-anulado', 'Se anuló el plan');
+        } catch (Exception $e) {
+            DB::rollback();
+            $this->emit('item-error', 'ERROR' . $e->getMessage());
+        }
+    }
+
+    /* Anular una transacción DE ENTERA */
+    public function AnularEntera(Plan $plan, PlanAccount $planAccount, Account $cuenta)
+    {
+        DB::beginTransaction();
+        try {
+            $movimiento = Movimiento::find($plan->movimiento_id);
+            $movimiento->status = 'INACTIVO';
+            $movimiento->save();
+
+            /* PONER EN ANULADO EL PLAN */
+            $plan->status = 'ANULADO';
+            $plan->save();
+
+            /* PONER EN INACTIVO EL PLANACCOUNT */
+            $planAccount->status = 'ANULADO';
+            $planAccount->save();
+
+            /* PONER LA CUENTA EN LIBRE Y PONER NUEVA CONTRASEÑA */
+            $cuenta->availability = 'LIBRE';
+            $cuenta->save();
+
+            DB::commit();
+            $this->resetUI();
+            $this->emit('item-anulado', 'Se anuló el plan');
+        } catch (Exception $e) {
+            DB::rollback();
+            $this->emit('item-error', 'ERROR' . $e->getMessage());
+        }
+    }
+
+    /* Anular una transacción DE COMBO */
+    public function AnularCombo(Plan $plan, PlanAccount $planAccount1, PlanAccount $planAccount2, PlanAccount $planAccount3, Account $cuenta1, Account $cuenta2, Account $cuenta3, AccountProfile $accountProfile1, AccountProfile $accountProfile2, AccountProfile $accountProfile3, Profile $perfil1, Profile $perfil2, Profile $perfil3)
+    {
+        DB::beginTransaction();
+        try {
+            /* PONER EN INACTIVO EL MOVIMIENTO */
+            $movimiento = Movimiento::find($plan->movimiento_id);
+            $movimiento->status = 'INACTIVO';
+            $movimiento->save();
+
+            /* ANULAR PLAN */
+            $plan->status = 'ANULADO';
+            $plan->save();
+
+            /* PONER EN ANULADO PLANACCOUNT 1 */
+            $planAccount1->status = 'ANULADO';
+            $planAccount1->save();
+            /* PONER EN ANULADO PLANACCOUNT 2 */
+            $planAccount2->status = 'ANULADO';
+            $planAccount2->save();
+            /* PONER EN ANULADO PLANACCOUNT 2 */
+            $planAccount3->status = 'ANULADO';
+            $planAccount3->save();
+
+            /* PONER EN ANULADO ACCOUNTPROFILE 1 */
+            $accountProfile1->status = 'ANULADO';
+            $accountProfile1->save();
+            /* PONER EN ANULADO ACCOUNTPROFILE 2 */
+            $accountProfile2->status = 'ANULADO';
+            $accountProfile2->save();
+            /* PONER EN ANULADO ACCOUNTPROFILE 3 */
+            $accountProfile3->status = 'ANULADO';
+            $accountProfile3->save();
+
+            /* PONER EN ANULADO E INACTIVO EL PERFIL 1 */
+            $perfil1->status = 'INACTIVO';
+            $perfil1->availability = 'ANULADO';
+            $perfil1->save();
+            /* PONER EN ANULADO E INACTIVO EL PERFIL 2 */
+            $perfil2->status = 'INACTIVO';
+            $perfil2->availability = 'ANULADO';
+            $perfil2->save();
+            /* PONER EN ANULADO E INACTIVO EL PERFIL 3 */
+            $perfil3->status = 'INACTIVO';
+            $perfil3->availability = 'ANULADO';
+            $perfil3->save();
+
+            /* crear un nuevo perfil libre en la cuenta 1 donde se anula el plan */
+            $perfilNuevo = Profile::create([
+                'nameprofile' => 'emanuel' . rand(100, 999),
+                'pin' => rand(1000, 9999),
+            ]);
+            AccountProfile::create([
+                'status' => 'SinAsignar',
+                'account_id' => $cuenta1->id,
+                'profile_id' => $perfilNuevo->id,
+            ]);
+            /* crear un nuevo perfil libre en la cuenta 2 donde se anula el plan */
+            $perfilNuevo = Profile::create([
+                'nameprofile' => 'emanuel' . rand(100, 999),
+                'pin' => rand(1000, 9999),
+            ]);
+            AccountProfile::create([
+                'status' => 'SinAsignar',
+                'account_id' => $cuenta2->id,
+                'profile_id' => $perfilNuevo->id,
+            ]);
+            /* crear un nuevo perfil libre en la cuenta 3 donde se anula el plan */
+            $perfilNuevo = Profile::create([
+                'nameprofile' => 'emanuel' . rand(100, 999),
+                'pin' => rand(1000, 9999),
+            ]);
+            AccountProfile::create([
+                'status' => 'SinAsignar',
+                'account_id' => $cuenta3->id,
+                'profile_id' => $perfilNuevo->id,
+            ]);
+
+            /* CONTAR LOS PERFILES ACTIVOS DE LA CUENTA 1 */
+            $PERFocupados = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
+                ->join('profiles as p', 'ap.profile_id', 'p.id')
+                ->where('accounts.id', $cuenta1->id)
+                ->where('ap.status', 'ACTIVO')
+                ->where('p.availability', 'OCUPADO')->get();
+            if ($PERFocupados->count() == 0) {
+                $cuenta1->whole_account = 'ENTERA';
+                $cuenta1->save();
+            }
+            /* CONTAR LOS PERFILES ACTIVOS DE LA CUENTA 2 */
+            $PERFocupados = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
+                ->join('profiles as p', 'ap.profile_id', 'p.id')
+                ->where('accounts.id', $cuenta2->id)
+                ->where('ap.status', 'ACTIVO')
+                ->where('p.availability', 'OCUPADO')->get();
+            if ($PERFocupados->count() == 0) {
+                $cuenta2->whole_account = 'ENTERA';
+                $cuenta2->save();
+            }
+            /* CONTAR LOS PERFILES ACTIVOS DE LA CUENTA 3 */
+            $PERFocupados = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
+                ->join('profiles as p', 'ap.profile_id', 'p.id')
+                ->where('accounts.id', $cuenta3->id)
+                ->where('ap.status', 'ACTIVO')
+                ->where('p.availability', 'OCUPADO')->get();
+            if ($PERFocupados->count() == 0) {
+                $cuenta3->whole_account = 'ENTERA';
+                $cuenta3->save();
             }
             DB::commit();
             $this->resetUI();
@@ -1567,6 +1675,7 @@ class PlanesController extends Component
         }
     }
 
+    // MODIFICAR DATOS DEL PLAN SELECCIONADO Y DATOS CLIENTE
     public function VerObservacionesPerfil(Plan $plan, Profile $perfil, Cliente $cliente)
     {
         $this->resetUI();
@@ -1587,6 +1696,7 @@ class PlanesController extends Component
 
         $this->emit('show-modal3', 'open modal');
     }
+
     public function VerObservacionesCuenta(Plan $plan, Cliente $cliente)
     {
         $this->resetUI();
@@ -1603,6 +1713,7 @@ class PlanesController extends Component
 
         $this->emit('show-modal3', 'open modal');
     }
+
     public function VerObservacionesCombo(Plan $plan, Cliente $cliente, Profile $perfil1, Profile $perfil2, Profile $perfil3, Platform $plataforma1, Platform $plataforma2, Platform $plataforma3)
     {
         $this->resetUI();
@@ -1769,6 +1880,7 @@ class PlanesController extends Component
             $this->emit('item-error', 'ERROR' . $e->getMessage());
         }
     }
+    // FIN MODIFICAR DATOS DEL PLAN SELECCIONADO Y DATOS CLIENTE
 
     public function EditarPerf(Profile $perf)
     {
@@ -1808,7 +1920,12 @@ class PlanesController extends Component
         }
     }
 
-    protected $listeners = ['deleteRow' => 'Anular', 'Realizado' => 'Realizado'];
+    protected $listeners = [
+        'AnularPerfil' => 'AnularPerfil',
+        'AnularEntera' => 'AnularEntera',
+        'AnularCombo' => 'AnularCombo',
+        'Realizado' => 'Realizado'
+    ];
 
     public function Realizado(Plan $plan)
     {
@@ -1904,6 +2021,13 @@ class PlanesController extends Component
         $this->PIN3COMBO = 0;
         $this->perfil3ID = 0;
         $this->comprobante = null;
+        $this->selected_plan = 0;
+        $this->selected_planAccount = 0;
+        $this->selected_account = 0;
+        $this->selected_accountProf = 0;
+        $this->selected_perfil = 0;
+        $this->selected_platf = 0;
+        $this->selected_cliente = 0;
 
         $this->resetValidation();
     }

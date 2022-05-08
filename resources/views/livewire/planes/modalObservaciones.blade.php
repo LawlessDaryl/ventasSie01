@@ -194,6 +194,7 @@
                         </div>
                     @endif
                 </div>
+
                 <div class="row">
                     <div class="col-sm-12 col-md-12">
                         <div class="form-group">
@@ -223,8 +224,8 @@
                             <label class="custom-file-label">Comprobante {{ $comprobante }}</label>
                         </div>
                     </div>
-
                 </div>
+
                 <div class="modal-footer">
                     <a href="javascript:void(0)" class="btn btn-dark" wire:click.prevent="Modificar()">Modificar</a>
                 </div>
