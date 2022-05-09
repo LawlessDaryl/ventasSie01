@@ -232,6 +232,15 @@
                                                                     <h6 style="font-size: 100%"><b>Responsable:</b>
                                                                         {{ $mm->movs->usermov->name }}</h6>
                                                                 @endif
+                                                                
+                                                                    @if($mm->movs->status=='INACTIVO' && $mm->movs->type == 'ANULADO')
+                                                                        @foreach($mm->movs->usermov->sucursalusers as $sucusu)
+                                                                            @if($sucusu->estado == 'ACTIVO')
+                                                                                <h6 style="font-size: 100%"><b>Sucursal: </b>
+                                                                                {{$sucusu->sucursal->name}}</h6>
+                                                                            @endif
+                                                                        @endforeach
+                                                                    @endif
                                                             @endforeach
 
                                                         </div>
@@ -417,6 +426,15 @@
                                                                     <h6 style="font-size: 100%"><b>Responsable:</b>
                                                                         {{ $mm->movs->usermov->name }}</h6>
                                                                 @endif
+                                                               
+                                                                    @if($mm->movs->status=='ACTIVO' || ($mm->movs->status == 'INACTIVO' && $mm->movs->type == 'ANULADO'))
+                                                                        @foreach($mm->movs->usermov->sucursalusers as $sucusu)
+                                                                            @if($sucusu->estado == 'ACTIVO')
+                                                                            <h6 style="font-size: 100%"><b>Sucursal: </b>
+                                                                                {{$sucusu->sucursal->name}}</h6>
+                                                                            @endif
+                                                                        @endforeach
+                                                                    @endif
                                                             @endforeach
                                                         </div>
                                                         {{-- ESTADO --}}
@@ -605,6 +623,15 @@
                                                                     <h6 style="font-size: 100%"><b>Responsable:</b>
                                                                         {{ $mm->movs->usermov->name }}</h6>
                                                                 @endif
+                                                                
+                                                                    @if($mm->movs->status=='ACTIVO')
+                                                                        @foreach($mm->movs->usermov->sucursalusers as $sucusu)
+                                                                            @if($sucusu->estado == 'ACTIVO')
+                                                                            <h6 style="font-size: 100%"><b>Sucursal: </b>
+                                                                                {{$sucusu->sucursal->name}}</h6>
+                                                                            @endif
+                                                                        @endforeach
+                                                                    @endif
                                                             @endforeach
 
                                                     </div>
