@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Destino;
+use App\Models\Permission;
 use Illuminate\Database\Seeder;
 
 class DestinoSeeder extends Seeder
@@ -14,25 +15,47 @@ class DestinoSeeder extends Seeder
      */
     public function run()
     {
-        Destino::create([
+        $ss=Destino::create([
             'nombre'=>'Deposito',
             'observacion'=>'ninguna',
             'sucursal_id'=>'1'           
         ]);
-        Destino::create([
+
+        Permission::create([
+            'name' => $ss->nombre.'_'.$ss->id,
+            'guard_name' => 'web'
+        ]);
+
+       
+        
+        $dd=Destino::create([
             'nombre'=>'Tienda',
             'observacion'=>'ninguna',
             'sucursal_id'=>'1'           
         ]);
-        Destino::create([
+        Permission::create([
+            'name' => $dd->nombre.'_'.$dd->id,
+            'guard_name' => 'web'
+        ]);
+        
+        $mm= Destino::create([
             'nombre'=>'Tienda',
             'observacion'=>'ninguna',
             'sucursal_id'=>'2'           
         ]);
-        Destino::create([
+        Permission::create([
+            'name' => $mm->nombre.'_'.$mm->id,
+            'guard_name' => 'web'
+        ]);
+
+        $nn=Destino::create([
             'nombre'=>'Almacen',
             'observacion'=>'ninguna',
             'sucursal_id'=>'1'           
+        ]);
+        Permission::create([
+            'name' => $nn->nombre.'_'.$nn->id,
+            'guard_name' => 'web'
         ]);
     }
 }

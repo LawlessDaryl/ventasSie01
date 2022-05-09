@@ -83,8 +83,9 @@ class TransferirProductoController extends Component
        
         $ss= Destino::select('destinos.id','destinos.nombre')->get();
         $arr=[];
-        foreach ($ss as $item) {
+        foreach ($ss as $item){
             $arr[$item->nombre.'_'.$item->id]=($item->id);
+            
         }
 
        foreach ($arr as $key => $value) {
@@ -172,6 +173,7 @@ class TransferirProductoController extends Component
     }
 
    public function asignarEstado(){
+
        if ($this->tipo_tr === "tr_dir") {
            $this->estado = 4;
        }

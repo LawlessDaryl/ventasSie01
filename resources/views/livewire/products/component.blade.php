@@ -122,7 +122,7 @@
                                         </a>
 
                                         <a href="javascript:void(0)"
-                                            onclick="Confirm('{{ $products->id }}','{{ $products->nombre }}',{{$products->destino->count()}})"
+                                            onclick="Confirm('{{ $products->id }}','{{ $products->nombre }}',{{$products->destinos->count()}})"
                                             class="btn btn-dark mtmobile p-1 m-0" title="Delete">
                                             <i class="fas fa-trash"></i>
                                         </a>

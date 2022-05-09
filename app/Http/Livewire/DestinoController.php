@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\Destino;
 use App\Models\Location;
+use Spatie\Permission\Models\Permission;
 use App\Models\Sucursal;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -33,12 +34,7 @@ public function mount()
 
     $this->fecha = Carbon::now();
 
-
 }
-
-
-
-
     public function render()
     {
         
@@ -70,20 +66,25 @@ public function mount()
             'observacion'=>$this->observacion,
             'sucursal_id'=>$this->sucursal
         ]);
+
+        
         $destino->save();
-
-
-        Location::create([
-
-            'codigo'=>'ER01',
-            'descripcion'=>'Estante de recepcion de productos',
-            'tipo'=>'ESTANTE',
-            'destino_id'=>$destino->id
+        
+        Permission::create([
+            'name' => $destino->nombre .'_'. $destino->id ,
+            'guard_name' => 'web'
         ]);
 
+ 
+
+
+        
 
         $this->resetUI();
         $this->emit('unidad-added', 'Estancia Registrada');
+
+        
+
     }
     public function Edit(Destino $unity)
     {
