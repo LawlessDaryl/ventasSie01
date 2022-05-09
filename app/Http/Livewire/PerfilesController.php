@@ -812,9 +812,9 @@ class PerfilesController extends Component
         if ($this->condicional == 'combos') {
             /* CARGAR NOMBRE DE PERFIL, PIN E ID EN LAS VARIABLES */
             foreach ($plan->PlanAccounts as  $value) {
-                if ($value->status == 'ACTIVO') {
+                if ($value->status == 'ACTIVO' && $value->COMBO == 'PERFIL1') {
                     foreach ($value->Cuenta->CuentaPerfiles as  $v) {
-                        if ($v->status == 'ACTIVO' && $v->COMBO == 'PERFIL1') {
+                        if ($v->status == 'ACTIVO' && $v->COMBO == 'PERFIL1' && $v->plan_id == $this->selected_id) {
                             $this->plataforma1Nombre = $v->Cuenta->Plataforma->nombre;
                             $this->perfil1COMBO =  $v->Perfil->nameprofile;
                             $this->PIN1COMBO = $v->Perfil->pin;
@@ -824,9 +824,9 @@ class PerfilesController extends Component
                 }
             }
             foreach ($plan->PlanAccounts as  $value) {
-                if ($value->status == 'ACTIVO') {
+                if ($value->status == 'ACTIVO' && $value->COMBO == 'PERFIL2') {
                     foreach ($value->Cuenta->CuentaPerfiles as  $v) {
-                        if ($v->status == 'ACTIVO' && $v->COMBO == 'PERFIL2') {
+                        if ($v->status == 'ACTIVO' && $v->COMBO == 'PERFIL2' && $v->plan_id == $this->selected_id) {
                             $this->plataforma2Nombre = $v->Cuenta->Plataforma->nombre;
                             $this->perfil2COMBO =  $v->Perfil->nameprofile;
                             $this->PIN2COMBO = $v->Perfil->pin;
@@ -836,9 +836,9 @@ class PerfilesController extends Component
                 }
             }
             foreach ($plan->PlanAccounts as  $value) {
-                if ($value->status == 'ACTIVO') {
+                if ($value->status == 'ACTIVO' && $value->COMBO == 'PERFIL3') {
                     foreach ($value->Cuenta->CuentaPerfiles as  $v) {
-                        if ($v->status == 'ACTIVO' && $v->COMBO == 'PERFIL3') {
+                        if ($v->status == 'ACTIVO' && $v->COMBO == 'PERFIL3' && $v->plan_id == $this->selected_id) {
                             $this->plataforma3Nombre = $v->Cuenta->Plataforma->nombre;
                             $this->perfil3COMBO =  $v->Perfil->nameprofile;
                             $this->PIN3COMBO = $v->Perfil->pin;
@@ -850,9 +850,9 @@ class PerfilesController extends Component
         } else {
             /* CARGAR NOMBRE DE PERFIL, PIN E ID EN LAS VARIABLES */
             foreach ($plan->PlanAccounts as  $value) {
-                if ($value->status == 'VENCIDO') {
+                if ($value->status == 'VENCIDO' && $value->COMBO == 'PERFIL1') {
                     foreach ($value->Cuenta->CuentaPerfiles as  $v) {
-                        if ($v->status == 'VENCIDO' && $v->COMBO == 'PERFIL1') {
+                        if ($v->status == 'VENCIDO' && $v->COMBO == 'PERFIL1' && $v->plan_id == $this->selected_id) {
                             $this->plataforma1Nombre = $v->Cuenta->Plataforma->nombre;
                             $this->perfil1COMBO =  $v->Perfil->nameprofile;
                             $this->PIN1COMBO = $v->Perfil->pin;
@@ -862,9 +862,9 @@ class PerfilesController extends Component
                 }
             }
             foreach ($plan->PlanAccounts as  $value) {
-                if ($value->status == 'VENCIDO') {
+                if ($value->status == 'VENCIDO' && $value->COMBO == 'PERFIL2') {
                     foreach ($value->Cuenta->CuentaPerfiles as  $v) {
-                        if ($v->status == 'VENCIDO' && $v->COMBO == 'PERFIL2') {
+                        if ($v->status == 'VENCIDO' && $v->COMBO == 'PERFIL2' && $v->plan_id == $this->selected_id) {
                             $this->plataforma2Nombre = $v->Cuenta->Plataforma->nombre;
                             $this->perfil2COMBO =  $v->Perfil->nameprofile;
                             $this->PIN2COMBO = $v->Perfil->pin;
@@ -874,9 +874,9 @@ class PerfilesController extends Component
                 }
             }
             foreach ($plan->PlanAccounts as  $value) {
-                if ($value->status == 'VENCIDO') {
+                if ($value->status == 'VENCIDO' && $value->COMBO == 'PERFIL3') {
                     foreach ($value->Cuenta->CuentaPerfiles as  $v) {
-                        if ($v->status == 'VENCIDO' && $v->COMBO == 'PERFIL3') {
+                        if ($v->status == 'VENCIDO' && $v->COMBO == 'PERFIL3' && $v->plan_id == $this->selected_id) {
                             $this->plataforma3Nombre = $v->Cuenta->Plataforma->nombre;
                             $this->perfil3COMBO =  $v->Perfil->nameprofile;
                             $this->PIN3COMBO = $v->Perfil->pin;
@@ -970,43 +970,31 @@ class PerfilesController extends Component
         $this->emit('combo-updated', 'Perfiles Actualizados');
     }
 
-    public function AccionesCombo(Plan $plan)
+    public function AccionesCombo(Plan $plan, Cliente $cliente)
     {
         $this->resetUI();
+
+        /* $this->selected_cliente = $cliente->id; */
+
         $this->selected_plan = $plan->id;
+        $this->observations = $plan->observations;
+        $this->inicioPlanActual = $plan->plan_start;
+        $this->expirationPlanActual = $plan->expiration_plan;
+        $this->mesesPlan = $plan->meses;
+        $this->importePlan = $plan->importe;
 
-        $this->data = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
-            ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
-            ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
-            ->select(
-                'plans.observations as observations',
-                'c.id as clienteID',
-                'c.nombre as nombreCliente',
-                'c.celular as celular',
-                'plans.plan_start as plan_start',
-                'plans.expiration_plan as expiration_plan',
-                'plans.meses as meses',
-                'plans.importe as importe'
-            )
-            ->where('plans.id', $this->selected_plan)
-            ->get()->first();
+        $this->clienteID = $cliente->id;
+        $this->nombreCliente = $cliente->nombre;
+        $this->celular = $cliente->celular;
 
-        $this->nombreCliente = $this->data->nombreCliente;
-        $this->celular = $this->data->celular;
-        $this->observations = $this->data->observations;
-        $this->inicioPlanActual = $this->data->plan_start;
-        $this->expirationPlanActual = $this->data->expiration_plan;
-        $this->clienteID = $this->data->clienteID;
-        $this->mesesPlan = $this->data->meses;
-        $this->importePlan = $this->data->importe;
         $this->inicioNueva = strtotime('+' . 1 . ' day', strtotime($this->expirationPlanActual));
         $this->inicioNueva = date('Y-m-d', $this->inicioNueva);
 
         /* CARGAR NOMBRE DE PERFIL, PIN E ID EN LAS VARIABLES */
         foreach ($plan->PlanAccounts as  $value) {
-            if ($value->status == 'ACTIVO') {
+            if ($value->status == 'ACTIVO' && $value->COMBO == 'PERFIL1') {
                 foreach ($value->Cuenta->CuentaPerfiles as  $v) {
-                    if ($v->status == 'ACTIVO' && $v->COMBO == 'PERFIL1') {
+                    if ($v->status == 'ACTIVO' && $v->COMBO == 'PERFIL1' && $v->plan_id == $this->selected_plan) {
                         $this->cuentaPerfil1 = $v->id;
                         $this->plataforma1Nombre = $v->Cuenta->Plataforma->nombre;
                         $this->plataforma1ID = $v->Cuenta->Plataforma->id;
@@ -1020,9 +1008,9 @@ class PerfilesController extends Component
             }
         }
         foreach ($plan->PlanAccounts as  $value) {
-            if ($value->status == 'ACTIVO') {
+            if ($value->status == 'ACTIVO' && $value->COMBO == 'PERFIL2') {
                 foreach ($value->Cuenta->CuentaPerfiles as  $v) {
-                    if ($v->status == 'ACTIVO' && $v->COMBO == 'PERFIL2') {
+                    if ($v->status == 'ACTIVO' && $v->COMBO == 'PERFIL2' && $v->plan_id == $this->selected_plan) {
                         $this->cuentaPerfil2 = $v->id;
                         $this->plataforma2Nombre = $v->Cuenta->Plataforma->nombre;
                         $this->plataforma2ID = $v->Cuenta->Plataforma->id;
@@ -1036,9 +1024,9 @@ class PerfilesController extends Component
             }
         }
         foreach ($plan->PlanAccounts as  $value) {
-            if ($value->status == 'ACTIVO') {
+            if ($value->status == 'ACTIVO' && $value->COMBO == 'PERFIL3') {
                 foreach ($value->Cuenta->CuentaPerfiles as  $v) {
-                    if ($v->status == 'ACTIVO' && $v->COMBO == 'PERFIL3') {
+                    if ($v->status == 'ACTIVO' && $v->COMBO == 'PERFIL3' && $v->plan_id == $this->selected_plan) {
                         $this->cuentaPerfil3 = $v->id;
                         $this->plataforma3Nombre = $v->Cuenta->Plataforma->nombre;
                         $this->plataforma3ID = $v->Cuenta->Plataforma->id;

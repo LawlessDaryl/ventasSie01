@@ -33,51 +33,37 @@ class UsersController extends Component
 
     public function mount()
     {
-        $this->selected_id = 0;
-        $this->fromDate = null;
-        $this->toDate = null;
         $this->pageTitle = 'Listado';
         $this->componentName = 'Usuarios';
+        $this->selected_id = 0;
         $this->profile = 'Elegir';
         $this->sucursal_id = 'Elegir';
-        $this->sucur = 'Elegir';
+        $this->sucursalUsuario = 'Elegir';
+        $this->sucursalUserUsuario = '';
+        $this->usuarioACTIVO = '';
         $this->details = [];
     }
 
     public function render()
     {
         if (strlen($this->search) > 0) {
-            $data = User::join('sucursal_users as su', 'su.user_id', 'users.id')
-                ->join('sucursals as s', 'su.sucursal_id', 's.id')
-                ->select(
-                    'users.*',
-                    's.name as nombreEmpresa',
-                    'su.estado as estadosu'
-                )
-                ->whereNull('fecha_fin')
-                ->where('users.name', 'like', '%' . $this->search . '%')
-                ->orwhere('s.name', 'like', '%' . $this->search . '%')
-                ->orderBy('users.name', 'asc')
+            $data = User::where('name', 'like', '%' . $this->search . '%')
+                ->orderBy('id', 'asc')
                 ->paginate($this->pagination);
-        } else { /* MOSTRAR SUCURSAL_USER DE LOS USUARIOS CON FECHA_FIN NULL */
-            $data = User::join('sucursal_users as su', 'su.user_id', 'users.id')
-                ->join('sucursals as s', 'su.sucursal_id', 's.id')
-                ->select(
-                    'users.*',
-                    's.name as nombreEmpresa',
-                    'su.estado as estadosu'
-                )
-                ->where('estado', 'ACTIVO')
-                ->orderBy('name', 'asc')
+        } else {
+            $data = User::orderBy('id', 'asc')
                 ->paginate($this->pagination);
         }
-        /* lISTADO DE LAS SUCURSALES EN LAS CUALES ESTUVO EL USUARIO */
-        $this->details = User::join('sucursal_users as su', 'su.user_id', 'users.id',)
-            ->join('sucursals as s', 's.id', 'su.sucursal_id',)
-            ->select('su.created_at', 'su.fecha_fin', 's.name')
-            ->where('su.user_id', $this->selected_id)
-            ->orderBy('su.id', 'desc')
-            ->get();
+
+        if ($this->selected_id > 0) {
+            $this->details = User::join('sucursal_users as su', 'users.id', 'su.user_id')
+                ->join('sucursals as s', 's.id', 'su.sucursal_id')
+                ->select('su.created_at', 'su.fecha_fin', 's.name')
+                ->where('users.id', $this->selected_id)
+                ->orderBy('su.created_at', 'desc')
+                ->get();
+        }
+
 
         return view('livewire.users.component', [
             'data' => $data,
@@ -93,7 +79,6 @@ class UsersController extends Component
         $this->resetUI();
         $this->emit('show-modal', 'show modal!');
     }
-
 
     public function Store()
     {
@@ -157,14 +142,7 @@ class UsersController extends Component
     }
 
     public function Edit(User $user)
-    {   /* CARGAR LOS DATOS DEL USUARIO EN EL MODAL */
-        $sucursal = User::join('sucursal_users as su', 'su.user_id', 'users.id')
-            ->join('sucursals as s', 'su.sucursal_id', 's.id')
-            ->select('s.*')
-            ->where('su.estado', 'ACTIVO')
-            ->where('su.user_id', $user->id)->get()->first();
-
-        $this->sucursal_id = $sucursal->id;
+    {
         $this->selected_id = $user->id;
         $this->name = $user->name;
         $this->phone = $user->phone;
@@ -238,7 +216,7 @@ class UsersController extends Component
     ];
 
     public function destroy(User $user)
-    {   /*  */
+    {
         if ($user) {
             $sales = Sale::where('user_id', $user->id)->count();
 
@@ -259,20 +237,29 @@ class UsersController extends Component
         }
     }
     /* VENTANA MODAL DE HISTORIAL DEL USUARIO */
-    public function viewDetails(User $u)
+    public function viewDetails(User $user)
     {
-        $this->selected_id = $u->id;
-        /* OBTENER SUCURSAL-USER DEL USUARIO SELECCIONADO */
-        $idsu = User::join('sucursal_users as su', 'su.user_id', 'users.id')
-            ->join('sucursals as s', 'su.sucursal_id', 's.id')
-            ->where('su.user_id', $u->id)
-            ->select('s.id as sucursalid', 's.name as sucursalname', 'su.id as sucursalUID')
-            ->orderBy('su.id', 'desc')
-            ->first();
-        $this->idsucursalUser = $idsu->sucursalUID;
-        $this->sucurid = $idsu->sucursalid;
-        $this->sucurname = $idsu->sucursalname;
-        $this->sucur = $this->sucurid;
+        $this->selected_id = $user->id;
+
+        if ($user->status == 'ACTIVE') {
+            $this->usuarioACTIVO = 'SI';
+        } else {
+            $this->usuarioACTIVO = 'NO';
+        }
+
+        foreach ($user->sucursalusers as $value) {
+            if ($value->estado == 'ACTIVO') {
+                $this->sucurname = $value->sucursal->name;
+                $this->sucursalUserUsuario = $value->id;
+                /* variable para comparar si cambio en el combobox */
+                $this->sucursalDelUsuario = $value->sucursal->id;
+                /* esta de abajo cambia en el modal */
+                $this->sucursalUsuario = $value->sucursal->id;
+            }
+        }
+        if ($this->sucursalUserUsuario == '') {
+            $this->sucursalUsuario = '1';
+        }
 
         $this->emit('show-modal2', 'open modal');
     }
@@ -280,40 +267,41 @@ class UsersController extends Component
     public function Cambiar()
     {
         $DateAndTime = date('Y-m-d H:i:s', time());
-        if ($this->sucur != 'Elegir') {
-            if ($this->sucur != $this->sucurid) {
-                /* CREAR NUEVO SUCURSAL_USER */
-                SucursalUser::create([
-                    'user_id' => $this->selected_id,
-                    'sucursal_id' => $this->sucur,
-                    'estado' => 'ACTIVO',
-                    'fecha_fin' => null,
-                ]);
-                /* EDITAR ANTERIOR SUCURSAL_USER, PONIENDO FECHA FIN O NO SEGUN EL CASO */
-                $su = SucursalUser::find($this->idsucursalUser);
-                if ($su->fecha_fin == null) {
-                    $su->update([
-                        'estado' => 'FINALIZADO',
-                        'fecha_fin' => $DateAndTime
-                    ]);
-                } else {
-                    $su->update([
-                        'estado' => 'FINALIZADO'
-                    ]);
-                }
+        if ($this->sucursalUsuario != $this->sucursalDelUsuario) {
+            /* CREAR NUEVO SUCURSAL_USER */
+            SucursalUser::create([
+                'user_id' => $this->selected_id,
+                'sucursal_id' => $this->sucursalUsuario,
+                'estado' => 'ACTIVO',
+                'fecha_fin' => null,
+            ]);
 
-                $usuario = User::find($this->selected_id);
-                $usuario->update([
-                    'status' => 'ACTIVE',
+            /* EDITAR ANTERIOR SUCURSAL_USER, PONIENDO FECHA FIN O NO SEGUN EL CASO */
+            $su = SucursalUser::find($this->sucursalUserUsuario);
+            if ($su->fecha_fin == null) {
+                $su->update([
+                    'estado' => 'FINALIZADO',
+                    'fecha_fin' => $DateAndTime
                 ]);
-                $usuario->save();
-
-                $this->emit('sucursal-actualizada', 'Se cambio al usuario de sucursal');
             }
+
+            $usuario = User::find($this->selected_id);
+            $usuario->update([
+                'status' => 'ACTIVE',
+            ]);
+            $usuario->save();
+
+            $this->emit('sucursal-actualizada', 'Se cambió al usuario de sucursal');
         }
     }
     public function Activar()
     {
+        SucursalUser::create([
+            'user_id' => $this->selected_id,
+            'sucursal_id' => $this->sucursalUsuario,
+            'estado' => 'ACTIVO',
+            'fecha_fin' => null,
+        ]);
         $usuario = User::find($this->selected_id);
         $usuario->update([
             'status' => 'ACTIVE',
@@ -324,14 +312,17 @@ class UsersController extends Component
     public function finalizar()
     {
         $DateAndTime = date('Y-m-d H:i:s', time());
+
         $usuario = User::find($this->selected_id);
         $usuario->update([
             'status' => 'LOCKED',
             'password' => bcrypt(uniqid()),
         ]);
         $usuario->save();
-        $su = SucursalUser::find($this->idsucursalUser);
+
+        $su = SucursalUser::find($this->sucursalUserUsuario);
         $su->update([
+            'estado' => 'FINALIZADO',
             'fecha_fin' => $DateAndTime
         ]);
         $this->emit('user-fin', 'Termino el ciclo del usuario');
@@ -344,12 +335,15 @@ class UsersController extends Component
         $this->password = '';
         $this->phone = '';
         $this->image = '';
-        $this->fecha_inicio = '';
-        $this->fecha_fin = '';
+
+        $this->selected_id = 0;
         $this->profile = 'Elegir';
         $this->sucursal_id = 'Elegir';
-        $this->selected_id = 0;
-        $this->search = '';
+        $this->sucursalUsuario = '';
+        $this->sucursalUserUsuario = '';
+        $this->details = [];
+        $this->usuarioACTIVO = '';
+
         $this->resetValidation();
         $this->resetPage();
     }

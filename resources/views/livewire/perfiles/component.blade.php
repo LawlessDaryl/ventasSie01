@@ -235,6 +235,9 @@
                                         <td class="text-center">
                                             <h6 class="text-center">{{ $p->Mov->climov->client->nombre }} <br>
                                                 {{ $p->Mov->climov->client->celular }}</h6>
+                                            @php
+                                                $IDcliente = $p->Mov->climov->client->id;
+                                            @endphp
                                         </td>
                                         <td class="text-center">
                                             <h6 class="text-center" style="font-size: 80%">
@@ -337,7 +340,6 @@
                                                         @endif
                                                     @endforeach
                                                 @endif
-
                                             </h6>
                                         </td>
                                         <td class="text-center">
@@ -361,7 +363,7 @@
                                         <td class="text-center">
                                             @if ($condicional == 'combos')
                                                 <a href="javascript:void(0)"
-                                                    wire:click="AccionesCombo({{ $p->id }})"
+                                                    wire:click="AccionesCombo('{{ $p->id }}','{{ $IDcliente }}')"
                                                     class="btn btn-dark mtmobile" title="Renovación">
                                                     <i class="fa-regular fa-calendar-check"></i>
                                                 </a>

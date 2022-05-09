@@ -16,20 +16,20 @@
                     <div class="col-sm-12 col-md-6">
                         <div class="form-group">
                             <h6>Cambiar de sucursal</h6>
-                            <select wire:model='sucur' class="form-control">
+                            <select wire:model='sucursalUsuario' class="form-control">
                                 <option value="Elegir" disabled>Elegir</option>
                                 @foreach ($sucursales as $s)
                                     <option value="{{ $s->id }}">{{ $s->name }}</option>
                                 @endforeach
                             </select>
-                            @error('sucur')
+                            @error('sucursalUsuario')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror
                         </div>
                     </div>
 
                     <div class="col-sm-12 col-md-6 mt-4">
-                        <a href="javascript:void(0)" class="btn btn-dark" wire:click.prevent="Cambiar()">CAMBIAR DE
+                        <a href="javascript:void(0)" class="btn btn-dark" wire:click.prevent="Cambiar()">ASIGNAR NUEVA
                             SUCURSAL</a>
                     </div>
 
@@ -47,7 +47,7 @@
                         <tbody>
                             @foreach ($details as $d)
                                 <tr
-                                    style="{{ $d->fecha_fin == '' ? 'background-color: lightgreen !important' : '  ' }}">
+                                    style="{{ $d->fecha_fin == null ? 'background-color: lightgreen !important' : '  ' }}">
                                     <td class="text-center">
                                         <h6>
                                             {{ \Carbon\Carbon::parse($d->created_at)->format('d/m/Y H:i:s') }}
@@ -55,7 +55,9 @@
                                     </td>
                                     <td class="text-center">
                                         <h6>
-                                            {{ \Carbon\Carbon::parse($d->fecha_fin)->format('d/m/Y H:i:s') }}
+                                            @if ($d->fecha_fin != null)
+                                                {{ \Carbon\Carbon::parse($d->fecha_fin)->format('d/m/Y H:i:s') }}
+                                            @endif
                                         </h6>
                                     </td>
                                     <td class="text-center">
@@ -69,10 +71,13 @@
                                 <a href="javascript:void(0)" class="btn btn-dark" wire:click.prevent="finalizar()">DAR
                                     DE BAJA AL USUARIO</a>
                             </td>
-                            <td class="text-left">
-                                <a href="javascript:void(0)" class="btn btn-dark" wire:click.prevent="Activar()">PONER
-                                    ACTIVO AL USUARIO</a>
-                            </td>
+                            @if ($usuarioACTIVO == 'NO')
+                                <td class="text-left">
+                                    <a href="javascript:void(0)" class="btn btn-dark"
+                                        wire:click.prevent="Activar()">PONER
+                                        ACTIVO AL USUARIO</a>
+                                </td>
+                            @endif
                         </tfoot>
                     </table>
                 </div>

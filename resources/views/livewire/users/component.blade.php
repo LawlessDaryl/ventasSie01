@@ -48,7 +48,13 @@
                                             class="badge {{ $r->status == 'ACTIVE' ? 'badge-success' : 'badge-danger' }} text-uppercase">{{ $r->status }}</span>
                                     </td>
                                     <td class="text-center">
-                                        <h6 class="text-center">{{ $r->nombreEmpresa }}</h6>
+                                        <h6 class="text-center">
+                                            @foreach ($r->sucursalusers as $su)
+                                                @if ($su->estado == 'ACTIVO')
+                                                    {{ $su->sucursal->name }}                                                    
+                                                @endif
+                                            @endforeach
+                                        </h6>
                                     </td>
 
                                     <td class="text-center">
@@ -58,19 +64,20 @@
                                         </span>
                                     </td>
                                     <td class="text-center">
-                                        <a href="javascript:void(0)"
-                                            wire:click="Edit({{ $r->id }})"
+                                        <a href="javascript:void(0)" wire:click="Edit({{ $r->id }})"
                                             class="btn btn-dark mtmobile" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
 
-                                        <a href="javascript:void(0)"
-                                            onclick="Confirm('{{ $r->id }}')"
+                                        {{-- <a href="javascript:void(0)"
+                                            onclick="Confirm('{{ $r->id }}','{{ $suID }}')"
                                             class="btn btn-dark" title="Delete">
                                             <i class="fas fa-trash"></i>
-                                        </a>
+                                        </a> --}}
 
-                                        <button wire:click.prevent="viewDetails({{$r}})" class="btn btn-dark">
+                                        <button
+                                            wire:click.prevent="viewDetails('{{ $r->id }}')"
+                                            class="btn btn-dark">
                                             <i class="fas fa-list"></i>
                                         </button>
                                     </td>
@@ -89,7 +96,6 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-
 
         window.livewire.on('item-added', Msg => {
             $('#theModal').modal('hide')
@@ -131,7 +137,6 @@
     });
 
     function Confirm(id, sucursalUser) {
-
         swal.fire({
             title: 'CONFIRMAR',
             icon: 'warning',
@@ -143,7 +148,7 @@
             confirmButtonText: 'Aceptar'
         }).then(function(result) {
             if (result.value) {
-                window.livewire.emit('deleteRow', id)
+                window.livewire.emit('deleteRow', id, sucursalUser)
                 Swal.close()
             }
         })
