@@ -233,14 +233,16 @@
                                                                         {{ $mm->movs->usermov->name }}</h6>
                                                                 @endif
                                                                 
-                                                                    @if($mm->movs->status=='INACTIVO' && $mm->movs->type == 'ANULADO')
+                                                                    {{-- @if($mm->movs->status=='INACTIVO' && $mm->movs->type == 'ANULADO')
                                                                         @foreach($mm->movs->usermov->sucursalusers as $sucusu)
                                                                             @if($sucusu->estado == 'ACTIVO')
                                                                                 <h6 style="font-size: 100%"><b>Sucursal: </b>
                                                                                 {{$sucusu->sucursal->name}}</h6>
                                                                             @endif
                                                                         @endforeach
-                                                                    @endif
+                                                                    @endif --}}
+                                                                    <h6 style="font-size: 100%"><b>Sucursal: </b>
+                                                                        {{$service->sucursalServ->name}}</h6>
                                                             @endforeach
 
                                                         </div>
@@ -427,14 +429,16 @@
                                                                         {{ $mm->movs->usermov->name }}</h6>
                                                                 @endif
                                                                
-                                                                    @if($mm->movs->status=='ACTIVO' || ($mm->movs->status == 'INACTIVO' && $mm->movs->type == 'ANULADO'))
+                                                                    {{-- @if($mm->movs->status=='ACTIVO' || ($mm->movs->status == 'INACTIVO' && $mm->movs->type == 'ANULADO'))
                                                                         @foreach($mm->movs->usermov->sucursalusers as $sucusu)
                                                                             @if($sucusu->estado == 'ACTIVO')
                                                                             <h6 style="font-size: 100%"><b>Sucursal: </b>
                                                                                 {{$sucusu->sucursal->name}}</h6>
                                                                             @endif
                                                                         @endforeach
-                                                                    @endif
+                                                                    @endif --}}
+                                                                    <h6 style="font-size: 100%"><b>Sucursal: </b>
+                                                                        {{$service->sucursalServ->name}}</h6>
                                                             @endforeach
                                                         </div>
                                                         {{-- ESTADO --}}
@@ -624,14 +628,16 @@
                                                                         {{ $mm->movs->usermov->name }}</h6>
                                                                 @endif
                                                                 
-                                                                    @if($mm->movs->status=='ACTIVO')
+                                                                    {{-- @if($mm->movs->status=='ACTIVO')
                                                                         @foreach($mm->movs->usermov->sucursalusers as $sucusu)
                                                                             @if($sucusu->estado == 'ACTIVO')
                                                                             <h6 style="font-size: 100%"><b>Sucursal: </b>
                                                                                 {{$sucusu->sucursal->name}}</h6>
                                                                             @endif
                                                                         @endforeach
-                                                                    @endif
+                                                                    @endif --}}
+                                                                    <h6 style="font-size: 100%"><b>Sucursal: </b>
+                                                                        {{$service->sucursalServ->name}}</h6>
                                                             @endforeach
 
                                                     </div>

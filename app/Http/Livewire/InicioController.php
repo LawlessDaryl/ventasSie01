@@ -128,8 +128,8 @@ class InicioController extends Component
                         ->where('os.id', 'like', '%' . $this->search . '%')
                         ->where('cat.id', $this->catprodservid)
                         ->where('os.status', 'ACTIVO')
-                        ->where('suc.id',$this->sucursal)
-                        ->where('suu.estado','ACTIVO')
+                        ->where('services.sucursal_id',$this->sucursal)
+                        /* ->where('suu.estado','ACTIVO') */
                         ->orderBy('services.fecha_estimada_entrega', 'asc')
                         ->distinct()
                         ->paginate($this->pagination);
@@ -175,8 +175,8 @@ class InicioController extends Component
                         ->where('os.id', 'like', '%' . $this->search . '%')
                         ->where('mov.status', 'ACTIVO')
                         ->where('os.status', 'ACTIVO')
-                        ->where('suc.id',$this->sucursal)
-                        ->where('suu.estado','ACTIVO')
+                        ->where('services.sucursal_id',$this->sucursal)
+                        /* ->where('suu.estado','ACTIVO') */
                         ->orderBy('services.fecha_estimada_entrega', 'asc')
                         ->distinct()
                         ->paginate($this->pagination);
@@ -291,8 +291,8 @@ class InicioController extends Component
                         ->where('mov.status', 'ACTIVO')
                         ->where('cat.id', $this->catprodservid)
                         ->where('os.status', 'ACTIVO')
-                        ->where('suc.id',$this->sucursal)
-                        ->where('suu.estado','ACTIVO')
+                        ->where('services.sucursal_id',$this->sucursal)
+                        /* ->where('suu.estado','ACTIVO') */
                         ->orderBy('services.fecha_estimada_entrega', 'asc')
                         ->distinct()
                         ->paginate($this->pagination);
@@ -321,8 +321,8 @@ class InicioController extends Component
                         ->where('mov.type', 'PENDIENTE')
                         ->where('mov.status', 'ACTIVO')
                         ->where('os.status', 'ACTIVO')
-                        ->where('suc.id',$this->sucursal)
-                        ->where('suu.estado','ACTIVO')
+                        ->where('services.sucursal_id',$this->sucursal)
+                        /* ->where('suu.estado','ACTIVO') */
                         ->orderBy('services.fecha_estimada_entrega', 'asc')
                         ->distinct()
                         ->paginate($this->pagination);
@@ -464,8 +464,8 @@ class InicioController extends Component
                     ->where('mov.status', 'ACTIVO')
                     ->where('cat.id', $this->catprodservid)
                     ->where('os.status', 'ACTIVO')
-                    ->where('suc.id',$this->sucursal)
-                    ->where('suu.estado','ACTIVO')
+                    ->where('services.sucursal_id',$this->sucursal)
+                    /* ->where('suu.estado','ACTIVO') */
                     ->orderBy('services.fecha_estimada_entrega', 'asc')
                     ->distinct()
                     ->paginate($this->pagination);
@@ -510,8 +510,8 @@ class InicioController extends Component
                     /* ->where('mov.user_id', Auth()->user()->id) */
                     ->where('mov.status', 'ACTIVO')
                     ->where('os.status', 'ACTIVO')
-                    ->where('suc.id',$this->sucursal)
-                    ->where('suu.estado','ACTIVO')
+                    ->where('services.sucursal_id',$this->sucursal)
+                    /* ->where('suu.estado','ACTIVO') */
                     ->orderBy('services.fecha_estimada_entrega', 'asc')
                     ->distinct()
                     ->paginate($this->pagination);

@@ -23,5 +23,8 @@ class Service extends Model
     {
         return $this->belongsTo(OrderService::class,'order_service_id','id');
     }
+    public function sucursalServ(){
+        return $this->belongsTo(Sucursal::class,'sucursal_id','id');
+    }
 
 }
