@@ -35,8 +35,7 @@ class OrderServiceController extends Component
         $typew, $typeworkid, $catprodservid, $diagnostico, $solucion, $hora_entrega, $proceso,
         $terminado, $costo, $detalle_costo, $nombreUsuario, $modificar, $type_service, $movimiento,
         $opciones, $tipopago, $dateFrom, $dateTo, $reportType, $userId, $estado, $mostrar,
-        $mostrarEliminar, $tipo, $condicion, $fechahoy, $variable, $nomUsuTerm,
-        $sucursalNombre;
+        $mostrarEliminar, $tipo, $condicion, $fechahoy, $variable, $nomUsuTerm;
 
     private $pagination = null;
     public function paginationView()
@@ -76,7 +75,6 @@ class OrderServiceController extends Component
         $this->fechahoy = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->variable = false;
         $this->nomUsuTerm = '';
-        $this->sucursalNombre = '';
     }
     public function render()
     {
@@ -357,6 +355,7 @@ class OrderServiceController extends Component
                             ->join('sucursals as suc', 'suc.id', 'suu.sucursal_id')
                             ->select('order_services.*')
                             ->where('suc.id', $this->sucursal)
+                            ->where('suu.estado','ACTIVO')
                             /* ->where('mov.type',  $this->opciones) */
                             ->where('mov.status', 'ACTIVO')
                             ->where('c.nombre', 'like', '%' . $this->search . '%')
@@ -384,6 +383,7 @@ class OrderServiceController extends Component
                                 ->join('sucursals as suc', 'suc.id', 'suu.sucursal_id')
                                 ->select('order_services.*')
                                 ->where('suc.id', $this->sucursal)
+                                ->where('suu.estado','ACTIVO')
                                 ->where('mov.type', 'ANULADO')
                                 ->where('mov.status', 'INACTIVO')
                                 ->where('c.nombre', 'like', '%' . $this->search . '%')
@@ -427,6 +427,7 @@ class OrderServiceController extends Component
                                 ->select('order_services.*')
                                 ->where('mov.type',  $this->opciones)
                                 ->where('suc.id', $this->sucursal)
+                                ->where('suu.estado','ACTIVO')
                                 ->where('mov.status', 'ACTIVO')
                                 ->where('c.nombre', 'like', '%' . $this->search . '%')
                                 ->orWhere('order_services.id', 'like', '%' . $this->search . '%')
@@ -469,6 +470,7 @@ class OrderServiceController extends Component
                         ->join('sucursals as suc', 'suc.id', 'suu.sucursal_id')
                         ->where('mov.status', 'ACTIVO')
                         ->where('suc.id', $this->sucursal)
+                        ->where('suu.estado','ACTIVO')
                         ->orWhere('mov.status', 'INACTIVO')
                         ->where('mov.type', 'ANULADO')
                         ->select('order_services.*')
@@ -485,6 +487,7 @@ class OrderServiceController extends Component
                         ->join('sucursals as suc', 'suc.id', 'suu.sucursal_id')
                         ->where('mov.type', 'ANULADO')
                         ->where('suc.id', $this->sucursal)
+                        ->where('suu.estado','ACTIVO')
                         ->select('order_services.*')
                         ->orderBy('order_services.id', 'desc')
                         ->distinct()
@@ -502,6 +505,7 @@ class OrderServiceController extends Component
                         ->where('mov.type',  $this->opciones)
                         ->where('mov.status', 'ACTIVO')
                         ->where('suc.id', $this->sucursal)
+                        ->where('suu.estado','ACTIVO')
                         ->select('order_services.*')
                         ->orderBy('order_services.id', 'desc')
                         ->distinct()
@@ -520,6 +524,7 @@ class OrderServiceController extends Component
                                 ->join('sucursals as suc', 'suc.id', 'suu.sucursal_id')
                                 ->where('mov.status', 'ACTIVO')
                                 ->where('suc.id', $this->sucursal)
+                                ->where('suu.estado','ACTIVO')
                                 ->select('order_services.*')
                                 ->whereBetween('mov.created_at', [$from, $to])
                                 ->orderBy('order_services.id', 'desc')
@@ -540,6 +545,7 @@ class OrderServiceController extends Component
                                 ->where('mov.user_id', $this->userId)
                                 ->where('mov.status', 'ACTIVO')
                                 ->where('suc.id', $this->sucursal)
+                                ->where('suu.estado','ACTIVO')
                                 ->orderBy('order_services.id', 'desc')
                                 ->distinct()
                                 ->paginate($this->pagination);
@@ -560,6 +566,7 @@ class OrderServiceController extends Component
                                 ->where('mov.type', $this->estado)
                                 ->where('mov.status', 'ACTIVO')
                                 ->where('suc.id', $this->sucursal)
+                                ->where('suu.estado','ACTIVO')
                                 ->orderBy('order_services.id', 'desc')
                                 ->distinct()
                                 ->paginate($this->pagination);
@@ -579,6 +586,7 @@ class OrderServiceController extends Component
                                 ->where('mov.type', $this->estado)
                                 ->where('mov.status', 'ACTIVO')
                                 ->where('suc.id', $this->sucursal)
+                                ->where('suu.estado','ACTIVO')
                                 ->orderBy('order_services.id', 'desc')
                                 ->distinct()
                                 ->paginate($this->pagination);
@@ -588,7 +596,7 @@ class OrderServiceController extends Component
             }
         }
 
-        
+
         $orderser = OrderService::join(
             'services as s',
             'order_services.id',
@@ -1334,7 +1342,7 @@ class OrderServiceController extends Component
         $this->costo = 0;
         $this->detalle_costo = '';
         $this->nombreUsuario = '';
-        $this->sucursalNombre = '';
+        
         /* $this->opciones = 'PENDIENTE'; */
 
         /* $this->condicion == 'MiSucursal'; */
