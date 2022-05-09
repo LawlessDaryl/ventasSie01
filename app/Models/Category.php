@@ -26,4 +26,8 @@ class Category extends Model
             return 'noimage.jpg';
         }
     }
+
+    public function subCat(){
+        return $this->belongsTo(Category::class, 'categoria_padre', 'id');
+    }
 }

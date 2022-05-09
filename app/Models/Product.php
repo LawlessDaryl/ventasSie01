@@ -20,15 +20,20 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class);
     }
+  
+ 
     public function provider()
     {
         return $this->belongsTo(Provider::class);
     }
 
-    public function destino()
+    public function destinos()
     {
-        return $this->hasMany(ProductosDestino::class);
+        return $this->belongsToMany(Destino::class,'productos_destinos','product_id','destino_id');
     }
+    
+
+
 
 
     public function getImagenAttribute()
@@ -44,6 +49,8 @@ class Product extends Model
             return 'noimage.jpg';
         }
     }
+
+ 
 
 
 }

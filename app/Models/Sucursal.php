@@ -10,4 +10,8 @@ class Sucursal extends Model
     use HasFactory;
 
     protected $fillable = ['name','adress','telefono','celular','nit_id','company_id'];
+    public function destino()
+    {
+        return $this->hasMany(Destino::class,'sucursal_id','id');
+    }
 }

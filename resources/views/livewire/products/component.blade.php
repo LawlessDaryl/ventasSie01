@@ -78,15 +78,15 @@
                                         <h6>{{ $products->caracteristicas }}</h6>
 
                                     </td>
-                                    @if ($products->category->categoria_padre === 0)
+                                    @if ($products->category->subcat == null)
                                     <td>
                                         <h6 class="text-center"> <strong>Categoria:</strong> {{ $products->category->name}}</h6>
                                         <h6 class="text-center"> <strong>Subcategoria:</strong>No definido</h6>
                                    </td>
                                     @else
                                     <td>
-                                        <h6 class="text-center"> <strong>Categoria:</strong> {{ $products->category->name}}</h6>
-                                        <h6 class="text-center"> <strong>Subcategoria:</strong>No definido</h6>
+                                        <h6 class="text-center"> <strong>Categoria:</strong> {{ $products->category->subcat->name}}</h6>
+                                        <h6 class="text-center"> <strong>Subcategoria:</strong>{{ $products->category->name}}</h6>
                                    </td>
                                     @endif
                                     <td>

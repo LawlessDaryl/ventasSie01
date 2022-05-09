@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 use App\Models\Category;
 use App\Models\Destino;
+use App\Models\LocationProducto;
 use App\Models\Product;
 use App\Models\ProductosDestino;
 use Livewire\Component;
@@ -76,11 +77,30 @@ class DestinoProductoController extends Component
                                         $merged = $collection->merge(['Bookcase', 'Door']);
                                         $merged->all();*/ 
                                         
-                                        $gh= ProductosDestino::leftJoin('location_productos','productos_destinos.product_id','location_productos.product')
+                                        $sql= 'select rt,location,dest from ( select products.nombre as rt,destinos.id as dest from productos_destinos 
+                                        join products on productos_destinos.product_id= products.id
+                                        join destinos on productos_destinos.destino_id= destinos.id
+                                         ) as dd left join ( select products.nombre as pt,destinos.id as best,locations.id as location from location_productos
+                                          join products on location_productos.product= products.id
+                                        join locations on location_productos.location= locations.id
+                                        join destinos on locations.destino_id= destinos.id) as mm on dd.dest= mm.best and dd.rt= mm.pt';
+
+                                        $ff= ProductosDestino::join('products','productos_destinos.product_id','products.id')
+                                        ->join('destinos','productos_destinos.destino_id','destinos.id')
+                                        ->select('products.nombre','destinos.id as destiti')->get();
+
+                                        
+
+                                        $kk= LocationProducto::join('products','location_productos.product','products.id')
                                         ->join('locations','location_productos.location','locations.id')
-                                        ->select('productos_destinos.id')
-                                        ->where('locations.destino_id','productos_destinos.destino_id');
-                                        dd($gh);             
+                                        ->join('destinos','locations.destino_id','destinos.id')
+                                        ->select('products.nombre','destinos.id as destino','locations.id as location')->get();
+
+                                        
+
+
+                                        $pr=DB::select($sql);
+                                     
     }
             
             else{
