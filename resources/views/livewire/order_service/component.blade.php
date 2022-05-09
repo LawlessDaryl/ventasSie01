@@ -241,10 +241,10 @@
                                                                             @endif
                                                                         @endforeach
                                                                     @endif --}}
-                                                                    <h6 style="font-size: 100%"><b>Sucursal: </b>
-                                                                        {{$service->sucursalServ->name}}</h6>
+                                                                    
                                                             @endforeach
-
+                                                            <h6 style="font-size: 100%"><b>Sucursal: </b>
+                                                                {{$service->sucursalServ->name}}</h6>
                                                         </div>
                                                         {{-- ESTADO --}}
                                                         <div class="col-sm-4">
@@ -437,9 +437,10 @@
                                                                             @endif
                                                                         @endforeach
                                                                     @endif --}}
-                                                                    <h6 style="font-size: 100%"><b>Sucursal: </b>
-                                                                        {{$service->sucursalServ->name}}</h6>
+                                                                    
                                                             @endforeach
+                                                            <h6 style="font-size: 100%"><b>Sucursal: </b>
+                                                                {{$service->sucursalServ->name}}</h6>
                                                         </div>
                                                         {{-- ESTADO --}}
                                                         <div class="col-sm-4">
@@ -636,10 +637,10 @@
                                                                             @endif
                                                                         @endforeach
                                                                     @endif --}}
-                                                                    <h6 style="font-size: 100%"><b>Sucursal: </b>
-                                                                        {{$service->sucursalServ->name}}</h6>
+                                                                    
                                                             @endforeach
-
+                                                            <h6 style="font-size: 100%"><b>Sucursal: </b>
+                                                                {{$service->sucursalServ->name}}</h6>
                                                     </div>
                                                     {{-- ESTADO --}}
                                                     <div class="col-sm-4">

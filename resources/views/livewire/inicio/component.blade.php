@@ -430,12 +430,12 @@
                                 @foreach ($data as $d3)
                                     <tr>
                                         <td class="text-center"
-                                            @if (substr($d3->horas, 0, 3) <= 2)
-                                                style="background-color: #FF0000 !important">
-                                            @elseif(substr($d3->horas, 0, 3) == 3)
-                                                style="background-color: #d6ec02 !important">
-                                            @elseif(substr($d3->horas, 0, 3) >= 4)
+                                            @if ($d3->dias < 15)
                                                 style="background-color: #00eb15 !important">
+                                            @elseif($d3->dias >= 15 && $d3->dias <= 30)
+                                                style="background-color: #d6ec02 !important">
+                                            @elseif($d3->dias > 30)
+                                                style="background-color: #FF0000 !important">
                                             @endif    
                                             {{-- style="{{ substr($d3->horas, 0, 3) <= 24? 'background-color: #FF0000 !important': 'background-color: #d6ec02 !important' }}"> --}}
                                             <h6>{{ $loop->iteration }}</h6>
@@ -484,13 +484,20 @@
                                 @foreach ($data as $d4)
                                     <tr>
                                         <td class="text-center"
-                                        @if (substr($d4->horas, 0, 3) <= 2)
+                                        {{-- @if (substr($d4->horas, 0, 3) <= 2)
                                             style="background-color: #FF0000 !important">
                                         @elseif(substr($d4->horas, 0, 3) == 3)
                                             style="background-color: #d6ec02 !important">
                                         @elseif(substr($d4->horas, 0, 3) >= 4)
                                             style="background-color: #00eb15 !important">
-                                        @endif
+                                        @endif --}}
+                                            @if ($d4->dias < 15)
+                                                style="background-color: #00eb15 !important">
+                                            @elseif($d4->dias >= 15 && $d4->dias <= 30)
+                                                style="background-color: #d6ec02 !important">
+                                            @elseif($d4->dias > 30)
+                                                style="background-color: #FF0000 !important">
+                                            @endif 
                                             {{-- style="{{ substr($d4->horas, 0, 3) <= 24? 'background-color: #FF0000 !important': 'background-color: #d6ec02 !important' }}"> --}}
                                             <h6>{{ $loop->iteration }}</h6>
                                         </td>
@@ -537,14 +544,14 @@
                             <tbody>
                                 @foreach ($data as $d5)
                                     <tr>
-                                        <td class="text-center"
-                                        @if (substr($d5->horas, 0, 3) <= 2)
+                                        <td class="text-center">
+                                        {{-- @if (substr($d5->horas, 0, 3) <= 2)
                                             style="background-color: #FF0000 !important">
                                         @elseif(substr($d5->horas, 0, 3) == 3)
                                             style="background-color: #d6ec02 !important">
                                         @elseif(substr($d5->horas, 0, 3) >= 4)
                                             style="background-color: #00eb15 !important">
-                                        @endif
+                                        @endif --}}
                                             {{-- style="{{ substr($d5->horas, 0, 3) <= 24? 'background-color: #FF0000 !important': 'background-color: #d6ec02 !important' }}"> --}}
                                             <h6>{{ $loop->iteration }}</h6>
                                         </td>
