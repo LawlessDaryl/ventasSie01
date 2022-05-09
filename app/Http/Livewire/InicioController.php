@@ -31,7 +31,7 @@ class InicioController extends Component
         $serviceid, $movtype, $orderservice, $users1, $service1, $categoria, $marca, $numeroOrden, $detalle1, $falla_segun_cliente, $nombreCliente, $celular, $usuarioId,
         $typew, $typeworkid, $catprodservid, $diagnostico, $solucion, $hora_entrega, $proceso,
         $terminado, $costo, $detalle_costo, $nombreUsuario, $modificar, $type_service, $movimiento,
-        $opciones, $tipopago, $condicional, $fechahoy, $horaActual, $condicion;
+        $opciones, $tipopago, $condicional, $fechahoy, $horaActual, $condicion, $diffmin;
 
 
     private $pagination = 10;
@@ -74,6 +74,7 @@ class InicioController extends Component
         $this->condicion = 'MiSucursal';
         $this->usuariolog = Auth()->user()->name;
         $this->fechahoy = Carbon::parse(Carbon::now())->format('Y-m-d');
+        $this->diffmin = '';
     }
 
     public function render()
@@ -330,9 +331,13 @@ class InicioController extends Component
                         $date1 = new DateTime($c->fecha_estimada_entrega);
                         $date2 = new DateTime("now");
                         $diff = $date2->diff($date1);
+
+                        /* $this->diffmin = (($diff->days * 24)* 60) + ($diff->i); */
+
                         if ($diff->invert != 1) {
                             $c->horas = (($diff->days * 24)) + ($diff->h)/*  . ' horas' */;
                             /* $c->minutos = (($diff->days * 24* 60)) + ($diff->i); */
+                            /* $this->diffmin; */
                         } else {
                             $c->horas = 'EXPIRADO';
                             /* $c->minutos = 'EXPIRADO'; */
@@ -426,9 +431,11 @@ class InicioController extends Component
                                 $date1 = new DateTime($mm->movs->created_at);
                                 $date2 = new DateTime("now");
                                 $diff = $date2->diff($date1);
+                                
                                 if ($diff->invert == 1) {
                                     $c->dias = (($diff->days)) + ($diff->d);
                                     $c->dias = $c->dias / 2;
+
                                 }
                             }
                         }

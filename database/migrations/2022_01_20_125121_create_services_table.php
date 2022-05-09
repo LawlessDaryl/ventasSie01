@@ -27,6 +27,7 @@ class CreateServicesTable extends Migration
             $table->foreign('cat_prod_service_id')->references('id')->on('cat_prod_services');
             $table->foreignId('order_service_id')->constrained();
             $table->foreignId('type_work_id')->constrained();
+            $table->foreignId('sucursal_id')->constrained();
             $table->timestamps();
         });
     }

@@ -328,6 +328,7 @@
                                                      <h6>{{ $d->horas }}</h6>
                                                      @else
                                                      <h6>{{ $d->horas }} horas</h6>
+                                                     {{-- <h6>{{ $diffmin }}</h6> --}}
                                                      @endif
                                                 
                                                 @endif

@@ -82,6 +82,7 @@ class ServiciosController extends Component
                 $this->sucursal = $usersuc->sucursal->id;
             }
         }
+        
 
         //$this->ResetSession();
         $services = Service::join('mov_services as ms', 'services.id', 'ms.service_id')
@@ -151,6 +152,7 @@ class ServiciosController extends Component
         elseif ((strlen($this->import) == 0))
             $this->saldo = 0;
 
+        
 
         return view('livewire.servicio.component', [
             'data' => $services,
@@ -351,9 +353,12 @@ class ServiciosController extends Component
                 'diagnostico' => $this->diagnostico,
                 'solucion' => $this->solucion,
                 'fecha_estimada_entrega' => $from,
-                'order_service_id' => $neworder->id
+                'order_service_id' => $neworder->id,
+                'sucursal_id' => $this->sucursal
             ]);
-
+            /* $services->update([
+                'sucursal_id' => $this->sucursal
+            ]); */
             $mv = Movimiento::create([
                 'type' => 'PENDIENTE',
                 'status' => 'ACTIVO',
