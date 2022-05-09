@@ -57,12 +57,12 @@ class NotificationController extends Component
     }
     public function quitarnovisto($id)
     {
+        //dd("Hola");
         $notificacion = Notification::find($id);
         $notificacion->update([
             'estado' => "VISTO",
         ]);
         $notificacion->save();
-        dd("Hola");
     }
     
 }

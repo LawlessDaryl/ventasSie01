@@ -92,6 +92,7 @@ class SaleListController extends Component
         ->orderBy('sales.id', 'desc')
         ->paginate(10);
     }
+    //Listar los detalles de una venta
     public function listardetalleventas()
     {
         $this->listadetalles = SaleDetail::join('sales as s', 's.id', 'sale_details.sale_id')
@@ -167,11 +168,15 @@ class SaleListController extends Component
         return $totalbs;
     }
     //Metodo para Anular una Venta
-    public function anularventa()
+    public function anularventa($idventa)
     {
+        $this->idventa = $idventa;
+        $this->listardetalleventas();
+        
+
+
         $this->emit('show-anular', 'show modal!');
     }
-
     //Metodo para Verificar si el usuario tiene el Permiso para Ver la
     //lista de Ventas de Manera Completa, filtrar Informacion en la lista, fecha, etc...
     public function verificarpermiso()

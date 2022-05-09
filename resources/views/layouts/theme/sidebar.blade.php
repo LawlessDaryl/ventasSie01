@@ -675,6 +675,28 @@
                         Devolución Ventas </a>
                 </li>
 
+
+
+                <li class="sub-submenu">
+                    <a role="menu" class="collapsed" data-toggle="collapse" data-target="#datatables" aria-expanded="false"><div><span class="icon">
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-crosshair"><circle cx="12" cy="12" r="10"></circle><line x1="22" y1="12" x2="18" y2="12"></line><line x1="6" y1="12" x2="2" y2="12"></line><line x1="12" y1="6" x2="12" y2="2"></line><line x1="12" y1="22" x2="12" y2="18"></line></svg>
+                    
+                    </span> Reportes</div> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"></polyline></svg> </a>
+                    <ul id="datatables" class="collapse" data-parent="#compact_submenuSidebar">
+                        <li>
+                            <a href="table_dt_basic.html"> Ventas por Mes </a>
+                        </li>
+                        <li>
+                            <a href="table_dt_basic-dark.html"> Ventas por Usuario </a>
+                        </li>
+                    </ul>
+                </li>
+
+
+
+
                 {{-- <li class="sub-submenu">
                     <a role="menu" class="collapsed" data-toggle="collapse" data-target="#datatables"
                      aria-expanded="false"><div><span class="icon">

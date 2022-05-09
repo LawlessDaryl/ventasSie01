@@ -152,7 +152,7 @@ a{
                                 @if($this->verificarpermiso())
                                 <td style="padding: 0%"  class="table-th text-withe text-center">
                                     <div class="btn-group" role="group" aria-label="Basic example">
-                                        <button wire:click="anularventa()" title="Anular Venta" type="button" class="btn btn-secondary" style="background-color: crimson">
+                                        <button wire:click="anularventa({{$d->id}})" title="Anular Venta" type="button" class="btn btn-secondary" style="background-color: crimson">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x-circle"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
                                         </button>
                                         <button title="Modificar Usuario Vendedor" type="button" class="btn btn-secondary" style="background-color: dodgerblue">

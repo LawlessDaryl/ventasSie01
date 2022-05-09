@@ -6,11 +6,11 @@
 <link href="{{ asset('assets/css/apps/contacts.css') }}" rel="stylesheet" type="text/css" />
 @endsection
 
-<div class="page-header">
+{{-- <div class="page-header">
     <div class="page-title">
         <h3>Notificaciones</h3>
     </div>
-</div>
+</div> --}}
 
 <div class="row layout-spacing layout-top-spacing" id="cancel-row">
     <div class="col-lg-12">
@@ -94,7 +94,7 @@
 
                 
             <!-- Modal -->
-            <div class="modal fade" id="exampleModalCenter{{$noti->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div wire:ignore.self class="modal fade" id="exampleModalCenter{{$noti->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -122,46 +122,6 @@
 
 
                 @if($noti->estado == "VISTO")
-                <div class="items">
-                    <div class="item-content">
-                        <div class="user-profile">
-                            <div class="n-chk align-self-center text-center">
-                                <label class="new-control new-checkbox checkbox-primary">
-                                  <input type="checkbox" class="new-control-input contact-chkbox">
-                                  <span class="new-control-indicator"></span>
-                                </label>
-                            </div>
-                            <img src="assets/img/mv.jpg" alt="avatar">
-                            <div class="user-meta-info">
-                                <p class="user-name" data-name="Alan Green">{{$noti->nn}}</p>
-                                <p class="user-work" data-occupation="Web Developer">Aviso</p>
-                            </div>
-                        </div>
-                        <div class="user-email">
-                            <p class="info-title">Usuario: </p>
-                            <p class="usr-email-addr" data-email="alan@mail.com">{{$this->buscarusuario($noti->idusuario)}}</p>
-                        </div>
-                        <div class="user-location">
-                            <p class="info-title">Sucursal: </p>
-                            <p class="usr-location" data-location="Boston, USA">{{$this->buscarsucursal($noti->sucursal_id)}}</p>
-                        </div>
-                        <div class="user-location">
-                            <p class="info-title">Fecha: </p>
-                            <p class="usr-location" data-location="Boston, USA">{{ $noti->fechanoti}}</p>
-                        </div>
-                        <div class="user-phone">
-                            <p class="info-title">Ver Detalles: </p>
-
-                            <button wire:click.prevent="quitarnovisto({{ $noti->id }})" type="button" class="btn btn-primary mb-2 mr-2" data-toggle="modal" data-target="#exampleModalCenter{{$noti->id}}">
-                                Ver Detalles
-                              </button>
-
-                        </div>
-                        
-                    </div>
-                </div>
-                @else
-
                 <div class="items">
                     <div class="item-content">
                         {{-- <div class="item-content" style="background-color: rgb(240, 231, 212)"> --}}
@@ -193,7 +153,48 @@
                         <div class="user-phone">
                             <p class="info-title">Ver Detalles: </p>
 
-                            <button wire:click.prevent="quitarnovisto({{ $noti->id }})" type="button" class="btn btn-primary mb-2 mr-2" data-toggle="modal" data-target="#exampleModalCenter{{$noti->id}}">
+                            <button wire:click="quitarnovisto({{ $noti->id }})" type="button" class="btn btn-primary mb-2 mr-2" data-toggle="modal" data-target="#exampleModalCenter{{$noti->id}}">
+                                Ver Detalles
+                              </button>
+
+                        </div>
+                        
+                    </div>
+                </div>
+                @else
+
+                <div class="items">
+                    <div style="background-color: rgb(240, 231, 212)"  class="item-content">
+                        {{-- <div class="item-content" style="background-color: rgb(240, 231, 212)"> --}}
+                        <div class="user-profile">
+                            <div class="n-chk align-self-center text-center">
+                                <label class="new-control new-checkbox checkbox-primary">
+                                  <input type="checkbox" class="new-control-input contact-chkbox">
+                                  <span class="new-control-indicator"></span>
+                                </label>
+                            </div>
+                            <img src="assets/img/mv.jpg" alt="avatar">
+                            <div class="user-meta-info">
+                                <p class="user-name" data-name="Alan Green">{{$noti->nn}}</p>
+                                <p class="user-work" data-occupation="Web Developer">Aviso</p>
+                            </div>
+                        </div>
+                        <div class="user-email">
+                            <p class="info-title">Usuario: </p>
+                            <p class="usr-email-addr" data-email="alan@mail.com">{{$this->buscarusuario($noti->idusuario)}}</p>
+                        </div>
+                        <div class="user-location">
+                            <p class="info-title">Sucursal: </p>
+                            <p class="usr-location" data-location="Boston, USA">{{$this->buscarsucursal($noti->sucursal_id)}}</p>
+                        </div>
+                        <div class="user-location">
+                            <p class="info-title">Fecha: </p>
+                            <p class="usr-location" data-location="Boston, USA">{{ $noti->fechanoti}}</p>
+                        </div>
+                        <div class="user-phone">
+                            <p class="info-title">Ver Detalles: </p>
+
+                            <button wire:click="quitarnovisto({{ $noti->id }})" type="button" class="btn btn-primary mb-2 mr-2" data-toggle="modal" data-target="#exampleModalCenter{{$noti->id}}">
                                 Ver Detalles
                               </button>
 

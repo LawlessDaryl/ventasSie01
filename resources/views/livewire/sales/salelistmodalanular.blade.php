@@ -14,31 +14,42 @@
             <div class="modal-body" style="color: black">
                 
 
-                  Esta Acción devolvera los siguientes productos a la Tienda
+                  Esta Acción devolvera los siguientes productos a la Tienda con estos Precios
             
                   <table border="1">
-                    <tbody>
+                    <thead>
                       <tr>
                         <td>No</td>
                         <th>Nombre Producto</th>
-                        <th>Precio Venta</th>
+                        <th>Total Bs</th>
                         <th>Cantidad</th>
                         <th>Total</th>
+                        <th>Egreso</th>
                       </tr>
-                      <tr>
-                        <th>1</th>
-                        <td>A1</td>
-                        <td>B1</td>
-                        <td>A1</td>
-                        <td>B1</td>
-                      </tr>
-                      <tr>
-                        <th>2</th>
-                        <td>A2</td>
-                        <td>B2</td>
-                        <td>A2</td>
-                        <td>B2</td>
-                      </tr>
+                    </thead>
+                    <tbody>
+                      @foreach ($listadetalles as $dv)
+                        <tr>
+                            <td class="table-th text-withe text-center">
+                                {{$loop->iteration}}
+                            </td>
+                            <td class="table-th text-withe text-left">
+                                {{ $dv->nombre }}
+                            </td>
+                            <td class="table-th text-withe text-right">
+                                {{ number_format($dv->po, 2) }} Bs
+                            </td>
+                            <td class="table-th text-withe text-center">
+                                {{ $dv->cantidad }}
+                            </td>
+                            <td class="table-th text-withe text-right">
+                                {{ number_format($dv->pv*$dv->cantidad, 2) }} Bs
+                            </td>
+                            <td class="table-th text-withe text-right">
+                              {{ number_format($dv->po - ($dv->po-$dv->pv), 2) }} Bs
+                          </td>
+                        </tr>
+                        @endforeach
                     </tbody>
                   </table>
             

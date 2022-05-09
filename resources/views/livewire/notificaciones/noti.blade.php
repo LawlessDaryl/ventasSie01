@@ -78,6 +78,18 @@
                         </div>
                 </a>
                 <hr style="margin:0px; height:2px;border:none;color:rgb(212, 44, 44);background-color:rgb(221, 189, 157);" />
+                @if($loop->iteration > 4)
+                    <a href="{{ url('notificaciones') }}">
+                        <div class="text-center">
+                            <div class="text-center">
+                                    <div class="text-center">
+                                        <p style="color: rgb(185, 110, 25); cursor: pointer;">Ver Mas...</p>
+                                    </div>
+                                </div>
+                        </div>
+                    </a>
+                    @break
+                @endif
                 @endforeach
             @else
             <div class="dropdown-item">
