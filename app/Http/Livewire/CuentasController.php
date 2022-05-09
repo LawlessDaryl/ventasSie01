@@ -481,7 +481,7 @@ class CuentasController extends Component
                 }
             }
         } elseif ($this->condicional == 'ocupados') { /* cuentas ocupadas enteras */
-            if ($this->PlataformaFiltro != 'TODAS') {
+            if ($this->PlataformaFiltro != 'TODAS') { // solo una plataforma
                 if (strlen($this->search) > 0) {
                     $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                         ->join('emails as e', 'accounts.email_id', 'e.id')
@@ -612,7 +612,7 @@ class CuentasController extends Component
                         $c->dias = $d;
                     }
                 }
-            } else {
+            } else { // todas las plataformas
                 if (strlen($this->search) > 0) {
                     $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                         ->join('emails as e', 'accounts.email_id', 'e.id')
@@ -740,7 +740,7 @@ class CuentasController extends Component
                 }
             }
         } elseif ($this->condicional == 'vencidos') {    /* CUENTAS VENCIDAS */
-            if ($this->PlataformaFiltro != 'TODAS') {
+            if ($this->PlataformaFiltro != 'TODAS') { // solo una plataforma
                 if (strlen($this->search) > 0) {
                     $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                         ->join('emails as e', 'accounts.email_id', 'e.id')
@@ -838,7 +838,7 @@ class CuentasController extends Component
                         ->orderBy('pl.expiration_plan', 'desc')
                         ->paginate($this->pagination);
                 }
-            } else {
+            } else { // todas las plataformas
                 if (strlen($this->search) > 0) {
                     $cuentas = Account::join('platforms as p', 'accounts.platform_id', 'p.id')
                         ->join('emails as e', 'accounts.email_id', 'e.id')
