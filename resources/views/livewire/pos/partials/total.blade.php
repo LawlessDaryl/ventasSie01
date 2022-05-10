@@ -49,8 +49,8 @@
                                     <strong>Tipo de Pago</strong>
                                     <select wire:model="tipopago" class="form-control">
                                         <option value="EFECTIVO" selected>EFECTIVO</option>
-                                        <option value="Banco">CUENTA BANCARIA</option>
-                                        <option value="TigoStreaming">TIGO MONEY</option>
+                                        <option value="BANCO">CUENTA BANCARIA</option>
+                                        {{-- <option value="TELEFONO">TIGO MONEY</option> --}}
                                     </select>
                                     </div>
                                 </div>

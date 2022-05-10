@@ -44,6 +44,9 @@
 
 @endsection
 
+
+
+@if($this->verificarcajaabierta() > 0)
 <div class="row sales layout-top-spacing">
     <div class="col-sm-12" >
 
@@ -298,6 +301,59 @@
     @endif
 
 </div>
+@else
+
+<div class="row sales layout-top-spacing">
+    <div class="col-sm-12" >
+
+            <!-- Secciones para las Ventas -->
+            <div class="widget widget-chart-one">
+
+                <div class="text-center">
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <h1>No se selecciono ninguna caja</h1>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+     
+                </div>
+            </div>
+    </div>
+
+</div>
+
+@endif
+
+
+
 
 
 

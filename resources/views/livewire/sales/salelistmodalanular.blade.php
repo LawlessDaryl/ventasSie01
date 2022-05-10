@@ -14,17 +14,16 @@
             <div class="modal-body" style="color: black">
                 
 
-                  Esta Acción devolvera los siguientes productos a la Tienda con estos Precios
+                  <p class="text-center">Esta acción devolvera los siguientes productos a la Tienda</p>
             
                   <table border="1">
                     <thead>
                       <tr>
-                        <td>No</td>
+                        <th>N°</th>
                         <th>Nombre Producto</th>
-                        <th>Total Bs</th>
+                        {{-- <th>Total Bs</th> --}}
                         <th>Cantidad</th>
-                        <th>Total</th>
-                        <th>Egreso</th>
+                        {{-- <th>Total</th> --}}
                       </tr>
                     </thead>
                     <tbody>
@@ -33,29 +32,35 @@
                             <td class="table-th text-withe text-center">
                                 {{$loop->iteration}}
                             </td>
-                            <td class="table-th text-withe text-left">
+                            <td class="table-th text-withe text-center">
                                 {{ $dv->nombre }}
                             </td>
-                            <td class="table-th text-withe text-right">
+                            {{-- <td class="table-th text-withe text-right">
                                 {{ number_format($dv->po, 2) }} Bs
-                            </td>
+                            </td> --}}
                             <td class="table-th text-withe text-center">
                                 {{ $dv->cantidad }}
                             </td>
-                            <td class="table-th text-withe text-right">
+                            {{-- <td class="table-th text-withe text-right">
                                 {{ number_format($dv->pv*$dv->cantidad, 2) }} Bs
-                            </td>
-                            <td class="table-th text-withe text-right">
-                              {{ number_format($dv->po - ($dv->po-$dv->pv), 2) }} Bs
-                          </td>
+                            </td> --}}
                         </tr>
                         @endforeach
                     </tbody>
                   </table>
-            
+                  <br>
+                  <p class="text-center">Se generará un egreso de Bs {{$this->totabs()}} de 
+                 
+                    @if($this->obtenertipopago() == "EFECTIVO")
+                    Caja
+                    @else
+                    {{$this->obtenertipopago()}}
+                    @endif
+                 .</p>
+
             </div>
             <div class="modal-footer">
-                <button class="btn btn-danger">Anular Venta</button>
+                <button wire:click="anularventa({{ $idventa }})" class="btn btn-danger">Anular Venta</button>
             </div>
         </div>
     </div>

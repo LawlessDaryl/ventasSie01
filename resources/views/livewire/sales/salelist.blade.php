@@ -100,6 +100,7 @@ a{
                             <th class="table-th text-withe text-center">¿Factura?</th>
                             <th class="table-th text-withe text-center">Observación</th>
                             <th class="table-th text-withe text-center">Fecha</th>
+                            <th>Estado</th>
                             <th class="table-th text-withe text-center">Detalles</th>
                             @if($this->verificarpermiso())
                             <th class="table-th text-withe text-center" width="50px"> Acciònes</th>
@@ -142,6 +143,19 @@ a{
                                         {{\Carbon\Carbon::parse($d->fecha)->format('h:i:s a')}}
                                     </h6>
                                 </td>
+                                @if($d->status == 'CANCELED')
+                                <td>
+                                    <div class="table-th text-withe text-center">
+                                        <h6 style="color: rgb(237, 0, 0);"><b>Anulado</b></h6>
+                                    </div>
+                                </td>
+                                @else
+                                <td>
+                                    <div class="table-th text-withe text-center">
+                                        <h6  style="color: rgb(14, 207, 43);"><b>Normal</b></h6>
+                                    </div>
+                                </td>
+                                @endif
                                 <td style="padding: 0%"  class="table-th text-withe text-center">
                                       <div class="btn-group" role="group" aria-label="Basic example">
                                         <button wire:click="cambiaridventa({{ $d->id }})" type="button" class="btn btn-secondary" style="background-color: rgb(12, 100, 194)">
@@ -152,12 +166,15 @@ a{
                                 @if($this->verificarpermiso())
                                 <td style="padding: 0%"  class="table-th text-withe text-center">
                                     <div class="btn-group" role="group" aria-label="Basic example">
-                                        <button wire:click="anularventa({{$d->id}})" title="Anular Venta" type="button" class="btn btn-secondary" style="background-color: crimson">
+                                        @if($d->status != 'CANCELED')
+                                        <button wire:click="mostraranularmodal({{$d->id}})" title="Anular Venta" type="button" class="btn btn-secondary" style="background-color: crimson">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x-circle"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+                                        Anular
                                         </button>
                                         <button title="Modificar Usuario Vendedor" type="button" class="btn btn-secondary" style="background-color: dodgerblue">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                                         </button>
+                                        @endif
                                     </div>
                                 </td>
                                 @endif
@@ -192,6 +209,9 @@ a{
         });
         window.livewire.on('show-anular', msg => {
             $('#anular').modal('show')
+        });
+        window.livewire.on('show-anularcerrar', msg => {
+            $('#anular').modal('hide')
         });
         
     });

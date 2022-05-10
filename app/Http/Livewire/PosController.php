@@ -1050,6 +1050,24 @@ class PosController extends Component
         $this->emit('scan-ok', $title);
     }
 
+
+    //Ocultar la pagina de ventas si no tiene una caja abierta
+    public function verificarcajaabierta()
+    {
+        /* Caja en la cual se encuentra el usuario */
+        $cajausuario = Caja::join('sucursals as s', 's.id', 'cajas.sucursal_id')
+        ->join('sucursal_users as su', 'su.sucursal_id', 's.id')
+        ->join('carteras as car', 'cajas.id', 'car.caja_id')
+        ->join('cartera_movs as cartmovs', 'car.id', 'cartmovs.cartera_id')
+        ->join('movimientos as mov', 'mov.id', 'cartmovs.movimiento_id')
+        ->where('mov.user_id', Auth()->user()->id)
+        ->where('mov.status', 'ACTIVO')
+        ->where('mov.type', 'APERTURA')
+        ->select('cajas.id as id')
+        ->get();
+        return $cajausuario->count();
+    }
+
     
     // Quitar los valores de la ventana Modal
     public function resetUI()
