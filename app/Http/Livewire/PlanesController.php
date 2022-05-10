@@ -26,13 +26,14 @@ class PlanesController extends Component
 {
     use WithPagination;
     use WithFileUploads;
+
     public $pageTitle = 'Planes', $componentName = 'Streaming';
+
     public $expiration_plan,  $importe, $search,
-        $condicion, $type, $nombre, $celular, $plataforma, $cuentaperfil, $accounts, $profiles,
-        $mostrartabla, $tipopago, $condicional = 'perfiles', $meses, $observaciones, $ready, $selected_perf, $totalCobrar,
-        $BuscarCliente, $ClienteSelect, $cuentasEnteras, $nombrePerfil, $pinPerfil, $CantidadPerfilesCrear,
-        $fecha_inicio, $plataforma1, $plataforma2, $plataforma3, $perfilplataforma1, $perfilplataforma2,
-        $perfilplataforma3, $telefonoAnterior, $NombreAnterior, $comprobante;
+        $nombre, $celular, $plataforma, $cuentaperfil, $accounts, $profiles,
+        $mostrartabla, $tipopago, $condicional = 'perfiles', $meses, $observaciones, $selected_perf,
+        $BuscarCliente, $ClienteSelect, $cuentasEnteras, $nombrePerfil, $pinPerfil,
+        $fecha_inicio, $plataforma1, $plataforma2, $plataforma3, $telefonoAnterior, $NombreAnterior, $comprobante;
 
     private $pagination = 10;
 
@@ -43,6 +44,8 @@ class PlanesController extends Component
 
     public function mount()
     {
+        $this->search = '';
+
         $this->plataforma = 'Elegir';
         $this->cuentaperfil = 'Elegir';
 
@@ -54,33 +57,33 @@ class PlanesController extends Component
         $this->tipopago = 'EFECTIVO';
         $this->meses = 1;
         $this->observaciones = '';
-        $this->ready = 'NINGUNA';
-        $this->totalCobrar = 0;
+
         $this->BuscarCliente = 0;
         $this->ClienteSelect = 0;
         $this->nombrePerfil = '';
         $this->pinPerfil = '';
-        $this->search = '';
+
         $this->cuentasEnteras = [];
-        $this->CantidadPerfilesCrear = 0;
+
         $this->plataforma1 = 'Elegir';
         $this->plataforma2 = 'Elegir';
         $this->plataforma3 = 'Elegir';
         $this->cuentasp1 = [];
         $this->cuentasp2 = [];
         $this->cuentasp3 = [];
-        $this->perfilplataforma1 = 0;
-        $this->perfilplataforma2 = 0;
-        $this->perfilplataforma3 = 0;
+
         $this->perfil1id = null;
         $this->perfilNombre1 = '';
-        $this->perfilPin1 = '';
+        $this->perfilPin1 = '
+        ';
         $this->perfil2id = null;
         $this->perfilNombre2 = '';
         $this->perfilPin2 = '';
+
         $this->perfil3id = null;
         $this->perfilNombre3 = '';
         $this->perfilPin3 = '';
+
         $this->perfiles_si_no = '';
         $this->plataformaReset = 'INICIO';
         $this->plataforma1Require = 'NO';
@@ -99,20 +102,25 @@ class PlanesController extends Component
         $this->arrayCuentas = array();
         $this->arrayPerfiles = array();
         $this->diasdePlan = 30;
+
         $this->perfilId = 0;
         $this->clienteId = 0;
+
         $this->plataforma1Nombre = '';
         $this->perfil1COMBO =  0;
         $this->PIN1COMBO = 0;
         $this->perfil1ID = 0;
+
         $this->plataforma2Nombre = '';
         $this->perfil2COMBO =  0;
         $this->PIN2COMBO = 0;
         $this->perfil2ID = 0;
+
         $this->plataforma3Nombre = '';
         $this->perfil3COMBO =  0;
         $this->PIN3COMBO = 0;
         $this->perfil3ID = 0;
+
         $this->comprobante = null;
         $this->selected_plan = 0;
         $this->selected_planAccount = 0;
@@ -169,7 +177,6 @@ class PlanesController extends Component
             /* REALIZAR CALCULO DE INGRESOS - EGRESOS */
             $c->monto = $INGRESOS - $EGRESOS;
         }
-
 
         if ($this->condicional == 'perfiles') {
             if (strlen($this->search) > 0) {
@@ -1903,24 +1910,19 @@ class PlanesController extends Component
         $this->tipopago = 'EFECTIVO';
         $this->meses = 1;
         $this->observaciones = '';
-        $this->ready = 'NINGUNA';
-        $this->totalCobrar = 0;
         $this->BuscarCliente = 0;
         $this->ClienteSelect = 0;
         $this->nombrePerfil = '';
         $this->pinPerfil = '';
         $this->search = '';
         $this->cuentasEnteras = [];
-        $this->CantidadPerfilesCrear = 0;
         $this->plataforma1 = 'Elegir';
         $this->plataforma2 = 'Elegir';
         $this->plataforma3 = 'Elegir';
         $this->cuentasp1 = [];
         $this->cuentasp2 = [];
         $this->cuentasp3 = [];
-        $this->perfilplataforma1 = 0;
-        $this->perfilplataforma2 = 0;
-        $this->perfilplataforma3 = 0;
+
         $this->perfil1id = null;
         $this->perfilNombre1 = '';
         $this->perfilPin1 = '';

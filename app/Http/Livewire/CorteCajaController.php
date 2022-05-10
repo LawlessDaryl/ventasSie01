@@ -45,11 +45,11 @@ class CorteCajaController extends Component
     }
     public function Cargar()
     {
-        /* TUPLA DE LA TABLA SUCURSAL-USER PARA OBTENER SU ID */
+        /* TUPLA DE LA TABLA SUCURSAL-USER ACTIVA PARA OBTENER SU ID */
         $idsu = User::join('sucursal_users as su', 'su.user_id', 'users.id')
-            ->where('su.user_id', Auth()->user()->id)
             ->select('su.id')
-            ->orderBy('su.id', 'desc')
+            ->where('su.user_id', Auth()->user()->id)
+            ->where('su.estado', 'ACTIVO')
             ->first();
 
         $this->data = Caja::join('sucursals as s', 's.id', 'cajas.sucursal_id')
@@ -90,29 +90,25 @@ class CorteCajaController extends Component
         $this->carteras = Cartera::where('caja_id', $caja->id)
             ->orWhere('caja_id', '1')   //orwhere para mostrar las carteras compartidas de la sucursal central
             ->select('id', 'nombre', 'descripcion', DB::raw('0 as monto'))->get();
-        if ($this->carteras->count()) {
-
-            foreach ($this->carteras as $c) {
-                /* SUMAR TODO LOS INGRESOS DE LA CARTERA */
-                $MONTO = Cartera::join('cartera_movs as cm', 'carteras.id', 'cm.cartera_id')
-                    ->join('movimientos as m', 'm.id', 'cm.movimiento_id')
-                    ->where('cm.type', 'INGRESO')
-                    ->where('m.status', 'ACTIVO')
-                    ->where('carteras.id', $c->id)->sum('m.import');
-                /* SUMAR TODO LOS EGRESOS DE LA CARTERA */
-                $MONTO2 = Cartera::join('cartera_movs as cm', 'carteras.id', 'cm.cartera_id')
-                    ->join('movimientos as m', 'm.id', 'cm.movimiento_id')
-                    ->where('cm.type', 'EGRESO')
-                    ->where('m.status', 'ACTIVO')
-                    ->where('carteras.id', $c->id)->sum('m.import');
-                /* REALIZAR CALCULO DE INGRESOS - EGRESOS */
-                $c->monto = $MONTO - $MONTO2;
-            }
-
-            $this->emit('show-modal', 'details loaded');
-        } else {
-            $this->emit('no-carteras', 'Esta caja no tiene carteras');
+            
+        foreach ($this->carteras as $c) {
+            /* SUMAR TODO LOS INGRESOS DE LA CARTERA */
+            $MONTO = Cartera::join('cartera_movs as cm', 'carteras.id', 'cm.cartera_id')
+                ->join('movimientos as m', 'm.id', 'cm.movimiento_id')
+                ->where('cm.type', 'INGRESO')
+                ->where('m.status', 'ACTIVO')
+                ->where('carteras.id', $c->id)->sum('m.import');
+            /* SUMAR TODO LOS EGRESOS DE LA CARTERA */
+            $MONTO2 = Cartera::join('cartera_movs as cm', 'carteras.id', 'cm.cartera_id')
+                ->join('movimientos as m', 'm.id', 'cm.movimiento_id')
+                ->where('cm.type', 'EGRESO')
+                ->where('m.status', 'ACTIVO')
+                ->where('carteras.id', $c->id)->sum('m.import');
+            /* REALIZAR CALCULO DE INGRESOS - EGRESOS */
+            $c->monto = $MONTO - $MONTO2;
         }
+
+        $this->emit('show-modal', 'details loaded');
     }
     public function CrearCorte()
     {
