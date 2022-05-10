@@ -50,6 +50,7 @@ class ServiciosController extends Component
         $this->diagnostico = 'Revisión';
         $this->solucion = 'Revisión';
         $this->typeservice = 'NORMAL';
+        $this->type_service = 'NORMAL';
         $this->saldo = 0;
         $this->on_account = 0;
         $this->import = 0;

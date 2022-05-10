@@ -33,24 +33,24 @@
                 @if ($orderservice == 0 || $cliente == '')
                     <ul class="tabs tab-pills">
                         <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
-                            data-target="#theClient">Asignar Cliente</a>
+                            data-target="#theClient">ASIGNAR CLIENTE</a>
                     </ul>
 
                     <ul class="tabs tab-pills">
                         <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
-                            data-target="#theNewClient">Nuevo Cliente</a>
+                            data-target="#theNewClient">NUEVO CLIENTE</a>
                     </ul>
                 @endif
                 @if (!empty($cliente))
                     <ul class="tabs tab-pills">
                         <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
-                            data-target="#theModal">Agregar Servicio</a>
+                            data-target="#theModal">AGREGAR SERVICIO</a>
                     </ul>
                 @endif
                 @if ($orderservice != 0)
                     <ul class="tabs tab-pills">
                         <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
-                            data-target="#theType">Tipo de Servicio</a>
+                            data-target="#theType">TIPO DE SERVICIO</a>
                     </ul>
                 @endif
             </div>
