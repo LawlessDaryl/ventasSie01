@@ -260,6 +260,12 @@ class SaleListController extends Component
         ]);
 
 
+
+        //Devolviento los productos a la tienda
+        //Actualizando variable $listadetalles
+        $this->listardetalleventas();
+
+
         $anular = Sale::find($this->idventa);
         $anular->update([
             'status' => 'CANCELED',

@@ -57,6 +57,7 @@ class SaleStatisticController extends Component
     {
         $mes = 0;
         $consulta = Sale::select('sales.total as total','sales.created_at as fecha')
+        ->where('sales.status', 'PAID')
         ->whereMonth('sales.created_at', $mes_elegido)
         ->whereYear('created_at', '2022')
         ->get();
