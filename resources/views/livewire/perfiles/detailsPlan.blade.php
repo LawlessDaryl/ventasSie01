@@ -122,8 +122,8 @@
                             <h6>Tipo de pago</h6>
                             <select wire:model="tipopago" class="form-control">
                                 <option value="EFECTIVO" selected>EFECTIVO</option>
-                                <option value="Banco">CUENTA BANCARIA</option>
-                                <option value="TigoStreaming">TIGO MONEY</option>
+                                {{-- <option value="Banco">CUENTA BANCARIA</option>
+                                <option value="TigoStreaming">TIGO MONEY</option> --}}
                             </select>
                             @error('tipopago')
                                 <span class="text-danger er">{{ $message }}</span>

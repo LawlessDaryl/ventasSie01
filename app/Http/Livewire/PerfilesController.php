@@ -72,24 +72,24 @@ class PerfilesController extends Component
         $this->plataforma1Nombre = '';
         $this->plataforma2Nombre = '';
         $this->plataforma3Nombre = '';
-        $this->perfil1ID = '';
-        $this->perfil2ID = '';
-        $this->perfil3ID = '';
+        $this->selected_perfil1 = '';
+        $this->selected_perfil2 = '';
+        $this->selected_perfil3 = '';
         $this->mostrarTablaCambiar1 = 'NO';
         $this->mostrarTablaCambiar2 = 'NO';
         $this->mostrarTablaCambiar3 = 'NO';
-        $this->plataforma1ID = '';
-        $this->plataforma2ID = '';
-        $this->plataforma3ID = '';
-        $this->PERFIL1cuentaID = '';
-        $this->PERFIL2cuentaID = '';
-        $this->PERFIL3cuentaID = '';
+        $this->selected_plataforma1 = '';
+        $this->selected_plataforma2 = '';
+        $this->selected_plataforma3 = '';
+        $this->selected_cuenta1 = '';
+        $this->selected_cuenta2 = '';
+        $this->selected_cuenta3 = '';
         $this->planAccount1 = '';
         $this->planAccount2 = '';
         $this->planAccount3 = '';
-        $this->cuentaPerfil1 = '';
-        $this->cuentaPerfil2 = '';
-        $this->cuentaPerfil3 = '';
+        $this->selected_accountProf1 = '';
+        $this->selected_accountProf2 = '';
+        $this->selected_accountProf3 = '';
         $this->clienteID = '';
         $this->expiracionCuenta1 = '';
         $this->expiracionCuenta2 = '';
@@ -110,6 +110,14 @@ class PerfilesController extends Component
         $this->selected_planAccount = 0;
         $this->selected_platf = 0;
         $this->selected_cliente = 0;
+
+        $this->selected_accountProf1 = 0;
+        $this->selected_accountProf2 = 0;
+        $this->selected_accountProf3 = 0;
+
+        $this->selected_planAccount1 = 0;
+        $this->selected_planAccount2 = 0;
+        $this->selected_planAccount3 = 0;
     }
 
     public function render()
@@ -818,7 +826,7 @@ class PerfilesController extends Component
                             $this->plataforma1Nombre = $v->Cuenta->Plataforma->nombre;
                             $this->perfil1COMBO =  $v->Perfil->nameprofile;
                             $this->PIN1COMBO = $v->Perfil->pin;
-                            $this->perfil1ID = $v->Perfil->id;
+                            $this->selected_perfil1 = $v->Perfil->id;
                         }
                     }
                 }
@@ -830,7 +838,7 @@ class PerfilesController extends Component
                             $this->plataforma2Nombre = $v->Cuenta->Plataforma->nombre;
                             $this->perfil2COMBO =  $v->Perfil->nameprofile;
                             $this->PIN2COMBO = $v->Perfil->pin;
-                            $this->perfil2ID = $v->Perfil->id;
+                            $this->selected_perfil2 = $v->Perfil->id;
                         }
                     }
                 }
@@ -842,7 +850,7 @@ class PerfilesController extends Component
                             $this->plataforma3Nombre = $v->Cuenta->Plataforma->nombre;
                             $this->perfil3COMBO =  $v->Perfil->nameprofile;
                             $this->PIN3COMBO = $v->Perfil->pin;
-                            $this->perfil3ID = $v->Perfil->id;
+                            $this->selected_perfil3 = $v->Perfil->id;
                         }
                     }
                 }
@@ -856,7 +864,7 @@ class PerfilesController extends Component
                             $this->plataforma1Nombre = $v->Cuenta->Plataforma->nombre;
                             $this->perfil1COMBO =  $v->Perfil->nameprofile;
                             $this->PIN1COMBO = $v->Perfil->pin;
-                            $this->perfil1ID = $v->Perfil->id;
+                            $this->selected_perfil1 = $v->Perfil->id;
                         }
                     }
                 }
@@ -868,7 +876,7 @@ class PerfilesController extends Component
                             $this->plataforma2Nombre = $v->Cuenta->Plataforma->nombre;
                             $this->perfil2COMBO =  $v->Perfil->nameprofile;
                             $this->PIN2COMBO = $v->Perfil->pin;
-                            $this->perfil2ID = $v->Perfil->id;
+                            $this->selected_perfil2 = $v->Perfil->id;
                         }
                     }
                 }
@@ -880,7 +888,7 @@ class PerfilesController extends Component
                             $this->plataforma3Nombre = $v->Cuenta->Plataforma->nombre;
                             $this->perfil3COMBO =  $v->Perfil->nameprofile;
                             $this->PIN3COMBO = $v->Perfil->pin;
-                            $this->perfil3ID = $v->Perfil->id;
+                            $this->selected_perfil3 = $v->Perfil->id;
                         }
                     }
                 }
@@ -948,19 +956,19 @@ class PerfilesController extends Component
         $cliente->celular = $this->celular;
         $cliente->save();
 
-        $prof1 = Profile::find($this->perfil1ID);
+        $prof1 = Profile::find($this->selected_perfil1);
         $prof1->update([
             'nameprofile' => $this->perfil1COMBO,
             'pin' => $this->PIN1COMBO,
         ]);
 
-        $prof2 = Profile::find($this->perfil2ID);
+        $prof2 = Profile::find($this->selected_perfil2);
         $prof2->update([
             'nameprofile' => $this->perfil2COMBO,
             'pin' => $this->PIN2COMBO,
         ]);
 
-        $prof3 = Profile::find($this->perfil3ID);
+        $prof3 = Profile::find($this->selected_perfil3);
         $prof3->update([
             'nameprofile' => $this->perfil3COMBO,
             'pin' => $this->PIN3COMBO,
@@ -973,8 +981,6 @@ class PerfilesController extends Component
     public function AccionesCombo(Plan $plan, Cliente $cliente)
     {
         $this->resetUI();
-
-        /* $this->selected_cliente = $cliente->id; */
 
         $this->selected_plan = $plan->id;
         $this->observations = $plan->observations;
@@ -990,18 +996,21 @@ class PerfilesController extends Component
         $this->inicioNueva = strtotime('+' . 1 . ' day', strtotime($this->expirationPlanActual));
         $this->inicioNueva = date('Y-m-d', $this->inicioNueva);
 
+        $this->selected_accountProf3 = 0;
+
         /* CARGAR NOMBRE DE PERFIL, PIN E ID EN LAS VARIABLES */
         foreach ($plan->PlanAccounts as  $value) {
             if ($value->status == 'ACTIVO' && $value->COMBO == 'PERFIL1') {
+                $this->selected_planAccount1 = $value->id;
                 foreach ($value->Cuenta->CuentaPerfiles as  $v) {
                     if ($v->status == 'ACTIVO' && $v->COMBO == 'PERFIL1' && $v->plan_id == $this->selected_plan) {
-                        $this->cuentaPerfil1 = $v->id;
+                        $this->selected_accountProf1 = $v->id;
                         $this->plataforma1Nombre = $v->Cuenta->Plataforma->nombre;
-                        $this->plataforma1ID = $v->Cuenta->Plataforma->id;
-                        $this->PERFIL1cuentaID = $v->Cuenta->id;
+                        $this->selected_plataforma1 = $v->Cuenta->Plataforma->id;
+                        $this->selected_cuenta1 = $v->Cuenta->id;
                         $this->perfil1COMBO =  $v->Perfil->nameprofile;
                         $this->PIN1COMBO = $v->Perfil->pin;
-                        $this->perfil1ID = $v->Perfil->id;
+                        $this->selected_perfil1 = $v->Perfil->id;
                         $this->expiracionCuenta1 = $v->Cuenta->expiration_account;
                     }
                 }
@@ -1009,15 +1018,16 @@ class PerfilesController extends Component
         }
         foreach ($plan->PlanAccounts as  $value) {
             if ($value->status == 'ACTIVO' && $value->COMBO == 'PERFIL2') {
+                $this->selected_planAccount2 = $value->id;
                 foreach ($value->Cuenta->CuentaPerfiles as  $v) {
                     if ($v->status == 'ACTIVO' && $v->COMBO == 'PERFIL2' && $v->plan_id == $this->selected_plan) {
-                        $this->cuentaPerfil2 = $v->id;
+                        $this->selected_accountProf2 = $v->id;
                         $this->plataforma2Nombre = $v->Cuenta->Plataforma->nombre;
-                        $this->plataforma2ID = $v->Cuenta->Plataforma->id;
-                        $this->PERFIL2cuentaID = $v->Cuenta->id;
+                        $this->selected_plataforma2 = $v->Cuenta->Plataforma->id;
+                        $this->selected_cuenta2 = $v->Cuenta->id;
                         $this->perfil2COMBO =  $v->Perfil->nameprofile;
                         $this->PIN2COMBO = $v->Perfil->pin;
-                        $this->perfil2ID = $v->Perfil->id;
+                        $this->selected_perfil2 = $v->Perfil->id;
                         $this->expiracionCuenta2 = $v->Cuenta->expiration_account;
                     }
                 }
@@ -1025,15 +1035,16 @@ class PerfilesController extends Component
         }
         foreach ($plan->PlanAccounts as  $value) {
             if ($value->status == 'ACTIVO' && $value->COMBO == 'PERFIL3') {
+                $this->selected_planAccount3 = $value->id;
                 foreach ($value->Cuenta->CuentaPerfiles as  $v) {
                     if ($v->status == 'ACTIVO' && $v->COMBO == 'PERFIL3' && $v->plan_id == $this->selected_plan) {
-                        $this->cuentaPerfil3 = $v->id;
+                        $this->selected_accountProf3 = $v->id;
                         $this->plataforma3Nombre = $v->Cuenta->Plataforma->nombre;
-                        $this->plataforma3ID = $v->Cuenta->Plataforma->id;
-                        $this->PERFIL3cuentaID = $v->Cuenta->id;
+                        $this->selected_plataforma3 = $v->Cuenta->Plataforma->id;
+                        $this->selected_cuenta3 = $v->Cuenta->id;
                         $this->perfil3COMBO =  $v->Perfil->nameprofile;
                         $this->PIN3COMBO = $v->Perfil->pin;
-                        $this->perfil3ID = $v->Perfil->id;
+                        $this->selected_perfil3 = $v->Perfil->id;
                         $this->expiracionCuenta3 = $v->Cuenta->expiration_account;
                     }
                 }
@@ -1058,13 +1069,13 @@ class PerfilesController extends Component
                 'e.content as content',
                 'e.pass as pass',
                 DB::raw('0 as perfActivos'),
-                DB::raw('0 as cantiadadQueSePuedeCrear'),
+                DB::raw('0 as espacios'),
             )
             ->where('accounts.status', 'ACTIVO')
             ->where('accounts.availability', 'LIBRE')
             ->where('accounts.expiration_account', '>', $date_now)
-            ->where('accounts.id', '!=', $this->PERFIL1cuentaID)
-            ->where('p.id', $this->plataforma1ID)
+            ->where('accounts.id', '!=', $this->selected_cuenta1)
+            ->where('p.id', $this->selected_plataforma1)
             ->get();
 
         foreach ($this->cuentasConEspaciosP1 as $c) {
@@ -1077,40 +1088,16 @@ class PerfilesController extends Component
             $cantidadActivos = $perfilesActivos->count();
             $c->perfActivos = $cantidadActivos;
 
-            $c->cantiadadQueSePuedeCrear = $c->number_profiles - $c->perfActivos;
+            $c->espacios = $c->number_profiles - $c->perfActivos;
         }
     }
 
     public function SeleccionarCuenta1(Account $cuenta)
     {
-        /* DATOS DEL ANTERIOR PLAN */
-        $datos = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
-            ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
-            ->join('accounts as acc', 'acc.id', 'pa.account_id')
-            ->join('account_profiles as ap', 'acc.id', 'ap.account_id')
-            ->join('profiles as prof', 'prof.id', 'ap.profile_id')
-            ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
-            ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
-            ->select(
-                'c.*',
-                'plans.id as planid',
-                'pa.id as planAccountid',
-                'ap.id as accountProfileid',
-                'prof.id as Profileid',
-                'acc.id as cuentaid',
-            )
-            ->where('plans.id', $this->selected_plan)
-            ->where('pa.status', 'ACTIVO')
-            ->where('ap.status', 'ACTIVO')
-            ->where('ap.COMBO', 'PERFIL1')
-            ->whereColumn('plans.id', '=', 'ap.plan_id')
-            ->orderby('plans.id', 'desc')
-            ->get()->first();
-
         DB::beginTransaction();
         try {
             /* PONER EN NO LISTO LA ACCION */
-            $plan = Plan::find($datos->planid);
+            $plan = Plan::find($this->selected_plan);
             $plan->done = 'NO';
             /* $plan->observations = $this->observations; */
             $plan->save();
@@ -1134,14 +1121,15 @@ class PerfilesController extends Component
             $cuenta->save();
 
             /* PONER EN CAMBIADO EL PLAN-ACCOUNT */
-            $planAccountVIEJO = PlanAccount::find($datos->planAccountid);
+            $planAccountVIEJO = PlanAccount::find($this->selected_planAccount1);
             $planAccountVIEJO->update([
                 'status' => 'CAMBIADO',
             ]);
 
             /* CREAR NUEVO PLAN-ACCOUNT */
             PlanAccount::create([
-                'plan_id' => $datos->planid,
+                'COMBO' => 'PERFIL1',
+                'plan_id' => $this->selected_plan,
                 'account_id' => $cuenta->id,
             ]);
 
@@ -1152,41 +1140,42 @@ class PerfilesController extends Component
             ]);
             AccountProfile::create([
                 'status' => 'SinAsignar',
-                'account_id' => $datos->cuentaid,
+                'account_id' => $this->selected_cuenta1,
                 'profile_id' => $perfil->id,
             ]);
 
 
             /* PONER EN VENCIDO EL PERFIL */
-            $perfilViejo = Profile::find($datos->Profileid);
+            $perfilViejo = Profile::find($this->selected_perfil1);
             $perfilViejo->status = 'INACTIVO';
             $perfilViejo->availability = 'VENCIDO';
             $perfilViejo->save();
 
             /* PONER EN CAMBIADO EL ACCOUNT-PROFILE */
-            $cuentaPerfilViejo = AccountProfile::find($datos->accountProfileid);
+            $cuentaPerfilViejo = AccountProfile::find($this->selected_accountProf1);
             $cuentaPerfilViejo->update([
                 'status' => 'CAMBIADO',
             ]);
 
-            $accountProfiles = AccountProfile::select('account_profiles.*')->where('account_id', $cuenta->id)
+            /* poner en activo el account_profile del perfil y ponerle el id del plan */
+            $accountProfiles = AccountProfile::where('account_id', $cuenta->id)
                 ->where('profile_id', $profile->id)->get()->first();
             $ACCOUNTPROF = AccountProfile::find($accountProfiles->id);
             $ACCOUNTPROF->update([
                 'status' => 'ACTIVO',
                 'COMBO' => 'PERFIL1',
-                'plan_id' => $datos->planid,
+                'plan_id' => $this->selected_plan,
             ]);
 
-            /* CONTAR LOS PERFILES ACTIVOS OCUPADOS */
+            /* CONTAR LOS PERFILES ocupados de la cuenta anterior */
             $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                 ->join('profiles as p', 'ap.profile_id', 'p.id')
-                ->where('accounts.id', $datos->cuentaid)
+                ->where('accounts.id', $this->selected_cuenta1)
                 ->where('p.availability', 'OCUPADO')->get();
 
             /* SI LA CUENTA NO TIENE PERFILES ACTIVOS REGRESA A SER ENTERA */
             if ($perfilesActivos->count() == 0) {
-                $cuenta = Account::find($datos->cuentaid);
+                $cuenta = Account::find($this->selected_cuenta1);
                 $cuenta->whole_account = 'ENTERA';
                 $cuenta->save();
             }
@@ -1216,13 +1205,13 @@ class PerfilesController extends Component
                 'e.content as content',
                 'e.pass as pass',
                 DB::raw('0 as perfActivos'),
-                DB::raw('0 as cantiadadQueSePuedeCrear'),
+                DB::raw('0 as espacios'),
             )
             ->where('accounts.status', 'ACTIVO')
             ->where('accounts.availability', 'LIBRE')
             ->where('accounts.expiration_account', '>', $date_now)
-            ->where('accounts.id', '!=', $this->PERFIL2cuentaID)
-            ->where('p.id', $this->plataforma2ID)
+            ->where('accounts.id', '!=', $this->selected_cuenta2)
+            ->where('p.id', $this->selected_plataforma2)
             ->get();
 
         foreach ($this->cuentasConEspaciosP2 as $c) {
@@ -1235,40 +1224,16 @@ class PerfilesController extends Component
             $cantidadActivos = $perfilesActivos->count();
             $c->perfActivos = $cantidadActivos;
 
-            $c->cantiadadQueSePuedeCrear = $c->number_profiles - $c->perfActivos;
+            $c->espacios = $c->number_profiles - $c->perfActivos;
         }
     }
 
     public function SeleccionarCuenta2(Account $cuenta)
     {
-        /* DATOS DEL ANTERIOR PLAN */
-        $datos = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
-            ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
-            ->join('accounts as acc', 'acc.id', 'pa.account_id')
-            ->join('account_profiles as ap', 'acc.id', 'ap.account_id')
-            ->join('profiles as prof', 'prof.id', 'ap.profile_id')
-            ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
-            ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
-            ->select(
-                'c.*',
-                'plans.id as planid',
-                'pa.id as planAccountid',
-                'ap.id as accountProfileid',
-                'prof.id as Profileid',
-                'acc.id as cuentaid',
-            )
-            ->where('plans.id', $this->selected_plan)
-            ->where('pa.status', 'ACTIVO')
-            ->where('ap.status', 'ACTIVO')
-            ->where('ap.COMBO', 'PERFIL2')
-            ->whereColumn('plans.id', '=', 'ap.plan_id')
-            ->orderby('plans.id', 'desc')
-            ->get()->first();
-
         DB::beginTransaction();
         try {
             /* PONER EN NO LISTO LA ACCION */
-            $plan = Plan::find($datos->planid);
+            $plan = Plan::find($this->selected_plan);
             $plan->done = 'NO';
             /* $plan->observations = $this->observations; */
             $plan->save();
@@ -1282,8 +1247,8 @@ class PerfilesController extends Component
 
             /* PONER LOS DATOS DEL ANTERIOR PERFIL AL NUEVO */
             $profile = Profile::find($perfilCambiar->id);
-            $profile->nameprofile = $this->perfil1COMBO;
-            $profile->pin = $this->PIN1COMBO;
+            $profile->nameprofile = $this->perfil2COMBO;
+            $profile->pin = $this->PIN2COMBO;
             $profile->availability = 'OCUPADO';
             $profile->save();
 
@@ -1292,14 +1257,15 @@ class PerfilesController extends Component
             $cuenta->save();
 
             /* PONER EN CAMBIADO EL PLAN-ACCOUNT */
-            $planAccountVIEJO = PlanAccount::find($datos->planAccountid);
+            $planAccountVIEJO = PlanAccount::find($this->selected_planAccount2);
             $planAccountVIEJO->update([
                 'status' => 'CAMBIADO',
             ]);
 
             /* CREAR NUEVO PLAN-ACCOUNT */
             PlanAccount::create([
-                'plan_id' => $datos->planid,
+                'COMBO' => 'PERFIL2',
+                'plan_id' => $this->selected_plan,
                 'account_id' => $cuenta->id,
             ]);
 
@@ -1310,41 +1276,40 @@ class PerfilesController extends Component
             ]);
             AccountProfile::create([
                 'status' => 'SinAsignar',
-                'account_id' => $datos->cuentaid,
+                'account_id' => $this->selected_cuenta2,
                 'profile_id' => $perfil->id,
             ]);
 
-
             /* PONER EN VENCIDO EL PERFIL */
-            $perfilViejo = Profile::find($datos->Profileid);
+            $perfilViejo = Profile::find($this->selected_perfil2);
             $perfilViejo->status = 'INACTIVO';
             $perfilViejo->availability = 'VENCIDO';
             $perfilViejo->save();
 
             /* PONER EN CAMBIADO EL ACCOUNT-PROFILE */
-            $cuentaPerfilViejo = AccountProfile::find($datos->accountProfileid);
+            $cuentaPerfilViejo = AccountProfile::find($this->selected_accountProf2);
             $cuentaPerfilViejo->update([
                 'status' => 'CAMBIADO',
             ]);
 
-            $accountProfiles = AccountProfile::select('account_profiles.*')->where('account_id', $cuenta->id)
+            $accountProfiles = AccountProfile::where('account_id', $cuenta->id)
                 ->where('profile_id', $profile->id)->get()->first();
             $ACCOUNTPROF = AccountProfile::find($accountProfiles->id);
             $ACCOUNTPROF->update([
                 'status' => 'ACTIVO',
                 'COMBO' => 'PERFIL2',
-                'plan_id' => $datos->planid,
+                'plan_id' => $this->selected_plan,
             ]);
 
-            /* CONTAR LOS PERFILES ACTIVOS OCUPADOS */
+            /* CONTAR LOS PERFILES ocupados de la cuenta anterior */
             $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                 ->join('profiles as p', 'ap.profile_id', 'p.id')
-                ->where('accounts.id', $datos->cuentaid)
+                ->where('accounts.id', $this->selected_cuenta2)
                 ->where('p.availability', 'OCUPADO')->get();
 
             /* SI LA CUENTA NO TIENE PERFILES ACTIVOS REGRESA A SER ENTERA */
             if ($perfilesActivos->count() == 0) {
-                $cuenta = Account::find($datos->cuentaid);
+                $cuenta = Account::find($this->selected_cuenta2);
                 $cuenta->whole_account = 'ENTERA';
                 $cuenta->save();
             }
@@ -1374,13 +1339,13 @@ class PerfilesController extends Component
                 'e.content as content',
                 'e.pass as pass',
                 DB::raw('0 as perfActivos'),
-                DB::raw('0 as cantiadadQueSePuedeCrear'),
+                DB::raw('0 as espacios'),
             )
             ->where('accounts.status', 'ACTIVO')
             ->where('accounts.availability', 'LIBRE')
             ->where('accounts.expiration_account', '>', $date_now)
-            ->where('accounts.id', '!=', $this->PERFIL3cuentaID)
-            ->where('p.id', $this->plataforma3ID)
+            ->where('accounts.id', '!=', $this->selected_cuenta3)
+            ->where('p.id', $this->selected_plataforma3)
             ->get();
 
         foreach ($this->cuentasConEspaciosP3 as $c) {
@@ -1393,40 +1358,16 @@ class PerfilesController extends Component
             $cantidadActivos = $perfilesActivos->count();
             $c->perfActivos = $cantidadActivos;
 
-            $c->cantiadadQueSePuedeCrear = $c->number_profiles - $c->perfActivos;
+            $c->espacios = $c->number_profiles - $c->perfActivos;
         }
     }
 
     public function SeleccionarCuenta3(Account $cuenta)
     {
-        /* DATOS DEL ANTERIOR PLAN */
-        $datos = Plan::join('movimientos as m', 'm.id', 'plans.movimiento_id')
-            ->join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
-            ->join('accounts as acc', 'acc.id', 'pa.account_id')
-            ->join('account_profiles as ap', 'acc.id', 'ap.account_id')
-            ->join('profiles as prof', 'prof.id', 'ap.profile_id')
-            ->join('cliente_movs as cmovs', 'm.id', 'cmovs.movimiento_id')
-            ->join('clientes as c', 'c.id', 'cmovs.cliente_id')
-            ->select(
-                'c.*',
-                'plans.id as planid',
-                'pa.id as planAccountid',
-                'ap.id as accountProfileid',
-                'prof.id as Profileid',
-                'acc.id as cuentaid',
-            )
-            ->where('plans.id', $this->selected_plan)
-            ->where('pa.status', 'ACTIVO')
-            ->where('ap.status', 'ACTIVO')
-            ->where('ap.COMBO', 'PERFIL3')
-            ->whereColumn('plans.id', '=', 'ap.plan_id')
-            ->orderby('plans.id', 'desc')
-            ->get()->first();
-
         DB::beginTransaction();
         try {
             /* PONER EN NO LISTO LA ACCION */
-            $plan = Plan::find($datos->planid);
+            $plan = Plan::find($this->selected_plan);
             $plan->done = 'NO';
             /* $plan->observations = $this->observations; */
             $plan->save();
@@ -1440,8 +1381,8 @@ class PerfilesController extends Component
 
             /* PONER LOS DATOS DEL ANTERIOR PERFIL AL NUEVO */
             $profile = Profile::find($perfilCambiar->id);
-            $profile->nameprofile = $this->perfil1COMBO;
-            $profile->pin = $this->PIN1COMBO;
+            $profile->nameprofile = $this->perfil3COMBO;
+            $profile->pin = $this->PIN3COMBO;
             $profile->availability = 'OCUPADO';
             $profile->save();
 
@@ -1450,14 +1391,15 @@ class PerfilesController extends Component
             $cuenta->save();
 
             /* PONER EN CAMBIADO EL PLAN-ACCOUNT */
-            $planAccountVIEJO = PlanAccount::find($datos->planAccountid);
+            $planAccountVIEJO = PlanAccount::find($this->selected_planAccount3);
             $planAccountVIEJO->update([
                 'status' => 'CAMBIADO',
             ]);
 
             /* CREAR NUEVO PLAN-ACCOUNT */
             PlanAccount::create([
-                'plan_id' => $datos->planid,
+                'COMBO' => 'PERFIL3',
+                'plan_id' => $this->selected_plan,
                 'account_id' => $cuenta->id,
             ]);
 
@@ -1468,41 +1410,41 @@ class PerfilesController extends Component
             ]);
             AccountProfile::create([
                 'status' => 'SinAsignar',
-                'account_id' => $datos->cuentaid,
+                'account_id' => $this->selected_cuenta3,
                 'profile_id' => $perfil->id,
             ]);
 
 
             /* PONER EN VENCIDO EL PERFIL */
-            $perfilViejo = Profile::find($datos->Profileid);
+            $perfilViejo = Profile::find($this->selected_perfil3);
             $perfilViejo->status = 'INACTIVO';
             $perfilViejo->availability = 'VENCIDO';
             $perfilViejo->save();
 
             /* PONER EN CAMBIADO EL ACCOUNT-PROFILE */
-            $cuentaPerfilViejo = AccountProfile::find($datos->accountProfileid);
+            $cuentaPerfilViejo = AccountProfile::find($this->selected_accountProf3);
             $cuentaPerfilViejo->update([
                 'status' => 'CAMBIADO',
             ]);
 
-            $accountProfiles = AccountProfile::select('account_profiles.*')->where('account_id', $cuenta->id)
+            $accountProfiles = AccountProfile::where('account_id', $cuenta->id)
                 ->where('profile_id', $profile->id)->get()->first();
             $ACCOUNTPROF = AccountProfile::find($accountProfiles->id);
             $ACCOUNTPROF->update([
                 'status' => 'ACTIVO',
                 'COMBO' => 'PERFIL3',
-                'plan_id' => $datos->planid,
+                'plan_id' => $this->selected_plan,
             ]);
 
             /* CONTAR LOS PERFILES ACTIVOS OCUPADOS */
             $perfilesActivos = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                 ->join('profiles as p', 'ap.profile_id', 'p.id')
-                ->where('accounts.id', $datos->cuentaid)
+                ->where('accounts.id', $this->selected_cuenta3)
                 ->where('p.availability', 'OCUPADO')->get();
 
             /* SI LA CUENTA NO TIENE PERFILES ACTIVOS REGRESA A SER ENTERA */
             if ($perfilesActivos->count() == 0) {
-                $cuenta = Account::find($datos->cuentaid);
+                $cuenta = Account::find($this->selected_cuenta3);
                 $cuenta->whole_account = 'ENTERA';
                 $cuenta->save();
             }
@@ -1551,10 +1493,6 @@ class PerfilesController extends Component
             ->select('cajas.id as id')
             ->get()->first();
 
-        $perfil1 = Profile::find($this->perfil1ID);
-        $perfil2 = Profile::find($this->perfil2ID);
-        $perfil3 = Profile::find($this->perfil3ID);
-
         DB::beginTransaction();
         try {
             $mv = Movimiento::create([
@@ -1563,56 +1501,39 @@ class PerfilesController extends Component
                 'import' => $this->importe,
                 'user_id' => Auth()->user()->id,
             ]);
-            foreach ($perfil1->CuentaPerfil as  $value) {
-                if ($value->status == 'ACTIVO') {
 
-                    $date_now = date('Y-m-d', time());
+            $date_now = date("Y-m-d H:i");
+            /* INVERSION DEL PERFIL 1 */
+            CuentaInversion::create([
+                'tipo' => 'INGRESO',
+                'cantidad' => $this->importe / 3,
+                'tipoPlan' => 'COMBO',
+                'tipoTransac' => 'RENOVACION',
+                'num_meses' => $this->meses,
+                'fecha_realizacion' => $date_now,
+                'account_id' => $this->selected_cuenta1
+            ]);
+            /* INVERSION DEL PERFIL 2 */
+            CuentaInversion::create([
+                'tipo' => 'INGRESO',
+                'cantidad' => $this->importe / 3,
+                'tipoPlan' => 'COMBO',
+                'tipoTransac' => 'RENOVACION',
+                'num_meses' => $this->meses,
+                'fecha_realizacion' => $date_now,
+                'account_id' => $this->selected_cuenta2
+            ]);
+            /* INVERSION DEL PERFIL 3 */
+            CuentaInversion::create([
+                'tipo' => 'INGRESO',
+                'cantidad' => $this->importe / 3,
+                'tipoPlan' => 'COMBO',
+                'tipoTransac' => 'RENOVACION',
+                'num_meses' => $this->meses,
+                'fecha_realizacion' => $date_now,
+                'account_id' => $this->selected_cuenta3
+            ]);
 
-                    CuentaInversion::create([
-                        'tipo' => 'INGRESO',
-                        'cantidad' => $this->importe / 3,
-                        'tipoPlan' => 'COMBO',
-                        'tipoTransac' => 'RENOVACION',
-                        'num_meses' => $this->meses,
-                        'fecha_realizacion' => $date_now,
-                        'account_id' => $value->Cuenta->id
-                    ]);
-                }
-            }
-
-            foreach ($perfil2->CuentaPerfil as  $value) {
-                if ($value->status == 'ACTIVO') {
-
-                    $date_now = date('Y-m-d', time());
-
-                    CuentaInversion::create([
-                        'tipo' => 'INGRESO',
-                        'cantidad' => $this->importe / 3,
-                        'tipoPlan' => 'COMBO',
-                        'tipoTransac' => 'RENOVACION',
-                        'num_meses' => $this->meses,
-                        'fecha_realizacion' => $date_now,
-                        'account_id' => $value->Cuenta->id
-                    ]);
-                }
-            }
-
-            foreach ($perfil3->CuentaPerfil as  $value) {
-                if ($value->status == 'ACTIVO') {
-
-                    $date_now = date('Y-m-d', time());
-
-                    CuentaInversion::create([
-                        'tipo' => 'INGRESO',
-                        'cantidad' => $this->importe / 3,
-                        'tipoPlan' => 'COMBO',
-                        'tipoTransac' => 'RENOVACION',
-                        'num_meses' => $this->meses,
-                        'fecha_realizacion' => $date_now,
-                        'account_id' => $value->Cuenta->id
-                    ]);
-                }
-            }
             /* CREAR EL PLAN */
             $plan = Plan::create([
                 'importe' => $this->importe,
@@ -1636,103 +1557,83 @@ class PerfilesController extends Component
                 $plan->save();
             }
 
+            /* CREAR PLAN ACCOUNT Y ACCOUNT PROFILE NUEVOS PARA EL PERFIL 1 */
+            PlanAccount::create([
+                'status' => 'ACTIVO',
+                'COMBO' => 'PERFIL1',
+                'plan_id' => $plan->id,
+                'account_id' => $this->selected_cuenta1,
+            ]);
+            AccountProfile::create([
+                'account_id' => $this->selected_cuenta1,
+                'profile_id' => $this->selected_perfil1,
+                'plan_id' => $plan->id,
+                'COMBO' => 'PERFIL1',
+                'status' => 'ACTIVO',
+            ]);
 
-            foreach ($perfil1->CuentaPerfil as  $value) {
-                if ($value->status == 'ACTIVO') {
-                    PlanAccount::create([
-                        'status' => 'ACTIVO',
-                        'plan_id' => $plan->id,
-                        'account_id' => $value->Cuenta->id,
-                    ]);
+            /* CREAR PLAN ACCOUNT Y ACCOUNT PROFILE NUEVOS PARA EL PERFIL 2 */
+            PlanAccount::create([
+                'status' => 'ACTIVO',
+                'COMBO' => 'PERFIL2',
+                'plan_id' => $plan->id,
+                'account_id' => $this->selected_cuenta2,
+            ]);
+            AccountProfile::create([
+                'account_id' => $this->selected_cuenta2,
+                'profile_id' => $this->selected_perfil2,
+                'plan_id' => $plan->id,
+                'COMBO' => 'PERFIL2',
+                'status' => 'ACTIVO',
+            ]);
 
-                    AccountProfile::create([
-                        'account_id' => $value->Cuenta->id,
-                        'profile_id' => $perfil1->id,
-                        'plan_id' => $plan->id,
-                        'COMBO' => 'PERFIL1',
-                        'status' => 'ACTIVO',
-                    ]);
-                }
-            }
-            foreach ($perfil2->CuentaPerfil as  $value) {
-                if ($value->status == 'ACTIVO') {
-                    PlanAccount::create([
-                        'status' => 'ACTIVO',
-                        'plan_id' => $plan->id,
-                        'account_id' => $value->Cuenta->id,
-                    ]);
-
-                    AccountProfile::create([
-                        'account_id' => $value->Cuenta->id,
-                        'profile_id' => $perfil2->id,
-                        'plan_id' => $plan->id,
-                        'COMBO' => 'PERFIL2',
-                        'status' => 'ACTIVO',
-                    ]);
-                }
-            }
-            foreach ($perfil3->CuentaPerfil as  $value) {
-                if ($value->status == 'ACTIVO') {
-                    PlanAccount::create([
-                        'status' => 'ACTIVO',
-                        'plan_id' => $plan->id,
-                        'account_id' => $value->Cuenta->id,
-                    ]);
-
-                    AccountProfile::create([
-                        'account_id' => $value->Cuenta->id,
-                        'profile_id' => $perfil3->id,
-                        'plan_id' => $plan->id,
-                        'COMBO' => 'PERFIL3',
-                        'status' => 'ACTIVO',
-                    ]);
-                }
-            }
-
+            /* CREAR PLAN ACCOUNT Y ACCOUNT PROFILE NUEVOS PARA EL PERFIL 3 */
+            PlanAccount::create([
+                'status' => 'ACTIVO',
+                'COMBO' => 'PERFIL3',
+                'plan_id' => $plan->id,
+                'account_id' => $this->selected_cuenta3,
+            ]);
+            AccountProfile::create([
+                'account_id' => $this->selected_cuenta3,
+                'profile_id' => $this->selected_perfil3,
+                'plan_id' => $plan->id,
+                'COMBO' => 'PERFIL3',
+                'status' => 'ACTIVO',
+            ]);
 
             /* PONER EN VENCIDO EL PLAN ANTERIOR */
             $planviejo = Plan::find($this->selected_plan);
             $planviejo->status = 'VENCIDO';
             $planviejo->save();
 
-            /* VENCER PLAN ACCOUNTS ACTIVAS */
-            $plansAccount = Plan::join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
-                ->select('pa.*')
-                ->where('plans.id', $this->selected_plan)
-                ->where('pa.status', 'ACTIVO')
-                ->get();
-
-            foreach ($plansAccount as $value) {
-                $planCuenta = PlanAccount::find($value->id);
-                $planCuenta->status = 'VENCIDO';
-                $planCuenta->save();
-            }
+            /* PONER EN VENCIDO EL PLAN ACCOUNT DEL PERFIL 1 */
+            $plAccount1 = PlanAccount::find($this->selected_planAccount1);
+            $plAccount1->status = 'VENCIDO';
+            $plAccount1->save();
+            /* PONER EN VENCIDO EL PLAN ACCOUNT DEL PERFIL 2 */
+            $plAccount2 = PlanAccount::find($this->selected_planAccount2);
+            $plAccount2->status = 'VENCIDO';
+            $plAccount2->save();
+            /* PONER EN VENCIDO EL PLAN ACCOUNT DEL PERFIL 3 */
+            $plAccount3 = PlanAccount::find($this->selected_planAccount3);
+            $plAccount3->status = 'VENCIDO';
+            $plAccount3->save();
 
             /* PONER EN VENCIDO ACCOUNTPROFILE ANTERIOR*/
-            $cuentaPerfil1 = AccountProfile::find($this->cuentaPerfil1);
+            $cuentaPerfil1 = AccountProfile::find($this->selected_accountProf1);
             $cuentaPerfil1->status = 'VENCIDO';
             $cuentaPerfil1->save();
             /* PONER EN VENCIDO ACCOUNTPROFILE ANTERIOR*/
-            $cuentaPerfil2 = AccountProfile::find($this->cuentaPerfil2);
+            $cuentaPerfil2 = AccountProfile::find($this->selected_accountProf2);
             $cuentaPerfil2->status = 'VENCIDO';
             $cuentaPerfil2->save();
             /* PONER EN VENCIDO ACCOUNTPROFILE ANTERIOR*/
-            $cuentaPerfil3 = AccountProfile::find($this->cuentaPerfil3);
+            $cuentaPerfil3 = AccountProfile::find($this->selected_accountProf3);
             $cuentaPerfil3->status = 'VENCIDO';
             $cuentaPerfil3->save();
 
-            /* PONER EN OCUPADO EL PERFIL */
-            $perfil1->availability = 'OCUPADO';
-            $perfil1->save();
-            /* PONER EN OCUPADO EL PERFIL */
-            $perfil2->availability = 'OCUPADO';
-            $perfil2->save();
-            /* PONER EN OCUPADO EL PERFIL */
-            $perfil3->availability = 'OCUPADO';
-            $perfil3->save();
-
             if ($this->tipopago == 'EFECTIVO') {
-
                 $cajaFisica = Cartera::where('tipo', 'CajaFisica')
                     ->where('caja_id', $CajaActual->id)->get()->first();
                 CarteraMov::create([
@@ -1740,44 +1641,6 @@ class PerfilesController extends Component
                     'tipoDeMovimiento' => 'STREAMING',
                     'comentario' => '',
                     'cartera_id' => $cajaFisica->id,
-                    'movimiento_id' => $mv->id
-                ]);
-                $tigoStreaming = Cartera::where('tipo', 'TigoStreaming')
-                    ->where('caja_id', '1')->get()->first();
-                CarteraMov::create([
-                    'type' => 'INGRESO',
-                    'tipoDeMovimiento' => 'STREAMING',
-                    'comentario' => '',
-                    'cartera_id' => $tigoStreaming->id,
-                    'movimiento_id' => $mv->id
-                ]);
-                $carteraTelefono = Cartera::where('tipo', 'Telefono')
-                    ->where('caja_id', $CajaActual->id)->get()->first();
-                CarteraMov::create([
-                    'type' => 'EGRESO',
-                    'tipoDeMovimiento' => 'STREAMING',
-                    'comentario' => '',
-                    'cartera_id' => $carteraTelefono->id,
-                    'movimiento_id' => $mv->id
-                ]);
-            } elseif ($this->tipopago == 'Banco') {
-                $banco = Cartera::where('tipo', 'Banco')
-                    ->where('caja_id', '1')->get()->first();
-                CarteraMov::create([
-                    'type' => 'INGRESO',
-                    'tipoDeMovimiento' => 'STREAMING',
-                    'comentario' => '',
-                    'cartera_id' => $banco->id,
-                    'movimiento_id' => $mv->id
-                ]);
-            } else {
-                $tigoStreaming = Cartera::where('tipo', 'TigoStreaming')
-                    ->where('caja_id', '1')->get()->first();
-                CarteraMov::create([
-                    'type' => 'INGRESO',
-                    'tipoDeMovimiento' => 'STREAMING',
-                    'comentario' => '',
-                    'cartera_id' => $tigoStreaming->id,
                     'movimiento_id' => $mv->id
                 ]);
             }
@@ -1801,31 +1664,34 @@ class PerfilesController extends Component
     {
         DB::beginTransaction();
         try {
+            /* CREAR PERFIL Y ACCOUNT PROFILE EN LA CUENTA ANTERIOR PARA QUE REEMPLACE AL QUE SE VENCE */
             $perfil1 = Profile::create([
                 'nameprofile' => 'emanuel' . rand(100, 999),
                 'pin' => rand(1000, 9999),
             ]);
             AccountProfile::create([
                 'status' => 'SinAsignar',
-                'account_id' => $this->PERFIL1cuentaID,
+                'account_id' => $this->selected_cuenta1,
                 'profile_id' => $perfil1->id,
             ]);
+            /* CREAR PERFIL Y ACCOUNT PROFILE EN LA CUENTA ANTERIOR PARA QUE REEMPLACE AL QUE SE VENCE */
             $perfil2 = Profile::create([
                 'nameprofile' => 'emanuel' . rand(100, 999),
                 'pin' => rand(1000, 9999),
             ]);
             AccountProfile::create([
                 'status' => 'SinAsignar',
-                'account_id' => $this->PERFIL2cuentaID,
+                'account_id' => $this->selected_cuenta2,
                 'profile_id' => $perfil2->id,
             ]);
+            /* CREAR PERFIL Y ACCOUNT PROFILE EN LA CUENTA ANTERIOR PARA QUE REEMPLACE AL QUE SE VENCE */
             $perfil3 = Profile::create([
                 'nameprofile' => 'emanuel' . rand(100, 999),
                 'pin' => rand(1000, 9999),
             ]);
             AccountProfile::create([
                 'status' => 'SinAsignar',
-                'account_id' => $this->PERFIL3cuentaID,
+                'account_id' => $this->selected_cuenta3,
                 'profile_id' => $perfil3->id,
             ]);
 
@@ -1835,79 +1701,78 @@ class PerfilesController extends Component
             $planAntiguo->observations = $this->observations;
             $planAntiguo->save();
 
-            $plansAccount = Plan::join('plan_accounts as pa', 'plans.id', 'pa.plan_id')
-                ->select('pa.*')
-                ->where('plans.id', $this->selected_plan)
-                ->where('pa.status', 'ACTIVO')
-                ->get();
+            /* PONER EN VENCIDO EL PLAN ACCOUNT DEL PERFIL 1 */
+            $plAccount1 = PlanAccount::find($this->selected_planAccount1);
+            $plAccount1->status = 'VENCIDO';
+            $plAccount1->save();
+            /* PONER EN VENCIDO EL PLAN ACCOUNT DEL PERFIL 2 */
+            $plAccount2 = PlanAccount::find($this->selected_planAccount2);
+            $plAccount2->status = 'VENCIDO';
+            $plAccount2->save();
+            /* PONER EN VENCIDO EL PLAN ACCOUNT DEL PERFIL 3 */
+            $plAccount3 = PlanAccount::find($this->selected_planAccount3);
+            $plAccount3->status = 'VENCIDO';
+            $plAccount3->save();
 
-            foreach ($plansAccount as $value) {
-                $planCuenta = PlanAccount::find($value->id);
-                $planCuenta->status = 'VENCIDO';
-                $planCuenta->save();
-            }
-
-            /* PONER EN INACTIVO AccountProfile */
-            $CuentaPerf1 = AccountProfile::find($this->cuentaPerfil1);
+            /* PONER EN INACTIVO AccountProfile 1 */
+            $CuentaPerf1 = AccountProfile::find($this->selected_accountProf1);
             $CuentaPerf1->status = 'VENCIDO';
             $CuentaPerf1->save();
-
-            $CuentaPerf2 = AccountProfile::find($this->cuentaPerfil2);
+            /* PONER EN INACTIVO AccountProfile 2 */
+            $CuentaPerf2 = AccountProfile::find($this->selected_accountProf2);
             $CuentaPerf2->status = 'VENCIDO';
             $CuentaPerf2->save();
-
-            $CuentaPerf3 = AccountProfile::find($this->cuentaPerfil3);
+            /* PONER EN INACTIVO AccountProfile 3 */
+            $CuentaPerf3 = AccountProfile::find($this->selected_accountProf3);
             $CuentaPerf3->status = 'VENCIDO';
             $CuentaPerf3->save();
 
-            /* PONER EN INACTIVO EL PERFIL */
-            $perf = Profile::find($this->perfil1ID);
+            /* PONER EN INACTIVO EL PERFIL 1 */
+            $perf = Profile::find($this->selected_perfil1);
             $perf->availability = 'VENCIDO';
             $perf->status = 'INACTIVO';
             $perf->save();
-
-            $perf2 = Profile::find($this->perfil2ID);
+            /* PONER EN INACTIVO EL PERFIL 2 */
+            $perf2 = Profile::find($this->selected_perfil2);
             $perf2->availability = 'VENCIDO';
             $perf2->status = 'INACTIVO';
             $perf2->save();
-
-            $perf3 = Profile::find($this->perfil3ID);
+            /* PONER EN INACTIVO EL PERFIL 3 */
+            $perf3 = Profile::find($this->selected_perfil3);
             $perf3->availability = 'VENCIDO';
             $perf3->status = 'INACTIVO';
             $perf3->save();
 
-            $Cuenta1 = Account::find($this->PERFIL1cuentaID);
-            /* CONTAR LOS PERFILES OCUPADOS */
+            /* CONTAR LOS PERFILES OCUPADOS DE LA CUENTA DEL PERFIL 1 */
             $perfOcupados = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                 ->join('profiles as p', 'ap.profile_id', 'p.id')
-                ->where('accounts.id', $Cuenta1->id)
+                ->where('accounts.id', $this->selected_cuenta1)
                 ->where('p.availability', 'OCUPADO')->get();
             /* SI LA CUENTA NO TIENE PERFILES OCUPADOS REGRESA A SER ENTERA */
             if ($perfOcupados->count() == 0) {
+                $Cuenta1 = Account::find($this->selected_cuenta1);
                 $Cuenta1->whole_account = 'ENTERA';
                 $Cuenta1->save();
             }
-
-            $Cuenta2 = Account::find($this->PERFIL2cuentaID);
-            /* CONTAR LOS PERFILES OCUPADOS */
+            /* CONTAR LOS PERFILES OCUPADOS DE LA CUENTA DEL PERFIL 2 */
             $perfOcupados = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                 ->join('profiles as p', 'ap.profile_id', 'p.id')
-                ->where('accounts.id', $Cuenta2->id)
+                ->where('accounts.id', $this->selected_cuenta2)
                 ->where('p.availability', 'OCUPADO')->get();
             /* SI LA CUENTA NO TIENE PERFILES OCUPADOS REGRESA A SER ENTERA */
             if ($perfOcupados->count() == 0) {
+                $Cuenta2 = Account::find($this->selected_cuenta2);
                 $Cuenta2->whole_account = 'ENTERA';
                 $Cuenta2->save();
             }
-
-            $Cuenta3 = Account::find($this->PERFIL3cuentaID);
-            /* CONTAR LOS PERFILES OCUPADOS */
+            /* CONTAR LOS PERFILES OCUPADOS DE LA CUENTA DEL PERFIL 3 */
             $perfOcupados = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
                 ->join('profiles as p', 'ap.profile_id', 'p.id')
-                ->where('accounts.id', $Cuenta3->id)
+                ->where('accounts.id', $this->selected_cuenta3)
                 ->where('p.availability', 'OCUPADO')->get();
             /* SI LA CUENTA NO TIENE PERFILES OCUPADOS REGRESA A SER ENTERA */
             if ($perfOcupados->count() == 0) {
+                $Cuenta3 = Account::find($this->selected_cuenta3);
                 $Cuenta3->whole_account = 'ENTERA';
                 $Cuenta3->save();
             }
@@ -1921,7 +1786,7 @@ class PerfilesController extends Component
     }
 
 
-    // renovacion vencimiento y cambiar de cuenta
+    // renovacion vencimiento y cambiar de cuenta de perfil
     public function Acciones(Profile $profile, AccountProfile $accountPRO, Account $cuenta, PlanAccount $planAccount, Plan $plan, Cliente $cliente, Platform $plataforma)
     {
         $this->resetUI();
@@ -1997,8 +1862,6 @@ class PerfilesController extends Component
             return;
         }
 
-        $perfil = Profile::find($this->selected_perfil);
-
         DB::beginTransaction();
         try {
             $mv = Movimiento::create([
@@ -2007,22 +1870,19 @@ class PerfilesController extends Component
                 'import' => $this->importe,
                 'user_id' => Auth()->user()->id,
             ]);
-            foreach ($perfil->CuentaPerfil as  $value) {
-                if ($value->status == 'ACTIVO') {
 
-                    $date_now = date('Y-m-d', time());
+            $date_now = date("Y-m-d H:i");
 
-                    CuentaInversion::create([
-                        'tipo' => 'INGRESO',
-                        'cantidad' => $this->importe,
-                        'tipoPlan' => 'PERFIL',
-                        'tipoTransac' => 'RENOVACION',
-                        'num_meses' => $this->meses,
-                        'fecha_realizacion' => $date_now,
-                        'account_id' => $value->Cuenta->id
-                    ]);
-                }
-            }
+            CuentaInversion::create([
+                'tipo' => 'INGRESO',
+                'cantidad' => $this->importe,
+                'tipoPlan' => 'PERFIL',
+                'tipoTransac' => 'RENOVACION',
+                'num_meses' => $this->meses,
+                'fecha_realizacion' => $date_now,
+                'account_id' => $this->selected_account
+            ]);
+
             $plan = Plan::create([
                 'importe' => $this->importe,
                 'plan_start' => $this->inicioNueva,
@@ -2044,22 +1904,19 @@ class PerfilesController extends Component
                 $plan->save();
             }
 
-            foreach ($perfil->CuentaPerfil as  $value) {
-                if ($value->status == 'ACTIVO') {
-                    PlanAccount::create([
-                        'status' => 'ACTIVO',
-                        'plan_id' => $plan->id,
-                        'account_id' => $value->Cuenta->id,
-                    ]);
+            PlanAccount::create([
+                'status' => 'ACTIVO',
+                'plan_id' => $plan->id,
+                'account_id' => $this->selected_account,
+            ]);
 
-                    AccountProfile::create([
-                        'account_id' => $value->Cuenta->id,
-                        'profile_id' => $perfil->id,
-                        'plan_id' => $plan->id,
-                        'status' => 'ACTIVO',
-                    ]);
-                }
-            }
+            AccountProfile::create([
+                'account_id' => $this->selected_account,
+                'profile_id' => $this->selected_perfil,
+                'plan_id' => $plan->id,
+                'status' => 'ACTIVO',
+            ]);
+
             /* PONER EN VENCIDO EL PLAN ANTERIOR */
             $planviejo = Plan::find($this->selected_plan);
             $planviejo->status = 'VENCIDO';
@@ -2072,12 +1929,8 @@ class PerfilesController extends Component
             $cuentaPerfil = AccountProfile::find($this->selected_accountProf);
             $cuentaPerfil->status = 'VENCIDO';
             $cuentaPerfil->save();
-            /* PONER EN OCUPADO EL PERFIL */
-            $perfil->availability = 'OCUPADO';
-            $perfil->save();
 
             if ($this->tipopago == 'EFECTIVO') {
-
                 $cajaFisica = Cartera::where('tipo', 'CajaFisica')
                     ->where('caja_id', $CajaActual->id)->get()->first();
                 CarteraMov::create([
@@ -2085,44 +1938,6 @@ class PerfilesController extends Component
                     'tipoDeMovimiento' => 'STREAMING',
                     'comentario' => '',
                     'cartera_id' => $cajaFisica->id,
-                    'movimiento_id' => $mv->id
-                ]);
-                $tigoStreaming = Cartera::where('tipo', 'TigoStreaming')
-                    ->where('caja_id', '1')->get()->first();
-                CarteraMov::create([
-                    'type' => 'INGRESO',
-                    'tipoDeMovimiento' => 'STREAMING',
-                    'comentario' => '',
-                    'cartera_id' => $tigoStreaming->id,
-                    'movimiento_id' => $mv->id
-                ]);
-                $carteraTelefono = Cartera::where('tipo', 'Telefono')
-                    ->where('caja_id', $CajaActual->id)->get()->first();
-                CarteraMov::create([
-                    'type' => 'EGRESO',
-                    'tipoDeMovimiento' => 'STREAMING',
-                    'comentario' => '',
-                    'cartera_id' => $carteraTelefono->id,
-                    'movimiento_id' => $mv->id
-                ]);
-            } elseif ($this->tipopago == 'Banco') {
-                $banco = Cartera::where('tipo', 'Banco')
-                    ->where('caja_id', '1')->get()->first();
-                CarteraMov::create([
-                    'type' => 'INGRESO',
-                    'tipoDeMovimiento' => 'STREAMING',
-                    'comentario' => '',
-                    'cartera_id' => $banco->id,
-                    'movimiento_id' => $mv->id
-                ]);
-            } else {
-                $tigoStreaming = Cartera::where('tipo', 'TigoStreaming')
-                    ->where('caja_id', '1')->get()->first();
-                CarteraMov::create([
-                    'type' => 'INGRESO',
-                    'tipoDeMovimiento' => 'STREAMING',
-                    'comentario' => '',
-                    'cartera_id' => $tigoStreaming->id,
                     'movimiento_id' => $mv->id
                 ]);
             }
@@ -2176,14 +1991,14 @@ class PerfilesController extends Component
         $perf->status = 'INACTIVO';
         $perf->save();
 
-        $Cuenta = Account::find($this->selected_account);
         /* CONTAR LOS PERFILES OCUPADOS */
         $perfOcupados = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
             ->join('profiles as p', 'ap.profile_id', 'p.id')
-            ->where('accounts.id', $Cuenta->id)
+            ->where('accounts.id', $this->selected_account)
             ->where('p.availability', 'OCUPADO')->get();
         /* SI LA CUENTA NO TIENE PERFILES OCUPADOS REGRESA A SER ENTERA */
         if ($perfOcupados->count() == 0) {
+            $Cuenta = Account::find($this->selected_account);
             $Cuenta->whole_account = 'ENTERA';
             $Cuenta->save();
         }
@@ -2208,7 +2023,7 @@ class PerfilesController extends Component
                 'e.content as content',
                 'e.pass as pass',
                 DB::raw('0 as perfActivos'),
-                DB::raw('0 as cantiadadQueSePuedeCrear'),
+                DB::raw('0 as espacios'),
             )
             ->where('accounts.status', 'ACTIVO')
             ->where('accounts.availability', 'LIBRE')
@@ -2227,7 +2042,7 @@ class PerfilesController extends Component
             $cantidadActivos = $perfilesActivos->count();
             $c->perfActivos = $cantidadActivos;
 
-            $c->cantiadadQueSePuedeCrear = $c->number_profiles - $c->perfActivos;
+            $c->espacios = $c->number_profiles - $c->perfActivos;
         }
     }
 
@@ -2294,8 +2109,8 @@ class PerfilesController extends Component
                 'status' => 'CAMBIADO',
             ]);
 
-            /* PONER EN ACTIVO EL NUEVO ACCOUNT PROFILE */
-            $accountProfiles = AccountProfile::select('account_profiles.*')->where('account_id', $cuenta->id)
+            /* PONER EN ACTIVO EL NUEVO ACCOUNT PROFILE y poner el id del plan */
+            $accountProfiles = AccountProfile::where('account_id', $cuenta->id)
                 ->where('profile_id', $profile->id)->get()->first();
             $ACCOUNTPROF = AccountProfile::find($accountProfiles->id);
             $ACCOUNTPROF->update([
@@ -2422,6 +2237,8 @@ class PerfilesController extends Component
     }
     public function resetUI()
     {
+        $this->pageTitle = 'Listado';
+        $this->componentName = 'Perfiles';
         $this->status = 'Elegir';
         $this->nameperfil = '';
         $this->pin = '';
@@ -2449,24 +2266,24 @@ class PerfilesController extends Component
         $this->plataforma1Nombre = '';
         $this->plataforma2Nombre = '';
         $this->plataforma3Nombre = '';
-        $this->perfil1ID = '';
-        $this->perfil2ID = '';
-        $this->perfil3ID = '';
+        $this->selected_perfil1 = '';
+        $this->selected_perfil2 = '';
+        $this->selected_perfil3 = '';
         $this->mostrarTablaCambiar1 = 'NO';
         $this->mostrarTablaCambiar2 = 'NO';
         $this->mostrarTablaCambiar3 = 'NO';
-        $this->plataforma1ID = '';
-        $this->plataforma2ID = '';
-        $this->plataforma3ID = '';
-        $this->PERFIL1cuentaID = '';
-        $this->PERFIL2cuentaID = '';
-        $this->PERFIL3cuentaID = '';
+        $this->selected_plataforma1 = '';
+        $this->selected_plataforma2 = '';
+        $this->selected_plataforma3 = '';
+        $this->selected_cuenta1 = '';
+        $this->selected_cuenta2 = '';
+        $this->selected_cuenta3 = '';
         $this->planAccount1 = '';
         $this->planAccount2 = '';
         $this->planAccount3 = '';
-        $this->cuentaPerfil1 = '';
-        $this->cuentaPerfil2 = '';
-        $this->cuentaPerfil3 = '';
+        $this->selected_accountProf1 = '';
+        $this->selected_accountProf2 = '';
+        $this->selected_accountProf3 = '';
         $this->clienteID = '';
         $this->expiracionCuenta1 = '';
         $this->expiracionCuenta2 = '';
@@ -2481,6 +2298,20 @@ class PerfilesController extends Component
         $this->start_account = null;
         $this->expiration_account = null;
         $this->comprobante = null;
+        $this->selected_perfil = 0;
+        $this->selected_accountProf = 0;
+        $this->selected_account = 0;
+        $this->selected_planAccount = 0;
+        $this->selected_platf = 0;
+        $this->selected_cliente = 0;
+
+        $this->selected_accountProf1 = 0;
+        $this->selected_accountProf2 = 0;
+        $this->selected_accountProf3 = 0;
+
+        $this->selected_planAccount1 = 0;
+        $this->selected_planAccount2 = 0;
+        $this->selected_planAccount3 = 0;
 
         $this->resetValidation();
     }

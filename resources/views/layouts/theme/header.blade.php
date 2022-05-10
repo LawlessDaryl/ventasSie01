@@ -2,7 +2,7 @@
     <header class="header navbar navbar-expand-sm 3838" style="background: #383838;">
         <ul class="navbar-item flex-row">
             <li class="nav-item theme-logo">
-                <a href="{{url('inicio')}}">
+                <a href="{{ url('inicio') }}">
                     <img src="assets/img/sie.png" class="navbar-logo" alt="logo">
                 </a>
             </li>
@@ -23,21 +23,23 @@
         <livewire:search-controller>
 
         </livewire:search-controller>
-        @if (@Auth::user()->hasPermissionTo('Corte_Caja_Index'))
-        <ul class="tabs tab-pills text-center mt-2">            
-            <a href="{{ url('cortecajas') }}" class="btn btn-warning btn-lg active" role="button" aria-pressed="true">CORTE DE CAJA</a>            
-        </ul>
-        @endif
+        @can('Corte_Caja_Index')
+            <ul class="tabs tab-pills text-center mt-2">
+                <a href="{{ url('cortecajas') }}" class="btn btn-warning btn-lg active" role="button"
+                    aria-pressed="true">CORTE DE CAJA</a>
+            </ul>
 
-        <ul class="tabs tab-pills text-center mt-4">
-            @if (empty(session('sesionCaja')))
-                <h5 style="background-color: #ff7600; color:#ffffff">No tienes ninguna caja abierta</h5>
-            @else
-                <marquee behavior="" direction="">
-                    <h5 style="background-color: #ff7600; color:#ffffff;font-size:24px">Usted tiene la {{ session('sesionCaja') }} abierta</h5>
-                </marquee>
-            @endif
-        </ul>
+            <ul class="tabs tab-pills text-center mt-4">
+                @if (empty(session('sesionCaja')))
+                    <h5 style="background-color: #ff7600; color:#ffffff">No tienes ninguna caja abierta</h5>
+                @else
+                    <marquee behavior="" direction="">
+                        <h5 style="background-color: #ff7600; color:#ffffff;font-size:24px">Usted tiene la
+                            {{ session('sesionCaja') }} abierta</h5>
+                    </marquee>
+                @endif
+            </ul>
+        @endcan
         <ul class="navbar-item flex-row navbar-dropdown">
             {{-- <li class="nav-item dropdown message-dropdown">
                 <a href="javascript:void(0);" class="nav-link dropdown-toggle" id="messageDropdown"
@@ -218,16 +220,16 @@
                         class="img-fluid">
                 </a>
                 <div class="dropdown-menu position-absolute animated fadeInUp" aria-labelledby="userProfileDropdown"">
-                    <div class="       user-profile-section" style="background: #ff7600;">
+                    <div class="         user-profile-section" style="background: #ff7600;">
                     <div class="media mx-auto">
                         <img src="{{ asset('storage/usuarios/' . auth()->user()->imagen) }}" class="img-fluid mr-2"
                             alt="avatar">
                         <div class="media-body">
                             <h5>{{ auth()->user()->name }}</h5>
                             <p>{{ auth()->user()->profile }}</p>
-                            @foreach(auth()->user()->sucursalusers as $sucu)
-                                @if($sucu->estado == 'ACTIVO')
-                                    <p>{{$sucu->sucursal->name}}</p>
+                            @foreach (auth()->user()->sucursalusers as $sucu)
+                                @if ($sucu->estado == 'ACTIVO')
+                                    <p>{{ $sucu->sucursal->name }}</p>
                                 @endif
                             @endforeach
                             <p></p>

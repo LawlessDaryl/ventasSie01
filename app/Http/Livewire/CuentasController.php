@@ -1214,7 +1214,7 @@ class CuentasController extends Component
             'meses_comprados' => $this->meseRenovarProv,
         ]);
 
-        $date_now = date('Y-m-d', time());
+        $date_now = date("Y-m-d H:i");
 
         CuentaInversion::create([
             'tipo' => 'EGRESO',
@@ -1337,11 +1337,11 @@ class CuentasController extends Component
                     'profile_id' => $perfil->id,
                 ]);
             }
-
-            $date_now = date('Y-m-d', time());
+            $date_now = date("Y-m-d H:i");
 
             CuentaInversion::create([
                 'tipo' => 'EGRESO',
+                'tipoTransac' => 'COMPRA',
                 'cantidad' => $this->price,
                 'num_meses' => $this->mesesComprar,
                 'fecha_realizacion' => $date_now,
@@ -1632,7 +1632,7 @@ class CuentasController extends Component
                 'user_id' => Auth()->user()->id,
             ]);
 
-            $date_now = date('Y-m-d', time());
+            $date_now = date("Y-m-d H:i");
 
             CuentaInversion::create([
                 'tipo' => 'INGRESO',
@@ -1672,7 +1672,6 @@ class CuentasController extends Component
             ]);
 
             if ($this->tipopago == 'EFECTIVO') {
-
                 $cajaFisica = Cartera::where('tipo', 'CajaFisica')
                     ->where('caja_id', $CajaActual->id)->get()->first();
                 CarteraMov::create([
@@ -1680,44 +1679,6 @@ class CuentasController extends Component
                     'tipoDeMovimiento' => 'STREAMING',
                     'comentario' => '',
                     'cartera_id' => $cajaFisica->id,
-                    'movimiento_id' => $mv->id
-                ]);
-                $tigoStreaming = Cartera::where('tipo', 'TigoStreaming')
-                    ->where('caja_id', '1')->get()->first();
-                CarteraMov::create([
-                    'type' => 'INGRESO',
-                    'tipoDeMovimiento' => 'STREAMING',
-                    'comentario' => '',
-                    'cartera_id' => $tigoStreaming->id,
-                    'movimiento_id' => $mv->id
-                ]);
-                $carteraTelefono = Cartera::where('tipo', 'Telefono')
-                    ->where('caja_id', $CajaActual->id)->get()->first();
-                CarteraMov::create([
-                    'type' => 'EGRESO',
-                    'tipoDeMovimiento' => 'STREAMING',
-                    'comentario' => '',
-                    'cartera_id' => $carteraTelefono->id,
-                    'movimiento_id' => $mv->id
-                ]);
-            } elseif ($this->tipopago == 'Banco') {
-                $banco = Cartera::where('tipo', 'Banco')
-                    ->where('caja_id', '1')->get()->first();
-                CarteraMov::create([
-                    'type' => 'INGRESO',
-                    'tipoDeMovimiento' => 'STREAMING',
-                    'comentario' => '',
-                    'cartera_id' => $banco->id,
-                    'movimiento_id' => $mv->id
-                ]);
-            } else {
-                $tigoStreaming = Cartera::where('tipo', 'TigoStreaming')
-                    ->where('caja_id', '1')->get()->first();
-                CarteraMov::create([
-                    'type' => 'INGRESO',
-                    'tipoDeMovimiento' => 'STREAMING',
-                    'comentario' => '',
-                    'cartera_id' => $tigoStreaming->id,
                     'movimiento_id' => $mv->id
                 ]);
             }

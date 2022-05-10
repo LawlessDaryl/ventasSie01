@@ -137,12 +137,12 @@
                                             </td>
                                             <td class="text-center">
                                                 <h6 class="text-center">
-                                                    {{ \Carbon\Carbon::parse($p->planinicio)->format('d:m:Y') }}
+                                                    {{ \Carbon\Carbon::parse($p->planinicio)->format('d/m/Y') }}
                                                 </h6>
                                             </td>
                                             <td class="text-center">
                                                 <h6 class="text-center">
-                                                    {{ \Carbon\Carbon::parse($p->planfin)->format('d:m:Y') }} </h6>
+                                                    {{ \Carbon\Carbon::parse($p->planfin)->format('d/m/Y') }} </h6>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -204,12 +204,12 @@
                                             </td>
                                             <td class="text-center">
                                                 <h6 class="text-center">
-                                                    {{ \Carbon\Carbon::parse($p->planinicio)->format('d:m:Y') }}
+                                                    {{ \Carbon\Carbon::parse($p->planinicio)->format('d/m/Y') }}
                                                 </h6>
                                             </td>
                                             <td class="text-center">
                                                 <h6 class="text-center">
-                                                    {{ \Carbon\Carbon::parse($p->planfin)->format('d:m:Y') }} </h6>
+                                                    {{ \Carbon\Carbon::parse($p->planfin)->format('d/m/Y') }} </h6>
                                             </td>
                                         </tr>
                                     @endforeach

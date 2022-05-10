@@ -26,9 +26,9 @@ class PlanesController extends Component
 {
     use WithPagination;
     use WithFileUploads;
-
-    public $expiration_plan, $status,  $importe, $pageTitle, $componentName, $selected_id, $hora, $search,
-        $condicion, $type, $nombre, $celular, $plataforma, $cuentaperfil, $accounts, $profiles, $cantidaperf,
+    public $pageTitle = 'Planes', $componentName = 'Streaming';
+    public $expiration_plan,  $importe, $search,
+        $condicion, $type, $nombre, $celular, $plataforma, $cuentaperfil, $accounts, $profiles,
         $mostrartabla, $tipopago, $condicional = 'perfiles', $meses, $observaciones, $ready, $selected_perf, $totalCobrar,
         $BuscarCliente, $ClienteSelect, $cuentasEnteras, $nombrePerfil, $pinPerfil, $CantidadPerfilesCrear,
         $fecha_inicio, $plataforma1, $plataforma2, $plataforma3, $perfilplataforma1, $perfilplataforma2,
@@ -43,20 +43,13 @@ class PlanesController extends Component
 
     public function mount()
     {
-        $this->pageTitle = 'Planes';
-        $this->componentName = 'Streaming';
-        $this->selected_id = 0;
-        $this->hora = date("d-m-Y H:i:s ");
-        $this->status = 'Vigente';
         $this->plataforma = 'Elegir';
         $this->cuentaperfil = 'Elegir';
-        $this->cantidaperf = 1;
+
         $this->nombre = '';
         $this->celular = '';
-        $this->nit = 0;
+
         $this->importe = '';
-        $this->condicion = 0;
-        $this->select = 1;
         $this->mostrartabla = 0;
         $this->tipopago = 'EFECTIVO';
         $this->meses = 1;
@@ -128,6 +121,14 @@ class PlanesController extends Component
         $this->selected_perfil = 0;
         $this->selected_platf = 0;
         $this->selected_cliente = 0;
+
+        $this->selected_account1 = 0;
+        $this->selected_account2 = 0;
+        $this->selected_account3 = 0;
+
+        $this->selected_accountProf1 = 0;
+        $this->selected_accountProf2 = 0;
+        $this->selected_accountProf3 = 0;
     }
 
     public function render()
@@ -806,39 +807,51 @@ class PlanesController extends Component
     {   //CARGAR PERFIL 1 EN LOS INPUT
         $perfil1 = Account::join('account_profiles as ap', 'accounts.id', 'ap.account_id')
             ->join('profiles as p', 'p.id', 'ap.profile_id')
-            ->select('p.*')
+            ->select('p.*', 'ap.id as IDaccProf')
             ->where('accounts.id', $cuenta1->id)
             ->where('p.availability', 'LIBRE')->get()->first();
         $this->perfil1id = $perfil1->id;
         $this->perfilNombre1 = $perfil1->nameprofile;
         $this->perfilPin1 = $perfil1->pin;
+
+        $this->selected_accountProf1 = $perfil1->IDaccProf;
+
         $this->plataforma1Require = 'SI';
+        $this->selected_account1 = $cuenta1->id;
     }
 
     public function SegundoPerfil(Account $cuenta2)
     {   //CARGAR PERFIL 2 EN LOS INPUT
         $perfil2 = Account::join('account_profiles as ap', 'accounts.id', 'ap.account_id')
             ->join('profiles as p', 'p.id', 'ap.profile_id')
-            ->select('p.*')
+            ->select('p.*', 'ap.id as IDaccProf')
             ->where('accounts.id', $cuenta2->id)
             ->where('p.availability', 'LIBRE')->get()->first();
         $this->perfil2id = $perfil2->id;
         $this->perfilNombre2 = $perfil2->nameprofile;
         $this->perfilPin2 = $perfil2->pin;
+
+        $this->selected_accountProf2 = $perfil2->IDaccProf;
+
         $this->plataforma2Require = 'SI';
+        $this->selected_account2 = $cuenta2->id;
     }
 
     public function TercerPerfil(Account $cuenta3)
     {   //CARGAR PERFIL 3 EN LOS INPUT
         $perfil3 = Account::join('account_profiles as ap', 'accounts.id', 'ap.account_id')
             ->join('profiles as p', 'p.id', 'ap.profile_id')
-            ->select('p.*')
+            ->select('p.*', 'ap.id as IDaccProf')
             ->where('accounts.id', $cuenta3->id)
             ->where('p.availability', 'LIBRE')->get()->first();
         $this->perfil3id = $perfil3->id;
         $this->perfilNombre3 = $perfil3->nameprofile;
         $this->perfilPin3 = $perfil3->pin;
+
+        $this->selected_accountProf3 = $perfil3->IDaccProf;
+
         $this->plataforma3Require = 'SI';
+        $this->selected_account3 = $cuenta3->id;
     }
 
     public function venderCombo()
@@ -888,27 +901,6 @@ class PlanesController extends Component
         ];
 
         $this->validate($rules, $messages);
-        /* actualizar los datos de los perfiles si los cambio el usuario segun lo que pidio el cliente */
-        $perfil1 = Profile::find($this->perfil1id);
-        $perfil1->update([
-            'nameprofile' => $this->perfilNombre1,
-            'pin' => $this->perfilPin1,
-        ]);
-        $perfil1->save();
-
-        $perfil2 = Profile::find($this->perfil2id);
-        $perfil2->update([
-            'nameprofile' => $this->perfilNombre2,
-            'pin' => $this->perfilPin2,
-        ]);
-        $perfil2->save();
-
-        $perfil3 = Profile::find($this->perfil3id);
-        $perfil3->update([
-            'nameprofile' => $this->perfilNombre3,
-            'pin' => $this->perfilPin3,
-        ]);
-        $perfil3->save();
 
         $cccc = Caja::join('sucursals as s', 's.id', 'cajas.sucursal_id')
             ->join('sucursal_users as su', 'su.sucursal_id', 's.id')
@@ -954,77 +946,78 @@ class PlanesController extends Component
                 'import' => $this->importe,
                 'user_id' => Auth()->user()->id,
             ]);
-            foreach ($perfil1->CuentaPerfil as  $value) {
-                if ($value->status == 'SinAsignar') {
-                    // Poner la cuenta del perfil 1 en dividida
-                    $account1 = Account::find($value->Cuenta->id);
-                    $account1->whole_account = 'DIVIDIDA';
-                    $account1->save();
 
-                    $date_now = date('Y-m-d', time());
+            $date_now = date("Y-m-d H:i");
 
-                    CuentaInversion::create([
-                        'tipo' => 'INGRESO',
-                        'cantidad' => $this->importe / 3,
-                        'tipoPlan' => 'COMBO',
-                        'tipoTransac' => 'VENTA',
-                        'num_meses' => $this->meses,
-                        'fecha_realizacion' => $date_now,
-                        'account_id' => $account1->id
-                    ]);
-                }
-            }
+            // Poner la cuenta del perfil 1 en dividida
+            $account1 = Account::find($this->selected_account1);
+            $account1->whole_account = 'DIVIDIDA';
+            $account1->save();
+
+            CuentaInversion::create([
+                'tipo' => 'INGRESO',
+                'cantidad' => $this->importe / 3,
+                'tipoPlan' => 'COMBO',
+                'tipoTransac' => 'VENTA',
+                'num_meses' => $this->meses,
+                'fecha_realizacion' => $date_now,
+                'account_id' => $this->selected_account1
+            ]);
+
+            // Poner la cuenta del perfil 2 en dividida
+            $account2 = Account::find($this->selected_account2);
+            $account2->whole_account = 'DIVIDIDA';
+            $account2->save();
+
+            CuentaInversion::create([
+                'tipo' => 'INGRESO',
+                'cantidad' => $this->importe / 3,
+                'tipoPlan' => 'COMBO',
+                'tipoTransac' => 'VENTA',
+                'num_meses' => $this->meses,
+                'fecha_realizacion' => $date_now,
+                'account_id' => $this->selected_account2
+            ]);
 
 
-            foreach ($perfil2->CuentaPerfil as  $value) {
-                if ($value->status == 'SinAsignar') {
-                    // Poner la cuenta del perfil 2 en dividida
-                    $account2 = Account::find($value->Cuenta->id);
-                    $account2->whole_account = 'DIVIDIDA';
-                    $account2->save();
+            // Poner la cuenta del perfil 3 en dividida
+            $account3 = Account::find($this->selected_account3);
+            $account3->whole_account = 'DIVIDIDA';
+            $account3->save();
 
-                    $date_now = date('Y-m-d', time());
+            CuentaInversion::create([
+                'tipo' => 'INGRESO',
+                'cantidad' => $this->importe / 3,
+                'tipoPlan' => 'COMBO',
+                'tipoTransac' => 'VENTA',
+                'num_meses' => $this->meses,
+                'fecha_realizacion' => $date_now,
+                'account_id' => $this->selected_account3
+            ]);
 
-                    CuentaInversion::create([
-                        'tipo' => 'INGRESO',
-                        'cantidad' => $this->importe / 3,
-                        'tipoPlan' => 'COMBO',
-                        'tipoTransac' => 'VENTA',
-                        'num_meses' => $this->meses,
-                        'fecha_realizacion' => $date_now,
-                        'account_id' => $account2->id
-                    ]);
-                }
-            }
-            foreach ($perfil3->CuentaPerfil as  $value) {
-                if ($value->status == 'SinAsignar') {
-                    // Poner la cuenta del perfil 3 en dividida
-                    $account3 = Account::find($value->Cuenta->id);
-                    $account3->whole_account = 'DIVIDIDA';
-                    $account3->save();
-
-                    $date_now = date('Y-m-d', time());
-
-                    CuentaInversion::create([
-                        'tipo' => 'INGRESO',
-                        'cantidad' => $this->importe / 3,
-                        'tipoPlan' => 'COMBO',
-                        'tipoTransac' => 'VENTA',
-                        'num_meses' => $this->meses,
-                        'fecha_realizacion' => $date_now,
-                        'account_id' => $account3->id
-                    ]);
-                }
-            }
-
-            // PONER EL PERFIL 1 EN OCUPADO
-            $perfil1->availability = 'OCUPADO';
+            /* actualizar los datos de los perfiles si fueron cambiados y ponerlos en ocupado */
+            $perfil1 = Profile::find($this->perfil1id);
+            $perfil1->update([
+                'nameprofile' => $this->perfilNombre1,
+                'pin' => $this->perfilPin1,
+                'availability' => 'OCUPADO'
+            ]);
             $perfil1->save();
-            // PONER EL PERFIL 2 EN OCUPADO
-            $perfil2->availability = 'OCUPADO';
+
+            $perfil2 = Profile::find($this->perfil2id);
+            $perfil2->update([
+                'nameprofile' => $this->perfilNombre2,
+                'pin' => $this->perfilPin2,
+                'availability' => 'OCUPADO'
+            ]);
             $perfil2->save();
-            // PONER EL PERFIL 3 EN OCUPADO
-            $perfil3->availability = 'OCUPADO';
+
+            $perfil3 = Profile::find($this->perfil3id);
+            $perfil3->update([
+                'nameprofile' => $this->perfilNombre3,
+                'pin' => $this->perfilPin3,
+                'availability' => 'OCUPADO'
+            ]);
             $perfil3->save();
 
             /* CREAR EL PLAN */
@@ -1069,33 +1062,24 @@ class PlanesController extends Component
             ]);
 
             /* MODIFICAR REGISTRO ACCONNTPROFILE Y DARLE EL ID DEL PLAN*/
-            foreach ($perfil1->CuentaPerfil as  $value) {
-                if ($value->status == 'SinAsignar') {
-                    $cuentaPerfil = $value;
-                    $cuentaPerfil->plan_id = $plan->id;
-                    $cuentaPerfil->status = 'ACTIVO';
-                    $cuentaPerfil->COMBO = 'PERFIL1';
-                    $cuentaPerfil->save();
-                }
-            }
-            foreach ($perfil2->CuentaPerfil as  $value) {
-                if ($value->status == 'SinAsignar') {
-                    $cuentaPerfil2 = $value;
-                    $cuentaPerfil2->plan_id = $plan->id;
-                    $cuentaPerfil2->status = 'ACTIVO';
-                    $cuentaPerfil2->COMBO = 'PERFIL2';
-                    $cuentaPerfil2->save();
-                }
-            }
-            foreach ($perfil3->CuentaPerfil as  $value) {
-                if ($value->status == 'SinAsignar') {
-                    $cuentaPerfil3 = $value;
-                    $cuentaPerfil3->plan_id = $plan->id;
-                    $cuentaPerfil3->status = 'ACTIVO';
-                    $cuentaPerfil3->COMBO = 'PERFIL3';
-                    $cuentaPerfil3->save();
-                }
-            }
+            $accountProfile1 = AccountProfile::find($this->selected_accountProf1);
+            $accountProfile1->plan_id = $plan->id;
+            $accountProfile1->status = 'ACTIVO';
+            $accountProfile1->COMBO = 'PERFIL1';
+            $accountProfile1->save();
+
+            $accountProfile2 = AccountProfile::find($this->selected_accountProf2);
+            $accountProfile2->plan_id = $plan->id;
+            $accountProfile2->status = 'ACTIVO';
+            $accountProfile2->COMBO = 'PERFIL2';
+            $accountProfile2->save();
+
+            $accountProfile3 = AccountProfile::find($this->selected_accountProf3);
+            $accountProfile3->plan_id = $plan->id;
+            $accountProfile3->status = 'ACTIVO';
+            $accountProfile3->COMBO = 'PERFIL3';
+            $accountProfile3->save();
+
             if ($this->tipopago == 'EFECTIVO') {
                 $cajaFisica = Cartera::where('tipo', 'CajaFisica')
                     ->where('caja_id', $cccc->id)->get()->first();
@@ -1104,44 +1088,6 @@ class PlanesController extends Component
                     'tipoDeMovimiento' => 'STREAMING',
                     'comentario' => '',
                     'cartera_id' => $cajaFisica->id,
-                    'movimiento_id' => $mv->id
-                ]);
-                $tigoStreaming = Cartera::where('tipo', 'TigoStreaming')
-                    ->where('caja_id', '1')->get()->first();
-                CarteraMov::create([
-                    'type' => 'INGRESO',
-                    'tipoDeMovimiento' => 'STREAMING',
-                    'comentario' => '',
-                    'cartera_id' => $tigoStreaming->id,
-                    'movimiento_id' => $mv->id
-                ]);
-                $carteraTelefono = Cartera::where('tipo', 'Telefono')
-                    ->where('caja_id', $cccc->id)->get()->first();
-                CarteraMov::create([
-                    'type' => 'EGRESO',
-                    'tipoDeMovimiento' => 'STREAMING',
-                    'comentario' => '',
-                    'cartera_id' => $carteraTelefono->id,
-                    'movimiento_id' => $mv->id
-                ]);
-            } elseif ($this->tipopago == 'Banco') {
-                $banco = Cartera::where('tipo', 'Banco')
-                    ->where('caja_id', '1')->get()->first();
-                CarteraMov::create([
-                    'type' => 'INGRESO',
-                    'tipoDeMovimiento' => 'STREAMING',
-                    'comentario' => '',
-                    'cartera_id' => $banco->id,
-                    'movimiento_id' => $mv->id
-                ]);
-            } else {
-                $tigoStreaming = Cartera::where('tipo', 'TigoStreaming')
-                    ->where('caja_id', '1')->get()->first();
-                CarteraMov::create([
-                    'type' => 'INGRESO',
-                    'tipoDeMovimiento' => 'STREAMING',
-                    'comentario' => '',
-                    'cartera_id' => $tigoStreaming->id,
                     'movimiento_id' => $mv->id
                 ]);
             }
@@ -1269,7 +1215,7 @@ class PlanesController extends Component
                     $accp->availability = 'OCUPADO';
                     $accp->save();
 
-                    $date_now = date('Y-m-d', time());
+                    $date_now = date("Y-m-d H:i");
 
                     CuentaInversion::create([
                         'tipo' => 'INGRESO',
@@ -1316,7 +1262,7 @@ class PlanesController extends Component
                             'cartera_id' => $cajaFisica->id,
                             'movimiento_id' => $mv->id
                         ]);
-                        $tigoStreaming = Cartera::where('tipo', 'TigoStreaming')
+                        /* $tigoStreaming = Cartera::where('tipo', 'TigoStreaming')
                             ->where('caja_id', '1')->get()->first();
                         CarteraMov::create([
                             'type' => 'INGRESO',
@@ -1333,8 +1279,8 @@ class PlanesController extends Component
                             'comentario' => '',
                             'cartera_id' => $carteraTelefono->id,
                             'movimiento_id' => $mv->id
-                        ]);
-                    } elseif ($this->tipopago == 'Banco') {
+                        ]); */
+                    } /* elseif ($this->tipopago == 'Banco') {
                         $banco = Cartera::where('tipo', 'Banco')
                             ->where('caja_id', '1')->get()->first();
                         CarteraMov::create([
@@ -1354,7 +1300,7 @@ class PlanesController extends Component
                             'cartera_id' => $tigoStreaming->id,
                             'movimiento_id' => $mv->id
                         ]);
-                    }
+                    } */
                     ClienteMov::create([
                         'movimiento_id' => $mv->id,
                         'cliente_id' => $cliente->id
@@ -1381,7 +1327,7 @@ class PlanesController extends Component
                             $account->whole_account = 'DIVIDIDA';
                             $account->save();
 
-                            $date_now = date('Y-m-d', time());
+                            $date_now = date("Y-m-d H:i");
 
                             CuentaInversion::create([
                                 'tipo' => 'INGRESO',
@@ -1420,6 +1366,7 @@ class PlanesController extends Component
                         $plan->save();
                     }
 
+                    /* crear plan account  */
                     foreach ($accp->CuentaPerfil as  $value) {
                         if ($value->status == 'SinAsignar') {
                             PlanAccount::create([
@@ -1430,9 +1377,9 @@ class PlanesController extends Component
                         }
                     }
 
+                    /* MODIFICAR REGISTRO ACCONNTPROFILE Y DARLE EL ID DEL PLAN*/
                     foreach ($accp->CuentaPerfil as  $value) {
                         if ($value->status == 'SinAsignar') {
-                            /* MODIFICAR REGISTRO ACCONNTPROFILE Y DARLE EL ID DEL PLAN*/
                             $cuentaPerfil = $value;
                             $cuentaPerfil->plan_id = $plan->id;
                             $cuentaPerfil->status = 'ACTIVO';
@@ -1448,44 +1395,6 @@ class PlanesController extends Component
                             'tipoDeMovimiento' => 'STREAMING',
                             'comentario' => '',
                             'cartera_id' => $cajaFisica->id,
-                            'movimiento_id' => $mv->id
-                        ]);
-                        $tigoStreaming = Cartera::where('tipo', 'TigoStreaming')
-                            ->where('caja_id', '1')->get()->first();
-                        CarteraMov::create([
-                            'type' => 'INGRESO',
-                            'tipoDeMovimiento' => 'STREAMING',
-                            'comentario' => '',
-                            'cartera_id' => $tigoStreaming->id,
-                            'movimiento_id' => $mv->id
-                        ]);
-                        $carteraTelefono = Cartera::where('tipo', 'Telefono')
-                            ->where('caja_id', $cccc->id)->get()->first();
-                        CarteraMov::create([
-                            'type' => 'EGRESO',
-                            'tipoDeMovimiento' => 'STREAMING',
-                            'comentario' => '',
-                            'cartera_id' => $carteraTelefono->id,
-                            'movimiento_id' => $mv->id
-                        ]);
-                    } elseif ($this->tipopago == 'Banco') {
-                        $banco = Cartera::where('tipo', 'Banco')
-                            ->where('caja_id', '1')->get()->first();
-                        CarteraMov::create([
-                            'type' => 'INGRESO',
-                            'tipoDeMovimiento' => 'STREAMING',
-                            'comentario' => '',
-                            'cartera_id' => $banco->id,
-                            'movimiento_id' => $mv->id
-                        ]);
-                    } else {
-                        $tigoStreaming = Cartera::where('tipo', 'TigoStreaming')
-                            ->where('caja_id', '1')->get()->first();
-                        CarteraMov::create([
-                            'type' => 'INGRESO',
-                            'tipoDeMovimiento' => 'STREAMING',
-                            'comentario' => '',
-                            'cartera_id' => $tigoStreaming->id,
                             'movimiento_id' => $mv->id
                         ]);
                     }
@@ -1984,18 +1893,12 @@ class PlanesController extends Component
 
     public function resetUI()
     {
-        $this->selected_id = 0;
-        $this->hora = date("d-m-Y H:i:s ");
-        $this->status = 'Vigente';
         $this->plataforma = 'Elegir';
         $this->cuentaperfil = 'Elegir';
-        $this->cantidaperf = 1;
         $this->nombre = '';
         $this->celular = '';
         $this->nit = 0;
         $this->importe = '';
-        $this->condicion = 0;
-        $this->select = 1;
         $this->mostrartabla = 0;
         $this->tipopago = 'EFECTIVO';
         $this->meses = 1;

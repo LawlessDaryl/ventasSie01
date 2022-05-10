@@ -24,7 +24,7 @@ class UsersController extends Component
     public $name, $phone, $email, $image, $password, $selected_id, $fileLoaded, $profile,
         $sucursal_id, $fecha_inicio, $fechafin, $idsucursalUser, $details, $sucurid, $sucurname;
     public $pageTitle, $componentName, $search, $sucur;
-    private $pagination = 5;
+    private $pagination = 10;
 
     public function paginationView()
     {
@@ -48,10 +48,10 @@ class UsersController extends Component
     {
         if (strlen($this->search) > 0) {
             $data = User::where('name', 'like', '%' . $this->search . '%')
-                ->orderBy('id', 'asc')
+                ->orderBy('name', 'asc')
                 ->paginate($this->pagination);
         } else {
-            $data = User::orderBy('id', 'asc')
+            $data = User::orderBy('name', 'asc')
                 ->paginate($this->pagination);
         }
 
@@ -106,7 +106,6 @@ class UsersController extends Component
 
         DB::beginTransaction();
         try {   /* REGISTRO DEL USUARIO "DOS TABLAS" */
-
             $user = User::create([
                 'name' => $this->name,
                 'email' => $this->email,
@@ -217,24 +216,25 @@ class UsersController extends Component
 
     public function destroy(User $user)
     {
-        if ($user) {
-            $sales = Sale::where('user_id', $user->id)->count();
+        $eliminarSucUsers = SucursalUser::join('users as u', 'u.id', 'sucursal_users.user_id')
+            ->select('sucursal_users.*')
+            ->where('u.id', $user->id)
+            ->get();
 
-            if ($sales > 0) {
-                $this->emit('user-withsales', 'No es posible eliminar el usuario porque tiene ventas o transacciones registradas');
-            } else {
-                $user->delete();
-
-                $imageName = $user->image;
-
-                if ($imageName != null) {
-                    unlink('storage/usuarios/' . $imageName);
-                }
-
-                $this->resetUI();
-                $this->emit('item-deleted', 'Usuario Eliminado');
-            }
+        foreach ($eliminarSucUsers as $value) {
+            $value->delete();
         }
+
+        $user->delete();
+
+        $imageName = $user->image;
+
+        if ($imageName != null) {
+            unlink('storage/usuarios/' . $imageName);
+        }
+
+        $this->resetUI();
+        $this->emit('item-deleted', 'Usuario Eliminado');
     }
     /* VENTANA MODAL DE HISTORIAL DEL USUARIO */
     public function viewDetails(User $user)
@@ -267,31 +267,38 @@ class UsersController extends Component
     public function Cambiar()
     {
         $DateAndTime = date('Y-m-d H:i:s', time());
-        if ($this->sucursalUsuario != $this->sucursalDelUsuario) {
-            /* CREAR NUEVO SUCURSAL_USER */
-            SucursalUser::create([
-                'user_id' => $this->selected_id,
-                'sucursal_id' => $this->sucursalUsuario,
-                'estado' => 'ACTIVO',
-                'fecha_fin' => null,
-            ]);
-
-            /* EDITAR ANTERIOR SUCURSAL_USER, PONIENDO FECHA FIN O NO SEGUN EL CASO */
-            $su = SucursalUser::find($this->sucursalUserUsuario);
-            if ($su->fecha_fin == null) {
-                $su->update([
-                    'estado' => 'FINALIZADO',
-                    'fecha_fin' => $DateAndTime
+        DB::beginTransaction();
+        try {
+            if ($this->sucursalUsuario != $this->sucursalDelUsuario) {
+                /* CREAR NUEVO SUCURSAL_USER */
+                SucursalUser::create([
+                    'user_id' => $this->selected_id,
+                    'sucursal_id' => $this->sucursalUsuario,
+                    'estado' => 'ACTIVO',
+                    'fecha_fin' => null,
                 ]);
+
+                /* EDITAR ANTERIOR SUCURSAL_USER, PONIENDO FECHA FIN O NO SEGUN EL CASO */
+                $su = SucursalUser::find($this->sucursalUserUsuario);
+                if ($su->fecha_fin == null) {
+                    $su->update([
+                        'estado' => 'FINALIZADO',
+                        'fecha_fin' => $DateAndTime
+                    ]);
+                }
+
+                $usuario = User::find($this->selected_id);
+                $usuario->update([
+                    'status' => 'ACTIVE',
+                ]);
+                $usuario->save();
             }
-
-            $usuario = User::find($this->selected_id);
-            $usuario->update([
-                'status' => 'ACTIVE',
-            ]);
-            $usuario->save();
-
+            DB::commit();
+            $this->resetUI();
             $this->emit('sucursal-actualizada', 'Se cambió al usuario de sucursal');
+        } catch (Exception $e) {
+            DB::rollback();
+            $this->emit('item-error', 'El usuario ya fue cambiado');
         }
     }
     public function Activar()

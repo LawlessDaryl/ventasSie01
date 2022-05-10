@@ -51,7 +51,7 @@
                                         <h6 class="text-center">
                                             @foreach ($r->sucursalusers as $su)
                                                 @if ($su->estado == 'ACTIVO')
-                                                    {{ $su->sucursal->name }}                                                    
+                                                    {{ $su->sucursal->name }}
                                                 @endif
                                             @endforeach
                                         </h6>
@@ -69,14 +69,13 @@
                                             <i class="fas fa-edit"></i>
                                         </a>
 
-                                        {{-- <a href="javascript:void(0)"
-                                            onclick="Confirm('{{ $r->id }}','{{ $suID }}')"
+                                        <a href="javascript:void(0)"
+                                            onclick="Confirm('{{ $r->id }}','{{ $r->name }}','{{ $r->movimientos->count() }}')"
                                             class="btn btn-dark" title="Delete">
                                             <i class="fas fa-trash"></i>
-                                        </a> --}}
+                                        </a>
 
-                                        <button
-                                            wire:click.prevent="viewDetails('{{ $r->id }}')"
+                                        <button wire:click.prevent="viewDetails('{{ $r->id }}')"
                                             class="btn btn-dark">
                                             <i class="fas fa-list"></i>
                                         </button>
@@ -136,7 +135,15 @@
         })
     });
 
-    function Confirm(id, sucursalUser) {
+    function Confirm(id, name, movimientos) {
+        if (movimientos > 0) {
+            swal.fire({
+                title: 'PRECAUCION',
+                icon: 'warning',
+                text: 'No se puede eliminar al usuario "' + name + '" porque tiene varios movimientos.'
+            })
+            return;
+        }
         swal.fire({
             title: 'CONFIRMAR',
             icon: 'warning',
@@ -148,7 +155,7 @@
             confirmButtonText: 'Aceptar'
         }).then(function(result) {
             if (result.value) {
-                window.livewire.emit('deleteRow', id, sucursalUser)
+                window.livewire.emit('deleteRow', id)
                 Swal.close()
             }
         })

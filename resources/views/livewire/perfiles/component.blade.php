@@ -240,7 +240,7 @@
                                             @endphp
                                         </td>
                                         <td class="text-center">
-                                            <h6 class="text-center" style="font-size: 80%">
+                                            <h6 class="text-center">
                                                 @if ($condicional == 'combos')
                                                     @foreach ($p->PlanAccounts as $item)
                                                         @if ($item->status == 'ACTIVO')
@@ -278,7 +278,7 @@
                                             </h6>
                                         </td>
                                         <td class="text-center">
-                                            <h6 class="text-center" style="font-size: 80%">
+                                            <h6 class="text-center">
                                                 @if ($condicional == 'combos')
                                                     @foreach ($p->PlanAccounts as $item)
                                                         @if ($item->status == 'ACTIVO')
@@ -343,10 +343,10 @@
                                             </h6>
                                         </td>
                                         <td class="text-center">
-                                            <h6 class="text-center" style="font-size: 80%">{{ $p->importe }}</h6>
+                                            <h6 class="text-center">{{ $p->importe }}</h6>
                                         </td>
                                         <td class="text-center">
-                                            <h6 class="text-center" style="font-size: 80%">
+                                            <h6 class="text-center">
                                                 {{ \Carbon\Carbon::parse($p->plan_start)->format('d/m/Y') }} </h6>
                                         </td>
                                         <td class="text-center"
@@ -356,7 +356,7 @@
                                                                 @else
                                                                 style="background-color: #FF0000 !important" @endif
                                             @endif>
-                                            <h6 class="text-center" style="font-size: 80%">
+                                            <h6 class="text-center">
                                                 {{ \Carbon\Carbon::parse($p->expiration_plan)->format('d/m/Y') }}
                                             </h6>
                                         </td>
