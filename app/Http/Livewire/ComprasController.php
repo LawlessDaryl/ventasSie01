@@ -68,9 +68,6 @@ class ComprasController extends Component
             ->orWhere('compras.created_at', 'like', '%' . $this->search . '%')
             ->orWhere('compras.status', 'like', '%' . $this->search . '%')
             ->get();
-
-          
-
             $this->totales = $this->datas_compras->sum('importe_total');
 
 

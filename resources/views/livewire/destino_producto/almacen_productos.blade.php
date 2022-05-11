@@ -67,7 +67,8 @@
                                         <h6 class="text-center">{{ $loop->iteration}}</h6>
                                     </td>
                                     <td>
-                                        <h6 class="text-center">{{ $destino->name}}</h6>
+                                        <h6 class="text-center">{{ $destino->name }}</h6>
+                                     
                                     </td>
                                     @if ($selected_id == 'General' || $selected_id == null)
                                     <td>

@@ -370,13 +370,15 @@
  </div>
  <script>
      document.addEventListener('DOMContentLoaded', function() {
- 
          window.livewire.on('show-modal', msg => {
              $('#modal_prov').modal('show')
          });
          window.livewire.on('prov_added', msg => {
-
              $('#modal_prov').modal('hide')
+             noty(Msg)
+         });
+         window.livewire.on('products_added', msg => {
+            $('#theModal').modal('hide')
              noty(Msg)
          });
          window.livewire.on('empty_cart', msg => {

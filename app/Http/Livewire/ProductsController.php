@@ -50,7 +50,7 @@ class ProductsController extends Component
 
     public function render()
     {
-     
+     /**sssssssss */
        if ($this->selected_categoria !== null ) {
           
         if ($this->selected_sub == null) {
@@ -133,7 +133,7 @@ class ProductsController extends Component
     {
         if ($this->categoryid === null) 
         {
-            $this->categoryid =$this->selected_id2;
+            $this->categoryid = $this->selected_id2;
         }
         $rules = [
             'nombre' => 'required|unique:products|min:5',
@@ -184,8 +184,7 @@ class ProductsController extends Component
     }
     public function Edit(Product $product)
     {
-        
-       
+
         if($product->category->categoria_padre === 0)
         { $this->selected_id2 = $product->category_id;
           $this->categoryid = "null";

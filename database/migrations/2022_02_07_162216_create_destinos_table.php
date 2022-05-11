@@ -17,7 +17,8 @@ class CreateDestinosTable extends Migration
             $table->id();
             $table->string('nombre',100);
             $table->string('observacion',100)->nullable();
-            $table->foreignId('sucursal_id')->constrained();
+            $table->unsignedBigInteger('sucursal_id');
+            $table->foreign('sucursal_id')->references('id')->on('sucursals');
             $table->timestamps();
         });
     }
