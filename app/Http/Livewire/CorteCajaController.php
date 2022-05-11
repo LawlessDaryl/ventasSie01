@@ -90,7 +90,7 @@ class CorteCajaController extends Component
         $this->carteras = Cartera::where('caja_id', $caja->id)
             ->orWhere('caja_id', '1')   //orwhere para mostrar las carteras compartidas de la sucursal central
             ->select('id', 'nombre', 'descripcion', DB::raw('0 as monto'))->get();
-            
+
         foreach ($this->carteras as $c) {
             /* SUMAR TODO LOS INGRESOS DE LA CARTERA */
             $MONTO = Cartera::join('cartera_movs as cm', 'carteras.id', 'cm.cartera_id')
@@ -148,6 +148,7 @@ class CorteCajaController extends Component
         $this->habilitado = 1;
 
         session(['sesionCaja' => $caja->nombre]);
+        session(['sesionCajaID' => $caja->id]);
 
         $this->emit('caja_funcion', 'Corte de caja Apertura realizado Exitosamente');
         $this->redirect('cortecajas');
@@ -188,7 +189,10 @@ class CorteCajaController extends Component
         ]);
         $caja->save();
         $this->habilitado = 0;
+
         session(['sesionCaja' => null]);
+        session(['sesionCajaID' => null]);
+
         $this->emit('caja_funcion', 'Corte de caja CIERRE realizado Exitosamente');
         $this->redirect('cortecajas');
     }

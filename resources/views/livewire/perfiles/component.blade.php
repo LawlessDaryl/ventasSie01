@@ -537,6 +537,99 @@
         })
     }
 
+    function ConfirmRenovarCombo(nombreCliente) {
+        swal.fire({
+            title: 'CONFIRMAR',
+            icon: 'warning',
+            text: 'Confirmar RENOVAR el combo del cliente ' + '"' + nombreCliente + '"',
+            showCancelButton: true,
+            cancelButtonText: 'Cerrar',
+            cancelButtonColor: '#383838',
+            confirmButtonColor: '#3B3F5C',
+            confirmButtonText: 'Aceptar'
+        }).then(function(result) {
+            if (result.value) {
+                window.livewire.emit('RenovarCombo')
+                Swal.close()
+            }
+        })
+    }
+
+    function ConfirmVencerCombo(nombreCliente) {
+        swal.fire({
+            title: 'CONFIRMAR',
+            icon: 'warning',
+            text: 'Confirmar VENCER el combo del cliente ' + '"' + nombreCliente + '"',
+            showCancelButton: true,
+            cancelButtonText: 'Cerrar',
+            cancelButtonColor: '#383838',
+            confirmButtonColor: '#3B3F5C',
+            confirmButtonText: 'Aceptar'
+        }).then(function(result) {
+            if (result.value) {
+                window.livewire.emit('VencerCombo')
+                Swal.close()
+            }
+        })
+    }
+
+    function CambiardeCuentaPerf1(id, plataforma, cuenta) {
+        swal.fire({
+            title: 'CONFIRMAR',
+            icon: 'warning',
+            text: 'Confirmar cambiar el perfil de la plataforma ' + plataforma + ' a la cuenta ' + cuenta +
+                '?',
+            showCancelButton: true,
+            cancelButtonText: 'Cerrar',
+            cancelButtonColor: '#383838',
+            confirmButtonColor: '#3B3F5C',
+            confirmButtonText: 'Aceptar'
+        }).then(function(result) {
+            if (result.value) {
+                window.livewire.emit('SeleccionarCuenta1', id)
+                Swal.close()
+            }
+        })
+    }
+
+    function CambiardeCuentaPerf2(id, plataforma, cuenta) {
+        swal.fire({
+            title: 'CONFIRMAR',
+            icon: 'warning',
+            text: 'Confirmar cambiar el perfil de la plataforma ' + plataforma + ' a la cuenta ' + cuenta +
+                '?',
+            showCancelButton: true,
+            cancelButtonText: 'Cerrar',
+            cancelButtonColor: '#383838',
+            confirmButtonColor: '#3B3F5C',
+            confirmButtonText: 'Aceptar'
+        }).then(function(result) {
+            if (result.value) {
+                window.livewire.emit('SeleccionarCuenta2', id)
+                Swal.close()
+            }
+        })
+    }
+
+    function CambiardeCuentaPerf3(id, plataforma, cuenta) {
+        swal.fire({
+            title: 'CONFIRMAR',
+            icon: 'warning',
+            text: 'Confirmar cambiar el perfil de la plataforma ' + plataforma + ' a la cuenta ' + cuenta +
+                '?',
+            showCancelButton: true,
+            cancelButtonText: 'Cerrar',
+            cancelButtonColor: '#383838',
+            confirmButtonColor: '#3B3F5C',
+            confirmButtonText: 'Aceptar'
+        }).then(function(result) {
+            if (result.value) {
+                window.livewire.emit('SeleccionarCuenta3', id)
+                Swal.close()
+            }
+        })
+    }
+
     function Confirm(id, name) {
         swal.fire({
             title: 'CONFIRMAR',

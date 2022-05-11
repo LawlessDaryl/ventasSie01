@@ -27,12 +27,13 @@ class PerfilesController extends Component
 {
     use WithPagination;
     use WithFileUploads;
-    public $nameperfil, $pin, $status, $availability, $observations,
-        $search, $selected_id, $pageTitle, $componentName, $condicional = 'ocupados',
-        $meses, $expirationNueva, $expirationPlanActual, $tipopago, $importe,
-        $mostrartabla2, $perfil, $selected_plan, $nombreCliente, $celular, $cuentasEnteras,
-        $nombrePerfil, $pinPerfil, $datos, $perfil1COMBO, $perfil2COMBO, $perfil3COMBO, $PIN1COMBO, $PIN2COMBO, $PIN3COMBO,
-        $plataforma1Nombre, $plataforma2Nombre, $plataforma3Nombre, $perfil1ID, $perfil2ID, $perfil3ID;
+
+    public $nameperfil, $pin, $status, $availability, $observations, $search, $selected_id,
+        $pageTitle, $componentName, $condicional = 'ocupados', $meses, $expirationNueva,
+        $expirationPlanActual, $tipopago, $importe, $mostrartabla2, $perfil, $selected_plan,
+        $nombreCliente, $celular, $cuentasEnteras, $nombrePerfil, $pinPerfil, $datos, $perfil1COMBO,
+        $perfil2COMBO, $perfil3COMBO, $PIN1COMBO, $PIN2COMBO, $PIN3COMBO, $plataforma1Nombre,
+        $plataforma2Nombre, $plataforma3Nombre, $perfil1ID, $perfil2ID, $perfil3ID;
 
     private $pagination = 10;
 
@@ -1785,7 +1786,6 @@ class PerfilesController extends Component
         }
     }
 
-
     // renovacion vencimiento y cambiar de cuenta de perfil
     public function Acciones(Profile $profile, AccountProfile $accountPRO, Account $cuenta, PlanAccount $planAccount, Plan $plan, Cliente $cliente, Platform $plataforma)
     {
@@ -2225,7 +2225,12 @@ class PerfilesController extends Component
         'deleteRow' => 'Destroy',
         'Vencer' => 'Vencer',
         'Realizado' => 'Realizado',
-        'SeleccionarCuenta' => 'SeleccionarCuenta'
+        'SeleccionarCuenta' => 'SeleccionarCuenta',
+        'RenovarCombo' => 'RenovarCombo',
+        'VencerCombo' => 'VencerCombo',
+        'SeleccionarCuenta1' => 'SeleccionarCuenta1',
+        'SeleccionarCuenta2' => 'SeleccionarCuenta2',
+        'SeleccionarCuenta3' => 'SeleccionarCuenta3',
     ];
 
     public function Realizado(Plan $plan)

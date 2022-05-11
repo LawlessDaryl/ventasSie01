@@ -6,7 +6,9 @@ use App\Models\Caja;
 use App\Models\Cartera;
 use App\Models\CarteraMov;
 use App\Models\Movimiento;
+use App\Models\Transaccion;
 use App\Models\User;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
@@ -132,6 +134,36 @@ class ReporteMovimientoController extends Component
                 ->where('crms.tipoDeMovimiento', $this->opciones)
                 ->orderBy('movimientos.id', 'desc')
                 ->get();
+        }
+    }
+    public function EliminarTigoMoney()
+    {
+        DB::beginTransaction();
+        try {
+            $transacciones = Transaccion::orderBy('id', 'desc')->get();
+
+            foreach ($transacciones as $transac) {
+                foreach ($transac->movTransac as $value) {
+                    foreach ($value->Movimiento->cartmov as $value2) {
+                        $carteraMov = $value2;
+                        $carteraMov->delete();
+                    }
+                    $clientemov = $value->Movimiento->climov;
+                    if ($clientemov) {
+                        $clientemov->delete();
+                    }
+                    $value->delete();
+                    $value->Movimiento->delete();
+                }
+                $transac->delete();
+            }
+
+            DB::commit();
+            $this->resetUI();
+            $this->emit('tigo-delete', 'Se eliminaron las transacciones tigo money');
+        } catch (Exception $e) {
+            DB::rollback();
+            $this->emit('item-error', 'ERROR' . $e->getMessage());
         }
     }
     /* ABRIR MODAL */

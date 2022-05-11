@@ -9,5 +9,10 @@ class MovTransac extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['movimiento_id','transaccion_id'];
+    protected $fillable = ['movimiento_id', 'transaccion_id'];
+
+    public function Movimiento()
+    {
+        return $this->belongsTo(Movimiento::class);
+    }
 }

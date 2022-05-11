@@ -156,6 +156,8 @@ class PlanesController extends Component
             ->where('mov.type', 'APERTURA')
             ->select('cajas.id as id')
             ->get()->first();
+        
+        /* dd((session('sesionCajaID'))); */
 
         /* MOSTRAR CARTERAS DE LA CAJA EN LA QUE SE ENCUENTRA */
         $carterasCaja = Cartera::where('caja_id', $cajausuario->id)
@@ -769,6 +771,7 @@ class PlanesController extends Component
         $this->arrayCuentas = array_unique($this->arrayCuentas);
         $this->accounts = Account::find($this->arrayCuentas);
     }
+    
     /* ELIMINAR CUENTA DEL ARREGLO */
     public function QuitarCuenta(Account $cuenta)
     {

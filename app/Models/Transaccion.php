@@ -10,4 +10,9 @@ class Transaccion extends Model
     use HasFactory;
 
     protected $fillable = ['codigo_transf', 'importe', 'observaciones', 'estado', 'telefono', 'ganancia', 'origen_motivo_id'];
+
+    public function movTransac()
+    {
+        return $this->hasMany(MovTransac::class);
+    }
 }

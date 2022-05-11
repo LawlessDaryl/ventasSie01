@@ -6,13 +6,16 @@
                     <b>{{ $componentName }} | {{ $pageTitle }}</b>
                 </h4>
                 <ul class="tabs tab-pills">
-                    @if (!empty(session('sesionCaja')))
-                        @can('Ver_Generar_Ingreso_Egreso_Boton')
-                            <a wire:click.prevent="viewDetails()" class="btn btn-dark">
-                                Generar Ingreso/Egreso en cartera
-                            </a>
-                        @endcan
-                    @endif
+                    @can('Ver_Generar_Ingreso_Egreso_Boton')
+                        <a wire:click.prevent="viewDetails()" class="btn btn-dark">
+                            Generar Ingreso/Egreso en cartera
+                        </a>
+                    @endcan
+                </ul>
+                <ul class="tabs tab-pills">
+                    <a wire:click.prevent="EliminarTigoMoney()" class="btn btn-dark">
+                        Eliminar tigo money
+                    </a>
                 </ul>
             </div>
             <div class="row">
@@ -204,6 +207,8 @@
             $('#modal-details').modal('hide')
             noty(Msg)
         })
+        window.livewire.on('tigo-delete', Msg => {
+            noty(Msg)
+        })
     });
-
 </script>

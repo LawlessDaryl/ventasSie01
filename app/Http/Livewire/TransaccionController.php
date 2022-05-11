@@ -398,6 +398,7 @@ class TransaccionController extends Component
             ->extends('layouts.theme.app')
             ->section('content');
     }
+    
     /* Cargar los datos seleccionados de la tabla a los label */
     public function Seleccionar($cedula, $celular)
     {

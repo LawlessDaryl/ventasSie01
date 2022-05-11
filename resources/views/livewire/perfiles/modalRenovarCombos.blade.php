@@ -21,21 +21,20 @@
                     <div class="col-sm-12 col-md-4">
                         <div class="form-group">
                             <h6>NOMBRE PERFIL</h6>
-                            <input type="text" wire:model="perfil1COMBO" class="form-control">
-
-                            @error('nombreCliente')
-                                <span class="text-danger er">{{ $message }}</span>
-                            @enderror
+                            <h6 class="form-control"><strong>
+                                    {{ $perfil1COMBO }}
+                                </strong>
+                            </h6>
                         </div>
                     </div>
 
                     <div class="col-sm-12 col-md-4">
                         <div class="form-group">
                             <h6>PIN PERFIL</h6>
-                            <input type="text" wire:model="PIN1COMBO" class="form-control">
-                            @error('celular')
-                                <span class="text-danger er">{{ $message }}</span>
-                            @enderror
+                            <h6 class="form-control"><strong>
+                                    {{ $PIN1COMBO }}
+                                </strong>
+                            </h6>
                         </div>
                     </div>
 
@@ -108,7 +107,7 @@
                                                                 <td class="text-center">
                                                                     <h6 class="text-center">
                                                                         <a href="javascript:void(0)"
-                                                                            wire:click="SeleccionarCuenta1('{{ $item->id }}')"
+                                                                            onclick="CambiardeCuentaPerf1('{{ $item->id }}','{{ $plataforma1Nombre }}','{{ $item->account_name }}')"
                                                                             class="btn btn-dark mtmobile"
                                                                             title="Seleccionar">
                                                                             <i class="fas fa-check"></i>
@@ -142,20 +141,20 @@
                     <div class="col-sm-12 col-md-4">
                         <div class="form-group">
                             <h6>NOMBRE PERFIL</h6>
-                            <input type="text" wire:model="perfil2COMBO" class="form-control">
-                            @error('nombreCliente')
-                                <span class="text-danger er">{{ $message }}</span>
-                            @enderror
+                            <h6 class="form-control"><strong>
+                                    {{ $perfil2COMBO }}
+                                </strong>
+                            </h6>
                         </div>
                     </div>
 
                     <div class="col-sm-12 col-md-4">
                         <div class="form-group">
                             <h6>PIN PERFIL</h6>
-                            <input type="text" wire:model="PIN2COMBO" class="form-control">
-                            @error('celular')
-                                <span class="text-danger er">{{ $message }}</span>
-                            @enderror
+                            <h6 class="form-control"><strong>
+                                    {{ $PIN2COMBO }}
+                                </strong>
+                            </h6>
                         </div>
                     </div>
 
@@ -228,7 +227,7 @@
                                                                 <td class="text-center">
                                                                     <h6 class="text-center">
                                                                         <a href="javascript:void(0)"
-                                                                            wire:click="SeleccionarCuenta2('{{ $item->id }}')"
+                                                                            onclick="CambiardeCuentaPerf2('{{ $item->id }}','{{ $plataforma2Nombre }}','{{ $item->account_name }}')"
                                                                             class="btn btn-dark mtmobile"
                                                                             title="Seleccionar">
                                                                             <i class="fas fa-check"></i>
@@ -262,20 +261,20 @@
                     <div class="col-sm-12 col-md-4">
                         <div class="form-group">
                             <h6>NOMBRE PERFIL</h6>
-                            <input type="text" wire:model="perfil3COMBO" class="form-control">
-                            @error('nombreCliente')
-                                <span class="text-danger er">{{ $message }}</span>
-                            @enderror
+                            <h6 class="form-control"><strong>
+                                    {{ $perfil3COMBO }}
+                                </strong>
+                            </h6>
                         </div>
                     </div>
 
                     <div class="col-sm-12 col-md-4">
                         <div class="form-group">
                             <h6>PIN PERFIL</h6>
-                            <input type="text" wire:model="PIN3COMBO" class="form-control">
-                            @error('celular')
-                                <span class="text-danger er">{{ $message }}</span>
-                            @enderror
+                            <h6 class="form-control"><strong>
+                                    {{ $PIN3COMBO }}
+                                </strong>
+                            </h6>
                         </div>
                     </div>
 
@@ -348,7 +347,7 @@
                                                                 <td class="text-center">
                                                                     <h6 class="text-center">
                                                                         <a href="javascript:void(0)"
-                                                                            wire:click="SeleccionarCuenta3('{{ $item->id }}')"
+                                                                            onclick="CambiardeCuentaPerf3('{{ $item->id }}','{{ $plataforma3Nombre }}','{{ $item->account_name }}')"
                                                                             class="btn btn-dark mtmobile"
                                                                             title="Seleccionar">
                                                                             <i class="fas fa-check"></i>
@@ -517,13 +516,13 @@
                     <div class="col-sm-12 col-md-4">
                         <div class="form-group text-center mt-4">
                             <a href="javascript:void(0)" class="btn btn-dark"
-                                wire:click.prevent="RenovarCombo()">Renovar combo</a>
+                                onclick="ConfirmRenovarCombo('{{ $nombreCliente }}')">Renovar combo</a>
                         </div>
                     </div>
                     <div class="col-sm-12 col-md-4">
                         <div class="form-group text-center mt-4">
                             <a href="javascript:void(0)" class="btn btn-dark"
-                                wire:click.prevent="VencerCombo()">Vencer combo</a>
+                                onclick="ConfirmVencerCombo('{{ $nombreCliente }}')">Vencer combo</a>
                         </div>
                     </div>
                 </div>
