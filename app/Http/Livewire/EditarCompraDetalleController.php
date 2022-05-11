@@ -24,19 +24,19 @@ use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
 
 
-use Darryldecode\Cart\Facades\ComprasFacade as Compras;
+use Darryldecode\Cart\Facades\EditarFacade as EditarCompra;
 use Exception;
 
-class DetalleComprasController extends Component
+class EditarCompraDetalleController extends Component
 {
 
     
     use WithPagination;
     use WithFileUploads;
     public  $nro_compra,$search,$provider,$fecha_compra,
-    $usuario,$metodo_pago,$pago_parcial=0,$tipo_documento,$nro_documento,$observacion
-    ,$selected_id,$descuento=0,$saldo=0,$subtotal,$cantidad_minima,
-    $estado_compra,$total_compra,$itemsQuantity,$price,$status,$tipo_transaccion,$destino,$porcentaje,$importe;
+    $usuario,$metodo_pago,$pago_parcial,$tipo_documento,$nro_documento,$observacion
+    ,$selected_id,$descuento=0,$saldo_por_pagar,$subtotal,$cantidad_minima,
+    $estado_compra,$total_compra,$itemsQuantity,$price,$status,$tipo_transaccion,$destino,$porcentaje;
 
     public $nombre_prov, $apellido_prov, $direccion_prov, $correo_prov,
     $telefono_prov;
@@ -44,10 +44,11 @@ class DetalleComprasController extends Component
     public $nombre,$costo, $precio_venta,$barcode,$codigo,$caracteristicas,$lote,$unidad, $marca, $garantia,$industria,
     $categoryid,$component,$selected_categoria,$image,$selected_id2;
 
-    private $pagination = 5;
    
-    public function mount()
+   
+    public function mount($id)
     {
+        dd($id);
         $this->componentName= "Compras";
         $this->fecha_compra = Carbon::now()->format('Y-m-d');
         $this->usuario = Auth()->user()->name;
@@ -59,7 +60,7 @@ class DetalleComprasController extends Component
         $this->tipo_documento = "FACTURA";
         $this->status = "ACTIVO";
         $this->total_compra= $this->subtotal-$this->descuento;
-        $this->subtotal = Compras::getTotal();
+        $this->subtotal = EditarCompra::getTotal();
         $this->porcentaje=0;
 
   
@@ -82,7 +83,7 @@ class DetalleComprasController extends Component
 //--------------------Select proveedor---------------------------//
        $data_provider= Provider::select('providers.*')->get();
         return view('livewire.compras.detalle_compra',['data_prod' => $prod,
-        'cart' => Compras::getContent()->sortBy('name'),
+        'cart' => EditarCompra::getContent()->sortBy('name'),
         'data_suc'=>$data_destino,
         'data_prov'=>$data_provider,
         'categories'=>Category::where('categories.categoria_padre',0)->orderBy('name', 'asc')->get(),
@@ -97,11 +98,11 @@ class DetalleComprasController extends Component
 
     public function increaseQty($productId, $cant = 1,$precio_compra = 0)
     {  
-        $title = 'aaa';
+    
         $product = Product::select('products.*')
         ->where('products.id',$productId)->first();
        
-        $exist = Compras::get($product->id);
+        $exist = EditarCompra::get($product->id);
 
         if ($exist) {
             $title = 'Cantidad actualizada';
@@ -125,13 +126,13 @@ class DetalleComprasController extends Component
 
         
         
-        Compras::add($products);
+        EditarCompra::add($products);
         // Compras::add($product->id, $product->name, $precio_compra, $cant);
         
-        $this->total = Compras::getTotal();
-        $this->itemsQuantity = Compras::getTotalQuantity();
+        $this->total = EditarCompra::getTotal();
+        $this->itemsQuantity = EditarCompra::getTotalQuantity();
         $this->emit('scan-ok', $title);
-         $this->subtotal = Compras::getTotal();
+         $this->subtotal = EditarCompra::getTotal();
          $this->total_compra= $this->subtotal-$this->descuento;
 
     }
@@ -184,7 +185,7 @@ class DetalleComprasController extends Component
         $product = Product::select('products.*')
         ->where('products.id',$productId)->first();
        
-        $exist = Compras::get($productId);
+        $exist = EditarCompra::get($productId);
         $prices=$exist->price;
         $precio_venta=$exist->attributes->precio;
         $codigo=$exist->attributes->codigo;
@@ -216,11 +217,11 @@ class DetalleComprasController extends Component
             );
     
 
-            Compras::add($products);
-            $this->subtotal = Compras::getTotal();
-            $this->itemsQuantity = Compras::getTotalQuantity();
+            EditarCompra::add($products);
+            $this->subtotal = EditarCompra::getTotal();
+            $this->itemsQuantity = EditarCompra::getTotalQuantity();
             $this->emit('scan-ok', $title);
-            $this->subtotal = Compras::getTotal();
+            $this->subtotal = EditarCompra::getTotal();
             $this->total_compra= $this->subtotal-$this->descuento;
 
         }
@@ -232,7 +233,7 @@ class DetalleComprasController extends Component
         $product = Product::select('products.*')
         ->where('products.id',$productId)->first();
        
-        $exist = Compras::get($productId);
+        $exist = EditarCompra::get($productId);
         $quantitys=$exist->quantity;
         $precio_venta=$exist->attributes->precio;
         $codigo=$exist->attributes->codigo;
@@ -243,8 +244,6 @@ class DetalleComprasController extends Component
             $title = "producto agregado";
         }
 
-     
-       
         $this->removeItem($productId);
        
         if ($price > 0) 
@@ -264,23 +263,23 @@ class DetalleComprasController extends Component
                 'attributes'=>$attributos
             );
     
-            Compras::add($products);
+            EditarCompra::add($products);
 
-            $this->subtotal = Compras::getTotal();
-            $this->itemsQuantity = Compras::getTotalQuantity();
+            $this->subtotal = EditarCompra::getTotal();
+            $this->itemsQuantity = EditarCompra::getTotalQuantity();
             $this->emit('scan-ok', $title);
-            $this->subtotal = Compras::getTotal();
+            $this->subtotal = EditarCompra::getTotal();
             $this->total_compra= $this->subtotal-$this->descuento;
         }
     }
 
     public function UpdatePrecioVenta($productId, $price = 20)
     {
-        $title = '';
+    
         $product = Product::select('products.*')
         ->where('products.id',$productId)->first();
        
-        $exist = Compras::get($productId);
+        $exist = EditarCompra::get($productId);
         $quantitys=$exist->quantity;
         $precio_compra=$exist->price;
         $codigo=$exist->attributes->codigo;
@@ -315,12 +314,13 @@ class DetalleComprasController extends Component
                 'quantity'=>$quantitys,
                 'attributes'=>$attributos
             );
-            Compras::add($products);
 
-            $this->subtotal = Compras::getTotal();
-            $this->itemsQuantity = Compras::getTotalQuantity();
+            EditarCompra::add($products);
+
+            $this->subtotal = EditarCompra::getTotal();
+            $this->itemsQuantity = EditarCompra::getTotalQuantity();
             $this->emit('scan-ok', $title);
-            $this->subtotal = Compras::getTotal();
+            $this->subtotal = EditarCompra::getTotal();
             $this->total_compra= $this->subtotal-$this->descuento;
     }
     }
@@ -328,12 +328,12 @@ class DetalleComprasController extends Component
 
     public function removeItem($productId)
     {
-        Compras::remove($productId);
+        EditarCompra::remove($productId);
 
-        $this->subtotal = Compras::getTotal();
-        $this->itemsQuantity = Compras::getTotalQuantity();
+        $this->subtotal = EditarCompra::getTotal();
+        $this->itemsQuantity = EditarCompra::getTotalQuantity();
         $this->emit('scan-ok', 'Producto eliminado');
-        $this->subtotal = Compras::getTotal();
+        $this->subtotal = EditarCompra::getTotal();
         $this->total_compra= $this->subtotal-$this->descuento;
         $this->descuento_change();
         if ( $this->descuento>0) {
@@ -373,7 +373,16 @@ class DetalleComprasController extends Component
         $this->telefono_prov='';
         $this->resetValidation();
     }
- 
+    
+    public function compraCredito(){
+        if ($this->tipo_transaccion == 'CONTADO') {
+            $this->saldo_por_pagar =0;
+            $this->pago_parcial= $this->total_compra;
+        }
+        else{
+            $this->saldo_por_pagar = $this->total_compra - $this->pago_parcial;
+        }
+    }
 
     public function descuento_change(){
         if ($this->subtotal>0 && $this->descuento>0 && $this->descuento<$this->subtotal) {
@@ -386,7 +395,7 @@ class DetalleComprasController extends Component
         }
     }
     public function validateCarrito(){
-        if (Compras::getTotalQuantity() == 0) {
+        if (EditarCompra::getTotalQuantity() == 0) {
             $this->emit('empty_cart', 'No tiene productos en el detalle de compra');
         }
     }
@@ -407,20 +416,13 @@ class DetalleComprasController extends Component
         $this->validate($rules, $messages);
         $this->validateCarrito();
 
-        /*if ($this->subtotal<= 0) 
+        if ($this->subtotal<= 0) 
         {
             $this->emit('sale-error', 'Agrega productos a la compra');
             return;
-        }*/
-
-        if ($this->tipo_transaccion === 'Credito') {
-            $this->saldo =$this->total_compra-$this->pago_parcial;
-            $this->importe=$this->pago_parcial;
-        }
-        else{
-            $this->importe=$this->total_compra;
         }
        
+         $this->compraCredito();
 
         DB::beginTransaction();
 
@@ -432,46 +434,41 @@ class DetalleComprasController extends Component
                 'descuento'=>$this->descuento,
                 'fecha_compra'=>$this->fecha_compra,
                 'transaccion'=>$this->tipo_transaccion,
-                'saldo'=>$this->saldo,
+                'pago'=>$this->pago_parcial,
                 'tipo_doc'=>$this->tipo_documento,
                 'nro_documento'=>$this->nro_documento,
                 'observacion'=>$this->observacion,
                 'proveedor_id'=>Provider::select('providers.id')->where('nombre_prov',$this->provider)->value('providers.id'),
                 'estado_compra'=>$this->estado_compra,
-                'status'=>$this->status,
-                'destino_id'=>$this->destino
+                'status'=>$this->status
             ]);
 
-            if ($this->tipo_transaccion === 'Contado' || $this->pago_parcial>0) {
-
-                $Movimiento= Movimiento::create([
+            $Movimiento= Movimiento::create([
                 
-                    'type'=>"COMPRAS",
-                    'status'=>"ACTIVO",
-                    'saldo'=>$this->saldo,
-                    'on_account'=>$this->pago_parcial,
-                    'import'=>$this->importe,
-                    'user_id' => Auth()->user()->id
-                ]);
-    
-                $ss = MovimientoCompra::create([
-                    'compra_id'=>$Compra_encabezado->id,
-                    'movimiento_id' => $Movimiento->id
-                ]);
-            }
-           
+                'type'=>"COMPRAS",
+                'status'=>"ACTIVO",
+                'saldo'=>$this->saldo_por_pagar,
+                'on_account'=>$this->pago_parcial,
+                'import'=>$this->pago_parcial,
+                'user_id' => Auth()->user()->id
+            ]);
+
+            $ss = MovimientoCompra::create([
+                'compra_id'=>$Compra_encabezado->id,
+                'movimiento_id' => $Movimiento->id
+            ]);
             
             if ($Compra_encabezado)
             {
               
-                $items = Compras::getContent();
+                $items = EditarCompra::getContent();
                 foreach ($items as $item) {
                     CompraDetalle::create([
                         'precio' => $item->price,
                         'cantidad' => $item->quantity,
                         'product_id' => $item->id,
                         'compra_id' => $Compra_encabezado->id,
-                        
+                        'destino_id'=>$this->destino
                         
                     ]);
                     
@@ -488,7 +485,7 @@ class DetalleComprasController extends Component
 
             DB::commit();
 
-            Compras::clear();
+            EditarCompra::clear();
             $this->total_compra = 0;
             $this->subtotal = 0;
             $this->provider="";
@@ -501,8 +498,8 @@ class DetalleComprasController extends Component
             $this-> nro_documento = "" ;
             $this-> observacion = "" ;
 
-            $this->total = Compras::getTotal();
-            $this->itemsQuantity = Compras::getTotalQuantity();
+            $this->total = EditarCompra::getTotal();
+            $this->itemsQuantity = EditarCompra::getTotalQuantity();
             $this->emit('save-ok', 'venta registrada con exito');
 
             redirect('/compras');

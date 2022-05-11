@@ -142,7 +142,7 @@
                                               
                                                 
                                                 <td class="text-center">
-                                                    <a href="javascript:void(0)" wire:click="Edit({{ $data->id }})"
+                                                    <a href="{{ url('editar_compra' . '/' . $data->compra_id)}}"
                                                         class="btn btn-dark mtmobile" title="Edit">
                                                         <i class="fas fa-edit"></i>
                                                     </a>

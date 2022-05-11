@@ -14,7 +14,7 @@ class Compra extends Model
                             'descuento',
                             'fecha_compra',
                             'transaccion',
-                            'saldo_por_pagar',
+                            'saldo',
                             'tipo_doc',
                             'nro_documento',
                             'observacion',
