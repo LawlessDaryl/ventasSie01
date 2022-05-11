@@ -351,7 +351,7 @@ class DetalleComprasController extends Component
         $this->precio_venta='';
         $this->caracteristicas='';
         $this->codigo ='';
-       
+
         $this->lote = '';
         $this->unidad = '';
         $this->marca = null;

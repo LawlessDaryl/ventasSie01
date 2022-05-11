@@ -65,10 +65,6 @@ class ComprasController extends Component
             ->orWhere('compras.created_at', 'like', '%' . $this->search . '%')
             ->orWhere('compras.status', 'like', '%' . $this->search . '%')
             ->get();
-<<<<<<< HEAD
-
-=======
->>>>>>> 1f2cb7c5d624e50b09dc028795457f991c363507
             $this->totales = $this->datas_compras->sum('importe_total');
         }
         return view('livewire.compras.component',['data_compras'=>$this->datas_compras, 'totales'=>$this->totales])
