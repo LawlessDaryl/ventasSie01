@@ -4,14 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Compra extends Model
 {
     use HasFactory;
+    use SoftDeletes;
     protected $fillable=['importe_total',
                             'descuento',
                             'fecha_compra',
-                          
                             'transaccion',
                             'saldo_por_pagar',
                             'tipo_doc',
@@ -19,7 +20,9 @@ class Compra extends Model
                             'observacion',
                             'proveedor_id',
                             'estado_compra',
-                            'status'];
+                            'status',
+                            'destino_id'
+                        ];
     
     public function compradetalle()
     {

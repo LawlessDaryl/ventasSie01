@@ -27,10 +27,13 @@ class CreateComprasTable extends Migration
             $table->string('nro_documento',100)->nullable();
             $table->string('observacion',100)->nullable();
             
+            
             $table->unsignedBigInteger('proveedor_id');
             $table->foreign('proveedor_id')->references('id')->on('providers');
             $table->enum('estado_compra',['finalizada','no_finalizada','P']);
             $table->enum('status',['ACTIVO','INACTIVO','P'])->default('ACTIVO');
+            $table->foreignId('destino_id')->constrained();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
