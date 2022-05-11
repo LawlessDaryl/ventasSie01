@@ -112,7 +112,7 @@
                                         <th class="table-th text-withe text-center" style="font-size: 70%">FECHA HORA
                                             ENTR.</th>
                                         <th class="table-th text-withe text-center" style="font-size: 70%">COSTO</th>
-                                        <th class="table-th text-withe text-center" style="font-size: 70%">UTILIDAD</th>
+                                        <th class="table-th text-withe text-center" style="font-size: 70%">IMPORTE</th>
                                         <th class="table-th text-withe text-center" style="font-size: 70%">A CUENTA</th>
                                         <th class="table-th text-withe text-center" style="font-size: 70%">SALDO</th>
 
@@ -243,7 +243,7 @@
                                             @foreach ($d->movservices as $mv)
                                                 @if ($mv->movs->type == 'PENDIENTE' && $mv->movs->status == 'ACTIVO')
                                                     <td class="text-center">
-                                                        <h6 style="font-size: 70%">{{ $mv->movs->type }}</h6>
+                                                        <h6 class="badge bg-danger text-center" style="font-size: 70%">{{ $mv->movs->type }}</h6>
                                                     </td>
                                                     <td class="text-center">
                                                         <h6 style="font-size: 70%">{{ $mv->movs->usermov->name }}
@@ -252,7 +252,7 @@
                                                 @endif
                                                 @if ($mv->movs->type == 'PROCESO' && $mv->movs->status == 'ACTIVO')
                                                     <td class="text-center">
-                                                        <h6 style="font-size: 70%">{{ $mv->movs->type }}</h6>
+                                                        <h6 class="badge bg-secondary text-center" style="font-size: 70%">{{ $mv->movs->type }}</h6>
                                                     </td>
                                                     <td class="text-center">
                                                         <h6 style="font-size: 70%">{{ $mv->movs->usermov->name }}
@@ -261,7 +261,7 @@
                                                 @endif
                                                 @if ($mv->movs->type == 'TERMINADO' && $mv->movs->status == 'ACTIVO')
                                                     <td class="text-center">
-                                                        <h6 style="font-size: 70%">{{ $mv->movs->type }}</h6>
+                                                        <h6 class="badge bg-warning text-center" style="font-size: 70%">{{ $mv->movs->type }}</h6>
                                                     </td>
                                                     <td class="text-center">
                                                         <h6 style="font-size: 70%">{{ $mv->movs->usermov->name }}
@@ -270,7 +270,7 @@
                                                 @endif
                                                 @if ($mv->movs->type == 'ENTREGADO' && $mv->movs->status == 'ACTIVO')
                                                     <td class="text-center">
-                                                        <h6 style="font-size: 70%">{{ $mv->movs->type }}</h6>
+                                                        <h6 class="badge bg-success text-center" style="font-size: 70%">{{ $mv->movs->type }}</h6>
                                                     </td>
                                                     <td class="text-center">
                                                         <h6 style="font-size: 70%">
