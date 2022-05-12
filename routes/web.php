@@ -37,6 +37,8 @@ use App\Http\Livewire\SucursalController;
 use App\Http\Livewire\CatProdServiceController;
 use App\Http\Livewire\ComprasController;
 use App\Http\Livewire\DetalleComprasController;
+use App\Http\Livewire\EditarCompraDetalleController;
+
 use App\Http\Livewire\CuentasController;
 use App\Http\Livewire\EmailsController;
 use App\Http\Livewire\InicioController;
@@ -144,6 +146,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('proveedores', ProvidersController::class)->name('supliers');
     Route::get('compras', ComprasController::class)->name('compras');
     Route::get('detalle_compras', DetalleComprasController::class)->name('detalle_compra');
+    Route::get('editar_compra/{id}',[EditarCompraDetalleController::class,'mount'])->name('detalle_compra');
     Route::get('transacciones', TransaccionesController::class)->name('transactions');
     Route::get('destino_prod', DestinoProductoController::class)->name('destination');
     Route::get('transferencia', TransferirProductoController::class)->name('destination');

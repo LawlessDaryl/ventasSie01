@@ -39,11 +39,9 @@ class ComprasController extends Component
     public function render()
     {
         $this->consultar();
-        $this->datas_compras= Compra::join('movimiento_compras as mov_compra','compras.id','mov_compra.id')
-        ->join('movimientos as mov','mov_compra.id','mov.id')
-        ->join('users','mov.user_id','users.id')
-        ->join('providers as prov','compras.proveedor_id','prov.id')
-        ->select('compras.*','compras.id as compra_id','compras.status as status_compra','mov.*','prov.nombre_prov as nombre_prov','users.name')
+        $this->datas_compras= Compra::join('providers as prov','compras.proveedor_id','prov.id')
+        ->join('users','users.id','compras.user_id')
+        ->select('compras.*','compras.id as compra_id','compras.status as status_compra','prov.nombre_prov as nombre_prov','users.name')
         ->whereBetween('compras.created_at',[$this->from,$this->to])
         ->where('compras.transaccion',$this->filtro)
         ->orderBy('compras.fecha_compra')
@@ -65,7 +63,10 @@ class ComprasController extends Component
             ->orWhere('compras.created_at', 'like', '%' . $this->search . '%')
             ->orWhere('compras.status', 'like', '%' . $this->search . '%')
             ->get();
+<<<<<<< HEAD
 
+=======
+>>>>>>> 7de76cfeff1f7fa3b8234322b59ba950625b7c77
             $this->totales = $this->datas_compras->sum('importe_total');
         }
         return view('livewire.compras.component',['data_compras'=>$this->datas_compras, 'totales'=>$this->totales])

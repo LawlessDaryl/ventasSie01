@@ -19,6 +19,10 @@ class Destino extends Model
     {
         return $this->belongsTo(Sucursal::class,'sucursal_id','id');
     }
+    public function dino()
+    {
+        return true;
+    }
     
 
 }

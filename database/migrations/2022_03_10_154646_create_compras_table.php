@@ -22,7 +22,7 @@ class CreateComprasTable extends Migration
             $table->dateTime('fecha_compra')->default(Carbon::now());
            
             $table->enum('transaccion',['Credito','Contado','P'])->default('Contado');
-            $table->decimal('pago',10,2)->default(0);
+            $table->decimal('saldo',10,2)->default(0);
             $table->enum('tipo_doc',['FACTURA','NOTA DE VENTA','RECIBO','NINGUNO'])->default('FACTURA');
             $table->string('nro_documento',100)->nullable();
             $table->string('observacion',100)->nullable();
@@ -33,6 +33,11 @@ class CreateComprasTable extends Migration
             $table->enum('estado_compra',['finalizada','no_finalizada','P']);
             $table->enum('status',['ACTIVO','INACTIVO','P'])->default('ACTIVO');
             $table->foreignId('destino_id')->constrained();
+<<<<<<< HEAD
+=======
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
+>>>>>>> 7de76cfeff1f7fa3b8234322b59ba950625b7c77
             $table->softDeletes();
             $table->timestamps();
         });

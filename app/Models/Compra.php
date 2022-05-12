@@ -14,14 +14,19 @@ class Compra extends Model
                             'descuento',
                             'fecha_compra',
                             'transaccion',
-                            'saldo_por_pagar',
+                            'saldo',
                             'tipo_doc',
                             'nro_documento',
                             'observacion',
                             'proveedor_id',
                             'estado_compra',
                             'status',
+<<<<<<< HEAD
                             'destino_id'
+=======
+                            'destino_id',
+                            'user_id'
+>>>>>>> 7de76cfeff1f7fa3b8234322b59ba950625b7c77
                         ];
     
     public function compradetalle()
