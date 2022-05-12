@@ -34,5 +34,9 @@ class RoleSeeder extends Seeder
             'name' => 'SUPERVISOR DE VENTAS',
             'guard_name' => 'web'
         ]);
+        Role::create([
+            'name' => 'ATM',
+            'guard_name' => 'web'
+        ]);
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ExportController;
+use App\Http\Controllers\ExportSaleController;
 use App\Http\Controllers\ExportServicioPdfController;
 use App\Http\Controllers\ExportStreamingPdfController;
 use App\Http\Controllers\ExportTigoPdfController;
@@ -61,10 +62,13 @@ use App\Http\Livewire\TransaccionesController;
 use App\Http\Livewire\TransferenciasController;
 use App\Http\Livewire\TypeWorkController;
 use App\Http\Livewire\UnidadesController;
+use App\Http\Livewire\SaleListController;
+use App\Http\Livewire\NotificationController;
 use App\Http\Livewire\DestinoProductoController;
 use App\Http\Livewire\TransferirProductoController;
 use App\Http\Livewire\DestinoController;
-
+use App\Http\Livewire\SaleDevolutionController;
+use App\Http\Livewire\SaleStatisticController;
 use Illuminate\Support\Facades\Auth;
 
 Auth::routes();
@@ -166,9 +170,17 @@ Route::middleware(['auth'])->group(function () {
     Route::get('cashout', CashoutController::class)->name('cashout')->middleware('permission:Cashout_Index');
     Route::get('reports', ReportsController::class)->name('reportes')->middleware('permission:Reportes_Index');
     Route::group(['middleware' => ['permission:Report_Sales_Export']], function () {
-        Route::get('report/pdf/{user}/{type}/{f1}/{f2}', [ExportController::class, 'reportPDF']);
-        Route::get('report/pdf/{user}/{type}', [ExportController::class, 'reportPDF']);
+    Route::get('report/pdf/{user}/{type}/{f1}/{f2}', [ExportController::class, 'reportPDF']);
+    Route::get('report/pdf/{user}/{type}', [ExportController::class, 'reportPDF']);
+    Route::get('report/pdf/{total}/{idventa}/{totalitems}', [ExportSaleController::class, 'reportPDFVenta']);
     });
+    //Lista de Ventas
+    Route::get('salelist', SaleListController::class)->name('salelist')->middleware('permission:VentasLista_Index');
+    Route::get('estadisticas', SaleStatisticController::class)->name('estadisticas');
+    Route::get('devolucionventa', SaleDevolutionController::class)->name('devolucionventa');
+    Route::get('notificaciones', NotificationController::class)->name('notificaciones');
+    Route::get('notificaciones/{idnotificacion}', [NotificacionController::class,'mostrarnotificacion']);
+
 });
 
 

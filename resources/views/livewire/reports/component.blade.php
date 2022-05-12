@@ -50,7 +50,7 @@
                                     Consultar
                                 </button>
 
-                                <a class="btn btn-dark btn-block {{count($data) < 1 ? 'disabled' : ''}}" href="{{ url('report/pdf' . '/' . $userId . '/' . $reportType . '/' 
+<a class="btn btn-dark btn-block {{count($data) < 1 ? 'disabled' : ''}}" href="{{ url('report/pdf' . '/' . $userId . '/' . $reportType . '/' 
                                     . $dateFrom . '/' . $dateTo)}}">Generar PDF</a>
 
                                 <a class="btn btn-dark btn-block {{count($data) < 1 ? 'disabled' : ''}}" href="{{ url('report/excel' . '/' . $userId . '/' . $reportType . '/' 

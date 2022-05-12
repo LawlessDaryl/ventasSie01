@@ -128,29 +128,27 @@
                 </svg>
             </li>
 
-            @role('ADMIN')
-                <li class="menu {{ request()->routeIs('ventas') ? 'active' : '' }}">
-                    <a href="#ventas" data-active="false" class="menu-toggle">
-                        <div class="base-menu">
-                            <div class="base-icons">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="feather feather-shopping-bag">
-                                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-                                    <line x1="3" y1="6" x2="21" y2="6"></line>
-                                    <path d="M16 10a4 4 0 0 1-8 0"></path>
-                                </svg>
-                            </div>
-                            <span>VENTAS</span>
+            <li class="menu {{ request()->routeIs('ventas') ? 'active' : '' }}">
+                <a href="#ventas" data-active="false" class="menu-toggle">
+                    <div class="base-menu">
+                        <div class="base-icons">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="feather feather-shopping-bag">
+                                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                                <line x1="3" y1="6" x2="21" y2="6"></line>
+                                <path d="M16 10a4 4 0 0 1-8 0"></path>
+                            </svg>
                         </div>
-                    </a>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="feather feather-chevron-left">
-                        <polyline points="15 18 9 12 15 6"></polyline>
-                    </svg>
-                </li>
-            @endcan
+                        <span>VENTAS</span>
+                    </div>
+                </a>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="feather feather-chevron-left">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+            </li>
 
             <li class="menu {{ request()->routeIs('permisos') ? 'active' : '' }}">
                 <a href="#permisos" data-active="false" class="menu-toggle">
@@ -600,6 +598,18 @@
         <div class="submenu" id="ventas">
             <ul class="submenu-list" data-parent-element="ventas">
 
+
+
+
+                @if (empty(session('sesionCaja')))
+                <li>
+                    <strong>
+                    <p> No tiene una caja abierta </p>
+                    </strong>
+                </li>
+                @else
+
+
                 <li>
                     <a href="{{ url('pos') }}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -610,6 +620,12 @@
                             <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
                         </svg>
                         Nueva Venta </a>
+                </li>
+
+                <li>
+                    <a href="{{ url('salelist') }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                        Lista de Ventas</a>
                 </li>
 
                 <li>
@@ -648,7 +664,55 @@
                         </svg>
                         Denominaciones </a>
                 </li>
+                <li>
+                    <a href="{{ url('estadisticas') }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trending-up"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                        Estadísticas </a>
+                </li>
+                <li>
+                    <a href="{{ url('devolucionventa') }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-refresh-ccw"><polyline points="1 4 1 10 7 10"></polyline><polyline points="23 20 23 14 17 14"></polyline><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path></svg>
+                        Devolución Ventas </a>
+                </li>
 
+
+
+                <li class="sub-submenu">
+                    <a role="menu" class="collapsed" data-toggle="collapse" data-target="#datatables" aria-expanded="false"><div><span class="icon">
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-crosshair"><circle cx="12" cy="12" r="10"></circle><line x1="22" y1="12" x2="18" y2="12"></line><line x1="6" y1="12" x2="2" y2="12"></line><line x1="12" y1="6" x2="12" y2="2"></line><line x1="12" y1="22" x2="12" y2="18"></line></svg>
+                    
+                    </span> Reportes</div> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"></polyline></svg> </a>
+                    <ul id="datatables" class="collapse" data-parent="#compact_submenuSidebar">
+                        <li>
+                            <a href="table_dt_basic.html"> Ventas por Mes </a>
+                        </li>
+                        <li>
+                            <a href="table_dt_basic-dark.html"> Ventas por Usuario </a>
+                        </li>
+                    </ul>
+                </li>
+
+
+
+
+                {{-- <li class="sub-submenu">
+                    <a role="menu" class="collapsed" data-toggle="collapse" data-target="#datatables"
+                     aria-expanded="false"><div><span class="icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-refresh-ccw"><polyline points="1 4 1 10 7 10"></polyline><polyline points="23 20 23 14 17 14"></polyline><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path></svg>
+                        
+                    </span> Devolución Ventas</div> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"></polyline></svg> </a>
+                    <ul id="datatables" class="collapse" data-parent="#compact_submenuSidebar">
+                        <li>
+                            <a href="{{ url('#') }}"> Por Venta </a>
+                        </li>
+                        <li>
+                            <a href="{{ url('devolucionventa') }}"> Por Producto </a>
+                        </li>
+                    </ul>
+                </li> --}}
+                @endif
 
             </ul>
         </div>

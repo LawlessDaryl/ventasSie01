@@ -17,6 +17,7 @@ return array(
     'App\\Http\\Controllers\\Controller' => $baseDir . '/app/Http/Controllers/Controller.php',
     'App\\Http\\Controllers\\ExportComprasController' => $baseDir . '/app/Http/Controllers/ExportComprasController.php',
     'App\\Http\\Controllers\\ExportController' => $baseDir . '/app/Http/Controllers/ExportController.php',
+    'App\\Http\\Controllers\\ExportSaleController' => $baseDir . '/app/Http/Controllers/ExportSaleController.php',
     'App\\Http\\Controllers\\ExportServicioPdfController' => $baseDir . '/app/Http/Controllers/ExportServicioPdfController.php',
     'App\\Http\\Controllers\\ExportStreamingPdfController' => $baseDir . '/app/Http/Controllers/ExportStreamingPdfController.php',
     'App\\Http\\Controllers\\ExportTigoPdfController' => $baseDir . '/app/Http/Controllers/ExportTigoPdfController.php',
@@ -50,6 +51,8 @@ return array(
     'App\\Http\\Livewire\\ModulosController' => $baseDir . '/app/Http/Livewire/ModulosController.php',
     'App\\Http\\Livewire\\MotivoController' => $baseDir . '/app/Http/Livewire/MotivoController.php',
     'App\\Http\\Livewire\\MovimientosController' => $baseDir . '/app/Http/Livewire/MovimientosController.php',
+    'App\\Http\\Livewire\\NotiController' => $baseDir . '/app/Http/Livewire/NotiController.php',
+    'App\\Http\\Livewire\\NotificationController' => $baseDir . '/app/Http/Livewire/NotificationController.php',
     'App\\Http\\Livewire\\OrderServiceController' => $baseDir . '/app/Http/Livewire/OrderServiceController.php',
     'App\\Http\\Livewire\\OrigenController' => $baseDir . '/app/Http/Livewire/OrigenController.php',
     'App\\Http\\Livewire\\OrigenMotivoComisionController' => $baseDir . '/app/Http/Livewire/OrigenMotivoComisionController.php',
@@ -69,6 +72,9 @@ return array(
     'App\\Http\\Livewire\\ReportesTigoController' => $baseDir . '/app/Http/Livewire/ReportesTigoController.php',
     'App\\Http\\Livewire\\ReportsController' => $baseDir . '/app/Http/Livewire/ReportsController.php',
     'App\\Http\\Livewire\\RolesController' => $baseDir . '/app/Http/Livewire/RolesController.php',
+    'App\\Http\\Livewire\\SaleDevolutionController' => $baseDir . '/app/Http/Livewire/SaleDevolutionController.php',
+    'App\\Http\\Livewire\\SaleListController' => $baseDir . '/app/Http/Livewire/SaleListController.php',
+    'App\\Http\\Livewire\\SaleStatisticController' => $baseDir . '/app/Http/Livewire/SaleStatisticController.php',
     'App\\Http\\Livewire\\SearchController' => $baseDir . '/app/Http/Livewire/SearchController.php',
     'App\\Http\\Livewire\\ServiciosController' => $baseDir . '/app/Http/Livewire/ServiciosController.php',
     'App\\Http\\Livewire\\StrProveedorController' => $baseDir . '/app/Http/Livewire/StrProveedorController.php',
@@ -76,7 +82,10 @@ return array(
     'App\\Http\\Livewire\\SucursalController' => $baseDir . '/app/Http/Livewire/SucursalController.php',
     'App\\Http\\Livewire\\TransaccionController' => $baseDir . '/app/Http/Livewire/TransaccionController.php',
     'App\\Http\\Livewire\\TransaccionesController' => $baseDir . '/app/Http/Livewire/TransaccionesController.php',
+<<<<<<< HEAD
     'App\\Http\\Livewire\\TransferenciasController' => $baseDir . '/app/Http/Livewire/TransferenciasController.php',
+=======
+>>>>>>> origin/pruebaschio
     'App\\Http\\Livewire\\TransferirProductoController' => $baseDir . '/app/Http/Livewire/TransferirProductoController.php',
     'App\\Http\\Livewire\\TypeWorkController' => $baseDir . '/app/Http/Livewire/TypeWorkController.php',
     'App\\Http\\Livewire\\UnidadesController' => $baseDir . '/app/Http/Livewire/UnidadesController.php',
@@ -104,9 +113,16 @@ return array(
     'App\\Models\\CompraDetalle' => $baseDir . '/app/Models/CompraDetalle.php',
     'App\\Models\\Denomination' => $baseDir . '/app/Models/Denomination.php',
     'App\\Models\\Destino' => $baseDir . '/app/Models/Destino.php',
+<<<<<<< HEAD
     'App\\Models\\DetalleDevolucion' => $baseDir . '/app/Models/DetalleDevolucion.php',
     'App\\Models\\DetalleTransferencia' => $baseDir . '/app/Models/DetalleTransferencia.php',
     'App\\Models\\Devolucion' => $baseDir . '/app/Models/Devolucion.php',
+=======
+    'App\\Models\\Detail_Devolution' => $baseDir . '/app/Models/Detail_Devolution.php',
+    'App\\Models\\Detalle_Transferencia' => $baseDir . '/app/Models/Detalle_Transferencia.php',
+    'App\\Models\\Devolution' => $baseDir . '/app/Models/Devolution.php',
+    'App\\Models\\DevolutionSale' => $baseDir . '/app/Models/DevolutionSale.php',
+>>>>>>> origin/pruebaschio
     'App\\Models\\Email' => $baseDir . '/app/Models/Email.php',
     'App\\Models\\EstadoTransDetalle' => $baseDir . '/app/Models/EstadoTransDetalle.php',
     'App\\Models\\EstadoTransferencia' => $baseDir . '/app/Models/EstadoTransferencia.php',
@@ -122,7 +138,12 @@ return array(
     'App\\Models\\MovService' => $baseDir . '/app/Models/MovService.php',
     'App\\Models\\MovTransac' => $baseDir . '/app/Models/MovTransac.php',
     'App\\Models\\Movimiento' => $baseDir . '/app/Models/Movimiento.php',
+<<<<<<< HEAD
     'App\\Models\\MovimientoCompra' => $baseDir . '/app/Models/MovimientoCompra.php',
+=======
+    'App\\Models\\Notification' => $baseDir . '/app/Models/Notification.php',
+    'App\\Models\\NotificationUser' => $baseDir . '/app/Models/NotificationUser.php',
+>>>>>>> origin/pruebaschio
     'App\\Models\\OrderService' => $baseDir . '/app/Models/OrderService.php',
     'App\\Models\\Origen' => $baseDir . '/app/Models/Origen.php',
     'App\\Models\\OrigenMotivo' => $baseDir . '/app/Models/OrigenMotivo.php',
@@ -289,6 +310,7 @@ return array(
     'Database\\Seeders\\CarteraSeeder' => $baseDir . '/database/seeders/CarteraSeeder.php',
     'Database\\Seeders\\CatProdServiceSeeder' => $baseDir . '/database/seeders/CatProdServiceSeeder.php',
     'Database\\Seeders\\CategorySeeder' => $baseDir . '/database/seeders/CategorySeeder.php',
+    'Database\\Seeders\\ClientSeeder' => $baseDir . '/database/seeders/ClientSeeder.php',
     'Database\\Seeders\\ComisionSeeder' => $baseDir . '/database/seeders/ComisionSeeder.php',
     'Database\\Seeders\\CompanySeeder' => $baseDir . '/database/seeders/CompanySeeder.php',
     'Database\\Seeders\\CompraDetalleSeeder' => $baseDir . '/database/seeders/CompraDetalleSeeder.php',
