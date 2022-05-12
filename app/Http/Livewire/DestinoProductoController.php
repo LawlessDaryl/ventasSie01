@@ -85,6 +85,8 @@ class DestinoProductoController extends Component
                                         join locations on location_productos.location= locations.id
                                         join destinos on locations.destino_id= destinos.id) as mm on dd.dest= mm.best and dd.rt= mm.pt';
 
+                                        
+
                                         $ff= ProductosDestino::join('products','productos_destinos.product_id','products.id')
                                         ->join('destinos','productos_destinos.destino_id','destinos.id')
                                         ->select('products.nombre','destinos.id as destiti')->get();

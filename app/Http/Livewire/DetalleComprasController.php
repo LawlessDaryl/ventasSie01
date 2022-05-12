@@ -443,7 +443,8 @@ class DetalleComprasController extends Component
                 'observacion'=>$this->observacion,
                 'proveedor_id'=>Provider::select('providers.id')->where('nombre_prov',$this->provider)->value('providers.id'),
                 'estado_compra'=>$this->estado_compra,
-                'status'=>$this->status
+                'status'=>$this->status,
+                'destino_id'=>$this->destino
             ]);
 
             $Movimiento= Movimiento::create([
@@ -472,7 +473,7 @@ class DetalleComprasController extends Component
                         'cantidad' => $item->quantity,
                         'product_id' => $item->id,
                         'compra_id' => $Compra_encabezado->id,
-                        'destino_id'=>$this->destino
+                        
                         
                     ]);
                     

@@ -15,4 +15,6 @@ class ProductosDestino extends Model
     public function productos(){
        $this->belongsTo(Product::class);  
     }
+
+   
 }

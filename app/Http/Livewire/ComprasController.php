@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\Compra;
+use App\Models\ProductosDestino;
 use Carbon\Carbon;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -23,22 +24,18 @@ class ComprasController extends Component
             $fecha,
             $search,
             $datas_compras,
-            $totales;
+            $totales,
+            $aprobado;
 
   public function paginationView()
      {
-                return 'vendor.livewire.bootstrap';
+            return 'vendor.livewire.bootstrap';
      }
-
-    public function mount(){
+  public function mount(){
         $this->nro=1;
         $this->filtro='Contado';
         $this->fecha='hoy';
-        
-        
     }
-
-
     public function render()
     {
         $this->consultar();
@@ -69,18 +66,12 @@ class ComprasController extends Component
             ->orWhere('compras.status', 'like', '%' . $this->search . '%')
             ->get();
 
-          
-
             $this->totales = $this->datas_compras->sum('importe_total');
-
-
         }
-
         return view('livewire.compras.component',['data_compras'=>$this->datas_compras, 'totales'=>$this->totales])
         ->extends('layouts.theme.app')
         ->section('content');
     }
-
     public function consultar()
     {
         if ($this->fecha == 'hoy') {
@@ -115,5 +106,48 @@ class ComprasController extends Component
   
     }
 
+    
+    public function Edit(Compra $compra_edit){
+
+        
+        redirect('/detalle_compras',['data_compra'=>$compra_edit]);
+    }
+
+    protected $listeners = ['deleteRow' => 'Destroy'];
+
+    public function Destroy(Compra $compra_edit)
+    {
+        
+        foreach ($compra_edit->compradetalle as $data) {
+            
+           $mm= ProductosDestino::where('destino_id',$compra_edit->destino_id)
+            ->where('product_id',$data->product_id)
+            ->select('productos_destinos.*')
+            ->value('stock');            
+
+            if ($mm >= $data->cantidad) 
+            {
+                $this->aprobado=true;
+            }
+            else{
+                $this->aprobado=false;
+            }
+   
+        }
+       
+        if ($this->aprobado == true) {
+            foreach ($compra_edit->compradetalle as $data) {
+                ProductosDestino::where('destino_id',$compra_edit->destino_id)
+                ->where('product_id',$data->product_id)
+                ->decrement('stock',$data->cantidad);
+    
+            }
+            $compra_edit->delete();
+        }
+
+       
+        $this->emit('purchase-deleted', 'Compra eliminada');
+    
+    }
   
 }
