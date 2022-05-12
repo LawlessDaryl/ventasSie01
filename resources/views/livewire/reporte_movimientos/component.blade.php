@@ -17,6 +17,11 @@
                         Eliminar tigo money
                     </a>
                 </ul>
+                <ul class="tabs tab-pills">
+                    <a wire:click.prevent="EliminarStreaming()" class="btn btn-dark">
+                        Eliminar streaming
+                    </a>
+                </ul>
             </div>
             <div class="row">
                 <div class="col-lg-4 col-md-4 col-sm-12">

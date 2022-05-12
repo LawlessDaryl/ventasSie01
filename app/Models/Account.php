@@ -16,6 +16,11 @@ class Account extends Model
         return $this->hasMany(AccountProfile::class);
     }
 
+    public function inversiones()
+    {
+        return $this->hasMany(CuentaInversion::class);
+    }
+
     public function PlanCuenta()
     {
         return $this->hasMany(PlanAccount::class);

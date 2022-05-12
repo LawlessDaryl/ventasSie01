@@ -215,7 +215,7 @@
                                                     @endif
                                                     @if ($cuentasEnteras)
                                                         @foreach ($cuentasEnteras as $item)
-                                                            @if ($item->cantiadadQueSePuedeCrear > 0)
+                                                            @if ($item->espacios > 0)
                                                                 <tr>
                                                                     <td class="text-center">
                                                                         <h6 class="text-center">
@@ -234,7 +234,7 @@
                                                                     </td>
                                                                     <td class="text-center">
                                                                         <h6 class="text-center">
-                                                                            {{ $item->cantiadadQueSePuedeCrear }}
+                                                                            {{ $item->espacios }}
                                                                         </h6>
                                                                     </td>
                                                                     <td class="text-center">

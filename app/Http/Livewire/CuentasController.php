@@ -1725,6 +1725,8 @@ class CuentasController extends Component
         $plancuenta->status = 'VENCIDO';
         $plancuenta->save();
 
+        $this->condicional = 'vencidos';
+
         $this->resetUI();
         $this->emit('cuenta-renovado-vencida', 'Se venció este plan');
     }

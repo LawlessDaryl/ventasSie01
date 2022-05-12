@@ -80,7 +80,7 @@ class TransaccionController extends Component
         $this->cedula = '';
         $this->celular = '';
         $this->codigo_transf = '';
-        $this->observaciones = '';        
+        $this->observaciones = '';
 
         $this->origMotID = 0;
         $this->OrigenMotivoObjeto = [];
@@ -398,7 +398,7 @@ class TransaccionController extends Component
             ->extends('layouts.theme.app')
             ->section('content');
     }
-    
+
     /* Cargar los datos seleccionados de la tabla a los label */
     public function Seleccionar($cedula, $celular)
     {
@@ -856,12 +856,22 @@ class TransaccionController extends Component
                     'movimiento_id' => $mv->id
                 ]);
 
-                $mvt = Movimiento::create([
-                    'type' => 'TERMINADO',
-                    'status' => 'ACTIVO',
-                    'import' => $this->importe,
-                    'user_id' => Auth()->user()->id,
-                ]);
+                if ($motiv->nombre == 'Recarga') {
+                    $importeEgresoRecarga = $this->importe - ($this->importe * 8) / 100;
+                    $mvt = Movimiento::create([
+                        'type' => 'TERMINADO',
+                        'status' => 'ACTIVO',
+                        'import' => $importeEgresoRecarga,
+                        'user_id' => Auth()->user()->id,
+                    ]);
+                } else {
+                    $mvt = Movimiento::create([
+                        'type' => 'TERMINADO',
+                        'status' => 'ACTIVO',
+                        'import' => $this->importe,
+                        'user_id' => Auth()->user()->id,
+                    ]);
+                }
 
                 CarteraMov::create([
                     'type' => 'EGRESO',
@@ -935,7 +945,7 @@ class TransaccionController extends Component
             $this->emit('item-error', 'ERROR' . $e->getMessage());
         }
     }
-    
+
     /* LISTENERS */
     protected $listeners = ['deleteRow' => 'Anular'];
     /* ANULAR TRANSACCION */
@@ -956,7 +966,7 @@ class TransaccionController extends Component
         $tran->save();
         $this->emit('item-anulado', 'Se anuló la transacción');
     }
-    
+
     public function VerObservaciones(Transaccion $tr)
     {
         $this->selected_id = $tr->id;

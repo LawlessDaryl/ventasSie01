@@ -2002,6 +2002,9 @@ class PerfilesController extends Component
             $Cuenta->whole_account = 'ENTERA';
             $Cuenta->save();
         }
+
+        $this->condicional = 'vencidos';
+
         $this->resetUI();
         $this->emit('item-accion', 'Se plan fue vencido');
     }
