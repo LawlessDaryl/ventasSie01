@@ -12,11 +12,11 @@
                     wire:click="DeleteAllServices()">VACIAR BD SERVICIOS</a>
                     @endif --}}
 
-                    <a href="javascript:void(0)" class="btn btn-dark" wire:click="IrInicio" style="font-size: 80%">IR A
+                    <a href="javascript:void(0)" class="btn btn-dark" wire:click="IrInicio" style="font-size: 90%">IR A
                         INICIO</a>
                     @if (@Auth::user()->hasPermissionTo('Recepcionar_Servicio'))
                         <a href="javascript:void(0)" class="btn btn-dark" wire:click="GoService"
-                            style="font-size: 80%">AGREGAR</a>
+                            style="font-size: 90%">AGREGAR</a>
                     @endif
                 </ul>
 
@@ -31,7 +31,7 @@
                                 <i class="fas fa-search"></i>
                             </span>
                         </div>
-                        <input style="font-size: 80%" type="text" wire:model="search" placeholder="Buscar"
+                        <input style="font-size: 90%" type="text" wire:model="search" placeholder="Buscar"
                             class="form-control">
 
                     </div>
@@ -44,7 +44,7 @@
                             <input type="radio" class="new-control-input" name="custom-radio-4" id="libres"
                                 value="MiSucursal" wire:model="condicion">
                             <span class="new-control-indicator"></span>
-                            <h6 style="font-size: 80%">MI SUCURSAL</h6>
+                            <h6 style="font-size: 90%">MI SUCURSAL</h6>
                         </label>
                     </div>
                 </div>
@@ -54,13 +54,13 @@
                             <input type="radio" class="new-control-input" name="custom-radio-4" id="ocupados"
                                 value="Todos" wire:model="condicion" checked>
                             <span class="new-control-indicator"></span>
-                            <h6 style="font-size: 80%">TODAS LAS SUCURSALES</h6>
+                            <h6 style="font-size: 90%">TODAS LAS SUCURSALES</h6>
                         </label>
                     </div>
                 </div>
 
                 <div class="col-lg-2 col-md-4 col-sm-12">
-                    <select wire:model.lazy="opciones" class="form-control" style="font-size: 80%">
+                    <select wire:model.lazy="opciones" class="form-control" style="font-size: 90%">
                         <option value="PENDIENTE">PENDIENTE</option>
                         <option value="PROCESO">PROCESO</option>
                         <option value="TERMINADO">TERMINADO</option>
@@ -80,9 +80,9 @@
             @if ($opciones == 'fechas')
                 <div class="row">
                     <div class="col-sm-2">
-                        <h6 style="font-size: 80%">Elige el usuario</h6>
+                        <h6 style="font-size: 90%">Elige el usuario</h6>
                         <div class="form-group">
-                            <select wire:model="userId" class="form-control" style="font-size: 80%">
+                            <select wire:model="userId" class="form-control" style="font-size: 90%">
                                 <option value="0">Todos</option>
                                 @foreach ($users as $user)
                                     <option value="{{ $user->id }}">{{ $user->name }}</option>
@@ -92,9 +92,9 @@
                     </div>
 
                     <div class="col-sm-2">
-                        <h6 style="font-size: 80%">Elige el estado</h6>
+                        <h6 style="font-size: 90%">Elige el estado</h6>
                         <div class="form-group">
-                            <select style="font-size: 80%" wire:model="estado" class="form-control">
+                            <select style="font-size: 90%" wire:model="estado" class="form-control">
                                 <option value="Todos">Todos</option>
                                 <option value="PENDIENTE">Pendiente</option>
                                 <option value="PROCESO">Proceso</option>
@@ -106,9 +106,9 @@
                     </div>
 
                     <div class="col-sm-2">
-                        <h6 style="font-size: 80%">Elige el tipo de reporte</h6>
+                        <h6 style="font-size: 90%">Elige el tipo de reporte</h6>
                         <div class="form-group">
-                            <select style="font-size: 80%" wire:model="reportType" class="form-control">
+                            <select style="font-size: 90%" wire:model="reportType" class="form-control">
                                 <option value="0">Servicios del día</option>
                                 <option value="1">Servicios por fecha</option>
                             </select>
@@ -116,18 +116,18 @@
                     </div>
 
                     <div class="col-sm-2 ">
-                        <h6 style="font-size: 80%">Fecha desde</h6>
+                        <h6 style="font-size: 90%">Fecha desde</h6>
                         <div class="form-group">
                             <input @if ($reportType == 0) disabled @endif type="date" wire:model="dateFrom"
-                                min="" max="" class="form-control flatpickr" style="font-size: 80%">
+                                min="" max="" class="form-control flatpickr" style="font-size: 90%">
                         </div>
                     </div>
 
                     <div class="col-sm-2 ">
-                        <h6 style="font-size: 80%">Fecha hasta</h6>
+                        <h6 style="font-size: 90%">Fecha hasta</h6>
                         <div class="form-group">
                             <input @if ($reportType == 0) disabled @endif type="date" wire:model="dateTo"
-                                min="" max="" class="form-control flatpickr" style="font-size: 80%">
+                                min="" max="" class="form-control flatpickr" style="font-size: 90%">
                         </div>
                     </div>
                 </div>
@@ -138,8 +138,8 @@
                     <table class="table table-unbordered table-striped mt-2">
                         <thead class="text-white" style="background: #3B3F5C">
                             <tr>
-                                <th style="font-size: 80%" class="table-th text-withe text-center" width="2%">#</th>
-                                <th style="font-size: 80%" class="table-th text-withe text-center" width="62%">
+                                <th style="font-size: 90%" class="table-th text-withe text-center" width="2%">#</th>
+                                <th style="font-size: 90%" class="table-th text-withe text-center" width="62%">
                                     <div class="col-sm-12 col-md-12">
                                         <div class="row">
                                             <div class="col-sm-2">CLIENTE</div>
@@ -149,13 +149,13 @@
                                         </div>
                                     </div>
                                 </th>
-                                <th style="font-size: 80%" class="table-th text-withe text-center" width="7%">CÓDIGO
+                                <th style="font-size: 90%" class="table-th text-withe text-center" width="7%">CÓDIGO
                                 </th>
-                                <th style="font-size: 80%" class="table-th text-withe text-center" width="7%">TOTAL</th>
-                                <th style="font-size: 80%" class="table-th text-withe text-center" width="8%">A CUENTA
+                                <th style="font-size: 90%" class="table-th text-withe text-center" width="7%">TOTAL</th>
+                                <th style="font-size: 90%" class="table-th text-withe text-center" width="8%">A CUENTA
                                 </th>
-                                <th style="font-size: 80%" class="table-th text-withe text-center" width="7%">SALDO</th>
-                                <th style="font-size: 80%" class="table-th text-withe text-center" width="7%">ACCIONES
+                                <th style="font-size: 90%" class="table-th text-withe text-center" width="7%">SALDO</th>
+                                <th style="font-size: 90%" class="table-th text-withe text-center" width="7%">ACCIONES
                                 </th>
                             </tr>
                         </thead>
@@ -167,7 +167,7 @@
                                     <tr>
                                         {{-- # --}}
                                         <td width="2%">
-                                            <h6 class="table-th text-withe text-center" style="font-size: 80%">
+                                            <h6 class="table-th text-withe text-center" style="font-size: 90%">
                                                 {{ $loop->iteration }}</h6>
                                         </td>
                                         @php
@@ -189,7 +189,7 @@
                                                         <div class="col-sm-2">
                                                             @if ($key == 0)
                                                                 <h6 class="table-th text-withe text-center"
-                                                                    style="font-size: 80%"><b>
+                                                                    style="font-size: 90%"><b>
                                                                         {{ $service->movservices[0]->movs->climov->client->nombre }}</b>
                                                                 </h6>
                                                             @endif
@@ -199,7 +199,7 @@
                                                             @if ($mm->movs->status == 'INACTIVO' && $mm->movs->type == 'ANULADO')
                                                                 <div class="col-sm-2">
                                                                     <h6 class="table-th text-withe text-center"
-                                                                        style="font-size: 80%">
+                                                                        style="font-size: 90%">
                                                                         {{ \Carbon\Carbon::parse($mm->movs->created_at)->format('d/m/Y h:i:s') }}
                                                                     </h6><br />
                                                                 </div>
@@ -211,7 +211,7 @@
                                                             <a href="javascript:void(0)"
                                                                 wire:click="InfoService({{ $service->id }})"
                                                                 title="Ver Servicio">
-                                                                <h6 style="font-size: 80%">
+                                                                <h6 style="font-size: 90%">
                                                                     {{ $service->categoria->nombre }}&nbsp{{ $service->marca }}&nbsp
                                                                     | {{ $service->detalle }}&nbsp |
                                                                     {{ $service->falla_segun_cliente }}</h6>
@@ -219,7 +219,7 @@
 
                                                             {{-- @foreach ($service->movservices as $mm)
                                                                 @if ($mm->movs->status == 'INACTIVO' && $mm->movs->type == 'ANULADO')
-                                                                    <h6 style="font-size: 80%"><b>Responsable:</b>
+                                                                    <h6 style="font-size: 90%"><b>Responsable:</b>
                                                                         {{ $mm->movs->usermov->name }}</h6>
                                                                 @endif
                                                             @endforeach --}}
@@ -236,57 +236,57 @@
                                                                     @endphp
                                                                 @endif
                                                                 @if ($mm->movs->status == 'INACTIVO' && $mm->movs->type == 'ANULADO' && $valorbooleano == true)
-                                                                    <h6 style="font-size: 80%"><b>Responsable:</b>
+                                                                    <h6 style="font-size: 90%"><b>Responsable:</b>
                                                                         {{ $terminado }}</h6>
                                                                     @php
                                                                         $valorbooleano = false;
                                                                     @endphp
                                                                 @elseif($mm->movs->status == 'INACTIVO' && $mm->movs->type == 'ANULADO')
-                                                                    <h6 style="font-size: 80%"><b>Responsable:</b>
+                                                                    <h6 style="font-size: 90%"><b>Responsable:</b>
                                                                         {{ $mm->movs->usermov->name }}</h6>
                                                                 @endif
 
                                                                 {{-- @if ($mm->movs->status == 'INACTIVO' && $mm->movs->type == 'ANULADO')
                                                                         @foreach ($mm->movs->usermov->sucursalusers as $sucusu)
                                                                             @if ($sucusu->estado == 'ACTIVO')
-                                                                                <h6 style="font-size: 80%"><b>Sucursal: </b>
+                                                                                <h6 style="font-size: 90%"><b>Sucursal: </b>
                                                                                 {{$sucusu->sucursal->name}}</h6>
                                                                             @endif
                                                                         @endforeach
                                                                     @endif --}}
                                                             @endforeach
-                                                            <h6 style="font-size: 80%"><b>Sucursal: </b>
+                                                            <h6 style="font-size: 90%"><b>Sucursal: </b>
                                                                 {{ $service->sucursalServ->name }}</h6>
                                                         </div>
                                                         {{-- ESTADO --}}
                                                         <div class="col-sm-4">
                                                             @if ($mm->movs->type == 'PENDIENTE' && $mm->movs->status == 'ACTIVO')
                                                                 <h6 class="badge bg-danger text-center"
-                                                                    style="font-size: 80%">
+                                                                    style="font-size: 90%">
                                                                     <b>{{ $mm->movs->type }}</b>
                                                                 </h6>
                                                             @else
                                                                 @if ($mm->movs->type == 'PROCESO' && $mm->movs->status == 'ACTIVO')
                                                                     <h6 class="badge bg-secondary text-center"
-                                                                        style="font-size: 80%">
+                                                                        style="font-size: 90%">
                                                                         <b>{{ $mm->movs->type }}</b>
                                                                     </h6>
                                                                 @else
                                                                     @if ($mm->movs->type == 'TERMINADO' && $mm->movs->status == 'ACTIVO')
                                                                         <h6 class="badge bg-warning text-center"
-                                                                            style="font-size: 80%">
+                                                                            style="font-size: 90%">
                                                                             <b>{{ $mm->movs->type }}</b>
                                                                         </h6>
                                                                     @else
                                                                         @if ($mm->movs->type == 'ENTREGADO' && $mm->movs->status == 'ACTIVO')
                                                                             <h6 class="badge bg-success text-center"
-                                                                                style="font-size: 80%">
+                                                                                style="font-size: 90%">
                                                                                 <b>{{ $mm->movs->type }}</b>
                                                                             </h6>
                                                                         @else
                                                                             @if ($mm->movs->type == 'ANULADO' && $mm->movs->status == 'INACTIVO')
                                                                                 <h6 class="badge bg-info text-center"
-                                                                                    style="font-size: 80%">
+                                                                                    style="font-size: 90%">
                                                                                     <b>{{ $mm->movs->type }}</b>
                                                                                 </h6>
                                                                             @endif
@@ -295,7 +295,7 @@
                                                                 @endif
                                                             @endif
                                                             <h6 class="table-th text-withe text-left"
-                                                                style="font-size: 80%">
+                                                                style="font-size: 90%">
                                                                 Serv: {{ $item->type_service }}
                                                             </h6>
                                                             @if (@Auth::user()->hasPermissionTo('Recepcionar_Servicio'))
@@ -351,45 +351,45 @@
                                         </td>
                                         {{-- CODIGO --}}
                                         <td class="text-center" width="7%">
-                                            <h6 class="table-th text-withe text-center" style="font-size: 80%">
+                                            <h6 class="table-th text-withe text-center" style="font-size: 90%">
                                                 {{ $item->id }}</h6>
                                         </td>
                                         {{-- @if ($item->id < 10)
                                             <td class="text-center" width="7%">
-                                                <h6 class="table-th text-withe text-center" style="font-size: 80%">000{{ $item->id }}</h6>
+                                                <h6 class="table-th text-withe text-center" style="font-size: 90%">000{{ $item->id }}</h6>
                                             </td>
                                         @endif
                                         @if ($item->id < 100 && $item->id >= 10)
                                             <td class="text-center" width="7%">
-                                                <h6 class="table-th text-withe text-center" style="font-size: 80%">00{{ $item->id }}</h6>
+                                                <h6 class="table-th text-withe text-center" style="font-size: 90%">00{{ $item->id }}</h6>
                                             </td>
                                         @endif
                                         @if ($item->id < 1000 && $item->id >= 100)
                                             <td class="text-center" width="7%">
-                                                <h6 class="table-th text-withe text-center" style="font-size: 80%">0{{ $item->id }}</h6>
+                                                <h6 class="table-th text-withe text-center" style="font-size: 90%">0{{ $item->id }}</h6>
                                             </td>
                                         @endif
                                         @if ($item->id < 10000 && $item->id >= 1000)
                                             <td class="text-center" width="7%">
-                                                <h6 class="table-th text-withe text-center" style="font-size: 80%">{{ $item->id }}</h6>
+                                                <h6 class="table-th text-withe text-center" style="font-size: 90%">{{ $item->id }}</h6>
                                             </td>
                                         @endif --}}
 
                                         {{-- TOTAL --}}
                                         <td class="text-center" width="7%">
-                                            <h6 class="table-th text-withe text-center" style="font-size: 80%">
+                                            <h6 class="table-th text-withe text-center" style="font-size: 90%">
                                                 {{ number_format($mytotal, 2) }}
                                             </h6>
                                         </td>
                                         {{-- A CUENTA --}}
                                         <td class="text-center" width="8%">
-                                            <h6 class="table-th text-withe text-center" style="font-size: 80%">
+                                            <h6 class="table-th text-withe text-center" style="font-size: 90%">
                                                 {{ number_format($myacuenta, 2) }}
                                             </h6>
                                         </td>
                                         {{-- SALDO --}}
                                         <td class="text-center" width="7%">
-                                            <h6 class="table-th text-withe text-center" style="font-size: 80%">
+                                            <h6 class="table-th text-withe text-center" style="font-size: 90%">
                                                 {{ number_format($mysaldo, 2) }}
                                             </h6>
                                         </td>
@@ -411,7 +411,7 @@
                                         <tr>
                                             {{-- # --}}
                                             <td width="2%" {{-- style="background-color: #f7861c !important" --}}>
-                                                <h6 class="table-th text-withe text-center" style="font-size: 80%">
+                                                <h6 class="table-th text-withe text-center" style="font-size: 90%">
                                                     {{ $loop->iteration }}</h6>
                                             </td>
                                             {{-- @foreach ($item->services as $servicess)
@@ -419,13 +419,13 @@
                                                     @if ($mm->movs->status == 'INACTIVO' && $mm->movs->type == 'ANULADO')
                                                         <td width="2%" style="background-color: #f7861c !important">
                                                             <h6 class="table-th text-withe text-center"
-                                                                style="font-size: 80%">{{ $loop->iteration }}</h6>
+                                                                style="font-size: 90%">{{ $loop->iteration }}</h6>
                                                         </td>
                                                     @else
                                                         @if ($mm->movs->status == 'ACTIVO' && $mm->movs->type == 'PENDIENTE')
                                                             <td width="2%" style="background-color: #f81b1b !important">
                                                                 <h6 class="table-th text-withe text-center"
-                                                                    style="font-size: 80%">{{ $loop->iteration }}
+                                                                    style="font-size: 90%">{{ $loop->iteration }}
                                                                 </h6>
                                                             </td>
                                                         @else
@@ -433,7 +433,7 @@
                                                                 <td width="2%"
                                                                     style="background-color: #c1c1c1 !important">
                                                                     <h6 class="table-th text-withe text-center"
-                                                                        style="font-size: 80%">{{ $loop->iteration }}
+                                                                        style="font-size: 90%">{{ $loop->iteration }}
                                                                     </h6>
                                                                 </td>
                                                             @else
@@ -441,7 +441,7 @@
                                                                     <td width="2%"
                                                                         style="background-color: #e2f83c !important">
                                                                         <h6 class="table-th text-withe text-center"
-                                                                            style="font-size: 80%">
+                                                                            style="font-size: 90%">
                                                                             {{ $loop->iteration }}</h6>
                                                                     </td>
                                                                 @else
@@ -449,7 +449,7 @@
                                                                         <td width="2%"
                                                                             style="background-color: #3cf842 !important">
                                                                             <h6 class="table-th text-withe text-center"
-                                                                                style="font-size: 80%">
+                                                                                style="font-size: 90%">
                                                                                 {{ $loop->iteration }}</h6>
                                                                         </td>
                                                                     @endif
@@ -478,7 +478,7 @@
                                                             <div class="col-sm-2">
                                                                 @if ($key == 0)
                                                                     <h6 class="table-th text-withe text-center"
-                                                                        style="font-size: 80%"><b>
+                                                                        style="font-size: 90%"><b>
                                                                             {{ $service->movservices[0]->movs->climov->client->nombre }}</b>
                                                                     </h6>
                                                                 @endif
@@ -488,7 +488,7 @@
                                                                 @if ($mm->movs->status == 'ACTIVO' || ($mm->movs->status == 'INACTIVO' && $mm->movs->type == 'ANULADO'))
                                                                     <div class="col-sm-2">
                                                                         <h6 class="table-th text-withe text-center"
-                                                                            style="font-size: 80%">
+                                                                            style="font-size: 90%">
                                                                             {{ \Carbon\Carbon::parse($mm->movs->created_at)->format('d/m/Y h:i:s') }}
                                                                         </h6><br />
                                                                     </div>
@@ -499,7 +499,7 @@
                                                                 <a href="javascript:void(0)"
                                                                     wire:click="InfoService({{ $service->id }})"
                                                                     title="Ver Servicio">
-                                                                    <h6 style="font-size: 80%">
+                                                                    <h6 style="font-size: 90%">
                                                                         {{ $service->categoria->nombre }}&nbsp{{ $service->marca }}&nbsp
                                                                         | {{ $service->detalle }}&nbsp |
                                                                         {{ $service->falla_segun_cliente }}</h6>
@@ -516,57 +516,57 @@
                                                                         @endphp
                                                                     @endif
                                                                     @if (($mm->movs->status == 'ACTIVO' || ($mm->movs->status == 'INACTIVO' && $mm->movs->type == 'ANULADO')) && $valorbooleano == true)
-                                                                        <h6 style="font-size: 80%"><b>Responsable:</b>
+                                                                        <h6 style="font-size: 90%"><b>Responsable:</b>
                                                                             {{ $terminado }}</h6>
                                                                         @php
                                                                             $valorbooleano = false;
                                                                         @endphp
                                                                     @elseif($mm->movs->status == 'ACTIVO' || ($mm->movs->status == 'INACTIVO' && $mm->movs->type == 'ANULADO'))
-                                                                        <h6 style="font-size: 80%"><b>Responsable:</b>
+                                                                        <h6 style="font-size: 90%"><b>Responsable:</b>
                                                                             {{ $mm->movs->usermov->name }}</h6>
                                                                     @endif
 
                                                                     {{-- @if ($mm->movs->status == 'ACTIVO' || ($mm->movs->status == 'INACTIVO' && $mm->movs->type == 'ANULADO'))
                                                                         @foreach ($mm->movs->usermov->sucursalusers as $sucusu)
                                                                             @if ($sucusu->estado == 'ACTIVO')
-                                                                            <h6 style="font-size: 80%"><b>Sucursal: </b>
+                                                                            <h6 style="font-size: 90%"><b>Sucursal: </b>
                                                                                 {{$sucusu->sucursal->name}}</h6>
                                                                             @endif
                                                                         @endforeach
                                                                     @endif --}}
                                                                 @endforeach
-                                                                <h6 style="font-size: 80%"><b>Sucursal: </b>
+                                                                <h6 style="font-size: 90%"><b>Sucursal: </b>
                                                                     {{ $service->sucursalServ->name }}</h6>
                                                             </div>
                                                             {{-- ESTADO --}}
                                                             <div class="col-sm-4">
                                                                 @if ($mm->movs->type == 'PENDIENTE' && $mm->movs->status == 'ACTIVO')
                                                                     <h6 class="badge bg-danger text-center"
-                                                                        style="font-size: 80%">
+                                                                        style="font-size: 90%">
                                                                         <b>{{ $mm->movs->type }}</b>
                                                                     </h6>
                                                                 @else
                                                                     @if ($mm->movs->type == 'PROCESO' && $mm->movs->status == 'ACTIVO')
                                                                         <h6 class="badge bg-secondary text-center"
-                                                                            style="font-size: 80%">
+                                                                            style="font-size: 90%">
                                                                             <b>{{ $mm->movs->type }}</b>
                                                                         </h6>
                                                                     @else
                                                                         @if ($mm->movs->type == 'TERMINADO' && $mm->movs->status == 'ACTIVO')
                                                                             <h6 class="badge bg-warning text-center"
-                                                                                style="font-size: 80%">
+                                                                                style="font-size: 90%">
                                                                                 <b>{{ $mm->movs->type }}</b>
                                                                             </h6>
                                                                         @else
                                                                             @if ($mm->movs->type == 'ENTREGADO' && $mm->movs->status == 'ACTIVO')
                                                                                 <h6 class="badge bg-success text-center"
-                                                                                    style="font-size: 80%">
+                                                                                    style="font-size: 90%">
                                                                                     <b>{{ $mm->movs->type }}</b>
                                                                                 </h6>
                                                                             @else
                                                                                 @if ($mm->movs->type == 'ANULADO' && $mm->movs->status == 'INACTIVO')
                                                                                     <h6 class="badge bg-info text-center"
-                                                                                        style="font-size: 80%">
+                                                                                        style="font-size: 90%">
                                                                                         <b>{{ $mm->movs->type }}</b>
                                                                                     </h6>
                                                                                 @endif
@@ -575,7 +575,7 @@
                                                                     @endif
                                                                 @endif
                                                                 <h6 class="table-th text-withe text-left"
-                                                                    style="font-size: 80%">
+                                                                    style="font-size: 90%">
                                                                     Serv: {{ $item->type_service }}
                                                                 </h6>
                                                                 @if (@Auth::user()->hasPermissionTo('Recepcionar_Servicio'))
@@ -634,44 +634,44 @@
                                             </td>
                                             {{-- CODIGO --}}
                                             <td class="text-center" width="7%">
-                                                <h6 class="table-th text-withe text-center" style="font-size: 80%">
+                                                <h6 class="table-th text-withe text-center" style="font-size: 90%">
                                                     {{ $item->id }}</h6>
                                             </td>
                                             {{-- @if ($item->id < 10)
                                             <td class="text-center" width="7%">
-                                                <h6 class="table-th text-withe text-center" style="font-size: 80%">000{{ $item->id }}</h6>
+                                                <h6 class="table-th text-withe text-center" style="font-size: 90%">000{{ $item->id }}</h6>
                                             </td>
                                         @endif
                                         @if ($item->id < 100 && $item->id >= 10)
                                             <td class="text-center" width="7%">
-                                                <h6 class="table-th text-withe text-center" style="font-size: 80%">00{{ $item->id }}</h6>
+                                                <h6 class="table-th text-withe text-center" style="font-size: 90%">00{{ $item->id }}</h6>
                                             </td>
                                         @endif
                                         @if ($item->id < 1000 && $item->id >= 100)
                                             <td class="text-center" width="7%">
-                                                <h6 class="table-th text-withe text-center" style="font-size: 80%">0{{ $item->id }}</h6>
+                                                <h6 class="table-th text-withe text-center" style="font-size: 90%">0{{ $item->id }}</h6>
                                             </td>
                                         @endif
                                         @if ($item->id < 10000 && $item->id >= 1000)
                                             <td class="text-center" width="7%">
-                                                <h6 class="table-th text-withe text-center" style="font-size: 80%">{{ $item->id }}</h6>
+                                                <h6 class="table-th text-withe text-center" style="font-size: 90%">{{ $item->id }}</h6>
                                             </td>
                                         @endif --}}
                                             {{-- TOTAL --}}
                                             <td class="text-center" width="7%">
-                                                <h6 class="table-th text-withe text-center" style="font-size: 80%">
+                                                <h6 class="table-th text-withe text-center" style="font-size: 90%">
                                                     {{ number_format($mytotal, 2) }}
                                                 </h6>
                                             </td>
                                             {{-- A CUENTA --}}
                                             <td class="text-center" width="8%">
-                                                <h6 class="table-th text-withe text-center" style="font-size: 80%">
+                                                <h6 class="table-th text-withe text-center" style="font-size: 90%">
                                                     {{ number_format($myacuenta, 2) }}
                                                 </h6>
                                             </td>
                                             {{-- SALDO --}}
                                             <td class="text-center" width="7%">
-                                                <h6 class="table-th text-withe text-center" style="font-size: 80%">
+                                                <h6 class="table-th text-withe text-center" style="font-size: 90%">
                                                     {{ number_format($mysaldo, 2) }}
                                                 </h6>
                                             </td>
@@ -690,7 +690,7 @@
                                             <tr>
                                                 {{-- # --}}
                                                 <td width="2%">
-                                                    <h6 class="table-th text-withe text-center" style="font-size: 80%">
+                                                    <h6 class="table-th text-withe text-center" style="font-size: 90%">
                                                         {{ $loop->iteration }}</h6>
                                                 </td>
                                                 @php
@@ -712,7 +712,7 @@
                                                                 <div class="col-sm-2">
                                                                     @if ($key == 0)
                                                                         <h6 class="table-th text-withe text-center"
-                                                                            style="font-size: 80%"><b>
+                                                                            style="font-size: 90%"><b>
                                                                                 {{ $service->movservices[0]->movs->climov->client->nombre }}</b>
                                                                         </h6>
                                                                     @endif
@@ -722,7 +722,7 @@
                                                                     @if ($mm->movs->status == 'ACTIVO')
                                                                         <div class="col-sm-2">
                                                                             <h6 class="table-th text-withe text-center"
-                                                                                style="font-size: 80%">
+                                                                                style="font-size: 90%">
                                                                                 {{ \Carbon\Carbon::parse($mm->movs->created_at)->format('d/m/Y h:i:s') }}
                                                                             </h6><br />
                                                                         </div>
@@ -733,7 +733,7 @@
                                                                     <a href="javascript:void(0)"
                                                                         wire:click="InfoService({{ $service->id }})"
                                                                         title="Ver Servicio">
-                                                                        <h6 style="font-size: 80%">
+                                                                        <h6 style="font-size: 90%">
                                                                             {{ $service->categoria->nombre }}&nbsp{{ $service->marca }}&nbsp
                                                                             | {{ $service->detalle }}&nbsp |
                                                                             {{ $service->falla_segun_cliente }}</h6>
@@ -741,7 +741,7 @@
 
                                                                     {{-- @foreach ($service->movservices as $mm)
                                                             @if ($mm->movs->status == 'ACTIVO')
-                                                                <h6 style="font-size: 80%"><b>Responsable:</b>
+                                                                <h6 style="font-size: 90%"><b>Responsable:</b>
                                                                     {{ $mm->movs->usermov->name }}</h6>
                                                             @endif
                                                         @endforeach --}}
@@ -758,7 +758,7 @@
                                                                             @endphp
                                                                         @endif
                                                                         @if ($mm->movs->status == 'ACTIVO' && $valorbooleano == true)
-                                                                            <h6 style="font-size: 80%">
+                                                                            <h6 style="font-size: 90%">
                                                                                 <b>Responsable:</b>
                                                                                 {{ $terminado }}
                                                                             </h6>
@@ -766,7 +766,7 @@
                                                                                 $valorbooleano = false;
                                                                             @endphp
                                                                         @elseif($mm->movs->status == 'ACTIVO')
-                                                                            <h6 style="font-size: 80%">
+                                                                            <h6 style="font-size: 90%">
                                                                                 <b>Responsable:</b>
                                                                                 {{ $mm->movs->usermov->name }}
                                                                             </h6>
@@ -775,44 +775,44 @@
                                                                         {{-- @if ($mm->movs->status == 'ACTIVO')
                                                                         @foreach ($mm->movs->usermov->sucursalusers as $sucusu)
                                                                             @if ($sucusu->estado == 'ACTIVO')
-                                                                            <h6 style="font-size: 80%"><b>Sucursal: </b>
+                                                                            <h6 style="font-size: 90%"><b>Sucursal: </b>
                                                                                 {{$sucusu->sucursal->name}}</h6>
                                                                             @endif
                                                                         @endforeach
                                                                     @endif --}}
                                                                     @endforeach
-                                                                    <h6 style="font-size: 80%"><b>Sucursal: </b>
+                                                                    <h6 style="font-size: 90%"><b>Sucursal: </b>
                                                                         {{ $service->sucursalServ->name }}</h6>
                                                                 </div>
                                                                 {{-- ESTADO --}}
                                                                 <div class="col-sm-4">
                                                                     @if ($mm->movs->type == 'PENDIENTE' && $mm->movs->status == 'ACTIVO')
                                                                         <h6 class="badge bg-danger text-center"
-                                                                            style="font-size: 80%">
+                                                                            style="font-size: 90%">
                                                                             <b>{{ $mm->movs->type }}</b>
                                                                         </h6>
                                                                     @else
                                                                         @if ($mm->movs->type == 'PROCESO' && $mm->movs->status == 'ACTIVO')
                                                                             <h6 class="badge bg-secondary text-center"
-                                                                                style="font-size: 80%">
+                                                                                style="font-size: 90%">
                                                                                 <b>{{ $mm->movs->type }}</b>
                                                                             </h6>
                                                                         @else
                                                                             @if ($mm->movs->type == 'TERMINADO' && $mm->movs->status == 'ACTIVO')
                                                                                 <h6 class="badge bg-warning text-center"
-                                                                                    style="font-size: 80%">
+                                                                                    style="font-size: 90%">
                                                                                     <b>{{ $mm->movs->type }}</b>
                                                                                 </h6>
                                                                             @else
                                                                                 @if ($mm->movs->type == 'ENTREGADO' && $mm->movs->status == 'ACTIVO')
                                                                                     <h6 class="badge bg-success text-center"
-                                                                                        style="font-size: 80%">
+                                                                                        style="font-size: 90%">
                                                                                         <b>{{ $mm->movs->type }}</b>
                                                                                     </h6>
                                                                                 @else
                                                                                     @if ($mm->movs->type == 'ANULADO' && $mm->movs->status == 'INACTIVO')
                                                                                         <h6 class="badge bg-info text-center"
-                                                                                            style="font-size: 80%">
+                                                                                            style="font-size: 90%">
                                                                                             <b>{{ $mm->movs->type }}</b>
                                                                                         </h6>
                                                                                     @endif
@@ -821,7 +821,7 @@
                                                                         @endif
                                                                     @endif
                                                                     <h6 class="table-th text-withe text-left"
-                                                                        style="font-size: 80%">
+                                                                        style="font-size: 90%">
                                                                         Serv: {{ $item->type_service }}
                                                                     </h6>
                                                                     @if (@Auth::user()->hasPermissionTo('Recepcionar_Servicio'))
@@ -881,44 +881,44 @@
                                                 </td>
                                                 {{-- CODIGO --}}
                                                 <td class="text-center" width="7%">
-                                                    <h6 class="table-th text-withe text-center" style="font-size: 80%">
+                                                    <h6 class="table-th text-withe text-center" style="font-size: 90%">
                                                         {{ $item->id }}</h6>
                                                 </td>
                                                 {{-- @if ($item->id < 10)
                                         <td class="text-center" width="7%">
-                                            <h6 class="table-th text-withe text-center" style="font-size: 80%">000{{ $item->id }}</h6>
+                                            <h6 class="table-th text-withe text-center" style="font-size: 90%">000{{ $item->id }}</h6>
                                         </td>
                                     @endif
                                     @if ($item->id < 100 && $item->id >= 10)
                                         <td class="text-center" width="7%">
-                                            <h6 class="table-th text-withe text-center" style="font-size: 80%">00{{ $item->id }}</h6>
+                                            <h6 class="table-th text-withe text-center" style="font-size: 90%">00{{ $item->id }}</h6>
                                         </td>
                                     @endif
                                     @if ($item->id < 1000 && $item->id >= 100)
                                         <td class="text-center" width="7%">
-                                            <h6 class="table-th text-withe text-center" style="font-size: 80%">0{{ $item->id }}</h6>
+                                            <h6 class="table-th text-withe text-center" style="font-size: 90%">0{{ $item->id }}</h6>
                                         </td>
                                     @endif
                                     @if ($item->id < 10000 && $item->id >= 1000)
                                         <td class="text-center" width="7%">
-                                            <h6 class="table-th text-withe text-center" style="font-size: 80%">{{ $item->id }}</h6>
+                                            <h6 class="table-th text-withe text-center" style="font-size: 90%">{{ $item->id }}</h6>
                                         </td>
                                     @endif --}}
                                                 {{-- TOTAL --}}
                                                 <td class="text-center" width="7%">
-                                                    <h6 class="table-th text-withe text-center" style="font-size: 80%">
+                                                    <h6 class="table-th text-withe text-center" style="font-size: 90%">
                                                         {{ number_format($mytotal, 2) }}
                                                     </h6>
                                                 </td>
                                                 {{-- A CUENTA --}}
                                                 <td class="text-center" width="8%">
-                                                    <h6 class="table-th text-withe text-center" style="font-size: 80%">
+                                                    <h6 class="table-th text-withe text-center" style="font-size: 90%">
                                                         {{ number_format($myacuenta, 2) }}
                                                     </h6>
                                                 </td>
                                                 {{-- SALDO --}}
                                                 <td class="text-center" width="7%">
-                                                    <h6 class="table-th text-withe text-center" style="font-size: 80%">
+                                                    <h6 class="table-th text-withe text-center" style="font-size: 90%">
                                                         {{ number_format($mysaldo, 2) }}
                                                     </h6>
                                                 </td>
@@ -937,7 +937,7 @@
                         @endif
                         <tfoot>
                             <tr>
-                                <td colspan="2" class="text-left" style="font-size: 80%">
+                                <td colspan="2" class="text-left" style="font-size: 90%">
                                     <span><b>TOTAL</b></span>
                                 </td>
                                 {{-- <td class="text-right" colspan="4">
@@ -947,7 +947,7 @@
 
                                         </strong></span>
                                 </td> --}}
-                                <td class="text-right" colspan="2" style="font-size: 80%">
+                                <td class="text-right" colspan="2" style="font-size: 90%">
                                     <span><strong>
                                             @php
                                                 $mytotal = 0;

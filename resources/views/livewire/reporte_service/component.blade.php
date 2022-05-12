@@ -103,24 +103,24 @@
                             <table class="table table-unbordered table-hover mt-1">
                                 <thead class="text-white" style="background: #3B3F5C">
                                     <tr>
-                                        <th class="table-th text-withe text-center" style="font-size: 70%">CLIENTE</th>
-                                        <th class="table-th text-withe text-center" style="font-size: 70%">ORDEN</th>
-                                        <th class="table-th text-withe text-center" style="font-size: 70%">FECHA HORA
+                                        <th class="table-th text-withe text-center" style="font-size: 90%">CLIENTE</th>
+                                        <th class="table-th text-withe text-center" style="font-size: 90%">ORDEN</th>
+                                        <th class="table-th text-withe text-center" style="font-size: 90%">FECHA HORA
                                             REC.</th>
-                                        <th class="table-th text-withe text-center" style="font-size: 70%">FECHA HORA
+                                        <th class="table-th text-withe text-center" style="font-size: 90%">FECHA HORA
                                             TERM.</th>
-                                        <th class="table-th text-withe text-center" style="font-size: 70%">FECHA HORA
+                                        <th class="table-th text-withe text-center" style="font-size: 90%">FECHA HORA
                                             ENTR.</th>
-                                        <th class="table-th text-withe text-center" style="font-size: 70%">COSTO</th>
-                                        <th class="table-th text-withe text-center" style="font-size: 70%">IMPORTE</th>
-                                        <th class="table-th text-withe text-center" style="font-size: 70%">A CUENTA</th>
-                                        <th class="table-th text-withe text-center" style="font-size: 70%">SALDO</th>
+                                        <th class="table-th text-withe text-center" style="font-size: 90%">COSTO</th>
+                                        <th class="table-th text-withe text-center" style="font-size: 90%">IMPORTE</th>
+                                        {{-- <th class="table-th text-withe text-center" style="font-size: 90%">A CUENTA</th>
+                                        <th class="table-th text-withe text-center" style="font-size: 90%">SALDO</th>
 
-                                        <th class="table-th text-withe text-center" style="font-size: 70%">TIPO SERVICIO
-                                        </th>
-                                        <th class="table-th text-withe text-center" style="font-size: 70%">DETALLE</th>
-                                        <th class="table-th text-withe text-center" style="font-size: 70%">ESTADO</th>
-                                        <th class="table-th text-withe text-center" style="font-size: 70%">TEC. RESP.
+                                        <th class="table-th text-withe text-center" style="font-size: 90%">TIPO SERVICIO</th> --}}
+                                        <th class="table-th text-withe text-center" style="font-size: 90%">UTILIDAD</th>
+                                        <th class="table-th text-withe text-center" style="font-size: 90%">DETALLE</th>
+                                        <th class="table-th text-withe text-center" style="font-size: 90%">ESTADO</th>
+                                        <th class="table-th text-withe text-center" style="font-size: 90%">TEC. RESP.
                                         </th>
 
                                     </tr>
@@ -138,62 +138,62 @@
                                         <tr>
                                             {{-- CLIENTE --}}
                                             <td class="text-center">
-                                                <h6 style="font-size: 70%">
+                                                <h6 style="font-size: 90%">
                                                     {{ $d->movservices[0]->movs->climov->client->nombre }}</h6>
                                             </td>
                                             {{-- NÚMERO ORDEN --}}
                                             <td class="text-center">
-                                                <h6 style="font-size: 70%">{{ $d->order_service_id }}</h6>
+                                                <h6 style="font-size: 90%">{{ $d->order_service_id }}</h6>
                                             </td>
                                             {{-- FECHA --}}
                                             @foreach ($d->movservices as $mv)
                                                 @if ($mv->movs->type == 'PENDIENTE')
                                                     <td class="text-center">
-                                                        <h6 style="font-size: 70%">
+                                                        <h6 style="font-size: 90%">
                                                             {{ \Carbon\Carbon::parse($mv->movs->created_at)->format('d/m/Y') }}
                                                         </h6>
                                                     </td>
                                                     @if ($mv->movs->status == 'ACTIVO')
                                                         <td class="text-center">
-                                                            <h6 style="font-size: 70%">Pendiente</h6>
+                                                            <h6 style="font-size: 90%">Pendiente</h6>
                                                         </td>
                                                         <td class="text-center">
-                                                            <h6 style="font-size: 70%">Pendiente</h6>
+                                                            <h6 style="font-size: 90%">Pendiente</h6>
                                                         </td>
                                                     @endif
                                                 @endif
                                                 @if ($mv->movs->type == 'PROCESO')
                                                     @if ($mv->movs->status == 'ACTIVO')
                                                         <td class="text-center">
-                                                            <h6 style="font-size: 70%">Proceso</h6>
+                                                            <h6 style="font-size: 90%">Proceso</h6>
                                                         </td>
                                                         <td class="text-center">
-                                                            <h6 style="font-size: 70%">Proceso</h6>
+                                                            <h6 style="font-size: 90%">Proceso</h6>
                                                         </td>
                                                     @endif
                                                 @endif
                                                 @if ($mv->movs->type == 'TERMINADO')
                                                     <td class="text-center">
-                                                        <h6 style="font-size: 70%">
+                                                        <h6 style="font-size: 90%">
                                                             {{ \Carbon\Carbon::parse($mv->movs->created_at)->format('d/m/Y') }}
                                                         </h6>
                                                     </td>
                                                     @if ($mv->movs->status == 'ACTIVO')
                                                         <td class="text-center">
-                                                            <h6 style="font-size: 70%">Terminado</h6>
+                                                            <h6 style="font-size: 90%">Terminado</h6>
                                                         </td>
                                                     @endif
                                                 @endif
 
                                                 @if ($mv->movs->type == 'ENTREGADO')
                                                     <td class="text-center">
-                                                        <h6 style="font-size: 70%">
+                                                        <h6 style="font-size: 90%">
                                                             {{ \Carbon\Carbon::parse($mv->movs->created_at)->format('d/m/Y') }}
                                                         </h6>
                                                     </td>
                                                 @elseif ($mv->movs->type == 'ABANDONADO')
                                                     <td class="text-center">
-                                                        <h6 style="font-size: 70%">Abandonado</h6>
+                                                        <h6 style="font-size: 90%">Abandonado</h6>
                                                     </td>
                                                 @endif
 
@@ -213,76 +213,88 @@
                                             @endforeach
                                             {{-- COSTO --}}
                                             <td class="text-center">
-                                                <h6 style="font-size: 70%">{{ number_format($d->costo, 2) }}</h6>
+                                                <h6 style="font-size: 90%">{{ number_format($d->costo, 2) }}</h6>
                                             </td>
                                             {{-- TOTAL --}}
                                             <td class="text-center">
-                                                <h6 style="font-size: 70%">
+                                                <h6 style="font-size: 90%">
                                                     {{ number_format($d->movservices[0]->movs->import, 2) }}</h6>
                                             </td>
                                             {{-- A CUENTA --}}
-                                            <td class="text-center">
-                                                <h6 style="font-size: 70%">
+                                            {{-- <td class="text-center">
+                                                <h6 style="font-size: 90%">
                                                     {{ number_format($d->movservices[0]->movs->on_account, 2) }}</h6>
-                                            </td>
+                                            </td> --}}
                                             {{-- SALDO --}}
-                                            <td class="text-center">
-                                                <h6 style="font-size: 70%">
+                                            {{-- <td class="text-center">
+                                                <h6 style="font-size: 90%">
                                                     {{ number_format($d->movservices[0]->movs->saldo, 2) }}</h6>
-                                            </td>
+                                            </td> --}}
                                             {{-- TIPO SERVICIO --}}
+                                            {{-- <td class="text-center">
+                                                <h6 style="font-size: 90%">{{ $d->OrderServicio->type_service }}</h6>
+                                            </td> --}}
+
+                                            {{-- UTILIDAD --}}
                                             <td class="text-center">
-                                                <h6 style="font-size: 70%">{{ $d->OrderServicio->type_service }}</h6>
+                                                <h6 style="font-size: 90%">{{ number_format($d->utilidad, 2) }}</h6>
                                             </td>
+
                                             {{-- DETALLE --}}
                                             <td class="text-center">
-                                                <h6 style="font-size: 70%">{{ $d->marca }}
-                                                    {{ $d->categoria->nombre }}</h6>
+                                                <h6 style="font-size: 90%">{{ $d->marca }}
+                                                    {{ $d->categoria->nombre }} {{ $d->detalle }}</h6>
+                                                <h6 style="font-size: 90%"><b>Falla:</b> {{ $d->falla_segun_cliente }}</h6>
+
                                             </td>
                                             {{-- ESTADO Y TECNICO RESPONSABLE --}}
                                             @foreach ($d->movservices as $mv)
                                                 @if ($mv->movs->type == 'PENDIENTE' && $mv->movs->status == 'ACTIVO')
                                                     <td class="text-center">
-                                                        <h6 class="badge bg-danger text-center" style="font-size: 70%">{{ $mv->movs->type }}</h6>
+                                                        <h6 class="badge bg-danger text-center" style="font-size: 90%">
+                                                            {{ $mv->movs->type }}</h6>
                                                     </td>
                                                     <td class="text-center">
-                                                        <h6 style="font-size: 70%">{{ $mv->movs->usermov->name }}
+                                                        <h6 style="font-size: 90%">{{ $mv->movs->usermov->name }}
                                                         </h6>
                                                     </td>
                                                 @endif
                                                 @if ($mv->movs->type == 'PROCESO' && $mv->movs->status == 'ACTIVO')
                                                     <td class="text-center">
-                                                        <h6 class="badge bg-secondary text-center" style="font-size: 70%">{{ $mv->movs->type }}</h6>
+                                                        <h6 class="badge bg-secondary text-center"
+                                                            style="font-size: 90%">{{ $mv->movs->type }}</h6>
                                                     </td>
                                                     <td class="text-center">
-                                                        <h6 style="font-size: 70%">{{ $mv->movs->usermov->name }}
+                                                        <h6 style="font-size: 90%">{{ $mv->movs->usermov->name }}
                                                         </h6>
                                                     </td>
                                                 @endif
                                                 @if ($mv->movs->type == 'TERMINADO' && $mv->movs->status == 'ACTIVO')
                                                     <td class="text-center">
-                                                        <h6 class="badge bg-warning text-center" style="font-size: 70%">{{ $mv->movs->type }}</h6>
+                                                        <h6 class="badge bg-warning text-center" style="font-size: 90%">
+                                                            {{ $mv->movs->type }}</h6>
                                                     </td>
                                                     <td class="text-center">
-                                                        <h6 style="font-size: 70%">{{ $mv->movs->usermov->name }}
+                                                        <h6 style="font-size: 90%">{{ $mv->movs->usermov->name }}
                                                         </h6>
                                                     </td>
                                                 @endif
                                                 @if ($mv->movs->type == 'ENTREGADO' && $mv->movs->status == 'ACTIVO')
                                                     <td class="text-center">
-                                                        <h6 class="badge bg-success text-center" style="font-size: 70%">{{ $mv->movs->type }}</h6>
+                                                        <h6 class="badge bg-success text-center" style="font-size: 90%">
+                                                            {{ $mv->movs->type }}</h6>
                                                     </td>
                                                     <td class="text-center">
-                                                        <h6 style="font-size: 70%">
+                                                        <h6 style="font-size: 90%">
                                                             {{ $d->movservices[2]->movs->usermov->name }}</h6>
                                                     </td>
                                                 @endif
                                                 @if ($mv->movs->type == 'ABANDONADO' && $mv->movs->status == 'ACTIVO')
                                                     <td class="text-center">
-                                                        <h6 style="font-size: 70%">{{ $mv->movs->type }}</h6>
+                                                        <h6 style="font-size: 90%">{{ $mv->movs->type }}</h6>
                                                     </td>
                                                     <td class="text-center">
-                                                        <h6 style="font-size: 70%">{{ $mv->movs->usermov->name }}
+                                                        <h6 style="font-size: 90%">{{ $mv->movs->usermov->name }}
                                                         </h6>
                                                     </td>
                                                 @endif
@@ -295,15 +307,19 @@
                                 <tfoot>
                                     <tr>
                                         <td colspan="2" class="text-left">
-                                            <span style="font-size: 70%"><b>TOTALES</b></span>
+                                            <span style="font-size: 90%"><b>TOTALES</b></span>
                                         </td>
                                         <td class="text-right" colspan="4">
-                                            <span style="font-size: 70%"><strong>
-                                                    {{ number_format($data->sum('costo'), 2) }} bs.
+                                            <span style="font-size: 90%"><strong>
+                                                    @if (($estado == 'ENTREGADO' && $userId != 0) || ($estado == 'Todos' && $userId != 0))
+                                                        {{ $costoEntregado }}
+                                                    @else
+                                                        {{ number_format($data->sum('costo'), 2) }}
+                                                    @endif
                                                 </strong></span>
                                         </td>
                                         <td class="text-right" colspan="1">
-                                            <span style="font-size: 70%"><strong>
+                                            <span style="font-size: 90%"><strong>
                                                     @php
                                                         $mytotal = 0;
                                                     @endphp
@@ -316,8 +332,13 @@
                                                             @endif
                                                         @endforeach
                                                     @endforeach
-                                                    {{ number_format($mytotal, 2) }} bs.
+                                                    {{ number_format($mytotal, 2) }}
 
+                                                </strong></span>
+                                        </td>
+                                        <td class="text-right" colspan="0">
+                                            <span style="font-size: 90%"><strong>
+                                                    {{ number_format($sumaUtilidad, 2) }}
                                                 </strong></span>
                                         </td>
 
@@ -331,7 +352,7 @@
             </div>
         </div>
     </div>
-    
+
 </div>
 
 <script>
