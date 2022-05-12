@@ -7,9 +7,9 @@
                     <div class="row mb-3" >
                         <div class="col-lg-11" >
                             <h5 class="mb-2 mt-2">DETALLE DE COMPRA</h5>
-                            <b>Fecha: </b>
+                            <b style="color: rgb(74, 74, 74)" >Fecha: </b>
                             {{$fecha_compra}}<br/>  
-                            <b>Registrado por: </b> 
+                            <b style="color: rgb(74, 74, 74)"  >Registrado por: </b> 
                             {{$usuario}}<br/>
                             
                         </div>
@@ -20,14 +20,14 @@
                         </div>
                         
                     </div>
-                    <hr style="height:3px;border:none;color:rgb(189, 188, 188);background-color:rgb(230, 152, 64);" />
+                    <hr style="height:3px;border:none;color:rgb(189, 188, 188);background-color:rgb(229, 140, 40);" />
                         <div class="row">
 
-                             <div class="col-12 col-md-4 col-lg-4 card">
+                             <div class="col-12 col-md-4 col-lg-4">
                                  <div class="row">
                                      <div class="col-lg-12">
                                          <div class="form-group">
-                                             <strong>Proveedor</strong>
+                                             <strong style="color: rgb(74, 74, 74)">Proveedor</strong>
                                              <div class="input-group-prepend mb-3">
                                                  <input list="provider" wire:model="provider" class="form-control">
                                                  <datalist id="provider">
@@ -48,7 +48,7 @@
                                 <div class="col-lg-12">
                                         
                                         <div class="form-group">
-                                            <strong>Destino Producto</strong>
+                                            <strong style="color: rgb(74, 74, 74)">Destino Producto</strong>
                                             <select wire:model.lazy="destino" class="form-control">
                                               <option value='Elegir'>Elegir Destino</option>
 
@@ -67,38 +67,45 @@
                                  </div>
                              </div>
 
-                             <div class="col-12 col-md-4 col-lg-4 card" style="border: thick #b4b4b1;" >
-
+                             <div class="col-12 col-md-4 col-lg-4" style="border: thick #b4b4b1;" >
                                 <div class="row">
 
                                     <div class="col-lg-6">
                                         <div class="form-group">
-                                          <strong>Dscto. en compras:</strong>
-                                          <input type="text" wire:model="descuento" wire:change="descuento_change" class="form-control">
-                                          @error('descuento')
+                                          <strong style="color: rgb(74, 74, 74)">Tipo de Documento:</strong>
+                                          <select wire:model='tipo_documento' class="form-control">
+                                              <option value='FACTURA' selected>Factura</option>
+                                              <option value='NOTA DE VENTA'>Nota de Venta</option>
+                                              <option value='RECIBO'>Recibo</option>
+                                              <option value='NINGUNO'>Ninguno</option>
+                                          </select>
+                                          @error('tipo_documento')
                                               <span class="text-danger er">{{ $message }}</span>
-                                          @enderror   
-                                          
-                                          
-
+                                          @enderror                                          
                                        </div>
                                     </div>
    
                                     <div class="col-lg-6">
                                         <div class="form-group">
-                                            <strong>Dscto. </strong>
-                                            <h5>{{$porcentaje}}%</h5>
+                                            <strong style="color: rgb(74, 74, 74)">Nro. de Documento</strong>
+                                            <input type="text" wire:model.lazy="nro_documento" class="form-control">
+                                            @error('nro_documento')
+                                                <span class="text-danger er">{{ $message }}</span>
+                                            @enderror
                                           </div>
                                     </div>
+    
+                                   
                                 </div>
+                              
                                 <div class="row">
                                     <div class="col-lg-6">
 
                                         <div class="form-group">
-                                            <strong>Tipo transaccion:</strong>
+                                            <strong style="color: rgb(74, 74, 74)">Tipo transaccion:</strong>
                                             <select wire:model='tipo_transaccion' class="form-control">
-                                                <option value="CONTADO" selected>Contado</option>
-                                                <option value="CREDITO">Credito</option>
+                                                <option value="Contado" selected>Contado</option>
+                                                <option value="Credito">Credito</option>
                                                 
                                             </select>
                                             @error('tipo_documento')
@@ -108,7 +115,7 @@
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group">
-                                            <strong>Pago parcial:</strong>
+                                            <strong style="color: rgb(74, 74, 74)">Pago parcial:</strong>
 
                                             @if($tipo_transaccion == "CONTADO")
 
@@ -126,41 +133,13 @@
                              </div>
                              <div class="col-12 col-md-4 col-lg-4" style="border: thick #b4b4b1;" >
 
-                                <div class="row">
-
-                                    <div class="col-lg-6">
-                                        <div class="form-group">
-                                          <strong>Tipo de Documento:</strong>
-                                          <select wire:model='tipo_documento' class="form-control">
-                                              <option value='FACTURA' selected>Factura</option>
-                                              <option value='NOTA DE VENTA'>Nota de Venta</option>
-                                              <option value='RECIBO'>Recibo</option>
-                                              <option value='NINGUNO'>Ninguno</option>
-                                          </select>
-                                          @error('tipo_documento')
-                                              <span class="text-danger er">{{ $message }}</span>
-                                          @enderror                                          
-                                       </div>
-                                    </div>
-   
-                                    <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <strong>Nro. de Documento</strong>
-                                            <input type="text" wire:model.lazy="nro_documento" class="form-control">
-                                            @error('nro_documento')
-                                                <span class="text-danger er">{{ $message }}</span>
-                                            @enderror
-                                          </div>
-                                    </div>
-    
-                                    <div class="col-lg-12">
-                                        <div class="form-group">
-                                               <strong>Observacion: </strong>
-                                            <textarea  wire:model='observacion' class="form-control" aria-label="With textarea"></textarea>
-                                            @error('observacion')
-                                            <span class="text-danger er">{{ $message }}</span>
-                                            @enderror
-                                        </div>
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                           <strong style="color: rgb(74, 74, 74)">Observacion: </strong>
+                                        <textarea  wire:model='observacion' class="form-control" aria-label="With textarea"></textarea>
+                                        @error('observacion')
+                                        <span class="text-danger er">{{ $message }}</span>
+                                        @enderror
                                     </div>
                                 </div>
 
@@ -252,18 +231,18 @@
                
                     <div class="col-lg-8 col-12  col-md-12">
                         <div class="widget mr-2 mb-2 mt-2">
-                                <div class="table-responsive p-1">
-                                    <table class="table table-unbordered table-hover mt-2">
-                                        <thead class="text-white" style="background: #3B3F5C">
-                                            <tr>
-                                                <th class="table-th text-withe text-center" style="width: 12rem">Producto</th>
-                                                <th class="table-th text-withe text-center">Codigo</th>
-                                                <th class="table-th text-withe text-center">Precio <br>Compra</th>
-                                                <th class="table-th text-withe text-center">Precio <br>Venta</th>
-                                                <th class="table-th text-withe text-center">Cantidad</th>
-                                                <th class="table-th text-withe text-center">Total</th>
+                                <div class="table-responsive p-0">
+                                    <table style="background: #ffffff" class="table-hover mt-2">
+                                        <thead  style="background: #595959" class="">
+                                            <tr class="m-2">
+                                                <th class="text-center" style="width: 12rem; color:#ffffff; font-size:1rem">Producto</th>
+                                                <th class="text-center" style="width: 5rem; color:#ffffff">Codigo</th>
+                                                <th class="text-center" style="width: 5rem; color:#ffffff" >Precio <br>Compra</th>
+                                                <th class="text-center" style="width: 5rem; color:#ffffff">Precio <br>Venta</th>
+                                                <th class="text-center" style="width: 5rem; color:#ffffff">Cantidad</th>
+                                                <th class="text-center" style="width: 6rem; color:#ffffff">Total</th>
                                              
-                                                <th class="table-th text-withe text-center">Acc.</th>
+                                                <th class="text-center" style="width: 6rem; color:#ffffff" >Accion</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -273,13 +252,13 @@
                                                         <h6 style="font-size: 0.90rem" >{{$prod->name}}</h6>
                                                     </td>
                                                     <td>
-                                                        <strong><h6> {{$prod->attributes->codigo}}</h6></strong>
+                                                        <strong><h6 style="font-size: 0.8rem!important;"> {{$prod->attributes->codigo}}</h6></strong>
                                                     </td>
                                                     <td>
                                                          <input type="text" 
                                                          id="r{{$prod->id}}" 
                                                          wire:change="UpdatePrice({{$prod->id}}, $('#r' + {{$prod->id}}).val() )" 
-                                                         style="font-size: 1rem!important;" 
+                                                         style="font-size: 0.8rem!important; padding:0!important" 
                                                          class="form-control text-center" 
                                                          value="{{$prod->price}}">
                                                     </td>
@@ -288,7 +267,7 @@
                                                         <input type="text" 
                                                          id="rs{{$prod->id}}" 
                                                          wire:change="UpdatePrecioVenta({{$prod->id}}, $('#rs' + {{$prod->id}}).val() )" 
-                                                         style="font-size: 1rem!important;" 
+                                                         style="font-size: 0.8rem!important; padding:0!important" 
                                                          class="form-control text-center" 
                                                          value="{{$prod->attributes->precio}}">
 
@@ -300,13 +279,13 @@
                                                          <input type="text" 
                                                          id="rr{{$prod->id}}" 
                                                          wire:change="UpdateQty({{$prod->id}}, $('#rr' + {{$prod->id}}).val() )" 
-                                                         style="font-size: 1rem!important; padding:0.1rem" 
+                                                         style="font-size: 0.8rem!important; padding:0!important" 
                                                          class="form-control text-center" 
                                                          value="{{$prod->quantity}}">
                                                     </td>
                                                    
                                                     <td>
-                                                        <h6>{{$prod->getPriceSum()}}</h6>
+                                                        <h6 style="font-size: 0.8rem!important;" class="text-center" >{{$prod->getPriceSum()}}</h6>
                                                     </td>
                                                     <td class="text-center">
                                                         <a href="javascript:void(0)"
@@ -320,27 +299,31 @@
                                             @endforeach
                                             <tfoot class="text-white text-right" style="background: #fffefd"  >
                                                     <tr>
-                                                        <td colspan="6">
-                                                             <h5 class="text-dark">SubTotal.-</h5>
+                                                        <td colspan="5">
+                                                             <h5 class="text-dark" style="font-size: 1rem!important;">SubTotal.-</h5>
                                                         </td>
                                                         <td>
-                                                            <h5 class="text-dark" >{{$subtotal}}</h5>
+                                                            <h5 class="text-dark" style="font-size: 1rem!important;" >{{$subtotal}}</h5>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td colspan="6">
-                                                             <h5 class="text-dark">Descuento.-</h5>
+
+                                                        <td colspan="5">
+                                                            <a href="javascript:void(0)" data-toggle="modal"
+                                                            data-target="#modal_desc"
+                                                            class="btn btn-dark mtmobile p-1 m-1 rounded-pill"><strong>%</strong> </i></a>
+                                                            <label class="text-dark" style="font-size: 1rem!important;"><strong>Descuento</strong> .-</label>
                                                         </td>
                                                         <td>
-                                                            <h5 class="text-dark" >{{$descuento}}</h5>
+                                                            <h5 class="text-dark" >{{$dscto}}</h5>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td colspan="6">
-                                                             <h5 class="text-dark">Total.-</h5>
+                                                        <td colspan="5">
+                                                             <h5 class="text-dark" style="font-size: 1rem!important;">Total.-</h5>
                                                         </td>
                                                         <td>
-                                                            <h5 class="text-dark" >{{$total_compra}}</h5>
+                                                            <h5 class="text-dark" style="font-size: 1rem!important;" >{{$total_compra}}</h5>
                                                         </td>
                                                     </tr>
                                             </tfoot>
@@ -349,16 +332,11 @@
                                 </div>
                             
                         </div>
-                        <div class="row">
+                        <div class="row align-items-center justify-content-center">
 
-                            <div class="col-lg-6">
-        
-                                <button class="btn btn-info m-3"  wire:click.prevent="guardarCompra()"> <h4 style="color: aliceblue" >Guardar Compra</h4> </button>
-                            </div>
-                            <div class="col-lg-6">
-        
-                                <button class="btn btn-danger m-3"> <h4 style="color: aliceblue" >Cancelar Compra</h4> </button>
-                            </div>
+                                <button class="btn btn-info m-3 p-2"  wire:click.prevent="guardarCompra()"> <h5 style="color: aliceblue" >Guardar Compra</h5> </button>
+                                <button class="btn btn-danger m-3 p-2"  wire:click.prevent="exit()" > <h5 style="color: aliceblue" >Cancelar Compra</h5> </button>
+                            
                         </div>
                     </div>
                 </div>
@@ -367,6 +345,7 @@
     </div>
     @include('livewire.compras.provider_info')
     @include('livewire.products.form')
+    @include('livewire.compras.descuento')
  </div>
  <script>
      document.addEventListener('DOMContentLoaded', function() {
@@ -375,6 +354,10 @@
          });
          window.livewire.on('prov_added', msg => {
              $('#modal_prov').modal('hide')
+             noty(Msg)
+         });
+         window.livewire.on('dscto_added', msg => {
+             $('#modal_desc').modal('hide')
              noty(Msg)
          });
          window.livewire.on('products_added', msg => {

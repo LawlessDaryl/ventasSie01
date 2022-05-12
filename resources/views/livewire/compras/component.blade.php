@@ -124,7 +124,7 @@
                                                     <h6 class="text-center">{{ $data->transaccion }}</h6>
                                                 </td>
                                                 <td>
-                                                    <h6 class="text-center">{{ $data->saldo_por_pagar }}</h6>
+                                                    <h6 class="text-center">{{ $data->saldo }}</h6>
                                                 </td>
                                               
                                                 @if( $data->status_compra == 'ACTIVO')

@@ -36,7 +36,7 @@ class DetalleComprasController extends Component
     public  $nro_compra,$search,$provider,$fecha_compra,
     $usuario,$metodo_pago,$pago_parcial=0,$tipo_documento,$nro_documento,$observacion
     ,$selected_id,$descuento=0,$saldo=0,$subtotal,$cantidad_minima,
-    $estado_compra,$total_compra,$itemsQuantity,$price,$status,$tipo_transaccion,$destino,$porcentaje,$importe;
+    $estado_compra,$total_compra,$itemsQuantity,$price,$status,$tipo_transaccion,$destino,$porcentaje,$importe,$dscto;
 
     public $nombre_prov, $apellido_prov, $direccion_prov, $correo_prov,
     $telefono_prov;
@@ -97,7 +97,7 @@ class DetalleComprasController extends Component
 
     public function increaseQty($productId, $cant = 1,$precio_compra = 0)
     {  
-        $title = 'aaa';
+       
         $product = Product::select('products.*')
         ->where('products.id',$productId)->first();
        
@@ -188,12 +188,7 @@ class DetalleComprasController extends Component
         $prices=$exist->price;
         $precio_venta=$exist->attributes->precio;
         $codigo=$exist->attributes->codigo;
-       
-        if ($exist) {
-            $title = "cantidad actualizada";
-        } else {
-            $title = "producto agregado";
-        }
+     
        
         $this->removeItem($productId);
        
@@ -274,6 +269,19 @@ class DetalleComprasController extends Component
         }
     }
 
+    public function aplicarDescto(){
+
+        $this->dscto= $this->descuento;
+      
+        $this->emit('dscto_added','Descuento aplicado satisfactoriamente');
+        
+    }
+
+    public function cancelDscto(){
+        $this->descuento=null;
+        $this->porcentaje=0;
+    }
+
     public function UpdatePrecioVenta($productId, $price = 20)
     {
         $title = '';
@@ -343,6 +351,12 @@ class DetalleComprasController extends Component
 
     }
 
+    public function exit(){
+        Compras::clear();
+        $this->resetUI();
+        redirect('/compras');
+    }
+
     public function resetUI()
     {
        
@@ -351,7 +365,6 @@ class DetalleComprasController extends Component
         $this->precio_venta='';
         $this->caracteristicas='';
         $this->codigo ='';
-
         $this->lote = '';
         $this->unidad = '';
         $this->marca = null;
@@ -413,7 +426,7 @@ class DetalleComprasController extends Component
             return;
         }*/
 
-        if ($this->tipo_transaccion === 'Credito') {
+        if ($this->tipo_transaccion == "Credito") {
             $this->saldo =$this->total_compra-$this->pago_parcial;
             $this->importe=$this->pago_parcial;
         }
@@ -439,7 +452,8 @@ class DetalleComprasController extends Component
                 'proveedor_id'=>Provider::select('providers.id')->where('nombre_prov',$this->provider)->value('providers.id'),
                 'estado_compra'=>$this->estado_compra,
                 'status'=>$this->status,
-                'destino_id'=>$this->destino
+                'destino_id'=>$this->destino,
+                'user_id'=> Auth()->user()->id
             ]);
 
             if ($this->tipo_transaccion === 'Contado' || $this->pago_parcial>0) {

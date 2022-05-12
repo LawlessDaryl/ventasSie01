@@ -21,7 +21,8 @@ class Compra extends Model
                             'proveedor_id',
                             'estado_compra',
                             'status',
-                            'destino_id'
+                            'destino_id',
+                            'user_id'
                         ];
     
     public function compradetalle()

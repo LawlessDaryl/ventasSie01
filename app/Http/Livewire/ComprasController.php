@@ -39,11 +39,9 @@ class ComprasController extends Component
     public function render()
     {
         $this->consultar();
-        $this->datas_compras= Compra::join('movimiento_compras as mov_compra','compras.id','mov_compra.id')
-        ->join('movimientos as mov','mov_compra.id','mov.id')
-        ->join('users','mov.user_id','users.id')
-        ->join('providers as prov','compras.proveedor_id','prov.id')
-        ->select('compras.*','compras.id as compra_id','compras.status as status_compra','mov.*','prov.nombre_prov as nombre_prov','users.name')
+        $this->datas_compras= Compra::join('providers as prov','compras.proveedor_id','prov.id')
+        ->join('users','users.id','compras.user_id')
+        ->select('compras.*','compras.id as compra_id','compras.status as status_compra','prov.nombre_prov as nombre_prov','users.name')
         ->whereBetween('compras.created_at',[$this->from,$this->to])
         ->where('compras.transaccion',$this->filtro)
         ->orderBy('compras.fecha_compra')
