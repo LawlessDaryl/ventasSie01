@@ -452,12 +452,7 @@ class DetalleComprasController extends Component
                 'proveedor_id'=>Provider::select('providers.id')->where('nombre_prov',$this->provider)->value('providers.id'),
                 'estado_compra'=>$this->estado_compra,
                 'status'=>$this->status,
-<<<<<<< HEAD
                 'destino_id'=>$this->destino
-=======
-                'destino_id'=>$this->destino,
-                'user_id'=> Auth()->user()->id
->>>>>>> 7de76cfeff1f7fa3b8234322b59ba950625b7c77
             ]);
 
             if ($this->tipo_transaccion === 'Contado' || $this->pago_parcial>0) {

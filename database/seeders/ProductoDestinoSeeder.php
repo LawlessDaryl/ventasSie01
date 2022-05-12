@@ -119,16 +119,7 @@ class ProductoDestinoSeeder extends Seeder
             'destino_id' => 4,
             'stock' => '1',
         ]);
-        ProductosDestino::create([
-            'product_id'=> 3,
-            'location_id' => 4,
-            'stock' => '2',
-        ]);
-        ProductosDestino::create([
-            'product_id'=> 4,
-            'location_id' => 4,
-            'stock' => '11',
-        ]);
+      
 
     }
 }
