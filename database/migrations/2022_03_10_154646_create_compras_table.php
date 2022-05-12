@@ -33,11 +33,8 @@ class CreateComprasTable extends Migration
             $table->enum('estado_compra',['finalizada','no_finalizada','P']);
             $table->enum('status',['ACTIVO','INACTIVO','P'])->default('ACTIVO');
             $table->foreignId('destino_id')->constrained();
-<<<<<<< HEAD
-=======
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
->>>>>>> 7de76cfeff1f7fa3b8234322b59ba950625b7c77
             $table->softDeletes();
             $table->timestamps();
         });
