@@ -82,10 +82,7 @@ return array(
     'App\\Http\\Livewire\\SucursalController' => $baseDir . '/app/Http/Livewire/SucursalController.php',
     'App\\Http\\Livewire\\TransaccionController' => $baseDir . '/app/Http/Livewire/TransaccionController.php',
     'App\\Http\\Livewire\\TransaccionesController' => $baseDir . '/app/Http/Livewire/TransaccionesController.php',
-<<<<<<< HEAD
     'App\\Http\\Livewire\\TransferenciasController' => $baseDir . '/app/Http/Livewire/TransferenciasController.php',
-=======
->>>>>>> origin/pruebaschio
     'App\\Http\\Livewire\\TransferirProductoController' => $baseDir . '/app/Http/Livewire/TransferirProductoController.php',
     'App\\Http\\Livewire\\TypeWorkController' => $baseDir . '/app/Http/Livewire/TypeWorkController.php',
     'App\\Http\\Livewire\\UnidadesController' => $baseDir . '/app/Http/Livewire/UnidadesController.php',
