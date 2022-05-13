@@ -109,12 +109,32 @@
                                     </td>
                                     @endif
                                     
-                                    <td class="text-center">
-                                        {{-- <span>
-                                            <img src="{{('storage/productos/'.$product->imagen) }}"
+
+
+
+
+                                    {{-- <td class="text-center">
+                                        <span>
+                                            <img src="{{('storage/productos/'.$product->image) }}"
                                                 alt="imagen de ejemplo" height="40" class="rounded">
-                                        </span> --}}
+                                        </span>
+                                    </td> --}}
+
+
+
+
+                                    <td class="text-center">
+                                        <span>
+                                            <img src="{{('storage/productos/'.$products->image) }}"
+                                                height="40" class="rounded">
+                                        </span>
                                     </td>
+
+
+
+
+
+
                                     <td class="text-center">
                                         <a href="javascript:void(0)" wire:click="Edit({{ $products->id }})"
                                             class="btn btn-dark mtmobile p-1 m-0" title="Edit">
