@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 //Modulo para buscar clientes en las ventas
 use App\Models\Cliente;
+use App\Models\Destino;
 use App\Models\Notification;
 use App\Models\NotificationUser;
 use App\Models\User;
@@ -28,7 +29,7 @@ class PosController extends Component
 {
     public $total, $itemsQuantity, $efectivo, $change, 
     $nit, $clienteanonimo="true", $tipopago ,$anonimo, $factura, $observacion, $facturasino, $nombreproducto, $clienteseleccionado;
-    public $razonsocial, $celular="";
+    public $razonsocial, $celular="",$tipodestino;
 
     //Variables para la venta desde almacen, moviendo productos de almacen a la tienda
     public  $stockalmacen, $nombrestockproducto, $cantidadToTienda = 1, $idproductoalmacen;
@@ -37,6 +38,11 @@ class PosController extends Component
     public $idventa, $totalbs, $totalitems;
     //Variables para Calcular el Descuento en Ventas...
     public $descuento, $totalBsBd;
+
+    //Variable para almacenar todos los destinos disponibles donde 
+    //aun queden stock disponble de un determinado producto para la venta
+
+    public $listadestinos;
 
     public function mount()
     {
@@ -52,6 +58,8 @@ class PosController extends Component
         $this->descuento = 0;
         $this->totalBsBd = 0;
         $this->actualizardescuento();
+        $this->listadestinos = $this->buscarproducto(1);
+        $this->tipodestino = 2;
 
     }
     public function render()
@@ -92,8 +100,7 @@ class PosController extends Component
         {
             //Buscando Stock del Producto en Tienda
             $datosnombreproducto = Product::join("productos_destinos as pd", "pd.product_id", "products.id")
-            ->join('locations as d', 'd.id', 'pd.location_id')
-            ->join('destinos as des', 'des.id', 'd.destino_id')
+            ->join('destinos as des', 'des.id', 'pd.destino_id')
             ->select("products.id as id","products.nombre as nombre", "products.image as image", "products.precio_venta as precio_venta",
             "pd.stock as stock")
             ->where("des.nombre", 'TIENDA')
@@ -128,14 +135,11 @@ class PosController extends Component
 
 
 
-
-
         return view('livewire.pos.component', [
             'denominations' => Denomination::orderBy('id', 'asc')->get(),
             'cart' => Cart::getContent()->sortBy('name'),
             'datosnit' => $datosnit,
             'datosnombreproducto' => $datosnombreproducto,
-
             'nit' =>$this->nit,
             'razonsocial' =>$this->razonsocial,
             'celular' =>$this->celular
@@ -207,11 +211,10 @@ class PosController extends Component
     {
         //Buscando Stock del Producto en Tienda
         $product = Product::join("productos_destinos as pd", "pd.product_id", "products.id")
-        ->join('locations as d', 'd.id', 'pd.location_id')
-        ->join('destinos as des', 'des.id', 'd.destino_id')
+        ->join('destinos as des', 'des.id', 'pd.destino_id')
         ->select("products.id as id","products.image as image","des.sucursal_id as sucursal_id","products.nombre as name",
-        "products.precio_venta as price","products.barcode", "pd.stock as stock")
-        ->where("products.barcode", $barcode)
+        "products.precio_venta as price","products.codigo", "pd.stock as stock")
+        ->where("products.codigo", $barcode)
         ->where("des.nombre", 'TIENDA')
         ->where("des.sucursal_id", $this->idsucursal())
         ->get()->first();
@@ -232,10 +235,9 @@ class PosController extends Component
             {
                 //Buscar Productos en Almacen
                 $productoalmacen = Product::join("productos_destinos as pd", "pd.product_id", "products.id")
-                ->join('locations as d', 'd.id', 'pd.location_id')
-                ->join('destinos as des', 'des.id', 'd.destino_id')
+                ->join('destinos as des', 'des.id', 'pd.destino_id')
                 ->select("products.id as id","products.image as image","des.sucursal_id as sucursal_id","products.nombre as name",
-                "products.precio_venta as price","products.barcode", "pd.stock as stock")
+                "products.precio_venta as price","products.codigo", "pd.stock as stock")
                 ->where("products.id", $product->id)
                 ->where("des.nombre", 'ALMACEN')
                 ->where("des.sucursal_id", $this->idsucursal())
@@ -283,10 +285,11 @@ class PosController extends Component
     {
         //Buscando Stock del Producto en Tienda
         $product = Product::join("productos_destinos as pd", "pd.product_id", "products.id")
-        ->join('locations as d', 'd.id', 'pd.location_id')
-        ->join('destinos as des', 'des.id', 'd.destino_id')
-        ->select("products.id as id","products.image as image","des.sucursal_id as sucursal_id","products.nombre as name",
-        "products.precio_venta as price","products.barcode", "pd.stock as stock")
+        ->join('destinos as des', 'des.id', 'pd.destino_id')
+        ->select("products.id as id","products.image as image",
+        "des.sucursal_id as sucursal_id","products.nombre as name",
+        "products.precio_venta as price","products.codigo", 
+        "pd.stock as stock")
         ->where("products.id", $idproducto)
         ->where("des.nombre", 'TIENDA')
         ->where("des.sucursal_id", $this->idsucursal())
@@ -301,10 +304,9 @@ class PosController extends Component
             {
                 //Buscar Productos en Almacen
                 $productoalmacen = Product::join("productos_destinos as pd", "pd.product_id", "products.id")
-                ->join('locations as d', 'd.id', 'pd.location_id')
-                ->join('destinos as des', 'des.id', 'd.destino_id')
+                ->join('destinos as des', 'des.id', 'pd.destino_id')
                 ->select("products.id as id","des.sucursal_id as sucursal_id","products.nombre as name",
-                "products.precio_venta as price","products.barcode", "pd.stock as stock")
+                "products.precio_venta as price","products.codigo", "pd.stock as stock")
                 ->where("products.id", $product->id)
                 ->where("des.nombre", 'ALMACEN')
                 ->where("des.sucursal_id", $this->idsucursal())
@@ -338,15 +340,14 @@ class PosController extends Component
             //Para Actualizar el Total Descuento
             $this->actualizardescuento();
     }
-
+    //Incrementar Items Carrito
     public function increaseQty($productId, $cant = 1)
     {
         //Consulta para saber el Stock de los Productos en Tienda
         $product = Product::join("productos_destinos as pd", "pd.product_id", "products.id")
-        ->join('locations as d', 'd.id', 'pd.location_id')
-        ->join('destinos as des', 'des.id', 'd.destino_id')
+        ->join('destinos as des', 'des.id', 'pd.destino_id')
         ->select("products.id as id","products.image as image","des.sucursal_id as sucursal_id","products.nombre as name",
-        "products.precio_venta as price","products.barcode", "pd.stock as stock")
+        "products.precio_venta as price","products.codigo", "pd.stock as stock")
         ->where("products.id", $productId)
         ->where("des.nombre", 'TIENDA')
         ->where("des.sucursal_id", $this->idsucursal())
@@ -370,10 +371,9 @@ class PosController extends Component
             {
                 //Buscar Productos en Almacen
                 $productoalmacen = Product::join("productos_destinos as pd", "pd.product_id", "products.id")
-                ->join('locations as d', 'd.id', 'pd.location_id')
-                ->join('destinos as des', 'des.id', 'd.destino_id')
+                ->join('destinos as des', 'des.id', 'pd.destino_id')
                 ->select("products.id as id","products.image as image","des.sucursal_id as sucursal_id","products.nombre as name",
-                "products.precio_venta as price","products.barcode", "pd.stock as stock")
+                "products.precio_venta as price","products.codigo", "pd.stock as stock")
                 ->where("products.id", $product->id)
                 ->where("des.nombre", 'ALMACEN')
                 ->where("des.sucursal_id", $this->idsucursal())
@@ -445,10 +445,9 @@ class PosController extends Component
         $title = '';
         //Consulta para saber el Stock de los Productos en Tienda
         $product = Product::join("productos_destinos as pd", "pd.product_id", "products.id")
-        ->join('locations as d', 'd.id', 'pd.location_id')
-        ->join('destinos as des', 'des.id', 'd.destino_id')
+        ->join('destinos as des', 'des.id', 'pd.destino_id')
         ->select("products.id as id","products.image as image","des.sucursal_id as sucursal_id","products.nombre as name",
-        "products.precio_venta as price","products.barcode", "pd.stock as stock")
+        "products.precio_venta as price","products.codigo", "pd.stock as stock")
         ->where("products.id", $productId)
         ->where("des.nombre", 'TIENDA')
         ->where("des.sucursal_id", $this->idsucursal())
@@ -469,20 +468,23 @@ class PosController extends Component
             if ($product->stock < $cant)
             {
                 //Buscar Productos en Almacen
-                $productoalmacen = Product::join("productos_destinos as pd", "pd.product_id", "products.id")
-                ->join('locations as d', 'd.id', 'pd.location_id')
-                ->join('destinos as des', 'des.id', 'd.destino_id')
-                ->select("products.id as id","products.image as image","des.sucursal_id as sucursal_id","products.nombre as name",
-                "products.precio_venta as price","products.barcode", "pd.stock as stock")
-                ->where("products.id", $product->id)
-                ->where("des.nombre", 'ALMACEN')
-                ->where("des.sucursal_id", $this->idsucursal())
-                ->get()->first();
-                if($productoalmacen->stock > 0)
+                // $productoalmacen = Product::join("productos_destinos as pd", "pd.product_id", "products.id")
+                // ->join('destinos as des', 'des.id', 'pd.destino_id')
+                // ->select("products.id as id","products.image as image", "des.sucursal_id as sucursal_id","products.nombre as name",
+                // "products.precio_venta as price","products.codigo", "pd.stock as stock")
+                // ->where("products.id", $productId)
+                // ->where("des.id", 1)
+                // ->where("des.sucursal_id", $this->idsucursal())
+                // ->get()
+                // ->first();
+
+                //dd($this->buscarproducto($productId)->count());
+                if($this->buscarproducto($productId)->count() > 0)
                 {
-                    $this->stockalmacen = $productoalmacen->stock;
-                    $this->nombrestockproducto = $productoalmacen->name;
-                    $this->idproductoalmacen = $productoalmacen->id;
+                    $this->listadestinos = $this->buscarproducto($productId);
+                    // $this->stockalmacen = $productoalmacen->stock;
+                    $this->nombrestockproducto = $product->name;
+                    // $this->idproductoalmacen = $productoalmacen->id;
                     $this->emit('no-stocktienda');
                     return;
                 }
@@ -491,10 +493,7 @@ class PosController extends Component
                     $this->emit('no-stock', 'stock insuficiente en TIENDA y ALMACEN');
                     return;
                 }
-
-
-
-        }
+            }
 
 
 
@@ -551,6 +550,7 @@ class PosController extends Component
         $this->actualizardescuento();
         
     }
+    //Decrementar Carrito de Compras
     public function decreaseQty($productId)
     {
         $item = Cart::get($productId);
@@ -575,7 +575,7 @@ class PosController extends Component
         $this->actualizardescuento();
 
     }
-
+    //Eliminar todos los Productos del Carrito
     public function clearCart()
     {
         Cart::clear();
@@ -586,7 +586,7 @@ class PosController extends Component
         $this->itemsQuantity = Cart::getTotalQuantity();
         $this->emit('scan-ok', 'Carrito vacio');
     }
-
+    //Guardar Venta
     public function saveSale()
     {
         if($this->anonimo == 1)
@@ -947,7 +947,25 @@ class PosController extends Component
         //Actualizamos el Total Descuento
         $this->actualizardescuento();
     }
+    //Buscar Producto en la sucursal (excepto en Tienda)
+    public function buscarproducto($idproducto)
+    {
+        $listadestinosproductos = Destino::join("productos_destinos as pd", "pd.destino_id", "destinos.id")
+        ->select("destinos.id as id","destinos.nombre as nombredestino","pd.product_id as idproducto","pd.stock as stock")
+        ->where("destinos.sucursal_id", $this->idsucursal())
+        ->where('destinos.nombre', '<>', 'TIENDA')
+        ->where('pd.product_id', $idproducto)
+        ->orderBy('pd.stock', 'desc')
+        ->get();
 
+
+
+
+
+
+        return $listadestinosproductos;
+
+    }
 
     
 
@@ -983,10 +1001,9 @@ class PosController extends Component
     {
         //Consulta para saber el Stock de los Productos en Tienda
         $product = Product::join("productos_destinos as pd", "pd.product_id", "products.id")
-        ->join('locations as d', 'd.id', 'pd.location_id')
-        ->join('destinos as des', 'des.id', 'd.destino_id')
+        ->join('destinos as des', 'des.id', 'pd.destino_id')
         ->select("products.id as id","products.image as image","des.sucursal_id as sucursal_id","products.nombre as name",
-        "products.precio_venta as price","products.barcode", "pd.stock as stock")
+        "products.precio_venta as price","products.codigo", "pd.stock as stock")
         ->where("products.id", $productId)
         ->where("des.nombre", 'TIENDA')
         ->where("des.sucursal_id", $this->idsucursal())
@@ -1010,10 +1027,9 @@ class PosController extends Component
             {
                 //Buscar Productos en Almacen
                 $productoalmacen = Product::join("productos_destinos as pd", "pd.product_id", "products.id")
-                ->join('locations as d', 'd.id', 'pd.location_id')
-                ->join('destinos as des', 'des.id', 'd.destino_id')
+                ->join('destinos as des', 'des.id', 'pd.destino_id')
                 ->select("products.id as id","products.image as image","des.sucursal_id as sucursal_id","products.nombre as name",
-                "products.precio_venta as price","products.barcode", "pd.stock as stock")
+                "products.precio_venta as price","products.codigo", "pd.stock as stock")
                 ->where("products.id", $product->id)
                 ->where("des.nombre", 'ALMACEN')
                 ->where("des.sucursal_id", $this->idsucursal())

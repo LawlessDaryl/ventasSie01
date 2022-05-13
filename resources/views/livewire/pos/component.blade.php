@@ -149,7 +149,28 @@
 
                             
                                 <h6 class="modal-text" style="color: rgb(0, 0, 0)">
-                                    No se encontraron mas Productos en la TIENDA. Pero en ALMACEN se encontraron {{$stockalmacen}} Unidad(s) del Producto:
+                                    No se encontraron mas Productos en la TIENDA. 
+
+                                    Pero en
+                                    <br>
+                                    <br>
+                                    <center>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                            <select wire:model="tipodestino" class="form-control">
+                                                @foreach ($listadestinos as $item)
+                                                <option value="{{$item->id}}">{{$item->nombredestino}}</option>
+                                                @endforeach
+                                            </select>
+                                            </div>
+                                        </div>
+                                    </center>
+
+
+                                    
+                                    
+                                    
+                                     se encontraron {{$stockalmacen}} Unidad(s) del Producto:
                                     <br>
                                     <br>
                                     "{{$nombrestockproducto}}"
