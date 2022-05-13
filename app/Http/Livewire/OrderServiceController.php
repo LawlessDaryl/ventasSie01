@@ -509,7 +509,7 @@ class OrderServiceController extends Component
                         }
                     }
                 } elseif ($this->opciones == 'TODOS') {
-
+                    
                     $orderservices = OrderService::join('services as s', 'order_services.id', 's.order_service_id')
                         ->join('mov_services as ms', 's.id', 'ms.service_id')
                         ->join('cat_prod_services as cat', 'cat.id', 's.cat_prod_service_id')
@@ -531,6 +531,7 @@ class OrderServiceController extends Component
                         ->orderBy('fecha', 'desc')
                         ->distinct()
                         ->paginate($this->pagination);
+
                 } elseif ($this->opciones == 'ANULADO') {
 
                     $orderservices = OrderService::join('services as s', 'order_services.id', 's.order_service_id')

@@ -74,7 +74,7 @@
                                         <th class="table-th text-withe text-center">ORDEN</th>
                                         <th class="table-th text-withe text-center">DETALLE</th>
                                         @if (@Auth::user()->hasPermissionTo('Ver_Costo_Reportes_Entregados'))
-                                        <th class="table-th text-withe text-center">COSTO</th>
+                                        <th class="table-th text-withe text-center">UTILIDAD</th>
                                         @endif
                                         <th class="table-th text-withe text-center">IMPORTE</th>
                                     </tr>
@@ -121,7 +121,7 @@
                                             {{-- COSTO --}}
                                             @if (@Auth::user()->hasPermissionTo('Ver_Costo_Reportes_Entregados'))
                                             <td class="text-center">
-                                                <h6>{{ number_format($d->costo, 2) }}</h6>
+                                                <h6>{{ number_format($d->utilidad, 2) }}</h6>
                                             </td>
                                             @endif
                                             {{-- IMPORTE --}}
@@ -172,7 +172,7 @@
                                                 {{-- COSTO --}}
                                                 @if (@Auth::user()->hasPermissionTo('Ver_Costo_Reportes_Entregados'))
                                                 <td class="text-center">
-                                                    <h6>{{ number_format($d->costo, 2) }}</h6>
+                                                    <h6>{{ number_format($d->utilidad, 2) }}</h6>
                                                 </td>
                                                 @endif
                                                 {{-- IMPORTE --}}
@@ -214,9 +214,10 @@
                                         <td class="text-right" colspan="4">
                                             <span><strong>
                                                     @if ($caja != 'Todos')
-                                                        {{ number_format($sumaCosto + $sumaCostoEfectivo, 2) }} bs.
+                                                        {{-- {{ number_format($sumaCosto + $sumaCostoEfectivo, 2) }} bs. --}}
+                                                        {{ number_format($sumaUtilidad, 2) }} bs.
                                                     @else
-                                                        {{ number_format($data->sum('costo'), 2) }} bs.
+                                                        {{ number_format($sumaUtilidad, 2) }} bs.
                                                     @endif
                                                 </strong></span>
                                         </td>
