@@ -110,10 +110,10 @@
                                     @endif
                                     
                                     <td class="text-center">
-                                        <span>
+                                        {{-- <span>
                                             <img src="{{('storage/productos/'.$product->imagen) }}"
                                                 alt="imagen de ejemplo" height="40" class="rounded">
-                                        </span>
+                                        </span> --}}
                                     </td>
                                     <td class="text-center">
                                         <a href="javascript:void(0)" wire:click="Edit({{ $products->id }})"

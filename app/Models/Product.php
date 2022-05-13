@@ -20,6 +20,10 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class);
     }
+    public function detalleCompra()
+    {
+        return $this->hasMany(CompraDetalle::class,'product_id','id');
+    }
   
  
     public function provider()
@@ -31,6 +35,8 @@ class Product extends Model
     {
         return $this->belongsToMany(Destino::class,'productos_destinos','product_id','destino_id');
     }
+
+   
     
 
 

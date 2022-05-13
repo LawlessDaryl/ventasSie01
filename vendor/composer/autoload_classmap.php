@@ -110,16 +110,10 @@ return array(
     'App\\Models\\CompraDetalle' => $baseDir . '/app/Models/CompraDetalle.php',
     'App\\Models\\Denomination' => $baseDir . '/app/Models/Denomination.php',
     'App\\Models\\Destino' => $baseDir . '/app/Models/Destino.php',
-<<<<<<< HEAD
-    'App\\Models\\DetalleDevolucion' => $baseDir . '/app/Models/DetalleDevolucion.php',
-    'App\\Models\\DetalleTransferencia' => $baseDir . '/app/Models/DetalleTransferencia.php',
-    'App\\Models\\Devolucion' => $baseDir . '/app/Models/Devolucion.php',
-=======
     'App\\Models\\Detail_Devolution' => $baseDir . '/app/Models/Detail_Devolution.php',
     'App\\Models\\Detalle_Transferencia' => $baseDir . '/app/Models/Detalle_Transferencia.php',
     'App\\Models\\Devolution' => $baseDir . '/app/Models/Devolution.php',
     'App\\Models\\DevolutionSale' => $baseDir . '/app/Models/DevolutionSale.php',
->>>>>>> origin/pruebaschio
     'App\\Models\\Email' => $baseDir . '/app/Models/Email.php',
     'App\\Models\\EstadoTransDetalle' => $baseDir . '/app/Models/EstadoTransDetalle.php',
     'App\\Models\\EstadoTransferencia' => $baseDir . '/app/Models/EstadoTransferencia.php',
@@ -135,12 +129,9 @@ return array(
     'App\\Models\\MovService' => $baseDir . '/app/Models/MovService.php',
     'App\\Models\\MovTransac' => $baseDir . '/app/Models/MovTransac.php',
     'App\\Models\\Movimiento' => $baseDir . '/app/Models/Movimiento.php',
-<<<<<<< HEAD
     'App\\Models\\MovimientoCompra' => $baseDir . '/app/Models/MovimientoCompra.php',
-=======
     'App\\Models\\Notification' => $baseDir . '/app/Models/Notification.php',
     'App\\Models\\NotificationUser' => $baseDir . '/app/Models/NotificationUser.php',
->>>>>>> origin/pruebaschio
     'App\\Models\\OrderService' => $baseDir . '/app/Models/OrderService.php',
     'App\\Models\\Origen' => $baseDir . '/app/Models/Origen.php',
     'App\\Models\\OrigenMotivo' => $baseDir . '/app/Models/OrigenMotivo.php',
