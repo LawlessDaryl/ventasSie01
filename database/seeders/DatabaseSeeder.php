@@ -44,7 +44,6 @@ class DatabaseSeeder extends Seeder
         /* INVENTARIOS */
         $this->call(AccountProfileSeeder::class);
         $this->call(DestinoSeeder::class);
-        $this->call(LocationSeeder::class);
         $this->call(UnidadSeeder::class);
         $this->call(CategorySeeder::class);
         $this->call(ClientSeeder::class);

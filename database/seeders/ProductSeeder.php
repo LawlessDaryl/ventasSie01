@@ -17,22 +17,13 @@ class ProductSeeder extends Seeder
         //ID=1
         Product::create([
             'nombre' => 'Cable Usb C Huawei 0.5 Metros',
-<<<<<<< HEAD
             'costo' => 45,
             'caracteristicas'=>'Nuevo',
             'codigo' => '88',
-=======
-            'costo' => 40.5,
-            'barcode' => '11',
->>>>>>> pruebaschio
             'garantia' => '2',
             'cantidad_minima' => '10',
-<<<<<<< HEAD
             'industria'=>'China',
             'precio_venta' => 60,
-=======
-            'precio_venta' => 70.5,
->>>>>>> pruebaschio
             'image' => 'Cable_Usb_C_Huawei_0.5_Metros.png',
             'category_id' => 7,
         ]);
