@@ -59,12 +59,7 @@
                             <div class="row mb-4" >
                                 <div class="col-sm-12" >
 
-                                    <h5 class="mb-2 mt-2">VENTAS</h5>
-                                    <b>Fecha: </b>
-                                    <?php
-                                    $DateAndTime = date('d-m-Y', time());  
-                                    echo " $DateAndTime.";
-                                    ?><br/> 
+                                    
                                     
                                     
                                     {{-- <hr style="height:3px;border:none;color:rgb(189, 188, 188);background-color:rgb(230, 152, 64);" /> --}}
