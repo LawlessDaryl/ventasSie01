@@ -12,14 +12,10 @@
             <div class="row">
               fasf
                 @if ($show === true)
-                hj
-                    @foreach ($data_loc as $value)
-                       <label> {{$value->dsn}}</label>
-                        {{$value->suc_name}}
-                        {{$value->loc}}
-                        {{$value->loc_cod}}
-                        {{$value->stock}}
-                    @endforeach
+            
+                   <div>jk</div>
+                      <div> {{$data_loc}} </div>
+                    
                 @endif
                    
                        

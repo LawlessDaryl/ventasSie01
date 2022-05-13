@@ -15,7 +15,6 @@
                
             </div>
           
-
             {{--SELECT DE LAS SUCURSALES--}}
             <div class="row">
                 <div class="col-12 col-lg-4 col-md-6">
