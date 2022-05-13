@@ -111,13 +111,8 @@
                                     
                                     <td class="text-center">
                                         <span>
-<<<<<<< HEAD
                                             <img src="{{('storage/productos/'.$products->imagen) }}"
                                                 alt="imagen de ejemplo" height="40" width="50" class="rounded">
-=======
-                                            <img src="{{('storage/productos/'.$product->imagen) }}"
-                                                alt="imagen de ejemplo" height="40" class="rounded">
->>>>>>> pruebaschio
                                         </span>
                                     </td>
                                     <td class="text-center">

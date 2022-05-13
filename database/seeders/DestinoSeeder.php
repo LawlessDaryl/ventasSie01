@@ -15,13 +15,8 @@ class DestinoSeeder extends Seeder
      */
     public function run()
     {
-<<<<<<< HEAD
         $ss=Destino::create([
             'nombre'=>'Deposito',
-=======
-        Destino::create([
-            'nombre'=>'Almacen',
->>>>>>> pruebaschio
             'observacion'=>'ninguna',
             'sucursal_id'=>'1'           
         ]);
@@ -38,26 +33,16 @@ class DestinoSeeder extends Seeder
             'observacion'=>'ninguna',
             'sucursal_id'=>'1'           
         ]);
-<<<<<<< HEAD
         Permission::create([
             'name' => $dd->nombre.'_'.$dd->id,
             'guard_name' => 'web'
         ]);
         
         $mm= Destino::create([
-=======
-        Destino::create([
-            'nombre'=>'Almacen Devoluciones',
-            'observacion'=>'ninguna',
-            'sucursal_id'=>'1'
-        ]);
-        Destino::create([
->>>>>>> pruebaschio
             'nombre'=>'Tienda',
             'observacion'=>'ninguna',
             'sucursal_id'=>'2'           
         ]);
-<<<<<<< HEAD
         Permission::create([
             'name' => $mm->nombre.'_'.$mm->id,
             'guard_name' => 'web'
@@ -65,10 +50,6 @@ class DestinoSeeder extends Seeder
 
         $nn=Destino::create([
             'nombre'=>'Almacen',
-=======
-        Destino::create([
-            'nombre'=>'Almacen Devoluciones',
->>>>>>> pruebaschio
             'observacion'=>'ninguna',
             'sucursal_id'=>'2'
         ]);

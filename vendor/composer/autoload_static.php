@@ -745,10 +745,7 @@ class ComposerStaticInit28b901c8f42efe2e95436386b8faf059
         'App\\Http\\Livewire\\SucursalController' => __DIR__ . '/../..' . '/app/Http/Livewire/SucursalController.php',
         'App\\Http\\Livewire\\TransaccionController' => __DIR__ . '/../..' . '/app/Http/Livewire/TransaccionController.php',
         'App\\Http\\Livewire\\TransaccionesController' => __DIR__ . '/../..' . '/app/Http/Livewire/TransaccionesController.php',
-<<<<<<< HEAD
         'App\\Http\\Livewire\\TransferenciasController' => __DIR__ . '/../..' . '/app/Http/Livewire/TransferenciasController.php',
-=======
->>>>>>> pruebaschio
         'App\\Http\\Livewire\\TransferirProductoController' => __DIR__ . '/../..' . '/app/Http/Livewire/TransferirProductoController.php',
         'App\\Http\\Livewire\\TypeWorkController' => __DIR__ . '/../..' . '/app/Http/Livewire/TypeWorkController.php',
         'App\\Http\\Livewire\\UnidadesController' => __DIR__ . '/../..' . '/app/Http/Livewire/UnidadesController.php',
@@ -776,16 +773,10 @@ class ComposerStaticInit28b901c8f42efe2e95436386b8faf059
         'App\\Models\\CompraDetalle' => __DIR__ . '/../..' . '/app/Models/CompraDetalle.php',
         'App\\Models\\Denomination' => __DIR__ . '/../..' . '/app/Models/Denomination.php',
         'App\\Models\\Destino' => __DIR__ . '/../..' . '/app/Models/Destino.php',
-<<<<<<< HEAD
-        'App\\Models\\DetalleDevolucion' => __DIR__ . '/../..' . '/app/Models/DetalleDevolucion.php',
-        'App\\Models\\DetalleTransferencia' => __DIR__ . '/../..' . '/app/Models/DetalleTransferencia.php',
-        'App\\Models\\Devolucion' => __DIR__ . '/../..' . '/app/Models/Devolucion.php',
-=======
         'App\\Models\\Detail_Devolution' => __DIR__ . '/../..' . '/app/Models/Detail_Devolution.php',
         'App\\Models\\Detalle_Transferencia' => __DIR__ . '/../..' . '/app/Models/Detalle_Transferencia.php',
         'App\\Models\\Devolution' => __DIR__ . '/../..' . '/app/Models/Devolution.php',
         'App\\Models\\DevolutionSale' => __DIR__ . '/../..' . '/app/Models/DevolutionSale.php',
->>>>>>> pruebaschio
         'App\\Models\\Email' => __DIR__ . '/../..' . '/app/Models/Email.php',
         'App\\Models\\EstadoTransDetalle' => __DIR__ . '/../..' . '/app/Models/EstadoTransDetalle.php',
         'App\\Models\\EstadoTransferencia' => __DIR__ . '/../..' . '/app/Models/EstadoTransferencia.php',
@@ -801,12 +792,9 @@ class ComposerStaticInit28b901c8f42efe2e95436386b8faf059
         'App\\Models\\MovService' => __DIR__ . '/../..' . '/app/Models/MovService.php',
         'App\\Models\\MovTransac' => __DIR__ . '/../..' . '/app/Models/MovTransac.php',
         'App\\Models\\Movimiento' => __DIR__ . '/../..' . '/app/Models/Movimiento.php',
-<<<<<<< HEAD
         'App\\Models\\MovimientoCompra' => __DIR__ . '/../..' . '/app/Models/MovimientoCompra.php',
-=======
         'App\\Models\\Notification' => __DIR__ . '/../..' . '/app/Models/Notification.php',
         'App\\Models\\NotificationUser' => __DIR__ . '/../..' . '/app/Models/NotificationUser.php',
->>>>>>> pruebaschio
         'App\\Models\\OrderService' => __DIR__ . '/../..' . '/app/Models/OrderService.php',
         'App\\Models\\Origen' => __DIR__ . '/../..' . '/app/Models/Origen.php',
         'App\\Models\\OrigenMotivo' => __DIR__ . '/../..' . '/app/Models/OrigenMotivo.php',
