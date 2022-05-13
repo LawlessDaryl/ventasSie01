@@ -85,7 +85,7 @@
                                     
                                     
                                     <td class="text-center">
-                                        <a href="javascript:void(0)" wire:click="verMobiliario({{ $data->id }})"
+                                        <a href="javascript:void(0)" wire:click="verMobiliario({{ $destino->productoid }})"
                                             class="btn btn-dark mtmobile" title="Edit">
                                             <i class="fas fa-eye"></i>
                                         </a>
@@ -108,3 +108,13 @@
    
   
 </div>
+@include('livewire.destino_producto.verMobiliario')
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+         window.livewire.on('nms', msg => {
+             $('#mobil').modal('show')
+         });
+     });
+</script>

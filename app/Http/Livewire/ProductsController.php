@@ -273,6 +273,9 @@ class ProductsController extends Component
                 unlink('storage/productos/' . $imageTemp);
             }
         }
+        foreach ($product->destinos as $data) {
+            $data->pivot->delete();
+        }
         $this->resetUI();
         $this->emit('product-deleted', 'Producto Eliminado');
     }

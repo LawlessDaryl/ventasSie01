@@ -19,6 +19,7 @@ class CategoriesController extends Component
     public $category_s = 0;
     public $subcat_s=false;
 
+
     public function mount()
     {
         $this->pageTitle = 'Listado';

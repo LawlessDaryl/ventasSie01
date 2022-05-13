@@ -31,6 +31,10 @@ class Product extends Model
     {
         return $this->belongsToMany(Destino::class,'productos_destinos','product_id','destino_id');
     }
+    public function detalleCompra()
+    {
+        return $this->hasMany(CompraDetalle::class,'product_id','id');
+    }
     
 
 

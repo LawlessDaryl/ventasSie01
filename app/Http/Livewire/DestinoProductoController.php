@@ -17,7 +17,7 @@ class DestinoProductoController extends Component
     
     use WithPagination;
 
-    public $selected_id,$search,$selected_ubicacion,$componentName,$title;
+    public $selected_id,$search,$selected_ubicacion,$componentName,$title,$sql,$pr=false,$show=false,$mm=[1,2,3],$lol;
     private $pagination = 10;
     public function paginationView()
     {
@@ -29,6 +29,9 @@ class DestinoProductoController extends Component
         $this->selected_id="General";
         $this->componentName='crear';
         $this->title='ssss';
+    
+ 
+        
       
     }
 
@@ -87,25 +90,7 @@ class DestinoProductoController extends Component
                                         join locations on location_productos.location= locations.id
                                         join destinos on locations.destino_id= destinos.id) as mm on dd.dest= mm.best and dd.rt= mm.pt';
 
-                                        
-
-                                        $ff= ProductosDestino::join('products','productos_destinos.product_id','products.id')
-                                        ->join('destinos','productos_destinos.destino_id','destinos.id')
-                                        ->select('products.nombre','destinos.id as destiti')->get();
-
-                                        
-
-                                        $kk= LocationProducto::join('products','location_productos.product','products.id')
-                                        ->join('locations','location_productos.location','locations.id')
-                                        ->join('destinos','locations.destino_id','destinos.id')
-                                        ->select('products.nombre','destinos.id as destino','locations.id as location')->get();
-
-                                        
-
-
-                                        $pr=DB::select($sql);
-                                     
-    }
+                                                             }
             
             else{
                
@@ -123,13 +108,32 @@ class DestinoProductoController extends Component
                            
 
         return view('livewire.destino_producto.almacen_productos',['destinos_almacen'=>$almacen,'data_suc' =>  $sucursal_ubicacion->get(),
-        'data_cat'=>Category::select('categories.name')->where('categories.categoria_padre','0')->get()
+        'data_cat'=>Category::select('categories.name')->where('categories.categoria_padre','0')->get(), 'lol'=>$this->pr
         ])  
         ->extends('layouts.theme.app')
         ->section('content');
     }
 
-    public function verMobiliario(){
+    public function verMobiliario(Product $prod){
+        
+        $this->sql= "select rt,location,dsn,suc_name,loc,loc_cod,stock from ( select products.id as rt,destinos.id as dest,destinos.nombre as dsn, sucursals.name as suc_name,stock from productos_destinos 
+        join products on productos_destinos.product_id= products.id
+        join destinos on productos_destinos.destino_id= destinos.id
+        join sucursals on destinos.sucursal_id= sucursals.id
+         ) as dd left join ( select products.id as pt,destinos.id as best,destinos.nombre as bsn,locations.id as location, locations.tipo as loc
+         ,locations.codigo as loc_cod
+         from location_productos
+          join products on location_productos.product= products.id
+        join locations on location_productos.location= locations.id
+        join destinos on locations.destino_id= destinos.id
+        ) as mm on dd.dest= mm.best and dd.rt= mm.pt where rt='$prod->id'";
+        
+        $this->pr=DB::select($this->sql);
+
+     if ($this->pr) {
+         dd($this->pr);
+        $this->emit('nms');
+     }
         
     }
     
