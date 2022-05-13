@@ -55,7 +55,7 @@ class ProductsController extends Component
           
         if ($this->selected_sub == null) {
             $prod = Product::join('categories as c', 'products.category_id','c.id')
-            ->select('products.*', 'c.name as cate')
+            ->select('products.*', 'c.name as cate', 'products.image as image')
             ->where('products.status',$this->estados)
 
             ->where(function($query){
@@ -73,7 +73,7 @@ class ProductsController extends Component
         else{
            
             $prod = Product::join('categories as c', 'products.category_id','c.id')
-            ->select('products.*', 'c.name as cate')
+            ->select('products.*', 'c.name as cate', 'products.image as image')
             ->where('c.id',$this->selected_sub)
             ->where('products.status',$this->estados)
             ->where(function($query){
@@ -91,7 +91,7 @@ class ProductsController extends Component
 
         
         $prod = Product::join('categories as c', 'products.category_id','c.id')
-        ->select('products.*', 'c.name as cate')
+        ->select('products.*', 'c.name as cate', 'products.image as image')
         ->where('products.status',$this->estados)
         ->where('products.nombre', 'like', '%' . $this->search . '%')
         ->orWhere('products.codigo', 'like', '%' . $this->search . '%')
@@ -105,7 +105,7 @@ class ProductsController extends Component
         else {
           
                 $prod = Product::join('categories as c', 'products.category_id','c.id')
-                ->select('products.*', 'c.name as cate')
+                ->select('products.*', 'c.name as cate', 'products.image as image')
                 ->where('products.status',$this->estados)
                 ->orderBy('products.id', 'desc')
                 ->paginate($this->pagination);}
