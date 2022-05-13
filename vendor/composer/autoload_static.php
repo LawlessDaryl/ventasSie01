@@ -680,6 +680,7 @@ class ComposerStaticInit28b901c8f42efe2e95436386b8faf059
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
         'App\\Http\\Controllers\\ExportComprasController' => __DIR__ . '/../..' . '/app/Http/Controllers/ExportComprasController.php',
         'App\\Http\\Controllers\\ExportController' => __DIR__ . '/../..' . '/app/Http/Controllers/ExportController.php',
+        'App\\Http\\Controllers\\ExportSaleController' => __DIR__ . '/../..' . '/app/Http/Controllers/ExportSaleController.php',
         'App\\Http\\Controllers\\ExportServicioPdfController' => __DIR__ . '/../..' . '/app/Http/Controllers/ExportServicioPdfController.php',
         'App\\Http\\Controllers\\ExportStreamingPdfController' => __DIR__ . '/../..' . '/app/Http/Controllers/ExportStreamingPdfController.php',
         'App\\Http\\Controllers\\ExportTigoPdfController' => __DIR__ . '/../..' . '/app/Http/Controllers/ExportTigoPdfController.php',
@@ -713,6 +714,8 @@ class ComposerStaticInit28b901c8f42efe2e95436386b8faf059
         'App\\Http\\Livewire\\ModulosController' => __DIR__ . '/../..' . '/app/Http/Livewire/ModulosController.php',
         'App\\Http\\Livewire\\MotivoController' => __DIR__ . '/../..' . '/app/Http/Livewire/MotivoController.php',
         'App\\Http\\Livewire\\MovimientosController' => __DIR__ . '/../..' . '/app/Http/Livewire/MovimientosController.php',
+        'App\\Http\\Livewire\\NotiController' => __DIR__ . '/../..' . '/app/Http/Livewire/NotiController.php',
+        'App\\Http\\Livewire\\NotificationController' => __DIR__ . '/../..' . '/app/Http/Livewire/NotificationController.php',
         'App\\Http\\Livewire\\OrderServiceController' => __DIR__ . '/../..' . '/app/Http/Livewire/OrderServiceController.php',
         'App\\Http\\Livewire\\OrigenController' => __DIR__ . '/../..' . '/app/Http/Livewire/OrigenController.php',
         'App\\Http\\Livewire\\OrigenMotivoComisionController' => __DIR__ . '/../..' . '/app/Http/Livewire/OrigenMotivoComisionController.php',
@@ -732,6 +735,9 @@ class ComposerStaticInit28b901c8f42efe2e95436386b8faf059
         'App\\Http\\Livewire\\ReportesTigoController' => __DIR__ . '/../..' . '/app/Http/Livewire/ReportesTigoController.php',
         'App\\Http\\Livewire\\ReportsController' => __DIR__ . '/../..' . '/app/Http/Livewire/ReportsController.php',
         'App\\Http\\Livewire\\RolesController' => __DIR__ . '/../..' . '/app/Http/Livewire/RolesController.php',
+        'App\\Http\\Livewire\\SaleDevolutionController' => __DIR__ . '/../..' . '/app/Http/Livewire/SaleDevolutionController.php',
+        'App\\Http\\Livewire\\SaleListController' => __DIR__ . '/../..' . '/app/Http/Livewire/SaleListController.php',
+        'App\\Http\\Livewire\\SaleStatisticController' => __DIR__ . '/../..' . '/app/Http/Livewire/SaleStatisticController.php',
         'App\\Http\\Livewire\\SearchController' => __DIR__ . '/../..' . '/app/Http/Livewire/SearchController.php',
         'App\\Http\\Livewire\\ServiciosController' => __DIR__ . '/../..' . '/app/Http/Livewire/ServiciosController.php',
         'App\\Http\\Livewire\\StrProveedorController' => __DIR__ . '/../..' . '/app/Http/Livewire/StrProveedorController.php',
@@ -739,7 +745,10 @@ class ComposerStaticInit28b901c8f42efe2e95436386b8faf059
         'App\\Http\\Livewire\\SucursalController' => __DIR__ . '/../..' . '/app/Http/Livewire/SucursalController.php',
         'App\\Http\\Livewire\\TransaccionController' => __DIR__ . '/../..' . '/app/Http/Livewire/TransaccionController.php',
         'App\\Http\\Livewire\\TransaccionesController' => __DIR__ . '/../..' . '/app/Http/Livewire/TransaccionesController.php',
+<<<<<<< HEAD
         'App\\Http\\Livewire\\TransferenciasController' => __DIR__ . '/../..' . '/app/Http/Livewire/TransferenciasController.php',
+=======
+>>>>>>> pruebaschio
         'App\\Http\\Livewire\\TransferirProductoController' => __DIR__ . '/../..' . '/app/Http/Livewire/TransferirProductoController.php',
         'App\\Http\\Livewire\\TypeWorkController' => __DIR__ . '/../..' . '/app/Http/Livewire/TypeWorkController.php',
         'App\\Http\\Livewire\\UnidadesController' => __DIR__ . '/../..' . '/app/Http/Livewire/UnidadesController.php',
@@ -767,9 +776,16 @@ class ComposerStaticInit28b901c8f42efe2e95436386b8faf059
         'App\\Models\\CompraDetalle' => __DIR__ . '/../..' . '/app/Models/CompraDetalle.php',
         'App\\Models\\Denomination' => __DIR__ . '/../..' . '/app/Models/Denomination.php',
         'App\\Models\\Destino' => __DIR__ . '/../..' . '/app/Models/Destino.php',
+<<<<<<< HEAD
         'App\\Models\\DetalleDevolucion' => __DIR__ . '/../..' . '/app/Models/DetalleDevolucion.php',
         'App\\Models\\DetalleTransferencia' => __DIR__ . '/../..' . '/app/Models/DetalleTransferencia.php',
         'App\\Models\\Devolucion' => __DIR__ . '/../..' . '/app/Models/Devolucion.php',
+=======
+        'App\\Models\\Detail_Devolution' => __DIR__ . '/../..' . '/app/Models/Detail_Devolution.php',
+        'App\\Models\\Detalle_Transferencia' => __DIR__ . '/../..' . '/app/Models/Detalle_Transferencia.php',
+        'App\\Models\\Devolution' => __DIR__ . '/../..' . '/app/Models/Devolution.php',
+        'App\\Models\\DevolutionSale' => __DIR__ . '/../..' . '/app/Models/DevolutionSale.php',
+>>>>>>> pruebaschio
         'App\\Models\\Email' => __DIR__ . '/../..' . '/app/Models/Email.php',
         'App\\Models\\EstadoTransDetalle' => __DIR__ . '/../..' . '/app/Models/EstadoTransDetalle.php',
         'App\\Models\\EstadoTransferencia' => __DIR__ . '/../..' . '/app/Models/EstadoTransferencia.php',
@@ -785,7 +801,12 @@ class ComposerStaticInit28b901c8f42efe2e95436386b8faf059
         'App\\Models\\MovService' => __DIR__ . '/../..' . '/app/Models/MovService.php',
         'App\\Models\\MovTransac' => __DIR__ . '/../..' . '/app/Models/MovTransac.php',
         'App\\Models\\Movimiento' => __DIR__ . '/../..' . '/app/Models/Movimiento.php',
+<<<<<<< HEAD
         'App\\Models\\MovimientoCompra' => __DIR__ . '/../..' . '/app/Models/MovimientoCompra.php',
+=======
+        'App\\Models\\Notification' => __DIR__ . '/../..' . '/app/Models/Notification.php',
+        'App\\Models\\NotificationUser' => __DIR__ . '/../..' . '/app/Models/NotificationUser.php',
+>>>>>>> pruebaschio
         'App\\Models\\OrderService' => __DIR__ . '/../..' . '/app/Models/OrderService.php',
         'App\\Models\\Origen' => __DIR__ . '/../..' . '/app/Models/Origen.php',
         'App\\Models\\OrigenMotivo' => __DIR__ . '/../..' . '/app/Models/OrigenMotivo.php',
@@ -952,6 +973,7 @@ class ComposerStaticInit28b901c8f42efe2e95436386b8faf059
         'Database\\Seeders\\CarteraSeeder' => __DIR__ . '/../..' . '/database/seeders/CarteraSeeder.php',
         'Database\\Seeders\\CatProdServiceSeeder' => __DIR__ . '/../..' . '/database/seeders/CatProdServiceSeeder.php',
         'Database\\Seeders\\CategorySeeder' => __DIR__ . '/../..' . '/database/seeders/CategorySeeder.php',
+        'Database\\Seeders\\ClientSeeder' => __DIR__ . '/../..' . '/database/seeders/ClientSeeder.php',
         'Database\\Seeders\\ComisionSeeder' => __DIR__ . '/../..' . '/database/seeders/ComisionSeeder.php',
         'Database\\Seeders\\CompanySeeder' => __DIR__ . '/../..' . '/database/seeders/CompanySeeder.php',
         'Database\\Seeders\\CompraDetalleSeeder' => __DIR__ . '/../..' . '/database/seeders/CompraDetalleSeeder.php',

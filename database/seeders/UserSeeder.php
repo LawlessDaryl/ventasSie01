@@ -38,5 +38,13 @@ class UserSeeder extends Seeder
             'status' => 'ACTIVE',
             'password' => bcrypt('123')
         ]);
+        User::create([
+            'name' => 'CajeroEjemplo',
+            'phone' => '62702872',
+            'email' => 'cajero@gmail.com',
+            'profile' => 'ATM',
+            'status' => 'ACTIVE',
+            'password' => bcrypt('123')
+        ]);
     }
 }

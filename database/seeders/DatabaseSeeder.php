@@ -16,7 +16,6 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::fctory(10)->create();
         $this->call(DenominationSeeder::class);
-        $this->call(CategorySeeder::class);
        
         $this->call(UserSeeder::class);
         $this->call(ComisionSeeder::class);
@@ -46,11 +45,13 @@ class DatabaseSeeder extends Seeder
         $this->call(AccountProfileSeeder::class);
         $this->call(DestinoSeeder::class);
         $this->call(LocationSeeder::class);
-        $this->call(ProductSeeder::class);
         $this->call(UnidadSeeder::class);
+        $this->call(CategorySeeder::class);
+        $this->call(ClientSeeder::class);
+        $this->call(ProductSeeder::class);
+        $this->call(ProductoDestinoSeeder::class);
         
         $this->call(ProviderSeeder::class);
-        $this->call(ProductoDestinoSeeder::class);
        
        
        // $this->call(CompraSeeder::class);

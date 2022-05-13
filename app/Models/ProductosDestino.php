@@ -9,7 +9,11 @@ class ProductosDestino extends Model
 {
     use HasFactory;
 
+<<<<<<< HEAD
     protected $fillable=['product_id','destino_id','stock'];
+=======
+    protected $fillable=['id','product_id','location_id','stock'];
+>>>>>>> pruebaschio
 
     
     public function productos(){

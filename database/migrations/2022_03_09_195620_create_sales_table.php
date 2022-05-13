@@ -20,12 +20,14 @@ class CreateSalesTable extends Migration
             $table->decimal('cash',10,2);
             $table->decimal('change',10,2);
             $table->enum('status',['PAID','PENDING','CANCELED'])->default('PAID');
+            $table->string('tipopago',20);
+            $table->string('factura',2);
 
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->unsignedBigInteger('movimiento_id');
             $table->foreign('movimiento_id')->references('id')->on('movimientos');
-
+            $table->string('observacion',500)->default('Ninguna');
 
             // $table->unsignedBigInteger('destinoproducto_id');
             // $table->foreign('destinoproducto_id')->references('id')->on('destinoproducto');

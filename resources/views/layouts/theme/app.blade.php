@@ -11,6 +11,9 @@
     @include('layouts.theme.styles')
     <!-- END PAGE LEVEL PLUGINS/CUSTOM STYLES -->
 
+    @yield('css')
+    
+
 </head>
 
 <body class="sidebar-noneoverflow dashboard-sales">
@@ -57,6 +60,9 @@
     <!-- BEGIN GLOBAL MANDATORY SCRIPTS -->
     @include('layouts.theme.scripts')
     <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM SCRIPTS -->
+
+    @yield('javascript')
+    {{-- @stack('custom-scripts') --}}
 
 </body>
 
