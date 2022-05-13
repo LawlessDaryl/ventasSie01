@@ -36,7 +36,7 @@ class DetalleComprasController extends Component
     public  $nro_compra,$search,$provider,$fecha_compra,
     $usuario,$metodo_pago,$pago_parcial=0,$tipo_documento,$nro_documento,$observacion
     ,$selected_id,$descuento=0,$saldo=0,$subtotal,$cantidad_minima,
-    $estado_compra,$total_compra,$itemsQuantity,$price,$status,$tipo_transaccion,$destino,$porcentaje,$importe,$dscto;
+    $estado_compra,$total_compra,$itemsQuantity,$price,$status,$tipo_transaccion,$destino,$porcentaje,$importe,$dscto,$user_id;
 
     public $nombre_prov, $apellido_prov, $direccion_prov, $correo_prov,
     $telefono_prov;
@@ -50,7 +50,7 @@ class DetalleComprasController extends Component
     {
         $this->componentName= "Compras";
         $this->fecha_compra = Carbon::now()->format('Y-m-d');
-        $this->usuario = Auth()->user()->name;
+        $this->usuario = Auth()->user()->id;
         $this->estado_compra = "finalizada";
         $this->selected_id = 0;
         $this->pago_parcial = 0;
@@ -452,7 +452,8 @@ class DetalleComprasController extends Component
                 'proveedor_id'=>Provider::select('providers.id')->where('nombre_prov',$this->provider)->value('providers.id'),
                 'estado_compra'=>$this->estado_compra,
                 'status'=>$this->status,
-                'destino_id'=>$this->destino
+                'destino_id'=>$this->destino,
+                'user_id'=>Auth()->user()->id
             ]);
 
             if ($this->tipo_transaccion === 'Contado' || $this->pago_parcial>0) {

@@ -182,12 +182,12 @@
     </div>
    </div>
 
-   <script>
+<script>
     document.addEventListener('DOMContentLoaded', function() {
 
         window.livewire.on('purchase-deleted', msg => {
             noty(msg)
         });
      
-    }
-<script>
+    });
+</script>
