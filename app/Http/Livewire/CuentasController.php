@@ -1248,23 +1248,24 @@ class CuentasController extends Component
         $rules = [
             'start_account' => 'required',
             'expiration_account' => 'required',
-            'number_profiles' => 'required',
-            'price' => 'required',
+            'number_profiles' => 'required|gt:0',
+            'price' => 'required|gt:0',
             'password_account' => 'required',
             'platform_id' => 'required|not_in:Elegir',
             'proveedor' => 'required|not_in:Elegir',
-            'email_id' => 'required_if:mostrarCorreo,0|not_in:Elegir',
+            'email_id' => 'required_if:mostrarCorreo,0',
         ];
         $messages = [
             'start_account.required' => 'La fecha de inicio es requerida',
             'expiration_account.required' => 'La fecha de expiración es requerida',
             'number_profiles.required' => 'La cantidad de perfiles es requerida',
+            'number_profiles.gt' => 'La cantidad debe ser mayor a 0',
             'price.required' => 'El precio de la cuenta es requerida',
+            'price.gt' => 'El precio debe ser mayor a 0',
             'password_account.required' => 'La contraseña de la cuenta es requerida',
             'platform_id.required' => 'La plataforma es requerida',
             'platform_id.not_in' => 'Elija una plataforma distinta a Elegir',
             'email_id.required_if' => 'El correo es requerido',
-            'email_id.not_in' => 'El correo debe ser distinto de Elegir',
             'proveedor.required' => 'El proveedor es requerido',
             'proveedor.not_in' => 'El proveedor tiene que ser diferente de Elegir',
         ];
@@ -1381,6 +1382,7 @@ class CuentasController extends Component
         $this->estado = $acc->status;
         $this->number_profiles = $acc->number_profiles;
         $this->nombre_cuenta = $acc->account_name;
+        $this->mesesComprar = $acc->meses_comprados;
         $this->passwordGmail = $acc->Correo->pass;
         $this->password_account = $acc->password_account;
         $this->price = $acc->price;
@@ -1395,17 +1397,23 @@ class CuentasController extends Component
         $rules = [
             'start_account' => 'required',
             'expiration_account' => 'required',
+            'number_profiles' => 'required|gt:0',
+            'price' => 'required|gt:0',
             'password_account' => 'required',
-            'number_profiles' => 'required|integer|gt:0',
+            'proveedor' => 'required|not_in:Elegir',
+            'email_id' => 'required_if:mostrarCorreo,0',
         ];
-
         $messages = [
             'start_account.required' => 'La fecha de inicio es requerida',
-            'expiration_account.required' => 'La fecha de fin es requerida',
+            'expiration_account.required' => 'La fecha de expiración es requerida',
+            'number_profiles.required' => 'La cantidad de perfiles es requerida',
+            'number_profiles.gt' => 'La cantidad debe ser mayor a 0',
+            'price.required' => 'El precio de la cuenta es requerida',
+            'price.gt' => 'El precio debe ser mayor a 0',
             'password_account.required' => 'La contraseña de la cuenta es requerida',
-            'number_profiles.required' => 'El numero de perfiles es requerido',
-            'number_profiles.integer' => 'El numero de perfiles debe ser un numero',
-            'number_profiles.gt' => 'El numero de perfiles debe ser mayor a 0',
+            'email_id.required_if' => 'El correo es requerido',
+            'proveedor.required' => 'El proveedor es requerido',
+            'proveedor.not_in' => 'El proveedor tiene que ser diferente de Elegir',
         ];
 
         $this->validate($rules, $messages);
@@ -1420,8 +1428,10 @@ class CuentasController extends Component
         try {
             $correo->update([
                 'pass' => $this->passwordGmail,
+                'content' => $this->email_id,
             ]);
             $correo->save();
+
             // INCREMENTAR EL NUMERO DE PERFILES
             if ($this->number_profiles > $acc->number_profiles) {
                 $cantidadCrear = $this->number_profiles - $acc->number_profiles;
@@ -1437,37 +1447,44 @@ class CuentasController extends Component
                         'profile_id' => $perfil->id,
                     ]);
                 }
-            } else {    //REDUCIR EL NUMERO DE PERFILES
-                $perfilBorrar = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
-                    ->join('profiles as p', 'p.id', 'ap.profile_id')
-                    ->select(
-                        'p.id as perfilID',
-                        'ap.id as apID'
-                    )
-                    ->where('accounts.id', $acc->id)
-                    ->where('p.availability', 'LIBRE')
-                    ->where('p.status', 'ACTIVO')
-                    ->orderBy('p.id', 'desc')
-                    ->get()->first();
-                try {
-                    $variable = $perfilBorrar->perfilID;
-                } catch (Exception $e) {
-                    $this->emit('item-error', "No puede reducir el numero de perfiles si todos los perfiles estan ocupados");
-                    return;
-                }
-                $accounProfB = AccountProfile::find($perfilBorrar->apID);
-                $accounProfB->delete();
+            } elseif ($this->number_profiles < $acc->number_profiles) {  //REDUCIR EL NUMERO DE PERFILES
+                $cantidadBorrar = $acc->number_profiles - $this->number_profiles;
+                for ($i = 0; $i < $cantidadBorrar; $i++) {
+                    $perfilBorrar = Account::join('account_profiles as ap', 'ap.account_id', 'accounts.id')
+                        ->join('profiles as p', 'p.id', 'ap.profile_id')
+                        ->select(
+                            'p.id as perfilID',
+                            'ap.id as apID',
+                        )
+                        ->where('accounts.id', $acc->id)
+                        ->where('p.availability', 'LIBRE')
+                        ->where('p.status', 'ACTIVO')
+                        ->orderBy('p.id', 'desc')
+                        ->get()->first();
+                    try {
+                        $variable = $perfilBorrar->perfilID;
+                    } catch (Exception $e) {
+                        $this->emit('item-error', "No puede reducir el número de perfiles si todos los perfiles estan ocupados");
+                        return;
+                    }
+                    $accounProfB = AccountProfile::find($perfilBorrar->apID);
+                    $accounProfB->delete();
 
-                $perfilB = Profile::find($perfilBorrar->perfilID);
-                $perfilB->delete();
+                    $perfilB = Profile::find($perfilBorrar->perfilID);
+                    $perfilB->delete();
+                }
             }
 
             if ($plataform->tipo == 'CORREO') {
                 $acc->update([
+                    'account_name' => $this->email_id,
                     'number_profiles' => $this->number_profiles,
                     'start_account' => $this->start_account,
                     'expiration_account' => $this->expiration_account,
                     'password_account' => $this->password_account,
+                    'price' => $this->price,
+                    'str_supplier_id' => $this->proveedor,
+                    'meses_comprados' => $this->mesesComprar,
                 ]);
                 $acc->save();
             } else {
@@ -1476,9 +1493,23 @@ class CuentasController extends Component
                     'start_account' => $this->start_account,
                     'expiration_account' => $this->expiration_account,
                     'password_account' => $this->password_account,
+                    'price' => $this->price,
+                    'str_supplier_id' => $this->proveedor,
+                    'meses_comprados' => $this->mesesComprar,
                 ]);
                 $acc->save();
             }
+
+            $cuentaInversion = CuentaInversion::where('account_id', $this->selected_id)
+                ->where('tipoTransac', 'COMPRA')
+                ->orderBy('id', 'desc')->get()->first();
+
+            $cuentaInversion->num_meses = $this->mesesComprar;
+            $cuentaInversion->cantidad = $this->price;
+            $cuentaInversion->save();
+
+
+
 
             DB::commit();
             $this->resetUI();
@@ -1516,7 +1547,7 @@ class CuentasController extends Component
         $messages = [
             'nombreCliente.required' => 'El nombre del cliente es requerido',
             'nombreCliente.min' => 'El nombre debe tener al menos 4 caracteres',
-            'celular.required' => 'El numero de celular del cliente es requerido',
+            'celular.required' => 'El número de celular del cliente es requerido',
             'celular.integer' => 'El celular debe ser un número',
             'celular.min' => 'El celular debe tener 8 dígitos',
             'start_account.required' => 'Seleccione una fecha valida',
@@ -1600,7 +1631,7 @@ class CuentasController extends Component
             'diasdePlan.integer' => 'La cantidad de dias debe ser un número',
             'diasdePlan.gt' => 'La cantidad de dias debe ser mayor a 0',
             'importe.required' => 'El importe es requerido',
-            'importe.integer' => 'El importe debe ser un numero',
+            'importe.integer' => 'El importe debe ser un número',
             'importe.gt' => 'El importe debe ser mayor a 0',
         ];
 

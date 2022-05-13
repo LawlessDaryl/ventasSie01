@@ -92,7 +92,7 @@
                                     <th class="table-th text-withe text-center">CANTIDAD</th>
                                     <th class="table-th text-withe text-center">TIPO DE PLAN</th>
                                     <th class="table-th text-withe text-center">TIPO DE TRANSACCION</th>
-                                    <th class="table-th text-withe text-center">NUMERO DE MESES</th>
+                                    <th class="table-th text-withe text-center">NÚMERO DE MESES</th>
                                     <th class="table-th text-withe text-center">FECHA REALIZACION</th>
                                     
                                     <th class="table-th text-withe text-center" width="50px"></th>

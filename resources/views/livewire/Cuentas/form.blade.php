@@ -35,8 +35,7 @@
                             <label>
                                 <h6>Proveedor</h6>
                             </label>
-                            <select @if ($selected_id > 0) disabled @endif wire:model='proveedor'
-                                class="form-control">
+                            <select wire:model='proveedor' class="form-control">
                                 <option value="Elegir" disabled>Elegir</option>
                                 @foreach ($proveedores as $p)
                                     <option value="{{ $p->id }}">{{ $p->name }}</option>
@@ -47,7 +46,6 @@
                             @enderror
                         </div>
                     </div>
-
 
                     <div class="col-sm-12 col-md-6">
                         <h6>Fecha de inicio de la cuenta</h6>
@@ -69,14 +67,12 @@
                         </div>
                     </div>
 
-
                     <div class="col-sm-12 col-md-6">
                         <div class="form-group">
                             <label>
                                 <h6>Correo</h6>
                             </label>
-                            <input @if ($mostrarCorreo == 'NO') disabled @endif
-                                @if ($selected_id > 0) disabled @endif type="text" wire:model="email_id"
+                            <input @if ($mostrarCorreo == 'NO') disabled @endif type="text" wire:model="email_id"
                                 class="form-control">
                             @error('email_id')
                                 <span class="text-danger er">{{ $message }}</span>
@@ -146,14 +142,12 @@
                         </div>
                     @endif
 
-
                     <div class="col-sm-12 col-md-6">
                         <div class="form-group">
                             <label>
                                 <h6>Número de Perfiles para la venta</h6>
                             </label>
-                            <input @if ($mostrarNumPerf == 'NO') disabled @endif
-                                 type="number"
+                            <input @if ($mostrarNumPerf == 'NO') disabled @endif type="number"
                                 wire:model.lazy="number_profiles" class="form-control">
                             @error('number_profiles')
                                 <span class="text-danger er">{{ $message }}</span>
@@ -166,8 +160,7 @@
                             <label>
                                 <h6>Meses que compró</h6>
                             </label>
-                            <input @if ($selected_id > 0) disabled @endif type="number"
-                                wire:model="mesesComprar" class="form-control">
+                            <input type="number" wire:model="mesesComprar" class="form-control">
                             @error('mesesComprar')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror
@@ -205,8 +198,7 @@
                             <label>
                                 <h6>Precio Compra Cuenta</h6>
                             </label>
-                            <input @if ($selected_id > 0) disabled @endif type="number"
-                                wire:model.lazy="price" class="form-control">
+                            <input type="number" wire:model.lazy="price" class="form-control">
                             @error('price')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror
@@ -216,7 +208,7 @@
                 </div>
 
             </div>
-            <div class="modal-footer">                
+            <div class="modal-footer">
                 @if ($selected_id < 1)
                     <button type="button" wire:click.prevent="Store()"
                         class="btn btn-dark close-btn text-info">REGISTRAR</button>

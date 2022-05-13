@@ -191,175 +191,195 @@ class TransaccionController extends Component
                 ->orderBy('transaccions.created_at', 'desc')
                 ->paginate($this->pagination);
         }
-
-        /* LISTADO DE MOTIVOS DE ESE ORIGEN */
-        if ($this->origen != 'Elegir') {
-            $motivos = OrigenMotivo::join('motivos as m', 'm.id', 'origen_motivos.motivo_id')
-                ->select('m.*')->where('origen_motivos.origen_id', $this->origen)->get();
-        } else {
-            $motivos = [];
+        try {
+            /* LISTADO DE MOTIVOS DE ESE ORIGEN */
+            if ($this->origen != 'Elegir') {
+                $motivos = OrigenMotivo::join('motivos as m', 'm.id', 'origen_motivos.motivo_id')
+                    ->select('m.*')->where('origen_motivos.origen_id', $this->origen)->get();
+            } else {
+                $motivos = [];
+            }
+        } catch (Exception $e) {
+            $this->emit('item-error', 'ERROR linea 1' . $e->getMessage());
+        }
+        try {
+            /* BUSCAR CLIENTE POR CEDULA EN EL INPUT DEL MODAL */
+            if ($this->cedula != '' && $this->ClienteSelect == 0) {
+                $this->datosPorCedula = Cliente::where('cedula', 'like', $this->cedula . '%')->orderBy('cedula', 'desc')->get();
+            } else {
+                $this->datosPorCedula = [];
+            }
+        } catch (Exception $e) {
+            $this->emit('item-error', 'ERROR linea 2' . $e->getMessage());
+        }
+        try {
+            /* BUSCAR CLIENTE POR TELEFONO EN EL INPUT DEL MODAL */
+            if ($this->celular != '' && $this->TelfSelect == 0) {
+                $this->datosPorTelefono = Cliente::where('celular', 'like', $this->celular . '%')->orderBy('celular', 'desc')->get();
+            } else {
+                $this->datosPorTelefono = [];
+            }
+        } catch (Exception $e) {
+            $this->emit('item-error', 'ERROR linea 3' . $e->getMessage());
         }
 
-
-        /* BUSCAR CLIENTE POR CEDULA EN EL INPUT DEL MODAL */
-        if ($this->cedula != '' && $this->ClienteSelect == 0) {
-            $this->datosPorCedula = Cliente::where('cedula', 'like', $this->cedula . '%')->orderBy('cedula', 'desc')->get();
-        } else {
-            $this->datosPorCedula = [];
-        }
-
-        /* BUSCAR CLIENTE POR TELEFONO EN EL INPUT DEL MODAL */
-        if ($this->celular != '' && $this->TelfSelect == 0) {
-            $this->datosPorTelefono = Cliente::where('celular', 'like', $this->celular . '%')->orderBy('celular', 'desc')->get();
-        } else {
-            $this->datosPorTelefono = [];
-        }
-
-
-        /* RESET DE CAMPOS AL CAMBIAR ORIGEN */
-        if ($this->origen != 'Elegir' && $this->condicionalOrigen == 'asd') {
-            $this->condicionalOrigen = $this->origen;
-        } elseif ($this->origen != $this->condicionalOrigen) {
-            $this->identificador = rand();
-            $this->identificador2 = rand();
-            $this->montoCobrarPagar = 'Monto a cobrar/pagar';
-
-            $this->motivo = 'Elegir';
-
-            $this->origMotID = 0;
-            $this->OrigenMotivoObjeto = [];
-            $this->transaccion = [];
-
-            $this->mostrarCI = 0;
-            $this->mostrartelf = 0;
-            $this->mostrarTelfCodigo = 0;
-
-            $this->montoR = 0;
-            $this->importe = '';
-
-            $this->ClienteSelect = 0;
-            $this->TelfSelect = 0;
-
-            $this->igualarMontos = 0;
-            $this->MostrarRadioButton = 0;
-
-            $this->ResetRadioButton = 0;
-            $this->condicionalOrigen = 'asd';
-            $this->condicionalMotivo = 'asd';
-            $this->requerimientoComision = '';
-        }
-
-
-        /* RESET DE CAMPOS AL CAMBIAR MOTIVO */
-        if ($this->motivo != 'Elegir' && $this->condicionalMotivo == 'asd') {
-            $this->condicionalMotivo = $this->motivo;
-        } elseif ($this->motivo != $this->condicionalMotivo) {
-            $this->identificador = rand();
-            $this->identificador2 = rand();
-            $this->montoCobrarPagar = 'Monto a cobrar/pagar';
-
-            $this->origMotID = 0;
-            $this->OrigenMotivoObjeto = [];
-            $this->transaccion = [];
-
-            $this->montoB = '';
-            $this->montoR = 0;
-            $this->importe = '';
-
-            $this->mostrarCI = 0;
-            $this->mostrartelf = 0;
-            $this->mostrarTelfCodigo = 0;
-
-            $this->ClienteSelect = 0;
-            $this->TelfSelect = 0;
-
-            $this->igualarMontos = 0;
-            $this->MostrarRadioButton = 0;
-
-            $this->ResetRadioButton = 0;
-            $this->condicionalMotivo = 'asd';
-            $this->requerimientoComision = '';
-        }
-
-
-
-        /* RESET DE RADIO BUTTONS AL CAMBIAR IMPORTE */
-        if ($this->ResetRadioButton != 0) {
-            if ($this->ResetRadioButton != $this->montoB) {
+        try {
+            /* RESET DE CAMPOS AL CAMBIAR ORIGEN */
+            if ($this->origen != 'Elegir' && $this->condicionalOrigen == 'asd') {
+                $this->condicionalOrigen = $this->origen;
+            } elseif ($this->origen != $this->condicionalOrigen) {
                 $this->identificador = rand();
                 $this->identificador2 = rand();
-                $this->igualarMontos = 0;
-                $this->importe = $this->montoB;
-                $this->montoR = $this->montoB;
-                $this->requerimientoComision = '';
-                $this->MostrarRadioButton = 0;
-                $this->ResetRadioButton = 0;
-            }
-        }
+                $this->montoCobrarPagar = 'Monto a cobrar/pagar';
 
+                $this->motivo = 'Elegir';
 
-        /* OBTENER ORIGEN-MOTIVO DE LOS CAMPOS SELECCIONADOS */
-        if ($this->origen != 'Elegir' && $this->motivo != 'Elegir') {
-            /* CARGAR ORIGEN MOTIVO OBJETO */
-            $this->OrigenMotivoObjeto = OrigenMotivo::where('motivo_id', $this->motivo)
-                ->where('origen_id', $this->origen)
-                ->get()->first();
-            /* CARGAR ORIGEN MOTIVO ID */
-            $this->origMotID = $this->OrigenMotivoObjeto->id;
-            if ($this->OrigenMotivoObjeto->comision_si_no == 'si') {
-                $this->MostrarRadioButton = 1;
-            } else {
-                $this->MostrarRadioButton = 0;
-            }
-            /* Mostrar label e imput (CI CLIENTE) solo si el origen motivo lo requiere */
-            if ($this->OrigenMotivoObjeto->CIdeCliente == 'SI') {
-                $this->mostrarCI = 1;
-            } else {
-                $this->cedula = '';
+                $this->origMotID = 0;
+                $this->OrigenMotivoObjeto = [];
+                $this->transaccion = [];
+
                 $this->mostrarCI = 0;
-            }
-            /* Mostrar label e imput (Telf Solicitante) solo si el origen motivo lo requiere */
-            if ($this->OrigenMotivoObjeto->telefSolicitante == 'SI') {
-                $this->mostrartelf = 1;
-            } else {
-                $this->celular = '';
                 $this->mostrartelf = 0;
-            }
-            /* Mostrar label e imput (Telf destino) solo si el origen motivo lo requiere */
-            if ($this->OrigenMotivoObjeto->telefDestino_codigo == 'SI') {
-                $this->mostrarTelfCodigo = 1;
-            } else {
-                $this->codigo_transf = '';
                 $this->mostrarTelfCodigo = 0;
+
+                $this->montoR = 0;
+                $this->importe = '';
+
+                $this->ClienteSelect = 0;
+                $this->TelfSelect = 0;
+
+                $this->igualarMontos = 0;
+                $this->MostrarRadioButton = 0;
+
+                $this->ResetRadioButton = 0;
+                $this->condicionalOrigen = 'asd';
+                $this->condicionalMotivo = 'asd';
+                $this->requerimientoComision = '';
             }
-            /* Monto a cobrar o pagar */
-            $motiv = Motivo::find($this->motivo);
-            if ($motiv->tipo == 'Retiro') {
-                $this->montoCobrarPagar = 'Monto a pagar';
-            } elseif ($motiv->tipo == 'Abono') {
-                $this->montoCobrarPagar = 'Monto a cobrar';
+        } catch (Exception $e) {
+            $this->emit('item-error', 'ERROR linea 4' . $e->getMessage());
+        }
+        try {
+            /* RESET DE CAMPOS AL CAMBIAR MOTIVO */
+            if ($this->motivo != 'Elegir' && $this->condicionalMotivo == 'asd') {
+                $this->condicionalMotivo = $this->motivo;
+            } elseif ($this->motivo != $this->condicionalMotivo) {
+                $this->identificador = rand();
+                $this->identificador2 = rand();
+                $this->montoCobrarPagar = 'Monto a cobrar/pagar';
+
+                $this->origMotID = 0;
+                $this->OrigenMotivoObjeto = [];
+                $this->transaccion = [];
+
+                $this->montoB = '';
+                $this->montoR = 0;
+                $this->importe = '';
+
+                $this->mostrarCI = 0;
+                $this->mostrartelf = 0;
+                $this->mostrarTelfCodigo = 0;
+
+                $this->ClienteSelect = 0;
+                $this->TelfSelect = 0;
+
+                $this->igualarMontos = 0;
+                $this->MostrarRadioButton = 0;
+
+                $this->ResetRadioButton = 0;
+                $this->condicionalMotivo = 'asd';
+                $this->requerimientoComision = '';
             }
+        } catch (Exception $e) {
+            $this->emit('item-error', 'ERROR linea 5' . $e->getMessage());
         }
 
+        try {
+            /* RESET DE RADIO BUTTONS AL CAMBIAR IMPORTE */
+            if ($this->ResetRadioButton != 0) {
+                if ($this->ResetRadioButton != $this->montoB) {
+                    $this->identificador = rand();
+                    $this->identificador2 = rand();
+                    $this->igualarMontos = 0;
+                    $this->importe = $this->montoB;
+                    $this->montoR = $this->montoB;
+                    $this->requerimientoComision = '';
+                    $this->MostrarRadioButton = 0;
+                    $this->ResetRadioButton = 0;
+                }
+            }
+        } catch (Exception $e) {
+            $this->emit('item-error', 'ERROR linea 6' . $e->getMessage());
+        }
+        try {
+            /* OBTENER ORIGEN-MOTIVO DE LOS CAMPOS SELECCIONADOS */
+            if ($this->origen != 'Elegir' && $this->motivo != 'Elegir') {
+                /* CARGAR ORIGEN MOTIVO OBJETO */
+                $this->OrigenMotivoObjeto = OrigenMotivo::where('motivo_id', $this->motivo)
+                    ->where('origen_id', $this->origen)
+                    ->get()->first();
+                /* CARGAR ORIGEN MOTIVO ID */
+                $this->origMotID = $this->OrigenMotivoObjeto->id;
+                if ($this->OrigenMotivoObjeto->comision_si_no == 'si') {
+                    $this->MostrarRadioButton = 1;
+                } else {
+                    $this->MostrarRadioButton = 0;
+                }
+                /* Mostrar label e imput (CI CLIENTE) solo si el origen motivo lo requiere */
+                if ($this->OrigenMotivoObjeto->CIdeCliente == 'SI') {
+                    $this->mostrarCI = 1;
+                } else {
+                    $this->cedula = '';
+                    $this->mostrarCI = 0;
+                }
+                /* Mostrar label e imput (Telf Solicitante) solo si el origen motivo lo requiere */
+                if ($this->OrigenMotivoObjeto->telefSolicitante == 'SI') {
+                    $this->mostrartelf = 1;
+                } else {
+                    $this->celular = '';
+                    $this->mostrartelf = 0;
+                }
+                /* Mostrar label e imput (Telf destino) solo si el origen motivo lo requiere */
+                if ($this->OrigenMotivoObjeto->telefDestino_codigo == 'SI') {
+                    $this->mostrarTelfCodigo = 1;
+                } else {
+                    $this->codigo_transf = '';
+                    $this->mostrarTelfCodigo = 0;
+                }
+                /* Monto a cobrar o pagar */
+                $motiv = Motivo::find($this->motivo);
+                if ($motiv->tipo == 'Retiro') {
+                    $this->montoCobrarPagar = 'Monto a pagar';
+                } elseif ($motiv->tipo == 'Abono') {
+                    $this->montoCobrarPagar = 'Monto a cobrar';
+                }
+            }
+        } catch (Exception $e) {
+            $this->emit('item-error', 'ERROR linea 7' . $e->getMessage());
+        }
 
-        /* Monto a registrar igual a importe si variable igualarMontos es igual a 0
+        try {
+            /* Monto a registrar igual a importe si variable igualarMontos es igual a 0
         (cambia a 1 cuando se ejecutan las comisiones) */
-        if ($this->igualarMontos == 0) {
-            $this->montoR = $this->montoB;
-            $this->importe = $this->montoB;
-        }
-
-
-        /* Calcular comision cuando cuando comision_si_no de origen_motivo es nopreguntar pero si son afectados los montos */
-        if ($this->origMotID != 0 && $this->montoB != '' && $this->igualarMontos == 0) {
-            if ($this->OrigenMotivoObjeto->comision_si_no == 'nopreguntar' && ($this->OrigenMotivoObjeto->suma_resta_si != 'mantiene' || $this->OrigenMotivoObjeto->suma_resta_no != 'mantiene')) {
-                $this->importe = $this->montoB;
+            if ($this->igualarMontos == 0) {
                 $this->montoR = $this->montoB;
-                $this->ComisionSi();
+                $this->importe = $this->montoB;
             }
+        } catch (Exception $e) {
+            $this->emit('item-error', 'ERROR linea 8' . $e->getMessage());
         }
-
-
+        try {
+            /* Calcular comision cuando cuando comision_si_no de origen_motivo es nopreguntar pero si son afectados los montos */
+            if ($this->origMotID != 0 && $this->montoB != '' && $this->igualarMontos == 0) {
+                if ($this->OrigenMotivoObjeto->comision_si_no == 'nopreguntar' && ($this->OrigenMotivoObjeto->suma_resta_si != 'mantiene' || $this->OrigenMotivoObjeto->suma_resta_no != 'mantiene')) {
+                    $this->importe = $this->montoB;
+                    $this->montoR = $this->montoB;
+                    $this->ComisionSi();
+                }
+            }
+        } catch (Exception $e) {
+            $this->emit('item-error', 'ERROR linea 9' . $e->getMessage());
+        }
 
         /* MOSTRAR CARTERAS DE LA CAJA EN LA QUE SE ENCUENTRA */
         $carterasCaja = Cartera::where('caja_id', $cajausuario->id)
@@ -380,7 +400,6 @@ class TransaccionController extends Component
             /* REALIZAR CALCULO DE INGRESOS - EGRESOS */
             $c->monto = $INGRESOS - $EGRESOS;
         }
-
 
 
         /* MOSTRAR SOLO TELEFONO O SOLO SISTEMA O AMBOS SI ES QUE EXISTEN EN ESA CAJA */
@@ -785,7 +804,7 @@ class TransaccionController extends Component
                     'tipoDeMovimiento' => 'TIGOMONEY',
                     'comentario' => '',
                     'cartera_id' => $CajaFisica->id,
-                    'movimiento_id' => $mv->id
+                    'movimiento_id' => $mv->id,
                 ]);
 
                 $mvt = Movimiento::create([

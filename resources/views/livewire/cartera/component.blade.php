@@ -21,7 +21,7 @@
                                 <th class="table-th text-withe text-center">NOMBRE</th>
                                 <th class="table-th text-withe text-center">DESCRIPCION</th>
                                 <th class="table-th text-withe text-center">TIPO</th>
-                                <th class="table-th text-withe text-center">NUMERO TELEFONO</th>
+                                <th class="table-th text-withe text-center">NÚMERO TELEFONO</th>
                                 <th class="table-th text-withe text-center">CAJA</th>
                                 <th class="table-th text-withe text-center">ACCIONES</th>
                             </tr>

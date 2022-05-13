@@ -68,7 +68,7 @@
                     </div>
                     <div class="col-sm-12 col-md-4 mt-4">
                         <a class=" btn btn-dark btn-block {{ count($data) < 1 ? 'disabled' : '' }}"
-                            href="{{ url('reporteTigo/pdf' .'/' .$userId .'/' .$reportType .'/' .$origenfiltro .'/' .$tipotr .'/' .$dateFrom .'/' .$dateTo) }}">
+                            href="{{ url('reporteTigo/pdf' . '/' . $userId . '/' . $reportType . '/' . $origenfiltro . '/' . $tipotr . '/' . $dateFrom . '/' . $dateTo) }}">
                             Generar
                             PDF</a>
                     </div>
@@ -134,7 +134,9 @@
                                                 </td>
                                             @endcan
                                             <td class="text-center">
-                                                <h6>{{ $d->created_at }}</h6>
+                                                <h6>
+                                                    {{ \Carbon\Carbon::parse($d->created_at)->format('d/m/Y H:i') }}
+                                                </h6>
                                             </td>
                                             <td class="text-center" width="50px">
                                                 <button wire:click.prevent="getDetails({{ $d->id }})"

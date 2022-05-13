@@ -45,7 +45,7 @@
                                     style="{{ $d->estado == 'Anulada' ? 'background-color: #d97171 !important' : '' }}">
                                     <td class="text-center">
                                         <h6 class="text-center">
-                                            <strong>{{ \Carbon\Carbon::parse($d->hora)->format('H:i:s') }}</strong>
+                                            <strong>{{ \Carbon\Carbon::parse($d->hora)->format('H:i') }}</strong>
                                         </h6>
                                     </td>
                                     <td class="text-center">

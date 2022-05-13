@@ -922,7 +922,7 @@ class PerfilesController extends Component
             'PIN3COMBO.required' => 'El pin del perfil es requerido',
             'nombreCliente.required' => 'El nombre del cliente es requerido',
             'nombreCliente.min' => 'El nombre debe tener al menos 4 caracteres',
-            'celular.required' => 'El numero de celular del cliente es requerido',
+            'celular.required' => 'El número de celular del cliente es requerido',
             'celular.integer' => 'El celular debe ser un número',
             'celular.min' => 'El celular debe tener 8 dígitos',
             'start_account.required' => 'Seleccione una fecha valida',
@@ -1477,7 +1477,7 @@ class PerfilesController extends Component
             'diasdePlan.integer' => 'La cantidad de dias debe ser un número',
             'diasdePlan.gt' => 'La cantidad de dias debe ser mayor a 0',
             'importe.required' => 'El importe es requerido',
-            'importe.integer' => 'El importe debe ser un numero',
+            'importe.integer' => 'El importe debe ser un número',
             'importe.gt' => 'El importe debe ser mayor a 0',
         ];
 
@@ -1839,7 +1839,7 @@ class PerfilesController extends Component
             'diasdePlan.integer' => 'Los dias deben ser un número',
             'diasdePlan.gt' => 'Los dias a renovar deben ser minimo 1',
             'importe.required' => 'El importe es requerido',
-            'importe.integer' => 'El importe debe ser un numero',
+            'importe.integer' => 'El importe debe ser un número',
             'importe.gt' => 'El importe debe ser mayor a 0',
         ];
 
@@ -2181,7 +2181,7 @@ class PerfilesController extends Component
             'pin.required' => 'El pin es requerido',
             'nombreCliente.required' => 'El nombre del cliente es requerido',
             'nombreCliente.min' => 'El nombre debe tener al menos 4 caracteres',
-            'celular.required' => 'El numero de celular del cliente es requerido',
+            'celular.required' => 'El número de celular del cliente es requerido',
             'celular.integer' => 'El celular debe ser un número',
             'celular.min' => 'El celular debe tener 8 dígitos',
             'start_account.required' => 'Seleccione una fecha valida',
