@@ -110,11 +110,7 @@
                                     @endif
                                     
                                     <td class="text-center">
-<<<<<<< HEAD
-                                       {{-- <span>
-=======
                                         {{-- <span>
->>>>>>> 1ec20fbd571562b1c035ddb94fef968dcae8c1d9
                                             <img src="{{('storage/productos/'.$product->imagen) }}"
                                                 alt="imagen de ejemplo" height="40" class="rounded">
                                         </span> --}}
