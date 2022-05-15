@@ -58,6 +58,7 @@
         <table cellpadding="0" cellspacing="-1" class="table-items" width="100%" height="50%">
             <thead>
                 <tr>
+                    <th width="4%">#</th>
                     <th width="8%">Cliente</th>
                     <th width="4%">Orden</th>
                     <th width="12%">Fecha Hora Recep.</th>
@@ -80,6 +81,10 @@
             <tbody>
                 @foreach ($data as $d)
                     <tr height="10px">
+                        <td align="center">
+                            <FONT FACE="times new roman" SIZE=1>{{ $loop->iteration }}
+                            </FONT>
+                        </td>
                         <td align="center">
                             <FONT FACE="times new roman" SIZE=1>{{ $d->movservices[0]->movs->climov->client->nombre }}
                             </FONT>
@@ -237,10 +242,10 @@
                     <td colspan="2" class="text-left">
                         <span><b>TOTALES</b></span>
                     </td>
-                    <td class="text-right" colspan="4">
+                    <td class="text-right" colspan="5">
                         <span><strong>
 
-                                {{ number_format($data->sum('costo'), 2) }} bs.
+                                {{ number_format($data->sum('costo'), 2) }}
 
                             </strong></span>
                     </td>
@@ -258,7 +263,7 @@
                                         @endif
                                     @endforeach
                                 @endforeach
-                                {{ number_format($mytotal, 2) }} bs.
+                                {{ number_format($mytotal, 2) }}
 
                             </strong></span>
                     </td>
