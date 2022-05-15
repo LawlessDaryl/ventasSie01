@@ -71,7 +71,7 @@
                     <th width="5%">Saldo</th>
                     <th width="8%">Tipo Servicio</th> -->
 
-                    <th width="7%">Detalle</th>
+                    <th width="13%">Detalle</th>
                     <th width="6%">Estado</th>
                     <th width="10%">Tec. Resp.</th>
 
@@ -184,7 +184,7 @@
 
                         <td align="center">
                             <FONT FACE="times new roman" SIZE=1>{{ $d->marca }} {{ $d->categoria->nombre }} {{ $d->detalle }}
-                            </FONT>
+                            </FONT><br>
                             <FONT FACE="times new roman" SIZE=1><b>Falla:</b> {{ $d->falla_segun_cliente }}
                             </FONT>
                         </td>
