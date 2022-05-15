@@ -64,10 +64,11 @@
                     <th width="11%">Fecha Hora Term.</th>
                     <th width="11%">Fecha Hora Entr.</th>
                     <th width="5%">Costo</th>
+                    <th width="8%">Importe</th>
                     <th width="8%">Utilidad</th>
-                    <th width="5%">A cuenta</th>
+                    <!-- <th width="5%">A cuenta</th>
                     <th width="5%">Saldo</th>
-                    <th width="8%">Tipo Servicio</th>
+                    <th width="8%">Tipo Servicio</th> -->
 
                     <th width="7%">Detalle</th>
                     <th width="6%">Estado</th>
@@ -158,7 +159,7 @@
                             <FONT FACE="times new roman" SIZE=1>
                                 {{ number_format($d->movservices[0]->movs->import, 2) }}</FONT>
                         </td>
-                        <td align="center">
+                        <!-- <td align="center">
                             <FONT FACE="times new roman" SIZE=1>
                                 {{ number_format($d->movservices[0]->movs->on_account, 2) }}</FONT>
                         </td>
@@ -169,9 +170,17 @@
 
                         <td align="center">
                             <FONT FACE="times new roman" SIZE=1>{{ $d->OrderServicio->type_service }}</FONT>
-                        </td>
+                        </td> -->
+
                         <td align="center">
-                            <FONT FACE="times new roman" SIZE=1>{{ $d->marca }} {{ $d->categoria->nombre }}
+                            <FONT FACE="times new roman" SIZE=1>
+                            {{ number_format($d->utilidad, 2) }}</FONT>
+                        </td>
+
+                        <td align="center">
+                            <FONT FACE="times new roman" SIZE=1>{{ $d->marca }} {{ $d->categoria->nombre }} {{ $d->detalle }}
+                            </FONT>
+                            <FONT FACE="times new roman" SIZE=1><b>Falla:</b> {{ $d->falla_segun_cliente }}
                             </FONT>
                         </td>
                         @foreach ($d->movservices as $mv)
@@ -252,6 +261,11 @@
                                 {{ number_format($mytotal, 2) }} bs.
 
                             </strong></span>
+                    </td>
+                    <td class="text-right" colspan="0">
+                        <span><strong>
+                        {{ number_format($sumaUtilidad, 2) }}
+                        </strong></span>
                     </td>
 
                 </tr>

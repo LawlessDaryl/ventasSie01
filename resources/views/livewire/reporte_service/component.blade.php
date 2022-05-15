@@ -315,7 +315,7 @@
                                         <td colspan="2" class="text-left">
                                             <span style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0"><b>TOTALES</b></span>
                                         </td>
-                                        <td class="text-right" colspan="4">
+                                        <td class="text-right" colspan="5">
                                             <span style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0"><strong>
                                                     @if (($estado == 'ENTREGADO' && $userId != 0) || ($estado == 'Todos' && $userId != 0))
                                                         {{ $costoEntregado }}
