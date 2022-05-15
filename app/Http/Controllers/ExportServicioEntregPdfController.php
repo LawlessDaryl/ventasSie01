@@ -22,6 +22,7 @@ class ExportServicioEntregPdfController extends Controller
         $sumaBanco=0;
         $sumaCosto=0;
         $sumaCostoEfectivo=0;
+        $sumaUtilidad = 0;
 
         $user = User::find(Auth()->user()->id);
         foreach ($user->sucursalusers as $usersuc) {
@@ -45,7 +46,7 @@ class ExportServicioEntregPdfController extends Controller
         if ($reportType == 1 && ($dateFrom == '' || $dateTo == '')) {
             $dateFrom = Carbon::parse(Carbon::now())->format('Y-m-d');
             $dateTo = Carbon::parse(Carbon::now())->format('Y-m-d');
-            $this->emit('item', 'Hiciste algo incorrecto, la fecha se actualizó');
+            $emit('item', 'Hiciste algo incorrecto, la fecha se actualizó');
         }
 
         if ($dateFrom == "" || $dateTo == "") {
@@ -64,7 +65,7 @@ class ExportServicioEntregPdfController extends Controller
                 $to = Carbon::parse($dateTo)->format('Y-m-d')     . ' 23:59:59';
             } catch (Exception $e) {
                 DB::rollback();
-                $this->emit('', 'Datos no Validos', $e->getMessage());
+                $emit('', 'Datos no Validos', $e->getMessage());
             }
         }
 
@@ -88,7 +89,8 @@ class ExportServicioEntregPdfController extends Controller
                 ->join('sucursal_users as su', 'u.id', 'su.user_id')
                 ->where('mov.status', 'like', 'ACTIVO')
                 ->select(
-                    'services.*'
+                    'services.*',
+                    DB::raw('0 as utilidad')
                 )
                 ->where('s.id', $sucursal)
                 ->where('ca.id', $caja)
@@ -98,6 +100,15 @@ class ExportServicioEntregPdfController extends Controller
                 ->distinct()
                 ->get();
                 
+                foreach ($data as $serv) {
+                    foreach ($serv->movservices as $mm) {
+                        if ($mm->movs->status == 'ACTIVO') {
+                            $serv->utilidad = $mm->movs->import - $serv->costo;
+                            $sumaUtilidad += $serv->utilidad;
+                        }
+                    }
+                }
+
                 $sumaCostoEfectivo = $data->sum('costo');
 
 
@@ -157,7 +168,8 @@ class ExportServicioEntregPdfController extends Controller
                     'services.detalle as detalle',
                     'cat.nombre as nomCat',
                     'services.costo as costo',
-                    'mov.import as import'
+                    'mov.import as import',
+                    DB::raw('0 as utilidad')
                 )
                 ->where('s.id', $sucursal)
                 ->where('ca.id', '1')
@@ -214,6 +226,11 @@ class ExportServicioEntregPdfController extends Controller
             foreach($movbancarios as $mB){
                 $sumaCosto += $mB->costo;
             }
+
+            foreach ($movbancarios as $movbanc) {
+                $movbanc->utilidad = $movbanc->import - $movbanc->costo;
+                $sumaUtilidad += $movbanc->utilidad;
+            }
           
             /* 
                 dd($banco); */
@@ -236,7 +253,8 @@ class ExportServicioEntregPdfController extends Controller
                 ->where('mov.status', 'ACTIVO')
                 ->select(
                     'services.*',
-                    
+                    DB::raw('0 as utilidad')
+
                 )
                 ->where('s.id', $sucursal)
                 ->where('mov.type', 'ENTREGADO')
@@ -245,6 +263,16 @@ class ExportServicioEntregPdfController extends Controller
                 ->distinct()
                 ->get();
  
+                foreach ($data as $serv) {
+                    foreach ($serv->movservices as $mm) {
+                        if ($mm->movs->status == 'ACTIVO') {
+                            $serv->utilidad = $mm->movs->import - $serv->costo;
+                            $sumaUtilidad += $serv->utilidad;
+                        }
+                    }
+                }
+
+
                 $data1 = Service::join('order_services as os', 'os.id', 'services.order_service_id')
                 ->join('mov_services as ms', 'services.id', 'ms.service_id')
                 ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
@@ -327,7 +355,7 @@ class ExportServicioEntregPdfController extends Controller
         }
         
         $sucursal = Sucursal::find($sucursal);
-        $pdf = PDF::loadView('livewire.pdf.reporteServiciosEntregados', compact('data', 'reportType', 'dateFrom', 'dateTo', 'sucursal', 'sumaEfectivo', 'sumaBanco', 'caja', 'movbancarios', 'contador','nombreCaja', 'sumaCosto', 'sumaCostoEfectivo'));
+        $pdf = PDF::loadView('livewire.pdf.reporteServiciosEntregados', compact('data', 'reportType', 'dateFrom', 'dateTo', 'sucursal', 'sumaEfectivo', 'sumaBanco', 'caja', 'movbancarios', 'contador','nombreCaja', 'sumaCosto', 'sumaCostoEfectivo','sumaUtilidad'));
 
         return $pdf->setPaper('letter')->stream('ServiciosReport.pdf');  //visualizar
         /* return $pdf->download('salesReport.pdf');  //descargar  */

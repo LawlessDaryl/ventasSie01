@@ -77,10 +77,10 @@
                     <th width="11%">Fecha Hora Entr.</th> --}}
                     <th width="7%">Detalle</th>
                     @if (@Auth::user()->hasPermissionTo('Ver_Costo_Reportes_Entregados'))
-                    <th width="5%">Costo</th>
-                    <th width="8%">Utilidad</th>
+                    <th width="5%">Utilidad</th>
+                    <th width="8%">Importe</th>
                     @else
-                    <th width="8%">Utilidad</th>
+                    <th width="8%">Importe</th>
                     @endif
                     {{-- <th width="5%">A cuenta</th>
                     <th width="5%">Saldo</th>
@@ -131,7 +131,7 @@
                         {{-- COSTO --}}
                         @if (@Auth::user()->hasPermissionTo('Ver_Costo_Reportes_Entregados'))
                         <td align="center">
-                            <FONT FACE="times new roman" SIZE=1>{{ number_format($d->costo, 2) }}</FONT>
+                            <FONT FACE="times new roman" SIZE=1>{{ number_format($d->utilidad, 2) }}</FONT>
                         </td>
                         @endif
                         {{-- IMPORTE --}}
@@ -185,7 +185,7 @@
                             {{-- COSTO --}}
                             @if (@Auth::user()->hasPermissionTo('Ver_Costo_Reportes_Entregados'))
                             <td align="center">
-                                <FONT FACE="times new roman" SIZE=1>{{ number_format($d->costo, 2) }}</FONT>
+                                <FONT FACE="times new roman" SIZE=1>{{ number_format($d->utilidad, 2) }}</FONT>
                             </td>
                             @endif
                             {{-- IMPORTE --}}
@@ -244,9 +244,11 @@
                     <td class="text-right" colspan="4">
                         <span><strong>
                                 @if ($caja != 'Todos')
-                                    {{ number_format($sumaCosto + $sumaCostoEfectivo, 2) }} bs.
+                                    <!-- {{ number_format($sumaCosto + $sumaCostoEfectivo, 2) }} bs. -->
+                                    {{ number_format($sumaUtilidad, 2) }}
                                 @else
-                                    {{ number_format($data->sum('costo'), 2) }} bs.
+                                    <!-- {{ number_format($data->sum('costo'), 2) }} bs. -->
+                                    {{ number_format($sumaUtilidad, 2) }}
                                 @endif
                             </strong></span>
                     </td>
