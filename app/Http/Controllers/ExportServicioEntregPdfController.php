@@ -17,12 +17,15 @@ class ExportServicioEntregPdfController extends Controller
     public function reporteServPDF($reportType, $dateFrom = null, $dateTo = null, $sucursal, $sumaEfectivo, $sumaBanco, $caja)
     {
         $data = [];
-
+        $movbancarios = [];
         $sumaEfectivo=0;
         $sumaBanco=0;
         $sumaCosto=0;
         $sumaCostoEfectivo=0;
         $sumaUtilidad = 0;
+        $sumaUtilidadBanco = 0;
+        $sumaUtilidadTotal = 0;
+        $contador = 0;
 
         $user = User::find(Auth()->user()->id);
         foreach ($user->sucursalusers as $usersuc) {
@@ -74,32 +77,22 @@ class ExportServicioEntregPdfController extends Controller
         }
         
         if ($caja != 'Todos') {
-            $data = Service::join('order_services as os', 'os.id', 'services.order_service_id')
-                ->join('mov_services as ms', 'services.id', 'ms.service_id')
-                ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
-                ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
+            $data = Service::join('mov_services as ms', 'services.id', 'ms.service_id')
                 ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
                 ->join('cartera_movs as cmv', 'cmv.movimiento_id', 'mov.id')
                 ->join('carteras as c', 'c.id', 'cmv.cartera_id')
                 ->join('cajas as ca', 'ca.id', 'c.caja_id')
-                ->join('sucursals as s', 's.id', 'ca.sucursal_id')
-                ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                ->join('clientes as cli', 'cli.id', 'cliemov.cliente_id')
-                ->join('users as u', 'u.id', 'mov.user_id')
-                ->join('sucursal_users as su', 'u.id', 'su.user_id')
-                ->where('mov.status', 'like', 'ACTIVO')
+                ->where('mov.status', 'ACTIVO')
                 ->select(
                     'services.*',
                     DB::raw('0 as utilidad')
                 )
-                ->where('s.id', $sucursal)
                 ->where('ca.id', $caja)
                 ->where('mov.type', 'ENTREGADO')
                 ->whereBetween('mov.created_at', [$from, $to])
-                ->orderBy('services.id', 'desc')
                 ->distinct()
                 ->get();
-                
+
                 foreach ($data as $serv) {
                     foreach ($serv->movservices as $mm) {
                         if ($mm->movs->status == 'ACTIVO') {
@@ -109,13 +102,26 @@ class ExportServicioEntregPdfController extends Controller
                     }
                 }
 
-                $sumaCostoEfectivo = $data->sum('costo');
+           
 
 
-                $data1 = Service::join('order_services as os', 'os.id', 'services.order_service_id')
-                ->join('mov_services as ms', 'services.id', 'ms.service_id')
-                ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
-                ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
+            $data1 = Service::join('mov_services as ms', 'services.id', 'ms.service_id')
+            ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+            ->join('cartera_movs as cmv', 'cmv.movimiento_id', 'mov.id')
+            ->join('carteras as c', 'c.id', 'cmv.cartera_id')
+            ->join('cajas as ca', 'ca.id', 'c.caja_id')
+            ->where('mov.status', 'ACTIVO')
+            ->select(
+                'mov.*',
+               
+            )
+            ->where('ca.id', $caja)
+            ->where('mov.type', 'ENTREGADO')
+            ->whereBetween('mov.created_at', [$from, $to])
+            ->distinct()
+            ->get();
+
+            $banco = Service::join('mov_services as ms', 'services.id', 'ms.service_id')
                 ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
                 ->join('cartera_movs as cmv', 'cmv.movimiento_id', 'mov.id')
                 ->join('carteras as c', 'c.id', 'cmv.cartera_id')
@@ -124,31 +130,7 @@ class ExportServicioEntregPdfController extends Controller
                 ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
                 ->join('clientes as cli', 'cli.id', 'cliemov.cliente_id')
                 ->join('users as u', 'u.id', 'mov.user_id')
-                ->join('sucursal_users as su', 'u.id', 'su.user_id')
-                ->where('mov.status', 'like', 'ACTIVO')
-                ->select(
-                    'mov.*'
-                )
-                ->where('s.id', $sucursal)
-                ->where('ca.id', $caja)
-                ->where('mov.type', 'ENTREGADO')
-                ->whereBetween('mov.created_at', [$from, $to])
-                ->distinct()
-                ->get();
-
-            $banco = Service::join('order_services as os', 'os.id', 'services.order_service_id')
-                ->join('mov_services as ms', 'services.id', 'ms.service_id')
-                ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
-                ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
-                ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                ->join('cartera_movs as cmv', 'cmv.movimiento_id', 'mov.id')
-                ->join('carteras as c', 'c.id', 'cmv.cartera_id')
-                ->join('cajas as ca', 'ca.id', 'c.caja_id')
-                ->join('sucursals as s', 's.id', 'ca.sucursal_id')
-                ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                ->join('clientes as cli', 'cli.id', 'cliemov.cliente_id')
-                ->join('users as u', 'u.id', 'mov.user_id')
-                ->join('sucursal_users as su', 'u.id', 'su.user_id')
+                
                 ->where('mov.status', 'like', 'ACTIVO')
                 ->select(
                     'services.*',
@@ -163,26 +145,23 @@ class ExportServicioEntregPdfController extends Controller
                     'mov.status as status',
                     'cli.*',
                     'cli.nombre as nomCli',
-                    'os.id as orderId',
-                    'services.marca as marca',
-                    'services.detalle as detalle',
-                    'cat.nombre as nomCat',
-                    'services.costo as costo',
                     'mov.import as import',
                     DB::raw('0 as utilidad')
                 )
-                ->where('s.id', $sucursal)
+                
+              
                 ->where('ca.id', '1')
                 ->where('mov.type', 'ENTREGADO')
                 ->whereBetween('mov.created_at', [$from, $to])
-                ->orderBy('services.id', 'desc')
+              
                 ->distinct()
                 ->get();
             $contador = $data->count();
+
             /*  dd($banco); */
 
-            $movbancarios = [];
-           
+            
+            
             foreach ($banco as  $value) {
                 $aperturasCierres = Caja::join('carteras as car', 'cajas.id', 'car.caja_id')
                     ->join('cartera_movs as cartmovs', 'car.id', 'cartmovs.cartera_id')
@@ -190,12 +169,9 @@ class ExportServicioEntregPdfController extends Controller
                     ->select('mov.*')
                     ->where('cajas.id', $caja)
                     ->where('mov.user_id', $value->idusuario)
-                    ->where('mov.type', 'APERTURA')                    
-                    ->orWhere('mov.type', 'CIERRE')                    
-                    ->get();     
-                    
-                    
-                
+                    ->where('mov.type', 'APERTURA')
+                    ->orWhere('mov.type', 'CIERRE')
+                    ->get();
 
                 $break = 0;
                 $hasta = 0;
@@ -204,16 +180,17 @@ class ExportServicioEntregPdfController extends Controller
 
                     if ($value2->status == 'ACTIVO' && $value2->type == 'APERTURA' && $value2->created_at <= $value->creacion_Mov) {
                         array_push($movbancarios, $value);
-                        $sumaBanco+=$value->import;
+                        $sumaBanco += $value->import;
+
                         $break = 1;
                     } elseif ($value2->type == 'APERTURA' && $value2->created_at <= $value->creacion_Mov) {
                         $hasta = 1;
                     } elseif ($hasta == 1 && $value2->type == 'CIERRE' && $value2->created_at >= $value->creacion_Mov) {
                         array_push($movbancarios, $value);
-                        $sumaBanco+=$value->import;
+                        $sumaBanco += $value->import;
                         /* $movbancarios=$value; */
                         $break = 1;
-                    }elseif ($hasta == 1 &&$value2->type == 'CIERRE'&& $value2->created_at <= $value->creacion_Mov){
+                    } elseif ($hasta == 1 && $value2->type == 'CIERRE' && $value2->created_at <= $value->creacion_Mov) {
                         $hasta = 0;
                     }
 
@@ -223,78 +200,74 @@ class ExportServicioEntregPdfController extends Controller
                 
             }
             /* dd($movbancarios); */
-            foreach($movbancarios as $mB){
+            foreach ($movbancarios as $mB) {
                 $sumaCosto += $mB->costo;
             }
-
+            
             foreach ($movbancarios as $movbanc) {
-                $movbanc->utilidad = $movbanc->import - $movbanc->costo;
-                $sumaUtilidad += $movbanc->utilidad;
+                        $movbanc->utilidad = $movbanc->import - $movbanc->costo;
+                        $sumaUtilidadBanco += $movbanc->utilidad;
             }
-          
+            $sumaUtilidadTotal = $sumaUtilidadBanco +$sumaUtilidad;
             /* 
                 dd($banco); */
-        }else {
-            $movbancarios=[];
-            $contador = 0;
-            $data = Service::join('order_services as os', 'os.id', 'services.order_service_id')
-                ->join('mov_services as ms', 'services.id', 'ms.service_id')
-                ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
-                ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
+        } else {
+            /* $sumaUtilidadTotal=0;
+            $sumaUtilidadBanco=0;
+            $sumaUtilidad=0; */
+
+            $data = Service::join('mov_services as ms', 'services.id', 'ms.service_id')
                 ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                ->join('cartera_movs as cmv', 'cmv.movimiento_id', 'mov.id')
-                ->join('carteras as c', 'c.id', 'cmv.cartera_id')
-                ->join('cajas as ca', 'ca.id', 'c.caja_id')
-                ->join('sucursals as s', 's.id', 'ca.sucursal_id')
-                ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                ->join('clientes as cli', 'cli.id', 'cliemov.cliente_id')
-                ->join('users as u', 'u.id', 'mov.user_id')
-                ->join('sucursal_users as su', 'u.id', 'su.user_id')
                 ->where('mov.status', 'ACTIVO')
                 ->select(
                     'services.*',
                     DB::raw('0 as utilidad')
 
                 )
-                ->where('s.id', $sucursal)
+                ->where('services.sucursal_id', $sucursal)
+                /* ->where('services.sucursal_id',$sucursal) */
                 ->where('mov.type', 'ENTREGADO')
                 ->whereBetween('mov.created_at', [$from, $to])
-                ->orderBy('services.id', 'desc')
                 ->distinct()
                 ->get();
- 
+                
                 foreach ($data as $serv) {
                     foreach ($serv->movservices as $mm) {
+                        
                         if ($mm->movs->status == 'ACTIVO') {
                             $serv->utilidad = $mm->movs->import - $serv->costo;
-                            $sumaUtilidad += $serv->utilidad;
+                            foreach($mm->movs->cartmov as $carmv){
+                                
+                                if($carmv->cartera->tipo == 'CajaFisica'){
+                                    
+                                    $sumaUtilidad += $serv->utilidad;
+                                    
+                                }
+                                else{
+                                    $sumaUtilidadBanco += $serv->utilidad;
+                                }
+                            }
+                            
+                            
                         }
                     }
                 }
+                
+                $sumaUtilidadTotal = $sumaUtilidadBanco +$sumaUtilidad;
+                
 
-
-                $data1 = Service::join('order_services as os', 'os.id', 'services.order_service_id')
-                ->join('mov_services as ms', 'services.id', 'ms.service_id')
-                ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
-                ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
+            $data1 = Service::join('mov_services as ms', 'services.id', 'ms.service_id')
                 ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                ->join('cartera_movs as cmv', 'cmv.movimiento_id', 'mov.id')
-                ->join('carteras as c', 'c.id', 'cmv.cartera_id')
-                ->join('cajas as ca', 'ca.id', 'c.caja_id')
-                ->join('sucursals as s', 's.id', 'ca.sucursal_id')
-                ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                ->join('clientes as cli', 'cli.id', 'cliemov.cliente_id')
-                ->join('users as u', 'u.id', 'mov.user_id')
-                ->join('sucursal_users as su', 'u.id', 'su.user_id')
                 ->where('mov.status', 'ACTIVO')
                 ->select(
                     'mov.*',
-                    
+
                 )
-                ->where('s.id', $sucursal)
+                ->where('services.sucursal_id', $sucursal)
+                /* ->where('services.sucursal_id',$sucursal) */
                 ->where('mov.type', 'ENTREGADO')
                 ->whereBetween('mov.created_at', [$from, $to])
-               
+
                 ->distinct()
                 ->get();
         }
@@ -355,7 +328,11 @@ class ExportServicioEntregPdfController extends Controller
         }
         
         $sucursal = Sucursal::find($sucursal);
-        $pdf = PDF::loadView('livewire.pdf.reporteServiciosEntregados', compact('data', 'reportType', 'dateFrom', 'dateTo', 'sucursal', 'sumaEfectivo', 'sumaBanco', 'caja', 'movbancarios', 'contador','nombreCaja', 'sumaCosto', 'sumaCostoEfectivo','sumaUtilidad'));
+        $pdf = PDF::loadView('livewire.pdf.reporteServiciosEntregados', 
+        compact('data', 'reportType', 'dateFrom', 'dateTo', 'sucursal', 
+        'sumaEfectivo', 'sumaBanco', 'caja', 'movbancarios', 'contador',
+        'nombreCaja', 'sumaCosto', 'sumaCostoEfectivo','sumaUtilidad',
+        'sumaUtilidadBanco','sumaUtilidadTotal'));
 
         return $pdf->setPaper('letter')->stream('ServiciosReport.pdf');  //visualizar
         /* return $pdf->download('salesReport.pdf');  //descargar  */

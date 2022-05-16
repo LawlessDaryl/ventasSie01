@@ -205,36 +205,34 @@
                         <span><b>EFECTIVO</b></span>
                     </td>
                     @if (@Auth::user()->hasPermissionTo('Ver_Costo_Reportes_Entregados'))
-                    <td class="text-right" colspan="5">
-                        <span>
-                            {{ number_format($sumaEfectivo, 2) }} bs.
-                        </span>
-                    </td>
-                    @else
                     <td class="text-right" colspan="4">
                         <span>
-                            {{ number_format($sumaEfectivo, 2) }} bs.
+                            {{ number_format($sumaUtilidad, 2) }} bs.
                         </span>
                     </td>
                     @endif
+                    <td class="text-right" colspan="{{ @Auth::user()->hasPermissionTo('Ver_Costo_Reportes_Entregados') ? '0' : '4' }}">
+                        <span>
+                            {{ number_format($sumaEfectivo, 2) }} bs.
+                        </span>
+                    </td>
                 </tr>
                 <tr>
                     <td colspan="2" class="text-left">
                         <span><b>TRANSFERENCIA BANCARIA</b></span>
                     </td>
                     @if (@Auth::user()->hasPermissionTo('Ver_Costo_Reportes_Entregados'))
-                    <td class="text-right" colspan="5">
-                        <span>
-                            {{ number_format($sumaBanco, 2) }} bs.
-                        </span>
-                    </td>
-                    @else
                     <td class="text-right" colspan="4">
                         <span>
-                            {{ number_format($sumaBanco, 2) }} bs.
+                            {{ number_format($sumaUtilidadBanco, 2) }} bs.
                         </span>
                     </td>
                     @endif
+                    <td class="text-right" colspan="{{ @Auth::user()->hasPermissionTo('Ver_Costo_Reportes_Entregados') ? '0' : '4' }}">
+                        <span>
+                            {{ number_format($sumaBanco, 2) }} bs.
+                        </span>
+                    </td>
                 </tr>
                 <tr>
                     <td colspan="2" class="text-left">
@@ -245,10 +243,10 @@
                         <span><strong>
                                 @if ($caja != 'Todos')
                                     <!-- {{ number_format($sumaCosto + $sumaCostoEfectivo, 2) }} bs. -->
-                                    {{ number_format($sumaUtilidad, 2) }}
+                                    {{ number_format($sumaUtilidadTotal, 2) }} bs.
                                 @else
                                     <!-- {{ number_format($data->sum('costo'), 2) }} bs. -->
-                                    {{ number_format($sumaUtilidad, 2) }}
+                                    {{ number_format($sumaUtilidadTotal, 2) }} bs.
                                 @endif
                             </strong></span>
                     </td>

@@ -215,11 +215,6 @@ class ReportEntregadoServController extends Component
                     'mov.status as status',
                     'cli.*',
                     'cli.nombre as nomCli',
-                    'os.id as orderId',
-                    'services.marca as marca',
-                    'services.detalle as detalle',
-                    'cat.nombre as nomCat',
-                    'services.costo as costo',
                     'mov.import as import',
                     DB::raw('0 as utilidad')
                 )
@@ -287,30 +282,18 @@ class ReportEntregadoServController extends Component
             /* 
                 dd($banco); */
         } else {
-            $this->data = Service::join('order_services as os', 'os.id', 'services.order_service_id')
-                ->join('mov_services as ms', 'services.id', 'ms.service_id')
-                ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
-                ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
+            $this->data = Service::join('mov_services as ms', 'services.id', 'ms.service_id')
                 ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                ->join('cartera_movs as cmv', 'cmv.movimiento_id', 'mov.id')
-                ->join('carteras as c', 'c.id', 'cmv.cartera_id')
-                ->join('cajas as ca', 'ca.id', 'c.caja_id')
-                ->join('sucursals as s', 's.id', 'ca.sucursal_id')
-                ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                ->join('clientes as cli', 'cli.id', 'cliemov.cliente_id')
-                ->join('users as u', 'u.id', 'mov.user_id')
-                ->join('sucursal_users as su', 'u.id', 'su.user_id')
                 ->where('mov.status', 'ACTIVO')
                 ->select(
                     'services.*',
                     DB::raw('0 as utilidad')
 
                 )
-                ->where('s.id', $this->sucursal)
+                ->where('services.sucursal_id', $this->sucursal)
                 /* ->where('services.sucursal_id',$this->sucursal) */
                 ->where('mov.type', 'ENTREGADO')
                 ->whereBetween('mov.created_at', [$from, $to])
-                ->orderBy('services.id', 'desc')
                 ->distinct()
                 ->get();
                 
@@ -339,25 +322,14 @@ class ReportEntregadoServController extends Component
                 $this->sumaUtilidadTotal = $this->sumaUtilidadBanco +$this->sumaUtilidad;
                 
 
-            $data1 = Service::join('order_services as os', 'os.id', 'services.order_service_id')
-                ->join('mov_services as ms', 'services.id', 'ms.service_id')
-                ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
-                ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
+            $data1 = Service::join('mov_services as ms', 'services.id', 'ms.service_id')
                 ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                ->join('cartera_movs as cmv', 'cmv.movimiento_id', 'mov.id')
-                ->join('carteras as c', 'c.id', 'cmv.cartera_id')
-                ->join('cajas as ca', 'ca.id', 'c.caja_id')
-                ->join('sucursals as s', 's.id', 'ca.sucursal_id')
-                ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                ->join('clientes as cli', 'cli.id', 'cliemov.cliente_id')
-                ->join('users as u', 'u.id', 'mov.user_id')
-                ->join('sucursal_users as su', 'u.id', 'su.user_id')
                 ->where('mov.status', 'ACTIVO')
                 ->select(
                     'mov.*',
 
                 )
-                ->where('s.id', $this->sucursal)
+                ->where('services.sucursal_id', $this->sucursal)
                 /* ->where('services.sucursal_id',$this->sucursal) */
                 ->where('mov.type', 'ENTREGADO')
                 ->whereBetween('mov.created_at', [$from, $to])
