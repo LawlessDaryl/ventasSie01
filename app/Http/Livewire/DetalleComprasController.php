@@ -36,7 +36,7 @@ class DetalleComprasController extends Component
     public  $nro_compra,$search,$provider,$fecha_compra,
     $usuario,$metodo_pago,$pago_parcial=0,$tipo_documento,$nro_documento,$observacion
     ,$selected_id,$descuento=0,$saldo=0,$subtotal,$cantidad_minima,
-    $estado_compra,$total_compra,$itemsQuantity,$price,$status,$tipo_transaccion,$destino,$porcentaje,$importe,$dscto=0,$aplicar=false;
+    $estado_compra,$total_compra,$itemsQuantity,$price,$status,$tipo_transaccion,$destino,$porcentaje,$importe,$dscto=0,$aplicar=false, $lote_compra;
 
     public $nombre_prov, $apellido_prov, $direccion_prov, $correo_prov,
     $telefono_prov;
@@ -60,7 +60,7 @@ class DetalleComprasController extends Component
         $this->status = "ACTIVO";
   
         $this->subtotal = Compras::getTotal();
-        $this->total_compra= $this->subtotal-$this->descuento;
+        $this->total_compra= $this->subtotal-$this->dscto;
         $this->porcentaje=0;
 
   
@@ -118,17 +118,12 @@ class DetalleComprasController extends Component
             'quantity'=>$cant,
             'attributes'=>$attributos
         );
-
-        
-        
         Compras::add($products);
         // Compras::add($product->id, $product->name, $precio_compra, $cant);
-        
         $this->total = Compras::getTotal();
         $this->itemsQuantity = Compras::getTotalQuantity();
-     
          $this->subtotal = Compras::getTotal();
-         $this->total_compra= $this->subtotal-$this->descuento;
+         $this->total_compra= $this->subtotal-$this->dscto;
 
     }
     public function addProvider(){
@@ -210,32 +205,20 @@ class DetalleComprasController extends Component
             Compras::add($products);
             $this->subtotal = Compras::getTotal();
             $this->itemsQuantity = Compras::getTotalQuantity();
-            $this->emit('scan-ok', $title);
             $this->subtotal = Compras::getTotal();
-            $this->total_compra= $this->subtotal-$this->descuento;
+            $this->total_compra= $this->subtotal-$this->dscto;
 
         }
     }
 
     public function UpdatePrice($productId, $price = 20)
     {
-        $title = '';
         $product = Product::select('products.*')
         ->where('products.id',$productId)->first();
-       
         $exist = Compras::get($productId);
         $quantitys=$exist->quantity;
         $precio_venta=$exist->attributes->precio;
         $codigo=$exist->attributes->codigo;
-       
-        if ($exist) {
-            $title = "cantidad actualizada";
-        } else {
-            $title = "producto agregado";
-        }
-
-     
-       
         $this->removeItem($productId);
        
         if ($price > 0) 
@@ -259,17 +242,14 @@ class DetalleComprasController extends Component
 
             $this->subtotal = Compras::getTotal();
             $this->itemsQuantity = Compras::getTotalQuantity();
-            $this->emit('scan-ok', $title);
-            $this->subtotal = Compras::getTotal();
-            $this->total_compra= $this->subtotal-$this->descuento;
+            $this->total_compra= $this->subtotal-$this->dscto;
         }
     }
 
     public function aplicarDescto(){
-
-        $this->aplicar=true;
-        $this->emit('dscto_added','Descuento aplicado satisfactoriamente');
         $this->dscto=$this->descuento;
+        $this->emit('dscto_added','Descuento aplicado satisfactoriamente');
+        $this->total_compra=$this->subtotal-$this->dscto;
     }
 
     public function cancelDscto(){
@@ -324,7 +304,7 @@ class DetalleComprasController extends Component
             $this->itemsQuantity = Compras::getTotalQuantity();
             $this->emit('scan-ok', $title);
             $this->subtotal = Compras::getTotal();
-            $this->total_compra= $this->subtotal-$this->descuento;
+            $this->total_compra= $this->subtotal-$this->dscto;
     }
     }
 
@@ -335,11 +315,16 @@ class DetalleComprasController extends Component
 
         $this->subtotal = Compras::getTotal();
         $this->itemsQuantity = Compras::getTotalQuantity();
-        $this->emit('scan-ok', 'Producto eliminado');
-        $this->subtotal = Compras::getTotal();
-        $this->total_compra= $this->subtotal-$this->descuento;
+      
+        if ($this->itemsQuantity <=0) 
+        {
+            $this->dscto=0;
+        }
+
+        $this->total_compra= $this->subtotal-$this->dscto;
         $this->descuento_change();
-        if ( $this->descuento>0) {
+        if ( $this->descuento>0) 
+        {
             
             $this->porcentaje= (round($this->descuento/$this->subtotal,2))*100;
         }
@@ -386,7 +371,7 @@ class DetalleComprasController extends Component
     public function descuento_change(){
         if ($this->subtotal>0 && $this->descuento>0 && $this->descuento<$this->subtotal) {
             
-            $this->total_compra= $this->subtotal-$this->descuento;
+            //$this->total_compra= $this->subtotal-$this->descuento;
             $this->porcentaje= (round($this->descuento/$this->subtotal,2))*100;
         }
         else{
@@ -404,12 +389,14 @@ class DetalleComprasController extends Component
 
         $rules = [
             'provider'=>'required',
-            'destino'=>'required|not_in:Elegir'
+            'destino'=>'required|not_in:Elegir',
+            'lote_compra'=>'required'
         ];
         $messages = [
             'provider.required' => 'El nombre del proveedor es requerido.',
             'destino.required'=>'Elige un destino',
-            'destino.not_in'=>'Elija un destino del producto'
+            'destino.not_in'=>'Elija un destino del producto',
+            'lote_compra.required'=>'El lote de compra es requerido'
         ];
 
         $this->validate($rules, $messages);
@@ -448,7 +435,8 @@ class DetalleComprasController extends Component
                 'estado_compra'=>$this->estado_compra,
                 'status'=>$this->status,
                 'destino_id'=>$this->destino,
-                'user_id'=> Auth()->user()->id
+                'user_id'=> Auth()->user()->id,
+                'lote_compra'=> $this->lote_compra 
             ]);
 
             if ($this->tipo_transaccion === 'Contado' || $this->pago_parcial>0) {

@@ -1,3 +1,16 @@
+
+@section('css')
+
+
+<style>
+
+    
+</style>
+
+
+@endsection
+
+
 <div class="row sales layout-top-spacing">
     <div class="col-sm-12" >
 
@@ -50,10 +63,10 @@
                                         <div class="form-group">
                                             <strong style="color: rgb(74, 74, 74)">Destino Producto</strong>
                                             <select wire:model.lazy="destino" class="form-control">
-                                              <option value='Elegir'>Elegir Destino</option>
+                                                <option value='Elegir'>Elegir Destino</option>
 
                                               @foreach($data_suc as $data)
-                                              <option value="{{$data->destino_id}}">{{$data->nombre}}-{{$data->name}}</option>
+                                                <option value="{{$data->destino_id}}">{{$data->nombre}}-{{$data->name}}</option>
                                               @endforeach
                                               
                                             </select>
@@ -120,18 +133,12 @@
                                             @if($tipo_transaccion == "CONTADO")
                                             <div class="input-group-prepend mb-3">
                                                  <input  wire:model='pago_parcial' type="text" disabled class="form-control" placeholder="Bs. 0">
-                                                 <span class="input-group-text input-gp">
-                                                    <a href="javascript:void(0)" data-toggle="modal"
-                                                        data-target="#tipo_p" class="fas fa-money-bill-wave text-white"></a>
-                                                </span>
+                                                
                                             </div>
                                            @else
                                            <div class="input-group-prepend mb-3">
                                                 <input  wire:model='pago_parcial' type="text" class="form-control" placeholder="Bs. 0">
-                                                <span class="input-group-text input-gp">
-                                                    <a href="javascript:void(0)" data-toggle="modal"
-                                                        data-target="#tipo_p" class="fas fa-money text-white"></a>
-                                                </span>
+                                              
                                             </div>
                                            @endif
                                            @error('pago_parcial')
@@ -144,6 +151,15 @@
                              </div>
                              <div class="col-12 col-md-4 col-lg-4" style="border: thick #b4b4b1;" >
 
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                           <strong style="color: rgb(74, 74, 74)">Lote de Compra: </strong>
+                                           <input type="text" wire:model.lazy="lote_compra" class="form-control">
+                                        @error('lote_compra')
+                                        <span class="text-danger er">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                            <strong style="color: rgb(74, 74, 74)">Observacion: </strong>
@@ -206,18 +222,9 @@
                                                  <tr>
                                                      <td>
                                                          <div class="card-body">
-                                                             <h5 class="card-title">{{$prod->nombre}}</h5>
-                                                             <div>
-                                                                 <b>Caracteristicas</b>
-                                                                 <b>Stock</b>
-                                                                 <b>Marca</b>
-                                                                 <b>Garantia</b> <br>
-                                                                 <b class="card-text"> {{$prod->caracteristicas}}</b>
-                                                                 <b class="card-text">{{$prod->stock}}</b>
-                                                                 <b class="card-text">{{$prod->marca}}</b>
-                                                                 <b class="card-text">{{$prod->garantia}}</b>
-                                                                
-                                                             </div>
+                                                            <h5> <strong>{{$prod->nombre}}</strong> </h5>
+                                                            <label>{{ $prod->unidad}}</label>|<label>{{ $prod->marca}}</label>|<label>{{ $prod->industria }}</label>
+                                                            <h6>{{ $prod->caracteristicas }}</h6>
                                                      </td>
                                                    
                                                      
@@ -242,10 +249,10 @@
                
                     <div class="col-lg-8 col-12  col-md-12">
                         <div class="widget mr-2 mb-2 mt-2">
-                                <div class="table-responsive p-0">
-                                    <table style="background: #ffffff" class="table-hover mt-2">
+                                <div class="table-responsive table-wrapper-scroll-y p-0">
+                                    <table style="background: #ffffff" class="table table-bordered table-striped mt-1">
                                         <thead  style="background: #595959" class="">
-                                            <tr class="m-2">
+                                            <tr>
                                                 <th class="text-center" style="width: 12rem; color:#ffffff; font-size:1rem">Producto</th>
                                                 <th class="text-center" style="width: 5rem; color:#ffffff">Codigo</th>
                                                 <th class="text-center" style="width: 5rem; color:#ffffff" >Precio <br>Compra</th>

@@ -22,7 +22,8 @@ class Compra extends Model
                             'estado_compra',
                             'status',
                             'destino_id',
-                            'user_id'
+                            'user_id',
+                            'lote_compra'
                         ];
     
     public function compradetalle()
