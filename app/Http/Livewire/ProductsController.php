@@ -74,17 +74,16 @@ class ProductsController extends Component
            
             $prod = Product::join('categories as c', 'products.category_id','c.id')
             ->select('products.*', 'c.name as cate')
-            ->where('c.id',$this->selected_sub)
             ->where('products.status',$this->estados)
-            ->where(function($query){
-                $query->where('products.nombre', 'like', '%' . $this->search . '%')
-                        ->orWhere('products.codigo', 'like', '%' . $this->search . '%')
-                        ->orWhere('products.status', 'like', '%' . $this->estados . '%');
-                       
+            ->where('c.id',$this->selected_sub)
+            ->where(function($querys){
+                $querys->where('products.nombre', 'like', '%' . $this->search . '%')
+                        ->orWhere('products.codigo', 'like', '%' . $this->search . '%');
             })
             
             ->orderBy('products.id', 'desc')
             ->paginate($this->pagination);
+           
         }
         }
          elseif (strlen($this->search) > 0) {

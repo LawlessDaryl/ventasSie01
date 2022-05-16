@@ -36,7 +36,7 @@ class DetalleComprasController extends Component
     public  $nro_compra,$search,$provider,$fecha_compra,
     $usuario,$metodo_pago,$pago_parcial=0,$tipo_documento,$nro_documento,$observacion
     ,$selected_id,$descuento=0,$saldo=0,$subtotal,$cantidad_minima,
-    $estado_compra,$total_compra,$itemsQuantity,$price,$status,$tipo_transaccion,$destino,$porcentaje,$importe,$dscto;
+    $estado_compra,$total_compra,$itemsQuantity,$price,$status,$tipo_transaccion,$destino,$porcentaje,$importe,$dscto=0,$aplicar=false;
 
     public $nombre_prov, $apellido_prov, $direccion_prov, $correo_prov,
     $telefono_prov;
@@ -58,8 +58,9 @@ class DetalleComprasController extends Component
         $this->tipo_transaccion = "CONTADO";
         $this->tipo_documento = "FACTURA";
         $this->status = "ACTIVO";
-        $this->total_compra= $this->subtotal-$this->descuento;
+  
         $this->subtotal = Compras::getTotal();
+        $this->total_compra= $this->subtotal-$this->descuento;
         $this->porcentaje=0;
 
   
@@ -103,11 +104,6 @@ class DetalleComprasController extends Component
        
         $exist = Compras::get($product->id);
 
-        if ($exist) {
-            $title = 'Cantidad actualizada';
-        } else {
-            $title = "Producto agregado";
-        }
 
         $attributos=[
             'precio'=>$product->precio_venta,
@@ -130,7 +126,7 @@ class DetalleComprasController extends Component
         
         $this->total = Compras::getTotal();
         $this->itemsQuantity = Compras::getTotalQuantity();
-        $this->emit('scan-ok', $title);
+     
          $this->subtotal = Compras::getTotal();
          $this->total_compra= $this->subtotal-$this->descuento;
 
@@ -271,10 +267,9 @@ class DetalleComprasController extends Component
 
     public function aplicarDescto(){
 
-        $this->dscto= $this->descuento;
-      
+        $this->aplicar=true;
         $this->emit('dscto_added','Descuento aplicado satisfactoriamente');
-        
+        $this->dscto=$this->descuento;
     }
 
     public function cancelDscto(){

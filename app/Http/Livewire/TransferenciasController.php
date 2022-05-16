@@ -49,7 +49,7 @@ class TransferenciasController extends Component
         
         ->get();*/
 
-        return view('livewire.destino_producto.verTransferencias',['data_t'=>$data,'data_m'=>$this->detalle,'data_estado'=>$this->estado])
+        return view('livewire.destinoproducto.verTransferencias',['data_t'=>$data,'data_m'=>$this->detalle,'data_estado'=>$this->estado])
         ->extends('layouts.theme.app')
         ->section('content');
         

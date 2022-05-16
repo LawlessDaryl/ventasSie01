@@ -6,7 +6,10 @@ use App\Models\Destino;
 use App\Models\LocationProducto;
 use App\Models\Product;
 use App\Models\ProductosDestino;
+use Illuminate\Collection;
+use Illuminate\Support\Collection as SupportCollection;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
 
@@ -14,10 +17,10 @@ use Illuminate\Support\Facades\DB;
 
 class DestinoProductoController extends Component
 {
-    
+    use WithFileUploads;
     use WithPagination;
 
-    public $selected_id,$search,$selected_ubicacion,$componentName,$title,$sql,$pr=false,$show=false,$mm=[1,2,3],$lol;
+    public $selected_id,$search,$selected_ubicacion,$componentName,$title,$sql,$prod,$show=false,$grouped;
     private $pagination = 10;
     public function paginationView()
     {
@@ -29,14 +32,13 @@ class DestinoProductoController extends Component
         $this->selected_id="General";
         $this->componentName='crear';
         $this->title='ssss';
+        $this->pr=20;
     
- 
-        
-      
     }
 
     public function render()
     {
+
         if($this->selected_id !== null){
 
             if($this->selected_id === 'General')
@@ -67,7 +69,7 @@ class DestinoProductoController extends Component
              $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
                                         ->join('destinos as dest','dest.id','productos_destinos.destino_id')
                                         ->select('productos_destinos.*','p.nombre as name','dest.nombre as nombre_destino',
-                                        'p.id as id_prod','p.id as productoid'
+                                        'p.id as id_prod'
                                         
                                         )
                                         ->where('dest.id',$this->selected_id)
@@ -81,14 +83,6 @@ class DestinoProductoController extends Component
                                         /* para hacer merge $collection = collect(['Desk', 'Chair']);
                                         $merged = $collection->merge(['Bookcase', 'Door']);
                                         $merged->all();*/ 
-                                        
-                                        $sql= 'select rt,location,dest from ( select products.nombre as rt,destinos.id as dest from productos_destinos 
-                                        join products on productos_destinos.product_id= products.id
-                                        join destinos on productos_destinos.destino_id= destinos.id
-                                         ) as dd left join ( select products.nombre as pt,destinos.id as best,locations.id as location from location_productos
-                                          join products on location_productos.product= products.id
-                                        join locations on location_productos.location= locations.id
-                                        join destinos on locations.destino_id= destinos.id) as mm on dd.dest= mm.best and dd.rt= mm.pt';
 
                                                              }
             
@@ -107,16 +101,19 @@ class DestinoProductoController extends Component
 
                            
 
-        return view('livewire.destino_producto.almacen_productos',['destinos_almacen'=>$almacen,'data_suc' =>  $sucursal_ubicacion->get(),
-        'data_cat'=>Category::select('categories.name')->where('categories.categoria_padre','0')->get(), 'lol'=>$this->pr
+        return view('livewire.destinoproducto.almacenproductos',['destinos_almacen'=>$almacen,'data_suc' =>  $sucursal_ubicacion->get(),
+        'data_cat'=>Category::select('categories.name')->where('categories.categoria_padre','0')->get()
         ])  
         ->extends('layouts.theme.app')
         ->section('content');
     }
 
-    public function verMobiliario(Product $prod){
-        
-        $this->sql= "select rt,location,dsn,suc_name,loc,loc_cod,stock from ( select products.id as rt,destinos.id as dest,destinos.nombre as dsn, sucursals.name as suc_name,stock from productos_destinos 
+
+    public function ver(Product $prod){
+
+        $query=[];
+
+         $this->sql= "select rt,location,dsn,suc_id,loc,loc_cod,stock from ( select products.id as rt,destinos.id as dest,destinos.nombre as dsn, sucursals.id as suc_id,stock from productos_destinos 
         join products on productos_destinos.product_id= products.id
         join destinos on productos_destinos.destino_id= destinos.id
         join sucursals on destinos.sucursal_id= sucursals.id
@@ -130,10 +127,30 @@ class DestinoProductoController extends Component
         
         $this->pr=DB::select($this->sql);
 
-     if ($this->pr) {
-         dd($this->pr);
-        $this->emit('nms');
-     }
+       
+       
+
+        $collection= new SupportCollection();
+         
+        foreach ($this->pr as $value) {
+            $collection->push(
+                (object)[
+                    'producto_id'=>$value->rt,
+                    'mob_code'=>$value->loc_cod,
+                    'tipo'=>$value->loc,
+                    'estancia'=>$value->dsn,
+                    'sucursal_id'=>$value->suc_id,
+                    'stock'=>$value->stock
+                ]
+                );
+        }
+
+     $this->grouped= $collection->groupBy('sucursal_id');
+   //dd($this->grouped);
+
+        $this->show=true;
+        $this->emit('show-modal','showsss');
+     
         
     }
     

@@ -115,13 +115,24 @@
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group">
-                                            <strong style="color: rgb(74, 74, 74)">Pago parcial:</strong>
+                                            <strong style="color: rgb(74, 74, 74)">Pago:</strong>
 
                                             @if($tipo_transaccion == "CONTADO")
-
-                                           <input  wire:model='pago_parcial' type="text" disabled class="form-control" placeholder="Bs. 0">
+                                            <div class="input-group-prepend mb-3">
+                                                 <input  wire:model='pago_parcial' type="text" disabled class="form-control" placeholder="Bs. 0">
+                                                 <span class="input-group-text input-gp">
+                                                    <a href="javascript:void(0)" data-toggle="modal"
+                                                        data-target="#tipo_p" class="fas fa-money-bill-wave text-white"></a>
+                                                </span>
+                                            </div>
                                            @else
-                                           <input  wire:model='pago_parcial' type="text" class="form-control" placeholder="Bs. 0">
+                                           <div class="input-group-prepend mb-3">
+                                                <input  wire:model='pago_parcial' type="text" class="form-control" placeholder="Bs. 0">
+                                                <span class="input-group-text input-gp">
+                                                    <a href="javascript:void(0)" data-toggle="modal"
+                                                        data-target="#tipo_p" class="fas fa-money text-white"></a>
+                                                </span>
+                                            </div>
                                            @endif
                                            @error('pago_parcial')
                                            <span class="text-danger er">{{ $message }}</span>
@@ -346,6 +357,7 @@
     @include('livewire.compras.provider_info')
     @include('livewire.products.form')
     @include('livewire.compras.descuento')
+    @include('livewire.compras.pago')
  </div>
  <script>
      document.addEventListener('DOMContentLoaded', function() {
