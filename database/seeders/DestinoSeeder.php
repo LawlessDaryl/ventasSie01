@@ -37,6 +37,15 @@ class DestinoSeeder extends Seeder
             'name' => $dd->nombre.'_'.$dd->id,
             'guard_name' => 'web'
         ]);
+
+        
+        Destino::create([
+            'nombre'=>'Almacen Devoluciones',
+            'observacion'=>'ninguna',
+            'sucursal_id'=>'1'           
+        ]);
+
+
         
         $mm= Destino::create([
             'nombre'=>'Tienda',
@@ -56,6 +65,12 @@ class DestinoSeeder extends Seeder
         Permission::create([
             'name' => $nn->nombre.'_'.$nn->id,
             'guard_name' => 'web'
+        ]);
+
+        Destino::create([
+            'nombre'=>'Almacen Devoluciones',
+            'observacion'=>'ninguna',
+            'sucursal_id'=>'2'           
         ]);
     }
 }

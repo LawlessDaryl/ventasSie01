@@ -6,6 +6,7 @@ use App\Models\Caja;
 use App\Models\Cartera;
 use App\Models\CarteraMov;
 use App\Models\ClienteMov;
+use App\Models\Destino;
 use App\Models\DevolutionSale;
 use App\Models\Location;
 use App\Models\Movimiento;
@@ -53,8 +54,7 @@ class SaleDevolutionController extends Component
         {
             //Buscando Stock del Producto en Tienda
             $datosnombreproducto = Product::join("productos_destinos as pd", "pd.product_id", "products.id")
-            ->join('locations as d', 'd.id', 'pd.location_id')
-            ->join('destinos as des', 'des.id', 'd.destino_id')
+            ->join('destinos as des', 'des.id', 'pd.destino_id')
             ->select("products.id as llaveid","products.nombre as nombre", "products.image as image", "products.precio_venta as precio_venta",
             "products.costo as costoproducto")
             ->where("des.nombre", 'TIENDA')
@@ -93,8 +93,7 @@ class SaleDevolutionController extends Component
 
         //Buscando Producto Entrante que llega a la Tienda para la Devolucion
         $pe = Product::join("productos_destinos as pd", "pd.product_id", "products.id")
-        ->join('locations as d', 'd.id', 'pd.location_id')
-        ->join('destinos as des', 'des.id', 'd.destino_id')
+        ->join('destinos as des', 'des.id', 'pd.destino_id')
         ->select("products.id as llaveid","products.nombre as nombre", "products.image as image", "products.precio_venta as precio_venta",
         "products.costo as costoproducto")
         ->where("des.nombre", 'TIENDA')
@@ -224,8 +223,7 @@ class SaleDevolutionController extends Component
     public function buscarproducto($id)
     {
         $datosproducto = Product::join("productos_destinos as pd", "pd.product_id", "products.id")
-        ->join('locations as d', 'd.id', 'pd.location_id')
-        ->join('destinos as des', 'des.id', 'd.destino_id')
+        ->join('destinos as des', 'des.id', 'pd.destino_id')
         ->select("products.id as llaveid","products.nombre as nombre", "products.image as image", "products.precio_venta as precio_venta",
         "products.costo as costoproducto")
         ->where("des.nombre", 'TIENDA')
@@ -240,8 +238,7 @@ class SaleDevolutionController extends Component
     public function llenarbs()
     {
         $precio = Product::join("productos_destinos as pd", "pd.product_id", "products.id")
-        ->join('locations as d', 'd.id', 'pd.location_id')
-        ->join('destinos as des', 'des.id', 'd.destino_id')
+        ->join('destinos as des', 'des.id', 'pd.destino_id')
         ->select("products.id as llaveid","products.nombre as nombre", "products.image as image", "products.precio_venta as precio_venta",
         "products.costo as costoproducto")
         ->where("des.nombre", 'TIENDA')
@@ -318,8 +315,7 @@ class SaleDevolutionController extends Component
 
         //Buscando si existen Productos en Almacen Devoluciones
         $tiendaproducto = ProductosDestino::join("products as p", "p.id", "productos_destinos.product_id")
-        ->join('locations as d', 'd.id', 'productos_destinos.location_id')
-        ->join('destinos as des', 'des.id', 'd.destino_id')
+        ->join('destinos as des', 'des.id', 'productos_destinos.destino_id')
         ->select("productos_destinos.id as id","p.nombre as name",
         "productos_destinos.stock as stock")
         ->where("p.id", $this->identrante)
@@ -332,8 +328,7 @@ class SaleDevolutionController extends Component
         if($tiendaproducto->count() > 0)
         {
             $id = ProductosDestino::join("products as p", "p.id", "productos_destinos.product_id")
-            ->join('locations as d', 'd.id', 'productos_destinos.location_id')
-            ->join('destinos as des', 'des.id', 'd.destino_id')
+            ->join('destinos as des', 'des.id', 'productos_destinos.destino_id')
             ->select("productos_destinos.id as id","p.nombre as name",
             "productos_destinos.stock as stock")
             ->where("p.id", $this->identrante)
@@ -350,20 +345,20 @@ class SaleDevolutionController extends Component
         }
         else
         {
-            //Buscamos la Locacion donde se encuentra el usuario
-            $locacion = Location::join('destinos as des', 'des.id', 'locations.destino_id')
-            ->join('sucursals as s','s.id','des.sucursal_id')
-            ->select("locations.id as id")
+            //Buscamos el destino y sucursal donde se encuentra el usuario
+            $destino = Destino::join('sucursals as s','s.id','destinos.sucursal_id')
+            ->select("destinos.id as id")
             ->where("s.id", $this->idsucursal())
-            ->where("des.nombre", 'Almacen Devoluciones')
+            ->where("destinos.nombre", 'Almacen Devoluciones')
             ->get()
             ->first();
+
 
 
             //Creamos el Producto
             ProductosDestino::create([
                 'product_id' => $this->identrante,
-                'location_id' => $locacion->id,
+                'destino_id' => $destino->id,
                 'stock' => 1
             ]);
 
@@ -431,8 +426,7 @@ class SaleDevolutionController extends Component
 
         //Buscando si existen Productos en Almacen Devoluciones
         $tiendaproducto = ProductosDestino::join("products as p", "p.id", "productos_destinos.product_id")
-        ->join('locations as d', 'd.id', 'productos_destinos.location_id')
-        ->join('destinos as des', 'des.id', 'd.destino_id')
+        ->join('destinos as des', 'des.id', 'productos_destinos.destino_id')
         ->select("productos_destinos.id as id","p.nombre as name",
         "productos_destinos.stock as stock")
         ->where("p.id", $this->identrante)
@@ -445,8 +439,7 @@ class SaleDevolutionController extends Component
         if($tiendaproducto->count() > 0)
         {
             $id = ProductosDestino::join("products as p", "p.id", "productos_destinos.product_id")
-            ->join('locations as d', 'd.id', 'productos_destinos.location_id')
-            ->join('destinos as des', 'des.id', 'd.destino_id')
+            ->join('destinos as des', 'des.id', 'productos_destinos.destino_id')
             ->select("productos_destinos.id as id","p.nombre as name",
             "productos_destinos.stock as stock")
             ->where("p.id", $this->identrante)
@@ -484,8 +477,7 @@ class SaleDevolutionController extends Component
 
         //Decrementamos el Stock del Producto que estamos Devolviendo
         $idproducto = ProductosDestino::join("products as p", "p.id", "productos_destinos.product_id")
-            ->join('locations as d', 'd.id', 'productos_destinos.location_id')
-            ->join('destinos as des', 'des.id', 'd.destino_id')
+            ->join('destinos as des', 'des.id', 'productos_destinos.destino_id')
             ->select("productos_destinos.id as id","p.nombre as name",
             "productos_destinos.stock as stock")
             ->where("p.id", $this->identrante)
@@ -531,8 +523,7 @@ class SaleDevolutionController extends Component
     public function verificarstock()
     {
         $producto = ProductosDestino::join("products as p", "p.id", "productos_destinos.product_id")
-        ->join('locations as d', 'd.id', 'productos_destinos.location_id')
-        ->join('destinos as des', 'des.id', 'd.destino_id')
+        ->join('destinos as des', 'des.id', 'productos_destinos.destino_id')
         ->select("productos_destinos.id as id","p.nombre as name",
         "productos_destinos.stock as stock")
         ->where("p.id", $this->identrante)

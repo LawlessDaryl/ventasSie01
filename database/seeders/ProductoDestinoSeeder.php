@@ -55,13 +55,13 @@ class ProductoDestinoSeeder extends Seeder
         ProductosDestino::create([
             'product_id'=> 4,
             'destino_id' => 1,
-            'stock' => '1',
+            'stock' => '70',
         
         ]);
         ProductosDestino::create([
             'product_id'=> 4,
             'destino_id' => 2,
-            'stock' => '2',
+            'stock' => '1',
         ]);
 
 
