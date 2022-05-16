@@ -21,7 +21,7 @@ class ReportEntregadoServController extends Component
     public $componentName, $data, $details, $sumDetails, $countDetails, $reportType,
         $userId, $dateFrom, $dateTo, $transaccionId, $estado, $fechas, $sumaEfectivo,
         $sumaBanco, $cajaSucursal, $caja, $movbancarios, $contador, $sumaCosto,
-        $sumaUtilidad;
+        $sumaUtilidad, $sumaUtilidadBanco,$sumaUtilidadTotal;
 
     public function mount()
     {
@@ -45,6 +45,8 @@ class ReportEntregadoServController extends Component
         $this->contador = 0;
         $this->sumaCosto = 0;
         $this->sumaUtilidad = 0;
+        $this->sumaUtilidadBanco = 0;
+        $this->sumaUtilidadTotal = 0;
     }
 
     public function render()
@@ -53,6 +55,8 @@ class ReportEntregadoServController extends Component
         $this->sumaBanco = 0;
         $this->sumaCosto = 0;
         $this->sumaUtilidad = 0;
+        $this->sumaUtilidadBanco = 0;
+        $this->sumaUtilidadTotal = 0;
 
         $user = User::find(Auth()->user()->id);
         foreach ($user->sucursalusers as $usersuc) {
@@ -83,32 +87,7 @@ class ReportEntregadoServController extends Component
 
         $this->trsbydate();
 
-        /* $rules = [
-            'dateFrom' => 'required|max:10',
-            
-        ];
-        $messages = [
-            'dateFrom.required' => 'La fecha es requerida',
-            'dateFrom.max' => 'Máximo 10 digitos',
-            
-        ];
-
-        $this->validate($rules, $messages); */
-
-        $users = User::join('model_has_roles as mr', 'users.id', 'mr.model_id')
-            ->join('roles as r', 'r.id', 'mr.role_id')
-            ->join('role_has_permissions as rp', 'r.id', 'rp.role_id')
-            ->join('permissions as p', 'p.id', 'rp.permission_id')
-            ->where('p.name', 'Orden_Servicio_Index')
-            ->where('r.name', 'TECNICO')
-            ->orWhere('r.name', 'SUPERVISOR')
-            ->where('p.name', 'Orden_Servicio_Index')
-            ->orWhere('r.name', 'ADMIN')
-            ->where('p.name', 'Orden_Servicio_Index')
-            ->select('users.*')
-            ->orderBy('name', 'asc')
-            ->distinct()
-            ->get();
+        
         if ('Todos' == $this->caja) {
             $totalEfectivo = Cartera::join('cajas as caj', 'caj.id', 'carteras.caja_id')
                 ->join('sucursals as s', 's.id', 'caj.sucursal_id')
@@ -142,13 +121,9 @@ class ReportEntregadoServController extends Component
                 ->get();
             $this->sumaBanco = $totalBanco->sum('import');
         }
-        /* foreach($users as $us){
-            if($us->hasPermissionTo('Orden_Servicio_Index')){
-                $usuario = 
-            }
-        } */
+   
         return view('livewire.reporte_serv_entreg.component', [
-            'users' => $users,
+           
             'cajas' => $this->cajaSucursal
         ])->extends('layouts.theme.app')
             ->section('content');
@@ -161,13 +136,10 @@ class ReportEntregadoServController extends Component
             $from = Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00';
             $to = Carbon::parse(Carbon::now())->format('Y-m-d')   . ' 23:59:59';
         } else {
-            try {
+         
                 $from = Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00';
                 $to = Carbon::parse($this->dateTo)->format('Y-m-d')     . ' 23:59:59';
-            } catch (Exception $e) {
-                DB::rollback();
-                $this->emit('', 'Datos no Validos', $e->getMessage());
-            }
+           
         }
 
         if ($this->reportType == 1 && ($this->dateFrom == '' || $this->dateTo == '')) {
@@ -175,30 +147,19 @@ class ReportEntregadoServController extends Component
         }
 
         if ($this->caja != 'Todos') {
-            $this->data = Service::join('order_services as os', 'os.id', 'services.order_service_id')
-                ->join('mov_services as ms', 'services.id', 'ms.service_id')
-                ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
-                ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
+            $this->data = Service::join('mov_services as ms', 'services.id', 'ms.service_id')
                 ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
                 ->join('cartera_movs as cmv', 'cmv.movimiento_id', 'mov.id')
                 ->join('carteras as c', 'c.id', 'cmv.cartera_id')
                 ->join('cajas as ca', 'ca.id', 'c.caja_id')
-                ->join('sucursals as s', 's.id', 'ca.sucursal_id')
-                ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                ->join('clientes as cli', 'cli.id', 'cliemov.cliente_id')
-                ->join('users as u', 'u.id', 'mov.user_id')
-                ->join('sucursal_users as su', 'u.id', 'su.user_id')
-                ->where('mov.status', 'like', 'ACTIVO')
+                ->where('mov.status', 'ACTIVO')
                 ->select(
                     'services.*',
                     DB::raw('0 as utilidad')
                 )
-                ->where('s.id', $this->sucursal)
-                /* ->where('services.sucursal_id',$this->sucursal) */
                 ->where('ca.id', $this->caja)
                 ->where('mov.type', 'ENTREGADO')
                 ->whereBetween('mov.created_at', [$from, $to])
-                ->orderBy('services.id', 'desc')
                 ->distinct()
                 ->get();
 
@@ -211,13 +172,26 @@ class ReportEntregadoServController extends Component
                     }
                 }
 
-            $this->sumaCostoEfectivo = $this->data->sum('costo');
+           
 
 
-            $data1 = Service::join('order_services as os', 'os.id', 'services.order_service_id')
-                ->join('mov_services as ms', 'services.id', 'ms.service_id')
-                ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
-                ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
+            $data1 = Service::join('mov_services as ms', 'services.id', 'ms.service_id')
+            ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+            ->join('cartera_movs as cmv', 'cmv.movimiento_id', 'mov.id')
+            ->join('carteras as c', 'c.id', 'cmv.cartera_id')
+            ->join('cajas as ca', 'ca.id', 'c.caja_id')
+            ->where('mov.status', 'ACTIVO')
+            ->select(
+                'mov.*',
+               
+            )
+            ->where('ca.id', $this->caja)
+            ->where('mov.type', 'ENTREGADO')
+            ->whereBetween('mov.created_at', [$from, $to])
+            ->distinct()
+            ->get();
+
+            $banco = Service::join('mov_services as ms', 'services.id', 'ms.service_id')
                 ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
                 ->join('cartera_movs as cmv', 'cmv.movimiento_id', 'mov.id')
                 ->join('carteras as c', 'c.id', 'cmv.cartera_id')
@@ -226,32 +200,7 @@ class ReportEntregadoServController extends Component
                 ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
                 ->join('clientes as cli', 'cli.id', 'cliemov.cliente_id')
                 ->join('users as u', 'u.id', 'mov.user_id')
-                ->join('sucursal_users as su', 'u.id', 'su.user_id')
-                ->where('mov.status', 'like', 'ACTIVO')
-                ->select(
-                    'mov.*'
-                )
-                ->where('s.id', $this->sucursal)
-                /* ->where('services.sucursal_id',$this->sucursal) */
-                ->where('ca.id', $this->caja)
-                ->where('mov.type', 'ENTREGADO')
-                ->whereBetween('mov.created_at', [$from, $to])
-                ->distinct()
-                ->get();
-
-            $banco = Service::join('order_services as os', 'os.id', 'services.order_service_id')
-                ->join('mov_services as ms', 'services.id', 'ms.service_id')
-                ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
-                ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
-                ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                ->join('cartera_movs as cmv', 'cmv.movimiento_id', 'mov.id')
-                ->join('carteras as c', 'c.id', 'cmv.cartera_id')
-                ->join('cajas as ca', 'ca.id', 'c.caja_id')
-                ->join('sucursals as s', 's.id', 'ca.sucursal_id')
-                ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                ->join('clientes as cli', 'cli.id', 'cliemov.cliente_id')
-                ->join('users as u', 'u.id', 'mov.user_id')
-                ->join('sucursal_users as su', 'u.id', 'su.user_id')
+                
                 ->where('mov.status', 'like', 'ACTIVO')
                 ->select(
                     'services.*',
@@ -274,12 +223,12 @@ class ReportEntregadoServController extends Component
                     'mov.import as import',
                     DB::raw('0 as utilidad')
                 )
-                ->where('s.id', $this->sucursal)
-                /* ->where('services.sucursal_id',$this->sucursal) */
+                
+              
                 ->where('ca.id', '1')
                 ->where('mov.type', 'ENTREGADO')
                 ->whereBetween('mov.created_at', [$from, $to])
-                ->orderBy('services.id', 'desc')
+              
                 ->distinct()
                 ->get();
             $this->contador = $this->data->count();
@@ -287,7 +236,7 @@ class ReportEntregadoServController extends Component
             /*  dd($banco); */
 
             $this->movbancarios = [];
-            $contador = 0;
+            
             foreach ($banco as  $value) {
                 $aperturasCierres = Caja::join('carteras as car', 'cajas.id', 'car.caja_id')
                     ->join('cartera_movs as cartmovs', 'car.id', 'cartmovs.cartera_id')
@@ -323,7 +272,7 @@ class ReportEntregadoServController extends Component
                     if ($break == 1)
                         break;
                 }
-                $contador += 1;
+                
             }
             /* dd($this->movbancarios); */
             foreach ($this->movbancarios as $mB) {
@@ -332,8 +281,9 @@ class ReportEntregadoServController extends Component
             
             foreach ($this->movbancarios as $movbanc) {
                         $movbanc->utilidad = $movbanc->import - $movbanc->costo;
-                        $this->sumaUtilidad += $movbanc->utilidad;
+                        $this->sumaUtilidadBanco += $movbanc->utilidad;
             }
+            $this->sumaUtilidadTotal = $this->sumaUtilidadBanco +$this->sumaUtilidad;
             /* 
                 dd($banco); */
         } else {
@@ -363,15 +313,31 @@ class ReportEntregadoServController extends Component
                 ->orderBy('services.id', 'desc')
                 ->distinct()
                 ->get();
-
+                
                 foreach ($this->data as $serv) {
                     foreach ($serv->movservices as $mm) {
+                        
                         if ($mm->movs->status == 'ACTIVO') {
                             $serv->utilidad = $mm->movs->import - $serv->costo;
-                            $this->sumaUtilidad += $serv->utilidad;
+                            foreach($mm->movs->cartmov as $carmv){
+                                
+                                if($carmv->cartera->tipo == 'CajaFisica'){
+                                    
+                                    $this->sumaUtilidad += $serv->utilidad;
+                                    
+                                }
+                                else{
+                                    $this->sumaUtilidadBanco += $serv->utilidad;
+                                }
+                            }
+                            
+                            
                         }
                     }
                 }
+                
+                $this->sumaUtilidadTotal = $this->sumaUtilidadBanco +$this->sumaUtilidad;
+                
 
             $data1 = Service::join('order_services as os', 'os.id', 'services.order_service_id')
                 ->join('mov_services as ms', 'services.id', 'ms.service_id')

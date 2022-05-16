@@ -39,8 +39,8 @@
                         <h6 style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0">Elige el tipo de reporte</h6>
                         <div class="form-group">
                             <select wire:model="reportType" class="form-control" style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0">
-                                <option value="0">Transacciones del día</option>
-                                <option value="1">Transacciones por fecha</option>
+                                <option value="0">Servicios del día</option>
+                                <option value="1">Servicios por fecha</option>
                             </select>
                         </div>
                     </div>

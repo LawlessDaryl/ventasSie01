@@ -14,8 +14,8 @@
                         <h6>Elige el tipo de reporte</h6>
                         <div class="form-group">
                             <select wire:model="reportType" class="form-control">
-                                <option value="0">Transacciones del día</option>
-                                <option value="1">Transacciones por fecha</option>
+                                <option value="0">Servicios del día</option>
+                                <option value="1">Servicios por fecha</option>
                             </select>
                         </div>
                     </div>
@@ -92,41 +92,41 @@
                                         <tr>
                                             {{-- # --}}
                                             <td width="2%">
-                                                <h6 class="table-th text-withe text-center" style="font-size: 100%">
+                                                <h6 class="table-th text-withe text-center" style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0">
                                                     {{ $loop->iteration }}</h6>
                                             </td>
                                             {{-- FECHA --}}
                                             @foreach ($d->movservices as $movser)
                                                 @if ($movser->movs->type == 'ENTREGADO' && $movser->movs->status == 'ACTIVO')
                                                     <td class="text-center">
-                                                        <h6>{{ \Carbon\Carbon::parse($movser->movs->created_at)->format('d/m/Y H:i') }}
+                                                        <h6 style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0">{{ \Carbon\Carbon::parse($movser->movs->created_at)->format('d/m/Y H:i') }}
                                                         </h6>
                                                     </td>
                                                 @endif
                                             @endforeach
                                             {{-- CLIENTE --}}
                                             <td class="text-center">
-                                                <h6>{{ $d->movservices[0]->movs->climov->client->nombre }}</h6>
+                                                <h6 style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0">{{ $d->movservices[0]->movs->climov->client->nombre }}</h6>
                                             </td>
                                             {{-- NÚMERO DE ORDEN --}}
                                             <td class="text-center">
-                                                <h6>{{ $d->order_service_id }}</h6>
+                                                <h6 style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0">{{ $d->order_service_id }}</h6>
                                             </td>
 
                                             {{-- DETALLE --}}
                                             <td class="text-center">
-                                                <h6>{{ $d->categoria->nombre }} {{ $d->marca }}
+                                                <h6 style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0">{{ $d->categoria->nombre }} {{ $d->marca }}
                                                     {{ $d->detalle }}</h6>
                                             </td>
                                             {{-- COSTO --}}
                                             @if (@Auth::user()->hasPermissionTo('Ver_Costo_Reportes_Entregados'))
                                             <td class="text-center">
-                                                <h6>{{ number_format($d->utilidad, 2) }}</h6>
+                                                <h6 style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0">{{ number_format($d->utilidad, 2) }}</h6>
                                             </td>
                                             @endif
                                             {{-- IMPORTE --}}
                                             <td class="text-center">
-                                                <h6>{{ number_format($d->movservices[0]->movs->import, 2) }}</h6>
+                                                <h6 style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0">{{ number_format($d->movservices[0]->movs->import, 2) }}</h6>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -134,7 +134,7 @@
                                         @if (count($movbancarios) > 1)
                                             <tr>
                                                 <td colspan="9">
-                                                    <h5 class="text-center">Servicios entregados y pagados por banco
+                                                    <h5 class="text-center" style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0">Servicios entregados y pagados por banco
                                                     </h5>
                                                 </td>
                                             </tr>
@@ -143,41 +143,41 @@
                                             <tr>
                                                 {{-- # --}}
                                                 <td width="2%">
-                                                    <h6 class="table-th text-withe text-center" style="font-size: 100%">
+                                                    <h6 class="table-th text-withe text-center" style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0">
                                                         {{ $loop->iteration + $contador }}</h6>
                                                 </td>
                                                 {{-- FECHA --}}
                                                 {{-- @foreach ($d->movservices as $movser) --}}
                                                 {{-- @if ($d->type == 'ENTREGADO' && $d->status == 'ACTIVO') --}}
                                                 <td class="text-center">
-                                                    <h6>{{ \Carbon\Carbon::parse($d->creacion_Mov)->format('d/m/Y') }}
+                                                    <h6 style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0">{{ \Carbon\Carbon::parse($d->creacion_Mov)->format('d/m/Y') }}
                                                     </h6>
                                                 </td>
                                                 {{-- @endif --}}
                                                 {{-- @endforeach --}}
                                                 {{-- CLIENTE --}}
                                                 <td class="text-center">
-                                                    <h6>{{ $d->nomCli }}</h6>
+                                                    <h6 style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0">{{ $d->nomCli }}</h6>
                                                 </td>
                                                 {{-- NÚMERO DE ORDEN --}}
                                                 <td class="text-center">
-                                                    <h6>{{ $d->orderId }}</h6>
+                                                    <h6 style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0">{{ $d->orderId }}</h6>
                                                 </td>
 
                                                 {{-- DETALLE --}}
                                                 <td class="text-center">
-                                                    <h6>{{ $d->nomCat }} {{ $d->marca }} {{ $d->detalle }}
+                                                    <h6 style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0">{{ $d->nomCat }} {{ $d->marca }} {{ $d->detalle }}
                                                     </h6>
                                                 </td>
                                                 {{-- COSTO --}}
                                                 @if (@Auth::user()->hasPermissionTo('Ver_Costo_Reportes_Entregados'))
                                                 <td class="text-center">
-                                                    <h6>{{ number_format($d->utilidad, 2) }}</h6>
+                                                    <h6 style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0">{{ number_format($d->utilidad, 2) }}</h6>
                                                 </td>
                                                 @endif
                                                 {{-- IMPORTE --}}
                                                 <td class="text-center">
-                                                    <h6>{{ number_format($d->import, 2) }}</h6>
+                                                    <h6 style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0">{{ number_format($d->import, 2) }}</h6>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -187,20 +187,34 @@
 
                                     <tr>
                                         <td colspan="2" class="text-left">
-                                            <span><b>EFECTIVO</b></span>
+                                            <span style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0"><b>EFECTIVO</b></span>
                                         </td>
+                                        @if (@Auth::user()->hasPermissionTo('Ver_Costo_Reportes_Entregados'))
+                                        <td class="text-right" colspan="4">
+                                            <span style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0">
+                                                {{ number_format($sumaUtilidad, 2) }} bs.
+                                            </span>
+                                        </td>
+                                        @endif
                                         <td class="text-right" colspan="5">
-                                            <span>
+                                            <span style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0">
                                                 {{ number_format($sumaEfectivo, 2) }} bs.
                                             </span>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td colspan="2" class="text-left">
-                                            <span><b>TRANSFERENCIA BANCARIA /T.DEBITO</b></span>
+                                            <span style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0"><b>TRANSFERENCIA BANCARIA /T.DEBITO</b></span>
                                         </td>
+                                        @if (@Auth::user()->hasPermissionTo('Ver_Costo_Reportes_Entregados'))
+                                        <td class="text-right" colspan="4">
+                                            <span style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0">
+                                                {{ number_format($sumaUtilidadBanco, 2) }} bs.
+                                            </span>
+                                        </td>
+                                        @endif
                                         <td class="text-right" colspan="5">
-                                            <span>
+                                            <span style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0">
                                                 {{ number_format($sumaBanco, 2) }} bs.
                                             </span>
                                         </td>
@@ -208,16 +222,16 @@
 
                                     <tr>
                                         <td colspan="2" class="text-left">
-                                            <span><b>TOTALES</b></span>
+                                            <span style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0"><b>TOTALES</b></span>
                                         </td>
                                         @if (@Auth::user()->hasPermissionTo('Ver_Costo_Reportes_Entregados'))
                                         <td class="text-right" colspan="4">
-                                            <span><strong>
+                                            <span style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0"><strong>
                                                     @if ($caja != 'Todos')
                                                         {{-- {{ number_format($sumaCosto + $sumaCostoEfectivo, 2) }} bs. --}}
-                                                        {{ number_format($sumaUtilidad, 2) }} bs.
+                                                        {{ number_format($sumaUtilidadTotal, 2) }} bs.
                                                     @else
-                                                        {{ number_format($sumaUtilidad, 2) }} bs.
+                                                        {{ number_format($sumaUtilidadTotal, 2) }} bs.
                                                     @endif
                                                 </strong></span>
                                         </td>
@@ -226,7 +240,7 @@
                                         </td>
                                         @endif
                                         <td class="text-right" colspan="0">
-                                            <span><strong>
+                                            <span style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0"><strong>
                                                     @php
                                                         $mytotal = 0;
                                                     @endphp

@@ -1106,6 +1106,9 @@ class OrderServiceController extends Component
 
     public function GuardarCambio(Service $service)
     {
+        if($this->costo == ''){
+            $this->costo = 0;
+        }
         $from = Carbon::parse($this->fecha_estimada_entrega)->format('Y-m-d') . Carbon::parse($this->hora_entrega)->format(' H:i') . ':00';
         $service->update([
             'type_work_id' => $this->typeworkid,
