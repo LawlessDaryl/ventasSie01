@@ -163,6 +163,18 @@ class PermissionSeeder extends Seeder
             'name' => 'admin_estancia_almacen',
             'guard_name' =>'web'
         ]);
+
+        //Ventas
+        //Poder Ver Lista de las Ventas realizados por el usuario logeado
+        Permission::create([
+            'name' => 'VentasLista_Index',
+            'guard_name' =>'web'
+        ]);
+        //Poder ver las Listas de las Ventas de todos los usuarios + anular venta
+        Permission::create([
+            'name' => 'VentasListaMasFiltros',
+            'guard_name' =>'web'
+        ]);
       
     }
 }

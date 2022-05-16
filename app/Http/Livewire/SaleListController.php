@@ -183,7 +183,7 @@ class SaleListController extends Component
     //Metodo para Verificar si el usuario tiene el Permiso para vender
     public function verificarpermiso()
     {
-        if(Auth::user()->hasPermissionTo('VentasListaMasFiltros_Index'))
+        if(Auth::user()->hasPermissionTo('VentasListaMasFiltros'))
         {
             return true;
         }

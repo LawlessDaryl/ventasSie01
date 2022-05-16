@@ -738,8 +738,7 @@ class PosController extends Component
 
                     //Decrementando el stock en tienda
                     $tiendaproducto = ProductosDestino::join("products as p", "p.id", "productos_destinos.product_id")
-                    ->join('locations as d', 'd.id', 'productos_destinos.location_id')
-                    ->join('destinos as des', 'des.id', 'd.destino_id')
+                    ->join('destinos as des', 'des.id', 'productos_destinos.destino_id')
                     ->select("productos_destinos.id as id","p.nombre as name",
                     "productos_destinos.stock as stock")
                     ->where("p.id", $item->id)
