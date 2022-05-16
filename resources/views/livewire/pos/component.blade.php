@@ -45,9 +45,7 @@
 {{-- Estilos para una tabla en el modal Stock Insuficiente --}}
 <style>
     .estilostable {
-    table-layout: fixed;
     width: 100%;
-    border-collapse: collapse;
     }
     .seleccionar:hover {
     background-color: skyblue;

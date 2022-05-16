@@ -26,9 +26,9 @@ en otros destinos dentro de la misma sucursal --}}
                             <thead style="background-color: rgb(243, 201, 146)">
                               <tr>
                                 <th>N°</th>
-                                <th>Nombre Destino</th>
+                                <th>Nombre</th>
                                 {{-- <th>Total Bs</th> --}}
-                                <th>Stock Disponible</th>
+                                <th>Stock</th>
                                 <th>Seleccionar</th>
                                 {{-- <th>Total</th> --}}
                               </tr>
