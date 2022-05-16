@@ -78,13 +78,20 @@ class TransferenciasController extends Component
 
        foreach ($arr as $key => $value) {
         if (Auth::user()->hasPermissionTo($key)) {
-            array_push($this->vs,$value);
+            array_push($this->vs,$value);   
         }
        }
 
     }
 
-    public function verificarStock(){
+    public function verificarStock()
+    {
         
+    }
+
+    public function recibirProductos(){
+
+        
+
     }
 }
