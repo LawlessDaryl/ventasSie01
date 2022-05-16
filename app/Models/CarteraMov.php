@@ -10,4 +10,6 @@ class CarteraMov extends Model
     use HasFactory;
 
     protected $fillable = ['type', 'tipoDeMovimiento', 'comentario', 'cartera_id', 'movimiento_id'];
+
+    
 }

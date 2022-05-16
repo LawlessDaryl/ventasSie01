@@ -218,6 +218,7 @@
                                     <th class="table-th text-withe text-center">MAX PERF</th>
                                     <th class="table-th text-withe text-center">INICIO PLAN</th>
                                     <th class="table-th text-withe text-center">EXPIRACIÓN PLAN</th>
+                                    <th class="table-th text-withe text-center">RENOVACION</th>
                                     <th class="table-th text-withe text-center">ACCIONES</th>
                                     <th class="table-th text-withe text-center">REALIZADO</th>
                                 </tr>
@@ -289,6 +290,8 @@
                                                     <i class="fa-regular fa-calendar-check"></i>
                                                 </a>
                                             @endif
+                                        </td>
+                                        <td class="text-center">
                                             <a href="javascript:void(0)" wire:click="Edit({{ $acounts->IDaccount }})"
                                                 class="btn btn-dark mtmobile" title="Editar">
                                                 <i class="fas fa-edit"></i>
