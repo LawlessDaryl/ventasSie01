@@ -25,6 +25,11 @@
             $("#exampleModalCenter").modal("show");
         });
 
+        // Mètodo JavaScript para cerrar al modal cuando se acaben los Productos
+        window.livewire.on('no-stocktiendacerrar', Msg => {
+            $("#exampleModalCenter").modal("hide");
+        });
+
 
 
         // Mètodo JavaScript para llamar al modal para Finalizar la Venta

@@ -24,6 +24,8 @@ use Darryldecode\Cart\Facades\CartFacade as Cart;
 use Exception;
 use Illuminate\Support\Facades\Redirect;
 use PhpParser\Node\Stmt\TryCatch;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class PosController extends Component
 {
@@ -882,48 +884,50 @@ class PosController extends Component
         return Redirect::to('print://$sale->id');
     }
 
-    //Mètodo para mover productos de la tabla ALM
+    //Mètodo para mover productos a la tienda desde otro destino dentro de la misma sucursal
     public function almacenToTienda()
     {
-        //Encontrando el Id de la Tabla ProductosDestino  a actualizar (para Decrementar Stock Almacen)
-        $almacen = ProductosDestino::join("products as p", "p.id", "productos_destinos.product_id")
+        //Consulta para saber el stock maximo a sacar del destino seleccionado para mover a la tienda
+        $destino_seleccionado = ProductosDestino::join("products as p", "p.id", "productos_destinos.product_id")
         ->join('destinos as des', 'des.id', 'productos_destinos.destino_id')
-        ->select("productos_destinos.product_id as id","p.nombre as name","p.precio_venta as price","p.image as image", "productos_destinos.stock as cantidad_disponible_almacen"
-        , "productos_destinos.id as id_pd")
+        ->select("productos_destinos.product_id as id","p.nombre as name",
+        "p.precio_venta as price","p.image as image", "productos_destinos.stock as cantidad_disponible_almacen"
+        , "productos_destinos.id as id_pd","des.id as iddestino", "des.nombre as nombredestino")
         ->where("productos_destinos.product_id", $this->idproductoalmacen)
-        ->where("des.nombre", 'ALMACEN')
+        ->where("des.id", $this->iddestinoseleccionado)
         ->where("des.sucursal_id", $this->idsucursal())
         ->get()->first();
 
 
-
-
+        //Reglas de Validación
         $rules = [ 
-            'cantidadToTienda' => 'required|integer|min:1|not_in:0|max:'.$almacen->cantidad_disponible_almacen,
+            'cantidadToTienda' => 'required|integer|min:1|not_in:0|max:'.$destino_seleccionado->cantidad_disponible_almacen,
         ];
         $messages = [
             'cantidadToTienda.required' => 'Ingrese un monto válido',
             'cantidadToTienda.min' => 'Ingrese un monto mayor a 0',
             'cantidadToTienda.not_in' => 'Ingrese un monto válido',
             'cantidadToTienda.integer' => 'El monto debe ser un número',
-            'cantidadToTienda.max' => 'El monto máximo debe ser '.$almacen->cantidad_disponible_almacen
+            'cantidadToTienda.max' => 'El monto máximo debe ser '.$destino_seleccionado->cantidad_disponible_almacen
         ];
-
+        //Validando las reglas mencionadas
         $this->validate($rules, $messages);
 
+        
 
-        $idproductodestinoalmacen = ProductosDestino::find($almacen->id_pd);
-        //Decrementando el Stock del Id que corresponde al Almacen
-        $idproductodestinoalmacen->update([
-            'stock' => $almacen->cantidad_disponible_almacen - $this->cantidadToTienda
+
+        //Encontrando el Id de la Tabla ProductosDestino  a actualizar (para Decrementar Stock del Destino Seleccionado)
+        $id_pd = ProductosDestino::find($destino_seleccionado->id_pd);
+        //Decrementando el Stock del Id que corresponde al Destino Seleccionado
+        $id_pd->update([
+            'stock' => $destino_seleccionado->cantidad_disponible_almacen - $this->cantidadToTienda
         ]);
 
-        //dd($productoalmacenid->name ." - Cantidad en Almacen:". $productoalmacenid->cantidad_disponible_almacen);
         //Encontrando el Id de la Tabla ProductosDestino  a actualizar (para Incrementar Stock Tienda)
         $tienda = ProductosDestino::join("products as p", "p.id", "productos_destinos.product_id")
-        ->join('locations as d', 'd.id', 'productos_destinos.location_id')
-        ->join('destinos as des', 'des.id', 'd.destino_id')
-        ->select("productos_destinos.product_id as id","p.nombre as name","p.precio_venta as price","p.image as image", "productos_destinos.stock as cantidad_disponible_tienda"
+        ->join('destinos as des', 'des.id', 'productos_destinos.destino_id')
+        ->select("productos_destinos.product_id as id","p.nombre as name","p.precio_venta as price","p.image as image",
+         "productos_destinos.stock as cantidad_disponible_tienda"
         , "productos_destinos.id as id_pd")
         ->where("productos_destinos.product_id", $this->idproductoalmacen)
         ->where("des.nombre", 'TIENDA')
@@ -951,24 +955,39 @@ class PosController extends Component
             'nombrenotificacion' => "MOVIMIENTO DE INVENTARIO",
 
             'mensaje' => 'El usuario: '.$nombreusuario->nombre.' movio '.$this->cantidadToTienda.' unidade(s) del producto '.
-            $almacen->name." del Almacen a la Tienda",
+            $destino_seleccionado->name." de ".$destino_seleccionado->nombredestino." a la Tienda",
 
             'user_id' => Auth()->user()->id,
             'sucursal_id' => $this->idsucursal(),
         ]);
 
-        //dd($idNotificacion->id);
 
+        //Obteniendo los Ids de todos los usuarios que tengan los
+        //permisos para recibir notificaciones de Movimiento de Inventario
 
-        //Obteniendo los Ids de los Administradores para Notificarlos
-        $idUsuarios[] = User::select("users.id as id","users.name as nombre","users.profile as rol")
-        ->where("users.profile", 'ADMIN')->get()->first();
+        
+
+        //Listando todos los usuarios
+        $id_users = User::select("users.id as id","users.name as nombre","users.profile as rol")->get();
+
+        //Variable donde se almacenarán los ids de los usuarios donde tengan los permisos para
+        //recibir las notificaciones de movimiento de inventarios
+        $ids = array();
+        
+        foreach($id_users as $id)
+        {
+            if($id->hasPermissionTo('VentasNotificacionesMovInv'))
+            {
+                $ids[] = $id->id;
+            }
+        }
+        
         
         //Notificando a todos los Administradores
-        foreach ($idUsuarios as $item)
+        foreach ($ids as $item)
         {
             NotificationUser::create([
-                'user_id' => $item->id,
+                'user_id' => $item,
                 'notification_id' => $idNotificacion->id
             ]);
         }
@@ -979,12 +998,15 @@ class PosController extends Component
 
         //Añadimos al Carrito
 
-        $this->increaseQty($almacen->id, $this->cantidadToTienda);
+        $this->increaseQty($destino_seleccionado->id, $this->cantidadToTienda);
 
-        // Cart::add($almacen->id, $almacen->name, $almacen->price, $this->cantidadToTienda, $almacen->image);
-        // $this->total = Cart::getTotal();
-        // $this->itemsQuantity = Cart::getTotalQuantity();
-        // $this->emit('scan-ok', "Cantidad Actualizada");
+        
+
+
+        //Cerramos la ventana modal
+        $this->emit('no-stocktiendacerrar');
+        return;
+
     }
 
     // Llamar al Modal de Monedas Para Finalizar las Ventas

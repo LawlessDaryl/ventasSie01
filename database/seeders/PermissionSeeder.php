@@ -175,6 +175,12 @@ class PermissionSeeder extends Seeder
             'name' => 'VentasListaMasFiltros',
             'guard_name' =>'web'
         ]);
+        //Poder recibir las notificaciones de movimiento de inventario de cualquier destino 
+        //dentro de la propia sucursal a la tienda
+        Permission::create([
+            'name' => 'VentasNotificacionesMovInv',
+            'guard_name' =>'web'
+        ]);
       
     }
 }

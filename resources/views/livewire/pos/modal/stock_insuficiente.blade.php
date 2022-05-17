@@ -48,7 +48,7 @@ en otros destinos dentro de la misma sucursal --}}
                                             {{ $item->stock }}
                                         </td>
                                         <td>
-                                            <button wire:click="seleccionardestino({{ $item->id }})"  class="btn-primary">
+                                            <button title="Mover Inventario de este lugar" wire:click="seleccionardestino({{ $item->id }})"  class="btn-primary">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check"><polyline points="20 6 9 17 4 12"></polyline></svg>
                                             </button>
                                         </td>
@@ -79,8 +79,8 @@ en otros destinos dentro de la misma sucursal --}}
                     
 
                         <center>
-                            <div class="col-lg-3">
-                                <input type="text" min="1" max="{{$stockalmacen}}" wire:model.lazy="cantidadToTienda" class="form-control">
+                            <div class="col-lg-6">
+                                <input type="number" min="1" max="{{$stockalmacen}}" wire:model.lazy="cantidadToTienda" class="form-control">
                                 @error('cantidadToTienda')
                                     <span class="text-danger er">{{ $message }}</span>
                                 @enderror
@@ -97,7 +97,7 @@ en otros destinos dentro de la misma sucursal --}}
                         <h4 style="color: red">{{$nombredestinoseleccionado}}</h4>
                         <br>
                         <button class="btn" data-dismiss="modal"><i class="flaticon-cancel-12"></i> No</button>
-                        <button type="button" data-dismiss="modal" class="btn btn-primary" wire:click.prevent="almacenToTienda()" >Si</button>
+                        <button type="button" class="btn btn-primary" wire:click.prevent="almacenToTienda()" >Si</button>
 
                     @endif
 
