@@ -31,13 +31,8 @@ class ExportServicioPdfController extends Controller
         if ($estado == 'Todos') {
             if ($userId == 0) {
                 /* $data=Service::orderBy('id','desc')->get(); */
-                $data = Service::join('order_services as os', 'os.id', 'services.order_service_id')
-                    ->join('mov_services as ms', 'services.id', 'ms.service_id')
-                    ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
-                    ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
+                $data = Service::join('mov_services as ms', 'services.id', 'ms.service_id')
                     ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                    ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                    ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
                     ->join('users as u', 'u.id', 'mov.user_id')
                     ->where('mov.status', 'like', 'ACTIVO')
                     ->select(
@@ -58,26 +53,13 @@ class ExportServicioPdfController extends Controller
                     }
                 }
 
-                /* for ($x = 0; $x < $data->count(); $x++) {
-                    $fechas = OrderService::join('services as s', 'order_services.id', 's.order_service_id')
-                        ->join('mov_services as ms', 's.id', 'ms.service_id')
-                        ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                        ->where('s.id', $data[$x]->serviceid)
-                        ->pluck('mov.created_at')->toArray();
-                    
-                } */
             } else {
 
                 if ($estado == "Todos") {
                     $costoEntregado = 0;
                     $data = [];
-                    $data1 = Service::join('order_services as os', 'os.id', 'services.order_service_id')
-                        ->join('mov_services as ms', 'services.id', 'ms.service_id')
-                        ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
-                        ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
+                    $data1 = Service::join('mov_services as ms', 'services.id', 'ms.service_id')
                         ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                        ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                        ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
                         ->join('users as u', 'u.id', 'mov.user_id')
                         ->where('mov.status', 'like', 'ACTIVO')
 
@@ -102,13 +84,8 @@ class ExportServicioPdfController extends Controller
                         }
                     }
 
-                    $datos2 = Service::join('order_services as os', 'os.id', 'services.order_service_id')
-                        ->join('mov_services as ms', 'services.id', 'ms.service_id')
-                        ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
-                        ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
+                    $datos2 = Service::join('mov_services as ms', 'services.id', 'ms.service_id')
                         ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                        ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                        ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
                         ->join('users as u', 'u.id', 'mov.user_id')
                         ->where('mov.status', 'like', 'ACTIVO')
                         ->select(
@@ -145,13 +122,8 @@ class ExportServicioPdfController extends Controller
                     
                 } else {
 
-                    $data = Service::join('order_services as os', 'os.id', 'services.order_service_id')
-                        ->join('mov_services as ms', 'services.id', 'ms.service_id')
-                        ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
-                        ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
+                    $data = Service::join('mov_services as ms', 'services.id', 'ms.service_id')
                         ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                        ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                        ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
                         ->join('users as u', 'u.id', 'mov.user_id')
                         ->where('mov.status', 'like', 'ACTIVO')
                         ->select(
@@ -176,13 +148,8 @@ class ExportServicioPdfController extends Controller
             }
         } else {
             if ($userId == 0) {
-                $data = Service::join('order_services as os', 'os.id', 'services.order_service_id')
-                    ->join('mov_services as ms', 'services.id', 'ms.service_id')
-                    ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
-                    ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
+                $data = Service::join('mov_services as ms', 'services.id', 'ms.service_id')
                     ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                    ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                    ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
                     ->join('users as u', 'u.id', 'mov.user_id')
                     ->where('mov.status', 'like', 'ACTIVO')
                     ->select(
@@ -207,13 +174,8 @@ class ExportServicioPdfController extends Controller
                 if ($estado == "ENTREGADO") {
                     $costoEntregado = 0;
                     $data = [];
-                    $data1 = Service::join('order_services as os', 'os.id', 'services.order_service_id')
-                        ->join('mov_services as ms', 'services.id', 'ms.service_id')
-                        ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
-                        ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
+                    $data1 = Service::join('mov_services as ms', 'services.id', 'ms.service_id')
                         ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                        ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                        ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
                         ->join('users as u', 'u.id', 'mov.user_id')
                         ->where('mov.status', 'like', 'ACTIVO')
 
@@ -248,13 +210,8 @@ class ExportServicioPdfController extends Controller
                     }
                 } else {
 
-                    $data = Service::join('order_services as os', 'os.id', 'services.order_service_id')
-                        ->join('mov_services as ms', 'services.id', 'ms.service_id')
-                        ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
-                        ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
+                    $data = Service::join('mov_services as ms', 'services.id', 'ms.service_id')
                         ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                        ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                        ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
                         ->join('users as u', 'u.id', 'mov.user_id')
                         ->where('mov.status', 'like', 'ACTIVO')
                         ->select(
@@ -279,90 +236,6 @@ class ExportServicioPdfController extends Controller
             }
         }
 
-
-
-
-
-        /* if ($estado == 'Todos') {
-            if ($userId == 0) {
-                
-                $data = Service::join('order_services as os', 'os.id', 'services.order_service_id')
-                    ->join('mov_services as ms', 'services.id', 'ms.service_id')
-                    ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
-                    ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
-                    ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                    ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                    ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
-                    ->join('users as u', 'u.id', 'mov.user_id')
-                    ->where('mov.status', 'like', 'ACTIVO')
-                    ->select(
-                        'services.*'
-                    )
-                    ->whereBetween('mov.created_at', [$from, $to])
-                    ->orderBy('services.id', 'desc')
-                    ->distinct()
-                    ->get();
-                
-            } else {
-
-                $data = Service::join('order_services as os', 'os.id', 'services.order_service_id')
-                ->join('mov_services as ms', 'services.id', 'ms.service_id')
-                ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
-                ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
-                ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
-                ->join('users as u', 'u.id', 'mov.user_id')
-                ->where('mov.status', 'like', 'ACTIVO')
-                ->select(
-                    'services.*'
-                )
-                    ->whereBetween('mov.created_at', [$from, $to])
-                    ->where('mov.user_id', $userId)
-                    ->orderBy('services.id', 'desc')
-                    ->distinct()
-                    ->get();
-            }
-        } else {
-            if ($userId == 0) {
-                $data = Service::join('order_services as os', 'os.id', 'services.order_service_id')
-                ->join('mov_services as ms', 'services.id', 'ms.service_id')
-                ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
-                ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
-                ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
-                ->join('users as u', 'u.id', 'mov.user_id')
-                ->where('mov.status', 'like', 'ACTIVO')
-                ->select(
-                    'services.*'
-                )
-                    ->whereBetween('mov.created_at', [$from, $to])
-                    ->where('mov.type', $estado)
-                    ->orderBy('services.id', 'desc')
-                    ->distinct()
-                    ->get();
-            } else {
-                $data = Service::join('order_services as os', 'os.id', 'services.order_service_id')
-                ->join('mov_services as ms', 'services.id', 'ms.service_id')
-                ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
-                ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
-                ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
-                ->join('users as u', 'u.id', 'mov.user_id')
-                ->where('mov.status', 'like', 'ACTIVO')
-                ->select(
-                    'services.*'
-                )
-                    ->whereBetween('mov.created_at', [$from, $to])
-                    ->where('mov.user_id', $userId)
-                    ->where('mov.type', $estado)
-                    ->orderBy('services.id', 'desc')
-                    ->distinct()
-                    ->get();
-            }
-        } */
 
         $user = $userId == 0 ? 'Todos' : User::find($userId)->name;
         $pdf = PDF::loadView('livewire.pdf.reporteServicios', compact('data', 'reportType', 'user','estado', 'dateFrom', 'dateTo', 'sumaUtilidad'));
