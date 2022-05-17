@@ -11,7 +11,7 @@ use Livewire\Component;
 
 class TransferenciasController extends Component
 {
-    public $nro,$nro_det,$detalle,$estado,$vs=[];
+    public $nro,$nro_det,$detalle,$estado,$estado_destino,$vs=[], $datalist_destino;
     public function mount(){
         $this->nro=1;
         $this->nro_det=1;
@@ -20,7 +20,7 @@ class TransferenciasController extends Component
     }
     public function render()
     {
-        $data= Transference::join('estado_transferencias','transferences.id','estado_transferencias.id_transferencia')
+        $data_origen= Transference::join('estado_transferencias','transferences.id','estado_transferencias.id_transferencia')
         ->join('users','estado_transferencias.id_usuario','users.id')
         ->join('destinos as origen','origen.id','transferences.id_origen')
         ->join('sucursals as suc_origen','suc_origen.id','origen.sucursal_id')
@@ -32,8 +32,25 @@ class TransferenciasController extends Component
         'origen.nombre as origen','destino1.nombre as dst')
         ->where('estado_transferencias.op','Activo')
         ->whereIn('origen.id',$this->vs)
+        ->get();
+
+        $data_destino= Transference::join('estado_transferencias','transferences.id','estado_transferencias.id_transferencia')
+        ->join('users','estado_transferencias.id_usuario','users.id')
+        ->join('destinos as origen','origen.id','transferences.id_origen')
+        ->join('sucursals as suc_origen','suc_origen.id','origen.sucursal_id')
+        ->join('destinos as destino2','destino2.id','transferences.id_destino')
+        ->join('sucursals as suc_destino','suc_destino.id','destino2.sucursal_id')
+        ->select('transferences.created_at as fecha_tr','transferences.id as tr_des_id',
+        'users.*','suc_origen.name as origen_name',
+        'suc_destino.name as destino_name','estado_transferencias.estado as estado_transferencia',
+        'origen.nombre as origen','destino2.nombre as dst2')
+        ->where('estado_transferencias.op','Activo')
+        ->whereIn('destino2.id',$this->vs)
         
         ->get();
+ 
+   
+
        /* $data= Transference::join('estado_transferencias','transferences.id','estado_transferencias.id_transferencia')
         ->join('users','estado_transferencias.id_usuario','users.id')
         ->join('destinos as origen','origen.id','transferences.id_origen')
@@ -49,24 +66,37 @@ class TransferenciasController extends Component
         
         ->get();*/
 
-        return view('livewire.destinoproducto.verTransferencias',['data_t'=>$data,'data_m'=>$this->detalle,'data_estado'=>$this->estado])
+        return view('livewire.destinoproducto.verTransferencias',['data_t'=>$data_origen,'data_estado'=>$this->estado, 'data_d'=>$data_destino
+       ])
         ->extends('layouts.theme.app')
         ->section('content');
         
     }
-
-    public function visualizar($id)
+    public function ver($id)
     {
         $this->detalle=DetalleTransferencia::join('products','detalle_transferencias.product_id','products.id')
         ->join('estado_trans_detalles','detalle_transferencias.id','estado_trans_detalles.detalle_id')
         ->join('estado_transferencias','estado_trans_detalles.estado_id','estado_transferencias.id')
         ->join('transferences','estado_transferencias.id_transferencia','transferences.id')
-        ->select('detalle_transferencias.*','products.nombre as prod_name')
+        ->select('detalle_transferencias.*')
         ->where('transferences.id',$id)->get();
-
         $this->estado= Transference::join('estado_transferencias','transferences.id','estado_transferencias.id_transferencia')
         ->select('estado_transferencias.estado')->value('estado_transferencias.estado');
+        //dd($this->detalle);
         
+    }
+    public function visualizardestino($id2)
+    {
+        $this->datalist_destino=DetalleTransferencia::join('products','detalle_transferencias.product_id','products.id')
+        ->join('estado_trans_detalles','detalle_transferencias.id','estado_trans_detalles.detalle_id')
+        ->join('estado_transferencias','estado_trans_detalles.estado_id','estado_transferencias.id')
+        ->join('transferences','estado_transferencias.id_transferencia','transferences.id')
+        ->select('detalle_transferencias.*','products.nombre as name_p')
+        ->where('transferences.id',$id2)->get();
+        
+        //dd($this->datalist_destino);
+        $this->estado_destino= Transference::join('estado_transferencias','transferences.id','estado_transferencias.id_transferencia')
+        ->select('estado_transferencias.estado')->value('estado_transferencias.estado');
     }
     public function verPermisos(){
        
