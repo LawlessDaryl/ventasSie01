@@ -108,13 +108,8 @@ class ReporteServiceController extends Component
         if ($this->estado == 'Todos') {
             if ($this->userId == 0) {
                 /* $this->data=Service::orderBy('id','desc')->get(); */
-                $this->data = Service::join('order_services as os', 'os.id', 'services.order_service_id')
-                    ->join('mov_services as ms', 'services.id', 'ms.service_id')
-                    ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
-                    ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
+                $this->data = Service::join('mov_services as ms', 'services.id', 'ms.service_id')
                     ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                    ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                    ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
                     ->join('users as u', 'u.id', 'mov.user_id')
                     ->where('mov.status', 'like', 'ACTIVO')
                     ->select(
@@ -135,26 +130,13 @@ class ReporteServiceController extends Component
                     }
                 }
 
-                /* for ($x = 0; $x < $this->data->count(); $x++) {
-                    $this->fechas = OrderService::join('services as s', 'order_services.id', 's.order_service_id')
-                        ->join('mov_services as ms', 's.id', 'ms.service_id')
-                        ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                        ->where('s.id', $this->data[$x]->serviceid)
-                        ->pluck('mov.created_at')->toArray();
-                    
-                } */
             } else {
 
                 if ($this->estado == "Todos") {
                     $this->costoEntregado = 0;
                     $this->data = [];
-                    $data1 = Service::join('order_services as os', 'os.id', 'services.order_service_id')
-                        ->join('mov_services as ms', 'services.id', 'ms.service_id')
-                        ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
-                        ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
+                    $data1 = Service::join('mov_services as ms', 'services.id', 'ms.service_id')
                         ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                        ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                        ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
                         ->join('users as u', 'u.id', 'mov.user_id')
                         ->where('mov.status', 'like', 'ACTIVO')
 
@@ -179,13 +161,8 @@ class ReporteServiceController extends Component
                         }
                     }
 
-                    $datos2 = Service::join('order_services as os', 'os.id', 'services.order_service_id')
-                        ->join('mov_services as ms', 'services.id', 'ms.service_id')
-                        ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
-                        ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
+                    $datos2 = Service::join('mov_services as ms', 'services.id', 'ms.service_id')
                         ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                        ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                        ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
                         ->join('users as u', 'u.id', 'mov.user_id')
                         ->where('mov.status', 'like', 'ACTIVO')
                         ->select(
@@ -222,13 +199,8 @@ class ReporteServiceController extends Component
                     
                 } else {
 
-                    $this->data = Service::join('order_services as os', 'os.id', 'services.order_service_id')
-                        ->join('mov_services as ms', 'services.id', 'ms.service_id')
-                        ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
-                        ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
+                    $this->data = Service::join('mov_services as ms', 'services.id', 'ms.service_id')
                         ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                        ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                        ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
                         ->join('users as u', 'u.id', 'mov.user_id')
                         ->where('mov.status', 'like', 'ACTIVO')
                         ->select(
@@ -253,13 +225,8 @@ class ReporteServiceController extends Component
             }
         } else {
             if ($this->userId == 0) {
-                $this->data = Service::join('order_services as os', 'os.id', 'services.order_service_id')
-                    ->join('mov_services as ms', 'services.id', 'ms.service_id')
-                    ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
-                    ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
+                $this->data = Service::join('mov_services as ms', 'services.id', 'ms.service_id')
                     ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                    ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                    ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
                     ->join('users as u', 'u.id', 'mov.user_id')
                     ->where('mov.status', 'like', 'ACTIVO')
                     ->select(
@@ -284,13 +251,8 @@ class ReporteServiceController extends Component
                 if ($this->estado == "ENTREGADO") {
                     $this->costoEntregado = 0;
                     $this->data = [];
-                    $data1 = Service::join('order_services as os', 'os.id', 'services.order_service_id')
-                        ->join('mov_services as ms', 'services.id', 'ms.service_id')
-                        ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
-                        ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
+                    $data1 = Service::join('mov_services as ms', 'services.id', 'ms.service_id')
                         ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                        ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                        ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
                         ->join('users as u', 'u.id', 'mov.user_id')
                         ->where('mov.status', 'like', 'ACTIVO')
 
@@ -325,13 +287,8 @@ class ReporteServiceController extends Component
                     }
                 } else {
 
-                    $this->data = Service::join('order_services as os', 'os.id', 'services.order_service_id')
-                        ->join('mov_services as ms', 'services.id', 'ms.service_id')
-                        ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
-                        ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
+                    $this->data = Service::join('mov_services as ms', 'services.id', 'ms.service_id')
                         ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                        ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                        ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
                         ->join('users as u', 'u.id', 'mov.user_id')
                         ->where('mov.status', 'like', 'ACTIVO')
                         ->select(
