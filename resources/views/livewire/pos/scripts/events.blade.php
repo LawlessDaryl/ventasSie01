@@ -31,6 +31,13 @@
         });
 
 
+        
+        // Mètodo JavaScript para llamar al modal cuando se acaben los Productos en la sucursal
+        //y se listen todas las sucursales donde aun queden stocks disponibles
+        window.livewire.on('modal-stocksucursales', Msg => {
+        $("#ModalSucursales").modal("show");
+        });
+        
 
         // Mètodo JavaScript para llamar al modal para Finalizar la Venta
         window.livewire.on('finalizarventa', Msg => {
