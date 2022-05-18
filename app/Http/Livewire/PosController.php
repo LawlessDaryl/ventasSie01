@@ -614,61 +614,72 @@ class PosController extends Component
             //Si no hay stock de un Producto en Tienda
             if ($product->stock < ($cant + $exist->quantity))
             {
-                try
+                //Buscamos el Producto en la sucursal menos en la Tienda
+                if($this->buscarxproducto($productId)->count() > 0)
                 {
-                    //Buscamos el Producto en la sucursal menos en la Tienda
-                    if($this->buscarxproducto($productId)->count() > 0)
+                    //Si se encontraron productos en la sucursal se llamara al modal
+                    //donde se podra descontar stock de un destino seleccionado
+
+                    //Actualizando la tabla $listadestinos donde se listan todos los destinos 
+                    //dentro de la sucursal en donde aun queden stock disponibles
+                    $this->listadestinos = $this->buscarxproducto($productId);
+
+                    //Actualizamos el id del producto que se planea realizar un movimiento de tienda a otro destino
+                    $this->idproductoalmacen = $productId;
+
+                    //Obteniendo el nombre del producto que se mostrara en el modal
+                    $this->nombrestockproducto = $product->name;
+
+
+                    //$this->tipodestino = $this->buscarxproducto($productId)->first()->id;
+
+                    //dd($this->listardestinos);
+                    //$this->stockalmacen = $this->numstock($productId, $this->tipodestino);
+
+
+
+
+
+                    //Llamando al modal
+                    $this->emit('no-stocktienda');
+                    return;
+
+
+
+
+
+
+
+
+                }
+                else
+                {
+                    //Si no hay stock del producto en la sucursal se buscara en todas las demas sucursales
+                    if($this->buscarxproductosucursal($productId)->count() > 0)
                     {
-                        //Si se encontraron productos en la sucursal se llamara al modal
-                        //donde se podra descontar stock de un destino seleccionado
+                        $this->listasucursales = $this->buscarxproductosucursal($productId);
 
-                        //Actualizando la tabla $listadestinos donde se listan todos los destinos 
-                        //dentro de la sucursal en donde aun queden stock disponibles
-                        $this->listadestinos = $this->buscarxproducto($productId);
-
-                        //Actualizamos el id del producto que se planea realizar un movimiento de tienda a otro destino
-                        $this->idproductoalmacen = $productId;
-
-                        //Obteniendo el nombre del producto que se mostrara en el modal
                         $this->nombrestockproducto = $product->name;
 
 
-                        //$this->tipodestino = $this->buscarxproducto($productId)->first()->id;
+                        
+                        //Poner el Id del producto con 0 stock en la variable global $idproductoalmacen
+                        //Para que sea usada por el metodo buscarstocksucursal($idsucursal)
+                        $this->idproductoalmacen = $productId;
 
-                        //dd($this->listardestinos);
-                        //$this->stockalmacen = $this->numstock($productId, $this->tipodestino);
 
-
-                        //Llamando al modal
-                        $this->emit('no-stocktienda');
+                        //Llamamos al modal donde se listarán todas las sucursales
+                        //en donde aún quedan stock disponibles
+                        $this->emit('modal-stocksucursales');
                         return;
-
-
-
-
-
-
-
 
                     }
                     else
                     {
-                        //Si no hay stock del producto en la sucursal se buscara en todas las demas sucursales
-
-
-
-
-
-
                         //Si no hay stock en la propia sucursal y en otras sucursales se mostrará el siguiente mensaje
-                        $this->emit('no-stock', 'stock insuficiente en TIENDA y TODOS LAS SUCURSALES DISPONIBLES');
+                        $this->emit('no-stock', 'stock insuficiente en TIENDA y TODOS LAS SUCURSALES EXISTENTES');
                         return;
                     }
-                }
-                catch (Exception $e)
-                {
-                    $this->emit('no-stock', 'stock');
-                    return;
                 }
             }
 
@@ -1196,35 +1207,69 @@ class PosController extends Component
         {
             if ($product->stock < ($cant + $exist->quantity))
             {
-                //Buscar Productos en Almacen
-                $productoalmacen = Product::join("productos_destinos as pd", "pd.product_id", "products.id")
-                ->join('destinos as des', 'des.id', 'pd.destino_id')
-                ->select("products.id as id","products.image as image","des.sucursal_id as sucursal_id","products.nombre as name",
-                "products.precio_venta as price","products.codigo", "pd.stock as stock")
-                ->where("products.id", $product->id)
-                ->where("des.nombre", 'ALMACEN')
-                ->where("des.sucursal_id", $this->idsucursal())
-                ->get()->first();
-                try
+                //Buscamos el Producto en la sucursal menos en la Tienda
+                if($this->buscarxproducto($productId)->count() > 0)
                 {
-                    if($productoalmacen->stock > 0)
+                    //Si se encontraron productos en la sucursal se llamara al modal
+                    //donde se podra descontar stock de un destino seleccionado
+
+                    //Actualizando la tabla $listadestinos donde se listan todos los destinos 
+                    //dentro de la sucursal en donde aun queden stock disponibles
+                    $this->listadestinos = $this->buscarxproducto($productId);
+
+                    //Actualizamos el id del producto que se planea realizar un movimiento de tienda a otro destino
+                    $this->idproductoalmacen = $productId;
+
+                    //Obteniendo el nombre del producto que se mostrara en el modal
+                    $this->nombrestockproducto = $product->name;
+
+
+                    //$this->tipodestino = $this->buscarxproducto($productId)->first()->id;
+
+                    //dd($this->listardestinos);
+                    //$this->stockalmacen = $this->numstock($productId, $this->tipodestino);
+
+
+
+
+
+                    //Llamando al modal
+                    $this->emit('no-stocktienda');
+                    return;
+
+
+
+
+
+                }
+                else
+                {
+                    //Si no hay stock del producto en la sucursal se buscara en todas las demas sucursales
+                    if($this->buscarxproductosucursal($productId)->count() > 0)
                     {
-                        $this->stockalmacen = $productoalmacen->stock;
-                        $this->nombrestockproducto = $productoalmacen->name;
-                        $this->idproductoalmacen = $productoalmacen->id;
-                        $this->emit('no-stocktienda');
+                        $this->listasucursales = $this->buscarxproductosucursal($productId);
+
+                        $this->nombrestockproducto = $product->name;
+
+
+                        
+                        //Poner el Id del producto con 0 stock en la variable global $idproductoalmacen
+                        //Para que sea usada por el metodo buscarstocksucursal($idsucursal)
+                        $this->idproductoalmacen = $productId;
+
+
+                        //Llamamos al modal donde se listarán todas las sucursales
+                        //en donde aún quedan stock disponibles
+                        $this->emit('modal-stocksucursales');
                         return;
+
                     }
                     else
                     {
-                        $this->emit('no-stock', 'stock insuficiente en TIENDA y ALMACEN');
+                        //Si no hay stock en la propia sucursal y en otras sucursales se mostrará el siguiente mensaje
+                        $this->emit('no-stock', 'stock insuficiente en TIENDA y TODOS LAS SUCURSALES EXISTENTES');
                         return;
                     }
-                }
-                catch (Exception $e)
-                {
-                    $this->emit('no-stock', 'Stock en 0, ¡Insuficiente!');
-                    return;
                 }
             }
         }
