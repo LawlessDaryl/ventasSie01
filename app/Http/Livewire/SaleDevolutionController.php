@@ -346,10 +346,9 @@ class SaleDevolutionController extends Component
         else
         {
             //Buscamos el destino y sucursal donde se encuentra el usuario
-            $destino = Destino::join('sucursals as s','s.id','destinos.sucursal_id')
-            ->select("destinos.id as id")
-            ->where("s.id", $this->idsucursal())
-            ->where("destinos.nombre", 'Almacen Devoluciones')
+            $destino = Destino::select("destinos.id as id")
+            ->where("destinos.sucursal_id", $this->idsucursal())
+            ->where("destinos.nombre", "Almacen Devoluciones")
             ->get()
             ->first();
 

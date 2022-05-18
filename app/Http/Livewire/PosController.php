@@ -137,6 +137,7 @@ class PosController extends Component
         ->select("destinos.id as id","destinos.nombre as nombredestino","pd.product_id as idproducto","pd.stock as stock")
         ->where("destinos.sucursal_id", $this->idsucursal())
         ->where('destinos.nombre', '<>', 'TIENDA')
+        ->where('destinos.nombre', '<>', 'Almacen Devoluciones')
         ->where('pd.product_id', $this->idproductoalmacen)
         ->where('pd.stock','>', 0)
         ->orderBy('pd.stock', 'desc')
@@ -299,59 +300,83 @@ class PosController extends Component
         //Buscando Stock del Producto en Tienda
         $product = Product::join("productos_destinos as pd", "pd.product_id", "products.id")
         ->join('destinos as des', 'des.id', 'pd.destino_id')
-        ->select("products.id as id","products.image as image",
-        "des.sucursal_id as sucursal_id","products.nombre as name",
-        "products.precio_venta as price","products.codigo", 
-        "pd.stock as stock")
-        ->where("products.id", $idproducto)
+        ->select("products.id as id","des.sucursal_id as sucursal_id","products.nombre as name","products.image as image",
+        "products.precio_venta as price", "pd.stock as stock")
+        ->where("pd.product_id", $idproducto)
         ->where("des.nombre", 'TIENDA')
         ->where("des.sucursal_id", $this->idsucursal())
         ->get()->first();
+
         
+        //Si ya existe en el carrito incart devolvera true
         if ($this->inCart($product->id))
+        {
+            $this->increaseQty($product->id);
+            return;
+        }
+
+        //Si el producto no existe, lo añadimos en el carrito de compras 
+        //pero antes verificamos si queda stock disponible en la tienda
+        if ($product->stock < 1)
+        {
+            //Buscamos el Producto en la sucursal menos en la Tienda
+            if($this->buscarxproducto($idproducto)->count() > 0)
             {
-                $this->increaseQty($product->id);
+                //Si se encontraron productos en la sucursal se llamara al modal
+                //donde se podra descontar stock de un destino seleccionado
+
+                //Actualizando la tabla $listadestinos donde se listan todos los destinos 
+                //dentro de la sucursal en donde aun queden stock disponibles
+                $this->listadestinos = $this->buscarxproducto($idproducto);
+
+                //Actualizamos el id del producto que se planea realizar un movimiento de tienda a otro destino
+                $this->idproductoalmacen = $idproducto;
+
+                //Obteniendo el nombre del producto que se mostrara en el modal
+                $this->nombrestockproducto = $product->name;
+
+                //Llamando al modal
+                $this->emit('no-stocktienda');
                 return;
+
+
+
+
+
+
+
+
             }
-            if ($product->stock < 1)
+            else
             {
-                //Buscar Productos en Almacen
-                $productoalmacen = Product::join("productos_destinos as pd", "pd.product_id", "products.id")
-                ->join('destinos as des', 'des.id', 'pd.destino_id')
-                ->select("products.id as id","des.sucursal_id as sucursal_id","products.nombre as name",
-                "products.precio_venta as price","products.codigo", "pd.stock as stock")
-                ->where("products.id", $product->id)
-                ->where("des.nombre", 'ALMACEN')
-                ->where("des.sucursal_id", $this->idsucursal())
-                ->get()->first();
 
-
-                if($productoalmacen->stock > 0)
+                //Si no hay stock del producto en la sucursal se buscara en todas las demas sucursales
+                if($this->buscarxproductosucursal($idproducto)->count() > 0)
                 {
-                    $this->stockalmacen = $productoalmacen->stock;
-                    $this->nombrestockproducto = $productoalmacen->name;
-                    $this->idproductoalmacen = $productoalmacen->id;
-                    $this->emit('no-stocktienda');
-                    return;
+                    dd($this->buscarxproductosucursal($idproducto));
+
                 }
                 else
                 {
-                    $this->emit('no-stock', 'stock insuficiente en TIENDA y ALMACEN');
+                    dd($this->buscarxproductosucursal($idproducto));
+                    //Si no hay stock en la propia sucursal y en otras sucursales se mostrará el siguiente mensaje
+                    $this->emit('no-stock', 'stock insuficiente en TIENDA y TODOS LAS SUCURSALES DISPONIBLESS');
                     return;
-                }
+                } 
             }
-            Cart::add(
-                $product->id,
-                $product->name,
-                $product->price,
-                $cant,
-                $product->image
-            );
-            $this->total = Cart::getTotal();
-            $this->itemsQuantity = Cart::getTotalQuantity();
-            $this->emit('scan-ok', 'Producto agregado');
-            //Para Actualizar el Total Descuento
-            $this->actualizardescuento();
+        }
+        Cart::add(
+            $product->id,
+            $product->name,
+            $product->price,
+            $cant,
+            $product->image
+        );
+        $this->total = Cart::getTotal();
+        $this->itemsQuantity = Cart::getTotalQuantity();
+        $this->emit('scan-ok', 'Producto agregado');
+        //Para Actualizar el Total Descuento
+        $this->actualizardescuento();
     }
     //Incrementar Items Carrito
     public function increaseQty($productId, $cant = 1)
@@ -378,6 +403,194 @@ class PosController extends Component
         }
         
         
+        if ($exist)
+        {
+            //Si no hay stock de un Producto en Tienda
+            if ($product->stock < ($cant + $exist->quantity))
+            {
+                //Buscamos el Producto en la sucursal menos en la Tienda
+                if($this->buscarxproducto($productId)->count() > 0)
+                {
+                    //Si se encontraron productos en la sucursal se llamara al modal
+                    //donde se podra descontar stock de un destino seleccionado
+
+                    //Actualizando la tabla $listadestinos donde se listan todos los destinos 
+                    //dentro de la sucursal en donde aun queden stock disponibles
+                    $this->listadestinos = $this->buscarxproducto($productId);
+
+                    //Actualizamos el id del producto que se planea realizar un movimiento de tienda a otro destino
+                    $this->idproductoalmacen = $productId;
+
+                    //Obteniendo el nombre del producto que se mostrara en el modal
+                    $this->nombrestockproducto = $product->name;
+
+
+                    //$this->tipodestino = $this->buscarxproducto($productId)->first()->id;
+
+                    //dd($this->listardestinos);
+                    //$this->stockalmacen = $this->numstock($productId, $this->tipodestino);
+
+
+                    //Llamando al modal
+                    $this->emit('no-stocktienda');
+                    return;
+
+
+
+
+
+
+
+
+                }
+                else
+                {
+                    
+                    
+                    //Si no hay stock del producto en la sucursal se buscara en todas las demas sucursales
+                    if($this->buscarxproductosucursal($productId)->count() > 0)
+                    {
+
+
+                        //dd($this->buscarxproductosucursal($productId));
+
+                        $this->nombrestockproducto = $product->name;
+
+                        //Llamamos al modal donde se listarán todas las sucursales
+                        //en donde aún quedan stock disponibles
+                        $this->emit('modal-stocksucursales');
+                        return;
+
+                    }
+                    else
+                    {
+                        //Si no hay stock en la propia sucursal y en otras sucursales se mostrará el siguiente mensaje
+                        $this->emit('no-stock', 'stock insuficiente en TIENDA y TODOS LAS SUCURSALES DISPONIBLES');
+                        return;
+                    } 
+
+
+                }
+            }
+        }
+
+        //DESC
+        //Obtenemos los datos ('Precio') del producto del Carrito
+        $precioCarrito = Cart::get($productId);
+        //Obtenemos los datos ('Precio') del producto de la Base de la Datos
+        $precioBD = Product::select("products.id as id","products.nombre as name","products.precio_venta as price")
+        ->where("products.id", $productId)
+        ->get()->first();
+        //Comparamos si hay Alguna diferencia en el Precio del Producto
+        //Precio carrito - Precio Base de Datos
+
+        try
+        {
+            $diferencia = $precioCarrito['price'] - $precioBD['price'];
+        }
+        catch(Exception $e)
+        {
+            $diferencia = 0;
+        }
+
+
+        if($diferencia == 0)
+        {
+            Cart::add($product->id, $product->name, $product->price, $cant, $product->image);
+        }
+        else
+        {
+            Cart::add($product->id, $product->name, $precioCarrito['price'], $cant, $product->image);
+        }
+
+
+
+        $this->total = Cart::getTotal();
+        $this->itemsQuantity = Cart::getTotalQuantity();
+        //Actualizamos el Total Descuento
+        $this->actualizardescuento();
+        $this->emit('scan-ok', $title);
+    }
+
+    
+    //Para Buscar un Producto en todos los destinos de la propia sucursal del usuario (excepto en Tienda)
+    public function buscarxproducto($idproducto)
+    {
+        //Primero Buscamos el Producto en todos los destinos(Almacén, Depósito, Almacen2, etc) de la Sucursal
+        $listadestinosproductos = Destino::join("productos_destinos as pd", "pd.destino_id", "destinos.id")
+        ->select("destinos.id as id","destinos.nombre as nombredestino","pd.product_id as idproducto","pd.stock as stock")
+        ->where("destinos.sucursal_id", $this->idsucursal())
+        ->where('destinos.nombre', '<>', 'TIENDA')
+        ->where('destinos.nombre', '<>', 'Almacen Devoluciones')
+        ->where('pd.product_id', $idproducto)
+        ->where('pd.stock','>', 0)
+        ->orderBy('pd.stock', 'desc')
+        ->get();
+
+        
+        return $listadestinosproductos;
+
+    }
+
+    //Para Buscar un Producto en todos los destinos de diferentes sucursales (excepto en la sucursal actual)
+    public function buscarxproductosucursal($idproducto)
+    {
+        //Primero Buscamos el Producto en todos los destinos(Almacén, Depósito, Almacen2, etc) de otras Sucursales
+        $listadestinosproductossucursal = Destino::join("productos_destinos as pd", "pd.destino_id", "destinos.id")
+        ->select("destinos.id as id","destinos.nombre as nombredestino","pd.product_id as idproducto","pd.stock as stock")
+        ->where('destinos.sucursal_id', '<>', $this->idsucursal())
+        ->where('pd.product_id', $idproducto)
+        ->where('pd.stock','>', 0)
+        ->orderBy('pd.stock', 'desc')
+        ->get();
+
+        
+        return $listadestinosproductossucursal;
+
+    }
+
+
+
+
+    //Buscar el Stock Disponible de un Producto dependiendo el destino que se seleccione
+    public function numstock($idproducto, $iddestino)
+    {
+        $productstock = Product::join("productos_destinos as pd", "pd.product_id", "products.id")
+        ->join('destinos as des', 'des.id', 'pd.destino_id')
+        ->select("products.nombre as name",
+        "pd.destino_id as destino_id", "pd.product_id as product_id","pd.stock as stock")
+        ->where("pd.product_id", $idproducto)
+        ->where("pd.destino_id", $iddestino)
+        ->where("des.sucursal_id", $this->idsucursal())
+        ->get()->first();
+
+        return $productstock->stock;
+    }
+
+
+    public function UpdateQty($productId, $cant = 1)
+    {
+        $title = '';
+        //Consulta para saber el Stock de los Productos en Tienda
+        $product = Product::join("productos_destinos as pd", "pd.product_id", "products.id")
+        ->join('destinos as des', 'des.id', 'pd.destino_id')
+        ->select("products.id as id","products.image as image","des.sucursal_id as sucursal_id","products.nombre as name",
+        "products.precio_venta as price","products.codigo", "pd.stock as stock")
+        ->where("products.id", $productId)
+        ->where("des.nombre", 'TIENDA')
+        ->where("des.sucursal_id", $this->idsucursal())
+        ->get()->first();
+        //------------------------------------------------------
+        
+        $exist = Cart::get($productId);
+        if ($exist)
+        {
+            $title = "Cantidad Actualizada";
+        }
+        else
+        {
+            $title = "Producto Agregado";
+        }
         if ($exist)
         {
             //Si no hay stock de un Producto en Tienda
@@ -437,135 +650,6 @@ class PosController extends Component
                 catch (Exception $e)
                 {
                     $this->emit('no-stock', 'stock');
-                    return;
-                }
-            }
-        }
-
-        //DESC
-        //Obtenemos los datos ('Precio') del producto del Carrito
-        $precioCarrito = Cart::get($productId);
-        //Obtenemos los datos ('Precio') del producto de la Base de la Datos
-        $precioBD = Product::select("products.id as id","products.nombre as name","products.precio_venta as price")
-        ->where("products.id", $productId)
-        ->get()->first();
-        //Comparamos si hay Alguna diferencia en el Precio del Producto
-        //Precio carrito - Precio Base de Datos
-
-        try
-        {
-            $diferencia = $precioCarrito['price'] - $precioBD['price'];
-        }
-        catch(Exception $e)
-        {
-            $diferencia = 0;
-        }
-
-
-        if($diferencia == 0)
-        {
-            Cart::add($product->id, $product->name, $product->price, $cant, $product->image);
-        }
-        else
-        {
-            Cart::add($product->id, $product->name, $precioCarrito['price'], $cant, $product->image);
-        }
-
-
-
-        $this->total = Cart::getTotal();
-        $this->itemsQuantity = Cart::getTotalQuantity();
-        //Actualizamos el Total Descuento
-        $this->actualizardescuento();
-        $this->emit('scan-ok', $title);
-    }
-
-    
-    //Para Buscar un Producto en todos los destinos de la propia sucursal del usuario (excepto en Tienda)
-    public function buscarxproducto($idproducto)
-    {
-        //Primero Buscamos el Producto en todos los destinos(Almacén, Depósito, Almacen2, etc) de la Sucursal
-        $listadestinosproductos = Destino::join("productos_destinos as pd", "pd.destino_id", "destinos.id")
-        ->select("destinos.id as id","destinos.nombre as nombredestino","pd.product_id as idproducto","pd.stock as stock")
-        ->where("destinos.sucursal_id", $this->idsucursal())
-        ->where('destinos.nombre', '<>', 'TIENDA')
-        ->where('pd.product_id', $idproducto)
-        ->where('pd.stock','>', 0)
-        ->orderBy('pd.stock', 'desc')
-        ->get();
-
-        
-        return $listadestinosproductos;
-
-    }
-
-    //Buscar el Stock Disponible de un Producto dependiendo el destino que se seleccione
-    public function numstock($idproducto, $iddestino)
-    {
-        $productstock = Product::join("productos_destinos as pd", "pd.product_id", "products.id")
-        ->join('destinos as des', 'des.id', 'pd.destino_id')
-        ->select("products.nombre as name",
-        "pd.destino_id as destino_id", "pd.product_id as product_id","pd.stock as stock")
-        ->where("pd.product_id", $idproducto)
-        ->where("pd.destino_id", $iddestino)
-        ->where("des.sucursal_id", $this->idsucursal())
-        ->get()->first();
-
-        return $productstock->stock;
-    }
-
-
-    public function UpdateQty($productId, $cant = 1)
-    {
-        $title = '';
-        //Consulta para saber el Stock de los Productos en Tienda
-        $product = Product::join("productos_destinos as pd", "pd.product_id", "products.id")
-        ->join('destinos as des', 'des.id', 'pd.destino_id')
-        ->select("products.id as id","products.image as image","des.sucursal_id as sucursal_id","products.nombre as name",
-        "products.precio_venta as price","products.codigo", "pd.stock as stock")
-        ->where("products.id", $productId)
-        ->where("des.nombre", 'TIENDA')
-        ->where("des.sucursal_id", $this->idsucursal())
-        ->get()->first();
-        //------------------------------------------------------
-        
-        $exist = Cart::get($productId);
-        if ($exist)
-        {
-            $title = "Cantidad Actualizada";
-        }
-        else
-        {
-            $title = "Producto Agregado";
-        }
-        if ($exist)
-        {
-            if ($product->stock < $cant)
-            {
-                //Buscar Productos en Almacen
-                // $productoalmacen = Product::join("productos_destinos as pd", "pd.product_id", "products.id")
-                // ->join('destinos as des', 'des.id', 'pd.destino_id')
-                // ->select("products.id as id","products.image as image", "des.sucursal_id as sucursal_id","products.nombre as name",
-                // "products.precio_venta as price","products.codigo", "pd.stock as stock")
-                // ->where("products.id", $productId)
-                // ->where("des.id", 1)
-                // ->where("des.sucursal_id", $this->idsucursal())
-                // ->get()
-                // ->first();
-
-                //dd($this->buscarproducto($productId)->count());
-                if($this->buscarxproducto($productId)->count() > 0)
-                {
-                    $this->listadestinos = $this->buscarxproducto($productId);
-                    // $this->stockalmacen = $productoalmacen->stock;
-                    $this->nombrestockproducto = $product->name;
-                    // $this->idproductoalmacen = $productoalmacen->id;
-                    $this->emit('no-stocktienda');
-                    return;
-                }
-                else
-                {
-                    $this->emit('no-stock', 'stock insuficiente en TIENDA y ALMACEN');
                     return;
                 }
             }
@@ -703,7 +787,7 @@ class PosController extends Component
                 'user_id' => Auth()->user()->id,
             ]);
             // Creando Cliente_Movimiento 
-            //Dependiendo si es o no un Cliente Anònimo
+            // Dependiendo si es o no un Cliente Anònimo
             if($this->clienteanonimo == 'true')
             {
                 ClienteMov::create([
@@ -983,7 +1067,8 @@ class PosController extends Component
         }
         
         
-        //Notificando a todos los Administradores
+        //Notificando a todos los usuarios donde tengan los permisos para
+        //recibir las notificaciones de movimiento de inventarios
         foreach ($ids as $item)
         {
             NotificationUser::create([
@@ -992,17 +1077,11 @@ class PosController extends Component
             ]);
         }
 
-
-
-
-
         //Añadimos al Carrito
 
         $this->increaseQty($destino_seleccionado->id, $this->cantidadToTienda);
 
         
-
-
         //Cerramos la ventana modal
         $this->emit('no-stocktiendacerrar');
         return;

@@ -75,7 +75,7 @@ body {
                         <div>
                             <h6>Seleccionar Usuario</h6>
                         </div>
-                        <select wire:model="usuarioseleccionado" class="form-control">
+                        <select class="form-control">
                           @foreach ($listausuarios as $u)
 
 

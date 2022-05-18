@@ -119,7 +119,19 @@ class ProductoDestinoSeeder extends Seeder
             'destino_id' => 4,
             'stock' => '1',
         ]);
+
+        //Agregando Productos a la Segunda Sucursal
       
+        ProductosDestino::create([
+            'product_id'=> 4,
+            'destino_id' => 4,
+            'stock' => '13',
+        ]);
+        ProductosDestino::create([
+            'product_id'=> 4,
+            'destino_id' => 5,
+            'stock' => '50',
+        ]);
 
     }
 }

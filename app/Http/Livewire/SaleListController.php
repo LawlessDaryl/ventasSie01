@@ -6,6 +6,7 @@ use App\Models\Caja;
 use App\Models\Cartera;
 use App\Models\CarteraMov;
 use App\Models\Movimiento;
+use App\Models\ProductosDestino;
 use App\Models\RoleHasPermissions;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -102,7 +103,7 @@ class SaleListController extends Component
     {
         $this->listadetalles = SaleDetail::join('sales as s', 's.id', 'sale_details.sale_id')
         ->join("products as p", "p.id", "sale_details.product_id")
-        ->select('p.image as image','p.nombre as nombre','p.precio_venta as po',
+        ->select('p.id as idproducto','p.image as image','p.nombre as nombre','p.precio_venta as po',
         'sale_details.price as pv','sale_details.quantity as cantidad')
         ->where('sale_details.sale_id', $this->idventa)
         ->orderBy('sale_details.id', 'asc')
@@ -192,7 +193,6 @@ class SaleListController extends Component
     //Obtener tipo de pago de una Venta para Anular una Venta
     public function obtenertipopago()
     {
-
         try
         {
             $venta = Sale::find($this->idventa);
@@ -259,11 +259,35 @@ class SaleListController extends Component
             'movimiento_id' => $Movimiento->id,
         ]);
 
+        //Actualizando variable $listadetalles
+        $this->listardetalleventas();
 
 
         //Devolviento los productos a la tienda
-        //Actualizando variable $listadetalles
-        $this->listardetalleventas();
+
+        //Guardando en una variable los productos y sus cantidades de una venta para devolverlos a la Tienda
+        $items = $this->listadetalles;
+        foreach ($items as $item)
+        {
+            //Incrementando el stock en tienda
+            $tiendaproducto = ProductosDestino::join("products as p", "p.id", "productos_destinos.product_id")
+            ->join('destinos as des', 'des.id', 'productos_destinos.destino_id')
+            ->select("productos_destinos.id as id","p.nombre as name",
+            "productos_destinos.stock as stock")
+            ->where("p.id", $item->idproducto)
+            ->where("des.nombre", 'TIENDA')
+            ->where("des.sucursal_id", $this->idsucursal())
+            ->get()->first();
+
+
+            $tiendaproducto->update([
+                'stock' => $tiendaproducto->stock + $item->cantidad
+            ]);
+        }
+
+
+
+
 
 
         $anular = Sale::find($this->idventa);
@@ -274,6 +298,16 @@ class SaleListController extends Component
         //dd('asd');
         $this->emit('show-anularcerrar', 'show modal!');
     }
-
+    //Obtener el Id de la Sucursal Donde esta el Usuario
+    public function idsucursal()
+    {
+        $idsucursal = User::join("sucursal_users as su","su.user_id","users.id")
+        ->select("su.sucursal_id as id","users.name as n")
+        ->where("users.id",Auth()->user()->id)
+        ->where("su.estado","ACTIVO")
+        ->get()
+        ->first();
+        return $idsucursal->id;
+    }
     
 }

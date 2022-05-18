@@ -143,6 +143,9 @@
             
             <!-- Ventana Modal para Avisar que ya no hay Stock en Tienda -->
             @include('livewire.pos.modal.stock_insuficiente')
+            <!-- Ventana Modal para Avisar que ya no hay Stock en toda la sucursal y mostrar stocks
+            disponible en otras sucursales -->
+            @include('livewire.pos.modal.stock_disponible_sucursales')
             
             <!-- Ventana Modal para Finalizar la Venta -->
             <div wire:ignore.self class="modal fade" id="ModalCenterFinalizarVenta" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
