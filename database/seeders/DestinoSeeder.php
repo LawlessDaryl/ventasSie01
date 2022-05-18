@@ -39,12 +39,7 @@ class DestinoSeeder extends Seeder
         ]);
 
 
-        
-        Destino::create([
-            'nombre'=>'Almacen Devoluciones',
-            'observacion'=>'ninguna',
-            'sucursal_id'=>'1'           
-        ]);
+    
 
         
         $mm= Destino::create([

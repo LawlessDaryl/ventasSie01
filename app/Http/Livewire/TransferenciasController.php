@@ -83,6 +83,9 @@ class TransferenciasController extends Component
         $this->estado= Transference::join('estado_transferencias','transferences.id','estado_transferencias.id_transferencia')
         ->select('estado_transferencias.estado')->value('estado_transferencias.estado');
         //dd($this->detalle);
+
+        $this->emit('show');
+        
         
     }
     public function visualizardestino($id2)
@@ -97,6 +100,8 @@ class TransferenciasController extends Component
         //dd($this->datalist_destino);
         $this->estado_destino= Transference::join('estado_transferencias','transferences.id','estado_transferencias.id_transferencia')
         ->select('estado_transferencias.estado')->value('estado_transferencias.estado');
+        $this->emit('show2');
+        
     }
     public function verPermisos(){
        

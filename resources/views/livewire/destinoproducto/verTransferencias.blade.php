@@ -331,9 +331,7 @@
                             <a class="dropdown-item" id="icon-pills-solicitud-tab1" data-toggle="tab" href="#icon-pills-solicitud" role="tab" aria-controls="icon-pills-solicitud" aria-selected="false">Solicitudes realizadas</a>
                             <a class="dropdown-item" id="icon-pills-solicitud2-tab2" data-toggle="tab" href="#icon-pills-solicitud" role="tab" aria-controls="icon-pills-solicitud2" aria-selected="false">Solicitudes pendientes</a>
                         </div>
-                    </li>
-    
-                    
+                    </li> 
                 </ul>
                 <div class="tab-content" id="icon-pills-tabContent">
                    
@@ -519,4 +517,24 @@
             </div>
         </div>
     </div>
+    @include('livewire.destinoproducto.modaldetalletr')
+    @include('livewire.destinoproducto.modaldetallete')
 </div>
+@section('javascript')
+<script>
+    document.addEventListener('DOMContentLoaded', function() 
+    {
+        window.livewire.on('show', msg => {
+            $('#detailtranference').modal('show')
+        });  
+    });
+    document.addEventListener('DOMContentLoaded', function() 
+    {
+        window.livewire.on('show2', msg => {
+            $('#detailtranferencete').modal('show')
+        });  
+    });
+
+</script>
+
+@endsection

@@ -107,17 +107,7 @@
    
     @include('livewire.destinoproducto.detallemobiliario')
     </div>
-   
-  
-
-
-
 @section('javascript')
-
-
-
-
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 

@@ -40,26 +40,28 @@ class TransferirProductoController extends Component
     
     public function mount()
     {
-        
      $this->verPermisos();
-
-
     }
     public function render()
     {
    
         $this->itemsQuantity = Transferencia::getTotalQuantity();
-        if($this->selected_origen !== 0){
-
+        if($this->selected_origen !== 0 && strlen($this->search) > 0){
                                         $almacen= ProductosDestino::join('products as prod','prod.id','productos_destinos.product_id')
                                         ->join('destinos as dest','dest.id','productos_destinos.destino_id')
-                                        ->select('prod.nombre as name','dest.nombre as nombre_destino','dest.id as dest_id','prod.id as prod_id')
                                         ->where('dest.id',$this->selected_origen)
+                                        ->where(function($query){
+                                            $query->where('prod.nombre', 'like', '%' . $this->search . '%')
+                                            ->orWhere('prod.codigo','like','%'.$this->search.'%')
+                                            ->orWhere('prod.marca','like','%'.$this->search.'%')
+                                            ->orWhere('prod.id','like','%'.$this->search.'%');
+                                        })
+                                        ->select('prod.nombre as name','dest.nombre as nombre_destino','dest.id as dest_id','prod.id as prod_id','productos_destinos.stock as stock')
                                         ->orderBy('prod.nombre','desc')
                                         ->paginate($this->pagination);
                                         }
                                         else{
-                                            $almacen=null;
+                                         $almacen=null;
                                         }
                                         $sucursal_ubicacion=Destino::join('sucursals as suc','suc.id','destinos.sucursal_id')
                                         ->select ('suc.name as sucursal','destinos.nombre as destino','destinos.id as destino_id')
@@ -93,28 +95,38 @@ class TransferirProductoController extends Component
             array_push($this->vs,$value);
         }
        }
-
     }
     public function increaseQty($productId)
 
     {
+        $bj=[];
         $product = Product::select('products.id','products.nombre as name')
         ->where('products.id',$productId)->first();
        
         $exist = Transferencia::get($product->id);
-       
-        if ($exist) {
-            $title = 'Cantidad actualizada';
-        } else {
-            $title = "Producto agregado";
+
+        $stock=ProductosDestino::where('productos_destinos.product_id',$product->id)
+        ->where('productos_destinos.destino_id',$this->selected_origen)->select('productos_destinos.stock')->value('productos_destinos.stock');
+
+      if ($exist) {
+        if ($stock>=(1+$exist->quantity))
+        {
+            Transferencia::add($product->id, $product->name,0, 1);
         }
-
+        else{
+           
+            $this->emit('no-stock','Sin stock disponible');
+        }
+      }
+      else{
         Transferencia::add($product->id, $product->name,0, 1);
+      }
+       
 
-        $this->itemsQuantity = Transferencia::getTotalQuantity();
-        $this->emit('scan-ok', $title);
+      
+        
+
     }
-
     public function UpdateQty($productId, $cant =1)
     {
         
@@ -123,21 +135,15 @@ class TransferirProductoController extends Component
        
         $exist = Transferencia::get($productId);
         
-       
-        if ($exist) {
-            $title = "cantidad actualizada";
-        } else {
-            $title = "producto agregado";
-        }
+
        
         $this->removeItem($productId);
        
-        if ($cant > 0) {
-
-          
+        if ($cant > 0) 
+        {
             Transferencia::add($product->id, $product->name,0, $cant);
             $this->itemsQuantity = Transferencia::getTotalQuantity();
-            $this->emit('scan-ok', $title);
+            $this->emit('scan-ok');
         }
     }
     public function removeItem($productId)

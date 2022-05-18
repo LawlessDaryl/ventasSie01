@@ -225,9 +225,9 @@
                                                             <h5> <strong>{{$prod->nombre}}</strong> </h5>
                                                             <label>{{ $prod->unidad}}</label>|<label>{{ $prod->marca}}</label>|<label>{{ $prod->industria }}</label>
                                                             <h6>{{ $prod->caracteristicas }}</h6>
+                                                           </div>
                                                      </td>
                                                    
-                                                     
                                                      <td class="text-center">
                                                          <a href="javascript:void(0)" wire:click="increaseQty({{ $prod->id }})"
                                                              class="btn btn-dark mtmobile">
@@ -288,9 +288,6 @@
                                                          style="font-size: 0.8rem!important; padding:0!important" 
                                                          class="form-control text-center" 
                                                          value="{{$prod->attributes->precio}}">
-
-
-                                                     
                                                     </td>
 
                                                     <td>

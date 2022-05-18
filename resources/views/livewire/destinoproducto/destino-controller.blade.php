@@ -8,9 +8,7 @@
               
             </div>
           
-
             {{--SELECT DE LAS SUCURSALES--}}
-
             
             <div class="row widget widget-chart-one" style="background-color: rgb(243, 244, 246)">
 
@@ -128,42 +126,52 @@
                 </div>
                 <div class="row">
 
-                    @if($selected_origen !== 0)
-                   
-                    <div class="col-12 col-lg-12 col-md-4 d-flex flex-lg-wrap flex-wrap flex-md-wrap flex-xl-wrap justify-content-center">
+                    @if($selected_origen !== 0 && strlen($search) > 0 )
 
-                            @foreach($destinos_almacen as $destino)
-                      
-                        <div class="card border-success" style="width: 13rem; margin:2rem">
-                        
-                            <div class="card-header"><h5> {{$destino->name}}</h5></div>
-                            <div class="card-body text-success">
+                        <div class="table-responsive">
+                            <table class="table table-unbordered table-hover mt-2">
+                                <thead class="text-white" style="background: #3B3F5C">
+                                    <tr>
+                                        <th class="table-th text-withe text-center">ITEM</th>
+                                        <th class="table-th text-withe text-center">PRODUCTO</th>                              
+                                        <th class="table-th text-withe text-center">STOCK</th>                         
+                                        <th class="table-th text-withe text-center">ACCION</th>                         
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($destinos_almacen as $destino)
+                                        <tr>
+                                            <td>
+                                                <h6 class="text-center">{{ $loop->iteration}}</h6>
+                                            </td>
+                                            <td>
+                                                <h6 class="text-center">{{ $destino->name }}</h6>
+                                            </td>
+                                            
+                                            <td>
+                                            <h6 class="text-center">{{ $destino->stock }}</h6>
+                                            </td>
+                                            <td class="text-center">
+                                                <a href="javascript:void(0)" wire:click="increaseQty({{ $destino->prod_id }})"
+                                                    class="btn btn-dark mtmobile">
+                                                    <i class="fas fa-plus"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                            {{$destinos_almacen->links() }}
 
-                             {{--<h5 class="card-title">{{$destino->tipo}}-{{$destino->codigo}}</h5>--}} 
-                                                         
-                               <p class="card-text"> <strong> Stock Disponible:</strong> {{$destino->stock}}</p>
-                               <p class="card-text"> <strong>Mobilirio ubicacion</strong> {{$destino->tipo}}-{{$destino->codigo}}</p>
-                             
-                               <button wire:click="increaseQty({{$destino->prod_id}})" class="btn btn-success" style="padding: 10px">Agregar</button>
-                             </div>
-                           </div>
-                           
-                          
-                      @endforeach
-                    </div>
+                        </div>
+                    
                     @else
                     <span>No se encontraron resultados</span>
                     @endif
                 </div>
 
               </div>
-
-
-       
-                   
-
                     {{--AREA DE TRANSFERENCIAS DE PRODUCTOS--}}
-
 
                     <div class="col-12 col-lg-7 col-md-3">
                         <div class="row">
@@ -276,6 +284,9 @@
            noty(msg)
        });
         window.livewire.on('empty_destino_origen', msg => {
+           noty(msg)
+       });
+        window.livewire.on('no-stock', msg => {
            noty(msg)
        });
     });
