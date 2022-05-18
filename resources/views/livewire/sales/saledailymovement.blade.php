@@ -8,6 +8,9 @@
     }
     .seleccionar:hover {
     background-color: skyblue;
+    cursor: pointer;
+    /* box-shadow: 10px 10px 0px 0px #46A2FD, 20px 20px #83C1FD, 30px 30px 14px #ACD5FD; */
+    transform: translate(-5px, -5px);
     }
     .tablehead{
         background-color: rgb(19, 128, 200);
