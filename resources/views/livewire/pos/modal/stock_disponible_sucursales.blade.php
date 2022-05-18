@@ -21,12 +21,45 @@ de realizar una venta de Tienda, Almacen, Depósito, etc dentro de la misma sucu
                     Pero se encontraron stocks disponibles en las siguientes sucursales:
                 </p>
 
+                <br>
+
+                @foreach ($listasucursales as $item)
+
+
+
+                <div style="background-color: rgb(17, 125, 203); color:floralwhite">{{$this->nombresucursal($item->idsucursal)}}</div>
+                <table class="estilostable" style="color: black">
+                    <thead style="background-color: rgb(243, 201, 146)">
+                      <tr>
+                        <th>N°</th>
+                        <th>Nombre</th>
+                        <th>Stock</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($this->buscarstocksucursal($item->idsucursal) as $item)
+                            <tr class="seleccionar">
+                                <td>
+                                    {{$loop->iteration}}
+                                </td>
+                                <td>
+                                    {{ $item->nombredestino }}
+                                </td>
+                                <td>
+                                    {{ $item->stock }}
+                                </td>
+                            </tr>
+                            @endforeach
+                    </tbody>
+                </table>
+                @endforeach
+
 
                 
             </div>
             <div class="modal-footer">
-                <button class="btn" data-dismiss="modal"><i class="flaticon-cancel-12"></i> No</button>
-                <button type="button" class="btn btn-primary" wire:click.prevent="almacenToTienda()" >Si</button>
+                {{-- <button class="btn" data-dismiss="modal"><i class="flaticon-cancel-12"></i> Cerrar Ventana</button>
+                <button type="button" class="btn btn-primary" wire:click.prevent="almacenToTienda()" >Si</button> --}}
             </div>
         </div>
     </div>

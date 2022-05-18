@@ -19,6 +19,7 @@ use App\Models\Cliente;
 use App\Models\Destino;
 use App\Models\Notification;
 use App\Models\NotificationUser;
+use App\Models\Sucursal;
 use App\Models\User;
 use Darryldecode\Cart\Facades\CartFacade as Cart;
 use Exception;
@@ -34,7 +35,7 @@ class PosController extends Component
     public $razonsocial, $celular="",$tipodestino;
 
     //Variables para mover inventario a la tienda
-    public  $stockalmacen, $nombrestockproducto, $cantidadToTienda = 1, $idproductoalmacen, $iddestinoseleccionado, $nombredestinoseleccionado;
+    public  $stockalmacen, $nombrestockproducto, $cantidadToTienda = 1, $idproductoalmacen, $iddestinoseleccionado, $nombredestinoseleccionado, $listasucursales;
 
     //Variables para el comprobantes...
     public $idventa, $totalbs, $totalitems;
@@ -58,6 +59,7 @@ class PosController extends Component
         $this->totalBsBd = 0;
         $this->actualizardescuento();
         $this->listadestinos = $this->buscarxproducto(1);
+        $this->listasucursales = $this->buscarxproductosucursal(1);
 
     }
     public function render()
@@ -431,6 +433,9 @@ class PosController extends Component
                     //$this->stockalmacen = $this->numstock($productId, $this->tipodestino);
 
 
+
+
+
                     //Llamando al modal
                     $this->emit('no-stocktienda');
                     return;
@@ -445,16 +450,19 @@ class PosController extends Component
                 }
                 else
                 {
-                    
-                    
                     //Si no hay stock del producto en la sucursal se buscara en todas las demas sucursales
                     if($this->buscarxproductosucursal($productId)->count() > 0)
                     {
-
-
-                        //dd($this->buscarxproductosucursal($productId));
+                        $this->listasucursales = $this->buscarxproductosucursal($productId);
 
                         $this->nombrestockproducto = $product->name;
+
+
+                        
+                        //Poner el Id del producto con 0 stock en la variable global $idproductoalmacen
+                        //Para que sea usada por el metodo buscarstocksucursal($idsucursal)
+                        $this->idproductoalmacen = $productId;
+
 
                         //Llamamos al modal donde se listarán todas las sucursales
                         //en donde aún quedan stock disponibles
@@ -465,11 +473,9 @@ class PosController extends Component
                     else
                     {
                         //Si no hay stock en la propia sucursal y en otras sucursales se mostrará el siguiente mensaje
-                        $this->emit('no-stock', 'stock insuficiente en TIENDA y TODOS LAS SUCURSALES DISPONIBLES');
+                        $this->emit('no-stock', 'stock insuficiente en TIENDA y TODOS LAS SUCURSALES EXISTENTES');
                         return;
-                    } 
-
-
+                    }
                 }
             }
         }
@@ -535,24 +541,36 @@ class PosController extends Component
     //Para Buscar un Producto en todos los destinos de diferentes sucursales (excepto en la sucursal actual)
     public function buscarxproductosucursal($idproducto)
     {
-        //Primero Buscamos el Producto en todos los destinos(Almacén, Depósito, Almacen2, etc) de otras Sucursales
+        //En esta variable se guardaran todos los Ids de las Sucursales en donde aun queden Stocks Disponibles
         $listadestinosproductossucursal = Destino::join("productos_destinos as pd", "pd.destino_id", "destinos.id")
-        ->select("destinos.id as id","destinos.nombre as nombredestino","pd.product_id as idproducto","pd.stock as stock")
+        ->select("destinos.sucursal_id as idsucursal")
         ->where('destinos.sucursal_id', '<>', $this->idsucursal())
         ->where('pd.product_id', $idproducto)
         ->where('pd.stock','>', 0)
+        ->groupBy('destinos.sucursal_id')
+        ->get();
+        return $listadestinosproductossucursal;
+    }
+
+    //Para Buscar un Producto en todos los destinos de una sucursal diferente a la Actual en Uso
+    public function buscarstocksucursal($idsucursal)
+    {
+        //Primero Buscamos el Producto en todos los destinos(Almacén, Depósito, Almacen2, etc) de una determinada Sucursal
+        $listproducts = Destino::join("productos_destinos as pd", "pd.destino_id", "destinos.id")
+        ->select("destinos.id as id","destinos.nombre as nombredestino","pd.product_id as idproducto","pd.stock as stock")
+        ->where("destinos.sucursal_id", $idsucursal)
+        ->where('destinos.nombre', '<>', 'Almacen Devoluciones')
+        ->where('pd.product_id', $this->idproductoalmacen)
+        ->where('pd.stock','>', 0)
         ->orderBy('pd.stock', 'desc')
         ->get();
-
-        
-        return $listadestinosproductossucursal;
-
+        return $listproducts;
     }
 
 
 
-
     //Buscar el Stock Disponible de un Producto dependiendo el destino que se seleccione
+    //en la ventana modal de Stock Insuficiente
     public function numstock($idproducto, $iddestino)
     {
         $productstock = Product::join("productos_destinos as pd", "pd.product_id", "products.id")
@@ -1243,6 +1261,19 @@ class PosController extends Component
     {
         $this->nombredestinoseleccionado = $iddestino->nombre;
         $this->iddestinoseleccionado = $iddestino->id;
+    }
+    //Buscar el nombre de una sucursal con el Id
+    public function nombresucursal($id)
+    {
+        try
+        {
+            $sucursal = Sucursal::find($id);
+            return $sucursal->name." ".$sucursal->adress;
+        }
+        catch (Exception $s)
+        {
+            return "";
+        }
     }
 
     
