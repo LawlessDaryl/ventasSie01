@@ -966,7 +966,7 @@ class PosController extends Component
             // Creando Cartera Movimiento
             CarteraMov::create([
                 'type' => "INGRESO",
-                'comentario' => "",
+                'comentario' => "Venta",
                 'cartera_id' => $cartera->id,
                 'movimiento_id' => $Movimiento->id,
             ]);

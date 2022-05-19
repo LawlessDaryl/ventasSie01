@@ -38,7 +38,11 @@ class DestinoSeeder extends Seeder
             'guard_name' => 'web'
         ]);
 
-
+        Destino::create([
+            'nombre'=>'Almacen Devoluciones',
+            'observacion'=>'ninguna',
+            'sucursal_id'=>'1'           
+        ]);
        
 
         
