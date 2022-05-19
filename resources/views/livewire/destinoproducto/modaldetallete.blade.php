@@ -19,7 +19,7 @@
                                         <th class="table-th text-withe text-center">#</th>
                                         <th class="table-th text-withe text-center">Descripcion</th>                              
                                         <th class="table-th text-withe text-center">Cantidad</th>
-                                        <th class="table-th text-withe text-center">Acciones</th>
+                                       
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -35,18 +35,6 @@
                                             <h6 class="text-center">{{ $ob->cantidad }}</h6>
                                         </td>
                                         
-                                        <td class="text-center">
-                                            <a href="javascript:void(0)" wire:click="Edit({{ $ob->tr_des_id }})"
-                                                class="btn btn-dark mtmobile p-1 m-0" title="Edit">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            <a href="javascript:void(0)" onclick="Confirm('{{ $ob->id }}','{{ $ob->nombre }}')" 
-                                                class="btn btn-dark p-1 m-0" title="Delete">
-                                                <i class="fas fa-trash"></i>
-                                            </a>
-                                           
-                                        </td>
-                                       
                                     </tr>
                                 @endforeach
                                
@@ -65,9 +53,13 @@
             
             <div class="row align-items-center justify-content-center">
 
-                <button class="btn btn-info m-3 p-2"  wire:click.prevent="ingresarProductos({{$this->selected_id2}})"> <h5 style="color: aliceblue">Transferencia exitosa</h5> </button>
-                <button class="btn btn-danger m-3 p-2"  wire:click.prevent="exit()" > <h5 style="color: aliceblue" > Rechazar Transferencia </h5> </button>
-            
+               
+            @if ($estado_destino != 'Recibido')
+                
+            <button class="btn btn-info m-3 p-2"  wire:click.prevent="ingresarProductos({{$this->selected_id2}})"> <h5 style="color: aliceblue">Transferencia exitosa</h5> </button>
+            <button class="btn btn-danger m-3 p-2"  wire:click.prevent="exit()" > <h5 style="color: aliceblue" > Rechazar Transferencia </h5> </button>
+                
+            @endif
         </div>
         </div>
     </div>

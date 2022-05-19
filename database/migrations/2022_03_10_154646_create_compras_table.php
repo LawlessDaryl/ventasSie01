@@ -25,6 +25,7 @@ class CreateComprasTable extends Migration
             $table->decimal('saldo',10,2)->default(0);
             $table->enum('tipo_doc',['FACTURA','NOTA DE VENTA','RECIBO','NINGUNO'])->default('FACTURA');
             $table->string('nro_documento',100)->nullable();
+            $table->string('lote_compra',100)->nullable();
             $table->string('observacion',100)->nullable();
             
             

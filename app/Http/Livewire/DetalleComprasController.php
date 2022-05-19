@@ -259,7 +259,7 @@ class DetalleComprasController extends Component
 
     public function UpdatePrecioVenta($productId, $price = 20)
     {
-        $title = '';
+      
         $product = Product::select('products.*')
         ->where('products.id',$productId)->first();
        
@@ -268,11 +268,7 @@ class DetalleComprasController extends Component
         $precio_compra=$exist->price;
         $codigo=$exist->attributes->codigo;
        
-        if ($exist) {
-            $title = "cantidad actualizada";
-        } else {
-            $title = "producto agregado";
-        }
+        
 
         $this->removeItem($productId);
        
@@ -339,7 +335,6 @@ class DetalleComprasController extends Component
 
     public function resetUI()
     {
-       
         $this->costo = '';
         $this->nombre = '';
         $this->precio_venta='';

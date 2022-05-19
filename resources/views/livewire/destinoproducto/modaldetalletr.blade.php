@@ -17,7 +17,7 @@
                                         <th class="table-th text-withe text-center">#</th>
                                         <th class="table-th text-withe text-center">Descripcion</th>                              
                                         <th class="table-th text-withe text-center">Cantidad</th>
-                                        <th class="table-th text-withe text-center">Acciones</th>
+                                      
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -33,17 +33,7 @@
                                             <h6 class="text-center">{{ $datas->cantidad }}</h6>
                                         </td>
                                         
-                                        <td class="text-center">
-                                            <a href="javascript:void(0)" wire:click="Edit({{ $datas->t_id }})"
-                                                class="btn btn-dark mtmobile p-1 m-0" title="Edit">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            <a href="javascript:void(0)" onclick="Confirm('{{ $datas->id }}','{{ $datas->nombre }}')" 
-                                                class="btn btn-dark p-1 m-0" title="Delete">
-                                                <i class="fas fa-trash"></i>
-                                            </a>
-                                           
-                                        </td>
+                                       
                                        
                                     </tr>
                                 @endforeach

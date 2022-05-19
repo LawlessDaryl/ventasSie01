@@ -50,6 +50,7 @@ class TransferirProductoController extends Component
                                         $almacen= ProductosDestino::join('products as prod','prod.id','productos_destinos.product_id')
                                         ->join('destinos as dest','dest.id','productos_destinos.destino_id')
                                         ->where('dest.id',$this->selected_origen)
+                                        ->where('productos_destinos.stock','>',0)
                                         ->where(function($query){
                                             $query->where('prod.nombre', 'like', '%' . $this->search . '%')
                                             ->orWhere('prod.codigo','like','%'.$this->search.'%')

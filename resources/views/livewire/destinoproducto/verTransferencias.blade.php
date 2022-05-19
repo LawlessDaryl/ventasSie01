@@ -335,11 +335,11 @@
                 </ul>
                 <div class="tab-content" id="icon-pills-tabContent">
                    
-                    <div class="tab-pane fade" id="icon-pills-transference" role="tabpanel" aria-labelledby="icon-pills-transference-tab1">
+                    <div class={{$class}} id="icon-pills-transference" role="tabpanel" aria-labelledby="icon-pills-transference-tab1">
                         <div class="media">
                             
                             <div class="media-body">
-                                <h5>Transferencias realizadas</h5>
+                                <center><h4>Transferencias Realizadas</h4></center>
                                 <div class="table-responsive">
                                     <table class="table table-unbordered table-hover mt-2">
                                         <thead class="text-white" style="background: #3B3F5C">
@@ -391,6 +391,7 @@
                                                     </td>
                                                     
                                                     <td class="text-center">
+                                                        @if ($data_td->estado_tr !='Recibido')
                                                         <a href="javascript:void(0)" wire:click="Edit({{ $data_td->t_id}})"
                                                             class="btn btn-dark mtmobile p-1 m-0" title="Edit">
                                                             <i class="fas fa-edit"></i>
@@ -399,6 +400,8 @@
                                                             class="btn btn-dark p-1 m-0" title="Delete">
                                                             <i class="fas fa-trash"></i>
                                                         </a>
+                                                        @endif
+                                                        
                                                         <a href="javascript:void(0)" wire:click="ver({{$data_td->t_id}})" 
                                                             class="btn btn-dark p-1 m-0" title="Ver">
                                                             <i class="fas fa-eye"></i>
@@ -447,19 +450,20 @@
             
                                                     </td>
             
-                                                    @if($data_td->estado_tr =="En transito")
+                                               
+                                                    @if($data2->estado_te =="En transito")
                                                     <td>
-                                                        <h6 class="text-center btn text-white btn-primary p-1">{{ $data_td->estado_tr }}</h6>
+                                                        <h6 class="text-center btn text-white btn-primary p-1">{{ $data2->estado_te }}</h6>
                                                     </td>
             
-                                                    @elseif($data_td->estado_tr =="Recibido")
+                                                    @elseif($data2->estado_te =="Recibido")
                                                     <td>
-                                                        <h6 class="text-center btn text-white btn-success p-1">{{ $data_td->estado_tr }}</h6>
+                                                        <h6 class="text-center btn text-white btn-success p-1">{{ $data2->estado_te }}</h6>
                                                     </td>
             
                                                     @else
                                                     <td>
-                                                        <h6 class="text-center btn text-white btn-primary p-1">{{ $data_td->estado_tr }}</h6>
+                                                        <h6 class="text-center btn text-white btn-primary p-1">{{ $data2->estado_te }}</h6>
                                                     </td>
                                         
                                                     @endif
@@ -469,14 +473,16 @@
                                                     </td>
                                                     
                                                     <td class="text-center">
-                                                        <a href="javascript:void(0)" wire:click="Edit({{ $data2->t_id }})"
+                                                        @if ($data2->estado_te !='Recibido')
+                                                        <a href="javascript:void(0)" wire:click="Edit({{ $data_td->t_id}})"
                                                             class="btn btn-dark mtmobile p-1 m-0" title="Edit">
                                                             <i class="fas fa-edit"></i>
                                                         </a>
-                                                        <a href="javascript:void(0)" onclick="Confirm('{{ $data2->id }}','{{ $data2->nombre }}')" 
+                                                        <a href="javascript:void(0)" onclick="Confirm('{{ $data_td->id }}','{{ $data_td->nombre }}')" 
                                                             class="btn btn-dark p-1 m-0" title="Delete">
                                                             <i class="fas fa-trash"></i>
                                                         </a>
+                                                        @endif
                                                         <a href="javascript:void(0)" wire:click="visualizardestino({{$data2->tr_des_id}})" 
                                                             class="btn btn-dark p-1 m-0" title="Ver">
                                                             <i class="fas fa-eye"></i>
