@@ -50,12 +50,7 @@
                                
                                
                                 @endif
-                                <td>
-                                    @if($estado=== 'Pendiente' )
-                                    <button class="btn btn-success p-0 col-lg-5">Verificar Stock</button>
-                                    <button class="btn btn-info p-0 col-lg-5">Aceptar Solicitud</button>
-                                    @endif
-                                </td>
+                               
                                 </tbody>
                                
                             </table>

@@ -4,6 +4,8 @@ namespace App\Http\Livewire;
 
 use App\Models\Destino;
 use App\Models\DetalleTransferencia;
+use App\Models\EstadoTransferencia;
+use App\Models\ProductosDestino;
 use App\Models\Transference;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -11,7 +13,7 @@ use Livewire\Component;
 
 class TransferenciasController extends Component
 {
-    public $nro,$nro_det,$detalle,$estado,$estado_destino,$vs=[], $datalist_destino;
+    public $nro,$nro_det,$detalle,$estado,$estado_destino,$vs=[], $datalist_destino,$selected_id1,$selected_id2;
     public function mount(){
         $this->nro=1;
         $this->nro_det=1;
@@ -74,30 +76,36 @@ class TransferenciasController extends Component
     }
     public function ver($id)
     {
+        $this->selected_id1= $id;
         $this->detalle=DetalleTransferencia::join('products','detalle_transferencias.product_id','products.id')
         ->join('estado_trans_detalles','detalle_transferencias.id','estado_trans_detalles.detalle_id')
         ->join('estado_transferencias','estado_trans_detalles.estado_id','estado_transferencias.id')
         ->join('transferences','estado_transferencias.id_transferencia','transferences.id')
         ->select('detalle_transferencias.*')
-        ->where('transferences.id',$id)->get();
+        ->where('transferences.id',$id)
+        ->where('estado_transferencias.op','Activo')
+        ->get();
         $this->estado= Transference::join('estado_transferencias','transferences.id','estado_transferencias.id_transferencia')
         ->select('estado_transferencias.estado')->value('estado_transferencias.estado');
         //dd($this->detalle);
 
-        $this->emit('show');
+        $this->emit('show1');
         
         
     }
     public function visualizardestino($id2)
     {
+        $this->selected_id2= $id2;
         $this->datalist_destino=DetalleTransferencia::join('products','detalle_transferencias.product_id','products.id')
         ->join('estado_trans_detalles','detalle_transferencias.id','estado_trans_detalles.detalle_id')
         ->join('estado_transferencias','estado_trans_detalles.estado_id','estado_transferencias.id')
         ->join('transferences','estado_transferencias.id_transferencia','transferences.id')
-        ->select('detalle_transferencias.*','products.nombre as name_p')
-        ->where('transferences.id',$id2)->get();
-        
+        ->select('detalle_transferencias.*','transferences.id as tr')
+        ->where('transferences.id',$id2)
+        ->where('estado_transferencias.op','Activo')
+        ->get();
         //dd($this->datalist_destino);
+      
         $this->estado_destino= Transference::join('estado_transferencias','transferences.id','estado_transferencias.id_transferencia')
         ->select('estado_transferencias.estado')->value('estado_transferencias.estado');
         $this->emit('show2');
@@ -119,14 +127,24 @@ class TransferenciasController extends Component
 
     }
 
-    public function verificarStock()
+
+    public function ingresarProductos()
     {
-        
-    }
+        //dd($this->datalist_destino);
+        foreach ($this->datalist_destino as $value) {
+            $q=ProductosDestino::where('product_id',$value->product_id)
+            ->where('destino_id',$this->selected_id2)->value('stock');
+            ProductosDestino::updateOrCreate(['product_id' => $value->product_id, 'destino_id'=>$this->selected_id2],['stock'=>$q+$value->cantidad]);
+        }
 
-    public function recibirProductos(){
-
-        
-
+       EstadoTransferencia::where('id_transferencia',$this->selected_id2)->update(['op'=>'Inactivo']);
+       EstadoTransferencia::create([
+        'estado'=>'Recibido',
+        'op'=>1,
+        'id_transferencia'=>$this->selected_id2,
+        'id_usuario'=>Auth()->user()->id
+    ]);
+    
+        $this->emit('close2');
     }
 }

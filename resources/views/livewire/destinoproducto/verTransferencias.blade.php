@@ -369,12 +369,12 @@
             
                                                     </td>
             
-                                                    @if($data_td->estado_tr =="Pendiente")
+                                                    @if($data_td->estado_tr =="En transito")
                                                     <td>
-                                                        <h6 class="text-center btn text-white btn-danger p-1">{{ $data_td->estado_tr }}</h6>
+                                                        <h6 class="text-center btn text-white btn-primary p-1">{{ $data_td->estado_tr }}</h6>
                                                     </td>
             
-                                                    @elseif($data_td->estado_tr =="Aprobado")
+                                                    @elseif($data_td->estado_tr =="Recibido")
                                                     <td>
                                                         <h6 class="text-center btn text-white btn-success p-1">{{ $data_td->estado_tr }}</h6>
                                                     </td>
@@ -447,19 +447,19 @@
             
                                                     </td>
             
-                                                    @if($data2->estado_tr =="Pendiente")
+                                                    @if($data_td->estado_tr =="En transito")
                                                     <td>
-                                                        <h6 class="text-center btn text-white btn-danger p-1">{{ $data2->estado_transferencia }}</h6>
+                                                        <h6 class="text-center btn text-white btn-primary p-1">{{ $data_td->estado_tr }}</h6>
                                                     </td>
             
-                                                    @elseif($data2->estado_tr =="Aprobado")
+                                                    @elseif($data_td->estado_tr =="Recibido")
                                                     <td>
-                                                        <h6 class="text-center btn text-white btn-success p-1">{{ $data2->estado_transferencia }}</h6>
+                                                        <h6 class="text-center btn text-white btn-success p-1">{{ $data_td->estado_tr }}</h6>
                                                     </td>
             
                                                     @else
                                                     <td>
-                                                        <h6 class="text-center btn text-white btn-primary p-1">{{ $data2->estado_transferencia }}</h6>
+                                                        <h6 class="text-center btn text-white btn-primary p-1">{{ $data_td->estado_tr }}</h6>
                                                     </td>
                                         
                                                     @endif
@@ -516,24 +516,28 @@
     
             </div>
         </div>
+        @include('livewire.destinoproducto.modaldetallete')
+        @include('livewire.destinoproducto.modaldetalletr')
     </div>
-    @include('livewire.destinoproducto.modaldetalletr')
-    @include('livewire.destinoproducto.modaldetallete')
 </div>
 @section('javascript')
 <script>
     document.addEventListener('DOMContentLoaded', function() 
     {
-        window.livewire.on('show', msg => {
+        window.livewire.on('show1', msg => {
             $('#detailtranference').modal('show')
         });  
-    });
-    document.addEventListener('DOMContentLoaded', function() 
-    {
+
         window.livewire.on('show2', msg => {
             $('#detailtranferencete').modal('show')
         });  
+        window.livewire.on('close2', msg => {
+            $('#detailtranferencete').modal('hide')
+        });  
     });
+  
+       
+    
 
 </script>
 

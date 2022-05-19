@@ -52,12 +52,7 @@
                                
                             
                                 @endif
-                                <td>
-                                    @if($estado_destino === 'Pendiente' )
-                                    <button class="btn btn-success p-0 col-lg-5">Verificar Stock</button>
-                                    <button class="btn btn-info p-0 col-lg-5">Aceptar Solicitud</button>
-                                    @endif
-                                </td>
+                               
     
                                
     
@@ -68,7 +63,12 @@
                         </div>
             </div>
             
-            <br>
+            <div class="row align-items-center justify-content-center">
+
+                <button class="btn btn-info m-3 p-2"  wire:click.prevent="ingresarProductos({{$this->selected_id2}})"> <h5 style="color: aliceblue">Transferencia exitosa</h5> </button>
+                <button class="btn btn-danger m-3 p-2"  wire:click.prevent="exit()" > <h5 style="color: aliceblue" > Rechazar Transferencia </h5> </button>
+            
+        </div>
         </div>
     </div>
 </div>
