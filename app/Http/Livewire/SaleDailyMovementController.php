@@ -5,16 +5,48 @@ namespace App\Http\Livewire;
 use App\Models\CarteraMov;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Carbon\Carbon;
 
 class SaleDailyMovementController extends Component
 {
+    public $dateFrom, $dateTo, $reportType;
     use WithPagination;
     public function paginationView()
     {
         return 'vendor.livewire.bootstrap';
     }
+
+    public function mount()
+    {
+        $this->reportType = 0;
+        $this->dateFrom = Carbon::parse(Carbon::now())->format('Y-m-d');
+        $this->dateTo = Carbon::parse(Carbon::now())->format('Y-m-d');
+    }
+
+
     public function render()
     {
+
+        if ($this->reportType == 0) {
+            $from = Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00';
+            $to = Carbon::parse(Carbon::now())->format('Y-m-d')   . ' 23:59:59';
+        } else {
+            $from = Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00';
+            $to = Carbon::parse($this->dateTo)->format('Y-m-d')     . ' 23:59:59';
+        }
+        if ($this->reportType == 1 && ($this->dateFrom == '' || $this->dateTo == '')) {
+            $this->dateFrom = Carbon::parse(Carbon::now())->format('Y-m-d');
+            $this->dateTo = Carbon::parse(Carbon::now())->format('Y-m-d');
+            $this->emit('item', 'Hiciste algo incorrecto, la fecha se actualizó');
+        }
+
+        if ($this->dateFrom == "" || $this->dateTo == "") {
+            $this->reportType = 0;
+        }
+
+
+
+
 
         $data = CarteraMov::join('movimientos as m', 'm.id', 'cartera_movs.movimiento_id')
             ->join("carteras as c", "c.id", "cartera_movs.cartera_id")
