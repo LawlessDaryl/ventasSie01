@@ -57,7 +57,7 @@ en otros destinos dentro de la misma sucursal --}}
 
                                     @endforeach
                             </tbody>
-                          </table>
+                        </table>
 
 
                    

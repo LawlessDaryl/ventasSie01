@@ -67,6 +67,7 @@ use App\Http\Livewire\NotificationController;
 use App\Http\Livewire\DestinoProductoController;
 use App\Http\Livewire\TransferirProductoController;
 use App\Http\Livewire\DestinoController;
+use App\Http\Livewire\SaleDailyMovementController;
 use App\Http\Livewire\SaleDevolutionController;
 use App\Http\Livewire\SaleStatisticController;
 use Illuminate\Support\Facades\Auth;
@@ -178,6 +179,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('salelist', SaleListController::class)->name('salelist')->middleware('permission:VentasLista_Index');
     Route::get('estadisticas', SaleStatisticController::class)->name('estadisticas');
     Route::get('devolucionventa', SaleDevolutionController::class)->name('devolucionventa');
+    Route::get('salemovimientodiario', SaleDailyMovementController::class)->name('salemovimientodiario');
     Route::get('notificaciones', NotificationController::class)->name('notificaciones');
     Route::get('notificaciones/{idnotificacion}', [NotificacionController::class,'mostrarnotificacion']);
 
