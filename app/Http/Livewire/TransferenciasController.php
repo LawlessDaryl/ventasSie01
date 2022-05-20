@@ -16,7 +16,7 @@ use Exception;
 
 class TransferenciasController extends Component
 {
-    public $nro,$nro_det,$detalle,$estado,$estado_destino,$vs=[], $datalist_destino,$selected_id1,$class1,$class,$selected_id2;
+    public $nro,$nro_det,$detalle,$estado,$estado_destino,$vs=[], $datalist_destino,$selected_id1,$class1,$class,$selected_id2,$data_origen;
     public function mount(){
         $this->nro=1;
         $this->nro_det=1;
@@ -25,7 +25,7 @@ class TransferenciasController extends Component
     }
     public function render()
     {
-        $data_origen= Transference::join('estado_transferencias','transferences.id','estado_transferencias.id_transferencia')
+        $this->data_origen= Transference::join('estado_transferencias','transferences.id','estado_transferencias.id_transferencia')
         ->join('users','estado_transferencias.id_usuario','users.id')
         ->join('destinos as origen','origen.id','transferences.id_origen')
         ->join('sucursals as suc_origen','suc_origen.id','origen.sucursal_id')
@@ -71,7 +71,7 @@ class TransferenciasController extends Component
         
         ->get();*/
 
-        return view('livewire.destinoproducto.verTransferencias',['data_t'=>$data_origen,'data_estado'=>$this->estado, 'data_d'=>$data_destino
+        return view('livewire.destinoproducto.verTransferencias',['data_t'=>$this->data_origen,'data_estado'=>$this->estado, 'data_d'=>$data_destino
        ])
         ->extends('layouts.theme.app')
         ->section('content');
@@ -79,6 +79,7 @@ class TransferenciasController extends Component
     }
     public function ver($id)
     {
+          
         $this->selected_id1= $id;
         $this->detalle=DetalleTransferencia::join('products','detalle_transferencias.product_id','products.id')
         ->join('estado_trans_detalles','detalle_transferencias.id','estado_trans_detalles.detalle_id')
@@ -98,6 +99,7 @@ class TransferenciasController extends Component
     }
     public function visualizardestino($id2)
     {
+        
         $this->selected_id2= $id2;
         $this->datalist_destino=DetalleTransferencia::join('products','detalle_transferencias.product_id','products.id')
         ->join('estado_trans_detalles','detalle_transferencias.id','estado_trans_detalles.detalle_id')
@@ -129,21 +131,28 @@ class TransferenciasController extends Component
             array_push($this->vs,$value);   
         }
        }
-
     }
-
-
     public function ingresarProductos()
     {
-       // dd($this->datalist_destino);
+        $rm=Transference::find($this->selected_id2)->value('id_origen');
+        
+       
+    // $origen= Transference
        DB::beginTransaction();
             try {
                 foreach ($this->datalist_destino as $value)
                 {
+                  
                     $q=ProductosDestino::where('product_id',$value->product_id)
                     ->where('destino_id',$this->selected_id2)->value('stock');
+                    $q2=ProductosDestino::where('product_id',$value->product_id)
+                    ->where('destino_id',$rm)->value('stock');
+                    
                     ProductosDestino::updateOrCreate(['product_id' => $value->product_id, 'destino_id'=>$this->selected_id2],['stock'=>$q+$value->cantidad]);
+                    ProductosDestino::updateOrCreate(['product_id' => $value->product_id, 'destino_id'=>$rm],['stock'=>$q2-$value->cantidad]);
                 }
+
+                
 
           EstadoTransferencia::where('id_transferencia',$this->selected_id2)->update(['op'=>'Inactivo']);
        
