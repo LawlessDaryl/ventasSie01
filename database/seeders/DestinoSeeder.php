@@ -38,12 +38,15 @@ class DestinoSeeder extends Seeder
             'guard_name' => 'web'
         ]);
 
-        Destino::create([
+        $pg=Destino::create([
             'nombre'=>'Almacen Devoluciones',
             'observacion'=>'ninguna',
             'sucursal_id'=>'1'           
         ]);
-       
+        Permission::create([
+            'name' => $pg->nombre.'_'.$pg->id,
+            'guard_name' => 'web'
+        ]);
 
         
         $mm= Destino::create([
