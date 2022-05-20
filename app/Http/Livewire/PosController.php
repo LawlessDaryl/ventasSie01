@@ -585,7 +585,7 @@ class PosController extends Component
         return $productstock->stock;
     }
 
-
+    //Actualizar el stock en el carrito de compras
     public function UpdateQty($productId, $cant = 1)
     {
         $title = '';
@@ -726,6 +726,8 @@ class PosController extends Component
         $this->actualizardescuento();
         
     }
+
+    //Eliminar un producto del carrito de compras
     public function removeItem($productId)
     {
         Cart::remove($productId);
