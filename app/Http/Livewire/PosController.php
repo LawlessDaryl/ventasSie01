@@ -611,9 +611,13 @@ class PosController extends Component
         }
         if ($exist)
         {
-            //Si no hay stock de un Producto en Tienda
-            if ($product->stock < ($cant + $exist->quantity))
+
+            if($cant > $exist->quantity)
             {
+                //Si no hay stock de un Producto en Tienda
+            if ($product->stock < $cant)
+            {
+                //dd($product->stock." < ".($exist->quantity));
                 //Buscamos el Producto en la sucursal menos en la Tienda
                 if($this->buscarxproducto($productId)->count() > 0)
                 {
@@ -682,6 +686,11 @@ class PosController extends Component
                     }
                 }
             }
+
+            }
+
+
+            
 
 
 
