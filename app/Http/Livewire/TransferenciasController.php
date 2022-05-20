@@ -21,10 +21,7 @@ class TransferenciasController extends Component
         $this->nro=1;
         $this->nro_det=1;
         $this->verPermisos();
-        $this->class='"tab-pane fade show active"';
-       
-       
-       
+
     }
     public function render()
     {
@@ -174,7 +171,7 @@ class TransferenciasController extends Component
             }
         DB::commit();
 
-        $this->reset($this->selected_id2,$this->datalist_destino,$this->estado_destino);
+        
         $this->emit('close2');
     }
 }

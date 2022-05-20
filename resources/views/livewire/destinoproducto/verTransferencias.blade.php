@@ -333,7 +333,7 @@
                         </div>
                     </li> 
                 </ul>
-                <div class="tab-content" id="icon-pills-tabContent">
+                <div class="tab-pane fade show" id="icon-pills-tabContent">
                    
                     <div class={{$class}} id="icon-pills-transference" role="tabpanel" aria-labelledby="icon-pills-transference-tab1">
                         <div class="media">
@@ -417,7 +417,7 @@
                         </div>
                     </div>
     
-                    <div class="tab-pane fade" id="icon-pills-transference2" role="tabpanel" aria-labelledby="icon-pills-transference2-tab2">
+                    <div class="tab-pane fade show" id="icon-pills-transference2" role="tabpanel" aria-labelledby="icon-pills-transference2-tab2">
                         <div class="media">
                             <div class="media-body">
                                 <center><h4>Transferencias entrantes</h4></center>
