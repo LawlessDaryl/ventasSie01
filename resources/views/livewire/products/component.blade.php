@@ -26,7 +26,7 @@
                         <select wire:model='selected_categoria' class="form-control">
                           <option value="null" disabled>Elegir Categoria</option>
                           @foreach ($categories as $key => $category)
-                          <option value="{{ $category->id }}">{{ $category->name}}-{{$category->id}}-{{$key}}</option>
+                          <option value="{{ $category->id }}">{{ $category->name}}</option>
                           @endforeach
                         </select>
                       </div>
@@ -89,9 +89,7 @@
                                         <h6 class="text-center"> <strong>Subcategoria:</strong>{{ $products->category->name}}</h6>
                                    </td>
                                     @endif
-                                    <td>
-                                         <h6 class="text-center">{{ $products->category->categoria_padre}}-{{ $products->category->id}}</h6>
-                                    </td>
+                                   
                                     <td>
                                          <h6 class="text-center">{{ $products->codigo}}</h6>
                                     </td>

@@ -58,7 +58,7 @@ class DetalleComprasController extends Component
         $this->tipo_transaccion = "CONTADO";
         $this->tipo_documento = "FACTURA";
         $this->status = "ACTIVO";
-  
+        
         $this->subtotal = Compras::getTotal();
         $this->total_compra= $this->subtotal-$this->dscto;
         $this->porcentaje=0;
@@ -437,7 +437,7 @@ class DetalleComprasController extends Component
             if ($this->tipo_transaccion === 'Contado' || $this->pago_parcial>0) {
 
                 $Movimiento= Movimiento::create([
-                
+                    
                     'type'=>"COMPRAS",
                     'status'=>"ACTIVO",
                     'saldo'=>$this->saldo,
@@ -455,27 +455,49 @@ class DetalleComprasController extends Component
             
             if ($Compra_encabezado)
             {
-              
+             
                 $items = Compras::getContent();
-                foreach ($items as $item) {
-                    CompraDetalle::create([
-                        'precio' => $item->price,
-                        'cantidad' => $item->quantity,
-                        'product_id' => $item->id,
-                        'compra_id' => $Compra_encabezado->id,
+                if ($this->tipo_documento == 'FACTURA') {
+                    foreach ($items as $item) {
+                        CompraDetalle::create([
+                            'precio' => $item->price*0.87,
+                            'cantidad' => $item->quantity,
+                            'product_id' => $item->id,
+                            'compra_id' => $Compra_encabezado->id,
+                            
+                            
+                        ]);
                         
+                        /*DB::table('productos_destinos')
+                        ->updateOrInsert(['stock'],$item->quantity, ['product_id' => $item->id, 'destino_id'=>$this->destino]);*/
                         
-                    ]);
-                    
-                    /*DB::table('productos_destinos')
-                    ->updateOrInsert(['stock'],$item->quantity, ['product_id' => $item->id, 'destino_id'=>$this->destino]);*/
-                    
-                    $q=ProductosDestino::where('product_id',$item->id)
-                    ->where('destino_id',$this->destino)->value('stock');
-
-                    ProductosDestino::updateOrCreate(['product_id' => $item->id, 'destino_id'=>$this->destino],['stock'=>$q+$item->quantity]);
-
+                        $q=ProductosDestino::where('product_id',$item->id)
+                        ->where('destino_id',$this->destino)->value('stock');
+    
+                        ProductosDestino::updateOrCreate(['product_id' => $item->id, 'destino_id'=>$this->destino],['stock'=>$q+$item->quantity]);
+    
+                    }
                 }
+                else{
+                    foreach ($items as $item) {
+                        CompraDetalle::create([
+                            'precio' => $item->price,
+                            'cantidad' => $item->quantity,
+                            'product_id' => $item->id,
+                            'compra_id' => $Compra_encabezado->id
+                        ]);
+                        
+                        /*DB::table('productos_destinos')
+                        ->updateOrInsert(['stock'],$item->quantity, ['product_id' => $item->id, 'destino_id'=>$this->destino]);*/
+                        
+                        $q=ProductosDestino::where('product_id',$item->id)
+                        ->where('destino_id',$this->destino)->value('stock');
+    
+                        ProductosDestino::updateOrCreate(['product_id' => $item->id, 'destino_id'=>$this->destino],['stock'=>$q+$item->quantity]);
+    
+                    }
+                }
+              
             }
 
             DB::commit();

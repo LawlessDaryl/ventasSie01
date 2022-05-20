@@ -8,8 +8,7 @@
                 <ul class="tabs tab-pills">
                     <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
                         data-target="#theModal">Agregar</a>
-                </ul>
-                <ul class="tabs tab-pills">
+           
                     <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
                         data-target="#asignar_mobiliario">Asignar Mobiliario</a>
                 </ul>

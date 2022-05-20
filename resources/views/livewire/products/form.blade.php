@@ -95,7 +95,7 @@
             <label>Categoría</label>
             <div class="input-group-prepend mb-3">
                 <select wire:model='selected_id2' class="form-control">
-                    <option value="Elegir">Elegir</option>
+                    <option value=null selected disabled>Elegir</option>
                     @foreach ($categories as $Key => $category)
                         <option value="{{ $category->id }}">{{ $category->name }}</option>
                     @endforeach
@@ -115,7 +115,7 @@
         <div class="form-group">
             <label>Subcategoría</label>
             <select wire:model='categoryid' class="form-control">
-                <option value= null  selected>Elegir</option>
+                <option value= null selected disabled>Elegir</option>
                 @foreach ($subcat as $Key => $cat)
                     <option value="{{ $cat->id }}">{{ $cat->name }}</option>
                 @endforeach

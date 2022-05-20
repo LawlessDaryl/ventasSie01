@@ -113,7 +113,7 @@ class DestinoProductoController extends Component
 
         $query=[];
 
-         $this->sql= "select rt,location,dsn,suc_id,loc,loc_cod,stock from ( select products.id as rt,destinos.id as dest,destinos.nombre as dsn, sucursals.id as suc_id,stock from productos_destinos 
+         $this->sql= "select rt,location,dsn,suc_id,loc,loc_cod,stock from ( select products.id as rt,destinos.id as dest,destinos.nombre as dsn, sucursals.name as suc_id,stock from productos_destinos 
         join products on productos_destinos.product_id= products.id
         join destinos on productos_destinos.destino_id= destinos.id
         join sucursals on destinos.sucursal_id= sucursals.id

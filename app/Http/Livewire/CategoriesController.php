@@ -14,7 +14,7 @@ class CategoriesController extends Component
     use WithFileUploads;
     use WithPagination;
 
-    public $name,$descripcion, $search,$categoryid, $selected_id, $pageTitle, $componentName,$categoria_padre;
+    public $name,$descripcion, $search,$categoryid, $selected_id, $pageTitle, $componentName,$categoria_padre,$data2;
     private $pagination = 5;
     public $category_s = 0;
     public $subcat_s=false;
@@ -37,17 +37,17 @@ class CategoriesController extends Component
     {
         if (strlen($this->search) > 0)
             $data = Category::where('name', 'like', '%' . $this->search . '%')
-            ->orWhere('categoria_padre',$this->category_s)
+       
             ->paginate($this->pagination);
         else
             $data = Category::orderBy('id', 'desc')
             ->orWhere('categoria_padre',$this->category_s)
             ->paginate($this->pagination);
 
-            $data2=Category::where('categoria_padre',$this->selected_id)
+            $this->data2=Category::where('categoria_padre',$this->selected_id)
             ->select('categories.*')->get();
            
-        return view('livewire.category.categories', ['categories' => $data,'subcat'=>$data2])
+        return view('livewire.category.categories', ['categories' => $data,'subcat'=>$this->data2])
             ->extends('layouts.theme.app')
             ->section('content');
 
@@ -67,6 +67,7 @@ class CategoriesController extends Component
     public function Ver(Category $category)
     {
         $this->selected_id = $category->id;
+        //dd($this->data2);
         $this->emit('show-modal_s', 'show modal!');
     }
 
@@ -161,10 +162,8 @@ class CategoriesController extends Component
 
     public function resetUI()
     {
-        $this->name = '';
-        $this->image = null;
-        $this->search = '';
-        $this->selected_id = 0;
+        $this->reset('name','descripcion','categoria_padre');
+       
         $this->resetValidation();
     }
 }

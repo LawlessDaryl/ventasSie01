@@ -95,10 +95,10 @@
                                             <th class="table-th text-withe text-center">#</th>                                
                                             <th class="table-th text-withe text-center">Proveedor</th>                                
                                             <th class="table-th text-withe text-center">Documento</th>                                
-                                            <th class="table-th text-withe text-center">Total<br>Compra</br></th>                                
                                             <th class="table-th text-withe text-center">Tipo<br>Compra</br> </th>                                
+                                            <th class="table-th text-withe text-center">Total<br>Compra</br></th>                                
                                             <th class="table-th text-withe text-center">Saldo</th>                                
-                                                                         
+  
                                             <th class="table-th text-withe text-center">Estado</th>
                                             <th class="table-th text-withe text-center">Usuario</th>
                                             <th class="table-th text-withe text-center">Acciones</th>
@@ -118,10 +118,10 @@
                                                     <h6 class="text-center">{{ $data->nro_documento }}</h6>
                                                 </td>
                                                 <td>
-                                                    <h6 class="text-center">{{ $data->importe_total }}</h6>
+                                                    <h6 class="text-center">{{ $data->transaccion }}</h6>
                                                 </td>
                                                 <td>
-                                                    <h6 class="text-center">{{ $data->transaccion }}</h6>
+                                                    <h6 class="text-center">{{ $data->importe_total }}</h6>
                                                 </td>
                                                 <td>
                                                     <h6 class="text-center">{{ $data->saldo }}</h6>
@@ -159,11 +159,13 @@
                                         @endforeach
                                         <tfoot class="text-white text-right" style="background: #fffefd"  >
                                             <tr>
-                                                <td colspan="8">
-                                                     <h5 class="text-dark">Total.-</h5>
+                                                <td colspan="4">
+                                                     <h5 class="text-dark">Total Bs.-</h5>
+                                                     <h5 class="text-dark">Total $us.-</h5>
                                                 </td>
                                                 <td>
-                                                    <h5 class="text-dark">{{$totales}}</h5>
+                                                    <h5 class="text-dark text-center">{{$totales}}</h5>
+                                                    <h5 class="text-dark text-center">{{round($totales/6.96,2)}}</h5>
                                                 </td>
                                             </tr>
                                             

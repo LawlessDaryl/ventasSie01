@@ -22,6 +22,7 @@
                     <table class="table table-unbordered table-hover mt-2">
                         <thead class="text-white" style="background: #3B3F5C">
                             <tr>
+                                <th class="table-th text-withe">#</th>
                                 <th class="table-th text-withe">NOMBRE</th>
                                 <th class="table-th text-withe text-center">DESCRIPCION</th>
                                 <th class="table-th text-withe text-center">ACCIONES</th>
@@ -34,10 +35,15 @@
                                 <tr>
                                     <td>
                                         
+                                        <h6>{{ $loop->iteration }}</h6>
+                                    </td>
+                                    <td>
+                                        
                                         <h6>{{ $category->name }}</h6>
                                     </td>
                                     <td>
                                         <h6>{{ $category->descripcion }}</h6>
+                                   
                                     </td>
                                    
                                     <td class="text-center">
@@ -45,8 +51,8 @@
                                             class="btn btn-dark mtmobile" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <a href="javascript:void(0)" onclick="Confirm('{{ $category->id }}','{{ $category->name }}',
-                                            '{{ $category->products->count() }}')" class="btn btn-dark"
+                                        <a href="javascript:void(0)" onclick="Confirm('{{ $category->id }}','{{ $category->name }}'"
+                                           class="btn btn-dark"
                                             title="Delete">
                                             <i class="fas fa-trash"></i>
                                         </a>

@@ -30,7 +30,7 @@
     <div class="form-group">
         <label>Categoría</label>
         <select wire:model='categoria_padre' class="form-control">
-            <option value="Elegir">Elegir</option>
+            <option value=null>Elegir</option>
             @foreach ($categories as $category)
                 <option value="{{ $category->id }}">{{ $category->name }}</option>
             @endforeach

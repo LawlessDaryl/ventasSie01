@@ -92,9 +92,12 @@ class ProductsController extends Component
         $prod = Product::join('categories as c', 'products.category_id','c.id')
         ->select('products.*', 'c.name as cate')
         ->where('products.status',$this->estados)
-        ->where('products.nombre', 'like', '%' . $this->search . '%')
-        ->orWhere('products.codigo', 'like', '%' . $this->search . '%')
-        ->orWhere('c.name', 'like', '%' . $this->search . '%')
+        ->where(function($querys){
+            $querys->where('products.nombre', 'like', '%' . $this->search . '%')
+            ->orWhere('products.codigo', 'like', '%' . $this->search . '%')
+            ->orWhere('c.name', 'like', '%' . $this->search . '%');
+        })
+        
         
         ->orderBy('products.id', 'desc')
         ->paginate($this->pagination);
@@ -295,8 +298,8 @@ class ProductsController extends Component
 
     public function resetUI()
     {
-        $this->selected_id =0;
-        $this->selected_id2 =0;
+        $this->selected_id =null;
+        $this->selected_id2 =null;
         $this->costo = '';
         $this->nombre = '';
         $this->precio_venta='';
@@ -309,7 +312,7 @@ class ProductsController extends Component
         $this->industria = '';
         $this->garantia = '';
         $this->cantidad_minima = '';
-        $this->categoryid = 'Elegir';
+        $this->categoryid =null;
         $this->image = null;
 
         $this->resetValidation();//clear the error bag
