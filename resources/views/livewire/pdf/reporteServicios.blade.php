@@ -245,7 +245,7 @@
                     <td class="text-right" colspan="5">
                         <span><strong>
 
-                                {{ number_format($data->sum('costo'), 2) }}
+                                {{ number_format($costoEntregado, 2) }}
 
                             </strong></span>
                     </td>

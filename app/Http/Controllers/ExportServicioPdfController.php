@@ -15,6 +15,7 @@ class ExportServicioPdfController extends Controller
     {
         $data = [];
         $sumaUtilidad = 0;
+        $costoEntregado = 0;
 
         if ($reportType == 0) //ventas del dia
         {
@@ -83,7 +84,7 @@ class ExportServicioPdfController extends Controller
                             }
                         }
                     }
-
+                    
                     $datos2 = Service::join('mov_services as ms', 'services.id', 'ms.service_id')
                         ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
                         ->join('users as u', 'u.id', 'mov.user_id')
@@ -238,7 +239,7 @@ class ExportServicioPdfController extends Controller
 
 
         $user = $userId == 0 ? 'Todos' : User::find($userId)->name;
-        $pdf = PDF::loadView('livewire.pdf.reporteServicios', compact('data', 'reportType', 'user','estado', 'dateFrom', 'dateTo', 'sumaUtilidad'));
+        $pdf = PDF::loadView('livewire.pdf.reporteServicios', compact('data', 'reportType', 'user','estado', 'dateFrom', 'dateTo', 'sumaUtilidad','costoEntregado'));
 
         return $pdf->setPaper('letter', 'landscape')->stream('ServiciosReport.pdf');  //visualizar
         /* return $pdf->download('salesReport.pdf');  //descargar  */
