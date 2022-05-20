@@ -171,7 +171,7 @@ class TransferenciasController extends Component
             }
         DB::commit();
 
-        
         $this->emit('close2');
+        $this->reset('selected_id2','datalist_destino','estado_destino');
     }
 }
