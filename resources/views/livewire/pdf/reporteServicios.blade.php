@@ -244,8 +244,12 @@
                     </td>
                     <td class="text-right" colspan="5">
                         <span><strong>
-
+                            @if (($estado == 'ENTREGADO' && $userId != 0) || ($estado == 'Todos' && $userId != 0))
                                 {{ number_format($costoEntregado, 2) }}
+                            @else
+                                {{ number_format($data->sum('costo'), 2) }}
+                            @endif
+                                
 
                             </strong></span>
                     </td>

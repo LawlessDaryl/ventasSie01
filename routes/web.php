@@ -156,8 +156,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('reporte/pdf/{id}', [ImprimirController::class, 'print'])->middleware('permission:Imprimir_Orden_Servicio_Index');
     Route::get('reporteservices', ReporteServiceController::class)->name('tw')->middleware('permission:Reporte_Servicios_Index');
     Route::group(['middleware' => ['permission:Reporte_Servicios_Export']], function () {
-        Route::get('reporteServicio/pdf/{user}/{estado}/{type}/{f1}/{f2}', [ExportServicioPdfController::class, 'reporteServPDF']);
-        Route::get('reporteServicio/pdf/{user}/{estado}/{type}', [ExportServicioPdfController::class, 'reporteServPDF']);
+        Route::get('reporteServicio/pdf/{user}/{estado}/{sucursal}/{type}/{f1}/{f2}', [ExportServicioPdfController::class, 'reporteServPDF']);
+        Route::get('reporteServicio/pdf/{user}/{estado}/{sucursal}/{type}', [ExportServicioPdfController::class, 'reporteServPDF']);
     });
     Route::get('reportentregservices', ReportEntregadoServController::class)->name('res')->middleware('permission:Boton_Entregar_Servicio');
     Route::get('reporteServicEntreg/pdf/{type}/{f1}/{f2}/{sucursal}/{sE}/{sB}/{caja}', [ExportServicioEntregPdfController::class, 'reporteServPDF']);

@@ -36,6 +36,18 @@
                     </div>
 
                     <div class="col-sm-2">
+                        <h6 style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0">Elige la sucursal</h6>
+                        <div class="form-group">
+                            <select wire:model="sucursal" class="form-control" style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0">
+                                <option value="0">Todos</option>
+                                @foreach ($sucursales as $suc)
+                                    <option value="{{ $suc->id }}">{{ $suc->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-1.6">
                         <h6 style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0">Elige el tipo de reporte</h6>
                         <div class="form-group">
                             <select wire:model="reportType" class="form-control" style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0">
@@ -45,7 +57,7 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-2 ">
+                    <div class="col-sm-1.2 ml-3">
                         <h6 style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0">Fecha desde</h6>
                         <div class="form-group">
                             <input @if ($reportType == 0) disabled @endif type="date" wire:model="dateFrom"
@@ -53,7 +65,7 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-2 ">
+                    <div class="col-sm-1.2 ml-3">
                         <h6 style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0">Fecha hasta</h6>
                         <div class="form-group">
                             <input @if ($reportType == 0) disabled @endif type="date" wire:model="dateTo"
@@ -61,10 +73,10 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-2 mt-4">
+                    <div class="col-sm-2 mt-3">
 
                         <a class="btn btn-dark btn-block {{ count($data) < 1 ? 'disabled' : '' }}"
-                            href="{{ url('reporteServicio/pdf' . '/' . $userId . '/' . $estado . '/' . $reportType . '/' . $dateFrom . '/' . $dateTo) }}"
+                            href="{{ url('reporteServicio/pdf' . '/' . $userId . '/' . $estado . '/' . $sucursal . '/' . $reportType . '/' . $dateFrom . '/' . $dateTo) }}"
                             target="_blank" style='font-size:15px'>Generar PDF</a>
 
                     </div>
