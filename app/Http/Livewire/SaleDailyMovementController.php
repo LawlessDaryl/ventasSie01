@@ -61,16 +61,12 @@ class SaleDailyMovementController extends Component
 
 
 
-        if($this->sucursal != 'Todos')
-        {
-
-        }
 
 
 
 
 
-
+        //Listar todas las sucursales de la empresa
         $sucursales = Sucursal::select('sucursals.id as idsucursal','sucursals.name as nombresucursal','sucursals.adress as direccionsucursal')->get();
         
 
@@ -102,7 +98,7 @@ class SaleDailyMovementController extends Component
             {
                 //Consulta para listar todas las cajas
                 $cajas = Caja::select('cajas.id as idcaja','cajas.nombre as nombrecaja')->get();
-                //
+                //Consulta para listar el movimiento diario de una caja en específico
                 $data = CarteraMov::join('movimientos as m', 'm.id', 'cartera_movs.movimiento_id')
                 ->join("carteras as c", "c.id", "cartera_movs.cartera_id")
                 ->join("users as u", "u.id", "m.user_id")
@@ -175,7 +171,27 @@ class SaleDailyMovementController extends Component
 
 
 
+        //Si se selecciona una caja y despues una sucursal que no le corrresponde se listaran todas las cajas que pertenescan a esa sucursal
+        if($this->sucursal != 'Todos' && $this->caja != 'Todos')
+        {
+            if($this->verificar_caja_sucursal($this->caja, $this->sucursal)->count() == 0)
+            {
+                
+                $this->caja == 'Todos';
 
+                $data = CarteraMov::join('movimientos as m', 'm.id', 'cartera_movs.movimiento_id')
+                ->join("carteras as c", "c.id", "cartera_movs.cartera_id")
+                ->join("users as u", "u.id", "m.user_id")
+                ->join("cajas as ca", "ca.id", "c.caja_id")
+                ->join("sucursals as s", "s.id", "ca.sucursal_id")
+                ->select('cartera_movs.created_at as fecha','u.name as nombreusuario',
+                'cartera_movs.comentario as motivo','m.import as importe','ca.nombre as nombrecaja',
+                'cartera_movs.type as tipo','c.nombre as nombrecartera','s.name as nombresucursal','m.id as idmovimiento')
+                ->where('s.id',$this->sucursal,)
+                ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta','Por Venta Anulada'])
+                ->get();
+            }
+        }
 
 
         
@@ -191,11 +207,7 @@ class SaleDailyMovementController extends Component
 
 
 
-    //Buscar caja 
-    public function verificar_caja_sucursal()
-    {
-
-    }
+    
 
 
     //Buscar Ventas por Id Movimiento
@@ -225,6 +237,18 @@ class SaleDailyMovementController extends Component
         }
 
         return $utilidad;
+    }
+
+    //Buscar caja 
+    public function verificar_caja_sucursal($idcaja, $idsucursal)
+    {
+        $resultado = Caja::join('sucursals as s', 's.id', 'cajas.sucursal_id')
+        ->select('s.id as id','cajas.id as idcaja')
+        ->where('cajas.id', $idcaja)
+        ->where('s.id', $idsucursal)
+        ->get();
+
+        return $resultado;
     }
 
 
