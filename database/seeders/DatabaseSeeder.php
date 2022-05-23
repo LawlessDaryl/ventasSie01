@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
         $this->call(PermissionSeeder::class);
         $this->call(RoleSeeder::class);
         $this->call(ModelHasRolesSeeder::class);
+        $this->call(DestinoSeeder::class);
         $this->call(RoleHasPermissionSeeder::class);
         $this->call(ProcedenciaSeeder::class);
         $this->call(TypeworkSeeder::class);
@@ -43,7 +44,6 @@ class DatabaseSeeder extends Seeder
         $this->call(ProfileSeeder::class);
         /* INVENTARIOS */
         $this->call(AccountProfileSeeder::class);
-        $this->call(DestinoSeeder::class);
         $this->call(UnidadSeeder::class);
         $this->call(CategorySeeder::class);
         $this->call(ClientSeeder::class);

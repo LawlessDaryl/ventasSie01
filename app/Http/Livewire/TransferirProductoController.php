@@ -232,7 +232,7 @@ class TransferirProductoController extends Component
                     ->where('destino_id',$this->selected_destino)->value('stock');
                     
                   
-                    ProductosDestino::where('product_id',$item->id)
+                    /*ProductosDestino::where('product_id',$item->id)
                     ->where('destino_id',$this->selected_destino)
                     ->update(['stock'=>($r+$item->quantity)]);
 

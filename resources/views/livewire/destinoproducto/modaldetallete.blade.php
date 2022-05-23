@@ -57,7 +57,7 @@
             @if ($estado_destino != 'Recibido')
                 
             <button class="btn btn-info m-3 p-2"  wire:click.prevent="ingresarProductos({{$this->selected_id2}})"> <h5 style="color: aliceblue">Transferencia exitosa</h5> </button>
-            <button class="btn btn-danger m-3 p-2"  wire:click.prevent="exit()" > <h5 style="color: aliceblue" > Rechazar Transferencia </h5> </button>
+            <button class="btn btn-danger m-3 p-2"  wire:click.prevent="rechazarTransferencia({{$this->selected_id2}})" > <h5 style="color: aliceblue" > Rechazar Transferencia </h5> </button>
                 
             @endif
         </div>

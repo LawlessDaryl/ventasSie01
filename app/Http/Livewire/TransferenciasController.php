@@ -37,6 +37,7 @@ class TransferenciasController extends Component
         'origen.nombre as origen','destino1.nombre as dst')
         ->where('estado_transferencias.op','Activo')
         ->whereIn('origen.id',$this->vs)
+        ->orderBy('fecha_tr','desc')
         ->get();
 
         $data_destino= Transference::join('estado_transferencias','transferences.id','estado_transferencias.id_transferencia')
@@ -51,25 +52,8 @@ class TransferenciasController extends Component
         'origen.nombre as origen','destino2.nombre as dst2')
         ->where('estado_transferencias.op','Activo')
         ->whereIn('destino2.id',$this->vs)
-        
+        ->orderBy('fecha_tr','desc')
         ->get();
- 
-   
-
-       /* $data= Transference::join('estado_transferencias','transferences.id','estado_transferencias.id_transferencia')
-        ->join('users','estado_transferencias.id_usuario','users.id')
-        ->join('destinos as origen','origen.id','transferences.id_origen')
-        ->join('sucursals as suc_origen','suc_origen.id','origen.sucursal_id')
-        ->join('destinos as destino1','destino1.id','transferences.id_destino')
-        ->join('sucursals as suc_destino','suc_destino.id','destino1.sucursal_id')
-        ->select('transferences.created_at as fecha_tr','transferences.id as t_id',
-        'users.*','suc_origen.name as origen_name',
-        'suc_destino.name as destino_name','estado_transferencias.estado as estado_tr',
-        'origen.nombre as origen','destino1.nombre as dst')
-        ->where('estado_transferencias.op','Activo')
-        ->whereIn('.id',$this->vs)
-        
-        ->get();*/
 
         return view('livewire.destinoproducto.verTransferencias',['data_t'=>$this->data_origen,'data_estado'=>$this->estado, 'data_d'=>$data_destino
        ])
@@ -101,6 +85,7 @@ class TransferenciasController extends Component
     {
         
         $this->selected_id2= $id2;
+        
         $this->datalist_destino=DetalleTransferencia::join('products','detalle_transferencias.product_id','products.id')
         ->join('estado_trans_detalles','detalle_transferencias.id','estado_trans_detalles.detalle_id')
         ->join('estado_transferencias','estado_trans_detalles.estado_id','estado_transferencias.id')
@@ -132,25 +117,27 @@ class TransferenciasController extends Component
         }
        }
     }
+
     public function ingresarProductos()
     {
-        $rm=Transference::find($this->selected_id2)->value('id_origen');
-        
-       
-    // $origen= Transference
+        $rm=Transference::where('transferences.id',$this->selected_id2)->value('id_destino');
+
+    $jm=[];
        DB::beginTransaction();
             try {
                 foreach ($this->datalist_destino as $value)
                 {
                   
                     $q=ProductosDestino::where('product_id',$value->product_id)
-                    ->where('destino_id',$this->selected_id2)->value('stock');
-                    $q2=ProductosDestino::where('product_id',$value->product_id)
                     ->where('destino_id',$rm)->value('stock');
                     
-                    ProductosDestino::updateOrCreate(['product_id' => $value->product_id, 'destino_id'=>$this->selected_id2],['stock'=>$q+$value->cantidad]);
-                    ProductosDestino::updateOrCreate(['product_id' => $value->product_id, 'destino_id'=>$rm],['stock'=>$q2-$value->cantidad]);
+                    //$dd=ProductosDestino::where('product_id',$value->product_id)
+                    //->where('destino_id',$rm)->value('stock');
+                    
+                    ProductosDestino::updateOrCreate(['product_id' => $value->product_id, 'destino_id'=>$rm],['stock'=>$q+$value->cantidad]);
+                    //ProductosDestino::updateOrCreate(['product_id' => $value->product_id, 'destino_id'=>$rm],['stock'=>($dd - $value->cantidad)]);
                 }
+               
 
                 
 
@@ -182,5 +169,48 @@ class TransferenciasController extends Component
 
         $this->emit('close2');
         $this->reset('selected_id2','datalist_destino','estado_destino');
+    }
+
+    public function rechazarTransferencia(){
+        $rm=Transference::where('transferences.id',$this->selected_id2)->value('id_origen');
+        DB::beginTransaction();
+        try {
+            foreach ($this->datalist_destino as $value)
+            {
+              
+                $q=ProductosDestino::where('product_id',$value->product_id)
+                ->where('origen_id',$rm)->value('stock');
+                ProductosDestino::updateOrCreate(['product_id' => $value->product_id, 'origen_id'=>$rm],['stock'=>$q+$value->cantidad]);
+              
+            }
+
+      EstadoTransferencia::where('id_transferencia',$this->selected_id2)->update(['op'=>'Inactivo']);
+   
+      $aux=EstadoTransferencia::create([
+             'estado'=>'Rechazado',
+             'op'=>1,
+             'id_transferencia'=>$this->selected_id2,
+             'id_usuario'=>Auth()->user()->id
+         ]);
+
+
+         foreach ($this->datalist_destino as $values) 
+         {
+            EstadoTransDetalle::create([
+                'estado_id'=> $aux->id,
+                'detalle_id'=>$values->id,
+              
+            ]);
+         }
+        } 
+        catch (Exception $e) {
+            DB::rollback();
+            dd($e->getMessage());
+            
+        }
+    DB::commit();
+
+    $this->emit('close2');
+
     }
 }
