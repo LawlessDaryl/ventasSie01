@@ -45,9 +45,7 @@
                 <div class="widget-heading">
                     <div class="col-12 col-lg-12 col-md-10">
                         <!-- Titulo Detalle Venta -->
-                        <hr style="height:3px;border:none;color:rgb(189, 188, 188);background-color:rgb(230, 152, 64);" />
                         <h4 class="card-title text-center"><b>REPORTE DE MOVIMIENTO DIARIO - VENTAS</b></h4>
-                        <hr style="height:3px;border:none;color:rgb(189, 188, 188);background-color:rgb(230, 152, 64);" />
                 
                     </div>
                 </div>
