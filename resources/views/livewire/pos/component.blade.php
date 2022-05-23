@@ -340,7 +340,7 @@ document.addEventListener('DOMContentLoaded', function() {
             swal({
                     title: 'Por Favor Espere a que la Venta Termine',
                     text: 'Generando Comprobante...',
-                    timer: 7000,
+                    timer: 70000,
                     padding: '2em',
                     onOpen: function () {
                     swal.showLoading()

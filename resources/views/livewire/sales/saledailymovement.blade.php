@@ -64,26 +64,27 @@
                                 </select>
                             </div>
                         </div>
+
+                        <div class="col-sm-2">
+                            <h6>Elige la Sucursal</h6>
+                            <div class="form-group">
+                                <select wire:model="sucursal" class="form-control">
+                                    <option value="Todos">Todos</option>
+                                    @foreach ($sucursales as $su)
+                                        <option value="{{ $su->idsucursal }}">{{ $su->nombresucursal. ' - ' .$su->direccionsucursal }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
     
                         <div class="col-sm-2">
                             <h6>Elige la Caja</h6>
                             <div class="form-group">
                                 <select wire:model="caja" class="form-control">
                                     <option value="Todos">Todos</option>
-                                    {{-- @foreach ($cajas as $cajSu)
-                                        <option value="{{ $cajSu->id }}">{{ $cajSu->nombre }}</option>
-                                    @endforeach --}}
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <h6>Elige la Sucursal</h6>
-                            <div class="form-group">
-                                <select wire:model="caja" class="form-control">
-                                    <option value="Todos">Todos</option>
-                                    {{-- @foreach ($cajas as $cajSu)
-                                        <option value="{{ $cajSu->id }}">{{ $cajSu->nombre }}</option>
-                                    @endforeach --}}
+                                    @foreach ($cajas as $c)
+                                        <option value="{{ $c->idcaja }}">{{ $c->nombrecaja }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -127,7 +128,8 @@
                                 <th>MOVIMIENTO</th>
                                 <th class="text-right">IMPORTE</th>
                                 <th class="text-center">MOTIVO</th>
-                                <th>SUCURSAL</th>
+                                <th class="text-right">UTILIDAD</th>
+                                <th class="text-center">SUCURSAL</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -163,14 +165,18 @@
                                         <td class="text-center">
                                             {{ ucwords($item->motivo) }}
                                         </td>
-                                        <td>
+                                        <td class="text-right">
+                                            @if($this->buscarventa($item->idmovimiento)->count() > 0)
+                                             {{ number_format($this->buscarutilidad($this->buscarventa($item->idmovimiento)->first()->idventa), 2) }} Bs
+                                            @endif
+                                        </td>
+                                        <td class="text-center">
                                             {{ ucwords($item->nombresucursal) }}
                                         </td>
                                     </tr>
                                     @endforeach
                             </tbody>
                         </table>
-                        {{ $data->links() }}
                     </div>
                 </div>  
 
