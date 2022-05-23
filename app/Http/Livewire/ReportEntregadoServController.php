@@ -163,11 +163,14 @@ class ReportEntregadoServController extends Component
             ->distinct()
             ->get();
 
+        $this->resetUI();
+
         return view('livewire.reporte_serv_entreg.component', [
             'cajas' => $this->cajaSucursal,
             'sucursales' => $sucursales
         ])->extends('layouts.theme.app')
             ->section('content');
+        
     }
 
     public function trsbydate()
@@ -751,5 +754,12 @@ class ReportEntregadoServController extends Component
         } */
 
         $this->sumaEfectivo = $data1->sum('import');
+        
+    }
+
+    public function resetUI(){
+        $this->caja = 'Todos';
+        
+        $this->resetValidation();
     }
 }
