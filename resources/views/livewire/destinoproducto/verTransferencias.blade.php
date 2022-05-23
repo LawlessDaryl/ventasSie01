@@ -381,7 +381,7 @@
             
                                                     @else
                                                     <td>
-                                                        <h6 class="text-center btn text-white btn-primary p-1">{{ $data_td->estado_tr }}</h6>
+                                                        <h6 class="text-center btn text-white btn-danger p-1">{{ $data_td->estado_tr }}</h6>
                                                     </td>
                                         
                                                     @endif
@@ -391,21 +391,29 @@
                                                     </td>
                                                     
                                                     <td class="text-center">
-                                                        @if ($data_td->estado_tr !='Recibido')
-                                                        <a href="javascript:void(0)" wire:click="Edit({{ $data_td->t_id}})"
-                                                            class="btn btn-dark mtmobile p-1 m-0" title="Edit">
-                                                            <i class="fas fa-edit"></i>
-                                                        </a>
-                                                        <a href="javascript:void(0)" onclick="Confirm('{{ $data_td->id }}','{{ $data_td->nombre }}')" 
-                                                            class="btn btn-dark p-1 m-0" title="Delete">
-                                                            <i class="fas fa-trash"></i>
-                                                        </a>
-                                                        @endif
-                                                        
+                                                        @if ($data_td->estado_tr =='Recibido' or $data_td->estado_tr =='Rechazado')
                                                         <a href="javascript:void(0)" wire:click="ver({{$data_td->t_id}})" 
                                                             class="btn btn-dark p-1 m-0" title="Ver">
                                                             <i class="fas fa-eye"></i>
                                                         </a>
+                                                        @else
+                                                        <a href="{{ url('edit/transferencia' . '/' . $data_td->t_id)}}"
+                                                            class="btn btn-dark mtmobile p-1 m-0" title="Edit">
+                                                            <i class="fas fa-edit"></i>
+                                                        </a>
+
+
+                                                        <a href="javascript:void(0)" onclick="Confirm('{{ $data_td->id }}','{{ $data_td->nombre }}')" 
+                                                            class="btn btn-dark p-1 m-0" title="Delete">
+                                                            <i class="fas fa-trash"></i>
+                                                        </a>
+
+                                                        <a href="javascript:void(0)" wire:click="ver({{$data_td->t_id}})" 
+                                                            class="btn btn-dark p-1 m-0" title="Ver">
+                                                            <i class="fas fa-eye"></i>
+                                                        </a>
+                                                        
+                                                        @endif
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -446,7 +454,7 @@
                                                         <h6 class="text-left"> <strong>Fecha:</strong> {{ \Carbon\Carbon::parse($data2->fecha_tr)->format('Y-m-d')}}</h6>
                                                         <h6 class="text-left"> <strong>Hora:</strong> {{ \Carbon\Carbon::parse($data2->fecha_tr)->format('H:i')}}</h6>
                                                         <h6 class="text-left"> <strong>Origen:</strong> {{ $data2->origen}}-{{$data2->origen_name}}</h6>
-                                                        <h6 class="text-left"> <strong>Destino:</strong> {{ $data2->dst }}-{{$data2->destino_name}}</h6>
+                                                        <h6 class="text-left"> <strong>Destino:</strong> {{ $data2->dst2 }}-{{$data2->destino_name}}</h6>
             
                                                     </td>
             
@@ -463,7 +471,7 @@
             
                                                     @else
                                                     <td>
-                                                        <h6 class="text-center btn text-white btn-primary p-1">{{ $data2->estado_te }}</h6>
+                                                        <h6 class="text-center btn text-white btn-danger p-1">{{ $data2->estado_te }}</h6>
                                                     </td>
                                         
                                                     @endif
@@ -473,20 +481,19 @@
                                                     </td>
                                                     
                                                     <td class="text-center">
-                                                        @if ($data2->estado_te !='Recibido')
-                                                        <a href="javascript:void(0)" wire:click="Edit({{ $data_td->t_id}})"
-                                                            class="btn btn-dark mtmobile p-1 m-0" title="Edit">
-                                                            <i class="fas fa-edit"></i>
-                                                        </a>
-                                                        <a href="javascript:void(0)" onclick="Confirm('{{ $data_td->id }}','{{ $data_td->nombre }}')" 
-                                                            class="btn btn-dark p-1 m-0" title="Delete">
-                                                            <i class="fas fa-trash"></i>
-                                                        </a>
-                                                        @endif
+                                                        @if ($data2->estado_te ==='Recibido' or $data2->estado_te === 'Rechazado')
                                                         <a href="javascript:void(0)" wire:click="visualizardestino({{$data2->tr_des_id}})" 
                                                             class="btn btn-dark p-1 m-0" title="Ver">
                                                             <i class="fas fa-eye"></i>
                                                         </a>
+                                                        @else
+                                                 
+                                                        <a href="javascript:void(0)" wire:click="visualizardestino({{$data2->tr_des_id}})" 
+                                                            class="btn btn-dark p-1 m-0" title="Ver">
+                                                            <i class="fas fa-eye"></i>
+                                                        </a>
+                                                        
+                                                        @endif
                                                     </td>
                                                 </tr>
                                             @endforeach

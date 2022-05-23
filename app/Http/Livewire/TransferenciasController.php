@@ -63,7 +63,7 @@ class TransferenciasController extends Component
     }
     public function ver($id)
     {
-          
+        
         $this->selected_id1= $id;
         $this->detalle=DetalleTransferencia::join('products','detalle_transferencias.product_id','products.id')
         ->join('estado_trans_detalles','detalle_transferencias.id','estado_trans_detalles.detalle_id')
@@ -179,8 +179,8 @@ class TransferenciasController extends Component
             {
               
                 $q=ProductosDestino::where('product_id',$value->product_id)
-                ->where('origen_id',$rm)->value('stock');
-                ProductosDestino::updateOrCreate(['product_id' => $value->product_id, 'origen_id'=>$rm],['stock'=>$q+$value->cantidad]);
+                ->where('destino_id',$rm)->value('stock');
+                ProductosDestino::updateOrCreate(['product_id' => $value->product_id, 'destino_id'=>$rm],['stock'=>$q+$value->cantidad]);
               
             }
 

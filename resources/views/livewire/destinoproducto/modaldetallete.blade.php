@@ -37,13 +37,7 @@
                                         
                                     </tr>
                                 @endforeach
-                               
-                            
                                 @endif
-                               
-    
-                               
-    
                                 </tbody>
                                
                             </table>
@@ -54,11 +48,13 @@
             <div class="row align-items-center justify-content-center">
 
                
-            @if ($estado_destino != 'Recibido')
+            @if ($estado_destino == 'En transito')
                 
             <button class="btn btn-info m-3 p-2"  wire:click.prevent="ingresarProductos({{$this->selected_id2}})"> <h5 style="color: aliceblue">Transferencia exitosa</h5> </button>
             <button class="btn btn-danger m-3 p-2"  wire:click.prevent="rechazarTransferencia({{$this->selected_id2}})" > <h5 style="color: aliceblue" > Rechazar Transferencia </h5> </button>
-                
+            
+
+
             @endif
         </div>
         </div>

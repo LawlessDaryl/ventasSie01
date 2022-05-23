@@ -60,6 +60,7 @@ use App\Http\Livewire\ProvidersController;
 use App\Http\Livewire\ReporteServiceController;
 use App\Http\Livewire\TransaccionesController;
 use App\Http\Livewire\TransferenciasController;
+use App\Http\Livewire\EditarTransferenciaController;
 use App\Http\Livewire\TypeWorkController;
 use App\Http\Livewire\UnidadesController;
 use App\Http\Livewire\SaleListController;
@@ -155,6 +156,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('transacciones', TransaccionesController::class)->name('transactions');
     Route::get('destino_prod', DestinoProductoController::class)->name('destination');
     Route::get('transferencia', TransferirProductoController::class)->name('destination');
+    Route::get('edit/transferencia/{id}', EditarTransferenciaController::class)->name('editdest');
     Route::get('destino', DestinoController::class)->name('dest');
     Route::get('transferencias', TransferenciasController::class)->name('transference');
 
