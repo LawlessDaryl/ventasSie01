@@ -16,6 +16,7 @@ use App\Models\ProductosDestino;
 use App\Models\Sucursal;
 use App\Models\Transference;
 use App\Models\transferencia_detalle;
+use Darryldecode\Cart\Facades\EditarFacade;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
@@ -31,22 +32,18 @@ class EditarTransferenciaController extends Component
     use WithPagination;
 
     public $selected_id,$search,
-    $itemsQuantity,$selected_3,$selected_origen=0,$selected_destino,$observacion,$tipo_tr;
+    $itemsQuantity,$selected_3,$selected_origen=0,$selected_destino,$observacion,$tipo_tr,$almacen;
     private $pagination = 10;
     public function paginationView()
     {
         return 'vendor.livewire.bootstrap';
     }
     
-    public function mount($id)
-    {
-      $this->selected_origen= $id;
-      
-    }
+  
     public function render()
     {
         if($this->selected_origen !== 0 && strlen($this->search) > 0){
-                                        $almacen= ProductosDestino::join('products as prod','prod.id','productos_destinos.product_id')
+                                        $this->almacen= ProductosDestino::join('products as prod','prod.id','productos_destinos.product_id')
                                         ->join('destinos as dest','dest.id','productos_destinos.destino_id')
                                         ->where('dest.id',$this->selected_origen)
                                         ->where('productos_destinos.stock','>',0)
@@ -61,16 +58,24 @@ class EditarTransferenciaController extends Component
                                         ->paginate($this->pagination);
                                         }
                                         else{
-                                         $almacen=null;
+                                         $this->almacen=null;
                                         }
                                       
 
                                     
 
-        return view('livewire.destinoproducto.destino-controller',['destinos_almacen'=>$almacen,
+        return view('livewire.destinoproducto.editartransferencia',['destinos_almacen'=>$this->almacen,
         'cart' => EditarTransferencia::getContent()
         ])  
         ->extends('layouts.theme.app')
+        ->section('content');
+    }
+
+    public function EditTransferencia($id){
+        $this->selected_destino="vivalo";
+        return view('livewire.destinoproducto.editartransferencia',['destinos_almacen'=>$this->almacen,
+        'cart' => EditarTransferencia::getContent()
+        ])->extends('layouts.theme.app')
         ->section('content');
     }
 
@@ -157,7 +162,7 @@ class EditarTransferenciaController extends Component
 
             if ($Transferencia_encabezado)
             {
-                $items = Transferencia::getContent();
+                $items = EditarTransferencia::getContent();
                 foreach ($items as $item) 
                 {
                    $ss=DetalleTransferencia::create([
@@ -206,7 +211,7 @@ class EditarTransferenciaController extends Component
             DB::commit();
             $this->resetUI();
            
-            $this->itemsQuantity = Transferencia::getTotalQuantity();
+            $this->itemsQuantity = EditarTransferencia::getTotalQuantity();
             redirect('/transferencias');
         
         } catch (Exception $e) {

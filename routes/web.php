@@ -156,9 +156,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('transacciones', TransaccionesController::class)->name('transactions');
     Route::get('destino_prod', DestinoProductoController::class)->name('destination');
     Route::get('transferencia', TransferirProductoController::class)->name('destination');
-    Route::get('edit/transferencia/{id}', EditarTransferenciaController::class)->name('editdest');
     Route::get('destino', DestinoController::class)->name('dest');
-    Route::get('transferencias', TransferenciasController::class)->name('transference');
+    Route::get('transferencias', TransferenciasController::class)->name('transfe');
+    Route::get('trans/{id}',[EditarTransferenciaController::class,'EditTransferencia'])->name('editdest');
 
     Route::get('Compras/pdf/{id}', [ExportComprasController::class, 'PrintCompraPdf']);
     Route::get('reporteCompras/pdf/{filtro}/{fecha}/{fromDate}/{toDate}/{data?}', [ExportComprasController::class, 'reporteComprasPdf']);

@@ -397,7 +397,7 @@
                                                             <i class="fas fa-eye"></i>
                                                         </a>
                                                         @else
-                                                        <a href="{{ url('edit/transferencia' . '/' . $data_td->t_id)}}"
+                                                        <a href="{{ url('trans/'. $data_td->t_id)}}"
                                                             class="btn btn-dark mtmobile p-1 m-0" title="Edit">
                                                             <i class="fas fa-edit"></i>
                                                         </a>
