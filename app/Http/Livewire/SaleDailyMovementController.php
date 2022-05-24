@@ -11,6 +11,7 @@ use Livewire\WithPagination;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Support\Facades\Redirect;
 
 class SaleDailyMovementController extends Component
 {
@@ -23,6 +24,9 @@ class SaleDailyMovementController extends Component
     public $sucursal;
     //Variable donde se almacenara las ids de las cajas de las sucursales
     public $caja;
+
+    //Variable para enviar datos y crear PDF
+    public $listareportes;
 
     use WithPagination;
     public function paginationView()
@@ -387,8 +391,8 @@ class SaleDailyMovementController extends Component
 
         
 
-
-        
+        //Actualizando la vaiable listareportes para crear el PDF
+        $this->listareportes = $data;
 
         return view('livewire.sales.saledailymovement', [
             'data' => $data,
@@ -464,5 +468,16 @@ class SaleDailyMovementController extends Component
         ->get()
         ->first();
         return $idsucursal->id;
+    }
+    public function generarpdf($data)
+    {
+        //dd($data);
+        //$array = mysqli_fetch_array($data);
+
+        
+        session(['asd' => $data]);
+
+        //Redireccionando para crear el comprobante con sus respectvas variables
+        return redirect::to('report/pdfmd' . '/' . 5 . '/' . 2);
     }
 }

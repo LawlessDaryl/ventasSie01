@@ -7,7 +7,7 @@ use App\Http\Controllers\ExportStreamingPdfController;
 use App\Http\Controllers\ExportTigoPdfController;
 use App\Http\Controllers\ImprimirController;
 use App\Http\Controllers\ExportComprasController;
-
+use App\Http\Controllers\ExportSaleMovDiaController;
 use App\Http\Livewire\ArqueosStreamingController;
 use App\Http\Livewire\ArqueosTigoController;
 use App\Http\Livewire\AsignarController;
@@ -175,6 +175,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('report/pdf/{user}/{type}/{f1}/{f2}', [ExportController::class, 'reportPDF']);
     Route::get('report/pdf/{user}/{type}', [ExportController::class, 'reportPDF']);
     Route::get('report/pdf/{total}/{idventa}/{totalitems}', [ExportSaleController::class, 'reportPDFVenta']);
+    Route::get('report/pdfmd/{num1}/{num2}', [ExportSaleMovDiaController::class, 'reportPDFMovDiaVenta']);
     });
     //Lista de Ventas
     Route::get('salelist', SaleListController::class)->name('salelist')->middleware('permission:VentasLista_Index');

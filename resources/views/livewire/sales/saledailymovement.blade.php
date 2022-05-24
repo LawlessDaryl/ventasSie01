@@ -108,10 +108,13 @@
     
                         <div class="col-sm-2 mt-4">
     
-                            <a class="btn btn-dark"
-                                href="{{ url('reporteServicEntreg/pdf' .'/' .$reportType .'/' .$dateFrom .'/' .$dateTo .'/' .$sucursal .'/' .$caja) }}"
-                                target="_blank" style='font-size:18px'>Generar PDF</a>
-    
+                            
+
+
+                                <button wire:click.prevent="generarpdf({{$data}})" class="btn btn-primary">
+                                    GENERAR PDF
+                                </button>
+
                         </div>
     
                     </div>
