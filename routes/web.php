@@ -180,7 +180,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('salelist', SaleListController::class)->name('salelist')->middleware('permission:VentasLista_Index');
     Route::get('estadisticas', SaleStatisticController::class)->name('estadisticas');
     Route::get('devolucionventa', SaleDevolutionController::class)->name('devolucionventa');
-    Route::get('salemovimientodiario', SaleDailyMovementController::class)->name('salemovimientodiario');
+    Route::get('salemovimientodiario', SaleDailyMovementController::class)->name('salemovimientodiario')->middleware('permission:VentasMovDia_Index');
     Route::get('notificaciones', NotificationController::class)->name('notificaciones');
     Route::get('notificaciones/{idnotificacion}', [NotificacionController::class,'mostrarnotificacion']);
 

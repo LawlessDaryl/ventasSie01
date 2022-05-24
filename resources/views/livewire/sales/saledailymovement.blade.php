@@ -54,7 +54,6 @@
 
                 <div class="widget-content">
                     <div class="row">
-
                         <div class="col-sm-2">
                             <h6>Elige el Tipo de Reporte</h6>
                             <div class="form-group">
@@ -65,6 +64,8 @@
                             </div>
                         </div>
 
+
+                        @if($this->verificarpermiso() == true)
                         <div class="col-sm-2">
                             <h6>Elige la Sucursal</h6>
                             <div class="form-group">
@@ -76,6 +77,7 @@
                                 </select>
                             </div>
                         </div>
+                        @endif
     
                         <div class="col-sm-2">
                             <h6>Elige la Caja</h6>
@@ -92,23 +94,23 @@
                         <div class="col-sm-2 ">
                             <h6>Fecha Desde</h6>
                             <div class="form-group">
-                                <input @if ($reportType == 0) disabled @endif type="datetime-local" wire:model="dateFrom"
+                                <input @if ($reportType == 0) disabled @endif type="date" wire:model="dateFrom"
                                     class="form-control" placeholder="Click para elegir">
                             </div>
                         </div>
                         <div class="col-sm-2 ">
                             <h6>Fecha Hasta</h6>
                             <div class="form-group">
-                                <input @if ($reportType == 0) disabled @endif type="datetime-local" wire:model="dateTo"
+                                <input @if ($reportType == 0) disabled @endif type="date" wire:model="dateTo"
                                     class="form-control" placeholder="Click para elegir">
                             </div>
                         </div>
     
                         <div class="col-sm-2 mt-4">
     
-                            {{-- <a class="btn btn-dark"
-                                href="{{ url('reporteServicEntreg/pdf' .'/' .$reportType .'/' .$dateFrom .'/' .$dateTo .'/' .$sucursal .'/' .$sumaEfectivo .'/' .$sumaBanco .'/' .$caja) }}"
-                                target="_blank" style='font-size:18px'>Generar PDF</a> --}}
+                            <a class="btn btn-dark"
+                                href="{{ url('reporteServicEntreg/pdf' .'/' .$reportType .'/' .$dateFrom .'/' .$dateTo .'/' .$sucursal .'/' .$caja) }}"
+                                target="_blank" style='font-size:18px'>Generar PDF</a>
     
                         </div>
     
@@ -128,8 +130,10 @@
                                 <th>MOVIMIENTO</th>
                                 <th class="text-right">IMPORTE</th>
                                 <th class="text-center">MOTIVO</th>
+                                @if($this->verificarpermiso() == true)
                                 <th class="text-right">UTILIDAD</th>
                                 <th class="text-center">SUCURSAL</th>
+                                @endif
                               </tr>
                             </thead>
                             <tbody>
@@ -165,6 +169,7 @@
                                         <td class="text-center">
                                             {{ ucwords($item->motivo) }}
                                         </td>
+                                        @if($this->verificarpermiso() == true)
                                         <td class="text-right">
                                             @if($this->buscarventa($item->idmovimiento)->count() > 0)
                                              {{ number_format($this->buscarutilidad($this->buscarventa($item->idmovimiento)->first()->idventa), 2) }} Bs
@@ -173,6 +178,7 @@
                                         <td class="text-center">
                                             {{ ucwords($item->nombresucursal) }}
                                         </td>
+                                        @endif
                                     </tr>
                                     @endforeach
                             </tbody>

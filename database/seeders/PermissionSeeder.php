@@ -181,6 +181,16 @@ class PermissionSeeder extends Seeder
             'name' => 'VentasNotificacionesMovInv',
             'guard_name' =>'web'
         ]);
+        //Poder ver el movimiento Diario de Ventas (Sin poder filtrar por Sucursal y ver Utilidad)
+        Permission::create([
+            'name' => 'VentasMovDia_Index',
+            'guard_name' =>'web'
+        ]);
+        //Poder ver el movimiento Diario de Ventas filtrando por sucursal y poder ver la utilidad
+        Permission::create([
+            'name' => 'VentasMovDiaSucursalUtilidad',
+            'guard_name' =>'web'
+        ]);
       
     }
 }

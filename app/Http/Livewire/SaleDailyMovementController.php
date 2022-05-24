@@ -9,6 +9,8 @@ use App\Models\Sucursal;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class SaleDailyMovementController extends Component
 {
@@ -33,28 +35,45 @@ class SaleDailyMovementController extends Component
         $this->reportType = 0;
         $this->dateFrom = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->dateTo = Carbon::parse(Carbon::now())->format('Y-m-d');
-        $this->sucursal='Todos';
+
+
+        if($this->verificarpermiso())
+        {
+            $this->sucursal ='Todos';
+        }
+        else
+        {
+            $this->sucursal = $this->idsucursal();
+        }
         $this->caja='Todos';
+
+
+
     }
 
 
     public function render()
     {
 
-        if ($this->reportType == 0) {
+        if ($this->reportType == 0)
+        {
             $from = Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00';
             $to = Carbon::parse(Carbon::now())->format('Y-m-d')   . ' 23:59:59';
-        } else {
+        }
+        else
+        {
             $from = Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00';
             $to = Carbon::parse($this->dateTo)->format('Y-m-d')     . ' 23:59:59';
         }
-        if ($this->reportType == 1 && ($this->dateFrom == '' || $this->dateTo == '')) {
+        if ($this->reportType == 1 && ($this->dateFrom == '' || $this->dateTo == ''))
+        {
             $this->dateFrom = Carbon::parse(Carbon::now())->format('Y-m-d');
             $this->dateTo = Carbon::parse(Carbon::now())->format('Y-m-d');
             $this->emit('item', 'Hiciste algo incorrecto, la fecha se actualizó');
         }
 
-        if ($this->dateFrom == "" || $this->dateTo == "") {
+        if ($this->dateFrom == "" || $this->dateTo == "")
+        {
             $this->reportType = 0;
         }
 
@@ -74,124 +93,299 @@ class SaleDailyMovementController extends Component
 
 
 
-
-        if($this->sucursal=='Todos')
+        //Si el tipo de Reporte esta en Reportes del Dia, todas las consultas dentro de este IF estaran con la fecha de hoy
+        //Caso contrario todas las consultas del ELSE estarán por un rango de fechas
+        if ($this->reportType == 0)
         {
-            if($this->sucursal=='Todos' && $this->caja=='Todos')
+            if($this->sucursal=='Todos')
             {
-                //Consulta para listar todas las cajas
-                $cajas = Caja::select('cajas.id as idcaja','cajas.nombre as nombrecaja')->get();
-                //Consulta para el reporte de movimiento diario con todas las sucursales
-                $data = CarteraMov::join('movimientos as m', 'm.id', 'cartera_movs.movimiento_id')
-                ->join("carteras as c", "c.id", "cartera_movs.cartera_id")
-                ->join("users as u", "u.id", "m.user_id")
-                ->join("cajas as ca", "ca.id", "c.caja_id")
-                ->join("sucursals as s", "s.id", "ca.sucursal_id")
-                ->select('cartera_movs.created_at as fecha','u.name as nombreusuario',
-                'cartera_movs.comentario as motivo','m.import as importe','ca.nombre as nombrecaja',
-                'cartera_movs.type as tipo','c.nombre as nombrecartera','s.name as nombresucursal','m.id as idmovimiento')
-                ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta','Por Venta Anulada'])
-                ->orderBy('cartera_movs.created_at', 'asc')
-                ->get();
+                if($this->sucursal=='Todos' && $this->caja=='Todos')
+                {
+                    //Consulta para listar todas las cajas
+                    $cajas = Caja::select('cajas.id as idcaja','cajas.nombre as nombrecaja')->get();
+                    //Consulta para el reporte de movimiento diario con todas las sucursales
+                    $data = CarteraMov::join('movimientos as m', 'm.id', 'cartera_movs.movimiento_id')
+                    ->join("carteras as c", "c.id", "cartera_movs.cartera_id")
+                    ->join("users as u", "u.id", "m.user_id")
+                    ->join("cajas as ca", "ca.id", "c.caja_id")
+                    ->join("sucursals as s", "s.id", "ca.sucursal_id")
+                    ->select('cartera_movs.created_at as fecha','u.name as nombreusuario',
+                    'cartera_movs.comentario as motivo','m.import as importe','ca.nombre as nombrecaja',
+                    'cartera_movs.type as tipo','c.nombre as nombrecartera','s.name as nombresucursal','m.id as idmovimiento')
+                    ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta','Por Venta Anulada'])
+                    ->whereDate('cartera_movs.created_at', date('Y/m/d'))
+                    ->orderBy('cartera_movs.created_at', 'asc')
+                    ->get();
+                }
+                else
+                {
+                    //Consulta para listar todas las cajas
+                    $cajas = Caja::select('cajas.id as idcaja','cajas.nombre as nombrecaja')->get();
+                    //Consulta para listar el movimiento diario de una caja en específico
+                    $data = CarteraMov::join('movimientos as m', 'm.id', 'cartera_movs.movimiento_id')
+                    ->join("carteras as c", "c.id", "cartera_movs.cartera_id")
+                    ->join("users as u", "u.id", "m.user_id")
+                    ->join("cajas as ca", "ca.id", "c.caja_id")
+                    ->join("sucursals as s", "s.id", "ca.sucursal_id")
+                    ->select('cartera_movs.created_at as fecha','u.name as nombreusuario',
+                    'cartera_movs.comentario as motivo','m.import as importe','ca.nombre as nombrecaja',
+                    'cartera_movs.type as tipo','c.nombre as nombrecartera','s.name as nombresucursal','m.id as idmovimiento')
+                    ->where('ca.id',$this->caja)
+                    ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta','Por Venta Anulada'])
+                    ->whereDate('cartera_movs.created_at', date('Y/m/d'))
+                    ->orderBy('cartera_movs.created_at', 'asc')
+                    ->get();
+                }
             }
             else
             {
-                //Consulta para listar todas las cajas
-                $cajas = Caja::select('cajas.id as idcaja','cajas.nombre as nombrecaja')->get();
-                //Consulta para listar el movimiento diario de una caja en específico
-                $data = CarteraMov::join('movimientos as m', 'm.id', 'cartera_movs.movimiento_id')
-                ->join("carteras as c", "c.id", "cartera_movs.cartera_id")
-                ->join("users as u", "u.id", "m.user_id")
-                ->join("cajas as ca", "ca.id", "c.caja_id")
-                ->join("sucursals as s", "s.id", "ca.sucursal_id")
-                ->select('cartera_movs.created_at as fecha','u.name as nombreusuario',
-                'cartera_movs.comentario as motivo','m.import as importe','ca.nombre as nombrecaja',
-                'cartera_movs.type as tipo','c.nombre as nombrecartera','s.name as nombresucursal','m.id as idmovimiento')
-                ->where('ca.id',$this->caja)
-                ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta','Por Venta Anulada'])
-                ->orderBy('cartera_movs.created_at', 'asc')
-                ->get();
+                if($this->caja=='Todos')
+                {
+                    //Consulta para listar todas las cajas de una determinada sucursal
+                    $cajas = Caja::select('cajas.id as idcaja','cajas.nombre as nombrecaja')
+                    ->where('cajas.sucursal_id',$this->sucursal,)
+                    ->get();
+                    //Consulta para filtrar por sucursal
+                    $data = CarteraMov::join('movimientos as m', 'm.id', 'cartera_movs.movimiento_id')
+                    ->join("carteras as c", "c.id", "cartera_movs.cartera_id")
+                    ->join("users as u", "u.id", "m.user_id")
+                    ->join("cajas as ca", "ca.id", "c.caja_id")
+                    ->join("sucursals as s", "s.id", "ca.sucursal_id")
+                    ->select('cartera_movs.created_at as fecha','u.name as nombreusuario',
+                    'cartera_movs.comentario as motivo','m.import as importe','ca.nombre as nombrecaja',
+                    'cartera_movs.type as tipo','c.nombre as nombrecartera','s.name as nombresucursal','m.id as idmovimiento')
+                    ->where('s.id',$this->sucursal,)
+                    ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta','Por Venta Anulada'])
+                    ->whereDate('cartera_movs.created_at', date('Y/m/d'))
+                    ->get();
+                }
+                else
+                {
+                    //Consulta para listar todas las cajas de una determinada sucursal
+                    $cajas = Caja::select('cajas.id as idcaja','cajas.nombre as nombrecaja')
+                    ->where('cajas.sucursal_id',$this->sucursal,)
+                    ->get();
+                    //Consulta para filtrar por sucursal y caja
+                    $data = CarteraMov::join('movimientos as m', 'm.id', 'cartera_movs.movimiento_id')
+                    ->join("carteras as c", "c.id", "cartera_movs.cartera_id")
+                    ->join("users as u", "u.id", "m.user_id")
+                    ->join("cajas as ca", "ca.id", "c.caja_id")
+                    ->join("sucursals as s", "s.id", "ca.sucursal_id")
+                    ->select('cartera_movs.created_at as fecha','u.name as nombreusuario',
+                    'cartera_movs.comentario as motivo','m.import as importe','ca.nombre as nombrecaja',
+                    'cartera_movs.type as tipo','c.nombre as nombrecartera','s.name as nombresucursal','m.id as idmovimiento')
+                    ->where('s.id',$this->sucursal,)
+                    ->where('ca.id',$this->caja)
+                    ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta','Por Venta Anulada'])
+                    ->whereDate('cartera_movs.created_at', date('Y/m/d'))
+                    ->get();
+                }
+            }
+            //Si se selecciona una caja y despues una sucursal que no le corresponde
+            //Se listarán todas las cajas de esa sucursal
+            if($this->sucursal != 'Todos' && $this->caja != 'Todos')
+            {
+                if($this->verificar_caja_sucursal($this->caja, $this->sucursal)->count() == 0)
+                {
+                    
+                    $this->caja == 'Todos';
+    
+                    $data = CarteraMov::join('movimientos as m', 'm.id', 'cartera_movs.movimiento_id')
+                    ->join("carteras as c", "c.id", "cartera_movs.cartera_id")
+                    ->join("users as u", "u.id", "m.user_id")
+                    ->join("cajas as ca", "ca.id", "c.caja_id")
+                    ->join("sucursals as s", "s.id", "ca.sucursal_id")
+                    ->select('cartera_movs.created_at as fecha','u.name as nombreusuario',
+                    'cartera_movs.comentario as motivo','m.import as importe','ca.nombre as nombrecaja',
+                    'cartera_movs.type as tipo','c.nombre as nombrecartera','s.name as nombresucursal','m.id as idmovimiento')
+                    ->where('s.id',$this->sucursal,)
+                    ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta','Por Venta Anulada'])
+                    ->whereDate('cartera_movs.created_at', date('Y/m/d'))
+                    ->get();
+                }
             }
 
-
-
-            
         }
         else
         {
-            if($this->caja=='Todos')
+            if($this->sucursal=='Todos')
             {
-                //Consulta para listar todas las cajas de una determinada sucursal
-                $cajas = Caja::select('cajas.id as idcaja','cajas.nombre as nombrecaja')
-                ->where('cajas.sucursal_id',$this->sucursal,)
-                ->get();
-                //Consulta para filtrar por sucursal
-                $data = CarteraMov::join('movimientos as m', 'm.id', 'cartera_movs.movimiento_id')
-                ->join("carteras as c", "c.id", "cartera_movs.cartera_id")
-                ->join("users as u", "u.id", "m.user_id")
-                ->join("cajas as ca", "ca.id", "c.caja_id")
-                ->join("sucursals as s", "s.id", "ca.sucursal_id")
-                ->select('cartera_movs.created_at as fecha','u.name as nombreusuario',
-                'cartera_movs.comentario as motivo','m.import as importe','ca.nombre as nombrecaja',
-                'cartera_movs.type as tipo','c.nombre as nombrecartera','s.name as nombresucursal','m.id as idmovimiento')
-                ->where('s.id',$this->sucursal,)
-                ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta','Por Venta Anulada'])
-                ->get();
+                if($this->sucursal=='Todos' && $this->caja=='Todos')
+                {
+                    
+                    //Consulta para listar todas las cajas
+                    $cajas = Caja::select('cajas.id as idcaja','cajas.nombre as nombrecaja')->get();
+                    //Consulta para el reporte de movimiento diario con todas las sucursales
+                    $data = CarteraMov::join('movimientos as m', 'm.id', 'cartera_movs.movimiento_id')
+                    ->join("carteras as c", "c.id", "cartera_movs.cartera_id")
+                    ->join("users as u", "u.id", "m.user_id")
+                    ->join("cajas as ca", "ca.id", "c.caja_id")
+                    ->join("sucursals as s", "s.id", "ca.sucursal_id")
+                    ->select('cartera_movs.created_at as fecha','u.name as nombreusuario',
+                    'cartera_movs.comentario as motivo','m.import as importe','ca.nombre as nombrecaja',
+                    'cartera_movs.type as tipo','c.nombre as nombrecartera','s.name as nombresucursal','m.id as idmovimiento')
+                    ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta','Por Venta Anulada'])
+                    
+                    ->whereYear('cartera_movs.created_at','>=' , date("Y", strtotime($this->dateFrom)))
+                    ->whereMonth('cartera_movs.created_at','>=' , date("m", strtotime($this->dateFrom)))
+                    ->whereDay('cartera_movs.created_at','>=', date("d", strtotime($this->dateFrom)))
+                    
+                    ->whereYear('cartera_movs.created_at','<=' , date("Y", strtotime($this->dateTo)))
+                    ->whereMonth('cartera_movs.created_at','<=' , date("m", strtotime($this->dateTo)))
+                    ->whereDay('cartera_movs.created_at','<=', date("d", strtotime($this->dateTo)))
+
+
+                    ->orderBy('cartera_movs.created_at', 'asc')
+                    ->get();
+                }
+                else
+                {
+                    //Consulta para listar todas las cajas
+                    $cajas = Caja::select('cajas.id as idcaja','cajas.nombre as nombrecaja')->get();
+                    //Consulta para listar el movimiento diario de una caja en específico
+                    $data = CarteraMov::join('movimientos as m', 'm.id', 'cartera_movs.movimiento_id')
+                    ->join("carteras as c", "c.id", "cartera_movs.cartera_id")
+                    ->join("users as u", "u.id", "m.user_id")
+                    ->join("cajas as ca", "ca.id", "c.caja_id")
+                    ->join("sucursals as s", "s.id", "ca.sucursal_id")
+                    ->select('cartera_movs.created_at as fecha','u.name as nombreusuario',
+                    'cartera_movs.comentario as motivo','m.import as importe','ca.nombre as nombrecaja',
+                    'cartera_movs.type as tipo','c.nombre as nombrecartera','s.name as nombresucursal','m.id as idmovimiento')
+                    ->where('ca.id',$this->caja)
+                    ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta','Por Venta Anulada'])
+                    
+                    ->whereYear('cartera_movs.created_at','>=' , date("Y", strtotime($this->dateFrom)))
+                    ->whereMonth('cartera_movs.created_at','>=' , date("m", strtotime($this->dateFrom)))
+                    ->whereDay('cartera_movs.created_at','>=', date("d", strtotime($this->dateFrom)))
+                    
+                    ->whereYear('cartera_movs.created_at','<=' , date("Y", strtotime($this->dateTo)))
+                    ->whereMonth('cartera_movs.created_at','<=' , date("m", strtotime($this->dateTo)))
+                    ->whereDay('cartera_movs.created_at','<=', date("d", strtotime($this->dateTo)))
+
+
+                    
+                    ->orderBy('cartera_movs.created_at', 'asc')
+                    ->get();
+                }
             }
             else
             {
-                //Consulta para listar todas las cajas de una determinada sucursal
-                $cajas = Caja::select('cajas.id as idcaja','cajas.nombre as nombrecaja')
-                ->where('cajas.sucursal_id',$this->sucursal,)
-                ->get();
-                //Consulta para filtrar por sucursal y caja
-                $data = CarteraMov::join('movimientos as m', 'm.id', 'cartera_movs.movimiento_id')
-                ->join("carteras as c", "c.id", "cartera_movs.cartera_id")
-                ->join("users as u", "u.id", "m.user_id")
-                ->join("cajas as ca", "ca.id", "c.caja_id")
-                ->join("sucursals as s", "s.id", "ca.sucursal_id")
-                ->select('cartera_movs.created_at as fecha','u.name as nombreusuario',
-                'cartera_movs.comentario as motivo','m.import as importe','ca.nombre as nombrecaja',
-                'cartera_movs.type as tipo','c.nombre as nombrecartera','s.name as nombresucursal','m.id as idmovimiento')
-                ->where('s.id',$this->sucursal,)
-                ->where('ca.id',$this->caja)
-                ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta','Por Venta Anulada'])
-                ->get();
-            }
-        }
+                if($this->caja=='Todos')
+                {
+                    //Consulta para listar todas las cajas de una determinada sucursal
+                    $cajas = Caja::select('cajas.id as idcaja','cajas.nombre as nombrecaja')
+                    ->where('cajas.sucursal_id',$this->sucursal,)
+                    ->get();
+                    //Consulta para filtrar por sucursal
+                    $data = CarteraMov::join('movimientos as m', 'm.id', 'cartera_movs.movimiento_id')
+                    ->join("carteras as c", "c.id", "cartera_movs.cartera_id")
+                    ->join("users as u", "u.id", "m.user_id")
+                    ->join("cajas as ca", "ca.id", "c.caja_id")
+                    ->join("sucursals as s", "s.id", "ca.sucursal_id")
+                    ->select('cartera_movs.created_at as fecha','u.name as nombreusuario',
+                    'cartera_movs.comentario as motivo','m.import as importe','ca.nombre as nombrecaja',
+                    'cartera_movs.type as tipo','c.nombre as nombrecartera','s.name as nombresucursal','m.id as idmovimiento')
+                    ->where('s.id',$this->sucursal,)
+                    ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta','Por Venta Anulada'])
+                    
+                    ->whereYear('cartera_movs.created_at','>=' , date("Y", strtotime($this->dateFrom)))
+                    ->whereMonth('cartera_movs.created_at','>=' , date("m", strtotime($this->dateFrom)))
+                    ->whereDay('cartera_movs.created_at','>=', date("d", strtotime($this->dateFrom)))
+                    
+                    ->whereYear('cartera_movs.created_at','<=' , date("Y", strtotime($this->dateTo)))
+                    ->whereMonth('cartera_movs.created_at','<=' , date("m", strtotime($this->dateTo)))
+                    ->whereDay('cartera_movs.created_at','<=', date("d", strtotime($this->dateTo)))
 
+
+                    
+                    ->get();
+                }
+                else
+                {
+                    //Consulta para listar todas las cajas de una determinada sucursal
+                    $cajas = Caja::select('cajas.id as idcaja','cajas.nombre as nombrecaja')
+                    ->where('cajas.sucursal_id',$this->sucursal,)
+                    ->get();
+                    //Consulta para filtrar por sucursal y caja
+                    $data = CarteraMov::join('movimientos as m', 'm.id', 'cartera_movs.movimiento_id')
+                    ->join("carteras as c", "c.id", "cartera_movs.cartera_id")
+                    ->join("users as u", "u.id", "m.user_id")
+                    ->join("cajas as ca", "ca.id", "c.caja_id")
+                    ->join("sucursals as s", "s.id", "ca.sucursal_id")
+                    ->select('cartera_movs.created_at as fecha','u.name as nombreusuario',
+                    'cartera_movs.comentario as motivo','m.import as importe','ca.nombre as nombrecaja',
+                    'cartera_movs.type as tipo','c.nombre as nombrecartera','s.name as nombresucursal','m.id as idmovimiento')
+                    ->where('s.id',$this->sucursal,)
+                    ->where('ca.id',$this->caja)
+                    ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta','Por Venta Anulada'])
+                    
+                    ->whereYear('cartera_movs.created_at','>=' , date("Y", strtotime($this->dateFrom)))
+                    ->whereMonth('cartera_movs.created_at','>=' , date("m", strtotime($this->dateFrom)))
+                    ->whereDay('cartera_movs.created_at','>=', date("d", strtotime($this->dateFrom)))
+                    
+                    ->whereYear('cartera_movs.created_at','<=' , date("Y", strtotime($this->dateTo)))
+                    ->whereMonth('cartera_movs.created_at','<=' , date("m", strtotime($this->dateTo)))
+                    ->whereDay('cartera_movs.created_at','<=', date("d", strtotime($this->dateTo)))
+
+
+                    
+                    ->get();
+                }
+            }
+            //Si se selecciona una caja y despues una sucursal que no le corresponde
+            //Se listarán todas las cajas de esa sucursal
+            if($this->sucursal != 'Todos' && $this->caja != 'Todos')
+            {
+                if($this->verificar_caja_sucursal($this->caja, $this->sucursal)->count() == 0)
+                {
+                    
+                    $this->caja == 'Todos';
+    
+                    $data = CarteraMov::join('movimientos as m', 'm.id', 'cartera_movs.movimiento_id')
+                    ->join("carteras as c", "c.id", "cartera_movs.cartera_id")
+                    ->join("users as u", "u.id", "m.user_id")
+                    ->join("cajas as ca", "ca.id", "c.caja_id")
+                    ->join("sucursals as s", "s.id", "ca.sucursal_id")
+                    ->select('cartera_movs.created_at as fecha','u.name as nombreusuario',
+                    'cartera_movs.comentario as motivo','m.import as importe','ca.nombre as nombrecaja',
+                    'cartera_movs.type as tipo','c.nombre as nombrecartera','s.name as nombresucursal','m.id as idmovimiento')
+                    ->where('s.id',$this->sucursal,)
+                    ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta','Por Venta Anulada'])
+                    
+                    ->whereYear('cartera_movs.created_at','>=' , date("Y", strtotime($this->dateFrom)))
+                    ->whereMonth('cartera_movs.created_at','>=' , date("m", strtotime($this->dateFrom)))
+                    ->whereDay('cartera_movs.created_at','>=', date("d", strtotime($this->dateFrom)))
+                    
+                    ->whereYear('cartera_movs.created_at','<=' , date("Y", strtotime($this->dateTo)))
+                    ->whereMonth('cartera_movs.created_at','<=' , date("m", strtotime($this->dateTo)))
+                    ->whereDay('cartera_movs.created_at','<=', date("d", strtotime($this->dateTo)))
+
+
+                    
+                    ->get();
+                }
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        }
 
 
         
-
-
-
-
-
-
-
-
-        //Si se selecciona una caja y despues una sucursal que no le corrresponde se listaran todas las cajas que pertenescan a esa sucursal
-        if($this->sucursal != 'Todos' && $this->caja != 'Todos')
-        {
-            if($this->verificar_caja_sucursal($this->caja, $this->sucursal)->count() == 0)
-            {
-                
-                $this->caja == 'Todos';
-
-                $data = CarteraMov::join('movimientos as m', 'm.id', 'cartera_movs.movimiento_id')
-                ->join("carteras as c", "c.id", "cartera_movs.cartera_id")
-                ->join("users as u", "u.id", "m.user_id")
-                ->join("cajas as ca", "ca.id", "c.caja_id")
-                ->join("sucursals as s", "s.id", "ca.sucursal_id")
-                ->select('cartera_movs.created_at as fecha','u.name as nombreusuario',
-                'cartera_movs.comentario as motivo','m.import as importe','ca.nombre as nombrecaja',
-                'cartera_movs.type as tipo','c.nombre as nombrecartera','s.name as nombresucursal','m.id as idmovimiento')
-                ->where('s.id',$this->sucursal,)
-                ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta','Por Venta Anulada'])
-                ->get();
-            }
-        }
 
 
         
@@ -251,6 +445,24 @@ class SaleDailyMovementController extends Component
         return $resultado;
     }
 
-
-
+    //Metodo para Verificar si el usuario tiene el Permiso para filtrar por Sucursal y ver por utilidad
+    public function verificarpermiso()
+    {
+        if(Auth::user()->hasPermissionTo('VentasMovDiaSucursalUtilidad'))
+        {
+            return true;
+        }
+        return false;
+    }
+    //Obtener el Id de la Sucursal Donde esta el Usuario
+    public function idsucursal()
+    {
+        $idsucursal = User::join("sucursal_users as su","su.user_id","users.id")
+        ->select("su.sucursal_id as id","users.name as n")
+        ->where("users.id",Auth()->user()->id)
+        ->where("su.estado","ACTIVO")
+        ->get()
+        ->first();
+        return $idsucursal->id;
+    }
 }
