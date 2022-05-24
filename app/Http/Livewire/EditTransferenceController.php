@@ -178,7 +178,7 @@ class EditTransferenceController extends Component
                         'cantidad' => $item->quantity,
                         'estado'=>1//***tiene que depender de modificar la transferencia, esta pendiente
                     ]);
-                    
+
                     $cc[]=$ss->id;
 
                     $q=ProductosDestino::where('product_id',$item->id)
