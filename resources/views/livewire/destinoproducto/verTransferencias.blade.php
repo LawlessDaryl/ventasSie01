@@ -397,12 +397,11 @@
                                                             <i class="fas fa-eye"></i>
                                                         </a>
                                                         @else
-                                                        <a href="{{ url('trans/'. $data_td->t_id)}}"
+                                                        <a href="javascript:void(0)" onclick="Confirm({{$data_td->t_id}})"
                                                             class="btn btn-dark mtmobile p-1 m-0" title="Edit">
                                                             <i class="fas fa-edit"></i>
                                                         </a>
-
-
+                                                       
                                                         <a href="javascript:void(0)" onclick="Confirm('{{ $data_td->id }}','{{ $data_td->nombre }}')" 
                                                             class="btn btn-dark p-1 m-0" title="Delete">
                                                             <i class="fas fa-trash"></i>
@@ -548,7 +547,23 @@
             $('#detailtranferencete').modal('hide')
         });  
     });
-  
+    function Confirm(id) {
+        swal.fire({
+            title: 'CONFIRMAR',
+            icon: 'warning',
+            text: '¿Esta seguro de editar la transferencia?',
+            showCancelButton: true,
+            cancelButtonText: 'Cerrar',
+            cancelButtonColor: '#383838',
+            confirmButtonColor: '#3B3F5C',
+            confirmButtonText: 'Aceptar'
+        }).then(function(result) {
+            if (result.value) {
+                window.livewire.emit('editRow', id)
+                Swal.close()
+            }
+        })
+    }
        
     
 

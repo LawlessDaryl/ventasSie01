@@ -60,7 +60,7 @@ use App\Http\Livewire\ProvidersController;
 use App\Http\Livewire\ReporteServiceController;
 use App\Http\Livewire\TransaccionesController;
 use App\Http\Livewire\TransferenciasController;
-use App\Http\Livewire\EditarTransferenciaController;
+use App\Http\Livewire\EditTransferenceController;
 use App\Http\Livewire\TypeWorkController;
 use App\Http\Livewire\UnidadesController;
 use App\Http\Livewire\SaleListController;
@@ -158,12 +158,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('transferencia', TransferirProductoController::class)->name('destination');
     Route::get('destino', DestinoController::class)->name('dest');
     Route::get('transferencias', TransferenciasController::class)->name('transfe');
-    Route::get('trans/{id}',[EditarTransferenciaController::class,'EditTransferencia'])->name('editdest');
+    Route::get('trans', EditTransferenceController::class)->name('editdest');
 
     Route::get('Compras/pdf/{id}', [ExportComprasController::class, 'PrintCompraPdf']);
     Route::get('reporteCompras/pdf/{filtro}/{fecha}/{fromDate}/{toDate}/{data?}', [ExportComprasController::class, 'reporteComprasPdf']);
     
- 
     
     
 
