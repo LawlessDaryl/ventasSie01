@@ -172,7 +172,11 @@ class EditTransferenceController extends Component
       
 
     foreach ($gh as $value) {
-       dd($value);
+      foreach ($this->datalist_destino as $val) {
+          if ($value->id === $val->product_id) {
+              
+          }
+      }
     }
 
 
