@@ -9,10 +9,13 @@ use App\Models\EstadoTransferencia;
 use App\Models\ProductosDestino;
 use App\Models\Transference;
 use Carbon\Carbon;
+use Darryldecode\Cart\Facades\EditarTransferenciaFacade;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Exception;
+use Illuminate\Support\Facades\Session;
+use Darryldecode\Cart\Facades\EditarTransferenciaFacade as EditarTransferencia;
 
 class TransferenciasController extends Component
 {
@@ -120,6 +123,9 @@ class TransferenciasController extends Component
     protected $listeners = ['editRow' => 'editar'];
     public function editar($id)
     {
+        
+        session(['id_transferencia' => null]);
+        
         session(['id_transferencia' => $id]);
         return redirect()->route('editdest');
     }
@@ -127,8 +133,6 @@ class TransferenciasController extends Component
     public function ingresarProductos()
     {
         $rm=Transference::where('transferences.id',$this->selected_id2)->value('id_destino');
-
-        $jm=[];
        DB::beginTransaction();
             try {
                 foreach ($this->datalist_destino as $value)

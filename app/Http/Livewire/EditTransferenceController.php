@@ -29,18 +29,20 @@ class EditTransferenceController extends Component
     
     use WithPagination;
     public $selected_id,$search,
-    $itemsQuantity,$selected_3,$selected_origen,$selected_destino,$observacion,$tipo_tr,$estado;
+    $itemsQuantity,$selected_3,$selected_origen,$selected_destino,$observacion,$tipo_tr,$estado,$ide,$datalist_destino;
     private $pagination = 10;
+
     public function paginationView()
     {
         return 'vendor.livewire.bootstrap';
     }
     public function mount(){
+
         $this->ide=session('id_transferencia');
+        EditarTransferencia::clear();
         $rm=Transference::where('transferences.id',$this->ide)->value('id_origen');
         $this->selected_origen= $rm;
         $this->cargarCarrito();
-
     }
   
     public function render()
@@ -76,23 +78,24 @@ class EditTransferenceController extends Component
 
     public function cargarCarrito()
     {
-    
-        $datalist_destino=DetalleTransferencia::join('products','detalle_transferencias.product_id','products.id')
+        $this->datalist_destino=DetalleTransferencia::join('products','detalle_transferencias.product_id','products.id')
         ->join('estado_trans_detalles','detalle_transferencias.id','estado_trans_detalles.detalle_id')
         ->join('estado_transferencias','estado_trans_detalles.estado_id','estado_transferencias.id')
         ->join('transferences','estado_transferencias.id_transferencia','transferences.id')
         ->select('detalle_transferencias.*','transferences.id as tr','estado_transferencias.estado as esty')
-        ->where('transferences.id',$this->selected_origen)
+        ->where('transferences.id',$this->ide)
         ->where('estado_transferencias.op','Activo')
         ->get();
+        //$bn =EditarTransferencia::getContent();
 
-      
-        foreach ($datalist_destino as $value) {
+        foreach ($this->datalist_destino as $value) 
+        {
+            
             $product = Product::select('products.*')
-        ->where('products.id',$value->product_id)->first();
+            ->where('products.id',$value->product_id)->first();
+     
+             EditarTransferencia::add($product->id, $product->nombre,0, $value->cantidad);
 
-       
-          EditarTransferencia::add($product->id, $product->nombre,0, $value->cantidad);
         }
 
     }
@@ -164,8 +167,16 @@ class EditTransferenceController extends Component
 
     public function finalizar_tr()
     {
-        DB::beginTransaction();
+        $gh= EditarTransferencia::getContent();
+        $auxi=[];
+      
 
+    foreach ($gh as $value) {
+       dd($value);
+    }
+
+
+        DB::beginTransaction();
         try {
 
             if ($this->selected_origen)
