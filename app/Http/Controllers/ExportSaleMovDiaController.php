@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use App\Models\Sale;
 use App\Models\User;
 use App\Models\Sucursal;
+use Illuminate\Support\Facades\Auth;
 
 class ExportSaleMovDiaController extends Controller
 {
@@ -17,6 +18,7 @@ class ExportSaleMovDiaController extends Controller
         $value = session('asd');
         //dd($value);
 
+        $num2=$this->verificarpermiso();
 
         $pdf = PDF::loadView('livewire.pdf.reportemovdiaventas', compact('value','num2'));
         return $pdf->stream('Reporte_Movimiento_Diario.pdf'); 
@@ -48,4 +50,13 @@ class ExportSaleMovDiaController extends Controller
                 ->get();
         return $venta;
     }
+     //Metodo para Verificar si el usuario tiene el Permiso para filtrar por Sucursal y ver por utilidad
+     public function verificarpermiso()
+     {
+         if(Auth::user()->hasPermissionTo('VentasMovDiaSucursalUtilidad'))
+         {
+             return true;
+         }
+         return false;
+     }
 }

@@ -57,7 +57,9 @@
             <th>Movimiento</th>
             <th class="text-right">Importe</th>
             <th class="text-center">Motivo</th>
+            @if($num2 == true)
             <th class="text-center">Sucursal</th>
+            @endif
           </tr>
         </thead>
         <tbody>
@@ -76,7 +78,7 @@
                         {{ $item['nombrecartera'] }}
                     </td>
                     <td>
-                    {{ ucwords($value[0]['nombrecaja']) }}
+                    {{ ucwords($item['nombrecaja']) }}
                     </td>
                     @if($item['tipo'] == "INGRESO")
                     <td style="color: rgb(8, 157, 212)">
@@ -93,9 +95,11 @@
                     <td class="text-center">
                     {{ ucwords($item['motivo']) }}
                     </td>
+                    @if($num2 == true)
                     <td class="text-center">
                     {{ ucwords($item['nombresucursal']) }}
                     </td>
+                    @endif
                 </tr>
                 @endforeach
         </tbody>
