@@ -229,7 +229,7 @@ class LocalizacionController extends Component
     {
         $item= LocationProducto::where('product',$prod)
         ->where('location',$id)->select('location_productos.id')->value('location_productos.id');
-        dd($item);
+        
     }
 
 
