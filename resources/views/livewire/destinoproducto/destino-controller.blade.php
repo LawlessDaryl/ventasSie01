@@ -185,13 +185,6 @@
                                                 <th class="table-th text-withe text-center">Producto</th>
                                               
                                                 <th class="table-th text-withe text-center">Cantidad</th>
-                                              
-                                                @if($selected_3)
-
-
-                                                <th class="table-th text-withe text-center">Destino <br>Producto </th>
-
-                                                @endif
 
                                                 <th class="table-th text-withe text-center">Acc.</th>
                                             </tr>
@@ -206,24 +199,11 @@
                                                          <input type="number" 
                                                          id="rr{{$prod->id}}" 
                                                          wire:change="UpdateQty({{$prod->id}}, $('#rr' + {{$prod->id}}).val())" 
-                                                         style="font-size: 1rem!important;" 
+                                                         style="font-size: 0.8rem!important; padding:0!important"  
                                                          class="form-control text-center" 
                                                          value="{{$prod->quantity}}">
                                                     </td>
                                                    
-                                                   @if($selected_3)
-
-                                                   <td>
-                                                       <div class="form-group">
-                                                         <select value="Elegir" class="form-control" name="" id="">
-                                                           <option value="Elegir Destino">Elegir Destino</option>
-                                                           
-                                                           <option>Destino 3</option>
-
-                                                         </select>
-                                                       </div>
-                                                   </td>
-                                                   @endif
                                                     <td class="text-center">
                                                         <a href="javascript:void(0)"
                                                         wire:click="removeItem({{ $prod->id }})"
@@ -241,28 +221,13 @@
                             
                          </div>
                         </div>
-                        <div class="row">
-
-                            <div class="col-4 col-lg-4 col-md-4">
-                
-                                <div class="form-group">
-                                    <button class="btn btn-lg btn-primary p-2" wire:click="finalizar_tr()" style="color: black">Finalizar</button>
-                                </div>
-                            </div>
-                           
-                         
-                                <div class="col-4 col-lg-4 col-md-4 justify-content-center">
-        
-                                    <div class="form-group">
-                                        <button wire:click="resetUI()" class="btn btn-lg btn-warning p-2 pr-2 pl-2" style="color: black">Reset</button>
-                                    </div>
-                                </div>
-                                <div class="col-4 col-lg-4 col-md-4">
-                
-                                    <div class="form-group">
-                                        <button wire:click="exit()" class="btn btn-lg btn-danger  p-2" style="color: black">Cancelar</button>
-                                    </div>
-                                </div>
+                        <div class="row align-items-center justify-content-center">                         
+                                    <button class="btn btn-lg btn-primary p-2 m-2" wire:click="finalizar_tr()" style="color: black">Finalizar</button>                     
+                              
+                                    <button wire:click="resetUI()" class="btn btn-lg btn-warning p-2 pl-3 pr-3 m-2" style="color: black">Reset</button>
+                                  
+                                    <button wire:click="exit()" class="btn btn-lg btn-danger  p-2 m-2" style="color: black">Cancelar</button>
+                        </div>
         
                             
                         </div>
@@ -280,16 +245,14 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
-        window.livewire.on('empty_destino', msg => {
+        window.livewire.on('empty', msg => {
            noty(msg)
        });
-        window.livewire.on('empty_destino_origen', msg => {
+        window.livewire.on('empty-destino', msg => {
            noty(msg)
        });
         window.livewire.on('no-stock', msg => {
            noty(msg)
        });
     });
-
- 
 </script>

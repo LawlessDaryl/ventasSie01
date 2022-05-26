@@ -49,8 +49,7 @@ class DestinoProductoController extends Component
             if (strlen($this->search) > 0) {
                 $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
                 ->join('destinos as dest','dest.id','productos_destinos.destino_id')
-                ->select(DB::raw('SUM(productos_destinos.stock) as stock_s'),'p.nombre as name',
-                'p.cantidad_minima as cant_min','p.id as productoid')
+                ->select(DB::raw('SUM(productos_destinos.stock) as stock_s'),'p.*')
                 ->where('p.nombre', 'like', '%' . $this->search . '%')
                 ->groupBy('productos_destinos.product_id')
                 ->paginate($this->pagination);
@@ -70,8 +69,7 @@ class DestinoProductoController extends Component
             else
              $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
                                         ->join('destinos as dest','dest.id','productos_destinos.destino_id')
-                                        ->select('productos_destinos.*','p.nombre as name','dest.nombre as nombre_destino',
-                                        'p.id as id_prod'
+                                        ->select('productos_destinos.*','p.*'
                                         
                                         )
                                         ->where('dest.id',$this->selected_id)
@@ -92,8 +90,7 @@ class DestinoProductoController extends Component
                
              $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
                                             ->join('destinos as dest','dest.id','productos_destinos.destino_id')
-                                            ->select(DB::raw('SUM(productos_destinos.stock) as stock_s'),'p.nombre as name',
-                                            'p.cantidad_minima as cant_min','p.id as productoid')
+                                            ->select(DB::raw('SUM(productos_destinos.stock) as stock_s'),'p.*')
                                             ->groupBy('productos_destinos.product_id')
                                             ->paginate($this->pagination);
             }

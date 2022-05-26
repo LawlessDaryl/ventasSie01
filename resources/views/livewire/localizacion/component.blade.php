@@ -56,13 +56,17 @@
                                 
                                     <td class="text-center">
                                         <a href="javascript:void(0)" wire:click="Edit({{ $location->id }})"
-                                            class="btn btn-dark mtmobile" title="Edit">
+                                            class="btn btn-dark p-1 m-0" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         <a href="javascript:void(0)"
                                             onclick="Confirm('{{ $location->id }}','{{ $location->descripcion }}')"
-                                            class="btn btn-dark" title="Delete">
+                                            class="btn btn-dark p-1 m-0" title="Delete">
                                             <i class="fas fa-trash"></i>
+                                        </a>
+                                        <a href="javascript:void(0)" wire:click="ver({{$location->id}})" 
+                                            class="btn btn-dark p-1 m-0" title="Ver">
+                                            <i class="fas fa-list"></i>
                                         </a>
                                     </td>
                                 </tr>
@@ -77,6 +81,7 @@
    @include('livewire.localizacion.form')
    </div>
    @include('livewire.localizacion.modal_asignar_mobiliario') 
+   @include('livewire.localizacion.verproductos') 
    
 </div>
 
@@ -107,8 +112,8 @@
         window.livewire.on('modal-hide', msg => {
             $('#theModal').modal('hide')
         });
-        window.livewire.on('hidden.bs.modal', function(e) {
-            $('.er').css('display', 'none')
+        window.livewire.on('verprod', function(e) {
+            $('#verproductos').modal('show')
         });
         window.livewire.on('show-modal', msg => {
              $('#asignar_mobiliario').modal('show')

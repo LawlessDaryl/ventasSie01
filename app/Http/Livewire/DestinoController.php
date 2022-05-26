@@ -75,11 +75,6 @@ public function mount()
             'guard_name' => 'web'
         ]);
 
- 
-
-
-        
-
         $this->resetUI();
         $this->emit('unidad-added', 'Estancia Registrada');
 

@@ -168,15 +168,24 @@ class TransferirProductoController extends Component
         $this->resetUI();
         redirect('/destino_prod');
     }
-    public function verificarStock(){
-
-    }
+   
     public function verificarDestino(){
-    if ($this->selected_destino === $this->selected_origen) {
-        $this->emit('empty_destino', 'El destino de la transferencia debe ser diferente al origen');
+    if ($this->selected_destino != $this->selected_origen) {
+        
+        return true;
     }
-    if($this->selected_destino == 0 || $this->selected_origen== null)
-    $this->emit('empty_destino_origen', 'No ha seleccionado el destino u origen para la transferencia.');
+        else{
+            $this->emit('empty', 'El destino de la transferencia debe ser diferente al origen');
+            return false;
+        }
+    if($this->selected_destino != null || $this->selected_origen !== null){
+        return true;
+    }
+        else{
+
+            $this->emit('empty-destino', 'No ha seleccionado el destino u origen para la transferencia.');
+            return false;
+        }
     }
 
    public function asignarEstado(){
@@ -193,9 +202,10 @@ class TransferirProductoController extends Component
     public function finalizar_tr()
     {
        
-       $this->verificarDestino();
+       //$this->verificarDestino();
        $this->asignarEstado();
 
+       if ($this->verificarDestino()) {
         DB::beginTransaction();
 
         try {
@@ -265,6 +275,8 @@ class TransferirProductoController extends Component
             DB::rollback();
             dd($e->getMessage());
         }
+       }
+       
     }
 
 }

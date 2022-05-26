@@ -181,8 +181,6 @@ class EditTransferenceController extends Component
             }
         }
         //dd($auxi);
-
-      
         foreach ($gh as $value) {
             foreach ($this->datalist_destino as $value2) {
                 if ($value->id == $value2->product_id) {

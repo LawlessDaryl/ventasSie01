@@ -20,7 +20,7 @@ class LocalizacionController extends Component
     use WithPagination;
     use WithFileUploads;
     public $sucursal, $codigo, $descripcion,$ubicacion, $tipo,$product,
-    $selected_id, $categoria,$subcategoria,$location, $pageTitle, $componentName,$search,$destino;
+    $selected_id, $categoria,$subcategoria,$location, $pageTitle, $componentName,$search,$destino,$listaproductos;
     private $pagination = 8;
     public function paginationView()
     {
@@ -43,8 +43,8 @@ class LocalizacionController extends Component
                 ->select('locations.*', 'dest.nombre as destino','suc.name as sucursal' )
                 ->where('locations.codigo', 'like', '%' . $this->search . '%')
                 ->orWhere('locations.tipo', 'like', '%' . $this->search . '%')
-                ->orWhere('dest.name', 'like', '%' . $this->search . '%')
-                ->orWhere('locations.ubicacion', 'like', '%' . $this->search . '%')
+                ->orWhere('dest.nombre', 'like', '%' . $this->search . '%')
+                ->orWhere('suc.name', 'like', '%' . $this->search . '%')
                 ->orderBy('locations.id', 'desc')
                 ->paginate($this->pagination);
         } else {
@@ -202,15 +202,35 @@ class LocalizacionController extends Component
     }
     public function resetUI()
     {
-        $this->tipo ='Elegir';
-        $this->codigo ='';
-        $this->descripcion ='Elegir';
-        $this->sucursal= 'Elegir';
-        $this->categoria= 'Elegir';
-        $this->subcategoria= 'Elegir';
-        $this->producto= 'Elegir';
-        $this->destino= 'Elegir';
-        $this->location= 'Elegir';
+        $this->tipo =null;
+        $this->codigo=null;
+        $this->descripcion= null;
+        $this->sucursal= null ;
+        $this->categoria=null ;
+        $this->subcategoria= null;
+        $this->producto=null ;
+        $this->destino= null;
+        $this->location= null;
         $this->resetValidation();
     }
+
+    public function ver($id){
+        
+        $this->listaproductos= Location::join('location_productos','locations.id','location_productos.location')
+        ->join('products','location_productos.product','products.id')
+        ->where('locations.id',$id)
+        ->select('locations.id as loc_id','products.nombre as prod_nom','products.id as pid')
+        ->get();
+        //dd($this->listaproductos->count());
+        $this->emit('verprod');
+    }
+
+    public function delete($id,$prod)
+    {
+        $item= LocationProducto::where('product',$prod)
+        ->where('location',$id)->select('location_productos.id')->value('location_productos.id');
+        dd($item);
+    }
+
+
 }
