@@ -10,7 +10,7 @@
           
             {{--SELECT DE LAS SUCURSALES--}}
             
-            <div class="row widget widget-chart-one" style="background-color: rgb(243, 244, 246)">
+            <div class="row">
 
                 <div class="col-12 col-lg-8 col-md-3 ml-3">
 

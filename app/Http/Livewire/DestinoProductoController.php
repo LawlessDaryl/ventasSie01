@@ -20,7 +20,7 @@ class DestinoProductoController extends Component
     use WithFileUploads;
     use WithPagination;
 
-    public $selected_id,$search,$selected_ubicacion,$componentName,$title,$sql,$prod,$show=false,$grouped;
+    public $selected_id,$search,$selected_ubicacion,$componentName,$title,$sql,$prod,$grouped;
     private $pagination = 10;
     public function paginationView()
     {
@@ -34,6 +34,9 @@ class DestinoProductoController extends Component
         $this->title='ssss';
         $this->pr=20;
     
+    }
+    public function cerrar(){
+        $this->grouped=false;
     }
 
     public function render()
@@ -57,8 +60,7 @@ class DestinoProductoController extends Component
 
                 $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
                 ->join('destinos as dest','dest.id','productos_destinos.destino_id')
-                ->select(DB::raw('SUM(productos_destinos.stock) as stock_s'),'p.nombre as name',
-                'p.cantidad_minima as cant_min','p.id as productoid')
+                ->select(DB::raw('SUM(productos_destinos.stock) as stock_s'),'p.*')
                 ->groupBy('productos_destinos.product_id')
                 ->paginate($this->pagination);
                 
@@ -110,9 +112,6 @@ class DestinoProductoController extends Component
 
 
     public function ver(Product $prod){
-
-        $query=[];
-
          $this->sql= "select rt,location,dsn,suc_id,loc,loc_cod,stock from ( select products.id as rt,destinos.id as dest,destinos.nombre as dsn, sucursals.name as suc_id,stock from productos_destinos 
         join products on productos_destinos.product_id= products.id
         join destinos on productos_destinos.destino_id= destinos.id
@@ -126,10 +125,6 @@ class DestinoProductoController extends Component
         ) as mm on dd.dest= mm.best and dd.rt= mm.pt where rt='$prod->id'";
         
         $this->pr=DB::select($this->sql);
-
-       
-       
-
         $collection= new SupportCollection();
          
         foreach ($this->pr as $value) {
@@ -146,12 +141,10 @@ class DestinoProductoController extends Component
         }
 
      $this->grouped= $collection->groupBy('sucursal_id');
-   //dd($this->grouped);
-
-        $this->show=true;
+   ///ddd($this->grouped);
         $this->emit('show-modal','showsss');
      
-        
+    
     }
     
 

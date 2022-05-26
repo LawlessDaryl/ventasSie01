@@ -14,7 +14,7 @@ use App\Models\Transference;
 use App\Models\transferencia_detalle;
 use Darryldecode\Cart\Facades\EditarFacade;
 use Livewire\Component;
-
+use Illuminate\Support\Collection as SupportCollection;
 use Illuminate\Support\Facades\DB;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -103,7 +103,6 @@ class EditTransferenceController extends Component
     public function increaseQty($productId)
 
     {
-       
         $product = Product::select('products.id','products.nombre as name')
         ->where('products.id',$productId)->first();
        
@@ -167,17 +166,39 @@ class EditTransferenceController extends Component
 
     public function finalizar_tr()
     {
+      
         $gh= EditarTransferencia::getContent();
         $auxi=[];
-      
+        $auxi2=[];
 
-    foreach ($gh as $value) {
-      foreach ($this->datalist_destino as $val) {
-          if ($value->id === $val->product_id) {
-              
-          }
-      }
-    }
+        foreach ($this->datalist_destino as $data) {
+            if ($gh->contains('id',$data->product_id)) {
+               
+            }
+            else{
+                array_push($auxi,[$data->product_id=>$data->cantidad] );
+                
+            }
+        }
+        //dd($auxi);
+
+      
+        foreach ($gh as $value) {
+            foreach ($this->datalist_destino as $value2) {
+                if ($value->id == $value2->product_id) {
+                   $auxi2[$value->id]=$value->quantity-$value2->cantidad;
+                }
+                else{
+                    $auxi2[$value->id]=$value->quantity;
+                }
+            }
+        }
+
+        dd($auxi2);
+      
+        
+
+        
 
 
         DB::beginTransaction();
