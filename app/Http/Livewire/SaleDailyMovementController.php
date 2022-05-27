@@ -478,6 +478,6 @@ class SaleDailyMovementController extends Component
         session(['asd' => $data]);
 
         //Redireccionando para crear el comprobante con sus respectvas variables
-        return redirect::to('report/pdfmd' . '/' . 5 . '/' . 2);
+        return redirect::to('report/pdfmd');
     }
 }

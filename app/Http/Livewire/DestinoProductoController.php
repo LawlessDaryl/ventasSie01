@@ -100,7 +100,9 @@ class DestinoProductoController extends Component
 
                            
 
-        return view('livewire.destinoproducto.almacenproductos',['destinos_almacen'=>$almacen,'data_suc' =>  $sucursal_ubicacion->get(),
+        return view('livewire.destinoproducto.almacenproductos',[
+            'destinos_almacen'=>$almacen,
+            'data_suc' =>  $sucursal_ubicacion->get(),
         'data_cat'=>Category::select('categories.name')->where('categories.categoria_padre','0')->get()
         ])  
         ->extends('layouts.theme.app')

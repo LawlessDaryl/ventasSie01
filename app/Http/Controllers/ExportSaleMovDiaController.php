@@ -13,14 +13,14 @@ use Illuminate\Support\Facades\Auth;
 
 class ExportSaleMovDiaController extends Controller
 {
-    public function reportPDFMovDiaVenta($num1, $num2)
+    public function reportPDFMovDiaVenta()
     {
         $value = session('asd');
         //dd($value);
 
-        $num2=$this->verificarpermiso();
+        $permiso=$this->verificarpermiso();
 
-        $pdf = PDF::loadView('livewire.pdf.reportemovdiaventas', compact('value','num2'));
+        $pdf = PDF::loadView('livewire.pdf.reportemovdiaventas', compact('value','permiso'));
         return $pdf->stream('Reporte_Movimiento_Diario.pdf'); 
     }
     //Buscar la utilidad de una venta mediante el idventa
