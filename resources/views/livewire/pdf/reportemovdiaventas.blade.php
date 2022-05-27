@@ -20,17 +20,9 @@
     width: 100%;
     font-size: 11px;
     text-align:center;
+    border-spacing:  0px;
     }
-    .seleccionar:hover {
-    background-color: skyblue;
-    cursor: pointer;
-    /* box-shadow: 10px 10px 0px 0px #46A2FD, 20px 20px #83C1FD, 30px 30px 14px #ACD5FD; */
-    /* transform: translate(-5px, -5px); */
-
-    background: #f1eaa9d2;
-    transform: translate(0px, -4px);;
-    transition-duration: 0.3s;
-    }
+    
     .tablehead{
         background-color: #383938;
         color: aliceblue;
@@ -46,43 +38,44 @@
     
         </div>
     </div>
-    <table class="estilostable" style="color: rgb(0, 0, 0)">
+    <table class="estilostable">
         <thead>
           <tr class="tablehead">
             <th class="text-center">N°</th>
-            <th>Fecha</th>
-            <th>Usuario</th>
-            <th>Cartera</th>
-            <th>Caja</th>
-            <th>Movimiento</th>
-            <th class="text-right">Importe</th>
-            <th class="text-center">Motivo</th>
-            @if($num2 == true)
-            <th class="text-center">Sucursal</th>
+            <th style="width: 100px;">FECHA</th>
+            <th style="width: 70px;">USUARIO</th>
+            <th>CARTERA</th>
+            <th style="width: 90px;">CAJA</th>
+            <th>MOVIMIENTO</th>
+            <th class="text-right" style="width: 70px;">IMPORTE</th>
+            <th class="text-center" style="width: 90px;">MOTIVO</th>
+            @if($permiso == true)
+            <th class="text-center">UTILIDAD</th>
+            <th class="text-center" style="width: 90px;">SUCURSAL</th>
             @endif
           </tr>
         </thead>
         <tbody>
             @foreach ($value as $item)
-                <tr class="seleccionar">
+                <tr>
                     <td class="text-center">
                         {{$loop->iteration}}
                     </td>
                     <td>
-                        {{ date("d/m/Y", strtotime($item['fecha'])) }}
+                        {{ date("d/m/Y h:i A", strtotime($item['fecha'])) }}
                     </td>
                     <td>
                         {{ $item['nombreusuario'] }}
                     </td>
                     <td>
-                        {{ $item['nombrecartera'] }}
+                        {{ ucwords(strtolower($item['nombrecartera'])) }}
                     </td>
                     <td>
-                    {{ ucwords($item['nombrecaja']) }}
+                    {{ ucwords(strtolower($item['nombrecaja'])) }}
                     </td>
                     @if($item['tipo'] == "INGRESO")
                     <td style="color: rgb(8, 157, 212)">
-                    <b>{{ $item['tipo'] }}</b>
+                        <b>{{ $item['tipo'] }}</b>
                     </td>
                     @else
                     <td style="color: rgb(205, 21, 0)">
@@ -90,12 +83,17 @@
                     </td>
                     @endif
                     <td class="text-right">
-                    {{ ucwords($item['importe']) }} Bs
+                    {{ number_format($item['importe'],2) }} Bs
                     </td>
                     <td class="text-center">
                     {{ ucwords($item['motivo']) }}
                     </td>
-                    @if($num2 == true)
+                    @if($permiso == true)
+                    <td class="text-center">
+                        @if($item['idmovimiento'] != '-')
+                        {{ number_format($item['idmovimiento'],2) }} Bs
+                        @endif
+                    </td>
                     <td class="text-center">
                     {{ ucwords($item['nombresucursal']) }}
                     </td>
@@ -104,5 +102,16 @@
                 @endforeach
         </tbody>
     </table>
+
+
+    <br>
+
+
+    <center style="font-size: 11px;">
+        <b>TOTAL INGRESOS: {{number_format($ingreso)}} Bs</b>
+            <br>
+        <b>TOTAL EGRESOS: {{number_format($egreso)}} Bs</b>
+    </center>
+
 </body>
 </html>

@@ -393,11 +393,16 @@ class SaleDailyMovementController extends Component
 
         //Actualizando la vaiable listareportes para crear el PDF
         $this->listareportes = $data;
+        $ingreso = $this->totalingresos();
+        $egreso = $this->totalegresos();
 
         return view('livewire.sales.saledailymovement', [
             'data' => $data,
             'sucursales' => $sucursales,
             'cajas' => $cajas,
+
+            'ingreso' => $ingreso,
+            'egreso' => $egreso,
         ])
         ->extends('layouts.theme.app')
         ->section('content');
@@ -475,9 +480,39 @@ class SaleDailyMovementController extends Component
         //$array = mysqli_fetch_array($data);
 
         
-        session(['asd' => $data]);
+        session(['tablareporte' => $data]);
 
         //Redireccionando para crear el comprobante con sus respectvas variables
-        return redirect::to('report/pdfmd');
+        return redirect::to('report/pdfmovdia');
+    }
+
+
+    
+    public function totalingresos()
+    {
+       $totalingreso = 0;
+       $tabla = $this->listareportes;
+       foreach ($tabla as $item)
+       {
+           if($item['tipo'] == 'INGRESO' )
+           {
+               $totalingreso = $totalingreso + $item['importe'];
+           }
+       }
+       return $totalingreso;
+
+    }
+    public function totalegresos()
+    {
+       $totalegreso = 0;
+       $tabla = $this->listareportes;
+       foreach ($tabla as $item)
+       {
+           if($item['tipo'] == 'EGRESO' )
+           {
+               $totalegreso = $totalegreso + $item['importe'];
+           }
+       }
+       return $totalegreso;
     }
 }

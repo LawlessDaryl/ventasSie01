@@ -146,7 +146,7 @@
                                             {{$loop->iteration}}
                                         </td>
                                         <td>
-                                            {{ $item->fecha }}
+                                            {{ date("d/m/Y h:i A", strtotime($item->fecha)) }}
                                         </td>
                                         <td>
                                             {{ ucwords($item->nombreusuario) }}
@@ -189,8 +189,23 @@
                     </div>
                 </div>  
 
+                <br>
+                <br>
 
-                
+                <div class="row">
+                    <div class="col-lg-4">
+                        
+                    </div>
+                    <div style="color: black" class="col-lg-4 text-center">
+                        <b>TOTAL INGRESOS: {{number_format($ingreso)}} Bs</b>
+                        <br>
+                        <b>TOTAL EGRESOS: {{number_format($egreso)}} Bs</b>
+                    </div>
+                    
+                    <div class="col-lg-4">
+                        
+                    </div>
+                </div>
 
 
 

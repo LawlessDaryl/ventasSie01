@@ -15,14 +15,48 @@ class ExportSaleMovDiaController extends Controller
 {
     public function reportPDFMovDiaVenta()
     {
-        $value = session('asd');
+        //$value = session('tablareporte');
         //dd($value);
 
-        $permiso=$this->verificarpermiso();
+        $permiso = $this->verificarpermiso();
 
-        $pdf = PDF::loadView('livewire.pdf.reportemovdiaventas', compact('value','permiso'));
+        $value = $this->creararray();
+
+        $ingreso = $this->totalingresos();
+        $egreso = $this->totalegresos();
+
+
+
+        session(['tablareporte' => null]);
+        $pdf = PDF::loadView('livewire.pdf.reportemovdiaventas', compact('value','permiso','ingreso','egreso'));
         return $pdf->stream('Reporte_Movimiento_Diario.pdf'); 
     }
+
+
+    //Crear array donde sereeemplazan los id de las movimientos por las utilidades
+    public function creararray()
+    {
+        $contador = 0;
+        $tabla = session('tablareporte');
+        //dd($tabla[0]['idmovimiento']);
+        foreach ($tabla as $item)
+        {
+            if($this->buscarventa($item['idmovimiento'])->count() > 0 )
+            {
+                //dd($item);
+                //dd($tabla[array($item)]['idmovimiento']);
+                //dd($item['idmovimiento']);
+                $tabla[$contador]['idmovimiento'] = $this->buscarutilidad($this->buscarventa($item['idmovimiento'])->first()->idventa);
+            }
+            else
+            {
+                $tabla[$contador]['idmovimiento'] = '-';
+            }
+            $contador++;
+        }
+        return $tabla;
+    }
+
     //Buscar la utilidad de una venta mediante el idventa
     public function buscarutilidad($idventa)
     {
@@ -59,4 +93,36 @@ class ExportSaleMovDiaController extends Controller
          }
          return false;
      }
+
+
+     public function totalingresos()
+     {
+        $totalingreso = 0;
+        $tabla = session('tablareporte');
+        foreach ($tabla as $item)
+        {
+            if($item['tipo'] == 'INGRESO' )
+            {
+                $totalingreso = $totalingreso + $item['importe'];
+            }
+        }
+        return $totalingreso;
+
+     }
+     public function totalegresos()
+     {
+        $totalegreso = 0;
+        $tabla = session('tablareporte');
+        foreach ($tabla as $item)
+        {
+            if($item['tipo'] == 'EGRESO' )
+            {
+                $totalegreso = $totalegreso + $item['importe'];
+            }
+        }
+        return $totalegreso;
+     }
+
+
+
 }
