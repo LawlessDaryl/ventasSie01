@@ -66,7 +66,7 @@ class TransferenciasController extends Component
     }
     public function ver($id)
     {
-        
+       
         $this->selected_id1= $id;
         $this->detalle=DetalleTransferencia::join('products','detalle_transferencias.product_id','products.id')
         ->join('estado_trans_detalles','detalle_transferencias.id','estado_trans_detalles.detalle_id')
@@ -123,9 +123,7 @@ class TransferenciasController extends Component
     protected $listeners = ['editRow' => 'editar'];
     public function editar($id)
     {
-        
         session(['id_transferencia' => null]);
-        
         session(['id_transferencia' => $id]);
         return redirect()->route('editdest');
     }

@@ -85,6 +85,7 @@ class EditTransferenceController extends Component
         ->select('detalle_transferencias.*','transferences.id as tr','estado_transferencias.estado as esty')
         ->where('transferences.id',$this->ide)
         ->where('estado_transferencias.op','Activo')
+      
         ->get();
         //$bn =EditarTransferencia::getContent();
 
@@ -149,8 +150,7 @@ class EditTransferenceController extends Component
     {
         EditarTransferencia::remove($productId);
         $this->itemsQuantity = EditarTransferencia::getTotalQuantity();
-        $this->emit('scan-ok', 'Producto eliminado');
-        $this->tipo_tr ='Elegir operacion';
+
     }
     public function resetUI()
     {
@@ -166,91 +166,68 @@ class EditTransferenceController extends Component
 
     public function finalizar_tr()
     {
-      
-        $gh= EditarTransferencia::getContent();
-        $auxi=[];
-        $auxi2=[];
+      $auxi=[];
+        $carrito= EditarTransferencia::getContent();
+        $keyed = $this->datalist_destino->map(function ($item) {
+            return ['id'=>$item->product_id,'cantidad'=>$item->cantidad];
+        })->keyBy('id');
+        
 
-        foreach ($this->datalist_destino as $data) {
-            if ($gh->contains('id',$data->product_id)) {
-               
+        $keyed2=$carrito->map(function ($item) use($keyed) {
+            if ($keyed->contains('id',$item->id)) {
+                return [
+                    'id'=>$item->id,
+                    'cantidad'=>$item->quantity-$keyed[$item->id]['cantidad']
+                ];
             }
             else{
-                array_push($auxi,[$data->product_id=>$data->cantidad] );
-                
+                return [
+                    'id'=>$item->id,
+                    'cantidad'=>$item->quantity
+                ];
             }
-        }
-        //dd($auxi);
-        foreach ($gh as $value) {
-            foreach ($this->datalist_destino as $value2) {
-                if ($value->id == $value2->product_id) {
-                   $auxi2[$value->id]=$value->quantity-$value2->cantidad;
-                }
-                else{
-                    $auxi2[$value->id]=$value->quantity;
-                }
-            }
-        }
+        });
 
-        dd($auxi2);
       
-        
-
-        
-
-
+       
         DB::beginTransaction();
         try {
 
-            if ($this->selected_origen)
-            {
-                $items = EditarTransferencia::getContent();
-                foreach ($items as $item) 
-                {
-                   $ss=DetalleTransferencia::create([
-                        'product_id' => $item->id,
-                        'cantidad' => $item->quantity,
-                        'estado'=>1//***tiene que depender de modificar la transferencia, esta pendiente
-                    ]);
-
-                    $cc[]=$ss->id;
-
-                    $q=ProductosDestino::where('product_id',$item->id)
-                    ->where('destino_id',$this->selected_origen)->value('stock');
-                    
-                  
-                    ProductosDestino::where('product_id',$item->id)
-                    ->where('destino_id',$this->selected_origen)
-                    ->update(['stock'=>($q-$item->quantity)]);
-                    
-
-                    $r=ProductosDestino::where('product_id',$item->id)
-                    ->where('destino_id',$this->selected_destino)->value('stock');
-                    
-                  
-                    /*ProductosDestino::where('product_id',$item->id)
-                    ->where('destino_id',$this->selected_destino)
-                    ->update(['stock'=>($r+$item->quantity)]);
-
-                    /*DB::table('productos_destinos')
-                    ->updateOrInsert(['stock'],$item->quantity, ['product_id' => $item->id, 'destino_id'=>$this->destino]);*/
-  
-                }
-
-                   $mm= EstadoTransferencia::create([
-                        'estado'=>$this->estado,
-                        'op'=>1,
-                        'id_transferencia'=>$Transferencia_encabezado->id,
-                        'id_usuario'=>Auth()->user()->id
-                    ]);
-
-                    foreach ($cc as $item) {
-                        EstadoTransDetalle::create([
-                            'estado_id'=>$mm->id,
-                            'detalle_id'=>$item
-                        ]);
-                    }    
+            foreach ($this->datalist_destino as $data) {
+                EstadoTransDetalle::where('detalle_id',$data->id)->delete();
+                $data->delete();
             }
+            foreach ($carrito as $value) {
+                $ss=DetalleTransferencia::create([
+                    'product_id' => $value->id,
+                    'cantidad' => $value->quantity,
+                    'estado'=>1//***tiene que depender de modificar la transferencia, esta pendiente
+                ]);
+
+                $cc[]=$ss->id;
+            }
+
+            foreach ($keyed2 as $item) 
+            {
+                   // dd($this->selected_origen);
+                    $q=ProductosDestino::where('product_id',$item['id'])
+                    ->where('destino_id',$this->selected_origen)->value('stock');
+
+                    ProductosDestino::where('product_id',$item['id'])
+                    ->where('destino_id',$this->selected_origen)
+                    ->update(['stock'=>($q+$item['cantidad'])]);
+            }
+
+            $kl=EstadoTransferencia::where('id_transferencia',$this->ide)->pluck('id');
+            
+            
+            foreach ($cc as $item) {
+                EstadoTransDetalle::create([
+                    'estado_id'=>$kl[0],
+                    'detalle_id'=>$item
+                ]);
+            }    
+            
             DB::commit();
             $this->resetUI();
            

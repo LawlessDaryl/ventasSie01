@@ -47,8 +47,6 @@ class DestinoSeeder extends Seeder
             'name' => $pg->nombre.'_'.$pg->id,
             'guard_name' => 'web'
         ]);
-
-        
         $mm= Destino::create([
             'nombre'=>'Tienda',
             'observacion'=>'ninguna',
