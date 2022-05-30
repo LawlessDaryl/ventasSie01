@@ -177,6 +177,9 @@ class TransferenciasController extends Component
 
         $this->emit('close2');
         $this->reset('selected_id2','datalist_destino','estado_destino');
+        
+        $this->emit('print_tr');
+
     }
 
     public function rechazarTransferencia(){
@@ -221,4 +224,11 @@ class TransferenciasController extends Component
     $this->emit('close2');
 
     }
+
+    public function imprimir($id){
+        
+        session(['id_transf' =>$id]);
+
+        return redirect()->route('transferencia.pdf');
+    } 
 }

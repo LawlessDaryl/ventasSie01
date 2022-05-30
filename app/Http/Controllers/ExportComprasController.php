@@ -60,10 +60,6 @@ class ExportComprasController extends Controller
        $nro= $this->nro;
        $totales=$this->totales;
 
-  
-        
-
-    
         $pdf = PDF::loadView('livewire.pdf.reporteCompras', compact('data', 'filtro', 'fecha','dateFrom', 'dateTo', 'dateTo','nro','totales'));
 
         return $pdf->stream('ComprasReport.pdf');  //visualizar

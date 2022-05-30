@@ -89,6 +89,10 @@
                                                             class="btn btn-dark p-1 m-0" title="Ver">
                                                             <i class="fas fa-list"></i>
                                                         </a>
+                                                        <a href="javascript:void(0)" wire:click="imprimir({{$data_td->t_id}})" 
+                                                            class="btn btn-dark p-1 m-0" title="Ver">
+                                                            <i class="fas fa-print"></i>
+                                                        </a>
                                                        
                                                        
                                                     </td>
@@ -179,13 +183,17 @@
                                                         @if ($data2->estado_te ==='Recibido' or $data2->estado_te === 'Rechazado')
                                                         <a href="javascript:void(0)" wire:click="visualizardestino({{$data2->tr_des_id}})" 
                                                             class="btn btn-dark p-1 m-0" title="Ver">
-                                                            <i class="fas fa-eye"></i>
+                                                            <i class="fas fa-list"></i>
+                                                        </a>
+                                                        <a href="javascript:void(0)" wire:click="imprimir({{$data2->tr_des_id}})" 
+                                                            class="btn btn-dark p-1 m-0" title="Ver">
+                                                            <i class="fas fa-print"></i>
                                                         </a>
                                                         @else
                                                  
                                                         <a href="javascript:void(0)" wire:click="visualizardestino({{$data2->tr_des_id}})" 
                                                             class="btn btn-dark p-1 m-0" title="Ver">
-                                                            <i class="fas fa-eye"></i>
+                                                            <i class="fas fa-list"></i>
                                                         </a>
                                                         
                                                         @endif
@@ -260,6 +268,7 @@
             }
         })
     }
+
        
     
 

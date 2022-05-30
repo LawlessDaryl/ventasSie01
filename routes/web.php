@@ -8,6 +8,7 @@ use App\Http\Controllers\ExportTigoPdfController;
 use App\Http\Controllers\ImprimirController;
 use App\Http\Controllers\ExportComprasController;
 use App\Http\Controllers\ExportSaleMovDiaController;
+use App\Http\Controllers\ExportTransferenciaController;
 use App\Http\Livewire\ArqueosStreamingController;
 use App\Http\Livewire\ArqueosTigoController;
 use App\Http\Livewire\AsignarController;
@@ -161,6 +162,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('trans', EditTransferenceController::class)->name('editdest');
 
     Route::get('Compras/pdf/{id}', [ExportComprasController::class, 'PrintCompraPdf']);
+    Route::get('Transferencia/pdf', [ExportTransferenciaController::class, 'printPdf'])->name('transferencia.pdf');
     Route::get('reporteCompras/pdf/{filtro}/{fecha}/{fromDate}/{toDate}/{data?}', [ExportComprasController::class, 'reporteComprasPdf']);
     
     
