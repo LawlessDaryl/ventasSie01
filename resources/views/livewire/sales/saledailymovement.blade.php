@@ -18,6 +18,9 @@
     width: 100%;
     min-width: 1000px;
     }
+    .estilostotales {
+    width: 100%;
+    }
     .seleccionar:hover {
     background-color: skyblue;
     cursor: pointer;
@@ -110,7 +113,6 @@
     
                             
 
-
                                 <button wire:click.prevent="generarpdf({{$data}})" class="btn btn-primary">
                                     GENERAR PDF
                                 </button>
@@ -197,9 +199,83 @@
                         
                     </div>
                     <div style="color: black" class="col-lg-4 text-center">
-                        <b>TOTAL INGRESOS: {{number_format($ingreso)}} Bs</b>
-                        <br>
-                        <b>TOTAL EGRESOS: {{number_format($egreso)}} Bs</b>
+                        
+
+
+
+                        <table class="estilostotales" style="color: rgb(0, 0, 0)">
+                            <thead>
+                              <tr class="tablehead">
+                                <th>TOTAL INGRESO</th>
+                                <th>TOTAL EGRESO</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="seleccionar">
+                                    <td class="text-center">
+                                        {{number_format($ingreso,2)}} Bs
+                                    </td>
+                                    <td>
+                                        {{number_format($egreso,2)}} Bs
+                                    </td>
+                                </tr>
+                                <tr style="background-color: rgb(0, 0, 0)">
+                                    <td class="text-center">
+                                        
+                                    </td>
+                                    <td>
+                                        
+                                    </td>
+                                </tr>
+
+
+                                @foreach($listacarteras as $cartera)
+
+                                    @if($cartera->totales != 0)
+
+
+
+
+
+                                    
+
+                                        <tr class="seleccionar">
+                                            <td class="text-center">
+                                                Total en {{$cartera->nombre}}
+                                            </td>
+                                            <td>
+                                                {{number_format($cartera->totales,2)}} Bs
+                                            </td>
+                                        </tr>
+
+
+
+
+
+
+                                    @endif
+                                @endforeach
+
+
+                            </tbody>
+                        </table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                     </div>
                     
                     <div class="col-lg-4">

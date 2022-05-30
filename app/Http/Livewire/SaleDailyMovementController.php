@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\Caja;
+use App\Models\Cartera;
 use App\Models\CarteraMov;
 use App\Models\Sale;
 use App\Models\Sucursal;
@@ -11,6 +12,7 @@ use Livewire\WithPagination;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 
 class SaleDailyMovementController extends Component
@@ -27,6 +29,8 @@ class SaleDailyMovementController extends Component
 
     //Variable para enviar datos y crear PDF
     public $listareportes;
+
+
 
     use WithPagination;
     public function paginationView()
@@ -113,7 +117,7 @@ class SaleDailyMovementController extends Component
                     ->join("users as u", "u.id", "m.user_id")
                     ->join("cajas as ca", "ca.id", "c.caja_id")
                     ->join("sucursals as s", "s.id", "ca.sucursal_id")
-                    ->select('cartera_movs.created_at as fecha','u.name as nombreusuario',
+                    ->select('c.id as idcartera','cartera_movs.created_at as fecha','u.name as nombreusuario',
                     'cartera_movs.comentario as motivo','m.import as importe','ca.nombre as nombrecaja',
                     'cartera_movs.type as tipo','c.nombre as nombrecartera','s.name as nombresucursal','m.id as idmovimiento')
                     ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta','Por Venta Anulada'])
@@ -393,14 +397,18 @@ class SaleDailyMovementController extends Component
 
         //Actualizando la vaiable listareportes para crear el PDF
         $this->listareportes = $data;
+        
         $ingreso = $this->totalingresos();
         $egreso = $this->totalegresos();
+
+        $listacarteras = $this->totalcarteras();
+
 
         return view('livewire.sales.saledailymovement', [
             'data' => $data,
             'sucursales' => $sucursales,
             'cajas' => $cajas,
-
+            'listacarteras' => $listacarteras,
             'ingreso' => $ingreso,
             'egreso' => $egreso,
         ])
@@ -515,4 +523,39 @@ class SaleDailyMovementController extends Component
        }
        return $totalegreso;
     }
+
+
+    //Sumar las carteras de la Consulta Principal $DATA
+    public function totalcarteras()
+    {
+        $carteras = Cartera::select('*', DB::raw('0 as totales'))
+        ->get();
+
+        foreach($this->listareportes as $item)
+        {
+            foreach($carteras as $item2)
+            {
+                if($item['idcartera'] == $item2['id'])
+                {
+
+                    if($item['tipo'] == 'INGRESO')
+                    {
+                        $item2['totales'] = $item2['totales'] + $item['importe'];
+                    }
+                    else
+                    {
+                        $item2['totales'] = $item2['totales'] - $item['importe'];
+                    }
+                    break;
+                }
+            }
+       
+        }
+
+
+        return $carteras;
+
+        
+    }
+
 }
