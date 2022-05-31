@@ -240,8 +240,8 @@
                                     
 
                                         <tr class="seleccionar">
-                                            <td class="text-center">
-                                                Total en {{$cartera->nombre}}
+                                            <td class="text-left">
+                                                Total en {{ucwords(strtolower($cartera->nombre))}}
                                             </td>
                                             <td>
                                                 {{number_format($cartera->totales,2)}} Bs

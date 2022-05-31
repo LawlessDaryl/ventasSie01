@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cartera;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade as PDF;
 use Carbon\Carbon;
@@ -10,6 +11,7 @@ use App\Models\Sale;
 use App\Models\User;
 use App\Models\Sucursal;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ExportSaleMovDiaController extends Controller
 {
@@ -23,12 +25,15 @@ class ExportSaleMovDiaController extends Controller
         $value = $this->creararray();
 
         $ingreso = $this->totalingresos();
+
         $egreso = $this->totalegresos();
 
+        $listacarteras = $this->totalcarteras();
 
 
+        //Volviendo la variable global en null despues de cumplir su función
         session(['tablareporte' => null]);
-        $pdf = PDF::loadView('livewire.pdf.reportemovdiaventas', compact('value','permiso','ingreso','egreso'));
+        $pdf = PDF::loadView('livewire.pdf.reportemovdiaventas', compact('value','permiso','ingreso','egreso','listacarteras'));
         return $pdf->stream('Reporte_Movimiento_Diario.pdf'); 
     }
 
@@ -123,6 +128,39 @@ class ExportSaleMovDiaController extends Controller
         return $totalegreso;
      }
 
+    //Sumar las carteras de la Consulta Principal $DATA 
+    public function totalcarteras()
+    {
+        $tabla = session('tablareporte');
+        $carteras = Cartera::select('*', DB::raw('0 as totales'))
+        ->get();
+
+        foreach($tabla as $item)
+        {
+            foreach($carteras as $item2)
+            {
+                if($item['idcartera'] == $item2['id'])
+                {
+
+                    if($item['tipo'] == 'INGRESO')
+                    {
+                        $item2['totales'] = $item2['totales'] + $item['importe'];
+                    }
+                    else
+                    {
+                        $item2['totales'] = $item2['totales'] - $item['importe'];
+                    }
+                    break;
+                }
+            }
+       
+        }
+
+
+        return $carteras;
+
+        
+    }
 
 
 }

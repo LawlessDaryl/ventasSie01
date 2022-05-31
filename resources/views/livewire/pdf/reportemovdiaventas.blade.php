@@ -6,6 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Movimiento Diario</title>
 
+
+    
+
     <style>
     .contenedortabla{
         /* overflow:scroll; */
@@ -22,11 +25,22 @@
     text-align:center;
     border-spacing:  0px;
     }
+    .estilostable2 {
+    font-size: 11px;
+    text-align:center;
+    border-spacing:  0px;
+    margin-left: auto;
+    margin-right: auto;
+    }
     
     .tablehead{
         background-color: #383938;
         color: aliceblue;
     }
+
+
+
+
     </style>
 
 </head>
@@ -105,13 +119,81 @@
 
 
     <br>
+    <br>
+
+    <div class="">
+            
 
 
-    <center style="font-size: 11px;">
-        <b>TOTAL INGRESOS: {{number_format($ingreso)}} Bs</b>
-            <br>
-        <b>TOTAL EGRESOS: {{number_format($egreso)}} Bs</b>
-    </center>
+            <table class="estilostable2" style="color: rgb(0, 0, 0)">
+                <thead>
+                    <tr class="tablehead">
+                    <th>TOTAL INGRESO</th>
+                    <th>-</th>
+                    <th>TOTAL EGRESO</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="seleccionar">
+                        <td class="text-center">
+                            {{number_format($ingreso,2)}} Bs
+                        </td>
+                        <td>
+                            -
+                        </td>
+                        <td>
+                            {{number_format($egreso,2)}} Bs
+                        </td>
+                    </tr>
+                    <tr style="background-color: rgb(0, 0, 0)">
+                        <td class="text-center">
+                            
+                        </td>
+                        <td>
+                            
+                        </td>
+                        <td>
+                            
+                        </td>
+                    </tr>
+
+
+                    @foreach($listacarteras as $cartera)
+
+                        @if($cartera->totales != 0)
+
+
+
+
+
+                        
+
+                            <tr class="seleccionar">
+                                <td class="text-left">
+                                    Total en {{ucwords(strtolower($cartera->nombre))}}
+                                </td>
+                                <td>
+                                    -
+                                </td>
+                                <td>
+                                    {{number_format($cartera->totales,2)}} Bs
+                                </td>
+                            </tr>
+
+
+
+
+
+
+                        @endif
+                    @endforeach
+
+
+                </tbody>
+            </table>
+
+        
+    </div>
 
 </body>
 </html>

@@ -135,7 +135,7 @@ class SaleDailyMovementController extends Component
                     ->join("users as u", "u.id", "m.user_id")
                     ->join("cajas as ca", "ca.id", "c.caja_id")
                     ->join("sucursals as s", "s.id", "ca.sucursal_id")
-                    ->select('cartera_movs.created_at as fecha','u.name as nombreusuario',
+                    ->select('c.id as idcartera','cartera_movs.created_at as fecha','u.name as nombreusuario',
                     'cartera_movs.comentario as motivo','m.import as importe','ca.nombre as nombrecaja',
                     'cartera_movs.type as tipo','c.nombre as nombrecartera','s.name as nombresucursal','m.id as idmovimiento')
                     ->where('ca.id',$this->caja)
@@ -159,7 +159,7 @@ class SaleDailyMovementController extends Component
                     ->join("users as u", "u.id", "m.user_id")
                     ->join("cajas as ca", "ca.id", "c.caja_id")
                     ->join("sucursals as s", "s.id", "ca.sucursal_id")
-                    ->select('cartera_movs.created_at as fecha','u.name as nombreusuario',
+                    ->select('c.id as idcartera','cartera_movs.created_at as fecha','u.name as nombreusuario',
                     'cartera_movs.comentario as motivo','m.import as importe','ca.nombre as nombrecaja',
                     'cartera_movs.type as tipo','c.nombre as nombrecartera','s.name as nombresucursal','m.id as idmovimiento')
                     ->where('s.id',$this->sucursal,)
@@ -179,7 +179,7 @@ class SaleDailyMovementController extends Component
                     ->join("users as u", "u.id", "m.user_id")
                     ->join("cajas as ca", "ca.id", "c.caja_id")
                     ->join("sucursals as s", "s.id", "ca.sucursal_id")
-                    ->select('cartera_movs.created_at as fecha','u.name as nombreusuario',
+                    ->select('c.id as idcartera','cartera_movs.created_at as fecha','u.name as nombreusuario',
                     'cartera_movs.comentario as motivo','m.import as importe','ca.nombre as nombrecaja',
                     'cartera_movs.type as tipo','c.nombre as nombrecartera','s.name as nombresucursal','m.id as idmovimiento')
                     ->where('s.id',$this->sucursal,)
@@ -203,7 +203,7 @@ class SaleDailyMovementController extends Component
                     ->join("users as u", "u.id", "m.user_id")
                     ->join("cajas as ca", "ca.id", "c.caja_id")
                     ->join("sucursals as s", "s.id", "ca.sucursal_id")
-                    ->select('cartera_movs.created_at as fecha','u.name as nombreusuario',
+                    ->select('c.id as idcartera','cartera_movs.created_at as fecha','u.name as nombreusuario',
                     'cartera_movs.comentario as motivo','m.import as importe','ca.nombre as nombrecaja',
                     'cartera_movs.type as tipo','c.nombre as nombrecartera','s.name as nombresucursal','m.id as idmovimiento')
                     ->where('s.id',$this->sucursal,)
@@ -229,7 +229,7 @@ class SaleDailyMovementController extends Component
                     ->join("users as u", "u.id", "m.user_id")
                     ->join("cajas as ca", "ca.id", "c.caja_id")
                     ->join("sucursals as s", "s.id", "ca.sucursal_id")
-                    ->select('cartera_movs.created_at as fecha','u.name as nombreusuario',
+                    ->select('c.id as idcartera','cartera_movs.created_at as fecha','u.name as nombreusuario',
                     'cartera_movs.comentario as motivo','m.import as importe','ca.nombre as nombrecaja',
                     'cartera_movs.type as tipo','c.nombre as nombrecartera','s.name as nombresucursal','m.id as idmovimiento')
                     ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta','Por Venta Anulada'])
@@ -256,7 +256,7 @@ class SaleDailyMovementController extends Component
                     ->join("users as u", "u.id", "m.user_id")
                     ->join("cajas as ca", "ca.id", "c.caja_id")
                     ->join("sucursals as s", "s.id", "ca.sucursal_id")
-                    ->select('cartera_movs.created_at as fecha','u.name as nombreusuario',
+                    ->select('c.id as idcartera','cartera_movs.created_at as fecha','u.name as nombreusuario',
                     'cartera_movs.comentario as motivo','m.import as importe','ca.nombre as nombrecaja',
                     'cartera_movs.type as tipo','c.nombre as nombrecartera','s.name as nombresucursal','m.id as idmovimiento')
                     ->where('ca.id',$this->caja)
@@ -290,7 +290,7 @@ class SaleDailyMovementController extends Component
                     ->join("users as u", "u.id", "m.user_id")
                     ->join("cajas as ca", "ca.id", "c.caja_id")
                     ->join("sucursals as s", "s.id", "ca.sucursal_id")
-                    ->select('cartera_movs.created_at as fecha','u.name as nombreusuario',
+                    ->select('c.id as idcartera','cartera_movs.created_at as fecha','u.name as nombreusuario',
                     'cartera_movs.comentario as motivo','m.import as importe','ca.nombre as nombrecaja',
                     'cartera_movs.type as tipo','c.nombre as nombrecartera','s.name as nombresucursal','m.id as idmovimiento')
                     ->where('s.id',$this->sucursal,)
@@ -320,7 +320,7 @@ class SaleDailyMovementController extends Component
                     ->join("users as u", "u.id", "m.user_id")
                     ->join("cajas as ca", "ca.id", "c.caja_id")
                     ->join("sucursals as s", "s.id", "ca.sucursal_id")
-                    ->select('cartera_movs.created_at as fecha','u.name as nombreusuario',
+                    ->select('c.id as idcartera','cartera_movs.created_at as fecha','u.name as nombreusuario',
                     'cartera_movs.comentario as motivo','m.import as importe','ca.nombre as nombrecaja',
                     'cartera_movs.type as tipo','c.nombre as nombrecartera','s.name as nombresucursal','m.id as idmovimiento')
                     ->where('s.id',$this->sucursal,)
@@ -354,7 +354,7 @@ class SaleDailyMovementController extends Component
                     ->join("users as u", "u.id", "m.user_id")
                     ->join("cajas as ca", "ca.id", "c.caja_id")
                     ->join("sucursals as s", "s.id", "ca.sucursal_id")
-                    ->select('cartera_movs.created_at as fecha','u.name as nombreusuario',
+                    ->select('c.id as idcartera','cartera_movs.created_at as fecha','u.name as nombreusuario',
                     'cartera_movs.comentario as motivo','m.import as importe','ca.nombre as nombrecaja',
                     'cartera_movs.type as tipo','c.nombre as nombrecartera','s.name as nombresucursal','m.id as idmovimiento')
                     ->where('s.id',$this->sucursal,)
