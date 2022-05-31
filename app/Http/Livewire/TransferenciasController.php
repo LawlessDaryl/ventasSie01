@@ -176,9 +176,11 @@ class TransferenciasController extends Component
         DB::commit();
 
         $this->emit('close2');
+        $tr=$this->selected_id2;
         $this->reset('selected_id2','datalist_destino','estado_destino');
-        
-        $this->emit('print_tr');
+        session(['id_transf' =>$tr]);
+        return redirect()->route('transferencia.pdf');
+       
 
     }
 

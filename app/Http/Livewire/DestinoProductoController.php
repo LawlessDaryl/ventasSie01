@@ -139,8 +139,9 @@ class DestinoProductoController extends Component
                 );
         }
 
-     $this->grouped= $collection->groupBy('sucursal_id');
-   ///ddd($this->grouped);
+     $this->grouped= $collection->groupBy(['sucursal_id','estancia']);
+    
+//dd($this->grouped);
         $this->emit('show-modal','showsss');
      
     

@@ -34,26 +34,28 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @foreach ($item as $value)
+                                                        @foreach ($item as $key=>$value)
                                                         <tr>
 
                                                             <td>
                                                                 <h6 class="text-center">{{ $loop->iteration}}</h6>
                                                             </td>
                                                             <td>
-                                                                <h6>{{$value->estancia}}</h6>
+                                                                <h6>{{$key}}</h6>
                                                             </td>
                                                             <td>
 
-                                                                <h6>{{$value->stock}}</h6>
+                                                                <h6>{{$value[0]->stock}}</h6>
                                                             </td>
                                                         <td>
 
-                                                            @if ($value->tipo == null)
+                                                            @if ($value[0]->tipo == null)
                                                                 <h6>No asignado</h6> 
                                                             @else
-                                                                
-                                                            <h6>{{$value->tipo}}-{{$value->mob_code}}</h6>
+                                                                @foreach ($value as $data)
+                                                                    
+                                                                <h6>{{$data->tipo}}-{{$data->mob_code}}</h6>
+                                                                @endforeach
                                                             @endif
                                                         </td>
                                                         </tr>
