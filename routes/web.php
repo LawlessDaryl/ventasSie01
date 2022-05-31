@@ -145,26 +145,31 @@ Route::middleware(['auth'])->group(function () {
     Route::get('reporteServicio/pdf/{user}/{estado}/{type}', [ExportServicioPdfController::class, 'reporteServPDF']);
 
     /* INVENTARIOS */
-    Route::get('categories', CategoriesController::class)->name('categorias');
-    Route::get('products', ProductsController::class)->name('productos');
-    Route::get('locations', LocalizacionController::class)->name('locations');
-    Route::get('unidades', UnidadesController::class)->name('unities');
-    Route::get('marcas', MarcasController::class)->name('brands');
-    Route::get('proveedores', ProvidersController::class)->name('supliers');
-    Route::get('compras', ComprasController::class)->name('compras');
-    Route::get('detalle_compras', DetalleComprasController::class)->name('detalle_compra');
-    Route::get('editar_compra/{id}',[EditarCompraDetalleController::class,'mount'])->name('detalle_compra');
-    Route::get('transacciones', TransaccionesController::class)->name('transactions');
-    Route::get('destino_prod', DestinoProductoController::class)->name('destination');
-    Route::get('transferencia', TransferirProductoController::class)->name('destination');
-    Route::get('destino', DestinoController::class)->name('dest');
-    Route::get('transferencias', TransferenciasController::class)->name('transfe');
-    Route::get('trans', EditTransferenceController::class)->name('editdest');
-
-    Route::get('Compras/pdf/{id}', [ExportComprasController::class, 'PrintCompraPdf']);
-    Route::get('Transferencia/pdf', [ExportTransferenciaController::class, 'printPdf'])->name('transferencia.pdf');
-    Route::get('reporteCompras/pdf/{filtro}/{fecha}/{fromDate}/{toDate}/{data?}', [ExportComprasController::class, 'reporteComprasPdf']);
-    
+    Route::group(['middleware' => ['permission:Inventarios_Registros']], function () {
+        Route::get('categories', CategoriesController::class)->name('categorias');
+        Route::get('products', ProductsController::class)->name('productos');
+        Route::get('locations', LocalizacionController::class)->name('locations');
+        Route::get('unidades', UnidadesController::class)->name('unities');
+        Route::get('marcas', MarcasController::class)->name('brands');
+        Route::get('proveedores', ProvidersController::class)->name('supliers');
+    });
+        Route::group(['middleware' => ['permission:Compras_Index']], function () {
+        Route::get('compras', ComprasController::class)->name('compras');
+        Route::get('detalle_compras', DetalleComprasController::class)->name('detalle_compra');
+        Route::get('editar_compra/{id}',[EditarCompraDetalleController::class,'mount'])->name('detalle_compra');
+    });
+   // Route::get('transacciones', TransaccionesController::class)->name('transactions')->middleware('permission:Coins_Index');
+        Route::get('destino_prod', DestinoProductoController::class)->name('destination')->middleware('permission:Almacen_Index');
+        Route::group(['middleware' => ['permission:Transferencia_Index']], function () {   
+        Route::get('transferencia', TransferirProductoController::class)->name('destination');
+        Route::get('destino', DestinoController::class)->name('dest');
+        Route::get('transferencias', TransferenciasController::class);
+        Route::get('trans', EditTransferenceController::class)->name('editdest');});
+        Route::group(['middleware' => ['permission:Reportes_Inventarios_Export']], function () {
+        Route::get('Compras/pdf/{id}', [ExportComprasController::class, 'PrintCompraPdf']);
+        Route::get('Transferencia/pdf', [ExportTransferenciaController::class, 'printPdf'])->name('transferencia.pdf');
+        Route::get('reporteCompras/pdf/{filtro}/{fecha}/{fromDate}/{toDate}/{data?}', [ExportComprasController::class, 'reporteComprasPdf']);
+        });
     
     
 

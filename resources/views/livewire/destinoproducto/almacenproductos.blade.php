@@ -18,7 +18,23 @@
     width: 100%;
     min-width: 1000px;
     }
+    .estilostotales {
+    width: 100%;
+    }
+    .seleccionar:hover {
+    background-color: skyblue;
+    cursor: pointer;
+    /* box-shadow: 10px 10px 0px 0px #46A2FD, 20px 20px #83C1FD, 30px 30px 14px #ACD5FD; */
+    /* transform: translate(-5px, -5px); */
 
+    background: #f1eaa9d2;
+	transform: translate(0px, -4px);;
+	transition-duration: 0.3s;
+    }
+    .tablehead{
+        background-color: #383938;
+        color: aliceblue;
+    }
 </style>
 @endsection
 <div class="row sales layout-top-spacing">
@@ -71,10 +87,11 @@
 
              
                 <div class="contenedortabla">
-                    <table class="estilostable">
-                        <thead class="text-white" style="background: #3B3F5C">
+                    <table class="estilostable" style="color: rgb(0, 0, 0)">
+                        <thead class="tablehead">
                             <tr>
                                 <th class="table-th text-withe text-center">ITEM</th>
+                                <th class="table-th text-withe text-center">IMAGEN</th>                              
                                 <th class="table-th text-withe text-center">PRODUCTO</th>                              
                                 <th class="table-th text-withe text-center">STOCK</th>   
                                 @if ($selected_id == 'General' || $selected_id == null)
@@ -86,25 +103,31 @@
                         <tbody>
                             @foreach ($destinos_almacen as $destino)
                                 @if ($destino->stock_s < $destino->cant_min)
-                            <tr style="background-color: rgb(227, 146, 146)">
+                            <tr class="seleccionar">
                                 @else
-                            <tr>
+                            <tr class="seleccionar">
                             @endif
                                     <td>
                                         <h6 class="text-center">{{ $loop->iteration}}</h6>
                                     </td>
+                                    <td class="text-center">
+                                        <span>
+                                            <img src="{{('storage/productos/'.$destino->image) }}"
+                                                height="40" class="rounded">
+                                        </span>
+                                    </td>
                                     <td>
-                                        <h5> <strong>{{$destino->nombre}}</strong> </h5>
+                                        <strong>{{$destino->nombre}}</strong>
                                         <label>{{ $destino->unidad}}</label>|<label>{{ $destino->marca}}</label>|<label>{{ $destino->industria }}</label>
-                                        <h6>{{ $destino->caracteristicas }}</h6>
+                                        {{ $destino->caracteristicas }}
                                      
                                     </td>
                                     @if ($selected_id == 'General' || $selected_id == null)
                                     <td>
-                                      <h6 class="text-center">{{ $destino->stock_s }}</h6>
+                                  <center>{{ $destino->stock_s }}</center> 
                                     </td>
                                     <td>
-                                      <h6 class="text-center">{{ $destino->cantidad_minima }}</h6>
+                                    <center>{{ $destino->cantidad_minima }}</center> 
                                   </td>
                                   <td class="text-center">
                                     <button wire:click="ver({{ $destino->id }})" type="button" class="btn btn-secondary" style="background-color: rgb(12, 100, 194)">

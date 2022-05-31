@@ -191,6 +191,26 @@ class PermissionSeeder extends Seeder
             'name' => 'VentasMovDiaSucursalUtilidad',
             'guard_name' =>'web'
         ]);
+        Permission::create([
+            'name' => 'Inventarios_Registros',
+            'guard_name' =>'web'
+        ]);
+        Permission::create([
+            'name' => 'Compras_Index',
+            'guard_name' =>'web'
+        ]);
+        Permission::create([
+            'name' => 'Almacen_Index',
+            'guard_name' =>'web'
+        ]);
+        Permission::create([
+            'name' => 'Transferencia_Index',
+            'guard_name' =>'web'
+        ]);
+        Permission::create([
+            'name' => 'Reportes_Inventarios_Export',
+            'guard_name' =>'web'
+        ]);
       
     }
 }

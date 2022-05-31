@@ -49,19 +49,20 @@ class DestinoProductoController extends Component
             if (strlen($this->search) > 0) {
                 $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
                 ->join('destinos as dest','dest.id','productos_destinos.destino_id')
-                ->select(DB::raw('SUM(productos_destinos.stock) as stock_s'),'p.*')
+                ->select('p.*')
                 ->where('p.nombre', 'like', '%' . $this->search . '%')
                 ->groupBy('productos_destinos.product_id')
+                ->selectRaw('sum(productos_destinos.stock) as stock_s')
                 ->paginate($this->pagination);
             }
-            
             else{
-
                 $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
                 ->join('destinos as dest','dest.id','productos_destinos.destino_id')
-                ->select(DB::raw('SUM(productos_destinos.stock) as stock_s'),'p.*')
+                ->select('p.*')
                 ->groupBy('productos_destinos.product_id')
+                ->selectRaw('sum(productos_destinos.stock) as stock_s')
                 ->paginate($this->pagination);
+               // dd($almacen);
                 
             }
 
@@ -69,9 +70,7 @@ class DestinoProductoController extends Component
             else
              $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
                                         ->join('destinos as dest','dest.id','productos_destinos.destino_id')
-                                        ->select('productos_destinos.*','p.*'
-                                        
-                                        )
+                                        ->select('productos_destinos.*','p.*')
                                         ->where('dest.id',$this->selected_id)
                                         ->where(function($query){
                                             $query->where('p.nombre', 'like', '%' . $this->search . '%')
@@ -90,8 +89,9 @@ class DestinoProductoController extends Component
                
              $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
                                             ->join('destinos as dest','dest.id','productos_destinos.destino_id')
-                                            ->select(DB::raw('SUM(productos_destinos.stock) as stock_s'),'p.*')
+                                            ->select('p.*')
                                             ->groupBy('productos_destinos.product_id')
+                                            ->selectRaw('sum(productos_destinos.stock) as stock_s')
                                             ->paginate($this->pagination);
             }
              $sucursal_ubicacion=Destino::join('sucursals as suc','suc.id','destinos.sucursal_id')

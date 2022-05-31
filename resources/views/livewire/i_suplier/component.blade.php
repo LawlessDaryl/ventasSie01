@@ -14,49 +14,39 @@
             </div>
             @include('common.searchbox')
 
-            <div class="widget-content">
-                <div class="table-responsive">
-                    <table class="table table-unbordered table-hover mt-2">
-                        <thead class="text-white" style="background: #3B3F5C">
-                            <tr>
-                                <th class="table-th text-withe text-center">PROVEEDOR</th>                                
-                                <th class="table-th text-withe text-center">STATUS</th>
-                                <th class="table-th text-withe text-center">ACCIONES</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($data_proveedor as $data)
-                                <tr>
-                                    <td>
-                                        <h5>Nombre</h5>
-                                        <label class="text-center">{{ $data->nombre_prov }}</label>
-                                        <h5>Apellido</h5>
-                                        <label class="text-center">{{ $data->apellido }}</label>
-                                    </td>
-                                    <td class="text-center">
-                                        <button type="button" class="btn-center btn btn-primary">{{ $data->status }}</button>
-                                    </td>
-                                    
-                                    <td class="text-center">
-                                        <a href="javascript:void(0)" wire:click="Edit({{ $data->id }})"
-                                            class="btn btn-dark mtmobile" title="Edit">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <a href="javascript:void(0)" onclick="Confirm('{{ $data->id }}','{{ $data->nombre }}')" 
-                                            class="btn btn-dark" title="Delete">
-                                            <i class="fas fa-trash"></i>
-                                        </a>
-                                    </td>
-                                </tr>
+            <div class="row">
+                <div class="col-12 col-lg-12 col-md-4 d-flex flex-lg-wrap flex-wrap flex-md-wrap flex-xl-wrap justify-content-left">
+                    @foreach ($data_proveedor as $data)
+                               
+                            <div class="card component-card_4" style="width: 18rem; margin:2rem;">
+                                
+                                    <div class="user-info">
+                                        <div class="card-header">
+
+                                            <h5 class="card-user_name">{{$data->nombre_prov." ".$data->apellido}}</h5>
+                                        </div>
+                                      <div class="card-body" >
+
+                                          <p class="card-text"> <strong>Telefono:</strong> {{$data->telefono ? $data->telefono : "No definido" }}</p>
+                                          <p class="card-text"> <strong>Direccion:</strong> {{$data->direccion ? $data->direccion : "No definido" }}</p>
+                                          <p class="card-text"> <strong>Correo:</strong> {{$data->correo ? $data->correo : "No definido" }}</p>
+                                          <p class="card-text"> <strong>Status:</strong> {{$data->status}}</p>
+
+                                      </div>
+                                    </div>
+                                
+                            
+                                </div>
                             @endforeach
-                        </tbody>
-                    </table>
+                    </div>
+                            
+                   
                     {{ $data_proveedor->links() }}
                 </div>
             </div>
         </div>
+        @include('livewire.i_suplier.form')
     </div>
-    @include('livewire.i_suplier.form')
 </div>
 
 <script>
