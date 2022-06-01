@@ -157,7 +157,8 @@ class PosController extends Component
             'nit' =>$this->nit,
             'razonsocial' =>$this->razonsocial,
             'celular' =>$this->celular,
-            'listdestinos' =>$listardestinos
+            'listdestinos' =>$listardestinos,
+            'listacarteras' => $this->listarcarteras()
 
         ])
             ->extends('layouts.theme.app')
@@ -886,7 +887,7 @@ class PosController extends Component
             }
             else
             {
-                $cartera = Cartera::where('tipo', $this->tipopago)
+                $cartera = Cartera::where('id', $this->tipopago)
                     ->where('caja_id', $cajausuario->id)->get()->first();
             }
             //Cambiando valor de $facturasino dependiendo del valor de $factura
@@ -1331,6 +1332,30 @@ class PosController extends Component
             return "";
         }
     }
+
+
+    //Listar todas las carteras que correspondan a la sucursal y a la caja
+    public function listarcarteras()
+    {
+        
+
+
+
+        $carteras = Caja::join('carteras as car', 'cajas.id', 'car.caja_id')
+        ->join('cartera_movs as cartmovs', 'car.id', 'cartmovs.cartera_id')
+        ->join('movimientos as mov', 'mov.id', 'cartmovs.movimiento_id')
+        ->where('cajas.estado', 'Abierto')
+        ->where('cajas.sucursal_id', $this->idsucursal())
+        ->where('mov.user_id', Auth()->user()->id)
+        ->where('mov.status', 'ACTIVO')
+        ->where('mov.type', 'APERTURA')
+        ->select('car.id as idcartera', 'car.nombre as nombrecartera', 'car.descripcion as dc')
+        ->get();
+
+        return $carteras;
+    }
+
+
 
     
     // Quitar los valores de la ventana Modal

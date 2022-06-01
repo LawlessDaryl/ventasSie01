@@ -48,11 +48,12 @@
                                     <div class="form-group">
                                     <strong>Tipo de Pago</strong>
                                     <select wire:model="tipopago" class="form-control">
-                                        <option value="EFECTIVO" selected>EFECTIVO</option>
-                                        <option value="BANCO">CUENTA BANCARIA</option>
-                                        {{-- <option value="TELEFONO">TIGO MONEY</option> --}}
+                                        @foreach ($listacarteras as $cartera)
+                                        <option value="{{$cartera->idcartera}}">{{ucwords(strtolower($cartera->nombrecartera)) .' - ' .ucwords(strtolower($cartera->dc))}}</option>
+                                        @endforeach
                                     </select>
                                     </div>
+
                                 </div>
 
                             </div>
