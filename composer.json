@@ -15,7 +15,8 @@
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.3",
         "livewire/livewire": "^2.7",
-        "phpoffice/phpspreadsheet": "dev-NumberFormatMask-Helpers",
+        "maatwebsite/excel": "^3.1",
+        "phpoffice/phpspreadsheet": "^1.23",
         "spatie/laravel-permission": "^5.4"
     },
     "require-dev": {

@@ -26,6 +26,7 @@ class CategoriesController extends Component
         $this->componentName = 'Categorias';
         $this->componentSub = 'Subcategorias';
         $this->subcat_fill= 'Elegir';
+        
     }
 
     public function paginationView()
@@ -69,6 +70,7 @@ class CategoriesController extends Component
         $this->selected_id = $category->id;
         //dd($this->data2);
         $this->emit('show-modal_s', 'show modal!');
+        
     }
 
     public function Store()

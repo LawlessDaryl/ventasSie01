@@ -112,13 +112,13 @@
                 <th colspan="1">
 
                 </th>
-                <th style="border-top: 2px solid #000;">
+                <th style="border-top: 2px solid #000; width: 2rem">
                     Recibido por
                 </th>
                 <th  colspan="1">
 
                 </th>
-                <th style="border-top: 2px solid #000;">
+                <th style="border-top: 2px solid #000;  width: 2rem">
                     Entregado por
                 </th>
                 <th>

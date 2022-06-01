@@ -1,3 +1,6 @@
+
+[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/support-ukraine.svg?t=1" />](https://supportukrainenow.org)
+
 <p align="center"><img src="/art/socialcard.png" alt="Social Card of Laravel Permission"></p>
 
 # Associate users with permissions and roles
@@ -18,7 +21,7 @@
 
 ## Documentation, Installation, and Usage Instructions
 
-See the [DOCUMENTATION](https://docs.spatie.be/laravel-permission/) for detailed installation and usage instructions.
+See the [documentation](https://spatie.be/docs/laravel-permission/) for detailed installation and usage instructions.
 
 ## What It Does
 This package allows you to manage user permissions and roles in a database.
@@ -61,11 +64,11 @@ Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recen
 
 ## Contributing
 
-Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
+Please see [CONTRIBUTING](https://github.com/spatie/.github/blob/main/CONTRIBUTING.md) for details.
 
 ### Security
 
-If you discover any security-related issues, please email [freek@spatie.be](mailto:freek@spatie.be) instead of using the issue tracker.
+If you discover any security-related issues, please email [security@spatie.be](mailto:security@spatie.be) instead of using the issue tracker.
 
 ## Postcardware
 

@@ -8,6 +8,8 @@
                 <ul class="tabs tab-pills">
                     <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
                         data-target="#theModal">Agregar<br>Producto</a>
+                    <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
+                        data-target="#importarModal">Importar<br>Productos</a>
                 </ul>
             </div>
             <div class="row">

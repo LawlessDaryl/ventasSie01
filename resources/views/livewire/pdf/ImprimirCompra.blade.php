@@ -5,9 +5,33 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reporte de Compras</title>
+    <title>Comprobante de Compra</title>
     <link rel="stylesheet" href="{{ asset('css/custom_pdf.css') }}">
     <link rel="stylesheet" href="{{ asset('css/custom_page.css') }}">
+    <!-- BEGIN GLOBAL MANDATORY STYLES -->
+    <link href="{{ asset('bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('assets/css/plugins.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('assets/css/structure.css') }}" rel="stylesheet" type="text/css" class="structure" />
+    <!-- END GLOBAL MANDATORY STYLES -->
+    <!-- BEGIN PAGE LEVEL CUSTOM STYLES -->
+    <link href="{{ asset('assets/css/scrollspyNav.css') }}" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/forms/theme-checkbox-radio.css') }}">
+    <link href="{{ asset('assets/css/tables/table-basic.css') }}" rel="stylesheet" type="text/css" />
+    <!-- END PAGE LEVEL CUSTOM STYLES -->
+
+    <style>
+        table {
+        width: 100%;
+        border: 1px solid rgb(255, 255, 255);
+        }
+        th, td {
+       
+        text-align: left;
+        vertical-align: top;
+        border: 1px solid rgb(255, 255, 255);
+        }
+    </style>
+
 </head>
 
 <body>
