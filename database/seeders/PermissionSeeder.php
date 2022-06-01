@@ -191,6 +191,16 @@ class PermissionSeeder extends Seeder
             'name' => 'VentasMovDiaSucursalUtilidad',
             'guard_name' =>'web'
         ]);
+        //Poder filtrar y Anular una devolucion
+        Permission::create([
+            'name' => 'VentasDevolucionesFiltrar',
+            'guard_name' =>'web'
+        ]);
+
+
+
+
+
         Permission::create([
             'name' => 'Inventarios_Registros',
             'guard_name' =>'web'

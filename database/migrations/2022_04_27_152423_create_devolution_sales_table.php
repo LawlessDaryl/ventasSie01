@@ -18,6 +18,7 @@ class CreateDevolutionSalesTable extends Migration
             $table->enum('tipo_dev',['PRODUCTO','MONETARIO']);
             $table->decimal('monto_dev',10,2);
             $table->string('observations',200)->default('Sin Observacion')->nullable();
+            $table->enum('estado',['NORMAL','ELIMINADO','TRANSFERIDO'])->default('NORMAL');
             $table->foreignId('product_id')->constrained();
             $table->foreignId('user_id')->constrained();
             $table->timestamps();

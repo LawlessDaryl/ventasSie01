@@ -15,6 +15,7 @@ use App\Models\ProductosDestino;
 use App\Models\Sale;
 use App\Models\SaleDetail;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -114,7 +115,7 @@ class SaleDevolutionController extends Component
             $devolucionesusuario = DevolutionSale::join("products as p", "p.id", "devolution_sales.product_id")
             ->join("users as u", "u.id", "devolution_sales.user_id")
             ->select('devolution_sales.id as id', 'p.image as image', 'p.nombre as nombre', 'devolution_sales.monto_dev as monto',
-            'devolution_sales.created_at as fechadevolucion','u.name as nombreusuario',
+            'devolution_sales.created_at as fechadevolucion','u.name as nombreusuario', 'devolution_sales.estado as estado',
             'devolution_sales.tipo_dev as tipo','devolution_sales.observations as observacion')
             ->where('nombre', 'like', '%' . $this->search . '%')
             ->orderBy('devolution_sales.created_at', 'desc')
@@ -123,7 +124,7 @@ class SaleDevolutionController extends Component
             $usuarioespecifico = DevolutionSale::join("products as p", "p.id", "devolution_sales.product_id")
             ->join("users as u", "u.id", "devolution_sales.user_id")
             ->select('devolution_sales.id as id', 'p.image as image', 'p.nombre as nombre', 'devolution_sales.monto_dev as monto',
-            'devolution_sales.created_at as fechadevolucion','u.name as nombreusuario',
+            'devolution_sales.created_at as fechadevolucion','u.name as nombreusuario','devolution_sales.estado as estado',
             'devolution_sales.tipo_dev as tipo','devolution_sales.observations as observacion')
             ->where('nombre', 'like', '%' . $this->search . '%')
             ->where('u.id', $this->usuarioseleccionado)
@@ -136,7 +137,7 @@ class SaleDevolutionController extends Component
             $devolucionesusuario = DevolutionSale::join("products as p", "p.id", "devolution_sales.product_id")
             ->join("users as u", "u.id", "devolution_sales.user_id")
             ->select('devolution_sales.id as id', 'p.image as image', 'p.nombre as nombre', 'devolution_sales.monto_dev as monto',
-            'devolution_sales.created_at as fechadevolucion','u.name as nombreusuario',
+            'devolution_sales.created_at as fechadevolucion','u.name as nombreusuario', 'devolution_sales.estado as estado',
             'devolution_sales.tipo_dev as tipo','devolution_sales.observations as observacion')
             ->orderBy('devolution_sales.created_at', 'desc')
             ->paginate($this->pagination);
@@ -144,7 +145,7 @@ class SaleDevolutionController extends Component
             $usuarioespecifico = DevolutionSale::join("products as p", "p.id", "devolution_sales.product_id")
             ->join("users as u", "u.id", "devolution_sales.user_id")
             ->select('devolution_sales.id as id', 'p.image as image', 'p.nombre as nombre', 'devolution_sales.monto_dev as monto',
-            'devolution_sales.created_at as fechadevolucion','u.name as nombreusuario',
+            'devolution_sales.created_at as fechadevolucion','u.name as nombreusuario','devolution_sales.estado as estado',
             'devolution_sales.tipo_dev as tipo','devolution_sales.observations as observacion')
             ->where('u.id', $this->usuarioseleccionado)
             ->orderBy('devolution_sales.created_at', 'desc')
@@ -537,6 +538,16 @@ class SaleDevolutionController extends Component
         }
         return false;
 
+    }
+
+    //Metodo para Verificar si el usuario tiene el Permiso para filtrar transferir y anular una devolucion
+    public function verificarpermiso()
+    {
+        if(Auth::user()->hasPermissionTo('VentasDevolucionesFiltrar'))
+        {
+            return true;
+        }
+        return false;
     }
 
     public function resetUI()
