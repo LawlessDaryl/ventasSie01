@@ -16,19 +16,19 @@ class ProductsImport implements ToModel,WithHeadingRow
     public function model(array $row)
     {
         return new Product([
-            'nombre';
-            'costo';
-            'caracteristicas';
-            'codigo';
-            'lote';
-            'unidad';
-            'marca';
-            'garantia';
-            'cantidad_minima';
-            'industria';
-            'precio_venta';
-             'status';
-        'category_id';
+            'nombre'=>$row;
+            'costo'=>;
+            'caracteristicas'=>;
+            'codigo'=>;
+            'lote'=>;
+            'unidad'=>;
+            'marca'=>;
+            'garantia'=>;
+            'cantidad_minima'=>;
+            'industria'=>;
+            'precio_venta'=>;
+             'status'=>;
+        'category_id'=>;
     
         ]);
     }
