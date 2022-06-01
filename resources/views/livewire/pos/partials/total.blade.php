@@ -1,7 +1,7 @@
 <div class="row">
 
 
-    <div class="col-lg-12">
+    <div class="col-12 col-md-12">
         <div class="jumbotron-fluid">
 
                 <blockquote style="border-left: 2px solid #EE761C !important; background-color: #f8f5f2" class="blockquote media-object">

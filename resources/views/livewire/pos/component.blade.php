@@ -88,10 +88,10 @@
                 </blockquote> --}}
 
 
-                <div class="col-12 col-lg-12 col-md-10 mt-3">
+                <div class="col-12 col-lg-12">
                     <div class="row">
                         <!-- Cuadro de Busqueda de Productos -->
-                        <div class="col-12 col-md-3 col-lg-6" style="border-left: thick solid #b4b4b1;" >
+                        <div class="col-md-6 col-lg-6" style="border-left: thick solid #b4b4b1;" >
 
                             <div class="input-group mb-12">
                                 <div class="input-group-prepend">

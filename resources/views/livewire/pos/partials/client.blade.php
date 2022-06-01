@@ -1,4 +1,4 @@
-<div class="col-12 col-md-3 col-lg-6" style="border-left: thick solid #b4b4b1;" >
+<div class="col-md-6 col-lg-6" style="border-left: thick solid #b4b4b1;" >
     @if ($anonimo == 1)
     
     <div class="row">
@@ -80,7 +80,7 @@
     @else
 
     <div class="text-center">
-        <h3>CARRITO DE COMPRAS</h3>
+        <h5>CARRITO DE COMPRAS</h5>
     </div>
     
     @endif
