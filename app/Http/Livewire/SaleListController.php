@@ -18,7 +18,10 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\Sale;
 use App\Models\SaleDetail;
 use App\Models\User;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\DB;
 use Exception;
+
 
 class SaleListController extends Component
 {
@@ -309,5 +312,42 @@ class SaleListController extends Component
         ->first();
         return $idsucursal->id;
     }
+
+    //Crear Comprobante de Ventas
+    public function crearcomprobante($idventa)
+    {
+
+        $this->idventa = $idventa;
+
+        $totalbs = $this->totabspdf($idventa);
+        //Llamar al Modal de Espera
+        //$this->emit('modalespera');
+        //Redireccionando para crear el comprobante con sus respectvas variables
+        
+        return redirect::to('report/pdf' . '/' . $totalbs. '/' . $this->idventa . '/' . $this->totalitems());
+    }
     
+
+    
+    //Obtener el total Bs de una venta
+    public function totabspdf($idventa)
+    {
+        $venta = Sale::join('users as u', 'u.id', 'sales.user_id')
+        ->join("movimientos as m", "m.id", "sales.movimiento_id")
+        ->join("cliente_movs as cm", "cm.movimiento_id", "m.id")
+        ->join("clientes as c", "c.id", "cm.cliente_id")
+        ->select('sales.id as id','sales.cash as totalbs','sales.created_at as fecha',
+        'sales.tipopago as tipopago','sales.change as cambio',
+        'u.name as user','c.razon_social as rz','c.cedula as ci','c.celular as celular')
+        ->where('sales.id', $idventa)
+        ->get();
+
+        $totalbs = 0;
+        foreach($venta as $d)
+        {
+            $totalbs = $d->totalbs - $d->cambio;
+        }
+        return $totalbs;
+    }
+
 }

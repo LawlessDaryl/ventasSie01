@@ -2,14 +2,17 @@
 
 namespace App\Http\Livewire;
 
+use App\Imports\ProductsImport;
 use App\Models\Category;
 use App\Models\Marca;
 use App\Models\Product;
 use App\Models\Unidad;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ProductsController extends Component
 {
@@ -210,7 +213,7 @@ class ProductsController extends Component
         $this->codigo=$product->codigo;
         $this->estado=$product->status;
         $this->image = null;
-        $this->emit('modal-show', 'show modal!');
+        $this->emit('modal-show');
     }
     public function Update()
     {
@@ -334,8 +337,6 @@ class ProductsController extends Component
             'name.min' => 'El nombre de la categoría debe tener al menos 3 caracteres'
         ];
         $this->validate($rules, $messages);
-
-        
             $category = Category::create([
                 'name' => $this->name,
                 'descripcion'=>$this->descripcion,
@@ -351,4 +352,15 @@ class ProductsController extends Component
             $this->name="";
             $this->descripcion="";
     }
+
+
+    public function import(Request $request){
+        
+        $file = $request->file('import_file');
+
+        Excel::import(new ProductsImport, $file);
+
+        return redirect()->route('productos');
+    }
+
 }

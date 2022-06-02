@@ -206,11 +206,15 @@
 
                                                         <div class="col-sm-12 col-md-12 col-lg-6">
                                                             @if($efectivo>=$total&&$total>0)
-                                                            <button wire:click.prevent="saveSale" data-dismiss="modal" class="btn btn-dark btn-md btn-block" 
-                                                            href="{{ url('report/pdf' . '/' . $total. '/' . $idventa . '/' . Auth()->user()->id)}}">
-                                                                FINALIZAR VENTA
-                                                            </button>
-                                                                @endif
+                                                                <button wire:click.prevent="saveSale" data-dismiss="modal" class="btn btn-dark btn-md btn-block">
+                                                                    FINALIZAR VENTA
+                                                                    {{$efectivo}}
+                                                                </button>
+
+
+                                                                <a wire:click="saveSale" href="{{'report/pdf' . '/' . $totalbs . '/' . $idventa . '/' . $totalitems}}" target="_blank"
+                                                                class="btn btn-dark btn-md btn-block"  >Mi PDF</a>
+                                                            @endif
                                                         </div>
                                                     </div>
                                                 </div>
