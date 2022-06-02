@@ -152,6 +152,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('unidades', UnidadesController::class)->name('unities');
         Route::get('marcas', MarcasController::class)->name('brands');
         Route::get('proveedores', ProvidersController::class)->name('supliers');
+        Route::post('importar',[ ProductsController::class,'import'])->name('importar');
     });
         Route::group(['middleware' => ['permission:Compras_Index']], function () {
         Route::get('compras', ComprasController::class)->name('compras');

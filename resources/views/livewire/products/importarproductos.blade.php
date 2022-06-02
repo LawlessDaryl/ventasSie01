@@ -1,31 +1,39 @@
-<div wire:ignore.self class="modal fade" id="importarModal" tabindex="-1" role="dialog">
+<div wire:ignore.self class="modal fade" id="modalimport" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
+        
       <div class="modal-content">
         <div class="modal-header" style="background: #414141">
-          <h5 class="modal-title text-white">
-              <b>Importar productos masivamente</b>
-          </h5>
-          <h6 class="text-center text-warning" wire:loading>POR FAVOR ESPERE</h6>
+            <h5 class="modal-title text-white">
+                <b>Importar Productos</b>
+            </h5>
         </div>
-        <div class="modal-body" style="background: #f0ecec">
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">Importar productos</div>
 
-<div class="row">
-    <div class="col-lg-12">
-        <div class="form-group">
-             <label> Nombre </label>
-            <input type="text" wire:model.lazy="name" class="form-control" placeholder="ej: Impresoras">
+                <div class="card-body">
+                    @if (isset($errors) && $errors->any())
+                    <div class="alert alert-danger" role="alert">
+                        @foreach ($errors->all() as $error)
+                        {{$error}}
+                        @endforeach
+                    </div>
+                    @endif
+
+                    <form action="{{route('importar')}}" method="POST" enctype="multipart/form-data">
+                        @csrf
+
+                        <input type="file" name="import_file" />
+
+                        <button class="btn btn-primary" type="submit">Importar</button>
+                    </form>
+                </div>
+            </div>
         </div>
-        @error('name')<span class="text-danger er">{{ $message }}</span> @enderror
     </div>
 </div>
 </div>
-        <div class="modal-footer" style="background: #f0ecec">
-            <button type="button" wire:click.prevent="resetCategory()" class="btn btn-dark close-btn text-info"
-                data-dismiss="modal" style="background: #3b3f5c">CANCELAR</button>
-         
-                <button type="button" wire:click.prevent="StoreCategory()"
-                    class="btn btn-dark close-btn text-info">GUARDAR</button>
-            </div>
-        </div>
-   </div>
+</div>
 </div>

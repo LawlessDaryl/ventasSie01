@@ -7,9 +7,9 @@
                 </h4>
                 <ul class="tabs tab-pills">
                     <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
-                        data-target="#theModal">Agregar<br>Producto</a>
+                        data-target="#theModal">Agregar<br>Productos</a>
                     <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
-                        data-target="#importarModal">Importar<br>Productos</a>
+                        data-target="#modalimport">Importar<br>Productos</a>
                 </ul>
             </div>
             <div class="row">
@@ -20,7 +20,7 @@
                                 <i class="fas fa-search"></i>
                             </span>
                         </div>
-                        <input type="text" wire:model="search" placeholder="Buscars" class="form-control">
+                        <input type="text" wire:model="search" placeholder="Buscar" class="form-control">
                     </div>
                 </div>
                 <div class="col-12 col-lg-3 col-md-3">
@@ -138,14 +138,11 @@
         </div>
     </div>
     @include('livewire.products.form')
+    @include('livewire.products.importarproductos')
 </div>
 
 <script>
-
-   
-    
     document.addEventListener('DOMContentLoaded', function() {
-
 
         window.livewire.on('product-added', msg => {
             $('#theModal').modal('hide'),
