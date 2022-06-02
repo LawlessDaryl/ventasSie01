@@ -31,6 +31,14 @@
                                           <p class="card-text"> <strong>Direccion:</strong> {{$data->direccion ? $data->direccion : "No definido" }}</p>
                                           <p class="card-text"> <strong>Correo:</strong> {{$data->correo ? $data->correo : "No definido" }}</p>
                                           <p class="card-text"> <strong>Status:</strong> {{$data->status}}</p>
+                                          <a href="javascript:void(0)" wire:click="Edit({{ $data->id }})"
+                                            class="btn btn-dark mtmobile" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="javascript:void(0)" onclick="Confirm('{{ $data->id }}','{{ $data->nombre }}')" 
+                                            class="btn btn-dark" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
 
                                       </div>
                                     </div>
