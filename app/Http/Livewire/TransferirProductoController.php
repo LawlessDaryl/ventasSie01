@@ -30,7 +30,7 @@ class TransferirProductoController extends Component
     
     use WithPagination;
 
-    public $selected_id,$search,
+    public $selected_id,$search,$cantidad,
     $itemsQuantity,$selected_3,$selected_origen=0,$selected_destino,$observacion,$tipo_tr,$estado,$vs=[];
     private $pagination = 10;
     public function paginationView()
@@ -100,7 +100,6 @@ class TransferirProductoController extends Component
     public function increaseQty($productId)
 
     {
-        $bj=[];
         $product = Product::select('products.id','products.nombre as name')
         ->where('products.id',$productId)->first();
        
@@ -122,10 +121,7 @@ class TransferirProductoController extends Component
       else{
         Transferencia::add($product->id, $product->name,0, 1);
       }
-       
 
-      
-        
 
     }
     public function UpdateQty($productId, $cant =1)
@@ -134,25 +130,31 @@ class TransferirProductoController extends Component
         $product = Product::select('products.id','products.nombre as name')
         ->where('products.id',$productId)->first();
        
-        $exist = Transferencia::get($productId);
+        //$exist = Transferencia::get($productId);
         
-
-       
-        $this->removeItem($productId);
-       
-        if ($cant > 0) 
+        $stock=ProductosDestino::where('productos_destinos.product_id',$product->id)
+        ->where('productos_destinos.destino_id',$this->selected_origen)->select('productos_destinos.stock')->value('productos_destinos.stock');
+        
+        if ($cant > 0 && $stock>=$cant) 
         {
+            $this->removeItem($productId);
             Transferencia::add($product->id, $product->name,0, $cant);
             $this->itemsQuantity = Transferencia::getTotalQuantity();
-            $this->emit('scan-ok');
+           
         }
+        else{
+            $this->emit('no-stock','Sin stock disponible');
+            $exist = Transferencia::get($productId);
+            $this->cantidad=$exist->quantity;
+
+        }
+       // dd($this->selected_origen);
     }
     public function removeItem($productId)
     {
         Transferencia::remove($productId);
         $this->itemsQuantity = Transferencia::getTotalQuantity();
-        $this->emit('scan-ok', 'Producto eliminado');
-        $this->tipo_tr ='Elegir operacion';
+        //$this->tipo_tr ='Elegir operacion';
   
     }
 

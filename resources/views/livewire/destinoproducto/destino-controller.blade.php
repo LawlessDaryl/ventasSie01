@@ -18,10 +18,10 @@
                         <div class="form-group">
                             <label> <strong style="color: black">TIPO OPERACION:</strong> </label>
                             <select wire:model='tipo_tr' class="form-control">
-                                <option value=null >Elegir operacion</option>
+                                <option value=null disabled>Elegir operacion</option>
                              
                               <option value="tr_dir">TRANSFERIR PRODUCTOS</option>
-                              <option value="tr_sol">SOLICITAR PRODUCTOS</option>
+                              <option value="tr_sol" disabled>SOLICITAR PRODUCTOS</option>
                           
                             
                             </select>

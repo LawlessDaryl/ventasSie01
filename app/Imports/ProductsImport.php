@@ -3,12 +3,14 @@
 namespace App\Imports;
 
 use App\Models\Product;
+use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithValidation;
 
-class ProductsImport implements ToModel,WithHeadingRow,WithBatchInserts,WithChunkReading
+class ProductsImport implements ToModel,WithHeadingRow,WithBatchInserts,WithChunkReading,WithValidation
 {
     /**
     * @param array $row
@@ -41,6 +43,16 @@ class ProductsImport implements ToModel,WithHeadingRow,WithBatchInserts,WithChun
     public function chunkSize(): int
     {
         return 1000;
+    }
+
+    public function rules(): array
+    {
+        return [
+            'email' => Rule::in(['patrick@maatwebsite.nl']),
+
+             // Above is alias for as it always validates in batches
+             '*.email' => Rule::in(['patrick@maatwebsite.nl']),
+        ];
     }
 
 }
