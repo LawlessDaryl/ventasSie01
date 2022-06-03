@@ -187,7 +187,7 @@
                                                     {{$this->calcularCambio($total)}}
                                                     @endif
                                                     <div class="row justify-content-between mt-5">
-                                                        <div class="col-sm-12 col-md-12 col-lg-6">
+                                                        <div class="col-sm-12 col-md-12 col-lg-4">
                                                             @if ($total > 0)
                                                                 <button  data-dismiss="modal" onclick="Confirm('','clearCart','¿Seguro de eliminar el carrito?')"
                                                                     class="btn btn-dark mtmobile">
@@ -200,22 +200,29 @@
 
                                                         {{-- <a class="btn btn-dark btn-block {{count($denominations) < 1 ? 'disabled' : ''}}" 
                                                         href="{{ url('report/pdf' . '/' . $total. '/' . $idventa . '/' . Auth()->user()->id)}}">Generar Comprobante</a> --}}
+                                                        @if($efectivo>=$total&&$total>0)
+                                                        <div class="col-sm-12 col-md-12 col-lg-4">
+                                                                <center>
+                                                                    <strong>Crear PDF</strong>
+                                                                    <label class="switch s-icons s-outline  s-outline-primary  mb-4 mr-2">
+                                                                        <input id="factura" type="checkbox" wire:model="crearpdf">
+                                                                        <span class="slider round"></span>
+                                                                    </label>
+                                                                </center>
+                                                        </div>
 
 
-
-
-                                                        <div class="col-sm-12 col-md-12 col-lg-6">
-                                                            @if($efectivo>=$total&&$total>0)
+                                                        
+                                                        <div class="col-sm-12 col-md-12 col-lg-4">
+                                                            
                                                                 <button wire:click.prevent="saveSale" data-dismiss="modal" class="btn btn-dark btn-md btn-block">
-                                                                    FINALIZAR VENTA
-                                                                    {{$efectivo}}
+                                                                    VENDER
                                                                 </button>
 
 
-                                                                <a wire:click="saveSale" href="{{'report/pdf' . '/' . $totalbs . '/' . $idventa . '/' . $totalitems}}" target="_blank"
-                                                                class="btn btn-dark btn-md btn-block"  >Mi PDF</a>
-                                                            @endif
+                                                            
                                                         </div>
+                                                        @endif
                                                     </div>
                                                 </div>
                                             </div>
@@ -344,18 +351,31 @@ document.addEventListener('DOMContentLoaded', function() {
                 })
 
         });
+        
+
+        //Llamando a una nueva pestaña donde estará el pdf modal
+        window.livewire.on('opentap', Msg => {
+            
+            // Abrir nuevo tab $idventa . '/' . $totalitems
+            var a = @this.totalbs;
+            var b = @this.idventa;
+            var c = @this.totalitems;
+
+
+            var win = window.open('report/pdf/' + a + '/' + b + '/' + c, '_blank',"width=1000,height=1500");
+            // Cambiar el foco al nuevo tab (punto opcional)
+            //win.focus();
+
+        });
 
 
 
     })
 
 
-
-
-
-
     
 </script>
+
 
 
 @endsection

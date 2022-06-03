@@ -43,6 +43,9 @@ class PosController extends Component
     //Variables para Calcular el Descuento en Ventas...
     public $descuento, $totalBsBd;
 
+    //Variable para el swich de crear pdf
+    public $crearpdf;
+
     
 
     public function mount()
@@ -57,7 +60,7 @@ class PosController extends Component
         $this->facturasino = 'No';
         $this->descuento = 0;
         $this->totalBsBd = 0;
-
+        $this->crearpdf = false;
         $listac = $this->listarcarteras();
         $this->tipopago = 'Elegir';
         foreach($listac as $list)
@@ -1000,16 +1003,22 @@ class PosController extends Component
 
             
             //Llamar al Modal de Espera
-            $this->emit('modalespera');
+            //$this->emit('modalespera');
             //Redireccionando para crear el comprobante con sus respectivas variables
-            return redirect::to('report/pdf' . '/' . $this->totalbs. '/' . $this->idventa . '/' . $this->totalitems);
-            
+            //return redirect::to('report/pdf' . '/' . $this->totalbs. '/' . $this->idventa . '/' . $this->totalitems);
+
 
             //$pdf = PDF::loadView('report/pdf' . '/' . $this->totalbs. '/' . $this->idventa . '/' . $this->totalitems);
 
             //return $pdf->stream('comprobante.pdf');  //visualizar
             /* return $pdf->download('salesReport.pdf');  //descargar  */
 
+
+
+            if($this->crearpdf == true)
+            {
+                $this->emit('opentap');
+            }
             return Redirect::to('pos');
         }
         catch (Exception $e) {
