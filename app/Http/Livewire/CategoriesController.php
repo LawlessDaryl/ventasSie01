@@ -6,7 +6,8 @@ use Livewire\Component;
 use App\Models\Category;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CategoriesController extends Component
 {
@@ -167,5 +168,15 @@ class CategoriesController extends Component
         $this->reset('name','descripcion','categoria_padre');
        
         $this->resetValidation();
+    }
+    
+    public function import(Request $request){
+        
+        $file = $request->file('import_file');
+
+        Excel::import(new ProductsImport,$file);
+       
+
+        return redirect()->route('productos');
     }
 }

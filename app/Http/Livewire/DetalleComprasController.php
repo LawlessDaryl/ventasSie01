@@ -171,7 +171,7 @@ class DetalleComprasController extends Component
 
     public function UpdateQty($productId, $cant = 3)
     {
-        $title = '';
+      
         $product = Product::select('products.*')
         ->where('products.id',$productId)->first();
        
