@@ -1003,7 +1003,7 @@ class PosController extends Component
 
             
             //Llamar al Modal de Espera
-            //$this->emit('modalespera');
+            $this->emit('modalespera');
             //Redireccionando para crear el comprobante con sus respectivas variables
             //return redirect::to('report/pdf' . '/' . $this->totalbs. '/' . $this->idventa . '/' . $this->totalitems);
 
@@ -1019,6 +1019,7 @@ class PosController extends Component
             {
                 $this->emit('opentap');
             }
+            sleep(5);
             return Redirect::to('pos');
         }
         catch (Exception $e) {

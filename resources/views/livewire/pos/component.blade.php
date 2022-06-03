@@ -334,9 +334,9 @@ document.addEventListener('DOMContentLoaded', function() {
         window.livewire.on('modalespera', Msg => {
             
             swal({
-                    title: 'Por Favor Espere a que la Venta Termine',
-                    text: 'Generando Comprobante...',
-                    timer: 70000,
+                    title: 'Venta Realizada con Exito',
+                    text: 'Recargando...',
+                    timer: 2000,
                     padding: '2em',
                     onOpen: function () {
                     swal.showLoading()
@@ -349,7 +349,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     console.log('I was closed by the timer')
                     }
                 })
-
+                
+                
         });
         
 
