@@ -7,7 +7,7 @@
                 <blockquote style="border-left: 2px solid #EE761C !important; background-color: #f8f5f2" class="blockquote media-object">
                     <div class="row">
 
-                       
+                        
 
 
                         
@@ -42,12 +42,14 @@
                             </div>
                         
                             <div class="col-12 col-md-3 col-lg-2">
-
+                                
+                                
 
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                     <strong>Tipo de Pago</strong>
                                     <select wire:model="tipopago" class="form-control">
+                                        <option disabled value="Elegir">Elegir</option>
                                         @foreach ($listacarteras as $cartera)
                                         <option value="{{$cartera->idcartera}}">{{ucwords(strtolower($cartera->nombrecartera)) .' - ' .ucwords(strtolower($cartera->dc))}}</option>
                                         @endforeach

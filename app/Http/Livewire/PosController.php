@@ -21,6 +21,7 @@ use App\Models\Notification;
 use App\Models\NotificationUser;
 use App\Models\Sucursal;
 use App\Models\User;
+use Barryvdh\DomPDF\PDF;
 use Darryldecode\Cart\Facades\CartFacade as Cart;
 use Exception;
 use Illuminate\Support\Facades\Redirect;
@@ -52,11 +53,22 @@ class PosController extends Component
         $this->itemsQuantity = Cart::getTotalQuantity();
         $this->ClienteSelectnit = 1;
         $this->ProductSelectNombre = 1;
-        $this->tipopago = 'EFECTIVO';
         $this->anonimo = 0;
         $this->facturasino = 'No';
         $this->descuento = 0;
         $this->totalBsBd = 0;
+
+        $listac = $this->listarcarteras();
+        $this->tipopago = 'Elegir';
+        foreach($listac as $list)
+        {
+            if($list->tipo == 'CajaFisica')
+            {
+                $this->tipopago = $list->idcartera;
+                break;
+            }
+            
+        }
         $this->actualizardescuento();
         $this->listadestinos = $this->buscarxproducto(1);
         $this->listasucursales = $this->buscarxproductosucursal(1);
@@ -154,11 +166,12 @@ class PosController extends Component
             'cart' => Cart::getContent()->sortBy('name'),
             'datosnit' => $datosnit,
             'datosnombreproducto' => $datosnombreproducto,
-            'nit' =>$this->nit,
-            'razonsocial' =>$this->razonsocial,
-            'celular' =>$this->celular,
             'listdestinos' =>$listardestinos,
-            'listacarteras' => $this->listarcarteras()
+            'listacarteras' => $this->listarcarteras(),
+
+           
+
+
 
         ])
             ->extends('layouts.theme.app')
@@ -341,8 +354,6 @@ class PosController extends Component
                 //Llamando al modal
                 $this->emit('no-stocktienda');
                 return;
-
-
 
 
 
@@ -879,22 +890,17 @@ class PosController extends Component
             ->get()->first();
 
             //Tipo de Pago en la Venta
-            if ($this->tipopago == 'EFECTIVO')
-            {
-                $cartera = Cartera::where('tipo', 'cajafisica')
-                    ->where('caja_id', $cajausuario->id)
-                    ->get()->first();
-            }
-            else
-            {
-                $cartera = Cartera::where('id', $this->tipopago)
+            $cartera = Cartera::where('id', $this->tipopago)
                     ->where('caja_id', $cajausuario->id)->get()->first();
-            }
             //Cambiando valor de $facturasino dependiendo del valor de $factura
             $this->ventafactura();
             //Guardando total Bs para crear comprobante en PDF
             $this->totalbs = $this->total;
             $this->totalitems = $this->itemsQuantity;
+
+            $tipopago = Cartera::find($this->tipopago);
+
+
             //Creando Venta
             if($this->observacion=="")
             {
@@ -903,7 +909,7 @@ class PosController extends Component
                     'items' => $this->itemsQuantity,
                     'cash' => $this->efectivo,
                     'change' => $this->change,
-                    'tipopago' => $this->tipopago,
+                    'tipopago' => $tipopago->nombre,
                     'factura' => $this->facturasino,
                     'movimiento_id' => $Movimiento->id,
                     'user_id' => Auth()->user()->id
@@ -916,7 +922,7 @@ class PosController extends Component
                     'items' => $this->itemsQuantity,
                     'cash' => $this->efectivo,
                     'change' => $this->change,
-                    'tipopago' => $this->tipopago,
+                    'tipopago' => $tipopago->nombre,
                     'factura' => $this->facturasino,
                     'movimiento_id' => $Movimiento->id,
                     'observacion' => $this->observacion,
@@ -995,15 +1001,38 @@ class PosController extends Component
             
             //Llamar al Modal de Espera
             $this->emit('modalespera');
-            //Redireccionando para crear el comprobante con sus respectvas variables
+            //Redireccionando para crear el comprobante con sus respectivas variables
             return redirect::to('report/pdf' . '/' . $this->totalbs. '/' . $this->idventa . '/' . $this->totalitems);
+            
 
-            //return Redirect::to('pos');
-        } catch (Exception $e) {
+            //$pdf = PDF::loadView('report/pdf' . '/' . $this->totalbs. '/' . $this->idventa . '/' . $this->totalitems);
+
+            //return $pdf->stream('comprobante.pdf');  //visualizar
+            /* return $pdf->download('salesReport.pdf');  //descargar  */
+
+            return Redirect::to('pos');
+        }
+        catch (Exception $e) {
             DB::rollback();
             $this->emit('sale-error', $e->getMessage());
         }
     }
+
+    public function tbs()
+    {
+        return $this->totalbs;
+    }
+    public function iventa()
+    {
+        return $this->idventa;
+    }
+    public function titems()
+    {
+        return $this->totalitems;
+    }
+
+
+
     public function printTicket($sale)
     {
         return Redirect::to('print://$sale->id');
@@ -1349,11 +1378,12 @@ class PosController extends Component
         ->where('mov.user_id', Auth()->user()->id)
         ->where('mov.status', 'ACTIVO')
         ->where('mov.type', 'APERTURA')
-        ->select('car.id as idcartera', 'car.nombre as nombrecartera', 'car.descripcion as dc')
+        ->select('car.id as idcartera', 'car.nombre as nombrecartera', 'car.descripcion as dc','car.tipo as tipo')
         ->get();
 
         return $carteras;
     }
+
 
 
 

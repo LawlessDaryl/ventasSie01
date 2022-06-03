@@ -105,6 +105,7 @@ a{
                             @if($this->verificarpermiso())
                             <th class="table-th text-withe text-center" width="50px"> Acciònes</th>
                             @endif
+                            <th class="table-th text-withe text-center">Comprobante</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -175,6 +176,13 @@ a{
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                                         </button> --}}
                                         @endif
+                                    </div>
+                                </td>
+                                <td style="padding: 0%"  class="table-th text-withe text-center">
+                                    <div class="btn-group" role="group" aria-label="Basic example">
+                                        <button wire:click="crearcomprobante({{$d->id}})" title="Crear PDF" type="button" class="btn btn-primary" style="background-color: crimson">
+                                            Mostrar Comprobante
+                                        </button>
                                     </div>
                                 </td>
                                 @endif
