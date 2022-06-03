@@ -360,6 +360,8 @@ class ProductsController extends Component
 
         Excel::import(new ProductsImport,$file);
        
+        
+
 
         return redirect()->route('productos');
     }

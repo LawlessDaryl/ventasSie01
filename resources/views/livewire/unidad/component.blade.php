@@ -68,7 +68,7 @@
         window.livewire.on('unidad-deleted', msg => {
             ///
         });
-        window.livewire.on('show-modal', msg => {
+       window.livewire.on('show-modal', msg => {
             $('#theModal').modal('show')
         });
         window.livewire.on('modal-hide', msg => {

@@ -68,9 +68,6 @@ class UnidadesController extends Component
     {
         $this->selected_id = $unity->id;
         $this->nombre = $unity->nombre;
-        
-       
-
         $this->emit('show-modal', 'show modal!');
     }
     public function Update()
