@@ -23,7 +23,7 @@ class ProductsController extends Component
      $image, $selected_id, $pageTitle, $componentName,$cate,$marca,$garantia,$stock,$stock_v
      ,$selected_categoria,$selected_sub,$nro=1,$sub,$change=[],$estados;
 
-    private $pagination = 15;
+    private $pagination = 100;
     public $selected_id2;
     public function paginationView()
     {
@@ -112,7 +112,7 @@ class ProductsController extends Component
                 $prod = Product::join('categories as c', 'products.category_id','c.id')
                 ->select('products.*', 'c.name as cate')
                 ->where('products.status',$this->estados)
-                ->orderBy('products.id', 'desc')
+                ->orderBy('products.nombre', 'desc')
                 ->paginate($this->pagination);}
             
         

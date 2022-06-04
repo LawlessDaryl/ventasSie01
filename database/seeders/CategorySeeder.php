@@ -20,18 +20,12 @@ class CategorySeeder extends Seeder
             'descripcion' => 'ninguna',
             'categoria_padre' => '0',
         ]);
-
-
         //ID = 2
         Category::create([
             'name' => 'Celulares',
             'descripcion' => 'ninguna',
             'categoria_padre' => '0',
         ]);
-
-
-
-
         //ID = 3
         Category::create([
             'name' => 'Pc',
@@ -51,9 +45,6 @@ class CategorySeeder extends Seeder
             'categoria_padre' => '1',
         ]);
 
-
-
-
         //ID = 6
         Category::create([
             'name' => 'Pantallas',
@@ -72,5 +63,7 @@ class CategorySeeder extends Seeder
             'descripcion' => 'ninguna',
             'categoria_padre' => '2',
         ]);
+
+
     }
 }
