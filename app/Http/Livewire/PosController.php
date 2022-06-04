@@ -226,6 +226,11 @@ class PosController extends Component
     }
     public function ACash($value)
     {
+        if($this->efectivo == "")
+        {
+            $this->efectivo = 0;
+        }
+
         $this->efectivo += ($value == 0 ? $this->total : $value);
         $this->change = ($this->efectivo - $this->total);
     }
@@ -1003,7 +1008,8 @@ class PosController extends Component
 
             
             //Llamar al Modal de Espera
-            $this->emit('modalespera');
+            //$this->emit('modalespera');
+            //sleep(2);
             //Redireccionando para crear el comprobante con sus respectivas variables
             //return redirect::to('report/pdf' . '/' . $this->totalbs. '/' . $this->idventa . '/' . $this->totalitems);
 
@@ -1019,7 +1025,6 @@ class PosController extends Component
             {
                 $this->emit('opentap');
             }
-            sleep(5);
             return Redirect::to('pos');
         }
         catch (Exception $e) {
