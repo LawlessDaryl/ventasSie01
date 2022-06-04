@@ -203,7 +203,7 @@
                                                         @if($efectivo>=$total&&$total>0)
                                                         <div class="col-sm-12 col-md-12 col-lg-4">
                                                                 <center>
-                                                                    <strong>Crear PDF</strong>
+                                                                    <strong>Generar Recibo</strong>
                                                                     <label class="switch s-icons s-outline  s-outline-primary  mb-4 mr-2">
                                                                         <input id="factura" type="checkbox" wire:model="crearpdf">
                                                                         <span class="slider round"></span>
