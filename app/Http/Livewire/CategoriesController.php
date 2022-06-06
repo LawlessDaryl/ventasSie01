@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Imports\CategoryImport;
 use Livewire\Component;
 use App\Models\Category;
 use Livewire\WithFileUploads;
@@ -174,9 +175,9 @@ class CategoriesController extends Component
         
         $file = $request->file('import_file');
 
-        Excel::import(new ProductsImport,$file);
+        Excel::import(new CategoryImport ,$file);
        
 
-        return redirect()->route('productos');
+        return redirect()->route('categorias');
     }
 }

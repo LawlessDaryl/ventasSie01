@@ -161,8 +161,8 @@ class TransferirProductoController extends Component
     public function resetUI()
     {
         Transferencia::clear();
-        $this->selected_destino = "Elegir Destino";
-        $this->selected_origen = "Elegir Destino";
+        $this->selected_destino = null;
+        $this->selected_origen = null;
 
     }
 
@@ -172,25 +172,21 @@ class TransferirProductoController extends Component
     }
    
     public function verificarDestino(){
-    if ($this->selected_destino != $this->selected_origen) {
+    if ($this->selected_destino == $this->selected_origen) {
         
-        return true;
+        $this->emit('empty', 'El destino de la transferencia debe ser diferente al origen');
+        return false;
     }
-        else{
-            $this->emit('empty', 'El destino de la transferencia debe ser diferente al origen');
-            return false;
-        }
-    if($this->selected_destino != null || $this->selected_origen !== null){
-        return true;
-    }
-        else{
+    if($this->selected_destino == null){
+        $this->emit('empty', 'No ha seleccionado el destino para la transferencia.');
+        return false;
 
-            $this->emit('empty-destino', 'No ha seleccionado el destino u origen para la transferencia.');
-            return false;
-        }
     }
+    return true;
+}
 
-   public function asignarEstado(){
+
+  /* public function asignarEstado(){
 
        if ($this->tipo_tr === "tr_dir") {
            $this->estado = 4;
@@ -199,13 +195,13 @@ class TransferirProductoController extends Component
            $this->estado=1;
        }
 
-   }
+   }*/
 
     public function finalizar_tr()
     {
+        //$this->verificarDestino();
+        //$this->asignarEstado();
        
-       //$this->verificarDestino();
-       $this->asignarEstado();
 
        if ($this->verificarDestino()) {
         DB::beginTransaction();
@@ -254,7 +250,7 @@ class TransferirProductoController extends Component
                 }
 
                    $mm= EstadoTransferencia::create([
-                        'estado'=>$this->estado,
+                        'estado'=>4,
                         'op'=>1,
                         'id_transferencia'=>$Transferencia_encabezado->id,
                         'id_usuario'=>Auth()->user()->id

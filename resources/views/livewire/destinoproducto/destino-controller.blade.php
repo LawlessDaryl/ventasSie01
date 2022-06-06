@@ -1,3 +1,40 @@
+
+@section('css')
+
+<style>
+
+.contenedortabla{
+        /* overflow:scroll; */
+        overflow-x:auto;
+        /* max-height: 100%; */
+        /* min-height:200px; */
+        /* max-width: 100%; */
+        /* min-width:100px; */
+    }
+
+    .estilostable {
+    width: 100%;
+   
+    }
+    .tablehead{
+        background-color: #383938;
+        color: aliceblue;
+    }
+    .tableheadprod{
+        background-color: rgb(230, 152, 64);
+        color: rgb(229, 229, 230);
+        
+    }
+
+    .mb{
+        background-color: rgb(230, 64, 64);
+    }
+</style>
+@endsection
+
+
+
+
 <div class="row sales layout-top-spacing">
     <div class="col-sm-12">
         <div class="widget widget-chart-one">
@@ -14,21 +51,6 @@
 
                 <div class="col-12 col-lg-8 col-md-3 ml-3">
 
-                    <div class="col-lg-7 col-md-6 col-12">
-                        <div class="form-group">
-                            <label> <strong style="color: black">TIPO OPERACION:</strong> </label>
-                            <select wire:model='tipo_tr' class="form-control">
-                                <option value=null disabled>Elegir operacion</option>
-                             
-                              <option value="tr_dir">TRANSFERIR PRODUCTOS</option>
-                              <option value="tr_sol" disabled>SOLICITAR PRODUCTOS</option>
-                          
-                            
-                            </select>
-                          </div>
-                        </div>
-
-                        @if ($tipo_tr== "tr_dir")
                         <div class="row">
                             <div class="col-lg-4 col-md-6 col-12">
                                 <div class="form-group">
@@ -46,7 +68,7 @@
                                     <div class="form-group">
                                         <label> <strong style="color: black">Destino de transferencia:</strong> </label>
                                         <select wire:model='selected_destino' class="form-control">
-                                            <option value=* >Elegir Destino</option>
+                                            <option value= null >Elegir Destino</option>
                                           @foreach ($data_destino as $data)
                                           <option value="{{ $data->destino_id }}">{{ $data->sucursal }}-{{$data->destino}}</option>
                                           @endforeach
@@ -63,44 +85,7 @@
     
                                     </div>
                         </div>
-                        @elseif($tipo_tr== "tr_sol")
-                        <div class="row">
-                            <div class="col-lg-4 col-md-6 col-12">
-                                <div class="form-group">
-                                    <label> <strong style="color: black" >Enviar solicitud desde:</strong> </label>
-                                    <select wire:model='selected_origen' {{ ($itemsQuantity>0)? 'disabled':""}} class="form-control">
-                                            <option value=0>Elegir Origen</option>
-                                        @foreach ($data_origen as $data)
-                                        <option value="{{ $data->destino_id }}">{{ $data->sucursal }}-{{$data->destino}}</option>
-                                        @endforeach
-                                    </select>
-                                  </div>
-                                </div> 
-    
-                                <div class="col-lg-4 col-md-6 col-12">
-                                    <div class="form-group">
-                                        <label> <strong style="color: black">Destino de solicitud:</strong> </label>
-                                        <select wire:model='selected_destino' class="form-control">
-                                            <option value=* >Elegir Destino</option>
-                                          @foreach ($data_destino as $data)
-                                          <option value="{{ $data->destino_id }}">{{ $data->sucursal }}-{{$data->destino}}</option>
-                                          @endforeach
-                                        
-                                        </select>
-                                      </div>
-                                    </div>
-                                    <div class="col-lg-4">
-                                    
-                                        <div class="form-group">
-                                            <label> <strong style="color: black">Observacion:</strong> </label>
-                                            <input  wire:model='observacion' class="form-control" type="text">
-                                          </div>
-    
-                                    </div>
-                        </div>
-                    
-                            
-                        @endif
+                       
                    
                 </div>
                
@@ -128,9 +113,9 @@
 
                     @if($selected_origen !== 0 && strlen($search) > 0 )
 
-                        <div class="table-responsive">
-                            <table class="table table-unbordered table-hover mt-2">
-                                <thead class="text-white" style="background: #3B3F5C">
+                    <div class="contenedortabla">
+                        <table class="estilostable" style="color: rgb(6, 5, 5)">
+                            <thead class="tableheadprod">
                                     <tr>
                                         <th class="table-th text-withe text-center">ITEM</th>
                                         <th class="table-th text-withe text-center">PRODUCTO</th>                              
@@ -153,7 +138,7 @@
                                             </td>
                                             <td class="text-center">
                                                 <a href="javascript:void(0)" wire:click="increaseQty({{ $destino->prod_id }})"
-                                                    class="btn btn-dark mtmobile">
+                                                    class="btn btn-dark mtmobile p-1">
                                                     <i class="fas fa-plus"></i>
                                                 </a>
                                             </td>
@@ -178,10 +163,11 @@
 
                             <div class="col-lg-12 col-md-12 col-12 widget mr-2 mb-2 mt-2">
                                   
-                                <div class="table-responsive p-1">
-                                    <table class="table table-unbordered table-hover mt-2">
-                                        <thead class="text-white" style="background: #3B3F5C">
+                                <div class="contenedortabla">
+                                    <table class="estilostable" style="color: rgb(6, 5, 5)">
+                                        <thead class="tablehead">
                                             <tr>
+                                                <th class="table-th text-withe text-center">#</th>
                                                 <th class="table-th text-withe text-center">Producto</th>
                                               
                                                 <th class="table-th text-withe text-center">Cantidad</th>
@@ -193,7 +179,10 @@
                                             @foreach ($cart as $prod)
                                                 <tr>
                                                     <td>
-                                                        <h6> {{$prod->name}}</h6>
+                                                        {{$loop->iteration}}
+                                                    </td>
+                                                    <td>
+                                                        {{$prod->name}}
                                                     </td>
                                                     <td>
                                                          <input type="number" 
@@ -207,7 +196,7 @@
                                                     <td class="text-center">
                                                         <a href="javascript:void(0)"
                                                         wire:click="removeItem({{ $prod->id }})"
-                                                            class="btn btn-dark mtmobile" title="Edit">
+                                                            class="btn btn-dark mtmobile mb p-2" title="Edit">
                                                             <i class="fas fa-trash"></i>
                                                         </a>
     

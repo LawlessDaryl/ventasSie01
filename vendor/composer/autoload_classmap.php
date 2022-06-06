@@ -101,6 +101,7 @@ return array(
     'App\\Http\\Middleware\\TrustHosts' => $baseDir . '/app/Http/Middleware/TrustHosts.php',
     'App\\Http\\Middleware\\TrustProxies' => $baseDir . '/app/Http/Middleware/TrustProxies.php',
     'App\\Http\\Middleware\\VerifyCsrfToken' => $baseDir . '/app/Http/Middleware/VerifyCsrfToken.php',
+    'App\\Imports\\CategoryImport' => $baseDir . '/app/Imports/CategoryImport.php',
     'App\\Imports\\ProductsImport' => $baseDir . '/app/Imports/ProductsImport.php',
     'App\\Models\\Account' => $baseDir . '/app/Models/Account.php',
     'App\\Models\\AccountProfile' => $baseDir . '/app/Models/AccountProfile.php',

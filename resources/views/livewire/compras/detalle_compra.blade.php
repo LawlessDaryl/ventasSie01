@@ -1,13 +1,31 @@
 
 @section('css')
 
-
 <style>
 
-    
+.contenedortabla{
+        /* overflow:scroll; */
+        overflow-x:auto;
+        /* max-height: 100%; */
+        /* min-height:200px; */
+        /* max-width: 100%; */
+        /* min-width:100px; */
+    }
+
+    .estilostable {
+    width: 100%;
+   
+    }
+    .tablehead{
+        background-color: #383938;
+        color: aliceblue;
+    }
+    .tableheadprod{
+        background-color: rgb(230, 152, 64);
+        color: rgb(229, 229, 230);
+        
+    }
 </style>
-
-
 @endsection
 
 
@@ -209,28 +227,28 @@
                                 </div>
                          
                                    @if(strlen($search) > 0)
-                                   <div class="table-responsive">
-                                     <table class="table table-unbordered table-hover">
-                                         <thead class="text-white" style="background: #3B3F5C">
+                                   <div class="contenedortabla">
+                                    <table class="estilostable" style="color: rgb(6, 5, 5)">
+                                        <thead class="tableheadprod">
                                              <tr>
-                                                 <th class="table-th text-withe text-center">Producto</th>                              
-                                                 <th class="table-th text-withe text-center">Accion</th>
+                                                 <th class="table-th text-withe text-left">Producto</th>                              
+                                                 <th class="table-th text-withe text-left">Accion</th>
                                              </tr>
                                          </thead>
                                          <tbody>
                                              @foreach ($data_prod as $prod)
                                                  <tr>
                                                      <td>
-                                                         <div class="card-body">
-                                                            <h5> <strong>{{$prod->nombre}}</strong> </h5>
-                                                            <label>{{ $prod->unidad}}</label>|<label>{{ $prod->marca}}</label>|<label>{{ $prod->industria }}</label>
-                                                            <h6>{{ $prod->caracteristicas }}</h6>
-                                                           </div>
+                                                         
+                                                            <strong>{{$prod->nombre}}</strong>
+                                                            <p>{{ $prod->unidad}}|{{ $prod->marca}}|{{ $prod->industria }}</p>
+                                                            <p>{{ $prod->caracteristicas }}</p>
+                                                        
                                                      </td>
                                                    
                                                      <td class="text-center">
                                                          <a href="javascript:void(0)" wire:click="increaseQty({{ $prod->id }})"
-                                                             class="btn btn-dark mtmobile">
+                                                             class="btn btn-dark mtmobile p-2">
                                                              <i class="fas fa-plus"></i>
                                                          </a>
                                                         
@@ -249,9 +267,13 @@
                
                     <div class="col-lg-8 col-12  col-md-12">
                         <div class="widget mr-2 mb-2 mt-2">
-                                <div class="table-responsive table-wrapper-scroll-y p-0">
-                                    <table style="background: #ffffff" class="table table-bordered table-striped mt-1">
-                                        <thead  style="background: #595959" class="">
+                              
+
+
+                                        <div class="contenedortabla">
+                                            <table class="estilostable" style="color: rgb(0, 0, 0)">
+
+                                        <thead class="tablehead">
                                             <tr>
                                                 <th class="text-center" style="width: 12rem; color:#ffffff; font-size:1rem">Producto</th>
                                                 <th class="text-center" style="width: 5rem; color:#ffffff">Codigo</th>
@@ -349,8 +371,8 @@
                         </div>
                         <div class="row align-items-center justify-content-center">
 
-                                <button class="btn btn-info m-3 p-2"  wire:click.prevent="guardarCompra()"> <h5 style="color: aliceblue" >Guardar Compra</h5> </button>
-                                <button class="btn btn-danger m-3 p-2"  wire:click.prevent="exit()" > <h5 style="color: aliceblue" >Cancelar Compra</h5> </button>
+                                <button class="btn btn-info m-3 p-2"  wire:click.prevent="guardarCompra()">GUARDAR</button>
+                                <button class="btn btn-danger m-3 p-2"  wire:click.prevent="exit()" > CANCELAR</button>
                             
                         </div>
                     </div>

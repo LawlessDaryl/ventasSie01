@@ -11,7 +11,7 @@ use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
 
-class ProductsImport implements ToModel,WithHeadingRow,WithBatchInserts,WithChunkReading,WithValidation
+class CategoryImport implements ToModel,WithHeadingRow,WithBatchInserts,WithChunkReading,WithValidation
 {
     /**
     * @param array $row
@@ -21,9 +21,9 @@ class ProductsImport implements ToModel,WithHeadingRow,WithBatchInserts,WithChun
     public function model(array $row)
     {
         return new Category([
-            'nombre'=>$row['nombre'],
-            'costo'=>$row['costo'],
-            'caracteristicas'=>$row['caracteristicas'],
+            'name'=>$row['nombre'],
+            'descripcion'=>$row['descripcion'],
+            
         ]);
     }
     public function batchSize(): int
@@ -38,11 +38,15 @@ class ProductsImport implements ToModel,WithHeadingRow,WithBatchInserts,WithChun
 
     public function rules(): array
     {
-        return [
-            'email' => Rule::in(['patrick@maatwebsite.nl']),
+        return [             // Above is alias for as it always validates in batches
+            '*.nombre' =>[
+                'distinct','required'
+            ],
+            '*.descripcion' =>[
+                'required'
+            ]
+            
 
-             // Above is alias for as it always validates in batches
-             '*.email' => Rule::in(['patrick@maatwebsite.nl']),
         ];
     }
 
