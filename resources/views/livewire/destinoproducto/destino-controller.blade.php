@@ -110,15 +110,15 @@
             </div>
                 </div>
                 <div class="row">
+                    <div class="col-lg-12 col-md-12 col-12">
 
                     @if($selected_origen !== 0 && strlen($search) > 0 )
-
                     <div class="contenedortabla">
                         <table class="estilostable" style="color: rgb(6, 5, 5)">
                             <thead class="tableheadprod">
                                     <tr>
                                         <th class="table-th text-withe text-center">ITEM</th>
-                                        <th class="table-th text-withe text-center">PRODUCTO</th>                              
+                                        <th class="table-th text-withe text-center">PRODUCTO</th>                    
                                         <th class="table-th text-withe text-center">STOCK</th>                         
                                         <th class="table-th text-withe text-center">ACCION</th>                         
                                     </tr>
@@ -153,6 +153,7 @@
                     @else
                     <span>No se encontraron resultados</span>
                     @endif
+                    </div>
                 </div>
 
               </div>

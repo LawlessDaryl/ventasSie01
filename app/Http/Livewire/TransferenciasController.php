@@ -19,11 +19,15 @@ use Darryldecode\Cart\Facades\EditarTransferenciaFacade as EditarTransferencia;
 
 class TransferenciasController extends Component
 {
-    public $nro,$nro_det,$detalle,$estado,$estado_destino,$vs=[], $datalist_destino,$selected_id1,$class1,$class,$selected_id2,$data_origen;
+    public $nro,$nro_det,$detalle,$estado,$estado_destino,$vs=[], $datalist_destino,$selected_id1,$class1,$class,$selected_id2,$data_origen,$estado_lista_tr,$estado_lista_te,$show1,$show2;
     public function mount(){
         $this->nro=1;
         $this->nro_det=1;
         $this->verPermisos();
+        $this->estado_lista_tr='active';
+        $this->estado_lista_te='';
+        $this->show1='show';
+        $this->show2='';
 
     }
     public function render()
