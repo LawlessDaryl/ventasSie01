@@ -233,11 +233,15 @@
             $('#modalDetails').modal('show')
         });
         window.livewire.on('mostrareditarmodal', msg => {
+            $('#modificartransaccion').modal({backdrop: 'static', keyboard: false})
             $('#modificartransaccion').modal('show')
         });
         window.livewire.on('mostrarocultar', msg => {
             $('#modificartransaccion').modal('show')
             $('#modificartransaccion').modal('hide')
         });
+
+
+
     })
 </script>

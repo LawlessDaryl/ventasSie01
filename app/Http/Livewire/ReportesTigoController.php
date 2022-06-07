@@ -23,7 +23,8 @@ class ReportesTigoController extends Component
         $userId, $dateFrom, $dateTo, $transaccionId, $tipotr, $origenfiltro;
 
 
-    public $search, $origen, $cedula, $celular, $condicionalOrigen, $motivo, $condicionalMotivo, $ResetRadioButton, $a, $b;
+    public $search, $origen, $cedula, $celular, $condicionalOrigen, $motivo, $condicionalMotivo, $ResetRadioButton, $a, $b,
+     $mostrarunavez1, $mostrarunavez2;
 
     public function mount()
     {
@@ -52,7 +53,8 @@ class ReportesTigoController extends Component
 
 
 
-
+        $this->mostrarunavez1 = true;
+        $this->mostrarunavez2 = true;
         $this->motivo = 'Elegir';
     }
 
@@ -961,6 +963,27 @@ class ReportesTigoController extends Component
         $tran->estado = 'Anulada';
         $tran->save();
         $this->emit('item-anulado', 'Se anuló la transacción');
+    }
+
+    public function cambiarafalse1()
+    {
+        $this->mostrarunavez1 = false;
+    }
+    public function cambiarafalse2()
+    {
+        $this->mostrarunavez2 = false;
+    }
+    /* Cargar los datos seleccionados de la tabla a los label */
+    public function Seleccionar($cedula, $celular)
+    {
+        $this->cedula = $cedula;
+        $this->celular = $celular;
+        $this->ClienteSelect = 1;
+        $this->TelfSelect = 1;
+
+        $this->mostrarunavez1 = false;
+        $this->mostrarunavez2 = false;
+
     }
 
 }
