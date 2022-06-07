@@ -3,7 +3,8 @@
         <ul class="navbar-item flex-row">
             <li class="nav-item theme-logo">
                 <a href="{{url('inicio')}}">
-                    <img src="assets/img/sie.png" class="navbar-logo" alt="logo">
+                    {{-- Logo --}}
+                    <img src="assets/img/fav08.png" class="navbar-logo" alt="logo">
                 </a>
             </li>
         </ul>

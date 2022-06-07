@@ -93,6 +93,7 @@
                                         @endcan
                                         <th class="table-th text-withe text-center">FECHA</th>
                                         <th class="table-th text-withe text-center" width="50px"></th>
+                                        <th class="table-th text-withe text-center">Editar</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -150,6 +151,11 @@
                                                     </svg>
                                                 </button>
                                             </td>
+                                            <td>
+                                                <button class="btn btn-dark btn-sm" title="Editar Transacción" wire:click="editartransaccion({{$d->id}})">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-square"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                                                </button>
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -162,6 +168,7 @@
         </div>
     </div>
     @include('livewire.reportes_tigo.sales-detail')
+    @include('livewire.reportes_tigo.modaleditartransaccion')
 </div>
 
 <script>
@@ -224,6 +231,13 @@
         //eventos
         window.livewire.on('show-modal', msg => {
             $('#modalDetails').modal('show')
+        });
+        window.livewire.on('mostrareditarmodal', msg => {
+            $('#modificartransaccion').modal('show')
+        });
+        window.livewire.on('mostrarocultar', msg => {
+            $('#modificartransaccion').modal('show')
+            $('#modificartransaccion').modal('hide')
         });
     })
 </script>
