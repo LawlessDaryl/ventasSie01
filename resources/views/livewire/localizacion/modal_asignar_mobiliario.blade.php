@@ -1,3 +1,35 @@
+
+@section('css')
+
+<style>
+
+.contenedortabla{
+        /* overflow:scroll; */
+        overflow-x:auto;
+        /* max-height: 100%; */
+        /* min-height:200px; */
+        /* max-width: 100%; */
+        /* min-width:100px; */
+    }
+
+    .estilostable {
+    width: 100%;
+   
+    }
+    .tablehead{
+        background-color: #383938;
+        color: aliceblue;
+    }
+    .tableheadprod{
+        background-color: rgb(43, 42, 41);
+        color: rgb(229, 229, 230);
+        border-radius: 1rem;
+        
+    }
+</style>
+@endsection
+
+
 <div wire:ignore.self class="modal fade" id="asignar_mobiliario" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -9,44 +41,84 @@
             </div>
          <div class="modal-body" style="background: #f0ecec">
             <div class="row">
-                <div class="col-sm-12 col-md-8 col-lg-6">
+                <div class="col-sm-12 col-md-8 col-lg-8">
                     <div class="form-group">
-                        <label>Categoria</label>
-                        <select wire:model='categoria' class="form-control">
-                            <option value="Elegir">Elegir</option>
-                            @foreach ($data_categoria as $data)
-                            
-                                <option value="{{$data->id}}">{{ $data->name}}</option>
-                            @endforeach
-                          
-                        </select>
+                        <label>Buscar productos...</label>
+                        <div class="input-group mb-4">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text input-gp">
+                                    <i class="fas fa-search"></i>
+                                </span>
+                            </div>
+                            <input type="text" wire:model="search2" placeholder="Buscar" class="form-control">
+                        </div>
                     </div>
+
+                    <div class="col-lg-12 col-md-12 col-12">
+
+                        @if(strlen($search2) > 0 )
+                        <div class="contenedortabla">
+                            <table class="estilostable" style="color: rgb(6, 5, 5)">
+                                <thead class="tableheadprod">
+                                        <tr>
+                                            <th class="table-th text-withe text-center">ITEM</th>
+                                            <th class="table-th text-withe text-center">PRODUCTO</th>                    
+                                                                  
+                                            <th class="table-th text-withe text-center">ACCION</th>                         
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($data_mob as $data_m)
+                                            <tr>
+                                                <td>
+                                                    <h6 class="text-center">{{ $loop->iteration}}</h6>
+                                                </td>
+                                                <td>
+                                                    <h6 class="text-center">{{ $data_m->nombre }}</h6>
+                                                </td>
+                                                <td class="text-center">
+                                                    <a href="javascript:void(0)" wire:click="addProd({{ $data_m->id}})"
+                                                        class="btn btn-dark mtmobile p-1">
+                                                        <i class="fas fa-plus"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                              
+    
+                            </div>
+                        @endif
+                        </div>
+
                 </div>
-                <div class="col-sm-12 col-md-8 col-lg-6">
-                    <div class="form-group">
-                        <label>Subcategoria</label>
-                        <select wire:model='subcategoria' class="form-control">
-                            <option value="Elegir">Elegir</option>
-                            @foreach ($data_subcategoria as $data)
-                                <option value="{{$data->id}}">{{ $data->name}}</option>
-                            @endforeach
-                          
-                        </select>
-                    </div>
-                </div>
+               
              </div>
             <div class="row">
                 <div class="col-sm-12 col-md-8 col-lg-12">
-                    <div class="form-group">
-                        <label>Productos</label>
-                        <select wire:model='product' class="form-control">
-                            <option value="Elegir">Elegir</option>
-                            @foreach ($data_producto as $data)
-                                <option value="{{$data->id}}">{{ $data->nombre}}</option>
-                            @endforeach
-                        </select>
-                        @error('product') <span class="text-danger er">{{ $message }}</span>@enderror
-                    </div>
+                    
+                        <h5>Producto</h5>
+                        @if($product)
+                        <div>{{$product_name}}</div>
+                        
+                       {{--
+                        @if ($auxi)
+                        @foreach ($auxi as $item)
+                        <h6>{{$item}}</h6>
+                        @endforeach
+                        --}}
+                        <br>
+                        <br>
+                        @else
+                        <br>
+                        Lista de productos para asignarlos a este mobiliario
+                        <br>
+                        @endif
+                        
+                        
+                       
+                    
                 </div>
             </div>
                 <div class="row">

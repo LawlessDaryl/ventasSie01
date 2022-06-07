@@ -30,12 +30,12 @@
                                     </td>
                                   
                                     <td>
-                                        <h6 class="text-center">{{ $data->prod_nom }}</h6>
+                                        <h6 class="text-center">{{ $data->producto->nombre}}</h6>
                                     </td>
                                     
                                     <td class="text-center">
-                                        <a href="javascript:void(0)" wire:click="delete('{{ $data->id }}','{{$data->pid}}')" 
-                                            class="btn btn-dark" title="Delete">
+                                        <a href="javascript:void(0)" wire:key="{{ $loop->index }}" wire:click="delete('{{ $data->id }}')" 
+                                            class="btn btn-danger" title="Delete">
                                             <i class="fas fa-trash"></i>
                                         </a>
                                     </td>

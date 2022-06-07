@@ -19,8 +19,8 @@ class LocalizacionController extends Component
 {
     use WithPagination;
     use WithFileUploads;
-    public $sucursal, $codigo, $descripcion,$ubicacion, $tipo,$product,
-    $selected_id, $categoria,$subcategoria,$location, $pageTitle, $componentName,$search,$destino,$listaproductos;
+    public $sucursal, $codigo, $descripcion,$ubicacion, $tipo,$product,$product_name,
+    $selected_id, $categoria,$subcategoria,$location, $pageTitle, $componentName,$search,$search2,$destino,$listaproductos,$auxi=[];
     private $pagination = 8;
     public function paginationView()
     {
@@ -61,6 +61,15 @@ class LocalizacionController extends Component
 
 
         $data_categoria= Category::where('categories.categoria_padre',0)->orderBy('name', 'asc')->get();
+     
+        if (strlen($this->search2) > 0)
+        $data_prod_mob = Product::select('products.*')
+        ->where('nombre', 'like', '%' . $this->search2 . '%')
+        ->orWhere('codigo','like','%'.$this->search2.'%')
+        ->take(3)
+        ->get();
+        else
+        $data_prod_mob=false;
 
         $data_subcategoria= Category::where('categories.categoria_padre',$this->categoria)
         ->where('categories.categoria_padre','!=','Elegir')
@@ -84,6 +93,7 @@ class LocalizacionController extends Component
                     'data_subcategoria'=> $data_subcategoria,
                     'data_destino'=>$data_destino,
                     'data_mobiliario'=> $data_mobiliario,
+                    'data_mob'=> $data_prod_mob,
                     'data_producto'=>$data_producto
 
            
@@ -186,12 +196,14 @@ class LocalizacionController extends Component
             'location' => "required|not_in:Elegir|unique:location_productos,location,NULL,NULL,product,{$this->product}"
         ];
         $messages = [
-            'product.not_in' => 'Elija una opcion diferente de elejir',
+            'product.not_in' => 'Elija una opcion diferente de elegir',
             'product.unique' => 'Este producto ya esta asignado a este mobiliario.',
             'location.unique' => 'Este mobiliario ya esta asignado a este producto',
             'location.required' => 'El nombre de tipo aparador es requerido'
         ];
+
         $this->validate($rules, $messages);
+
         LocationProducto::create([
             'product'=>$this->product,
             'location'=>$this->location
@@ -209,6 +221,7 @@ class LocalizacionController extends Component
         $this->categoria=null ;
         $this->subcategoria= null;
         $this->producto=null ;
+        $this->product_name=null;
         $this->destino= null;
         $this->location= null;
         $this->resetValidation();
@@ -216,20 +229,29 @@ class LocalizacionController extends Component
 
     public function ver($id){
         
-        $this->listaproductos= Location::join('location_productos','locations.id','location_productos.location')
+        $this->listaproductos= LocationProducto::join('locations','locations.id','location_productos.location')
         ->join('products','location_productos.product','products.id')
         ->where('locations.id',$id)
-        ->select('locations.id as loc_id','products.nombre as prod_nom','products.id as pid')
+        ->select('location_productos.*')
         ->get();
         //dd($this->listaproductos->count());
         $this->emit('verprod');
     }
 
-    public function delete($id,$prod)
+    public function delete($id)
     {
-        $item= LocationProducto::where('product',$prod)
-        ->where('location',$id)->select('location_productos.id')->value('location_productos.id');
+        LocationProducto::where('location_productos.id',$id)->delete();
+
         
+    }
+
+    public function addProd( Product $id){
+
+      
+      $this->product=$id->id;
+    $this->product_name=$id->nombre;
+    
+
     }
 
 

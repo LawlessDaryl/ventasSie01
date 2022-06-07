@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\DB;
 
 use Darryldecode\Cart\Facades\ComprasFacade as Compras;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 
 class DetalleComprasController extends Component
 {
@@ -33,7 +34,7 @@ class DetalleComprasController extends Component
     
     use WithPagination;
     use WithFileUploads;
-    public  $nro_compra,$search,$provider,$fecha_compra,
+    public  $nro_compra,$search,$provider,$fecha_compra,$vs=[],
     $usuario,$metodo_pago,$pago_parcial=0,$tipo_documento,$nro_documento,$observacion
     ,$selected_id,$descuento=0,$saldo=0,$subtotal,$cantidad_minima,
     $estado_compra,$total_compra,$itemsQuantity,$price,$status,$tipo_transaccion,$destino,$porcentaje,$importe,$dscto=0,$aplicar=false, $lote_compra;
@@ -62,7 +63,8 @@ class DetalleComprasController extends Component
         $this->subtotal = Compras::getTotal();
         $this->total_compra= $this->subtotal-$this->dscto;
         $this->porcentaje=0;
-
+        $this->verPermisos();
+      
   
     }
     public function render()
@@ -78,7 +80,9 @@ class DetalleComprasController extends Component
         $prod = "cero";
 //---------------Select destino de la compra----------------------//
        $data_destino= Sucursal::join('destinos as dest','sucursals.id','dest.sucursal_id')
-       ->select('dest.*','dest.id as destino_id','sucursals.*')->get();
+       ->whereIn('dest.id',$this->vs)
+       ->select('dest.*','dest.id as destino_id','sucursals.*')
+       ->get();
 
 //--------------------Select proveedor---------------------------//
        $data_provider= Provider::select('providers.*')->get();
@@ -95,6 +99,22 @@ class DetalleComprasController extends Component
         ->section('content');
      }
   
+     public function verPermisos(){
+       
+        $ss= Destino::select('destinos.id','destinos.nombre')->get();
+        $arr=[];
+        foreach ($ss as $item){
+            $arr[$item->nombre.'_'.$item->id]=($item->id);
+            
+        }
+
+       foreach ($arr as $key => $value) {
+        if (Auth::user()->hasPermissionTo($key)) {
+            array_push($this->vs,$value);
+        }
+       }
+
+    }
 
     public function increaseQty($productId, $cant = 1,$precio_compra = 0)
     {  

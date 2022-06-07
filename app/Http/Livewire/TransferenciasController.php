@@ -32,7 +32,8 @@ class TransferenciasController extends Component
     }
     public function render()
     {
-        $this->data_origen= Transference::join('estado_transferencias','transferences.id','estado_transferencias.id_transferencia')
+       
+        $data_or= Transference::join('estado_transferencias','transferences.id','estado_transferencias.id_transferencia')
         ->join('users','estado_transferencias.id_usuario','users.id')
         ->join('destinos as origen','origen.id','transferences.id_origen')
         ->join('sucursals as suc_origen','suc_origen.id','origen.sucursal_id')
@@ -40,12 +41,14 @@ class TransferenciasController extends Component
         ->join('sucursals as suc_destino','suc_destino.id','destino1.sucursal_id')
         ->select('transferences.created_at as fecha_tr','transferences.id as t_id',
         'users.*','suc_origen.name as origen_name',
-        'suc_destino.name as destino_name','estado_transferencias.estado as estado_tr',
+        'suc_destino.name as destino_name','estado_transferencias.estado as estado_tr','estado_transferencias.op',
         'origen.nombre as origen','destino1.nombre as dst')
-        ->where('estado_transferencias.op','Activo')
         ->whereIn('origen.id',$this->vs)
+        ->OrWhereIn('destino1.id',$this->vs)        
         ->orderBy('fecha_tr','desc')
         ->get();
+        $this->data_origen= $data_or->where('op','Activo');
+        
 
         $data_destino= Transference::join('estado_transferencias','transferences.id','estado_transferencias.id_transferencia')
         ->join('users','estado_transferencias.id_usuario','users.id')
@@ -58,6 +61,7 @@ class TransferenciasController extends Component
         'suc_destino.name as destino_name','estado_transferencias.estado as estado_te',
         'origen.nombre as origen','destino2.nombre as dst2')
         ->where('estado_transferencias.op','Activo')
+        ->where('estado_transferencias.estado','En Transito')
         ->whereIn('destino2.id',$this->vs)
         ->orderBy('fecha_tr','desc')
         ->get();

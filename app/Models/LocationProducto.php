@@ -9,4 +9,11 @@ class LocationProducto extends Model
 {
     use HasFactory;
     protected $fillable =  ['product','location'];
+
+    
+    public function producto()
+    {
+        return $this->belongsTo(Product::class,'product','id');
+    }
 }
+

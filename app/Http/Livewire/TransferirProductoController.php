@@ -70,7 +70,6 @@ class TransferirProductoController extends Component
                                         ->orderBy('suc.name','asc');
                                         $sucursal_ubicacion2=Destino::join('sucursals as suc','suc.id','destinos.sucursal_id')
                                         ->select ('suc.name as sucursal','destinos.nombre as destino','destinos.id as destino_id')
-                                      
                                         ->orderBy('suc.name','asc');
 
                                     
