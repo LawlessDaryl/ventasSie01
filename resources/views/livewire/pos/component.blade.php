@@ -363,7 +363,7 @@ document.addEventListener('DOMContentLoaded', function() {
             var c = @this.totalitems;
 
 
-            var win = window.open('report/pdf/' + a + '/' + b + '/' + c, '_blank',"width=1000,height=1500");
+            var win = window.open('report/pdf/' + a + '/' + b + '/' + c);
             // Cambiar el foco al nuevo tab (punto opcional)
             //win.focus();
 
