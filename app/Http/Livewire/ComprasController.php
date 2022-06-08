@@ -104,14 +104,18 @@ class ComprasController extends Component
     }
 
     
-    public function Edit(Compra $compra_edit){
+   
 
-        
-        redirect('/detalle_compras',['data_compra'=>$compra_edit]);
+   
+
+    protected $listeners = ['deleteRow' => 'Destroy','editarcompras'=>'editarCompra'];
+
+    public function editarCompra($id)
+    {
+        session(['id_compra' => null]);
+        session(['id_compra' => $id]);
+        return redirect()->route('detalle_compra');
     }
-
-    protected $listeners = ['deleteRow' => 'Destroy'];
-
     public function Destroy(Compra $compra_edit)
     {
         

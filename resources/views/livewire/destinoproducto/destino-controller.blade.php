@@ -244,5 +244,8 @@
         window.livewire.on('no-stock', msg => {
            noty(msg)
        });
+        window.livewire.on('empty_cart_tr', msg => {
+           noty(msg)
+       });
     });
 </script>

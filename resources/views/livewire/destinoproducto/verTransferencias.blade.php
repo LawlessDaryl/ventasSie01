@@ -86,7 +86,7 @@
                                                     <i class="fas fa-print"></i>
                                                 </a>
                                                
-                                               
+                                            
                                             </td>
                                             @else
                                                 <td>
@@ -95,7 +95,7 @@
                                                     <i class="fas fa-edit"></i>
                                                 </a>
                                                
-                                                <a href="javascript:void(0)" onclick="Confirm('{{ $data_td->id }}','{{ $data_td->nombre }}')" 
+                                                <a href="javascript:void(0)" onclick="Confirmarborrado('{{ $data_td->id }}')" 
                                                     class="btn btn-dark p-1 m-0" title="Delete">
                                                     <i class="fas fa-trash"></i>
                                                 </a>
@@ -232,9 +232,23 @@
             }
         })
     }
-
-       
-    
+    function Confirmarborrado(id) {
+        swal.fire({
+            title: 'CONFIRMAR',
+            icon: 'warning',
+            text: '¿Esta seguro de eliminar la transferencia?',
+            showCancelButton: true,
+            cancelButtonText: 'Cerrar',
+            cancelButtonColor: '#383838',
+            confirmButtonColor: '#3B3F5C',
+            confirmButtonText: 'Aceptar'
+        }).then(function(result) {
+            if (result.value) {
+                window.livewire.emit('deleteRow', id)
+                Swal.close()
+            }
+        })
+    }
 
 </script>
 

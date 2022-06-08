@@ -396,6 +396,10 @@ class DetalleComprasController extends Component
     public function validateCarrito(){
         if (Compras::getTotalQuantity() == 0) {
             $this->emit('empty_cart', 'No tiene productos en el detalle de compra');
+            return false;
+        }
+        else{
+            return true;
         }
     }
 
@@ -403,12 +407,13 @@ class DetalleComprasController extends Component
     {
 
         $rules = [
-            'provider'=>'required',
+            'provider'=>'required|exists:providers,nombre_prov',
             'destino'=>'required|not_in:Elegir',
             'lote_compra'=>'required'
         ];
         $messages = [
             'provider.required' => 'El nombre del proveedor es requerido.',
+            'provider.exists' => 'El proveedor es inexistente.',
             'destino.required'=>'Elige un destino',
             'destino.not_in'=>'Elija un destino del producto',
             'lote_compra.required'=>'El lote de compra es requerido'
@@ -431,121 +436,125 @@ class DetalleComprasController extends Component
             $this->importe=$this->total_compra;
         }
        
+if ($this->validateCarrito()) {
+    DB::beginTransaction();
 
-        DB::beginTransaction();
+    try {
+        
 
-        try {
-            
-            $Compra_encabezado = Compra::create([
 
-                'importe_total'=>$this->total_compra,
-                'descuento'=>$this->descuento,
-                'fecha_compra'=>$this->fecha_compra,
-                'transaccion'=>$this->tipo_transaccion,
+        $Compra_encabezado = Compra::create([
+
+            'importe_total'=>$this->total_compra,
+            'descuento'=>$this->descuento,
+            'fecha_compra'=>$this->fecha_compra,
+            'transaccion'=>$this->tipo_transaccion,
+            'saldo'=>$this->saldo,
+            'tipo_doc'=>$this->tipo_documento,
+            'nro_documento'=>$this->nro_documento,
+            'observacion'=>$this->observacion,
+            'proveedor_id'=>Provider::select('providers.id')->where('nombre_prov',$this->provider)->value('providers.id'),
+            'estado_compra'=>$this->estado_compra,
+            'status'=>$this->status,
+            'destino_id'=>$this->destino,
+            'user_id'=> Auth()->user()->id,
+            'lote_compra'=> $this->lote_compra 
+        ]);
+
+        if ($this->tipo_transaccion === 'Contado' || $this->pago_parcial>0) {
+
+            $Movimiento= Movimiento::create([
+                
+                'type'=>"COMPRAS",
+                'status'=>"ACTIVO",
                 'saldo'=>$this->saldo,
-                'tipo_doc'=>$this->tipo_documento,
-                'nro_documento'=>$this->nro_documento,
-                'observacion'=>$this->observacion,
-                'proveedor_id'=>Provider::select('providers.id')->where('nombre_prov',$this->provider)->value('providers.id'),
-                'estado_compra'=>$this->estado_compra,
-                'status'=>$this->status,
-                'destino_id'=>$this->destino,
-                'user_id'=> Auth()->user()->id,
-                'lote_compra'=> $this->lote_compra 
+                'on_account'=>$this->pago_parcial,
+                'import'=>$this->importe,
+                'user_id' => Auth()->user()->id
             ]);
 
-            if ($this->tipo_transaccion === 'Contado' || $this->pago_parcial>0) {
-
-                $Movimiento= Movimiento::create([
-                    
-                    'type'=>"COMPRAS",
-                    'status'=>"ACTIVO",
-                    'saldo'=>$this->saldo,
-                    'on_account'=>$this->pago_parcial,
-                    'import'=>$this->importe,
-                    'user_id' => Auth()->user()->id
-                ]);
-    
-                $ss = MovimientoCompra::create([
-                    'compra_id'=>$Compra_encabezado->id,
-                    'movimiento_id' => $Movimiento->id
-                ]);
-            }
-           
-            
-            if ($Compra_encabezado)
-            {
-             
-                $items = Compras::getContent();
-                if ($this->tipo_documento == 'FACTURA') {
-                    foreach ($items as $item) {
-                        CompraDetalle::create([
-                            'precio' => $item->price*0.87,
-                            'cantidad' => $item->quantity,
-                            'product_id' => $item->id,
-                            'compra_id' => $Compra_encabezado->id,
-                            
-                            
-                        ]);
-                        
-                        /*DB::table('productos_destinos')
-                        ->updateOrInsert(['stock'],$item->quantity, ['product_id' => $item->id, 'destino_id'=>$this->destino]);*/
-                        
-                        $q=ProductosDestino::where('product_id',$item->id)
-                        ->where('destino_id',$this->destino)->value('stock');
-    
-                        ProductosDestino::updateOrCreate(['product_id' => $item->id, 'destino_id'=>$this->destino],['stock'=>$q+$item->quantity]);
-    
-                    }
-                }
-                else{
-                    foreach ($items as $item) {
-                        CompraDetalle::create([
-                            'precio' => $item->price,
-                            'cantidad' => $item->quantity,
-                            'product_id' => $item->id,
-                            'compra_id' => $Compra_encabezado->id
-                        ]);
-                        
-                        /*DB::table('productos_destinos')
-                        ->updateOrInsert(['stock'],$item->quantity, ['product_id' => $item->id, 'destino_id'=>$this->destino]);*/
-                        
-                        $q=ProductosDestino::where('product_id',$item->id)
-                        ->where('destino_id',$this->destino)->value('stock');
-    
-                        ProductosDestino::updateOrCreate(['product_id' => $item->id, 'destino_id'=>$this->destino],['stock'=>$q+$item->quantity]);
-    
-                    }
-                }
-              
-            }
-
-            DB::commit();
-
-            Compras::clear();
-            $this->total_compra = 0;
-            $this->subtotal = 0;
-            $this->provider="";
-            $this-> destino ="";
-            $this-> descuento =0;
-            $this-> porcentaje =0;
-            $this->  tipo_transaccion ="Contado";
-            $this->  pago_parcial ="";
-            $this-> tipo_documento = "Factura" ;
-            $this-> nro_documento = "" ;
-            $this-> observacion = "" ;
-
-            $this->total = Compras::getTotal();
-            $this->itemsQuantity = Compras::getTotalQuantity();
-            $this->emit('save-ok', 'venta registrada con exito');
-
-            redirect('/compras');
-            //$this->emit('print-ticket', $sale->id);
-        } catch (Exception $e) {
-            DB::rollback();
-            dd($e->getMessage());
-            
+            $ss = MovimientoCompra::create([
+                'compra_id'=>$Compra_encabezado->id,
+                'movimiento_id' => $Movimiento->id
+            ]);
         }
+       
+        
+        if ($Compra_encabezado)
+        {
+         
+            $items = Compras::getContent();
+            if ($this->tipo_documento == 'FACTURA') {
+                foreach ($items as $item) {
+                    CompraDetalle::create([
+                        'precio' => $item->price*0.87,
+                        'cantidad' => $item->quantity,
+                        'product_id' => $item->id,
+                        'compra_id' => $Compra_encabezado->id,
+                        
+                        
+                    ]);
+                    
+                    /*DB::table('productos_destinos')
+                    ->updateOrInsert(['stock'],$item->quantity, ['product_id' => $item->id, 'destino_id'=>$this->destino]);*/
+                    
+                    $q=ProductosDestino::where('product_id',$item->id)
+                    ->where('destino_id',$this->destino)->value('stock');
+
+                    ProductosDestino::updateOrCreate(['product_id' => $item->id, 'destino_id'=>$this->destino],['stock'=>$q+$item->quantity]);
+
+                }
+            }
+            else{
+                foreach ($items as $item) {
+                    CompraDetalle::create([
+                        'precio' => $item->price,
+                        'cantidad' => $item->quantity,
+                        'product_id' => $item->id,
+                        'compra_id' => $Compra_encabezado->id
+                    ]);
+                    
+                    /*DB::table('productos_destinos')
+                    ->updateOrInsert(['stock'],$item->quantity, ['product_id' => $item->id, 'destino_id'=>$this->destino]);*/
+                    
+                    $q=ProductosDestino::where('product_id',$item->id)
+                    ->where('destino_id',$this->destino)->value('stock');
+
+                    ProductosDestino::updateOrCreate(['product_id' => $item->id, 'destino_id'=>$this->destino],['stock'=>$q+$item->quantity]);
+
+                }
+            }
+          
+        }
+
+        DB::commit();
+
+        Compras::clear();
+        $this->total_compra = 0;
+        $this->subtotal = 0;
+        $this->provider="";
+        $this-> destino ="";
+        $this-> descuento =0;
+        $this-> porcentaje =0;
+        $this->  tipo_transaccion ="Contado";
+        $this->  pago_parcial ="";
+        $this-> tipo_documento = "Factura" ;
+        $this-> nro_documento = "" ;
+        $this-> observacion = "" ;
+
+        $this->total = Compras::getTotal();
+        $this->itemsQuantity = Compras::getTotalQuantity();
+        $this->emit('save-ok', 'venta registrada con exito');
+
+        redirect('/compras');
+        //$this->emit('print-ticket', $sale->id);
+    } catch (Exception $e) {
+        DB::rollback();
+        dd($e->getMessage());
+        
+    }
+}
+      
     }
 
     public function EditCompra($id){

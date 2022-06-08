@@ -192,7 +192,7 @@ class ProductsController extends Component
 
         if($product->category->categoria_padre === 0)
         { $this->selected_id2 = $product->category_id;
-          $this->categoryid = "null";
+          $this->categoryid = null;
         }
         else{
         $this->selected_id2 = $product->category->categoria_padre;
@@ -217,6 +217,10 @@ class ProductsController extends Component
     }
     public function Update()
     {
+        if ($this->categoryid === null) 
+        {
+            $this->categoryid = $this->selected_id2;
+        }
         $rules = [
             'nombre' => "required|min:3|unique:products,nombre,{$this->selected_id}",
             'codigo'=>"required|min:6|unique:products,codigo,{$this->selected_id}",

@@ -181,8 +181,15 @@ class TransferirProductoController extends Component
         return false;
 
     }
+    if (Transferencia::getTotalQuantity() == 0) {
+        $this->emit('empty_cart_tr', 'No tiene productos para realizar la transferencia');
+        return false;
+    }
+
     return true;
 }
+
+
 
 
   /* public function asignarEstado(){

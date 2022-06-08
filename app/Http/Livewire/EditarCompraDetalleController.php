@@ -36,7 +36,7 @@ class EditarCompraDetalleController extends Component
     public  $nro_compra,$search,$provider,$fecha_compra,
     $usuario,$metodo_pago,$pago_parcial,$tipo_documento,$nro_documento,$observacion
     ,$selected_id,$descuento=0,$saldo_por_pagar,$subtotal,$cantidad_minima,
-    $estado_compra,$total_compra,$itemsQuantity,$price,$status,$tipo_transaccion,$destino,$porcentaje;
+    $estado_compra,$total_compra,$itemsQuantity,$price,$status,$tipo_transaccion,$destino,$porcentaje,$datalistcarrito;
 
     public $nombre_prov, $apellido_prov, $direccion_prov, $correo_prov,
     $telefono_prov;
@@ -46,11 +46,17 @@ class EditarCompraDetalleController extends Component
 
    
    
-    public function mount($id)
+    public function mount()
     {
-        dd($id);
-        $this->componentName= "Compras";
-        $this->fecha_compra = Carbon::now()->format('Y-m-d');
+
+        $this->ide=session('id_compra');
+        EditarCompra::clear();
+        $this->selected_origen=Compra::where('compras.id',$this->ide)->value('id');
+     
+        $this->cargarCarrito();
+        
+        $this->componentName= "Editar Compras";
+        $this->fecha_compra = Compra::where('compras.id',$this->ide)->value('fecha_compra') ;
         $this->usuario = Auth()->user()->name;
         $this->estado_compra = "finalizada";
         $this->selected_id = 0;
@@ -94,7 +100,26 @@ class EditarCompraDetalleController extends Component
         ->extends('layouts.theme.app')
         ->section('content');
      }
-  
+     public function cargarCarrito()
+     {
+         $this->datalistcarrito=Compra::join('compra_detalles','compra_detalles.compra_id','compras.id')
+         ->join('products','products.id','compra_detalles.product_id')
+         ->select('compras.*','products.id as product_id','compra_detalles.cantidad as cantidad','compra_detalles.precio as precio')
+         ->where('compras.id',$this->ide)
+         ->get();
+         //$bn =EditarTransferencia::getContent();
+ 
+         foreach ($this->datalistcarrito as $value) 
+         {
+             
+             $product = Product::select('products.*')
+             ->where('products.id',$value->product_id)->first();
+      
+              EditarCompra::add($product->id, $product->nombre,$value->precio, $value->cantidad);
+ 
+         }
+ 
+     }
 
     public function increaseQty($productId, $cant = 1,$precio_compra = 0)
     {  
