@@ -10,6 +10,7 @@
                         data-target="#theModal">Agregar<br>Productos</a>
                     <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
                         data-target="#modalimport">Importar<br>Productos</a>
+                        <a href="https://api.whatsapp.com/send?phone=number&text=Hola%20este%20es%20el%20mensaje">Mensaje a whatsapp</a>
                 </ul>
             </div>
             <div class="row">

@@ -114,7 +114,7 @@ class ComprasController extends Component
     {
         session(['id_compra' => null]);
         session(['id_compra' => $id]);
-        return redirect()->route('detalle_compra');
+        return redirect()->route('editcompra');
     }
     public function Destroy(Compra $compra_edit)
     {

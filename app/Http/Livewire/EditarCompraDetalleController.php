@@ -88,7 +88,7 @@ class EditarCompraDetalleController extends Component
 
 //--------------------Select proveedor---------------------------//
        $data_provider= Provider::select('providers.*')->get();
-        return view('livewire.compras.detalle_compra',['data_prod' => $prod,
+        return view('livewire.compras.editcomponent',['data_prod' => $prod,
         'cart' => EditarCompra::getContent()->sortBy('name'),
         'data_suc'=>$data_destino,
         'data_prov'=>$data_provider,

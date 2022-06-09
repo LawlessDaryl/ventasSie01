@@ -158,7 +158,7 @@ Route::middleware(['auth'])->group(function () {
         Route::group(['middleware' => ['permission:Compras_Index']], function () {
         Route::get('compras', ComprasController::class)->name('compras');
         Route::get('detalle_compras', DetalleComprasController::class)->name('detalle_compra');
-        Route::get('editar_compra/{id}',[EditarCompraDetalleController::class,'mount'])->name('detalle_compra');
+        Route::get('editar_compra',EditarCompraDetalleController::class)->name('editcompra');
     });
    // Route::get('transacciones', TransaccionesController::class)->name('transactions')->middleware('permission:Coins_Index');
         Route::get('destino_prod', DestinoProductoController::class)->name('destination')->middleware('permission:Almacen_Index');

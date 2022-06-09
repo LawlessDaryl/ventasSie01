@@ -59,14 +59,9 @@
                         <div class="row mt-1">
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                  
                                     <select wire:model="filtro" class="form-control">
-                                       
-                                      
                                             <option value ='Contado' selected>Contado</option>
                                             <option value='Credito'>Credito</option>
-                                          
-                                       
                                     </select>
                                     @error('filtro')
                                     <span class="text-danger">{{ $message}}</span>
@@ -142,7 +137,7 @@
                                               
                                                 
                                                 <td class="text-center">
-                                                    <a href="{{ url('editar_compra' . '/' . $data->compra_id)}}"
+                                                    <a href="javascript:void(0)" wire:click= "editarCompra('{{$data->id}}')"
                                                         class="btn btn-dark mtmobile" title="Edit">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
