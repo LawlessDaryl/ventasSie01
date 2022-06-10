@@ -37,10 +37,10 @@
                 <div class="col-12 col-lg-12 col-md-10 mt-3">
                     <div class="row mb-3" >
                         <div class="col-lg-11" >
-                            <h5 class="mb-2 mt-2">DETALLE DE COMPRA</h5>
-                            <b style="color: rgb(74, 74, 74)" >Fecha: </b>
+                            <h5 class="mb-2 mt-2">DETALLE DE COMPRA N° {{$ide}}</h5>
+                            <b style="color: rgb(74, 74, 74)">Fecha: </b>
                             {{$fecha_compra}}<br/>  
-                            <b style="color: rgb(74, 74, 74)"  >Registrado por: </b> 
+                            <b style="color: rgb(74, 74, 74)">Registrado por: </b> 
                             {{$usuario}}<br/>
                             
                         </div>

@@ -16,6 +16,7 @@ use App\Models\ProductosDestino;
 use App\Models\Provider;
 use App\Models\Sucursal;
 use App\Models\Unidad;
+use App\Models\User;
 use Carbon\Carbon;
 use Livewire\Component;
 
@@ -26,6 +27,7 @@ use Illuminate\Support\Facades\DB;
 
 use Darryldecode\Cart\Facades\EditarFacade as EditarCompra;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 
 class EditarCompraDetalleController extends Component
 {
@@ -33,10 +35,10 @@ class EditarCompraDetalleController extends Component
     
     use WithPagination;
     use WithFileUploads;
-    public  $nro_compra,$search,$provider,$fecha_compra,
-    $usuario,$metodo_pago,$pago_parcial,$tipo_documento,$nro_documento,$observacion
-    ,$selected_id,$descuento=0,$saldo_por_pagar,$subtotal,$cantidad_minima,
-    $estado_compra,$total_compra,$itemsQuantity,$price,$status,$tipo_transaccion,$destino,$porcentaje,$datalistcarrito;
+    public  $nro_compra,$search,$provider,$fecha_compra,$vs=[],$auxi,
+    $usuario,$metodo_pago,$pago_parcial=0,$tipo_documento,$nro_documento,$observacion
+    ,$selected_id,$descuento=0,$saldo=0,$subtotal,$cantidad_minima,
+    $estado_compra,$total_compra,$itemsQuantity,$price,$status,$tipo_transaccion,$destino,$porcentaje,$importe,$dscto=0,$aplicar=false, $lote_compra;
 
     public $nombre_prov, $apellido_prov, $direccion_prov, $correo_prov,
     $telefono_prov;
@@ -51,23 +53,25 @@ class EditarCompraDetalleController extends Component
 
         $this->ide=session('id_compra');
         EditarCompra::clear();
-        $this->selected_origen=Compra::where('compras.id',$this->ide)->value('id');
+        $this->aux=Compra::find($this->ide);
      
         $this->cargarCarrito();
         
         $this->componentName= "Editar Compras";
         $this->fecha_compra = Compra::where('compras.id',$this->ide)->value('fecha_compra') ;
-        $this->usuario = Auth()->user()->name;
+        $this->usuario = $this->aux->user->name;
         $this->estado_compra = "finalizada";
         $this->selected_id = 0;
-        $this->pago_parcial = 0;
-        $this->destino = 'Elegir';
-        $this->tipo_transaccion = "CONTADO";
-        $this->tipo_documento = "FACTURA";
-        $this->status = "ACTIVO";
-        $this->total_compra= $this->subtotal-$this->descuento;
+        $this->tipo_transaccion= $this->aux->transaccion;
+        $this->pago_parcial = $this->aux->importe_total-$this->aux->saldo;
+        $this->destino = $this->aux->destino;
+        $this->tipo_transaccion = $this->aux->transaccion;
+        $this->tipo_documento = $this->aux->tipo_doc;
+        $this->total_compra= $this->aux->importe_total;
         $this->subtotal = EditarCompra::getTotal();
-        $this->porcentaje=0;
+        $this->porcentaje=$this->aux->descuento > 0 ? ($this->aux->descuento/$this->aux->importe_total) : 0;
+
+        $this->verPermisos();
 
   
     }
@@ -79,12 +83,14 @@ class EditarCompraDetalleController extends Component
         ->orWhere('codigo','like','%'.$this->search.'%')
         ->orWhere('marca','like','%'.$this->search.'%')
         ->orWhere('id','like','%'.$this->search.'%')
-        ->paginate($this->pagination);
+        ->get();
         else
         $prod = "cero";
 //---------------Select destino de la compra----------------------//
        $data_destino= Sucursal::join('destinos as dest','sucursals.id','dest.sucursal_id')
-       ->select('dest.*','dest.id as destino_id','sucursals.*')->get();
+       ->whereIn('dest.id',$this->vs)
+       ->select('dest.*','dest.id as destino_id','sucursals.*')
+       ->get();
 
 //--------------------Select proveedor---------------------------//
        $data_provider= Provider::select('providers.*')->get();
@@ -100,6 +106,23 @@ class EditarCompraDetalleController extends Component
         ->extends('layouts.theme.app')
         ->section('content');
      }
+
+     public function verPermisos(){
+       
+        $ss= Destino::select('destinos.id','destinos.nombre')->get();
+        $arr=[];
+        foreach ($ss as $item){
+            $arr[$item->nombre.'_'.$item->id]=($item->id);
+            
+        }
+
+       foreach ($arr as $key => $value) {
+        if (Auth::user()->hasPermissionTo($key)) {
+            array_push($this->vs,$value);
+        }
+       }
+
+    }
      public function cargarCarrito()
      {
          $this->datalistcarrito=Compra::join('compra_detalles','compra_detalles.compra_id','compras.id')

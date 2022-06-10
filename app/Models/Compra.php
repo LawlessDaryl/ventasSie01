@@ -30,4 +30,14 @@ class Compra extends Model
     {
         return $this->hasMany(CompraDetalle::class);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class,'user_id','id');
+    }
+    public function destino()
+    {
+        return $this->belongsTo(Destino::class,'destino_id','id');
+    }
+
 }
