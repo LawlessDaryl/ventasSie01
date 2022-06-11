@@ -69,6 +69,10 @@ class EditarCompraDetalleController extends Component
         $this->tipo_documento = $this->aux->tipo_doc;
         $this->total_compra= $this->aux->importe_total;
         $this->subtotal = EditarCompra::getTotal();
+        $this->provider = Provider::where('id',$this->aux->proveedor_id)->pluck('nombre_prov');
+        $this->nro_documento=$this->aux->nro_documento;
+        $this->lote_compra= $this->aux->lote_compra;
+
         $this->porcentaje=$this->aux->descuento > 0 ? ($this->aux->descuento/$this->aux->importe_total) : 0;
 
         $this->verPermisos();
@@ -138,7 +142,15 @@ class EditarCompraDetalleController extends Component
              $product = Product::select('products.*')
              ->where('products.id',$value->product_id)->first();
       
-              EditarCompra::add($product->id, $product->nombre,$value->precio, $value->cantidad);
+            if ($value->tipo_doc == 'FACTURA') {
+                
+                EditarCompra::add($product->id, $product->nombre,($value->precio/0.87), $value->cantidad);
+            }
+            
+            else{
+                EditarCompra::add($product->id, $product->nombre,$value->precio, $value->cantidad);
+            }
+
  
          }
  
