@@ -19,7 +19,7 @@ class EditarServiceProvider extends ServiceProvider
             $storage = $app['session'];
             $events = $app['events'];
             $instanceName = 'cart_4';
-            $session_key = '88uuiioo99888';
+            $session_key = '88uuiioo998522';
             return new Cart(
                 $storage,
                 $events,

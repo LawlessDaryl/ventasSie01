@@ -38,7 +38,7 @@ class EditarCompraDetalleController extends Component
     public  $nro_compra,$search,$provider,$fecha_compra,$vs=[],$auxi,
     $usuario,$metodo_pago,$pago_parcial=0,$tipo_documento,$nro_documento,$observacion
     ,$selected_id,$descuento=0,$saldo=0,$subtotal,$cantidad_minima,
-    $estado_compra,$total_compra,$itemsQuantity,$price,$status,$tipo_transaccion,$destino,$porcentaje,$importe,$dscto=0,$aplicar=false, $lote_compra;
+    $estado_compra,$total_compra,$itemsQuantity,$price,$status,$tipo_transaccion,$destino,$porcentaje,$importe,$dscto=0,$aplicar=false, $lote_compra,$destino1;
 
     public $nombre_prov, $apellido_prov, $direccion_prov, $correo_prov,
     $telefono_prov;
@@ -63,12 +63,14 @@ class EditarCompraDetalleController extends Component
         $this->estado_compra = "finalizada";
         $this->selected_id = 0;
         $this->tipo_transaccion= $this->aux->transaccion;
-        $this->pago_parcial = $this->aux->importe_total-$this->aux->saldo;
-        $this->destino = $this->aux->destino;
+        $this->pago_parcial = $this->aux->saldo>0? $this->aux->importe_total-$this->aux->saldo:0;
+        $this->destino = $this->aux->destino_id;
+        $this->destino1 = $this->aux->destino_id;
         $this->tipo_transaccion = $this->aux->transaccion;
         $this->tipo_documento = $this->aux->tipo_doc;
         $this->total_compra= $this->aux->importe_total;
         $this->subtotal = EditarCompra::getTotal();
+        
         $this->provider = Provider::where('id',$this->aux->proveedor_id)->pluck('nombre_prov');
         $this->nro_documento=$this->aux->nro_documento;
         $this->lote_compra= $this->aux->lote_compra;
@@ -138,7 +140,6 @@ class EditarCompraDetalleController extends Component
  
          foreach ($this->datalistcarrito as $value) 
          {
-             
              $product = Product::select('products.*')
              ->where('products.id',$value->product_id)->first();
       
@@ -150,8 +151,6 @@ class EditarCompraDetalleController extends Component
             else{
                 EditarCompra::add($product->id, $product->nombre,$value->precio, $value->cantidad);
             }
-
- 
          }
  
      }
@@ -476,7 +475,7 @@ class EditarCompraDetalleController extends Component
         $this->validate($rules, $messages);
         $this->validateCarrito();
 
-        if ($this->subtotal<= 0) 
+        if ($this->subtotal<= 0)
         {
             $this->emit('sale-error', 'Agrega productos a la compra');
             return;
@@ -484,26 +483,13 @@ class EditarCompraDetalleController extends Component
        
          $this->compraCredito();
 
+                $bn = CompraDetalle::where('compra_id',$this->ide);
+                $bn->delete();
+                dd($bn);
         DB::beginTransaction();
 
         try {
-            
-            $Compra_encabezado = Compra::create([
-
-                'importe_total'=>$this->total_compra,
-                'descuento'=>$this->descuento,
-                'fecha_compra'=>$this->fecha_compra,
-                'transaccion'=>$this->tipo_transaccion,
-                'pago'=>$this->pago_parcial,
-                'tipo_doc'=>$this->tipo_documento,
-                'nro_documento'=>$this->nro_documento,
-                'observacion'=>$this->observacion,
-                'proveedor_id'=>Provider::select('providers.id')->where('nombre_prov',$this->provider)->value('providers.id'),
-                'estado_compra'=>$this->estado_compra,
-                'status'=>$this->status
-            ]);
-
-            $Movimiento= Movimiento::create([
+          /*  $Movimiento= Movimiento::create([
                 
                 'type'=>"COMPRAS",
                 'status'=>"ACTIVO",
@@ -516,18 +502,20 @@ class EditarCompraDetalleController extends Component
             $ss = MovimientoCompra::create([
                 'compra_id'=>$Compra_encabezado->id,
                 'movimiento_id' => $Movimiento->id
-            ]);
-            
-            if ($Compra_encabezado)
+            ]);*/
+
+            if ($this->ide)
             {
-              
+                $bn = CompraDetalle::where('compra_id',$this->ide);
+                $bn->delete();
+                dd($bn);
                 $items = EditarCompra::getContent();
                 foreach ($items as $item) {
                     CompraDetalle::create([
                         'precio' => $item->price,
                         'cantidad' => $item->quantity,
                         'product_id' => $item->id,
-                        'compra_id' => $Compra_encabezado->id,
+                        //'compra_id' => $->id,
                         'destino_id'=>$this->destino
                         
                     ]);

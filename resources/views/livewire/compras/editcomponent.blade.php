@@ -83,9 +83,9 @@
                                             <select wire:model.lazy="destino" class="form-control">
                                                 <option value='Elegir'>Elegir Destino</option>
 
-                                              @foreach($data_suc as $data)
-                                                <option value="{{$data->destino_id}}">{{$data->nombre}}-{{$data->name}}</option>
-                                              @endforeach
+                                                @foreach($data_suc as $data)
+                                                    <option value="{{$data->destino_id}}">{{$data->nombre}}-{{$data->name}}</option>
+                                                @endforeach
                                               
                                             </select>
                                           </div>

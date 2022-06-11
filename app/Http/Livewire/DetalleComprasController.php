@@ -123,8 +123,6 @@ class DetalleComprasController extends Component
         ->where('products.id',$productId)->first();
        
         $exist = Compras::get($product->id);
-
-
         $attributos=[
             'precio'=>$product->precio_venta,
             'codigo'=>$product->codigo,
