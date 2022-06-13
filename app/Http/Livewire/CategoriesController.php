@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Imports\CategoryImport;
+use App\Imports\SubCategoryImport;
 use Livewire\Component;
 use App\Models\Category;
 use Livewire\WithFileUploads;
@@ -176,6 +177,15 @@ class CategoriesController extends Component
         $file = $request->file('import_file');
 
         Excel::import(new CategoryImport ,$file);
+       
+
+        return redirect()->route('categorias');
+    }
+    public function importsub(Request $request){
+        
+        $file = $request->file('import_file');
+
+        Excel::import(new SubCategoryImport ,$file);
        
 
         return redirect()->route('categorias');

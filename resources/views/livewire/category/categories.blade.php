@@ -13,6 +13,8 @@
                         data-target="#theModal_s">Agregar Subcategoria</a>
                     <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
                         data-target="#modalimportcat">Importar Categorias</a>
+                    <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
+                        data-target="#modalimportsubcat">Importar SubCategorias</a>
                     
                 </ul>
             </div>
@@ -78,7 +80,7 @@
     @include('livewire.category.form_subcategory')
     @include('livewire.category.subcategories')
     @include('livewire.category.importarcategorias')
-
+    @include('livewire.category.importarsubcategorias')
 </div>
 
 <script>

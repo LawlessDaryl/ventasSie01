@@ -148,6 +148,7 @@ Route::middleware(['auth'])->group(function () {
     Route::group(['middleware' => ['permission:Inventarios_Registros']], function () {
         Route::get('categories', CategoriesController::class)->name('categorias');
         Route::post('importar-cat',[ CategoriesController::class,'import'])->name('importar_cat');
+        Route::post('importar-subcat',[ CategoriesController::class,'importsub'])->name('importar_subcat');
         Route::get('products', ProductsController::class)->name('productos');
         Route::get('locations', LocalizacionController::class)->name('locations');
         Route::get('unidades', UnidadesController::class)->name('unities');
