@@ -10,7 +10,7 @@
                         data-target="#theModal">Agregar<br>Productos</a>
                     <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
                         data-target="#modalimport">Importar<br>Productos</a>
-                        <a href="https://api.whatsapp.com/send?phone=number&text=Hola%20este%20es%20el%20mensaje">Mensaje a whatsapp</a>
+                       
                 </ul>
             </div>
             <div class="row">
@@ -167,8 +167,6 @@
         });
     });
 
-
-
         function Confirm(id, name, products) {
         if (products > 0)
         {
@@ -210,16 +208,5 @@
         }
        
     }
-    function imprimirElemento(elemento){
-            var ventana = window.open('', 'PRINT', 'height=400,width=600');
-            ventana.document.write('<html><head><title>' + document.title + '</title>');
-            ventana.document.write('</head><body >');
-            ventana.document.write(elemento.innerHTML);
-            ventana.document.write('</body></html>');
-            ventana.document.close();
-            ventana.focus();
-            ventana.print();
-            ventana.close();
-            return true;
-}
+  
 </script>

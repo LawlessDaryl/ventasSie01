@@ -69,6 +69,7 @@ class ComprasController extends Component
         ->extends('layouts.theme.app')
         ->section('content');
     }
+
     public function consultar()
     {
         if ($this->fecha == 'hoy') {
@@ -102,11 +103,6 @@ class ComprasController extends Component
         }
   
     }
-
-    
-   
-
-   
 
     protected $listeners = ['deleteRow' => 'Destroy','editarcompras'=>'editarCompra'];
 
@@ -144,10 +140,14 @@ class ComprasController extends Component
     
             }
             $compra_edit->delete();
+            $this->emit('purchase-deleted', 'Compra eliminada');
+        }
+
+        else{
+            $this->emit('purchase-error', 'No puede eliminar la compra, Uno o varios de los productos acaban de ser distribuidos.');
         }
 
        
-        $this->emit('purchase-deleted', 'Compra eliminada');
     
     }
   

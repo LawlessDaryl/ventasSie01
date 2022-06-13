@@ -103,10 +103,10 @@
                                         @foreach ($data_compras as $data)
                                             <tr>
                                                 <td>
-                                                    <h6 class="text-center">{{ $nro++}}</h6>
+                                                    <h6 class="text-center">{{ $loop->iteration}}</h6>
                                                 </td>
                                                 <td>
-                                                    <h6 class="text-center">{{ $data->nombre_prov}}</h6>
+                                                    <h6 class="text-center" wire:key="{{ $loop->index }}">{{ $data->nombre_prov}}</h6>
                                                 </td>
                                                 <td>
                                                     <h6 class="text-left">{{$data->tipo_doc}}</h6>
@@ -180,11 +180,14 @@
    </div>
 
    <script>
-    document.addEventListener('DOMContentLoaded', function()s {
+    document.addEventListener('DOMContentLoaded', function() {
 
         window.livewire.on('purchase-deleted', msg => {
             noty(msg)
         });
+        window.livewire.on('purchase-error', msg => {
+            noty(msg)
+        });
      
-    }
+    })
     </script>
