@@ -482,10 +482,11 @@ class EditarCompraDetalleController extends Component
         }
        
          $this->compraCredito();
+    
 
                 $bn = CompraDetalle::where('compra_id',$this->ide);
-                $bn->delete();
-                dd($bn);
+                $bn->forceDelete();
+               
         DB::beginTransaction();
 
         try {
