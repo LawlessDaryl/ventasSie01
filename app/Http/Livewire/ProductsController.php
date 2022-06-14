@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Imports\ProductsImport;
+use App\Imports\PruebaImport;
 use App\Models\Category;
 use App\Models\Marca;
 use App\Models\Product;
@@ -54,6 +55,8 @@ class ProductsController extends Component
     public function render()
     {
      /**sssssssss */
+     
+  
        if ($this->selected_categoria !== null ) {
           
         if ($this->selected_sub == null) {
@@ -362,7 +365,7 @@ class ProductsController extends Component
         
         $file = $request->file('import_file');
 
-        Excel::import(new ProductsImport,$file);
+        Excel::import(new PruebaImport,$file);
        
         
 

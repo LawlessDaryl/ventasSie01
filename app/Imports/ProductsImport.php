@@ -18,7 +18,7 @@ class ProductsImport implements ToModel,WithHeadingRow,WithBatchInserts,WithChun
     public function __construct()
     {
         $this->categories = Category::pluck('id', 'name');
-        //dd($this->categories);
+       
     }
     /**
     * @param array $row

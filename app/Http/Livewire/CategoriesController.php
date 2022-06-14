@@ -41,11 +41,11 @@ class CategoriesController extends Component
     {
         if (strlen($this->search) > 0)
             $data = Category::where('name', 'like', '%' . $this->search . '%')
-       
+            ->where('categoria_padre',$this->category_s)
             ->paginate($this->pagination);
         else
-            $data = Category::orderBy('id', 'desc')
-            ->orWhere('categoria_padre',$this->category_s)
+            $data = Category::where('categoria_padre',$this->category_s)
+            ->orderBy('id', 'asc')
             ->paginate($this->pagination);
 
             $this->data2=Category::where('categoria_padre',$this->selected_id)
