@@ -192,7 +192,6 @@ class ProductsController extends Component
     }
     public function Edit(Product $product)
     {
-
         if($product->category->categoria_padre === 0)
         { $this->selected_id2 = $product->category_id;
           $this->categoryid = null;
@@ -243,7 +242,7 @@ class ProductsController extends Component
         $this->validate($rules, $messages);
         $product = Product::find($this->selected_id);
         $product->update([
-            'nombr_prod' => $this->nombre,
+            'nombre' => $this->nombre,
             'costo' => $this->costo,
             'caracteristicas'=>$this->caracteristicas,
             'codigo'=>$this->codigo,
@@ -367,9 +366,6 @@ class ProductsController extends Component
 
         Excel::import(new PruebaImport,$file);
        
-        
-
-
         return redirect()->route('productos');
     }
 

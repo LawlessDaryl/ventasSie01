@@ -16,6 +16,7 @@ use Maatwebsite\Excel\Concerns\WithValidation;
 class PruebaImport implements ToCollection,WithHeadingRow,WithBatchInserts,WithChunkReading
 {
     private $categories;
+    public $arr=[];
 
     public function __construct()
     {
@@ -32,20 +33,67 @@ class PruebaImport implements ToCollection,WithHeadingRow,WithBatchInserts,WithC
     */
     public function collection(Collection $collection)
     {
-        foreach ($collection as $row) {
+      /*  foreach ($collection as $row) {
 
             if ($row['categoria'] != 'No definido') {
-                if (condition) {
-                    # code...
+
+                $mm=Product::where('nombre',$row['nombre'])->value('nombre');
+                if ($mm != null) {
+                   
+                    $detail1 = $this->products[$row['nombre']];
+                    $detail= Product::find($detail1);
+                    $detail->category_id =$this->categories[$row['categoria']];
+                    $detail->save();
                 }
-                $detail1 = $this->products[$row['nombre']];
+         
+            }
+
+           
+        }*/
+      /*  if ($row['categoria'] != 'No definido') {
+
+            $mm=Product::where('nombre',$row['nombre'])->pluck('nombre');
+            if ($mm == null) {
+                array_push($this->arr, $row['nombre'] );
+            }
+
+          /*  $detail1 = $this->products[$row['nombre']];
+            
+            if ($detail1 != null) 
+            {
                 $detail= Product::find($detail1);
                 $detail->category_id =$this->categories[$row['categoria']];
                 $detail->save();
             }
+            
+            
+           
+        }*/
+
+          foreach ($collection as $row) {
+
+                $mm=Product::where('nombre',$row['nombre'])->value('nombre');
+                if ($mm != null) {
+                   
+                    $detail1 = $this->products[$row['nombre']];
+                    $detail= Product::find($detail1);
+                    $detail->industria= $this->categories[$row['industria']];
+                    $detail->unidad= $this->categories[$row['unidad']];
+                    $detail->marca= $this->categories[$row['marca']];
+                    $detail->precio_venta= $this->categories[$row['precio venta']];
+                    $detail->caracteristicas= $this->categories[$row['caracteristica']];
+                    $detail->save();
+                }
+         
+            
 
            
         }
+
+        
+
+
+        
     }
     public function batchSize(): int
     {
