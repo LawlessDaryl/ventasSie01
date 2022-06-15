@@ -168,26 +168,18 @@ class CategoriesController extends Component
     public function resetUI()
     {
         $this->reset('name','descripcion','categoria_padre');
-       
         $this->resetValidation();
     }
-    
+
     public function import(Request $request){
-        
         $file = $request->file('import_file');
-
         Excel::import(new CategoryImport ,$file);
-       
-
         return redirect()->route('categorias');
     }
+    
     public function importsub(Request $request){
-        
         $file = $request->file('import_file');
-
         Excel::import(new SubCategoryImport ,$file);
-       
-
         return redirect()->route('categorias');
     }
 }

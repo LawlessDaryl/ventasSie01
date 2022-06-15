@@ -27,19 +27,20 @@ class ProductsImport implements ToModel,WithHeadingRow,WithBatchInserts,WithChun
     */
     public function model(array $row)
     {
+
         return new Product([
-            'nombre'=>$row['nombre'],
-            'costo'=>$row['costo'],
-            'caracteristicas'=>$row['caracteristicas'],
-            'codigo'=>$row['codigo'],
-            'lote'=>$row['lote'],
-            'unidad'=>$row['unidad'],
-            'marca'=>$row['marca'],
-            'garantia'=>$row['garantia'],
-            'cantidad_minima'=>$row['cantidad_minima'],
-            'industria'=>$row['industria'],
-            'precio_venta'=>$row['precio_venta'],
-            'status'=>$row['status'],
+            'nombre'=>preg_replace('/\s+/', ' ',trim($row['nombre'])),
+            'costo'=>preg_replace('/\s+/', ' ',trim($row['costo'])),
+            'caracteristicas'=>preg_replace('/\s+/', ' ',trim($row['caracteristicas'])),
+            'codigo'=>preg_replace('/\s+/', ' ',trim($row['codigo'])),
+            'lote'=>preg_replace('/\s+/', ' ',trim($row['lote'])),
+            'unidad'=>preg_replace('/\s+/', ' ',trim($row['unidad'])),
+            'marca'=>preg_replace('/\s+/', ' ',trim($row['marca'])),
+            'garantia'=>preg_replace('/\s+/', ' ',trim($row['garantia'])),
+            'cantidad_minima'=>preg_replace('/\s+/', ' ',trim($row['cantidad_minima'])),
+            'industria'=>preg_replace('/\s+/', ' ',trim($row['industria'])),
+            'precio_venta'=>preg_replace('/\s+/', ' ',trim($row['precio_venta'])),
+            'status'=>preg_replace('/\s+/', ' ',trim($row['status'])),
             'category_id'=>$this->categories[$row['categoria']]
         ]);
     }
