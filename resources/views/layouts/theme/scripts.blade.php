@@ -36,6 +36,7 @@ integrity="sha512-hkvXFLlESjeYENO4CNi69z3A1puvONQV5Uh+G4TUDayZxSLyic5Kba9hhuiNLb
             pos: 'top-right'
         });
     }
+
 </script>
 
 <script src="{{ asset('plugins/flatpickr/flatpickr.js') }}"></script>

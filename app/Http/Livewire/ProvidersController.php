@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\I_Supplier;
+
 use App\Models\Provider;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -12,7 +12,7 @@ class ProvidersController extends Component
 {
     use WithPagination;
     use WithFileUploads;
-    public  $search, $nombre,$apellido,$direccion,$telefono,$correo, $selected_id;
+    public  $search, $nombre_prov,$apellido,$direccion,$telefono,$correo, $selected_id;
     public  $pageTitle, $componentName;
     private $pagination = 5;
     
@@ -32,7 +32,7 @@ class ProvidersController extends Component
         
             if (strlen($this->search) > 0)
                 $suplier = Provider::select('providers.*')
-                ->where('nombre', 'like', '%' . $this->search . '%')
+                ->where('nombre_prov', 'like', '%' . $this->search . '%')
                 ->orWhere('apellido','like','%'.$this->search.'%')
                 ->orWhere('direccion','like','%'.$this->search.'%')
                 ->orWhere('status','like','%'.$this->search.'%')
@@ -51,20 +51,19 @@ class ProvidersController extends Component
     public function Store()
     {
         $rules = [
-            'nombre' => 'required|unique:providers',
-            'apellido' => 'required',
-            
-            
+            'nombre_prov' => 'required|unique:providers',
         ];
         $messages = [
-            'nombre.required' => 'El nombre del proveedor es requerido.',
-            'nombre.unique' => 'Ya existe un proveedor  con ese nombre.',
-            'apellido.required' => 'El apellido del proveedor es requerido.'
+            'nombre_prov.required' => 'El nombre del proveedor es requerido.',
+            'nombre_prov.unique' => 'Ya existe un proveedor  con ese nombre.', 
         ];
         $this->validate($rules, $messages);
 
+        
+
         Provider::create([
-            'nombre' => $this->nombre,
+
+            'nombre_prov' => $this->nombre_prov,
             'apellido'=>$this->apellido,
             'direccion' => $this->direccion,
             'telefono'=>$this->telefono,
@@ -78,7 +77,7 @@ class ProvidersController extends Component
     public function Edit(Provider $sup)
     {
         $this->selected_id = $sup->id;
-        $this->nombre = $sup->nombre;
+        $this->nombre_prov = $sup->nombre_prov;
         $this->apellido = $sup->apellido;
         $this->direccion = $sup->direccion;
         $this->telefono = $sup->telefono;
@@ -89,20 +88,20 @@ class ProvidersController extends Component
     public function Update()
     {
         $rules = [
-            'nombre.required' => 'El nombre del proveedor es requerido.',
-            'nombre.unique' => 'Ya existe un proveedor  con ese nombre.',
+            'nombre_prov.required' => 'El nombre del proveedor es requerido.',
+            'nombre_prov.unique' => 'Ya existe un proveedor  con ese nombre.',
             'apellido.required' => 'El apellido del proveedor es requerido.'
         ];
         $messages = [
-            'nombre.required' => 'El nombre del proveedor es requerido.',
-            'nombre.unique' => 'Ya existe un proveedor  con ese nombre.',
+            'nombre_prov.required' => 'El nombre del proveedor es requerido.',
+            'nombre_prov.unique' => 'Ya existe un proveedor  con ese nombre.',
             'apellido.required' => 'El apellido del proveedor es requerido.'
 
         ];
         $this->validate($rules, $messages);
         $uni = Provider::find($this->selected_id);
         $uni->update([
-            'nombre' => $this->nombre,
+            'nombre_prov' => $this->nombre_prov,
             'apellidos'=>$this->apellido,
             'direccion' => $this->direccion,
             'telefono'=>$this->telefono,
@@ -125,7 +124,7 @@ class ProvidersController extends Component
 
     public function resetUI()
     {
-        $this->nombre = '';
+        $this->nombre_prov = '';
         $this->selected_id=0;
         $this->apellido='';
         $this->direccion='';

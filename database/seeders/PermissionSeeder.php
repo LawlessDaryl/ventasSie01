@@ -208,6 +208,43 @@ class PermissionSeeder extends Seeder
             'name' => 'Filtrar_sucursal_Reporte_Servicio',
             'guard_name' => 'web'
         ]);
+        Permission::create([
+            'name' => 'admin_estancia_almacen',
+            'guard_name' =>'web'
+        ]);
+
+        //Ventas
+        //Poder Ver Lista de las Ventas realizados por el usuario logeado
+        Permission::create([
+            'name' => 'VentasLista_Index',
+            'guard_name' =>'web'
+        ]);
+        //Poder ver las Listas de las Ventas de todos los usuarios + anular venta
+        Permission::create([
+            'name' => 'VentasListaMasFiltros',
+            'guard_name' =>'web'
+        ]);
+        //Poder recibir las notificaciones de movimiento de inventario de cualquier destino 
+        //dentro de la propia sucursal a la tienda
+        Permission::create([
+            'name' => 'VentasNotificacionesMovInv',
+            'guard_name' =>'web'
+        ]);
+        //Poder ver el movimiento Diario de Ventas (Sin poder filtrar por Sucursal y ver Utilidad)
+        Permission::create([
+            'name' => 'VentasMovDia_Index',
+            'guard_name' =>'web'
+        ]);
+        //Poder ver el movimiento Diario de Ventas filtrando por sucursal y poder ver la utilidad
+        Permission::create([
+            'name' => 'VentasMovDiaSucursalUtilidad',
+            'guard_name' =>'web'
+        ]);
+        //Poder filtrar y Anular una devolucion
+        Permission::create([
+            'name' => 'VentasDevolucionesFiltrar',
+            'guard_name' =>'web'
+        ]);
 
 
 
@@ -294,5 +331,28 @@ class PermissionSeeder extends Seeder
             'name' => 'Modificar_Detalle_Serv',
             'guard_name' => 'web'
         ]);
+
+
+        Permission::create([
+            'name' => 'Inventarios_Registros',
+            'guard_name' =>'web'
+        ]);
+        Permission::create([
+            'name' => 'Compras_Index',
+            'guard_name' =>'web'
+        ]);
+        Permission::create([
+            'name' => 'Almacen_Index',
+            'guard_name' =>'web'
+        ]);
+        Permission::create([
+            'name' => 'Transferencia_Index',
+            'guard_name' =>'web'
+        ]);
+        Permission::create([
+            'name' => 'Reportes_Inventarios_Export',
+            'guard_name' =>'web'
+        ]);
+      
     }
 }

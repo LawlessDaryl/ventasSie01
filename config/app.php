@@ -166,7 +166,10 @@ return [
          * Package Service Providers...
          */
 
-  
+        \App\Providers\ComprasServiceProvider::class,
+        \App\Providers\EditarServiceProvider::class,
+        \App\Providers\TransferenciaServiceProvider::class,
+        \App\Providers\EditarTransferenciaServiceProvider::class,
 
         /*
          * Application Service Providers...

@@ -2,10 +2,14 @@
 
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\ExportServicioEntregPdfController;
+use App\Http\Controllers\ExportSaleController;
 use App\Http\Controllers\ExportServicioPdfController;
 use App\Http\Controllers\ExportStreamingPdfController;
 use App\Http\Controllers\ExportTigoPdfController;
 use App\Http\Controllers\ImprimirController;
+use App\Http\Controllers\ExportComprasController;
+use App\Http\Controllers\ExportSaleMovDiaController;
+use App\Http\Controllers\ExportTransferenciaController;
 use App\Http\Livewire\ArqueosStreamingController;
 use App\Http\Livewire\ArqueosTigoController;
 use App\Http\Livewire\AsignarController;
@@ -35,6 +39,9 @@ use App\Http\Livewire\PlataformasController;
 use App\Http\Livewire\SucursalController;
 use App\Http\Livewire\CatProdServiceController;
 use App\Http\Livewire\ComprasController;
+use App\Http\Livewire\DetalleComprasController;
+use App\Http\Livewire\EditarCompraDetalleController;
+
 use App\Http\Livewire\CuentasController;
 use App\Http\Livewire\EmailsController;
 use App\Http\Livewire\InicioController;
@@ -59,8 +66,18 @@ use App\Http\Livewire\ReporteMovimientoController;
 use App\Http\Livewire\ReportEntregadoServController;
 use App\Http\Livewire\ReporteServiceController;
 use App\Http\Livewire\TransaccionesController;
+use App\Http\Livewire\TransferenciasController;
+use App\Http\Livewire\EditTransferenceController;
 use App\Http\Livewire\TypeWorkController;
 use App\Http\Livewire\UnidadesController;
+use App\Http\Livewire\SaleListController;
+use App\Http\Livewire\NotificationController;
+use App\Http\Livewire\DestinoProductoController;
+use App\Http\Livewire\TransferirProductoController;
+use App\Http\Livewire\DestinoController;
+use App\Http\Livewire\SaleDailyMovementController;
+use App\Http\Livewire\SaleDevolutionController;
+use App\Http\Livewire\SaleStatisticController;
 use Illuminate\Support\Facades\Auth;
 
 Auth::routes();
@@ -125,14 +142,36 @@ Route::middleware(['auth'])->group(function () {
     Route::get('modulos', ModulosController::class)->name('modulos');
 
     /* INVENTARIOS */
-    Route::get('categories', CategoriesController::class)->name('categorias');
-    Route::get('products', ProductsController::class)->name('productos');
-    Route::get('locations', LocalizacionController::class)->name('locations');
-    Route::get('unidades', UnidadesController::class)->name('unities');
-    Route::get('marcas', MarcasController::class)->name('brands');
-    Route::get('proveedores', ProvidersController::class)->name('supliers');
-    Route::get('compras', ComprasController::class)->name('compras');
-    Route::get('transacciones', TransaccionesController::class)->name('transactions');
+    Route::group(['middleware' => ['permission:Inventarios_Registros']], function () {
+        Route::get('categories', CategoriesController::class)->name('categorias');
+        Route::post('importar-cat',[ CategoriesController::class,'import'])->name('importar_cat');
+        Route::post('importar-subcat',[ CategoriesController::class,'importsub'])->name('importar_subcat');
+        Route::get('products', ProductsController::class)->name('productos');
+        Route::get('locations', LocalizacionController::class)->name('locations');
+        Route::get('unidades', UnidadesController::class)->name('unities');
+        Route::get('marcas', MarcasController::class)->name('brands');
+        Route::get('proveedores', ProvidersController::class)->name('supliers');
+        Route::post('importar',[ ProductsController::class,'import'])->name('importar');
+    });
+        Route::group(['middleware' => ['permission:Compras_Index']], function () {
+        Route::get('compras', ComprasController::class)->name('compras');
+        Route::get('detalle_compras', DetalleComprasController::class)->name('detalle_compra');
+        Route::get('editar_compra',EditarCompraDetalleController::class)->name('editcompra');
+    });
+   // Route::get('transacciones', TransaccionesController::class)->name('transactions')->middleware('permission:Coins_Index');
+        Route::get('destino_prod', DestinoProductoController::class)->name('destination')->middleware('permission:Almacen_Index');
+        Route::group(['middleware' => ['permission:Transferencia_Index']], function () {   
+        Route::get('transferencia', TransferirProductoController::class)->name('destination');
+        Route::get('destino', DestinoController::class)->name('dest');
+        Route::get('transferencias', TransferenciasController::class);
+        Route::get('trans', EditTransferenceController::class)->name('editdest');});
+        Route::group(['middleware' => ['permission:Reportes_Inventarios_Export']], function () {
+        Route::get('Compras/pdf/{id}', [ExportComprasController::class, 'PrintCompraPdf']);
+        Route::get('Transferencia/pdf', [ExportTransferenciaController::class, 'printPdf'])->name('transferencia.pdf');
+        Route::get('reporteCompras/pdf/{filtro}/{fecha}/{fromDate}/{toDate}/{data?}', [ExportComprasController::class, 'reporteComprasPdf']);
+        });
+    
+    
 
     /* VENTAS */
     Route::get('coins', CoinsController::class)->name('monedas')->middleware('permission:Coins_Index');
@@ -140,8 +179,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('cashout', CashoutController::class)->name('cashout')->middleware('permission:Cashout_Index');
     Route::get('reports', ReportsController::class)->name('reportes')->middleware('permission:Reportes_Index');
     Route::group(['middleware' => ['permission:Report_Sales_Export']], function () {
-        Route::get('report/pdf/{user}/{type}/{f1}/{f2}', [ExportController::class, 'reportPDF']);
-        Route::get('report/pdf/{user}/{type}', [ExportController::class, 'reportPDF']);
+    Route::get('report/pdf/{user}/{type}/{f1}/{f2}', [ExportController::class, 'reportPDF']);
+    Route::get('report/pdf/{user}/{type}', [ExportController::class, 'reportPDF']);
+    Route::get('report/pdf/{total}/{idventa}/{totalitems}', [ExportSaleController::class, 'reportPDFVenta']);
+    Route::get('report/pdfmovdia', [ExportSaleMovDiaController::class, 'reportPDFMovDiaVenta']);
     });
 
     /* SERVICIOS */
@@ -162,6 +203,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('reportentregservices', ReportEntregadoServController::class)->name('res')->middleware('permission:Boton_Entregar_Servicio');
     Route::get('reporteServicEntreg/pdf/{type}/{f1}/{f2}/{sucursal}/{sE}/{sB}/{caja}', [ExportServicioEntregPdfController::class, 'reporteServPDF']);
     Route::get('reporteServicEntreg/pdf/{type}/{sucursal}', [ExportServicioEntregPdfController::class, 'reporteServPDF']);
+    //Lista de Ventas
+    Route::get('salelist', SaleListController::class)->name('salelist')->middleware('permission:VentasLista_Index');
+    Route::get('estadisticas', SaleStatisticController::class)->name('estadisticas');
+    Route::get('devolucionventa', SaleDevolutionController::class)->name('devolucionventa');
+    Route::get('salemovimientodiario', SaleDailyMovementController::class)->name('salemovimientodiario')->middleware('permission:VentasMovDia_Index');
+    Route::get('notificaciones', NotificationController::class)->name('notificaciones');
+    Route::get('notificaciones/{idnotificacion}', [NotificacionController::class,'mostrarnotificacion']);
+
 });
 
 

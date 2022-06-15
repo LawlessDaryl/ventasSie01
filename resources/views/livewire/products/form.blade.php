@@ -1,6 +1,6 @@
 @include('common.modalHead')
 <div class="row">
-    <div class="col-sm-12 col-md-8">
+    <div class="col-sm-12 col-lg-7 col-md-8">
         <div class="form-group">
             <label>Nombre</label>
             <input type="text" wire:model.lazy="nombre" class="form-control" placeholder="ej:Celular Samsung Galaxy A01">
@@ -8,14 +8,19 @@
         </div>
     </div>
   
-  
-    <div class="col-sm-12 col-md-4">
+    <div class="col-sm-12 col-lg-5 col-md-4">
         <div class="form-group">
-            <label>Codigo de barras</label>
-            <input type="text" wire:model.lazy="barcode" class="form-control" placeholder="ej: 012020222">
-            @error('barcode') <span class="text-danger er">{{ $message }}</span>@enderror
+            <label>Codigo</label>
+            <div class="input-group-prepend mb-3">
+                <input type="text" wire:model.lazy="codigo" class="form-control col-lg-7" placeholder="ej: 012020222">
+                <a href="javascript:void(0)" wire:click="GenerateCode()" class="btn btn-dark p-0 m-1 col-lg-4" title="Generar Codigo">
+                    <i> Generar Codigo</i>
+                </a>
+            </div>
+            @error('codigo') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>
     </div>
+
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
             <label>Caracteristicas</label>
@@ -23,10 +28,18 @@
             @error('caracteristicas') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>
     </div>
+
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
-            <label>Lote de produccion</label>
-            <input type="text" wire:model.lazy="lote" class="form-control" placeholder="ej: 012020222">
+            <label>Garantia(en dias)</label>
+            <input type="text" wire:model.lazy="garantia" class="form-control" placeholder="introducir dias">
+            @error('garantia') <span class="text-danger er">{{ $message }}</span>@enderror
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-4">
+        <div class="form-group">
+            <label>Numero de Lote</label>
+            <input type="text" wire:model.lazy="lote" class="form-control" placeholder="ej: L001">
             @error('lote') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>
     </div>
@@ -56,16 +69,9 @@
     </div>
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
-            <label>Industria</label>
+            <label>Pais de Procedencia</label>
             <input type="text" wire:model.lazy="industria" class="form-control" placeholder="ej: 012020222">
             @error('industria') <span class="text-danger er">{{ $message }}</span>@enderror
-        </div>
-    </div>
-    <div class="col-sm-12 col-md-4">
-        <div class="form-group">
-            <label>Precio de venta</label>
-            <input type="text" wire:model.lazy="precio_venta" class="form-control" placeholder="ej: 012020222">
-            @error('precio_venta') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>
     </div>
     <div class="col-sm-12 col-md-4">
@@ -78,37 +84,70 @@
   
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
-            <label>Cantidad Míninma</label>
-            <input type="number" wire:model.lazy="cantidad_minima" class="form-control" placeholder="ej: 20">
-            @error('cantidad_minima') <span class="text-danger er">{{ $message }}</span>@enderror
+            <label>Precio de venta</label>
+            <input type="text" wire:model.lazy="precio_venta" class="form-control" placeholder="ej: 012020222">
+            @error('precio_venta') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>
     </div>
 
-    <div class="col-sm-12 col-md-4">
+    <div class="col-sm-12 col-lg-4 col-md-4">
         <div class="form-group">
             <label>Categoría</label>
-            <select wire:model.lazy='selected_id2' class="form-control">
-                <option value="Elegir">Elegir</option>
-                @foreach ($categories as $category)
-                    <option value="{{ $category->id }}">{{ $category->name }}</option>
-                @endforeach
-            </select>
-      
-        </div>
+            <div class="input-group-prepend mb-3">
+                <select wire:model='selected_id2' class="form-control">
+                    <option value=null selected disabled>Elegir</option>
+                    @foreach ($categories as $Key => $category)
+                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                    @endforeach
+                </select>
+                <span class="input-group-text input-gp">
+                    <a href="javascript:void(0)" data-toggle="modal"
+                        data-target="#modalCategory" class="fas fa-plus text-white"></a>
+                </span>
+
+
+            </div>
+            @error('selected_id2') <span class="text-danger er">{{ $message }}</span>@enderror
+        </div>       
     </div>
 
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
             <label>Subcategoría</label>
             <select wire:model='categoryid' class="form-control">
-                <option value="Elegir" disabled>Elegir</option>
-                @foreach ($subcat as $category)
-                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                <option value= null selected disabled>Elegir</option>
+                @foreach ($subcat as $Key => $cat)
+                    <option value="{{ $cat->id }}">{{ $cat->name }}</option>
                 @endforeach
             </select>
             @error('categoryid') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>
     </div>
+    <div class="col-sm-12 col-md-4">
+        <div class="form-group">
+            <label>Cantidad Minima</label>
+                <input type="text" wire:model.lazy="cantidad_minima" class="form-control" placeholder="ej:123">
+            @error('cantidad_minima') <span class="text-danger er">{{ $message }}</span>@enderror
+        </div>
+    </div>
+
+    @if ($selected_id)
+        
+    <div class="col-sm-12 col-md-4">
+        <div class="form-group">
+            <label>Estado</label>
+            <select wire:model='estado' class="form-control">
+                <option value="Elegir" disabled>Elegir</option>
+                <option value="ACTIVO">ACTIVO</option>
+                <option value="INACTIVO">INACTIVO</option>
+            </select>
+            @error('estado') <span class="text-danger er">{{ $message }}</span>@enderror
+        </div>
+    </div>
+        
+    @endif
+
+   
 
     <div class="col-sm-12 col-md-8">
         <div class="form-group custom-file">
@@ -118,7 +157,22 @@
             
         </div>
     </div>
-   
+    
 
 </div>
     @include('common.modalFooter')
+    @include('livewire.products.modalcategory')
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function() {
+            window.livewire.on('cat-added', msg => {
+                $('#modalCategory').modal('hide'),
+                noty(msg)
+            });
+            
+        });
+    
+      
+    </script>
+    

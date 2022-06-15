@@ -5,7 +5,7 @@
             <label>Nombre Unidad</label>
             <input type="text" wire:model.lazy="nombre" class="form-control" placeholder="pieza"
             maxlenght="25">
-            @error('name') <span class="text-danger er">{{ $message }}</span>@enderror
+            @error('nombre') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>
     </div>
 </div>

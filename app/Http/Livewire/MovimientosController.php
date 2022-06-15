@@ -10,4 +10,5 @@ class MovimientosController extends Component
     {
         return view('livewire.movimientos');
     }
+    
 }

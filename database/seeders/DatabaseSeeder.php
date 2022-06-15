@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\CompraDetalle;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -28,6 +29,7 @@ class DatabaseSeeder extends Seeder
         $this->call(PermissionSeeder::class);
         $this->call(RoleSeeder::class);
         $this->call(ModelHasRolesSeeder::class);
+        $this->call(DestinoSeeder::class);
         $this->call(RoleHasPermissionSeeder::class);
         $this->call(ProcedenciaSeeder::class);
 
@@ -48,11 +50,29 @@ class DatabaseSeeder extends Seeder
         $this->call(CuentaInversionSeeder::class);
         $this->call(ProfileSeeder::class);
         $this->call(AccountProfileSeeder::class);
+<<<<<<< HEAD
         /* INVENTARIOS */
         $this->call(LocationSeeder::class);
         $this->call(UnidadSeeder::class);
         $this->call(CategorySeeder::class);
 
         /*  Category::factory(20)->create(); */
+=======
+        $this->call(UnidadSeeder::class);
+        $this->call(CategorySeeder::class);
+        $this->call(ClientSeeder::class);
+        $this->call(ProductSeeder::class);
+        $this->call(ProductoDestinoSeeder::class);
+        $this->call(LocationSeeder::class);
+        
+        $this->call(ProviderSeeder::class);
+       
+       
+       // $this->call(CompraSeeder::class);
+        //$this->call(CompraDetalleSeeder::class);
+        
+        
+       /*  Category::factory(20)->create(); */
+>>>>>>> origin/comprasventas2
     }
 }

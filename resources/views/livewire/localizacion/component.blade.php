@@ -8,7 +8,12 @@
                 <ul class="tabs tab-pills">
                     <a href="javascript:void(0)" class="btn btn-warning" data-toggle="modal"
                         data-target="#theModal">Agregar</a>
+           
+                    <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
+                        data-target="#asignar_mobiliario">Asignar Mobiliario</a>
                 </ul>
+
+
             </div>
             @include('common.searchbox')
 
@@ -21,7 +26,8 @@
                                 <th class="table-th text-withe text-center">CODIGO</th>
                                 <th class="table-th text-withe text-center">DESCRIPCION</th>
                                 <th class="table-th text-withe text-center">UBICACION</th>
-                                <th class="table-th text-withe">SUCURSAL</th>
+                                <th class="table-th text-withe text-center">SUCURSAL</th>
+                                
                                 <th class="table-th text-withe text-center">ACCIONES</th>
                                
                             </tr>
@@ -39,23 +45,28 @@
                                         <h6 class="text-center">{{ $location->descripcion }}</h6>
                                     </td>
                                     <td>
-                                        <h6 class="text-center">{{ $location->ubicacion }}</h6>
+                                        <h6 class="text-center">{{ $location->destino }}</h6>
                                     </td>
                                     <td>
-                                        <h6>{{ $location->sucursal }}</h6>
+                                        <h6 class="text-center">{{ $location->sucursal}}</h6>
                                     </td>
+                                    
             
 
                                 
                                     <td class="text-center">
                                         <a href="javascript:void(0)" wire:click="Edit({{ $location->id }})"
-                                            class="btn btn-warning mtmobile" title="Edit">
+                                            class="btn btn-dark p-1 m-0" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         <a href="javascript:void(0)"
                                             onclick="Confirm('{{ $location->id }}','{{ $location->descripcion }}')"
-                                            class="btn btn-warning" title="Delete">
+                                            class="btn btn-dark p-1 m-0" title="Delete">
                                             <i class="fas fa-trash"></i>
+                                        </a>
+                                        <a href="javascript:void(0)" wire:click="ver({{$location->id}})" 
+                                            class="btn btn-dark p-1 m-0" title="Ver">
+                                            <i class="fas fa-list"></i>
                                         </a>
                                     </td>
                                 </tr>
@@ -67,7 +78,11 @@
             </div>
         </div>
     </div>
-   @include('livewire.localizacion.form') 
+   @include('livewire.localizacion.form')
+   </div>
+   @include('livewire.localizacion.modal_asignar_mobiliario') 
+   @include('livewire.localizacion.verproductos') 
+   
 </div>
 
 
@@ -78,6 +93,10 @@
 
         window.livewire.on('localizacion-added', msg => {
             $('#theModal').modal('hide'),
+            noty(msg)
+        });
+        window.livewire.on('localizacion-assigned', msg => {
+            $('#asignar_mobiliario').modal('hide'),
             noty(msg)
         });
         window.livewire.on('location-updated', msg => {
@@ -93,9 +112,13 @@
         window.livewire.on('modal-hide', msg => {
             $('#theModal').modal('hide')
         });
-        window.livewire.on('hidden.bs.modal', function(e) {
-            $('.er').css('display', 'none')
+        window.livewire.on('verprod', function(e) {
+            $('#verproductos').modal('show')
         });
+        window.livewire.on('show-modal', msg => {
+             $('#asignar_mobiliario').modal('show')
+         });
+         
     });
 
     function Confirm(id, descripcion, locations) {

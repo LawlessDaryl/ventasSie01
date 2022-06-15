@@ -9,7 +9,7 @@ class Category extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'image'];
+    protected $fillable = ['name', 'descripcion','categoria_padre'];
 
     public function products()
     {
@@ -25,5 +25,9 @@ class Category extends Model
         else {
             return 'noimage.jpg';
         }
+    }
+
+    public function subCat(){
+        return $this->belongsTo(Category::class, 'categoria_padre', 'id');
     }
 }

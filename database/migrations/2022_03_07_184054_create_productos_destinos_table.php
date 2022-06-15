@@ -14,15 +14,17 @@ class CreateProductosDestinosTable extends Migration
     public function up()
     {
         Schema::create('productos_destinos', function (Blueprint $table) {
+      
             $table->id();
-
-            $table->unsignedBigInteger('product-id');
-            $table->foreign('product-id')->references('id')->on('products');
+            $table->unsignedBigInteger('product_id');
+            $table->foreign('product_id')->references('id')->on('products');
             
-            $table->unsignedBigInteger('destino-id');
-            $table->foreign('destino-id')->references('id')->on('locations');
+            $table->unsignedBigInteger('destino_id');
+            $table->foreign('destino_id')->references('id')->on('destinos');
             
             $table->integer('stock');
+            
+            
 
             $table->timestamps();
         });

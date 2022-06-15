@@ -2,11 +2,14 @@
 
 namespace App\Http\Livewire;
 
+use App\Imports\CategoryImport;
+use App\Imports\SubCategoryImport;
 use Livewire\Component;
 use App\Models\Category;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CategoriesController extends Component
 {
@@ -14,10 +17,11 @@ class CategoriesController extends Component
     use WithFileUploads;
     use WithPagination;
 
-    public $name,$descripcion, $search,$categoryid, $selected_id, $pageTitle, $componentName,$categoria_padre;
+    public $name,$descripcion, $search,$categoryid, $selected_id, $pageTitle, $componentName,$categoria_padre,$data2;
     private $pagination = 5;
     public $category_s = 0;
     public $subcat_s=false;
+
 
     public function mount()
     {
@@ -25,6 +29,7 @@ class CategoriesController extends Component
         $this->componentName = 'Categorias';
         $this->componentSub = 'Subcategorias';
         $this->subcat_fill= 'Elegir';
+        
     }
 
     public function paginationView()
@@ -36,17 +41,17 @@ class CategoriesController extends Component
     {
         if (strlen($this->search) > 0)
             $data = Category::where('name', 'like', '%' . $this->search . '%')
-            ->orWhere('categoria_padre',$this->category_s)
+            ->where('categoria_padre',$this->category_s)
             ->paginate($this->pagination);
         else
-            $data = Category::orderBy('id', 'desc')
-            ->orWhere('categoria_padre',$this->category_s)
+            $data = Category::where('categoria_padre',$this->category_s)
+            ->orderBy('id', 'asc')
             ->paginate($this->pagination);
 
-            $data2=Category::where('categoria_padre',$this->selected_id)
+            $this->data2=Category::where('categoria_padre',$this->selected_id)
             ->select('categories.*')->get();
            
-        return view('livewire.category.categories', ['categories' => $data,'subcat'=>$data2])
+        return view('livewire.category.categories', ['categories' => $data,'subcat'=>$this->data2])
             ->extends('layouts.theme.app')
             ->section('content');
 
@@ -66,7 +71,9 @@ class CategoriesController extends Component
     public function Ver(Category $category)
     {
         $this->selected_id = $category->id;
+        //dd($this->data2);
         $this->emit('show-modal_s', 'show modal!');
+        
     }
 
     public function Store()
@@ -84,8 +91,6 @@ class CategoriesController extends Component
                 'name' => $this->name,
                 'descripcion'=>$this->descripcion,
                 'categoria_padre'=>$this->categoria_padre
-           
-                
             ]);
         }
         else
@@ -162,10 +167,27 @@ class CategoriesController extends Component
 
     public function resetUI()
     {
-        $this->name = '';
-        $this->image = null;
-        $this->search = '';
-        $this->selected_id = 0;
+        $this->reset('name','descripcion','categoria_padre');
+       
         $this->resetValidation();
+    }
+    
+    public function import(Request $request){
+        
+        $file = $request->file('import_file');
+
+        Excel::import(new CategoryImport ,$file);
+       
+
+        return redirect()->route('categorias');
+    }
+    public function importsub(Request $request){
+        
+        $file = $request->file('import_file');
+
+        Excel::import(new SubCategoryImport ,$file);
+       
+
+        return redirect()->route('categorias');
     }
 }

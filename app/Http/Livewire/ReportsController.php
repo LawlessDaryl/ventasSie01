@@ -70,7 +70,7 @@ class ReportsController extends Component
     public function getDetails($saleId)
     {
         $this->details = SaleDetail::join('products as p', 'p.id', 'sale_details.product_id')
-        ->select('sale_details.id', 'sale_details.price', 'sale_details.quantity', 'p.name as product')
+        ->select('sale_details.id', 'sale_details.price', 'sale_details.quantity', 'p.nombre as product')
         ->where('sale_details.sale_id', $saleId)
         ->get();
 
