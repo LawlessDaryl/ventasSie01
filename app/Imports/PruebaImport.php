@@ -33,6 +33,19 @@ class PruebaImport implements ToCollection,WithHeadingRow,WithBatchInserts,WithC
     */
     public function collection(Collection $collection)
     {
+/*
+        foreach ($collection as $row) {
+
+        $mm=Product::where('nombre', trim($row['nombre']))->value('nombre');
+      
+        
+        if ($mm == null) 
+        {
+                array_push($this->arr, $row['nombre']);
+        }
+        }
+*/
+        
       /*  foreach ($collection as $row) {
 
             if ($row['categoria'] != 'No definido') {
@@ -74,7 +87,6 @@ class PruebaImport implements ToCollection,WithHeadingRow,WithBatchInserts,WithC
 
                 $mm=Product::where('nombre',$row['nombre'])->value('nombre');
                 if ($mm != null) {
-                   
                     $detail1 = $this->products[$row['nombre']];
                     $detail= Product::find($detail1);
                     $detail->industria= $this->categories[$row['industria']];
@@ -84,13 +96,10 @@ class PruebaImport implements ToCollection,WithHeadingRow,WithBatchInserts,WithC
                     $detail->caracteristicas= $this->categories[$row['caracteristica']];
                     $detail->save();
                 }
-         
-            
 
-           
         }
 
-        
+     
 
 
         
