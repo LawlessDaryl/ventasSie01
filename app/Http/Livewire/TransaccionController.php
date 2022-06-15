@@ -639,7 +639,7 @@ class TransaccionController extends Component
             'codigo_transf' => 'required_if:mostrarTelfCodigo,1',
             'motivo' => 'required|not_in:Elegir',
             'origen' => 'required|not_in:Elegir',
-            'montoB' => 'required|integer|min:1|not_in:0',
+            'montoB' => 'required|numeric|min:1|not_in:0',
             'requerimientoComision' => 'required_if:MostrarRadioButton,1',
         ];
         $messages = [ /* mensajes de validaciones */
