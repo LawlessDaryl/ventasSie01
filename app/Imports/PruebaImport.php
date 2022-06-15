@@ -39,12 +39,12 @@ class PruebaImport implements ToCollection,WithHeadingRow,WithBatchInserts,WithC
         $mm=Product::where('nombre', trim($row['nombre']))->value('nombre');
       
         
-        if ($mm == null) {
-             
-                array_push($this->arr, $row['nombre'] );
-            }
+        if ($mm == null) 
+        {
+                array_push($this->arr, $row['nombre']);
         }
-        dd($this->arr);
+        }
+        
       /*  foreach ($collection as $row) {
 
             if ($row['categoria'] != 'No definido') {
