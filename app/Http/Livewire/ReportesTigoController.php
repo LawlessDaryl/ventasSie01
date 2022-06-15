@@ -671,19 +671,6 @@ class ReportesTigoController extends Component
         $this->codigo_transf = $adata->first()->codigo_transf;
         $this->observaciones = $adata->first()->observaciones;
 
-
-
-        //dd($adata->first()->sino);
-        // if($adata->first()->sino == "si")
-        // {
-        //     $this->siseleccionado = 'SI';
-        // }
-        // else
-        // {
-            
-        // }
-
-
         $this->emit('mostrareditarmodal', '');
 
 

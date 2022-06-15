@@ -134,7 +134,7 @@ class InicioController extends Component
                         /* ->where('suu.estado','ACTIVO') */
                         ->orderBy('services.fecha_estimada_entrega', 'asc')
                         ->distinct()
-                        ->paginate($this->pagination);
+                        ->get();
                         foreach ($orderservices as $c) {
                             /* $date1 = new DateTime($c->fecha_estimada_entrega);
                             $date2 = new DateTime("now");
@@ -181,7 +181,7 @@ class InicioController extends Component
                         /* ->where('suu.estado','ACTIVO') */
                         ->orderBy('services.fecha_estimada_entrega', 'asc')
                         ->distinct()
-                        ->paginate($this->pagination);
+                        ->get();
                         
                         foreach ($orderservices as $c) {
                             /* $date1 = new DateTime($c->fecha_estimada_entrega);
@@ -235,7 +235,7 @@ class InicioController extends Component
                         ->where('os.status', 'ACTIVO')
                         ->orderBy('services.fecha_estimada_entrega', 'asc')
                         ->distinct()
-                        ->paginate($this->pagination);
+                        ->get();
                         foreach ($orderservices as $c) {
                             $date1 = new DateTime($c->fecha_estimada_entrega);
                             $date2 = new DateTime("now");
@@ -260,7 +260,7 @@ class InicioController extends Component
                         ->where('os.status', 'ACTIVO')
                         ->orderBy('services.fecha_estimada_entrega', 'asc')
                         ->distinct()
-                        ->paginate($this->pagination);
+                        ->get();
                         
                     foreach ($orderservices as $c) {
                         $date1 = new DateTime($c->fecha_estimada_entrega);
@@ -297,7 +297,7 @@ class InicioController extends Component
                         /* ->where('suu.estado','ACTIVO') */
                         ->orderBy('services.fecha_estimada_entrega', 'asc')
                         ->distinct()
-                        ->paginate($this->pagination);
+                        ->get();
                         foreach ($orderservices as $c) {
                             $date1 = new DateTime($c->fecha_estimada_entrega);
                             $date2 = new DateTime("now");
@@ -327,7 +327,7 @@ class InicioController extends Component
                         /* ->where('suu.estado','ACTIVO') */
                         ->orderBy('services.fecha_estimada_entrega', 'asc')
                         ->distinct()
-                        ->paginate($this->pagination);
+                        ->get();
                         
                     foreach ($orderservices as $c) {
                         $date1 = new DateTime($c->fecha_estimada_entrega);
@@ -371,7 +371,7 @@ class InicioController extends Component
                     ->where('os.status', 'ACTIVO')
                     ->orderBy('services.fecha_estimada_entrega', 'asc')
                     ->distinct()
-                    ->paginate($this->pagination);
+                    ->get();
                     foreach ($orderservices as $c) {
                         /* $date1 = new DateTime($c->fecha_estimada_entrega);
                         $date2 = new DateTime("now");
@@ -417,7 +417,7 @@ class InicioController extends Component
                     ->where('os.status', 'ACTIVO')
                     ->orderBy('services.fecha_estimada_entrega', 'asc')
                     ->distinct()
-                    ->paginate($this->pagination);
+                    ->get();
                     
                     foreach ($orderservices as $c) {
                         /* $date1 = new DateTime($c->fecha_estimada_entrega);
@@ -470,7 +470,7 @@ class InicioController extends Component
                     /* ->where('suu.estado','ACTIVO') */
                     ->orderBy('services.fecha_estimada_entrega', 'asc')
                     ->distinct()
-                    ->paginate($this->pagination);
+                    ->get();
                     foreach ($orderservices as $c) {
                         /* $date1 = new DateTime($c->fecha_estimada_entrega);
                         $date2 = new DateTime("now");
@@ -516,7 +516,7 @@ class InicioController extends Component
                     /* ->where('suu.estado','ACTIVO') */
                     ->orderBy('services.fecha_estimada_entrega', 'asc')
                     ->distinct()
-                    ->paginate($this->pagination);
+                    ->get();
                     
                     foreach ($orderservices as $c) {
                         /* $date1 = new DateTime($c->fecha_estimada_entrega);
@@ -562,7 +562,7 @@ class InicioController extends Component
                     ->where('os.status', 'ACTIVO')
                     ->orderBy('services.fecha_estimada_entrega', 'asc')
                     ->distinct()
-                    ->paginate($this->pagination);
+                    ->get();
                     foreach ($orderservices as $c) {
                         $date1 = new DateTime($c->fecha_estimada_entrega);
                         $date2 = new DateTime("now");
@@ -593,7 +593,7 @@ class InicioController extends Component
                     ->where('os.status', 'ACTIVO')
                     ->orderBy('services.fecha_estimada_entrega', 'asc')
                     ->distinct()
-                    ->paginate($this->pagination);
+                    ->get();
                     foreach ($orderservices as $c) {
                         $date1 = new DateTime($c->fecha_estimada_entrega);
                         $date2 = new DateTime("now");
@@ -628,7 +628,7 @@ class InicioController extends Component
                     ->where('os.status', 'ACTIVO')
                     ->orderBy('services.fecha_estimada_entrega', 'asc')
                     ->distinct()
-                    ->paginate($this->pagination);
+                    ->get();
                     foreach ($orderservices as $c) {
                         $date1 = new DateTime($c->fecha_estimada_entrega);
                         $date2 = new DateTime("now");
@@ -659,7 +659,7 @@ class InicioController extends Component
                     ->where('os.status', 'ACTIVO')
                     ->orderBy('services.fecha_estimada_entrega', 'asc')
                     ->distinct()
-                    ->paginate($this->pagination);
+                    ->get();
                     foreach ($orderservices as $c) {
                         $date1 = new DateTime($c->fecha_estimada_entrega);
                         $date2 = new DateTime("now");
@@ -712,7 +712,7 @@ class InicioController extends Component
             ->select('order_services.*')
             ->orderBy('order_services.id', 'desc')
             ->distinct()
-            ->paginate($this->pagination);
+            ->get();
     }
 
 

@@ -116,7 +116,7 @@
                                                     <td class="text-center">
                                                         <a href="javascript:void(0)"
                                                             wire:click="AgregarCuenta({{ $ap->id }})"
-                                                            class="btn btn-dark mtmobile" title="Seleccionar">
+                                                            class="btn btn-warning mtmobile" title="Seleccionar">
                                                             <i class="fas fa-check"></i>
                                                         </a>
                                                     </td>
@@ -181,7 +181,7 @@
                                                         <td class="text-center">
                                                             <a href="javascript:void(0)"
                                                                 wire:click="QuitarCuenta({{ $ap->id }})"
-                                                                class="btn btn-dark mtmobile" title="Remover">
+                                                                class="btn btn-warning mtmobile" title="Remover">
                                                                 <i class="fa-solid fa-x"></i>
                                                             </a>
                                                         </td>
@@ -272,7 +272,7 @@
                                                         <td>
                                                             <a href="javascript:void(0)"
                                                                 wire:click="AgregarPerfil({{ $ap->id }})"
-                                                                class="btn btn-dark mtmobile" title="Seleccionar">
+                                                                class="btn btn-warning mtmobile" title="Seleccionar">
                                                                 <i class="fas fa-check"></i>
                                                             </a>
                                                         </td>
@@ -347,12 +347,12 @@
                                                         <td>
                                                             <a href="javascript:void(0)"
                                                                 wire:click="EditarPerf({{ $ap->id }})"
-                                                                class="btn btn-dark mtmobile" title="EDITAR">
+                                                                class="btn btn-warning mtmobile" title="EDITAR">
                                                                 <i class="fa-solid fa-file-signature"></i>
                                                             </a>
                                                             <a href="javascript:void(0)"
                                                                 wire:click="QuitarPerfil({{ $ap->id }})"
-                                                                class="btn btn-dark mtmobile" title="Remover">
+                                                                class="btn btn-warning mtmobile" title="Remover">
                                                                 <i class="fa-solid fa-x"></i>
                                                             </a>
                                                         </td>
@@ -474,7 +474,7 @@
                                                                     <td class="text-center">
                                                                         <a href="javascript:void(0)"
                                                                             wire:click="Seleccionar('{{ $d->celular }}','{{ $d->nombre }}')"
-                                                                            class="btn btn-dark mtmobile"
+                                                                            class="btn btn-warning mtmobile"
                                                                             title="Seleccionar">
                                                                             <i class="fas fa-check"></i>
                                                                         </a>
@@ -554,12 +554,12 @@
             </div>
             <div class="modal-footer">
                 <button type="button" wire:click.prevent="CargarAnterior()"
-                    class="btn btn-dark close-btn text-info">CARGAR
+                    class="btn btn-warning close-btn text-info">CARGAR
                     ANTERIOR</button>
                 <button type="button" wire:click.prevent="resetUI()"
-                    class="btn btn-dark close-btn text-info">LIMPIAR</button>
+                    class="btn btn-warning close-btn text-info">LIMPIAR</button>
                 <button type="button" wire:click.prevent="Store()"
-                    class="btn btn-dark close-btn text-info">GUARDAR</button>
+                    class="btn btn-warning close-btn text-info">GUARDAR</button>
             </div>
         </div>
     </div>

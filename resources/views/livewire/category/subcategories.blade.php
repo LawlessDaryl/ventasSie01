@@ -27,11 +27,11 @@
                                    
                                     <td class="text-center">
                                         <a href="javascript:void(0)" wire:click="Edit({{ $category->id }})"
-                                            class="btn btn-dark mtmobile" title="Edit">
+                                            class="btn btn-warning mtmobile" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         <a href="javascript:void(0)" onclick="Confirm('{{ $category->id }}','{{ $category->name }}',
-                                            '{{ $category->products->count() }}')" class="btn btn-dark"
+                                            '{{ $category->products->count() }}')" class="btn btn-warning"
                                             title="Delete">
                                             <i class="fas fa-trash"></i>
                                         </a>

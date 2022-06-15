@@ -75,7 +75,7 @@
 
                     <div class="col-sm-2 mt-3">
 
-                        <a class="btn btn-dark btn-block {{ count($data) < 1 ? 'disabled' : '' }}"
+                        <a class="btn btn-warning btn-block {{ count($data) < 1 ? 'disabled' : '' }}"
                             href="{{ url('reporteServicio/pdf' . '/' . $userId . '/' . $estado . '/' . $sucursal . '/' . $reportType . '/' . $dateFrom . '/' . $dateTo) }}"
                             target="_blank" style='font-size:15px'>Generar PDF</a>
 
@@ -112,8 +112,8 @@
                     <div class="col-sm-12 col-md-12">
                         <!-- TABLA -->
                         <div class="table-responsive">
-                            <table class="table table-unbordered table-hover mt-1">
-                                <thead class="text-white" style="background: #3B3F5C">
+                            <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
+                                <thead class="text-white" style="background: #ee761c">
                                     <tr>
                                         <th class="table-th text-withe text-center" style="font-size: 90%">#</th>
                                         <th class="table-th text-withe text-center" style="font-size: 90%">CLIENTE</th>

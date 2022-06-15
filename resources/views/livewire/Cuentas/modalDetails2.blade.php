@@ -118,7 +118,7 @@
                         <div class="col-sm-12 col-md-4">
                             <div class="form-group text-center mt-4">
                                 <a href="javascript:void(0)" @if ($meses == 0) disabled @endif
-                                    class="btn btn-dark"
+                                    class="btn btn-warning"
                                     onclick="ConfirmRenovar('{{ $correoCuenta }}','{{ $meses }}')">Renovar
                                     Cuenta</a>
                             </div>
@@ -126,7 +126,7 @@
 
                         <div class="col-sm-12 col-md-4">
                             <div class="form-group text-center mt-4">
-                                <a href="javascript:void(0)" class="btn btn-dark"
+                                <a href="javascript:void(0)" class="btn btn-warning"
                                     onclick="ConfirmVencer('{{ $correoCuenta }}')">Vencer
                                     Cuenta</a>
                             </div>
@@ -134,7 +134,7 @@
 
                         <div class="col-sm-12 col-md-4">
                             <div class="form-group text-center mt-4">
-                                <a href="javascript:void(0)" class="btn btn-dark"
+                                <a href="javascript:void(0)" class="btn btn-warning"
                                     wire:click.prevent="CambiarCuenta()">Cambiar
                                     a otra cuenta</a>
                             </div>
@@ -187,7 +187,7 @@
                                                             </td>
                                                             <td class="text-center">
                                                                 <h6 class="text-center">
-                                                                    <a href="javascript:void(0)" class="btn btn-dark"
+                                                                    <a href="javascript:void(0)" class="btn btn-warning"
                                                                         onclick="ConfirmCambiar('{{ $cuent->id }}','{{ $cuent->Correo->content }}')">Seleccionar</a>
                                                                 </h6>
                                                             </td>

@@ -115,7 +115,7 @@
                         <div class="col-sm-12 col-md-4">
                             <div class="form-group text-center mt-4">
                                 <a @if ($meses == 0) disabled @endif href="javascript:void(0)"
-                                    class="btn btn-dark"
+                                    class="btn btn-warning"
                                     onclick="ConfirmRenovar('{{ $nameperfil }}','{{ $meses }}')">Renovar
                                     Perfil</a>
                             </div>
@@ -123,7 +123,7 @@
 
                         <div class="col-sm-12 col-md-4">
                             <div class="form-group text-center mt-4">
-                                <a href="javascript:void(0)" class="btn btn-dark"
+                                <a href="javascript:void(0)" class="btn btn-warning"
                                     onclick="ConfirmVencer('{{ $nameperfil }}')">Vencer
                                     Perfil</a>
                             </div>
@@ -131,7 +131,7 @@
 
                         <div class="col-sm-12 col-md-4">
                             <div class="form-group text-center mt-4">
-                                <a href="javascript:void(0)" class="btn btn-dark"
+                                <a href="javascript:void(0)" class="btn btn-warning"
                                     wire:click.prevent="CambiarCuenta()">Cambiar
                                     a otra cuenta</a>
                             </div>
@@ -189,7 +189,7 @@
                                                                     <h6 class="text-center">
                                                                         <a href="javascript:void(0)"
                                                                             wire:click="SeleccionarCuenta('{{ $item->id }}')"
-                                                                            class="btn btn-dark mtmobile"
+                                                                            class="btn btn-warning mtmobile"
                                                                             title="Seleccionar">
                                                                             <i class="fas fa-check"></i>
                                                                         </a>

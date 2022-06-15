@@ -7,7 +7,7 @@
                 </h4>
                 <ul class="tabs tab-pills">
 
-                    <a href="javascript:void(0)" class="btn btn-dark" wire:click="Agregar()">Agregar</a>
+                    <a href="javascript:void(0)" class="btn btn-warning" wire:click="Agregar()">Agregar</a>
 
                 </ul>
             </div>
@@ -15,8 +15,8 @@
 
             <div class="widget-content">
                 <div class="table-responsive">
-                    <table class="table table-unbordered table-hover mt-2">
-                        <thead class="text-white" style="background: #3B3F5C">
+                    <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
+                        <thead class="text-white" style="background: #ee761c">
                             <tr>
                                 <th class="table-th text-withe">USUARIO</th>
                                 <th class="table-th text-withe text-center">TELÉFONO</th>
@@ -60,17 +60,17 @@
                                     <td class="text-center">
                                         <a href="javascript:void(0)"
                                             wire:click="Edit({{ $r->id }})"
-                                            class="btn btn-dark mtmobile" title="Edit">
+                                            class="btn btn-warning mtmobile" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
 
                                         <a href="javascript:void(0)"
                                             onclick="Confirm('{{ $r->id }}')"
-                                            class="btn btn-dark" title="Delete">
+                                            class="btn btn-warning" title="Delete">
                                             <i class="fas fa-trash"></i>
                                         </a>
 
-                                        <button wire:click.prevent="viewDetails({{$r}})" class="btn btn-dark">
+                                        <button wire:click.prevent="viewDetails({{$r}})" class="btn btn-warning">
                                             <i class="fas fa-list"></i>
                                         </button>
                                     </td>

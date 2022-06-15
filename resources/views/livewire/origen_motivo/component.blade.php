@@ -19,16 +19,16 @@
                     </div>
 
                     <button wire:click.prevent="SyncAll()" type="button"
-                        class="btn btn-dark mbmobile inblock mr-5">Sincronizar todos</button>
-                    <button onclick="Revocar()" type="button" class="btn btn-dark mbmobile mr-5">Revocar todos</button>
+                        class="btn btn-warning">Sincronizar todos</button>
+                    <button onclick="Revocar()" type="button" class="btn btn-warning">Revocar todos</button>
                 </div>
 
 
                 <div class="row mt-3">
                     <div class="col-sm-12">
                         <div class="table-responsive">
-                            <table class="table table-unbordered table-hover mt-2">
-                                <thead class="text-white" style="background: #3B3F5C">
+                            <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
+                                <thead class="text-white" style="background: #ee761c">
                                     <tr>
                                         <th class="table-th text-withe text-center">ID</th>
                                         <th class="table-th text-withe text-center">MOTIVOS</th>
@@ -57,7 +57,7 @@
                                                 @if ($motivo->checked == 1)
                                                     @if ($motivo->condicional != 'no')
                                                         <button onclick="Confirm('{{ $motivo->id }}','{{ $motivo->nombre }}')" type="button"
-                                                            class="btn btn-dark">
+                                                            class="btn btn-warning">
                                                             <svg aria-hidden="true" focusable="false" data-prefix="far"
                                                                 data-icon="check-circle" role="img"
                                                                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
@@ -70,7 +70,7 @@
 
                                                     @else
                                                         <button disabled wire:click.prevent="Condicion()"
-                                                            class="btn btn-dark">
+                                                            class="btn btn-warning">
 
 
                                                             <svg aria-hidden="true" focusable="false" data-prefix="far"
@@ -86,7 +86,7 @@
                                                     @endif
 
                                                     <button wire:click.prevent="viewDetails({{ $motivo->id }})"
-                                                        class="btn btn-dark">
+                                                        class="btn btn-warning">
 
                                                         <svg aria-hidden="true" focusable="false" data-prefix="fas"
                                                             data-icon="clipboard-check" role="img"
@@ -103,7 +103,7 @@
 
 
                                                 {{-- <button wire:click.prevent="viewDetails({{ $motivo->id }})"
-                                                    class="btn btn-dark">
+                                                    class="btn btn-warning">
                                                     <i class="fas fa-list"></i>
                                                 </button> --}}
                                             </td>

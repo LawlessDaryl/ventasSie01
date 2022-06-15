@@ -6,11 +6,11 @@
                     <b>{{ $componentName }} | {{ $pageTitle }}</b>
                 </h4>
                 <ul class="tabs tab-pills">
-                    <a href="javascript:void(0)" class="btn btn-dark" wire:click="CrearCombo()"
+                    <a href="javascript:void(0)" class="btn btn-warning" wire:click="CrearCombo()"
                         data-target="#theModal">Vender Combo</a>
                 </ul>
                 <ul class="tabs tab-pills">
-                    <a href="javascript:void(0)" class="btn btn-dark" wire:click="Agregar()" data-target="#theModal">+
+                    <a href="javascript:void(0)" class="btn btn-warning" wire:click="Agregar()" data-target="#theModal">+
                         Nueva</a>
                 </ul>
             </div>
@@ -66,8 +66,8 @@
             @if ($condicional == 'perfiles')
                 <div class="widget-content">
                     <div class="table-responsive">
-                        <table class="table table-unbordered table-hover mt-2">
-                            <thead class="text-white" style="background: #3B3F5C">
+                        <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
+                            <thead class="text-white" style="background: #ee761c">
                                 <tr>
                                     <th class="table-th text-withe text-center" style="font-size: 80%">PLATAFORMA</th>
                                     <th class="table-th text-withe text-center" style="font-size: 80%">CLIENTE</th>
@@ -121,12 +121,12 @@
                                         <td class="text-center">
                                             <a href="javascript:void(0)"
                                                 wire:click="VerObservaciones({{ $p->id }})"
-                                                class="btn btn-dark mtmobile" title="Observaciones">
+                                                class="btn btn-warning mtmobile" title="Observaciones">
                                                 <i class="fa-solid fa-file-signature"></i>
                                             </a>
                                             @if ($p->estado != 'ANULADO')
                                                 <a href="javascript:void(0)" onclick="Confirm({{ $p->id }})"
-                                                    class="btn btn-dark mtmobile" title="Anular">
+                                                    class="btn btn-warning mtmobile" title="Anular">
                                                     <i class="fas fa-trash"></i>
                                                 </a>
                                             @endif
@@ -134,7 +134,7 @@
                                         <td class="text-center"
                                             style="{{ $p->ready == 'NO' ? 'background-color: #d97171 !important' : 'background-color: #09ed3d !important' }}">
                                             @if ($p->ready == 'NO')
-                                                <a href="javascript:void(0)" class="btn btn-dark"
+                                                <a href="javascript:void(0)" class="btn btn-warning"
                                                     onclick="ConfirmHecho('{{ $p->id }}')">
                                                     <i class="fa-regular fa-circle-exclamation"></i>
                                                 </a>
@@ -152,8 +152,8 @@
             @elseif($condicional == 'cuentas')
                 <div class="widget-content">
                     <div class="table-responsive">
-                        <table class="table table-unbordered table-striped mt-2">
-                            <thead class="text-white" style="background: #3B3F5C">
+                        <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
+                            <thead class="text-white" style="background: #ee761c">
                                 <tr>
                                     <th class="table-th text-withe text-center">PLATAFORMA</th>
                                     <th class="table-th text-withe text-center">CLIENTE</th>
@@ -202,12 +202,12 @@
                                         <td class="text-center">
                                             <a href="javascript:void(0)"
                                                 wire:click="VerObservaciones({{ $p->id }})"
-                                                class="btn btn-dark mtmobile" title="Observaciones">
+                                                class="btn btn-warning mtmobile" title="Observaciones">
                                                 <i class="fa-solid fa-file-signature"></i>
                                             </a>
                                             @if ($p->estado != 'ANULADO')
                                                 <a href="javascript:void(0)" onclick="Confirm({{ $p->id }})"
-                                                    class="btn btn-dark mtmobile" title="Anular">
+                                                    class="btn btn-warning mtmobile" title="Anular">
                                                     <i class="fas fa-trash"></i>
                                                 </a>
                                             @endif
@@ -215,7 +215,7 @@
                                         <td class="text-center"
                                             style="{{ $p->ready == 'NO' ? 'background-color: #d97171 !important' : 'background-color: #09ed3d !important' }}">
                                             @if ($p->ready == 'NO')
-                                                <a href="javascript:void(0)" class="btn btn-dark"
+                                                <a href="javascript:void(0)" class="btn btn-warning"
                                                     onclick="ConfirmHecho('{{ $p->id }}')">
                                                     <i class="fa-regular fa-circle-exclamation"></i>
                                                 </a>
@@ -233,8 +233,8 @@
             @else
                 <div class="widget-content">
                     <div class="table-responsive">
-                        <table class="table table-unbordered table-hover mt-2">
-                            <thead class="text-white" style="background: #3B3F5C">
+                        <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
+                            <thead class="text-white" style="background: #ee761c">
                                 <tr>
                                     <th class="table-th text-withe text-center" style="font-size: 80%">PLATAFORMAS</th>
                                     <th class="table-th text-withe text-center" style="font-size: 80%">CLIENTE</th>
@@ -327,12 +327,12 @@
                                         <td class="text-center">
                                             <a href="javascript:void(0)"
                                                 wire:click="VerObservaciones({{ $p->id }})"
-                                                class="btn btn-dark mtmobile" title="Observaciones">
+                                                class="btn btn-warning mtmobile" title="Observaciones">
                                                 <i class="fa-solid fa-file-signature"></i>
                                             </a>
                                             @if ($p->status != 'ANULADO')
                                                 <a href="javascript:void(0)" onclick="Confirm({{ $p->id }})"
-                                                    class="btn btn-dark mtmobile" title="Anular">
+                                                    class="btn btn-warning mtmobile" title="Anular">
                                                     <i class="fas fa-trash"></i>
                                                 </a>
                                             @endif
@@ -340,7 +340,7 @@
                                         <td class="text-center"
                                             style="{{ $p->ready == 'NO' ? 'background-color: #d97171 !important' : 'background-color: #09ed3d !important' }}">
                                             @if ($p->ready == 'NO')
-                                                <a href="javascript:void(0)" class="btn btn-dark"
+                                                <a href="javascript:void(0)" class="btn btn-warning"
                                                     onclick="ConfirmHecho('{{ $p->id }}')">
                                                     <i class="fa-regular fa-circle-exclamation"></i>
                                                 </a>

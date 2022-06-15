@@ -32,24 +32,24 @@
                 </div>
                 @if ($orderservice == 0 || $cliente == '')
                     <ul class="tabs tab-pills">
-                        <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
+                        <a href="javascript:void(0)" class="btn btn-warning" data-toggle="modal"
                             data-target="#theClient">ASIGNAR CLIENTE</a>
                     </ul>
 
                     <ul class="tabs tab-pills">
-                        <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
+                        <a href="javascript:void(0)" class="btn btn-warning" data-toggle="modal"
                             data-target="#theNewClient">NUEVO CLIENTE</a>
                     </ul>
                 @endif
                 @if (!empty($cliente))
                     <ul class="tabs tab-pills">
-                        <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
+                        <a href="javascript:void(0)" class="btn btn-warning" data-toggle="modal"
                             data-target="#theModal">AGREGAR SERVICIO</a>
                     </ul>
                 @endif
                 @if ($orderservice != 0)
                     <ul class="tabs tab-pills">
-                        <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
+                        <a href="javascript:void(0)" class="btn btn-warning" data-toggle="modal"
                             data-target="#theType">TIPO DE SERVICIO</a>
                     </ul>
                 @endif
@@ -58,8 +58,8 @@
 
             <div class="widget-content">
                 <div class="table-responsive">
-                    <table class="table table-unbordered table-hover mt-2">
-                        <thead class="text-white" style="background: #3B3F5C">
+                    <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
+                        <thead class="text-white" style="background: #ee761c">
                             <tr>
                                 <th class="table-th text-withe">#</th>
                                 <th class="table-th text-withe text-center">EQUIPO</th>
@@ -102,13 +102,13 @@
                                     </td>
                                     <td class="text-center">
                                         <a href="javascript:void(0)" wire:click="Edit({{ $item->id }})"
-                                            class="btn btn-dark mtmobile" title="Edit">
+                                            class="btn btn-warning mtmobile" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         @if($item->tipo != 'TERMINADO' && $item->tipo != 'ENTREGADO')
                                         <a href="javascript:void(0)"
                                             onclick="Confirm('{{ $item->id }}','{{ $item->category }}','{{ $item->marca }}')"
-                                            class="btn btn-dark" title="Delete">
+                                            class="btn btn-warning" title="Delete">
                                             <i class="fas fa-trash"></i>
                                         </a>
                                         @endif
@@ -124,10 +124,10 @@
 
                 <ul class="tabs tab-pills">
                     @if (!empty(session('od')))
-                        <a class="btn btn-dark mb-2" href="{{ url('reporte/pdf' . '/' . $orderservice) }}" 
+                        <a class="btn btn-warning mb-2" href="{{ url('reporte/pdf' . '/' . $orderservice) }}" 
                         target="_blank" wire:click="ResetSession">IMPRIMIR</a>
                     @endif
-                    <button class="btn btn-dark mb-2" wire:click="ResetSession">IR A SERVICIOS</button>
+                    <button class="btn btn-warning mb-2" wire:click="ResetSession">IR A SERVICIOS</button>
                 </ul>
             </div>
         </div>

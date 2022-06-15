@@ -92,8 +92,8 @@
             @if ($condicional == 'ocupados' || $condicional == 'vencidos')
                 <div class="widget-content">
                     <div class="table-responsive">
-                        <table class="table table-unbordered table-hover mt-2">
-                            <thead class="text-white" style="background: #3B3F5C">
+                        <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
+                            <thead class="text-white" style="background: #ee761c">
                                 <tr>
                                     <th class="table-th text-withe text-center">PLATAFORMA</th>
                                     <th class="table-th text-withe text-center">CLIENTE</th>
@@ -163,17 +163,17 @@
                                                 @if ($p->estadoCuentaPerfil == 'ACTIVO')
                                                     <a href="javascript:void(0)"
                                                         wire:click="Acciones({{ $p->planid }})"
-                                                        class="btn btn-dark mtmobile" title="Renovación">
-                                                        <i class="fa-regular fa-calendar-check"></i>
+                                                        class="btn btn-warning" title="Renovación">
+                                                        <i class="fa fas fa-file-signature"></i>
                                                     </a>
                                                     {{-- <a href="javascript:void(0)" wire:click="Edit({{ $p->id }})"
-                                                        class="btn btn-dark mtmobile" title="Editar">
+                                                        class="btn btn-warning mtmobile" title="Editar">
                                                         <i class="fas fa-edit"></i>
                                                     </a> --}}
                                                     <a href="javascript:void(0)"
                                                         wire:click="EditObservaciones('{{ $p->planid }}','{{ $p->id }}')"
-                                                        class="btn btn-dark mtmobile" title="Observaciones">
-                                                        <i class="fa-solid fa-align-left"></i>
+                                                        class="btn btn-warning" title="Observaciones">
+                                                        <i class="fa fas fa-eye"></i>
                                                     </a>
                                                 @endif
                                             @endif
@@ -182,7 +182,7 @@
                                         <td
                                             style="{{ $p->done == 'NO' ? 'background-color: #d97171 !important' : 'background-color: #09ed3d !important' }}">
                                             @if ($p->done == 'NO')
-                                                <a href="javascript:void(0)" class="btn btn-dark"
+                                                <a href="javascript:void(0)" class="btn btn-warning"
                                                     onclick="ConfirmHecho('{{ $p->planid }}')">
                                                     <i class="fa-regular fa-circle-exclamation"></i>
                                                 </a>
@@ -200,8 +200,8 @@
             @else
                 <div class="widget-content">
                     <div class="table-responsive">
-                        <table class="table table-unbordered table-hover mt-2">
-                            <thead class="text-white" style="background: #3B3F5C">
+                        <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
+                            <thead class="text-white" style="background: #ee761c">
                                 <tr>
                                     <th class="table-th text-withe text-center" style="font-size: 80%">PLATAFORMAS</th>
                                     <th class="table-th text-withe text-center" style="font-size: 80%">CLIENTE</th>
@@ -371,13 +371,13 @@
                                                 @if ($condicional == 'combos')
                                                     <a href="javascript:void(0)"
                                                         wire:click="AccionesCombo({{ $p->id }})"
-                                                        class="btn btn-dark mtmobile" title="Renovación">
-                                                        <i class="fa-regular fa-calendar-check"></i>
+                                                        class="btn btn-warning" title="Renovación">
+                                                        <i class="fa fas fa-file-signature"></i>
                                                     </a>
 
                                                     <a href="javascript:void(0)"
                                                         wire:click="EditCombo({{ $p->id }})"
-                                                        class="btn btn-dark mtmobile" title="Edit">
+                                                        class="btn btn-warning" title="Edit">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
                                                 @endif
@@ -386,7 +386,7 @@
                                         <td class="text-center"
                                             style="{{ $p->done == 'NO' ? 'background-color: #d97171 !important' : 'background-color: #09ed3d !important' }}">
                                             @if ($p->done == 'NO')
-                                                <a href="javascript:void(0)" class="btn btn-dark"
+                                                <a href="javascript:void(0)" class="btn btn-warning"
                                                     onclick="ConfirmHecho('{{ $p->id }}')">
                                                     <i class="fa-regular fa-circle-exclamation"></i>
                                                 </a>

@@ -6,7 +6,7 @@
                     <b>{{ $componentName }} | {{ $pageTitle }}</b>
                 </h4>
                 <ul class="tabs tab-pills">
-                    <a href="javascript:void(0)" class="btn btn-dark" wire:click="nuevatransaccion()">+
+                    <a href="javascript:void(0)" class="btn btn-warning" wire:click="nuevatransaccion()">+
                         Nueva</a>
 
                 </ul>
@@ -26,8 +26,8 @@
 
             <div class="widget-content">
                 <div class="table-responsive">
-                    <table class="table table-unbordered table-striped mt-2">
-                        <thead class="text-white" style="background: #3B3F5C">
+                    <table class="table table-hover">
+                        <thead class="text-white" style="background: #ee761c">
                             <tr>
                                 <th class="table-th text-withe text-center">HORA</th>
                                 <th class="table-th text-withe text-center">CÉDULA</th>
@@ -70,22 +70,14 @@
                                         @can('Anular_trans_tigomoney_Boton')
                                             @if ($d->estado != 'Anulada')
                                                 <a href="javascript:void(0)" onclick="Confirm({{ $d->id }})"
-                                                    class="btn btn-dark mtmobile" title="Anular">
+                                                    class="btn btn-warning" title="Anular">
                                                     <i class="fas fa-trash"></i>
                                                 </a>
                                             @endif
                                         @endcan
                                         <a href="javascript:void(0)" wire:click="VerObservaciones({{ $d->id }})"
-                                            class="btn btn-dark mtmobile" title="Observaciones">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                                stroke-linecap="round" stroke-linejoin="round"
-                                                class="feather feather-align-center">
-                                                <line x1="18" y1="10" x2="6" y2="10"></line>
-                                                <line x1="21" y1="6" x2="3" y2="6"></line>
-                                                <line x1="21" y1="14" x2="3" y2="14"></line>
-                                                <line x1="18" y1="18" x2="6" y2="18"></line>
-                                            </svg>
+                                            class="btn btn-warning mtmobile" title="Observaciones">
+                                            <i class="fas fa-trash"></i>
                                         </a>
                                     </td>
                                 </tr>

@@ -23,10 +23,10 @@
 
                     </div>
                     <ul class="tabs tab-pills">
-                        <a href="javascript:void(0)" class="btn btn-dark m-2" data-toggle="modal"
+                        <a href="javascript:void(0)" class="btn btn-warning m-2" data-toggle="modal"
                             data-target="#theModal">Agregar Proveedor</a>
                 
-                        <a href="javascript:void(0)" class="btn btn-dark m-2" data-toggle="modal"
+                        <a href="javascript:void(0)" class="btn btn-warning m-2" data-toggle="modal"
                             data-target="#theModal">Crear Producto
                         </a>
                     </ul>

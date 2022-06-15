@@ -128,7 +128,7 @@
                                                                     <td class="text-center">
                                                                         <a href="javascript:void(0)"
                                                                             wire:click="Seleccionar('{{ $d->content }}','{{ $d->pass }}')"
-                                                                            class="btn btn-dark mtmobile"
+                                                                            class="btn btn-warning mtmobile"
                                                                             title="Seleccionar">
                                                                             <i class="fas fa-check"></i>
                                                                         </a>
@@ -219,10 +219,10 @@
             <div class="modal-footer">                
                 @if ($selected_id < 1)
                     <button type="button" wire:click.prevent="Store()"
-                        class="btn btn-dark close-btn text-info">REGISTRAR</button>
+                        class="btn btn-warning close-btn text-info">REGISTRAR</button>
                 @else
                     <button type="button" wire:click.prevent="Update()"
-                        class="btn btn-dark close-btn text-info">ACTUALIZAR</button>
+                        class="btn btn-warning close-btn text-info">ACTUALIZAR</button>
                 @endif
             </div>
         </div>

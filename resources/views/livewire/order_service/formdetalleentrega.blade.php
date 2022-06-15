@@ -110,10 +110,10 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" wire:click.prevent="CambioTerminado({{$service1}})" class="btn btn-dark close-btn text-info"
+                <button type="button" wire:click.prevent="CambioTerminado({{$service1}})" class="btn btn-warning close-btn text-info"
                     data-dismiss="modal" style="background: #3b3f5c">REGISTRAR ENTREGADO</button>
                 
-                <button type="button" wire:click.prevent="resetUI()" class="btn btn-dark close-btn text-info"
+                <button type="button" wire:click.prevent="resetUI()" class="btn btn-warning close-btn text-info"
                     data-dismiss="modal" style="background: #3b3f5c">CANCELAR</button>
                    
             </div>

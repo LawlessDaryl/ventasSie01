@@ -135,11 +135,11 @@
 
             <div class="widget-content">
                 <div class="table-responsive">
-                    <table class="table table-unbordered table-striped mt-2">
-                        <thead class="text-white" style="background: #3B3F5C">
+                    <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
+                        <thead class="text-white" style="background: #ee761c">
                             <tr>
-                                <th style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0" class="table-th text-withe text-center" width="2%">#</th>
-                                <th style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0" class="table-th text-withe text-center" width="62%">
+                                <th class="table-th text-withe text-center">#</th>
+                                <th class="table-th text-withe text-center">
                                     <div class="col-sm-12 col-md-12">
                                         <div class="row">
                                             <div class="col-sm-2">CLIENTE</div>
@@ -149,13 +149,13 @@
                                         </div>
                                     </div>
                                 </th>
-                                <th style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0" class="table-th text-withe text-center" width="7%">CÓDIGO
+                                <th class="table-th text-withe text-center">CÓDIGO
                                 </th>
-                                <th style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0" class="table-th text-withe text-center" width="7%">TOTAL</th>
-                                <th style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0" class="table-th text-withe text-center" width="8%">A CUENTA
+                                <th class="table-th text-withe text-center">TOTAL</th>
+                                <th class="table-th text-withe text-center">A CUENTA
                                 </th>
-                                <th style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0" class="table-th text-withe text-center" width="7%">SALDO</th>
-                                <th style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0" class="table-th text-withe text-center" width="7%">ACCIONES
+                                <th class="table-th text-withe text-center">SALDO</th>
+                                <th class="table-th text-withe text-center">ACCIONES
                                 </th>
                             </tr>
                         </thead>
@@ -166,7 +166,7 @@
                                 @foreach ($data as $item)
                                     <tr>
                                         {{-- # --}}
-                                        <td width="2%">
+                                        <td>
                                             <h6 class="table-th text-withe text-center" style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0">
                                                 {{ $loop->iteration }}</h6>
                                         </td>
@@ -175,7 +175,7 @@
                                             $myacuenta = 0;
                                             $mysaldo = 0;
                                         @endphp
-                                        <td width="62%">
+                                        <td>
 
                                             @foreach ($item->services as $key => $service)
                                                 {{-- @php
@@ -301,7 +301,7 @@
                                                             @if (@Auth::user()->hasPermissionTo('Recepcionar_Servicio'))
                                                                 @if ($mm->movs->type == 'PENDIENTE')
                                                                     <a style="font-size: 60%" href="javascript:void(0)"
-                                                                        class="btn btn-dark mtmobile"
+                                                                        class="btn btn-primary btn-sm"
                                                                         wire:click="Edit({{ $service->id }})"
                                                                         title="Cambiar Estado">{{ $mm->movs->type }}</a>
                                                                 @endif
@@ -310,7 +310,7 @@
                                                             @if (!empty(session('sesionCaja')) && @Auth::user()->hasPermissionTo('Boton_Entregar_Servicio'))
                                                                 @if ($mm->movs->type == 'TERMINADO')
                                                                     <a style="font-size: 60%" href="javascript:void(0)"
-                                                                        class="btn btn-dark mtmobile"
+                                                                        class="btn btn-primary btn-sm"
                                                                         wire:click="DetallesTerminado({{ $service->id }})"
                                                                         title="Cambiar Estado">Entregar</a>
                                                                 @endif
@@ -318,14 +318,14 @@
 
                                                             @if ($mm->movs->type != 'ENTREGADO')
                                                                 <a style="font-size: 60%" href="javascript:void(0)"
-                                                                    class="btn btn-dark mtmobile"
+                                                                    class="btn btn-primary btn-sm"
                                                                     wire:click="Detalles({{ $service->id }})"
                                                                     title="Cambiar Estado">Detalle</a>
                                                             @endif
 
                                                             @if ($mm->movs->type == 'ENTREGADO')
                                                                 <a style="font-size: 60%" href="javascript:void(0)"
-                                                                    class="btn btn-dark mtmobile"
+                                                                    class="btn btn-primary btn-sm"
                                                                     wire:click="DetalleEntregado({{ $service->id }})"
                                                                     title="Ver Detalle">Detalle</a>
                                                             @endif
@@ -396,7 +396,7 @@
                                         {{-- ACCIONES --}}
                                         <td class="text-center" width="7%">
                                             <a style="font-size: 60%" href="javascript:void(0)"
-                                                class="btn btn-dark mtmobile"
+                                                class="btn btn-primary btn-sm"
                                                 wire:click="VerOpciones({{ $item->id }})"
                                                 title="Opciones">Opciones</a>
                                         </td>
@@ -464,7 +464,7 @@
                                                 $myacuenta = 0;
                                                 $mysaldo = 0;
                                             @endphp
-                                            <td width="62%">
+                                            <td>
 
                                                 @foreach ($item->services as $key => $service)
                                                     {{-- @php
@@ -582,7 +582,7 @@
                                                                     @if ($mm->movs->type == 'PENDIENTE')
                                                                         <a style="font-size: 60%"
                                                                             href="javascript:void(0)"
-                                                                            class="btn btn-dark mtmobile"
+                                                                            class="btn btn-primary btn-sm"
                                                                             wire:click="Edit({{ $service->id }})"
                                                                             title="Cambiar Estado">{{ $mm->movs->type }}</a>
                                                                     @endif
@@ -592,7 +592,7 @@
                                                                     @if ($mm->movs->type == 'TERMINADO')
                                                                         <a style="font-size: 60%"
                                                                             href="javascript:void(0)"
-                                                                            class="btn btn-dark mtmobile"
+                                                                            class="btn btn-primary btn-sm"
                                                                             wire:click="DetallesTerminado({{ $service->id }})"
                                                                             title="Cambiar Estado">Entregar</a>
                                                                     @endif
@@ -600,14 +600,14 @@
 
                                                                 @if ($mm->movs->type != 'ENTREGADO')
                                                                     <a style="font-size: 60%" href="javascript:void(0)"
-                                                                        class="btn btn-dark mtmobile"
+                                                                        class="btn btn-primary btn-sm"
                                                                         wire:click="Detalles({{ $service->id }})"
                                                                         title="Cambiar Estado">Detalle</a>
                                                                 @endif
 
                                                                 @if ($mm->movs->type == 'ENTREGADO')
                                                                     <a style="font-size: 60%" href="javascript:void(0)"
-                                                                        class="btn btn-dark mtmobile"
+                                                                        class="btn btn-primary btn-sm"
                                                                         wire:click="DetalleEntregado({{ $service->id }})"
                                                                         title="Ver Detalle">Detalle</a>
                                                                 @endif
@@ -678,7 +678,7 @@
                                             {{-- ACCIONES --}}
                                             <td class="text-center" width="7%">
                                                 <a style="font-size: 60%" href="javascript:void(0)"
-                                                    class="btn btn-dark mtmobile"
+                                                    class="btn btn-primary btn-sm"
                                                     wire:click="VerOpciones({{ $item->id }})"
                                                     title="Opciones">Opciones</a>
                                             </td>
@@ -698,7 +698,7 @@
                                                     $myacuenta = 0;
                                                     $mysaldo = 0;
                                                 @endphp
-                                                <td width="62%">
+                                                <td>
 
                                                     @foreach ($item->services as $key => $service)
                                                         {{-- @php
@@ -828,7 +828,7 @@
                                                                         @if ($mm->movs->type == 'PENDIENTE')
                                                                             <a style="font-size: 60%"
                                                                                 href="javascript:void(0)"
-                                                                                class="btn btn-dark mtmobile"
+                                                                                class="btn btn-primary btn-sm"
                                                                                 wire:click="Edit({{ $service->id }})"
                                                                                 title="Cambiar Estado">{{ $mm->movs->type }}</a>
                                                                         @endif
@@ -838,7 +838,7 @@
                                                                         @if ($mm->movs->type == 'TERMINADO')
                                                                             <a style="font-size: 60%"
                                                                                 href="javascript:void(0)"
-                                                                                class="btn btn-dark mtmobile"
+                                                                                class="btn btn-primary btn-sm"
                                                                                 wire:click="DetallesTerminado({{ $service->id }})"
                                                                                 title="Cambiar Estado">Entregar</a>
                                                                         @endif
@@ -847,7 +847,7 @@
                                                                     @if ($mm->movs->type != 'ENTREGADO')
                                                                         <a style="font-size: 60%"
                                                                             href="javascript:void(0)"
-                                                                            class="btn btn-dark mtmobile"
+                                                                            class="btn btn-primary btn-sm"
                                                                             wire:click="Detalles({{ $service->id }})"
                                                                             title="Cambiar Estado">Detalle</a>
                                                                     @endif
@@ -855,7 +855,7 @@
                                                                     @if ($mm->movs->type == 'ENTREGADO')
                                                                         <a style="font-size: 60%"
                                                                             href="javascript:void(0)"
-                                                                            class="btn btn-dark mtmobile"
+                                                                            class="btn btn-primary btn-sm"
                                                                             wire:click="DetalleEntregado({{ $service->id }})"
                                                                             title="Ver Detalle">Detalle</a>
                                                                     @endif
@@ -925,7 +925,7 @@
                                                 {{-- ACCIONES --}}
                                                 <td class="text-center" width="7%">
                                                     <a style="font-size: 60%" href="javascript:void(0)"
-                                                        class="btn btn-dark mtmobile"
+                                                        class="btn btn-primary btn-sm"
                                                         wire:click="VerOpciones({{ $item->id }})"
                                                         title="Opciones">Opciones</a>
                                                 </td>

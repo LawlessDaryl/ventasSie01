@@ -72,15 +72,15 @@
 
             <div class="row mt-5">
                 <div class="col-sm-12 col-md-3 mbmobile">
-                    <div class="connect-sorting bg-dark">
-                        <h5 class="text-white">Transacciones totales : <br> ${{number_format($total,2)}}</h5>
+                    <div class="form-control" style="background: #ee761c">
+                        <h5 class="text-white">Transacciones Totales : <br> ${{number_format($total,2)}}</h5>
                     </div>
                 </div>
 
                 <div class="col-sm-12 col-md-9">
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped mt-1">
-                            <thead class="text-white" style="background: #3b3ff5;">
+                        <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
+                            <thead class="text-white" style="background: #ee761c">
                                 <tr>
                                     <th class="table-th text-center text-white">CEDULA</th>
                                     <th class="table-th text-center text-white">TELEFONO</th>
@@ -114,7 +114,7 @@
                                     <td class="text-center"><h6>{{$row->motivo_nombre}}</h6></td>
                                     <td class="text-center"><h6>{{$row->created_at}}</h6></td>
                                     <td class="text-center">
-                                        <button wire:click.prevent="viewDetails({{$row->id}})" class="btn btn-dark btn-sm">
+                                        <button wire:click.prevent="viewDetails({{$row->id}})" class="btn btn-warning">
                                             <i class="fas fa-list"></i>
                                         </button>
                                     </td>

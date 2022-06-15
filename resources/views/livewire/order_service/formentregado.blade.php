@@ -290,12 +290,12 @@
 
                 @if(@Auth::user()->hasPermissionTo('Modificar_Detalle_Serv'))
                 <button type="button" wire:click.prevent="GuardarCambio({{$service1}})"
-                    class="btn btn-dark close-btn text-info"
+                    class="btn btn-warning close-btn text-info"
                     data-dismiss="modal" style="background: #3b3f5c">REGISTRAR INFORMACIÓN</button>
 
                 @endif
 
-                <button type="button" wire:click.prevent="resetUI()" class="btn btn-dark close-btn text-info"
+                <button type="button" wire:click.prevent="resetUI()" class="btn btn-warning close-btn text-info"
                     data-dismiss="modal" style="background: #3b3f5c">CANCELAR</button>
             </div>
         </div>

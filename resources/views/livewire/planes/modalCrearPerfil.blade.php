@@ -62,7 +62,7 @@
                                                 <h6 class="text-center">{{ $c->cantiadadQueSePuedeCrear }}</h6>
                                             </td>
                                             <td class="text-center">
-                                                <a href="javascript:void(0)" class="btn btn-dark"
+                                                <a href="javascript:void(0)" class="btn btn-warning"
                                                     wire:click.prevent="SeleccionarCuenta({{ $c->id }})">Crear
                                                     aqui</a>
                                             </td>

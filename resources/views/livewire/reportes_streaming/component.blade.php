@@ -67,7 +67,7 @@
                     </div>
 
                     {{-- <div class="col-sm-2 mt-4">
-                        <a class="btn btn-dark btn-block {{ count($data) < 1 ? 'disabled' : '' }}"
+                        <a class="btn btn-warning btn-block {{ count($data) < 1 ? 'disabled' : '' }}"
                             href="{{ url('reporteStreaming/pdf' .'/' .$userId .'/' .$Perf_Cuenta .'/' .$Vencid_Vigent .'/' .$reportType .'/' .$dateFrom .'/' .$dateTo) }}">Generar
                             PDF</a>
                     </div> --}}
@@ -76,8 +76,8 @@
                 <div class="row">
                     @if ($Perf_Cuenta == 0)
                         <div class="table-responsive">
-                            <table class="table table-unbordered table-hover mt-1">
-                                <thead class="text-white" style="background: #3B3F5C">
+                            <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
+                                <thead class="text-white" style="background: #ee761c">
                                     <tr>
                                         <th class="table-th text-withe text-center">PLATAFORMA</th>
                                         <th class="table-th text-withe text-center">CLIENTE</th>
@@ -147,8 +147,8 @@
                         </div>
                     @elseif ($Perf_Cuenta == 1)
                         <div class="table-responsive">
-                            <table class="table table-unbordered table-hover mt-1">
-                                <thead class="text-white" style="background: #3B3F5C">
+                            <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
+                                <thead class="text-white" style="background: #ee761c">
                                     <tr>
                                         <th class="table-th text-withe text-center">PLATAFORMA</th>
                                         <th class="table-th text-withe text-center">CLIENTE</th>
@@ -212,8 +212,8 @@
                     @elseif ($Perf_Cuenta == 2)
                         <div class="widget-content">
                             <div class="table-responsive">
-                                <table class="table table-unbordered table-hover mt-2">
-                                    <thead class="text-white" style="background: #3B3F5C">
+                                <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
+                                    <thead class="text-white" style="background: #ee761c">
                                         <tr>
                                             <th class="table-th text-withe text-center">
                                                 PLATAFORMAS</th>

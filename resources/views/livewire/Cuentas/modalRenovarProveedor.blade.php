@@ -156,7 +156,7 @@
 
                     <div class="col-sm-12 col-md-12">
                         <div class="form-group text-center mt-4">
-                            <a href="javascript:void(0)" class="btn btn-dark" wire:click="RenovarCuenta()">Renovar
+                            <a href="javascript:void(0)" class="btn btn-warning" wire:click="RenovarCuenta()">Renovar
                                 Cuenta</a>
                         </div>
                     </div>

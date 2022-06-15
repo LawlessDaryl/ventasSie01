@@ -49,7 +49,7 @@
 
                     <div class="col-sm-12 col-md-12">
                         <div class="form-group text-center mt-4">
-                            <a href="javascript:void(0)" class="btn btn-dark"
+                            <a href="javascript:void(0)" class="btn btn-warning"
                                 wire:click.prevent="cambiarCuentaPlat1()">Cambiar de cuenta perfil plataforma 1</a>
                         </div>
                     </div>
@@ -107,7 +107,7 @@
                                                                 <h6 class="text-center">
                                                                     <a href="javascript:void(0)"
                                                                         wire:click="SeleccionarCuenta1('{{ $item->id }}')"
-                                                                        class="btn btn-dark mtmobile"
+                                                                        class="btn btn-warning mtmobile"
                                                                         title="Seleccionar">
                                                                         <i class="fas fa-check"></i>
                                                                     </a>
@@ -167,7 +167,7 @@
 
                     <div class="col-sm-12 col-md-12">
                         <div class="form-group text-center mt-4">
-                            <a href="javascript:void(0)" class="btn btn-dark"
+                            <a href="javascript:void(0)" class="btn btn-warning"
                                 wire:click.prevent="cambiarCuentaPlat2()">Cambiar de cuenta perfil plataforma 2</a>
                         </div>
                     </div>
@@ -225,7 +225,7 @@
                                                                 <h6 class="text-center">
                                                                     <a href="javascript:void(0)"
                                                                         wire:click="SeleccionarCuenta2('{{ $item->id }}')"
-                                                                        class="btn btn-dark mtmobile"
+                                                                        class="btn btn-warning mtmobile"
                                                                         title="Seleccionar">
                                                                         <i class="fas fa-check"></i>
                                                                     </a>
@@ -285,7 +285,7 @@
 
                     <div class="col-sm-12 col-md-12">
                         <div class="form-group text-center mt-4">
-                            <a href="javascript:void(0)" class="btn btn-dark"
+                            <a href="javascript:void(0)" class="btn btn-warning"
                                 wire:click.prevent="cambiarCuentaPlat3()">Cambiar de cuenta perfil plataforma 3</a>
                         </div>
                     </div>
@@ -343,7 +343,7 @@
                                                                 <h6 class="text-center">
                                                                     <a href="javascript:void(0)"
                                                                         wire:click="SeleccionarCuenta3('{{ $item->id }}')"
-                                                                        class="btn btn-dark mtmobile"
+                                                                        class="btn btn-warning mtmobile"
                                                                         title="Seleccionar">
                                                                         <i class="fas fa-check"></i>
                                                                     </a>
@@ -498,19 +498,19 @@
                     </div>
                     <div class="col-sm-12 col-md-4">
                         <div class="form-group text-center mt-4">
-                            <a href="javascript:void(0)" class="btn btn-dark"
+                            <a href="javascript:void(0)" class="btn btn-warning"
                                 wire:click.prevent="RenovarCombo()">Renovar combo</a>
                         </div>
                     </div>
                     <div class="col-sm-12 col-md-4">
                         <div class="form-group text-center mt-4">
-                            <a href="javascript:void(0)" class="btn btn-dark"
+                            <a href="javascript:void(0)" class="btn btn-warning"
                                 wire:click.prevent="VencerCombo()">Vencer combo</a>
                         </div>
                     </div>
                     <div class="col-sm-12 col-md-4">
                         <div class="form-group text-center mt-4">
-                            <a href="javascript:void(0)" class="btn btn-dark"
+                            <a href="javascript:void(0)" class="btn btn-warning"
                                 wire:click.prevent="UpdateCombo()">Actualizar
                                 datos</a>
                         </div>

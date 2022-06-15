@@ -9,7 +9,7 @@
 
 
                 <div class="row">
-
+                    @if (@Auth::user()->hasPermissionTo('Filtrar_sucursal_Reporte_Servicio'))
                     <div class="col-sm-2">
                         <h6>Elige la sucursal</h6>
                         <div class="form-group">
@@ -21,7 +21,7 @@
                             </select>
                         </div>
                     </div>
-
+                    @endif
                     <div class="col-sm-2">
                         <h6>Elige la caja</h6>
                         <div class="form-group">
@@ -62,11 +62,11 @@
 
                     <div class="col-sm-2 mt-4">
 
-                        {{-- <a class="btn btn-dark btn-block {{ count($data) < 1 ? 'disabled' : '' }}"
+                        {{-- <a class="btn btn-warning btn-block {{ count($data) < 1 ? 'disabled' : '' }}"
                             href="{{ url('reporteServicEntreg/pdf' . '/' . $reportType . '/' . $dateFrom . '/' . $dateTo . '/' . $sucursal . '/' . $sumaEfectivo . '/' . $sumaBanco . '/' . $caja) }}"
                             target="_blank" style='font-size:18px'>Generar PDF</a> --}}
 
-                        <a class="btn btn-dark"
+                        <a class="btn btn-warning btn-block btn btn-warning btn-lg"
                             href="{{ url('reporteServicEntreg/pdf' .'/' .$reportType .'/' .$dateFrom .'/' .$dateTo .'/' .$sucursal .'/' .$sumaEfectivo .'/' .$sumaBanco .'/' .$caja) }}"
                             target="_blank" style='font-size:18px'>Generar PDF</a>
 
@@ -77,8 +77,8 @@
                     <div class="col-sm-12 col-md-12">
                         <!-- TABLA -->
                         <div class="table-responsive">
-                            <table class="table table-unbordered table-hover mt-1">
-                                <thead class="text-white" style="background: #3B3F5C">
+                            <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
+                                <thead class="text-white" style="background: #ee761c">
                                     <tr>
                                         <th class="table-th text-withe text-center">#</th>
                                         <th class="table-th text-withe text-center">FECHA</th>

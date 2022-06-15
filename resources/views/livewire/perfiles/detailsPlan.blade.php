@@ -154,14 +154,14 @@
                     <div class="col-sm-12 col-md-4">
                         <div class="form-group text-center mt-4">
                             <button type="button" @if ($meses <= 0) disabled @endif
-                                wire:click.prevent="Renovar()" class="btn btn-dark">Renovar
+                                wire:click.prevent="Renovar()" class="btn btn-warning">Renovar
                                 plan</button>
                         </div>
                     </div>
 
                     <div class="col-sm-12 col-md-4">
                         <div class="form-group text-center mt-4">
-                            <a href="javascript:void(0)" class="btn btn-dark"
+                            <a href="javascript:void(0)" class="btn btn-warning"
                                 onclick="ConfirmVencer('{{ $nameperfil }}')">Vencer
                                 plan</a>
                         </div>
@@ -169,7 +169,7 @@
 
                     <div class="col-sm-12 col-md-4">
                         <div class="form-group text-center mt-4">
-                            <a href="javascript:void(0)" class="btn btn-dark"
+                            <a href="javascript:void(0)" class="btn btn-warning"
                                 wire:click.prevent="CambiarCuenta()">Buscar
                                 otra cuenta (Cambiar)</a>
                         </div>
@@ -226,7 +226,7 @@
                                                             </td>
                                                             <td class="text-center">
                                                                 <h6 class="text-center">
-                                                                    <a href="javascript:void(0)" class="btn btn-dark"
+                                                                    <a href="javascript:void(0)" class="btn btn-warning"
                                                                         onclick="ConfirmCambiar('{{ $item->id }}','{{ $nameperfil }}','{{ $item->account_name }}')">
                                                                         <i class="fas fa-check"></i>
                                                                     </a>

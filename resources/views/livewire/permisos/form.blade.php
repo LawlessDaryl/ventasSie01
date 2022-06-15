@@ -28,14 +28,14 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" wire:click.prevent="resetUI()" class="btn btn-dark close-btn text-info"
+                <button type="button" wire:click.prevent="resetUI()" class="btn btn-warning close-btn text-info"
                     data-dismiss="modal" style="background: #3b3f5c">CANCELAR</button>
                 @if ($selected_id < 1)
                     <button type="button" wire:click.prevent="CreatePermission()"
-                        class="btn btn-dark close-btn text-info">GUARDAR</button>
+                        class="btn btn-warning close-btn text-info">GUARDAR</button>
                 @else
                     <button type="button" wire:click.prevent="UpdatePermission()"
-                        class="btn btn-dark close-btn text-info">ACTUALIZAR</button>
+                        class="btn btn-warning close-btn text-info">ACTUALIZAR</button>
                 @endif
 
 

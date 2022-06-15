@@ -204,6 +204,10 @@ class PermissionSeeder extends Seeder
             'name' => 'Eliminar_Servicio',
             'guard_name' => 'web'
         ]);
+        Permission::create([    /* PERMITIR FILTRAR POR SUCURSAL LOS REPORTES DE SERVICIOS */
+            'name' => 'Filtrar_sucursal_Reporte_Servicio',
+            'guard_name' => 'web'
+        ]);
 
 
 

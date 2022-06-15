@@ -73,7 +73,7 @@
 
                         <div class="col-sm-12 col-md-6">
                             <div class="form-group text-center mt-4">
-                                <a href="javascript:void(0)" class="btn btn-dark"
+                                <a href="javascript:void(0)" class="btn btn-warning"
                                     wire:click.prevent="CrearPerfil()">Crear Perfil</a>
                             </div>
                         </div>
@@ -120,7 +120,7 @@
                                     <td class="text-center">
                                         {{-- <a href="javascript:void(0)"
                                             onclick="Confirmar('{{ $d->id }}','{{ $d->namep }}')"
-                                            class="btn btn-dark" title="Delete">
+                                            class="btn btn-warning" title="Delete">
                                             <i class="fas fa-trash"></i>
                                         </a> --}}
                                     </td>

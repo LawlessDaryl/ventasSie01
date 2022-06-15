@@ -25,7 +25,7 @@
                     <div class="col-lg-4 col-md-4 col-sm-12">
 
                         <ul class="tabs tab-pills">
-                            <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
+                            <a href="javascript:void(0)" class="btn btn-warning" data-toggle="modal"
                                 data-target="#theNewClient" wire:click.prevent="resetUI()" data-dismiss="modal">Nuevo
                                 Cliente</a>
                         </ul>
@@ -66,7 +66,7 @@
                                                             <td class="text-center">
                                                                 <a href="javascript:void(0)"
                                                                     wire:click="Seleccionar({{ $d->id }})"
-                                                                    class="btn btn-dark mtmobile" title="Seleccionar">
+                                                                    class="btn btn-warning mtmobile" title="Seleccionar">
                                                                     <i class="fas fa-check"></i>
                                                                 </a>
                                                                 
@@ -91,7 +91,7 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" wire:click.prevent="resetUI()" class="btn btn-dark close-btn text-info"
+                <button type="button" wire:click.prevent="resetUI()" class="btn btn-warning close-btn text-info"
                     data-dismiss="modal" style="background: #3b3f5c">CANCELAR</button>
             </div>
         </div>

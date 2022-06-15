@@ -452,7 +452,7 @@
                 @if((@Auth::user()->id == $this->usuarioId) || (@Auth::user()->hasPermissionTo('Ver_Modificar_Eliminar_Servicio')))
                     @if ($proceso)
                         <button type="button" wire:click.prevent="CambioProceso({{ $service1 }})"
-                            class="btn btn-dark close-btn text-info" data-dismiss="modal"
+                            class="btn btn-warning close-btn text-info" data-dismiss="modal"
                             style="background: #3b3f5c">REGISTRAR TERMINADO</button>
                     @endif
                 @endif
@@ -460,13 +460,13 @@
                 @if((/* $this->tipo == 'PENDIENTE' ||  */(@Auth::user()->id == $this->usuarioId) || (@Auth::user()->hasPermissionTo('Ver_Modificar_Eliminar_Servicio'))))
                     @if ($selected_id < 1)
                         <button type="button" wire:click.prevent="GuardarCambio({{ $service1 }})"
-                            class="btn btn-dark close-btn text-info">REGISTRAR INFORMACIÓN</button>
+                            class="btn btn-warning close-btn text-info">REGISTRAR INFORMACIÓN</button>
                     @else
                         <button type="button" wire:click.prevent="Update()"
-                            class="btn btn-dark close-btn text-info">ACTUALIZAR</button>
+                            class="btn btn-warning close-btn text-info">ACTUALIZAR</button>
                     @endif
                 @endif
-                <button type="button" wire:click.prevent="resetUI()" class="btn btn-dark close-btn text-info"
+                <button type="button" wire:click.prevent="resetUI()" class="btn btn-warning close-btn text-info"
                     data-dismiss="modal" style="background: #3b3f5c">CANCELAR</button>
 
 

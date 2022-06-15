@@ -6,7 +6,7 @@
                     <b>{{ $componentName }} | {{ $pageTitle }}</b>
                 </h4>
                 <ul class="tabs tab-pills">                   
-                        <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
+                        <a href="javascript:void(0)" class="btn btn-warning" data-toggle="modal"
                         data-target="#theModal">+ Nueva</a>                   
                 </ul>
             </div>
@@ -50,18 +50,18 @@
                             
                                     <td class="text-center">
                                         <a href="javascript:void(0)" wire:click="Edit()"
-                                            class="btn btn-dark mtmobile" title="Edit">
+                                            class="btn btn-warning mtmobile" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
 
                                         <a href="javascript:void(0)" onclick="Confirm()" 
-                                        class="btn btn-dark"
+                                        class="btn btn-warning"
                                             title="Delete">
                                             <i class="fas fa-trash"></i>
                                         </a>
 
                                         <a href="javascript:void(0)" onclick="" 
-                                        class="btn btn-dark"
+                                        class="btn btn-warning"
                                             title="Detalles">
                                             <i class="fas fa-list"></i>
                                         </a>

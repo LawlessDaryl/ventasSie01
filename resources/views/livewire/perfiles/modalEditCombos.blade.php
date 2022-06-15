@@ -88,7 +88,7 @@
 
                     <div class="col-sm-12 col-md-4">
                         <div class="form-group text-center mt-4">
-                            <a href="javascript:void(0)" class="btn btn-dark"
+                            <a href="javascript:void(0)" class="btn btn-warning"
                                 wire:click.prevent="UpdateCombo()">Actualizar
                                 datos</a>
                         </div>

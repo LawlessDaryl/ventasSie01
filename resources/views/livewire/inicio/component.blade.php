@@ -69,7 +69,7 @@
                         @if (@Auth::user()->hasPermissionTo('Orden_Servicio_Index'))
                             <div class="col-lg-2 col-sm-2 col-md-3 mt-4">
                                 <ul class="tabs tab-pills">
-                                    <a href="{{ url('orderservice') }}" class="btn btn-dark">IR A SERVICIOS</a>
+                                    <a href="{{ url('orderservice') }}" class="btn btn-warning">IR A SERVICIOS</a>
                                 </ul>
                             </div>
                         @endif
@@ -163,7 +163,7 @@
                     @if (@Auth::user()->hasPermissionTo('Orden_Servicio_Index'))
                         <div class="col-lg-2 col-sm-2 col-md-3 mt-4">
                             <ul class="tabs tab-pills">
-                                <a href="{{ url('orderservice') }}" class="btn btn-dark">IR A SERVICIOS</a>
+                                <a href="{{ url('orderservice') }}" class="btn btn-warning">IR A SERVICIOS</a>
                             </ul>
                         </div>
                     @endif
@@ -230,7 +230,7 @@
                     @if (@Auth::user()->hasPermissionTo('Orden_Servicio_Index'))
                         <div class="col-lg-2 col-sm-2 col-md-3 mt-4">
                             <ul class="tabs tab-pills">
-                                <a href="{{ url('orderservice') }}" class="btn btn-dark">IR A SERVICIOS</a>
+                                <a href="{{ url('orderservice') }}" class="btn btn-warning">IR A SERVICIOS</a>
                             </ul>
                         </div>
                     @endif
@@ -275,9 +275,8 @@
             </div>
             <div class="row">
                 <div class="col-sm-12">
-                    <table id="style-3" class="table style-3 table-hover dataTable no-footer" role="grid"
-                        aria-describedby="style-3_info">
-                        <thead class="text-white" style="background: #3B3F5C; font-size: 10px">
+                    <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
+                        <thead class="text-white" style="background: #ee761c">
                             <tr>
                                 <th class="table-th text-withe text-center">#</th>
                                 <th class="table-th text-withe text-center">FECHAS</th>
@@ -598,7 +597,6 @@
                             </tbody>
                         @endif
                     </table>
-                    {{ $data->links() }}
                 </div>
             </div>
 

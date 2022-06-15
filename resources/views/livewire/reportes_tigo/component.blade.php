@@ -67,7 +67,7 @@
                         </div>
                     </div>
                     <div class="col-sm-12 col-md-4 mt-4">
-                        <a class=" btn btn-dark btn-block {{ count($data) < 1 ? 'disabled' : '' }}"
+                        <a class="btn btn-dark btn-block btn btn-warning btn-lg {{ count($data) < 1 ? 'disabled' : '' }}"
                             href="{{ url('reporteTigo/pdf' .'/' .$userId .'/' .$reportType .'/' .$origenfiltro .'/' .$tipotr .'/' .$dateFrom .'/' .$dateTo) }}">
                             Generar
                             PDF</a>
@@ -76,8 +76,8 @@
 
                     <div class="col-sm-12 col-md-12">
                         <div class="table-responsive">
-                            <table class="table table-unbordered table-hover mt-1">
-                                <thead class="text-white" style="background: #3B3F5C">
+                            <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
+                                <thead class="text-white" style="background: #ee761c">
                                     <tr>
                                         <th class="table-th text-withe text-center">CEDULA</th>
                                         <th class="table-th text-withe text-center">TELEFONO</th>
@@ -108,7 +108,7 @@
                                     @foreach ($data as $d)
                                         <tr
                                             style="{{ $d->estado == 'Anulada' ? 'background-color: #d97171 !important' : '' }}">
-                                            <td class="text-center">
+                                            <td class="text-center" style="height: 5px;">
                                                 <h6>{{ $d->cedula }}</h6>
                                             </td>
                                             <td class="text-center">
@@ -137,9 +137,9 @@
                                             <td class="text-center">
                                                 <h6>{{ $d->created_at }}</h6>
                                             </td>
-                                            <td class="text-center" width="50px">
+                                            <td>
                                                 <button wire:click.prevent="getDetails({{ $d->id }})"
-                                                    class="btn btn-dark btn-sm" title="Ver observaciones">
+                                                    class="btn btn-warning btn-sm" title="Ver observaciones">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                         viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -152,7 +152,7 @@
                                                 </button>
                                             </td>
                                             <td>
-                                                <button class="btn btn-dark btn-sm" title="Editar Transacción" wire:click="editartransaccion({{$d->id}})">
+                                                <button class="btn btn-warning btn-sm" title="Editar Transacción" wire:click="editartransaccion({{$d->id}})">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-square"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
                                                 </button>
                                             </td>
@@ -173,11 +173,9 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-
         window.livewire.on('item', msg => {
             noty(msg)
         });
-
         flatpickr(document.getElementsByClassName('flatpickr'), {
             enableTime: false,
             dateFormat: 'Y-m-d',
@@ -238,7 +236,6 @@
         });
         window.livewire.on('mostrarocultar', msg => {
             $('#modificartransaccion').modal('show')
-            $('#modificartransaccion').modal('hide')
         });
 
 

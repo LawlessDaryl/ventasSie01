@@ -83,8 +83,8 @@
                 </div>
                 <div class="row">
                     <div class="table-responsive">
-                        <table class="table table-unbordered table-hover mt-1">
-                            <thead class="text-white" style="background: #3B3F5C">
+                        <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
+                            <thead class="text-white" style="background: #ee761c">
                                 <tr>
                                     <th class="table-th text-withe text-center">PLATAFORMA</th>
                                     <th class="table-th text-withe text-center">CUENTA</th>                                    

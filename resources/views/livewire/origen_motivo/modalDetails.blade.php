@@ -218,7 +218,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" wire:click.prevent="Asignar()" class="btn btn-dark close-btn text-info"
+                        <button type="button" wire:click.prevent="Asignar()" class="btn btn-warning close-btn text-info"
                             style="background: #3b3f5c">Terminar</button>
                     </div>
                 </div>

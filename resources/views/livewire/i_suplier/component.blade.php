@@ -7,7 +7,7 @@
                 </h4>
                 <ul class="tabs tab-pills">
                     
-                        <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
+                        <a href="javascript:void(0)" class="btn btn-warning" data-toggle="modal"
                         data-target="#theModal">Agregar Proveedor</a>
                     
                 </ul>
@@ -39,11 +39,11 @@
                                     
                                     <td class="text-center">
                                         <a href="javascript:void(0)" wire:click="Edit({{ $data->id }})"
-                                            class="btn btn-dark mtmobile" title="Edit">
+                                            class="btn btn-warning mtmobile" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         <a href="javascript:void(0)" onclick="Confirm('{{ $data->id }}','{{ $data->nombre }}')" 
-                                            class="btn btn-dark" title="Delete">
+                                            class="btn btn-warning" title="Delete">
                                             <i class="fas fa-trash"></i>
                                         </a>
                                     </td>

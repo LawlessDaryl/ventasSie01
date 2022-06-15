@@ -1,63 +1,106 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">
-    <title>Sistema SIE</title>
-     <link rel="icon" type="image/x-icon" href="assets/img/fav02.png" /> {{--Favicon --}}
-
-    @include('layouts.theme.styles')
-    <!-- END PAGE LEVEL PLUGINS/CUSTOM STYLES -->
-
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<title>Sistema SIE</title>
+	<meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
+	@include('layouts.theme.styles2')
 </head>
+<body>
+	<div class="wrapper">
+		
+    @include('layouts.theme.header2')
 
-<body class="sidebar-noneoverflow dashboard-sales">
-    <!-- BEGIN LOADER -->
-    <div id="load_screen">
-        <div class="loader">
-            <div class="loader-content">
-                <div class="spinner-grow align-self-center"></div>
-            </div>
-        </div>
-    </div>
-    <!--  END LOADER -->
+    @include('layouts.theme.sidebar2')
 
-    <!--  BEGIN NAVBAR  -->
+		<div class="main-panel">
+			<div class="content">
+				<div class="page-inner">
+					@yield('content')
+				</div>
+			</div>
+
+      @include('layouts.theme.footer2')
+		</div>
+		
+		<!-- Custom template | don't include it in your project! -->
+		<div class="custom-template">
+			<div class="title">Settings</div>
+			<div class="custom-content">
+				<div class="switcher">
+					<div class="switch-block">
+						<h4>Logo Header</h4>
+						<div class="btnSwitch">
+							<button type="button" class="changeLogoHeaderColor" data-color="dark"></button>
+							<button type="button" class="selected changeLogoHeaderColor" data-color="blue"></button>
+							<button type="button" class="changeLogoHeaderColor" data-color="purple"></button>
+							<button type="button" class="changeLogoHeaderColor" data-color="light-blue"></button>
+							<button type="button" class="changeLogoHeaderColor" data-color="green"></button>
+							<button type="button" class="changeLogoHeaderColor" data-color="orange"></button>
+							<button type="button" class="changeLogoHeaderColor" data-color="red"></button>
+							<button type="button" class="changeLogoHeaderColor" data-color="white"></button>
+							<br/>
+							<button type="button" class="changeLogoHeaderColor" data-color="dark2"></button>
+							<button type="button" class="changeLogoHeaderColor" data-color="blue2"></button>
+							<button type="button" class="changeLogoHeaderColor" data-color="purple2"></button>
+							<button type="button" class="changeLogoHeaderColor" data-color="light-blue2"></button>
+							<button type="button" class="changeLogoHeaderColor" data-color="green2"></button>
+							<button type="button" class="changeLogoHeaderColor" data-color="orange2"></button>
+							<button type="button" class="changeLogoHeaderColor" data-color="red2"></button>
+						</div>
+					</div>
+					<div class="switch-block">
+						<h4>Navbar Header</h4>
+						<div class="btnSwitch">
+							<button type="button" class="changeTopBarColor" data-color="dark"></button>
+							<button type="button" class="changeTopBarColor" data-color="blue"></button>
+							<button type="button" class="changeTopBarColor" data-color="purple"></button>
+							<button type="button" class="changeTopBarColor" data-color="light-blue"></button>
+							<button type="button" class="changeTopBarColor" data-color="green"></button>
+							<button type="button" class="changeTopBarColor" data-color="orange"></button>
+							<button type="button" class="changeTopBarColor" data-color="red"></button>
+							<button type="button" class="changeTopBarColor" data-color="white"></button>
+							<br/>
+							<button type="button" class="changeTopBarColor" data-color="dark2"></button>
+							<button type="button" class="selected changeTopBarColor" data-color="blue2"></button>
+							<button type="button" class="changeTopBarColor" data-color="purple2"></button>
+							<button type="button" class="changeTopBarColor" data-color="light-blue2"></button>
+							<button type="button" class="changeTopBarColor" data-color="green2"></button>
+							<button type="button" class="changeTopBarColor" data-color="orange2"></button>
+							<button type="button" class="changeTopBarColor" data-color="red2"></button>
+						</div>
+					</div>
+					<div class="switch-block">
+						<h4>Sidebar</h4>
+						<div class="btnSwitch">
+							<button type="button" class="selected changeSideBarColor" data-color="white"></button>
+							<button type="button" class="changeSideBarColor" data-color="dark"></button>
+							<button type="button" class="changeSideBarColor" data-color="dark2"></button>
+						</div>
+					</div>
+					<div class="switch-block">
+						<h4>Background</h4>
+						<div class="btnSwitch">
+							<button type="button" class="changeBackgroundColor" data-color="bg2"></button>
+							<button type="button" class="changeBackgroundColor selected" data-color="bg1"></button>
+							<button type="button" class="changeBackgroundColor" data-color="bg3"></button>
+							<button type="button" class="changeBackgroundColor" data-color="dark"></button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="custom-toggle">
+				<i class="flaticon-settings"></i>
+			</div>
+		</div>
+		<!-- End Custom template -->
+	</div>
 
 
-    <!--  BEGIN NAVBAR  -->
-    @include('layouts.theme.header')
-    <!--  END NAVBAR  -->
 
-    <!--  BEGIN MAIN CONTAINER  -->
-    <div class="main-container" id="container">
+  @include('layouts.theme.scripts2')
 
-        <div class="overlay"></div>
-        <div class="search-overlay"></div>
 
-        <!--  BEGIN SIDEBAR  -->
-        @include('layouts.theme.sidebar')
-        <!--  END SIDEBAR  -->
-
-        <!--  BEGIN CONTENT AREA  -->
-        <div id="content" class="main-content">
-            <div class="layout-px-spacing">
-                @yield('content')
-            </div>
-            
-            @include('layouts.theme.footer')
-        </div>
-        <!--  END CONTENT AREA  -->
-
-    </div>
-    <!-- END MAIN CONTAINER -->
-
-    <!-- BEGIN GLOBAL MANDATORY SCRIPTS -->
-    @include('layouts.theme.scripts')
-    <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM SCRIPTS -->
 
 </body>
-
 </html>

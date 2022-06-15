@@ -21,7 +21,7 @@
                     </div>
                 </div>
                 <div class="text-center">
-                    <a href="javascript:void(0)" class="btn btn-dark" wire:click.prevent="Modificar()">Modificar</a>
+                    <a href="javascript:void(0)" class="btn btn-warning" wire:click.prevent="Modificar()">Modificar</a>
                 </div>
             </div>
         </div>

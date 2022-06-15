@@ -7,7 +7,7 @@
                 </h4>
                 <ul class="tabs tab-pills">
 
-                    <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
+                    <a href="javascript:void(0)" class="btn btn-warning" data-toggle="modal"
                         data-target="#theModal">AGREGAR</a>
 
                 </ul>
@@ -16,8 +16,8 @@
 
             <div class="widget-content">
                 <div class="table-responsive">
-                    <table class="table table-unbordered table-hover mt-2">
-                        <thead class="text-white" style="background: #3B3F5C">
+                    <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
+                        <thead class="text-white" style="background: #ee761c">
                             <tr>
                                 <th class="table-th text-withe text-center">NOMBRE</th>
                                 <th class="table-th text-withe text-center">CATEGORÍA</th>
@@ -47,10 +47,10 @@
 
                                     <td class="text-center">
                                         <a href="javascript:void(0)" wire:click="Edit({{ $item->id }})"
-                                            class="btn btn-dark mtmobile" title="Edit">
+                                            class="btn btn-warning mtmobile" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <a href="javascript:void(0)" onclick="Confirm('{{ $item->id }}','{{ $item->name }}')" class="btn btn-dark" title="Delete">
+                                        <a href="javascript:void(0)" onclick="Confirm('{{ $item->id }}','{{ $item->name }}')" class="btn btn-warning" title="Delete">
                                             <i class="fas fa-trash"></i>
                                         </a>
                                     </td>

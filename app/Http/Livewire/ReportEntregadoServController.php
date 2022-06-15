@@ -48,7 +48,7 @@ class ReportEntregadoServController extends Component
         $this->sumaUtilidad = 0;
         $this->sumaUtilidadBanco = 0;
         $this->sumaUtilidadTotal = 0;
-        $this->sucursal = 0;
+        $this->sucursal = $this->idsucursal();
     }
 
     public function render()
@@ -66,6 +66,7 @@ class ReportEntregadoServController extends Component
                 $this->sucursal = $usersuc->sucursal->id;
             }
         } */
+
 
         $this->cajaSucursal = Caja::where('sucursal_id', $this->sucursal)
             ->where('nombre', '!=', 'Caja General')->get();
@@ -89,7 +90,8 @@ class ReportEntregadoServController extends Component
 
         $this->trsbydate();
 
-        if($this->sucursal == 0){
+        if($this->sucursal == 0)
+        {
             if ('Todos' == $this->caja) {
                 $totalEfectivo = Cartera::join('cajas as caj', 'caj.id', 'carteras.caja_id')
                     ->join('sucursals as s', 's.id', 'caj.sucursal_id')
@@ -119,7 +121,9 @@ class ReportEntregadoServController extends Component
                     ->get();
                 $this->sumaBanco = $totalBanco->sum('import');
             }
-        }else{
+        }
+        else
+        {
             if ('Todos' == $this->caja) {
                 $totalEfectivo = Cartera::join('cajas as caj', 'caj.id', 'carteras.caja_id')
                     ->join('sucursals as s', 's.id', 'caj.sucursal_id')
@@ -173,6 +177,16 @@ class ReportEntregadoServController extends Component
         
     }
 
+    public function idsucursal()
+    {
+        $idsucursal = User::join("sucursal_users as su","su.user_id","users.id")
+        ->select("su.sucursal_id as id","users.name as n")
+        ->where("users.id",Auth()->user()->id)
+        ->where("su.estado","ACTIVO")
+        ->get()
+        ->first();
+        return $idsucursal->id;
+    }
     public function trsbydate()
     {
 
@@ -190,8 +204,10 @@ class ReportEntregadoServController extends Component
             return;
         }
 
-        if($this->sucursal == 0){
-            if ($this->caja != 'Todos') {
+        if($this->sucursal == 0)
+        {
+            if ($this->caja != 'Todos')
+            {
                 $this->data = Service::join('mov_services as ms', 'services.id', 'ms.service_id')
                     ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
                     ->join('cartera_movs as cmv', 'cmv.movimiento_id', 'mov.id')
@@ -322,7 +338,9 @@ class ReportEntregadoServController extends Component
                 }
                 $this->sumaUtilidadTotal = $this->sumaUtilidadBanco +$this->sumaUtilidad;
     
-            } else {
+            }
+            else
+            {
                 $this->data = Service::join('mov_services as ms', 'services.id', 'ms.service_id')
                     ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
                     ->where('mov.status', 'ACTIVO')
@@ -336,6 +354,7 @@ class ReportEntregadoServController extends Component
                     ->whereBetween('mov.created_at', [$from, $to])
                     ->distinct()
                     ->get();
+                    //dd($this->data);
                     
                     foreach ($this->data as $serv) {
                         foreach ($serv->movservices as $mm) {
@@ -758,7 +777,7 @@ class ReportEntregadoServController extends Component
     }
 
     public function resetUI(){
-        $this->caja = 'Todos';
+        //$this->caja = 'Todos';
         
         $this->resetValidation();
     }

@@ -145,7 +145,7 @@
                                                             <td class="text-center">
                                                                 <a href="javascript:void(0)"
                                                                     wire:click="PrimerPerfil({{ $ap->id }})"
-                                                                    class="btn btn-dark mtmobile">
+                                                                    class="btn btn-warning mtmobile">
                                                                     <i class="fas fa-check"></i>
                                                                 </a>
                                                             </td>
@@ -248,7 +248,7 @@
                                                             <td class="text-center">
                                                                 <a href="javascript:void(0)"
                                                                     wire:click="SegundoPerfil({{ $c2->id }})"
-                                                                    class="btn btn-dark mtmobile">
+                                                                    class="btn btn-warning mtmobile">
                                                                     <i class="fas fa-check"></i>
                                                                 </a>
                                                             </td>
@@ -353,7 +353,7 @@
                                                             <td class="text-center">
                                                                 <a href="javascript:void(0)"
                                                                     wire:click="TercerPerfil({{ $c3->id }})"
-                                                                    class="btn btn-dark mtmobile">
+                                                                    class="btn btn-warning mtmobile">
                                                                     <i class="fas fa-check"></i>
                                                                 </a>
                                                             </td>
@@ -462,7 +462,7 @@
                                                                     <td class="text-center">
                                                                         <a href="javascript:void(0)"
                                                                             wire:click="Seleccionar('{{ $d->celular }}','{{ $d->nombre }}')"
-                                                                            class="btn btn-dark mtmobile"
+                                                                            class="btn btn-warning mtmobile"
                                                                             title="Seleccionar">
                                                                             <i class="fas fa-check"></i>
                                                                         </a>
@@ -534,7 +534,7 @@
                     <div class="col-sm-12 col-md-6">
                         <div class="form-group">
                             <button type="button" wire:click.prevent="venderCombo()"
-                                class="btn btn-dark close-btn text-info">VENDER</button>
+                                class="btn btn-warning close-btn text-info">VENDER</button>
                         </div>
                     </div>
 

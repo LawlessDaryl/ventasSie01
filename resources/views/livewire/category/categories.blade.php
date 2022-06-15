@@ -7,9 +7,9 @@
                 </h4>
                 <ul class="tabs tab-pills">
                    
-                    <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
+                    <a href="javascript:void(0)" class="btn btn-warning" data-toggle="modal"
                         data-target="#theModal">Agregar Categoria</a>
-                    <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
+                    <a href="javascript:void(0)" class="btn btn-warning" data-toggle="modal"
                         data-target="#theModal_s">Agregar Subcategoria</a>
                     
                 </ul>
@@ -42,16 +42,16 @@
                                    
                                     <td class="text-center">
                                         <a href="javascript:void(0)" wire:click="Edit({{ $category->id }})"
-                                            class="btn btn-dark mtmobile" title="Edit">
+                                            class="btn btn-warning mtmobile" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         <a href="javascript:void(0)" onclick="Confirm('{{ $category->id }}','{{ $category->name }}',
-                                            '{{ $category->products->count() }}')" class="btn btn-dark"
+                                            '{{ $category->products->count() }}')" class="btn btn-warning"
                                             title="Delete">
                                             <i class="fas fa-trash"></i>
                                         </a>
                                         <a href="javascript:void(0)" wire:click="Ver({{$category->id}})"
-                                            class="btn btn-dark mtmobile" title="Ver subcategorias">
+                                            class="btn btn-warning mtmobile" title="Ver subcategorias">
                                             <i class="fas fa-eye"></i>
                                            
                                         </a>

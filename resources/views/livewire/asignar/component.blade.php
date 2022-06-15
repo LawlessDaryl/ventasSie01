@@ -18,16 +18,16 @@
                         </select>
                     </div>
 
-                    <button wire:click.prevent="SyncAll()" type="button" class="btn btn-dark mbmobile inblock mr-5">Sincronizar todos</button>
-                    <button onclick="Revocar()" type="button" class="btn btn-dark mbmobile mr-5">Revocar todos</button>
+                    <button wire:click.prevent="SyncAll()" type="button" class="btn btn-warning">Sincronizar todos</button>
+                    <button onclick="Revocar()" type="button" class="btn btn-warning">Revocar todos</button>
                 </div>
 
 
                 <div class="row mt-3">
                     <div class="col-sm-12">
                         <div class="table-responsive">
-                            <table class="table table-unbordered table-hover mt-2">
-                                <thead class="text-white" style="background: #3B3F5C">
+                            <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
+                                <thead class="text-white" style="background: #ee761c">
                                     <tr>
                                         <th class="table-th text-withe text-center">ID</th>
                                         <th class="table-th text-withe text-center">PERMISO</th>
@@ -39,20 +39,42 @@
                                         <td>
                                             <h6 class="text-center">{{$permiso->id}}</h6>
                                         </td>
-                                        <td class="text-center">
-                                            <div class="n-chk">
-                                            <label class="new-control new-checkbox checkbox-primary">
-                                                <input type="checkbox" 
-                                                wire:change="SyncPermiso($('#p' + {{ $permiso->id 
+                                        <td class="">
+                                            <div class="row">
+
+                                                <div class="col-2 text-center">
+                                                    <label class="colorinput">
+                                                        <input name="color" type="checkbox" value="warning" class="colorinput-input"
+                                                         
+                                                    wire:change="SyncPermiso($('#p' + {{ $permiso->id 
                                                     }}).is(':checked'), '{{$permiso->name}}')"
                                                     id="p{{ $permiso->id }}"
                                                     value="{{ $permiso->id }}"
                                                 class="new-control-input" 
                                                 {{ $permiso->checked == 1 ? 'checked' : '' }}
-                                                >
-                                                <span class="new-control-indicator"></span>
-                                                <h6>{{ $permiso->name}}</h6>
-                                            </label>
+                                                        >
+                                                        <span class="colorinput-color bg-warning"></span>
+                                                    </label>
+                                                    
+    
+                                                {{-- <label class="new-control new-checkbox checkbox-primary">
+                                                    <input type="checkbox" 
+                                                    wire:change="SyncPermiso($('#p' + {{ $permiso->id 
+                                                        }}).is(':checked'), '{{$permiso->name}}')"
+                                                        id="p{{ $permiso->id }}"
+                                                        value="{{ $permiso->id }}"
+                                                    class="new-control-input" 
+                                                    {{ $permiso->checked == 1 ? 'checked' : '' }}
+                                                    >
+                                                    <span class="new-control-indicator"></span>
+                                                    <h6>{{ $permiso->name}}</h6>
+                                                </label> --}}
+                                                </div>
+                                                <div class="">
+                                                    {{ $permiso->name}}
+                                                </div>
+
+                                                
                                             </div>
                                         </td>
 

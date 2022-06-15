@@ -73,7 +73,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" wire:click.prevent="updateObserv()"
-                    class="btn btn-dark close-btn text-info">ACTUALIZAR</button>
+                    class="btn btn-warning close-btn text-info">ACTUALIZAR</button>
             </div>
         </div>
     </div>

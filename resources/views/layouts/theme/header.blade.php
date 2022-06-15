@@ -219,12 +219,12 @@
                         class="img-fluid">
                 </a>
                 <div class="dropdown-menu position-absolute animated fadeInUp" aria-labelledby="userProfileDropdown"">
-                    <div class="       user-profile-section" style="background: #ff7600;">
+                    <div class="       user-profile-section" style="background: #ee761c;">
                     <div class="media mx-auto">
                         <img src="{{ asset('storage/usuarios/' . auth()->user()->imagen) }}" class="img-fluid mr-2"
                             alt="avatar">
                         <div class="media-body">
-                            <h5>{{ auth()->user()->name }}</h5>
+                            <h4>{{ auth()->user()->name }}</h4>
                             <p>{{ auth()->user()->profile }}</p>
                             @foreach(auth()->user()->sucursalusers as $sucu)
                                 @if($sucu->estado == 'ACTIVO')

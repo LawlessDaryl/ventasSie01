@@ -29,7 +29,7 @@
 
                     <div class="col-sm-12 col-md-6">
                         <div class="form-group text-center mt-4">
-                            <a href="javascript:void(0)" class="btn btn-dark"
+                            <a href="javascript:void(0)" class="btn btn-warning"
                                 wire:click.prevent="Cambiar()" >CAMBIAR</a>
                         </div>
                     </div>
@@ -63,7 +63,7 @@
 
                         <tfoot>
                             <td class="text-right">
-                                <a href="javascript:void(0)" class="btn btn-dark"
+                                <a href="javascript:void(0)" class="btn btn-warning"
                                 wire:click.prevent="finalizar()" >DAR DE BAJA AL USUARIO</a>
                             </td>
                         </tfoot>

@@ -131,7 +131,7 @@
                                             {{ \Carbon\Carbon::parse($p->planfin)->format('d:m:Y') }} </h6>
                                     </td>
                                     <td class="text-center">
-                                        <button wire:click.prevent="viewDetails({{$p->id}})" class="btn btn-dark btn-sm">
+                                        <button wire:click.prevent="viewDetails({{$p->id}})" class="btn btn-warning btn-sm">
                                             <i class="fas fa-list"></i>
                                         </button>
                                     </td>
@@ -201,7 +201,7 @@
                                             {{ \Carbon\Carbon::parse($p->planfin)->format('d:m:Y') }} </h6>
                                     </td>
                                     <td class="text-center">
-                                        <button wire:click.prevent="viewDetails({{$p->id}})" class="btn btn-dark btn-sm">
+                                        <button wire:click.prevent="viewDetails({{$p->id}})" class="btn btn-warning btn-sm">
                                             <i class="fas fa-list"></i>
                                         </button>
                                     </td>

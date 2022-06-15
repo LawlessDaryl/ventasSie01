@@ -39,15 +39,15 @@
                     @endif
                     
                     
-                    {{-- <button onclick="Revocar()" type="button" class="btn btn-dark mbmobile mr-5">Revocar todos</button> --}}
+                    {{-- <button onclick="Revocar()" type="button" class="btn btn-warning mbmobile mr-5">Revocar todos</button> --}}
                 </div>
 
 
                 <div class="row mt-3">
                     <div class="col-sm-12">
                         <div class="table-responsive">
-                            <table class="table table-unbordered table-hover mt-2">
-                                <thead class="text-white" style="background: #3B3F5C">
+                            <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
+                                <thead class="text-white" style="background: #ee761c">
                                     <tr>
                                         <th class="table-th text-withe">NOMBRE COMISION</th>
                                         <th class="table-th text-withe text-center">M INICIAL</th>

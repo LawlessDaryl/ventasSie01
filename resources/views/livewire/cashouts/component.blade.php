@@ -45,11 +45,11 @@
 
                     <div class="col-sm-12 col-md-3 align-self-center d-flex justify-content-around">
                         @if($userid > 0 && $fromDate != null && $toDate != null)
-                        <button wire:click.prevent="Consultar()" type="button" class="btn btn-dark">Consultar</button>
+                        <button wire:click.prevent="Consultar()" type="button" class="btn btn-warning">Consultar</button>
                         @endif
 
                         @if($total > 0)
-                        <button wire:click.prevent="Print()" type="button" class="btn btn-dark">Imprimir</button>
+                        <button wire:click.prevent="Print()" type="button" class="btn btn-warning">Imprimir</button>
                         @endif
                     </div>
                 </div>
@@ -92,7 +92,7 @@
                                     <td class="text-center"><h6>{{$row->items}}</h6></td>
                                     <td class="text-center"><h6>{{$row->created_at}}</h6></td>
                                     <td class="text-center">
-                                        <button wire:click.prevent="viewDetails({{$row}})" class="btn btn-dark btn-sm">
+                                        <button wire:click.prevent="viewDetails({{$row}})" class="btn btn-warning btn-sm">
                                             <i class="fas fa-list"></i>
                                         </button>
                                     </td>

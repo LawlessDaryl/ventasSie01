@@ -65,7 +65,7 @@
 
                 </div>
                 <div>
-                    <a href="javascript:void(0)" class="btn btn-dark" wire:click.prevent="Generar()">Generar</a>
+                    <a href="javascript:void(0)" class="btn btn-warning" wire:click.prevent="Generar()">Generar</a>
                 </div>
 
             </div>

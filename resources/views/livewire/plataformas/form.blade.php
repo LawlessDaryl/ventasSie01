@@ -112,21 +112,21 @@
                         </div>
                     </div>
                     {{-- <a href="javascript:void(0)" wire:click="$set('status','Elegir')"
-                        class="btn btn-dark mtmobile" title="Edit">
+                        class="btn btn-warning mtmobile" title="Edit">
                         <i class="fas fa-edit"></i>
                     </a> --}}
                 </div>
 
             </div>
             <div class="modal-footer">
-                <button type="button" wire:click.prevent="resetUI()" class="btn btn-dark close-btn text-info"
+                <button type="button" wire:click.prevent="resetUI()" class="btn btn-warning close-btn text-info"
                     data-dismiss="modal" style="background: #3b3f5c">CANCELAR</button>
                 @if ($selected_id < 1)
                     <button type="button" wire:click.prevent="Store()" wire:loading.attr="disabled"
-                        wire:target="image, Store" class="btn btn-dark close-btn text-info">GUARDAR</button>
+                        wire:target="image, Store" class="btn btn-warning close-btn text-info">GUARDAR</button>
                 @else
                     <button type="button" wire:click.prevent="Update()"
-                        class="btn btn-dark close-btn text-info">ACTUALIZAR</button>
+                        class="btn btn-warning close-btn text-info">ACTUALIZAR</button>
                 @endif
             </div>
         </div>

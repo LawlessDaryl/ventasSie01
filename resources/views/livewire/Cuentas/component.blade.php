@@ -6,7 +6,7 @@
                     <b>{{ $componentName }} | {{ $pageTitle }}</b>
                 </h4>
                 <ul class="tabs tab-pills">
-                    <a href="javascript:void(0)" class="btn btn-dark" wire:click="Agregar()">Agregar</a>
+                    <a href="javascript:void(0)" class="btn btn-warning" wire:click="Agregar()">Agregar</a>
                 </ul>
             </div>
             <div class="row">
@@ -109,8 +109,8 @@
             @if ($condicional == 'cuentas' || $condicional == 'inhabilitadas')
                 <div class="widget-content">
                     <div class="table-responsive">
-                        <table class="table table-unbordered table-hover mt-2">
-                            <thead class="text-white" style="background: #3B3F5C">
+                        <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
+                            <thead class="text-white" style="background: #ee761c">
                                 <tr>
                                     <th class="table-th text-withe text-center">PLATAFORMA Y PROVEEDOR</th>
                                     <th class="table-th text-withe text-center">GMAIL O NOMBRE-USUARIO</th>
@@ -143,7 +143,7 @@
                                             <td class="text-center" style="background-color: #09ed3d !important">
                                                 <a href="javascript:void(0)"
                                                     wire:click="mostrarRenovar({{ $acounts->id }})"
-                                                    class="btn btn-primary" title="Renovar">
+                                                    class="btn btn-warning" title="Renovar">
                                                     {{ \Carbon\Carbon::parse($acounts->expiration_account)->format('d/m/Y') }}
                                                 </a>
                                             </td>
@@ -151,7 +151,7 @@
                                             <td class="text-center" style="background-color: #f1dc08 !important">
                                                 <a href="javascript:void(0)"
                                                     wire:click="mostrarRenovar({{ $acounts->id }})"
-                                                    class="btn btn-primary" title="Renovar">
+                                                    class="btn btn-warning" title="Renovar">
                                                     {{ \Carbon\Carbon::parse($acounts->expiration_account)->format('d/m/Y') }}
                                                 </a>
                                             </td>
@@ -159,7 +159,7 @@
                                             <td class="text-center" style="background-color: #FF0000 !important">
                                                 <a href="javascript:void(0)"
                                                     wire:click="mostrarRenovar({{ $acounts->id }})"
-                                                    class="btn btn-primary" title="Renovar">
+                                                    class="btn btn-warning" title="Renovar">
                                                     {{ \Carbon\Carbon::parse($acounts->expiration_account)->format('d/m/Y') }}
                                                 </a>
                                             </td>
@@ -179,18 +179,18 @@
                                             </td>
                                             <td class="text-center">
                                                 <a href="javascript:void(0)" wire:click="Crear({{ $acounts->id }})"
-                                                    class="btn btn-dark mtmobile" title="Ver Perfiles">
-                                                    <i class="fa-solid fa-user-gear"></i>
+                                                    class="btn btn-warning" title="Ver Perfiles">
+                                                    <i class="fa fas fa-chalkboard-teacher"></i>
                                                 </a>
                                                 <a href="javascript:void(0)" wire:click="Edit({{ $acounts->id }})"
-                                                    class="btn btn-dark mtmobile" title="Editar Cuenta">
+                                                    class="btn btn-warning" title="Editar Cuenta">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
                                                 @if ($acounts->dias <= 3)
                                                     <a href="javascript:void(0)"
                                                         onclick="ConfirmarInhabilitar('{{ $acounts->id }}','{{ $acounts->perfOcupados }}')"
-                                                        class="btn btn-dark mtmobile" title="Inhabilitar">
-                                                        <i class="fa-regular fa-trash-can"></i>
+                                                        class="btn btn-warning" title="Inhabilitar">
+                                                        <i class="fas fa-trash"></i>
                                                     </a>
                                                 @endif
                                             </td>
@@ -205,8 +205,8 @@
             @else
                 <div class="widget-content">
                     <div class="table-responsive">
-                        <table class="table table-unbordered table-hover mt-2">
-                            <thead class="text-white" style="background: #3B3F5C">
+                        <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
+                            <thead class="text-white" style="background: #ee761c">
                                 <tr>
                                     <th class="table-th text-withe text-center">PLATAFORMA Y PROVEEDOR</th>
                                     <th class="table-th text-withe text-center">CLIENTE</th>
@@ -252,7 +252,7 @@
                                             @if ($condicional == 'ocupados')
                                                 <a href="javascript:void(0)"
                                                     wire:click="mostrarRenovar({{ $acounts->id }})"
-                                                    class="btn btn-primary" title="Renovar">
+                                                    class="btn btn-warning" title="Renovar">
                                                     {{ \Carbon\Carbon::parse($acounts->expiration_account)->format('d/m/Y') }}
                                                 </a>
                                             @else
@@ -283,24 +283,24 @@
                                             @if ($acounts->plan_status == 'VIGENTE')
                                                 <a href="javascript:void(0)"
                                                     wire:click="Acciones({{ $acounts->planid }})"
-                                                    class="btn btn-dark mtmobile" title="Renovación">
-                                                    <i class="fa-regular fa-calendar-check"></i>
+                                                    class="btn btn-warning" title="Renovación">
+                                                    <i class="fa fas fa-file-signature"></i>
                                                 </a>
                                             @endif
                                             <a href="javascript:void(0)" wire:click="Edit({{ $acounts->id }})"
-                                                class="btn btn-dark mtmobile" title="Editar">
+                                                class="btn btn-warning" title="Editar">
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                             <a href="javascript:void(0)"
                                                 wire:click="EditObservaciones({{ $acounts->planid }})"
-                                                class="btn btn-dark mtmobile" title="Observaciones">
-                                                <i class="fa-solid fa-align-left"></i>
+                                                class="btn btn-warning" title="Observaciones">
+                                                <i class="fa fas fa-eye"></i>
                                             </a>
                                         </td>
                                         <td
                                             style="{{ $acounts->done == 'NO' ? 'background-color: #d97171 !important' : 'background-color: #09ed3d !important' }}">
                                             @if ($acounts->done == 'NO')
-                                                <a href="javascript:void(0)" class="btn btn-dark"
+                                                <a href="javascript:void(0)" class="btn btn-warning"
                                                     onclick="ConfirmHecho('{{ $acounts->planid }}')">
                                                     <i class="fa-regular fa-circle-exclamation"></i>
                                                 </a>

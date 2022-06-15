@@ -37,18 +37,18 @@
                                     <ul class="tabs tab-pills text-center mt-2">
                                         @if ($item->estado == 'Cerrado')
                                             <a href="javascript:void(0)"
-                                                class="btn btn-dark {{ session('sesionCaja') != null ? 'disabled' : '' }}"
+                                                class="btn btn-warning {{ session('sesionCaja') != null ? 'disabled' : '' }}"
                                                 wire:click.prevent="getDetails({{ $item->id }})">VER
                                                 CAJA</a>
                                         @else
                                             <a href="javascript:void(0)"
-                                                class="btn btn-dark {{ $item->AbiertaPorUsuario != auth()->user()->id ? 'disabled' : '' }}"
+                                                class="btn btn-warning {{ $item->AbiertaPorUsuario != auth()->user()->id ? 'disabled' : '' }}"
                                                 wire:click.prevent="getDetails({{ $item->id }})">VER
                                                 CAJA</a>
                                         @endif
                                         @if ($item->estado != 'Cerrado')
                                             @if ($item->AbiertaPorUsuario != auth()->user()->id)
-                                                <a href="javascript:void(0)" class="btn btn-dark"
+                                                <a href="javascript:void(0)" class="btn btn-warning"
                                                     wire:click.prevent="CerrarCajaDelUsuario({{ $item->id }},{{ $item->AbiertaPorUsuario }})">CERRAR
                                                     LA CAJA DEL
                                                     USUARIO</a>
