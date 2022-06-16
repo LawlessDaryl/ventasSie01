@@ -12,7 +12,7 @@
             <div class="row text-center">
                             
                 <div class="col-lg-10 col-md-12 col-sm-12">
-                   <h3>Lista de Ventas</h3>
+                   <h2>Lista de Ventas</h2>
                 </div>
 
 
@@ -36,7 +36,7 @@
 
 
             <div class="table-responsive mb-4 mt-4">
-                <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
+                <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4" style="min-width: 1500px;">
                     <thead class="text-white" style="background: #ee761c">
                         <tr>
                             <th class="table-th text-withe text-center">No</th>
@@ -48,48 +48,45 @@
                             <th class="table-th text-withe text-center">Observación</th>
                             <th class="table-th text-withe text-center">Fecha</th>
                             <th>Estado</th>
-                            <th class="table-th text-withe text-center">Detalles</th>
-                            @if($this->verificarpermiso())
-                            <th class="table-th text-withe text-center" width="50px"> Acciònes</th>
-                            @endif
-                            <th class="table-th text-withe text-center">Comprobante</th>
+                            <th class="table-th text-withe text-center"> Acciònes</th>
                         </tr>
                     </thead>
                     <tbody>
                             @foreach ($data as $d)
                             <tr>
-                                <td style="padding: 0%" class="table-th text-withe text-center">
-                                    <h6>{{$loop->iteration}}</h6>
+                                <td class="table-th text-withe text-center">
+                                    {{$loop->iteration}}
                                 </td>
-                                <td style="padding: 0%" class="table-th text-withe text-center">
-                                    
-                                    <p>Ci:{{ $d->ci }}</p>
-                                    <h6>{{ $d->rz }}</h6>
-                                    <p>Celular:{{ $d->celular }}</p>
+                                <td class="table-th text-withe text-center">
+                                    Ci:{{ $d->ci }}
+                                    <br>
+                                    <b>{{ $d->rz }}</b>
+                                    <br>
+                                    Celular:{{ $d->celular }}
                                 </td>
-                                <td style="padding: 0%" class="table-th text-withe text-right">
-                                    <p>Descuento Bs {{number_format( $this->totaldescuento($d->id), 2) }}</p>
-                                    <h6><b>Total Bs {{number_format( $d->totalbs - $d->cambio, 2) }}</b></h6>
-                                    <p>Cambio Bs {{number_format( $d->cambio, 2) }}</p>
+                                <td class="table-th text-withe text-right">
+                                    Descuento Bs {{number_format( $this->totaldescuento($d->id), 2) }}
+                                    <br>
+                                    <b>Total Bs {{number_format( $d->totalbs - $d->cambio, 2) }}</b>
+                                    <br>
+                                    Cambio Bs {{number_format( $d->cambio, 2) }}
                                 </td>
-                                <td style="padding: 0%" class="table-th text-withe text-center">
-                                    <h6>{{ $d->user }}</h6>
+                                <td class="table-th text-withe text-center">
+                                    {{ $d->user }}
                                 </td>
-                                <td style="padding: 0%" class="table-th text-withe text-center">
-                                    <h6>{{ $d->tipopago }}</h6>
+                                <td class="table-th text-withe text-center">
+                                    {{ $d->tipopago }}
                                 </td>
-                                <td style="padding: 0%" class="table-th text-withe text-center">
-                                    <h6>{{ $d->factura }}</h6>
+                                <td class="table-th text-withe text-center">
+                                    {{ $d->factura }}
                                 </td>
-                                <td style="padding: 0%" class="table-th text-withe text-center">
-                                    <h6>{{ $d->obs }}</h6>
+                                <td class="table-th text-withe text-center">
+                                    {{ $d->obs }}
                                 </td>
-                                <td style="padding: 0%" class="table-th text-withe text-center">
-                                    <h6>
-                                        {{\Carbon\Carbon::parse($d->fecha)->format('d-m-Y')}}
-                                        <br>
-                                        {{\Carbon\Carbon::parse($d->fecha)->format('h:i:s a')}}
-                                    </h6>
+                                <td class="table-th text-withe text-center">
+                                    {{\Carbon\Carbon::parse($d->fecha)->format('d-m-Y')}}
+                                    <br>
+                                    {{\Carbon\Carbon::parse($d->fecha)->format('h:i:s a')}}
                                 </td>
                                 @if($d->status == 'CANCELED')
                                 <td>
@@ -104,35 +101,23 @@
                                     </div>
                                 </td>
                                 @endif
-                                <td style="padding: 0%"  class="table-th text-withe text-center">
-                                      <div class="btn-group" role="group" aria-label="Basic example">
-                                        <button wire:click="cambiaridventa({{ $d->id }})" type="button" class="btn btn-secondary" style="background-color: rgb(12, 100, 194)">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-                                        </button>
-                                      </div>
-                                </td>
-                                @if($this->verificarpermiso())
-                                <td style="padding: 0%"  class="table-th text-withe text-center">
+                                <td class="text-center">
                                     <div class="btn-group" role="group" aria-label="Basic example">
-                                        @if($d->status != 'CANCELED')
-                                        <button wire:click="mostraranularmodal({{$d->id}})" title="Anular Venta" type="button" class="btn btn-secondary" style="background-color: crimson">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x-circle"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
-                                        Anular
+                                        <button wire:click="cambiaridventa({{ $d->id }})" class="btn btn-warning" title="Ver detalles de la venta">
+                                            <i class="fas fa-bars"></i>
                                         </button>
-                                        {{-- <button title="Modificar Usuario Vendedor" type="button" class="btn btn-secondary" style="background-color: dodgerblue">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                                        </button> --}}
+                                        @if($this->verificarpermiso())
+                                            @if($d->status != 'CANCELED')
+                                                <button wire:click="mostraranularmodal({{$d->id}})" class="btn btn-warning" title="Anular Venta">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            @endif
                                         @endif
-                                    </div>
-                                </td>
-                                <td style="padding: 0%"  class="table-th text-withe text-center">
-                                    <div class="btn-group" role="group" aria-label="Basic example">
-                                        <button wire:click="crearcomprobante({{$d->id}})" title="Crear PDF" type="button" class="btn btn-primary" style="background-color: crimson">
-                                            Mostrar Comprobante
+                                        <button wire:click="crearcomprobante({{$d->id}})" class="btn btn-warning" title="Crear Comprobante">
+                                            <i class="fas fa-print"></i>
                                         </button>
                                     </div>
                                 </td>
-                                @endif
                             </tr>
                             @endforeach
                     </tbody>
