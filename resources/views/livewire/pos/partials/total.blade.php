@@ -6,22 +6,16 @@
 
                 <blockquote style="border-left: 2px solid #EE761C !important; background-color: #f8f5f2" class="blockquote media-object">
                     <div class="row">
-
-                        
-
-
                         
                             <div class="col-12 col-md-3 col-lg-2">
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                         <strong>Cliente Anònimo</strong>
                                             <br>
-                                            <label class="switch s-icons s-outline  s-outline-primary  mb-4 mr-2">
-                                                {{-- <input type="checkbox" wire:model.lazy="clienteanonimo" checked> --}}
-                                                <input type="checkbox" wire:click="clienteanonimo()" checked wire:model="clienteanonimo">
-                                                <span class="slider round"></span>
+                                            <label class="colorinput">
+                                                <input type="checkbox" wire:click="clienteanonimo()" checked wire:model="clienteanonimo" class="colorinput-input">
+                                                <span class="colorinput-color bg-warning"></span>
                                             </label>
-                                            
                                     
                                     </div>
                                 </div>
@@ -33,18 +27,15 @@
                                 <div class="col-lg-12">
                                     <strong>Venta con Factura</strong>
                                     <br>
-                                        <label class="switch s-icons s-outline  s-outline-primary  mb-4 mr-2">
-                                            <input id="factura" type="checkbox" wire:model="factura">
-                                            <span class="slider round"></span>
+                                        <label class="colorinput">
+                                            <input id="factura" type="checkbox" wire:model="factura" class="colorinput-input">
+                                            <span class="colorinput-color bg-warning"></span>
                                         </label>
                                 </div>
     
                             </div>
                         
                             <div class="col-12 col-md-3 col-lg-2">
-                                
-                                
-
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                     <strong>Tipo de Pago</strong>

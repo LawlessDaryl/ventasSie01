@@ -4,7 +4,7 @@
 				<div class="sidebar-content">
 					<div class="user">
 						<div class="avatar-sm float-left mr-2">
-							<img src="assets/img/profile.jpg" alt="..." class="avatar-img rounded-circle">
+							<img src="{{ asset('storage/usuarios/' . auth()->user()->imagen) }}" alt="..." class="avatar-img rounded-circle">
 						</div>
 						<div class="info">
 							<a data-toggle="collapse" href="#collapseExample" aria-expanded="true">
@@ -523,7 +523,7 @@
 
 						<li class="nav-item">
 							<a data-toggle="collapse" href="#charts">
-								<i class="far fa-chart-bar"></i>
+								<img src="assets/img/inventarios.png" width="25" height="35" alt="navbar brand" class="navbar-brand">
 								<p>Inventarios</p>
 								<span class="caret"></span>
 							</a>
@@ -565,7 +565,7 @@
 
 						<li class="nav-item">
 							<a data-toggle="collapse" href="#charts2">
-								<i class="far fa-chart-bar"></i>
+								<img src="assets/img/parametros.png" width="25" height="35" alt="navbar brand" class="navbar-brand">
 								<p>Parámetros</p>
 								<span class="caret"></span>
 							</a>
@@ -613,7 +613,7 @@
 
 						<li class="nav-item">
 							<a data-toggle="collapse" href="#submenu">
-								<i class="fas fa-bars"></i>
+								<img src="assets/img/ventas.png" width="25" height="35" alt="navbar brand" class="navbar-brand">
 								<p>Ventas</p>
 								<span class="caret"></span>
 							</a>
@@ -697,7 +697,15 @@
 							</div>
 						</li>
 						<li class="mx-4 mt-2">
-							<a href="http://themekita.com/atlantis-bootstrap-dashboard.html" style="background-color: #ee761c!important;" class="btn btn-primary btn-block"><span class="btn-label mr-2"> <i class="fa icon-logout"></i> </span>Cerrar Sesión</a> 
+								<a style="background-color: #ee761c!important;" class="btn btn-primary btn-block" href="{{ route('logout') }}"
+									onclick="event.preventDefault(); document.getElementById('logout-form').submit()">
+									<span class="btn-label mr-2">
+										<i class="fa icon-logout"></i> 
+									   </span>Cerrar Sesión
+								</a>
+								<form action="{{ route('logout') }}" method="POST" id="logout-form">
+								@csrf
+								</form>
 						</li>
 					</ul>
 				</div>

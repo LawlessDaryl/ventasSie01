@@ -10,8 +10,8 @@
             <div class="modal-body">
                 
 
-                  <table>
-                    <thead class="titulos">
+                <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
+                    <thead class="text-white" style="background: #ee761c">
                       <tr>
                         <th>No</th>
                         <th>Imagen</th>

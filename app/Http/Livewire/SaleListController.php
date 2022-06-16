@@ -213,8 +213,6 @@ class SaleListController extends Component
     //Anular una Venta
     public function anularventa()
     {
-
-
         // Creando Movimiento
         $Movimiento = Movimiento::create([
             'type' => "ANULARVENTA",
@@ -240,8 +238,7 @@ class SaleListController extends Component
         if ($this->obtenertipopago() == 'EFECTIVO')
         {
             //Tipo de Pago en la Venta
-            $cartera = Cartera::where('tipo', 'cajafisica')
-            ->where('caja_id', $cajausuario->id)->get()->first();
+            $cartera = Cartera::where('caja_id', $cajausuario->id)->get()->first();
         }
         else
         {

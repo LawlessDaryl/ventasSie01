@@ -375,18 +375,31 @@ class PosController extends Component
                 //Si no hay stock del producto en la sucursal se buscara en todas las demas sucursales
                 if($this->buscarxproductosucursal($idproducto)->count() > 0)
                 {
-                    dd($this->buscarxproductosucursal($idproducto));
+                    $this->listasucursales = $this->buscarxproductosucursal($idproducto);
 
+                    $this->nombrestockproducto = $product->name;
+
+
+                    
+                    //Poner el Id del producto con 0 stock en la variable global $idproductoalmacen
+                    //Para que sea usada por el metodo buscarstocksucursal($idsucursal)
+                    $this->idproductoalmacen = $idproducto;
+
+
+                    //Llamamos al modal donde se listarán todas las sucursales
+                    //en donde aún quedan stock disponibles
+                    $this->emit('modal-stocksucursales');
+                    return;
                 }
                 else
                 {
-                    dd($this->buscarxproductosucursal($idproducto));
                     //Si no hay stock en la propia sucursal y en otras sucursales se mostrará el siguiente mensaje
                     $this->emit('no-stock', 'stock insuficiente en TIENDA y TODOS LAS SUCURSALES DISPONIBLESS');
                     return;
                 } 
             }
         }
+
         Cart::add(
             $product->id,
             $product->name,
@@ -449,7 +462,6 @@ class PosController extends Component
 
                     //$this->tipodestino = $this->buscarxproducto($productId)->first()->id;
 
-                    //dd($this->listardestinos);
                     //$this->stockalmacen = $this->numstock($productId, $this->tipodestino);
 
 
@@ -637,7 +649,6 @@ class PosController extends Component
                 //Si no hay stock de un Producto en Tienda
             if ($product->stock < $cant)
             {
-                //dd($product->stock." < ".($exist->quantity));
                 //Buscamos el Producto en la sucursal menos en la Tienda
                 if($this->buscarxproducto($productId)->count() > 0)
                 {
@@ -657,7 +668,6 @@ class PosController extends Component
 
                     //$this->tipodestino = $this->buscarxproducto($productId)->first()->id;
 
-                    //dd($this->listardestinos);
                     //$this->stockalmacen = $this->numstock($productId, $this->tipodestino);
 
 
@@ -1282,7 +1292,6 @@ class PosController extends Component
 
                     //$this->tipodestino = $this->buscarxproducto($productId)->first()->id;
 
-                    //dd($this->listardestinos);
                     //$this->stockalmacen = $this->numstock($productId, $this->tipodestino);
 
 

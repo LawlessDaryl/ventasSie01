@@ -33,8 +33,8 @@
                         <div class="statbox widget box box-shadow">
                             <div class="widget-content widget-content-area row">
                                 <div class="table-responsive table-wrapper-scroll-y my-custom-scrollbar">
-                                    <table class="table table-hover table-sm" style="width:100%">
-                                        <thead class="text-white" style="background: #3B3F5C">
+                                    <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
+                                        <thead class="text-white" style="background: #ee761c">
                                             <tr>
                                                 <th class="table-th text-withe text-center">NIT</th>
                                                 <th class="table-th text-withe text-center">Razón Social</th>
@@ -57,7 +57,7 @@
                                                     <td class="text-center">
                                                         <a href="javascript:void(0)"
                                                             wire:click="llenardatoscliente({{ $n->id }})"
-                                                            class="btn btn-dark mtmobile" title="Seleccionar">
+                                                            class="btn btn-warning" title="Seleccionar">
                                                             <i class="fas fa-check"></i>
                                                         </a>
                                                     </td>

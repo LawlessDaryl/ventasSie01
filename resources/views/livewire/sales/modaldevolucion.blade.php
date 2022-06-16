@@ -54,8 +54,8 @@
     
                         <div class="table-responsive table-wrapper-scroll-y my-custom-scrollbar">
 
-                            <table class="table table-bordered table-striped mt-1">
-                                <thead class="text-white" style="background: #3b3f5c ">
+                            <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
+                                <thead class="text-white" style="background: #ee761c">
                                     <tr>
                                         <th class="table-th text-center text-white">IMAGEN</th>
                                         <th class="table-th text-left text-white">DESCRIPCIóN</th>

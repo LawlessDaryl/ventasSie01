@@ -1,58 +1,5 @@
 @section('css')
 
-<!-- BEGIN PAGE LEVEL STYLES -->
-<link rel="stylesheet" type="text/css" href="plugins/table/datatable/datatables.css">
-<link rel="stylesheet" type="text/css" href="plugins/table/datatable/dt-global_style.css">
-<!-- END PAGE LEVEL STYLES -->
-
-
-
-{{-- Modal --}}
-
-<style>
-    /* Estilos de etiqueta*/
-
-
-table {
-  background: white;
-  width: 100%;
-  margin: 0 auto;
-  margin-top: 2%;
-  border-collapse: collapse;
-  text-align: center;
-}
-
-/*Pseudo-clases*/
-.titulos {
-  background-color: orange;
-  color: black;
-}
-
-tr:hover {
-  background-color: skyblue;
-}
-tr {
-  color: black;
-}
-
-/* Estililos de clases*/
-
-.Cabecera {
-  background-color: white;
-  border-radius: 4px;
-  height: 30px;
-  padding: 2em;
-  margin: 0 25%;
-  text-align: center;
-  color: white;
-}
-
-a{
-  text-decoration: none;
-  color: white;
-  font-size: 14pt;
-}
-</style>
 
 @endsection
 
@@ -89,8 +36,8 @@ a{
 
 
             <div class="table-responsive mb-4 mt-4">
-                <table id="zero-config" class="table table-hover" style="width:100%">
-                    <thead>
+                <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
+                    <thead class="text-white" style="background: #ee761c">
                         <tr>
                             <th class="table-th text-withe text-center">No</th>
                             <th class="table-th text-withe text-center">Cliente</th>

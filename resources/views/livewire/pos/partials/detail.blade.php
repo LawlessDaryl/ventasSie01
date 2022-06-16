@@ -4,8 +4,8 @@
     <div class="table-responsive table-wrapper-scroll-y">
         {{-- <div class="table-responsive table-wrapper-scroll-y my-custom-scrollbar"> --}}
 
-        <table class="table table-bordered table-striped mt-1">
-            <thead class="text-white" style="background: #3b3f5c ">
+            <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
+                <thead class="text-white" style="background: #ee761c">
                 <tr>
                     <th class="table-th text-left text-white">IMAGEN</th>
                     <th class="table-th text-left text-white">DESCRIPCIóN</th>
@@ -62,16 +62,23 @@
 
                         {{-- Acciones --}}
                         <td class="text-center">
-                            <button onclick="Confirm('{{ $item->id }}','removeItem','¿Confirmas Eliminar el Registro?')" class="btn btn-dark mbmobile">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                            <button wire:click.prevent="decreaseQty({{ $item->id }})" class="btn btn-dark mbmobile">
-                                <i class="fas fa-minus"></i>
-                            </button>
 
-                            <button wire:click.prevent="increaseQty({{ $item->id }})" class="btn btn-dark mbmobile">
-                                <i class="fas fa-plus"></i>
-                            </button>
+
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                                <button onclick="Confirm('{{ $item->id }}','removeItem','¿Confirmas Eliminar el Registro?')" class="btn btn-warning btn-sm">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                                <button wire:click.prevent="decreaseQty({{ $item->id }})" class="btn btn-warning btn-sm">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+    
+                                <button wire:click.prevent="increaseQty({{ $item->id }})" class="btn btn-warning btn-sm">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+
+
+                            
                         </td>
                     </tr>
                 @endforeach
