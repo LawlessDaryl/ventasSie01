@@ -199,20 +199,21 @@ class SaleListController extends Component
         try
         {
             $venta = Sale::find($this->idventa);
-            return $venta->tipopago;
+
+            $cartera = Cartera::find($venta->cartera_id);
+
+            return $cartera->nombre. " - ".$cartera->descripcion;
         }
         catch (Exception $e)
         {
             
         }
-
-
-
         
     }
     //Anular una Venta
     public function anularventa()
     {
+        //dd($this->idventa);
         // Creando Movimiento
         $Movimiento = Movimiento::create([
             'type' => "ANULARVENTA",
@@ -220,42 +221,14 @@ class SaleListController extends Component
             'user_id' => Auth()->user()->id,
         ]);
 
-
-        /* Caja en la cual se encuentra el usuario */
-        $cajausuario = Caja::join('sucursals as s', 's.id', 'cajas.sucursal_id')
-        ->join('sucursal_users as su', 'su.sucursal_id', 's.id')
-        ->join('carteras as car', 'cajas.id', 'car.caja_id')
-        ->join('cartera_movs as cartmovs', 'car.id', 'cartmovs.cartera_id')
-        ->join('movimientos as mov', 'mov.id', 'cartmovs.movimiento_id')
-        ->where('mov.user_id', Auth()->user()->id)
-        ->where('mov.status', 'ACTIVO')
-        ->where('mov.type', 'APERTURA')
-        ->select('cajas.id as id')
-        ->get()->first();
-
-
-
-        if ($this->obtenertipopago() == 'EFECTIVO')
-        {
-            //Tipo de Pago en la Venta
-            $cartera = Cartera::where('caja_id', $cajausuario->id)->get()->first();
-        }
-        else
-        {
-            //Tipo de Pago en la Venta
-            $cartera = Cartera::where('tipo', $this->obtenertipopago())
-            ->where('caja_id', $cajausuario->id)->get()->first();
-        }
-
-        
-
-
+        //Obteniendo Información de la Venta
+        $venta = Sale::find($this->idventa);
 
         // Creando Cartera Movimiento
         CarteraMov::create([
             'type' => "EGRESO",
             'comentario' => "Por Venta Anulada",
-            'cartera_id' => $cartera->id,
+            'cartera_id' => $venta->cartera_id,
             'movimiento_id' => $Movimiento->id,
         ]);
 

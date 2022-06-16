@@ -10,7 +10,7 @@
             <div class="modal-body">
                 
 
-                <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
+                <table class="estilostable">
                     <thead class="text-white" style="background: #ee761c">
                       <tr>
                         <th>No</th>
@@ -26,7 +26,7 @@
                     
                     <tbody>
                         @foreach ($listadetalles as $dv)
-                        <tr>
+                        <tr class="estilostr">
                             <td class="table-th text-withe text-center">
                                 {{$loop->iteration}}
                             </td>

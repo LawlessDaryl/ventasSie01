@@ -1,5 +1,41 @@
 @section('css')
 
+<style>
+
+.estilostable {
+  background: white;
+  width: 100%;
+  margin: 0 auto;
+  margin-top: 2%;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+.estilostr:hover {
+  background-color: skyblue;
+}
+.estilostr {
+  color: black;
+}
+
+/* Estililos de clases*/
+
+.Cabecera {
+  background-color: white;
+  border-radius: 4px;
+  height: 30px;
+  padding: 2em;
+  margin: 0 25%;
+  text-align: center;
+  color: white;
+}
+
+.estilosa{
+  text-decoration: none;
+  color: white;
+  font-size: 14pt;
+}
+</style>
 
 @endsection
 
@@ -47,7 +83,7 @@
                             <th class="table-th text-withe text-center">¿Factura?</th>
                             <th class="table-th text-withe text-center">Observación</th>
                             <th class="table-th text-withe text-center">Fecha</th>
-                            <th>Estado</th>
+                            <th class="table-th text-withe text-center">Estado</th>
                             <th class="table-th text-withe text-center"> Acciònes</th>
                         </tr>
                     </thead>
@@ -64,7 +100,7 @@
                                     <br>
                                     Celular:{{ $d->celular }}
                                 </td>
-                                <td class="table-th text-withe text-right">
+                                <td class="table-th text-withe text-center">
                                     Descuento Bs {{number_format( $this->totaldescuento($d->id), 2) }}
                                     <br>
                                     <b>Total Bs {{number_format( $d->totalbs - $d->cambio, 2) }}</b>
@@ -89,16 +125,16 @@
                                     {{\Carbon\Carbon::parse($d->fecha)->format('h:i:s a')}}
                                 </td>
                                 @if($d->status == 'CANCELED')
-                                <td>
-                                    <div class="table-th text-withe text-center">
-                                        <h6 style="color: rgb(237, 0, 0);"><b>Anulado</b></h6>
-                                    </div>
+                                <td class="table-th text-withe text-center">
+                                    <span class="stamp stamp-md bg-danger mr-3">
+										Anulado
+									</span>
                                 </td>
                                 @else
-                                <td>
-                                    <div class="table-th text-withe text-center">
-                                        <h6  style="color: rgb(14, 207, 43);"><b>Normal</b></h6>
-                                    </div>
+                                <td class="table-th text-withe text-center">
+                                    <span class="stamp stamp-md bg-success mr-3">
+										NORMAL
+									</span>
                                 </td>
                                 @endif
                                 <td class="text-center">
