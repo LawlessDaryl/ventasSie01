@@ -519,43 +519,140 @@
 
 						
 						
+						
 
-						{{-- <li class="nav-item">
+						<li class="nav-item">
 							<a data-toggle="collapse" href="#charts">
 								<i class="far fa-chart-bar"></i>
-								<p>Charts</p>
+								<p>Inventarios</p>
 								<span class="caret"></span>
 							</a>
 							<div class="collapse" id="charts">
 								<ul class="nav nav-collapse">
 									<li>
-										<a href="charts/charts.html">
-											<span class="sub-item">Chart Js</span>
-										</a>
+										<a href="{{ url('categories') }}">
+											<i class="fa fas fa-minus"></i>
+											Categorias </a>
 									</li>
 									<li>
-										<a href="charts/sparkline.html">
-											<span class="sub-item">Sparkline</span>
-										</a>
+										<a href="{{ url('products') }}">
+											<i class="fa fas fa-minus"></i>
+											Productos </a>
+									</li>
+									<li>
+										<a href="{{url('transacciones')}}">
+											<i class="fa fas fa-minus"></i>
+											Devolucion en Compras </a>
+									</li>
+									<li>
+										<a href="{{url('proveedores')}}">
+											<i class="fa fas fa-minus"></i>
+											Proveedores </a>
+									</li>
+									<li>
+										<a href="{{url('compras')}}">
+											<i class="fa fas fa-minus"></i>
+											Compras </a>
+									</li>
+									<li>
+										<a href="{{url('destino_prod')}}">
+											<i class="fa fas fa-minus"></i>
+											Almacen Producto </a>
 									</li>
 								</ul>
 							</div>
 						</li>
+
 						<li class="nav-item">
+							<a data-toggle="collapse" href="#charts2">
+								<i class="far fa-chart-bar"></i>
+								<p>Parámetros</p>
+								<span class="caret"></span>
+							</a>
+							<div class="collapse" id="charts2">
+								<ul class="nav nav-collapse">
+									<li>
+										<a href="{{ url('unidades') }}">
+											<i class="fa fas fa-minus"></i>
+											Unidades </a>
+									</li>
+									<li>
+										<a href="{{url('locations')}}">
+											<i class="fa fas fa-minus"></i>
+											Mobiliario </a>
+									</li>
+									<li>
+										<a href="{{ url('marcas') }}">
+											<i class="fa fas fa-minus"></i>
+											Marcas </a>
+									</li>
+									<li>
+										<a href="{{url('destino')}}">
+											<i class="fa fas fa-minus"></i>
+											Locacion/Estancia </a>
+									</li>
+								</ul>
+							</div>
+						</li>
+
+
+
+
+
+
+						{{-- <li class="nav-item">
 							<a href="widgets.html">
 								<i class="fas fa-desktop"></i>
 								<p>Widgets</p>
 								<span class="badge badge-success">4</span>
 							</a>
-						</li>
+						</li> --}}
+
+
+
+
 						<li class="nav-item">
 							<a data-toggle="collapse" href="#submenu">
 								<i class="fas fa-bars"></i>
-								<p>Menu Levels</p>
+								<p>Ventas</p>
 								<span class="caret"></span>
 							</a>
 							<div class="collapse" id="submenu">
 								<ul class="nav nav-collapse">
+
+									<li>
+										<a href="{{ url('pos') }}">
+											<i class="fa fas fa-minus"></i>
+											Nueva Venta </a>
+									</li>
+									<li>
+										<a href="{{ url('salelist') }}">
+											<i class="fa fas fa-minus"></i>
+											Lista de Ventas </a>
+									</li>
+									<li>
+										<a href="{{ url('coins') }}">
+											<i class="fa fas fa-minus"></i>
+											Denominaciones </a>
+									</li>
+									<li>
+										<a href="{{ url('estadisticas') }}">
+											<i class="fa fas fa-minus"></i>
+											Estadísticas </a>
+									</li>
+									<li>
+										<a href="{{ url('devolucionventa') }}">
+											<i class="fa fas fa-minus"></i>
+											Devolución Ventas </a>
+									</li>
+									<li>
+										<a href="{{ url('salemovimientodiario') }}">
+											<i class="fa fas fa-minus"></i>
+											Movimiento Diario </a>
+									</li>
+
+
+
 									<li>
 										<a data-toggle="collapse" href="#subnav1">
 											<span class="sub-item">Level 1</span>
@@ -598,7 +695,7 @@
 									</li>
 								</ul>
 							</div>
-						</li> --}}
+						</li>
 						<li class="mx-4 mt-2">
 							<a href="http://themekita.com/atlantis-bootstrap-dashboard.html" style="background-color: #ee761c!important;" class="btn btn-primary btn-block"><span class="btn-label mr-2"> <i class="fa icon-logout"></i> </span>Cerrar Sesión</a> 
 						</li>

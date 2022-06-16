@@ -50,14 +50,6 @@ class DatabaseSeeder extends Seeder
         $this->call(CuentaInversionSeeder::class);
         $this->call(ProfileSeeder::class);
         $this->call(AccountProfileSeeder::class);
-<<<<<<< HEAD
-        /* INVENTARIOS */
-        $this->call(LocationSeeder::class);
-        $this->call(UnidadSeeder::class);
-        $this->call(CategorySeeder::class);
-
-        /*  Category::factory(20)->create(); */
-=======
         $this->call(UnidadSeeder::class);
         $this->call(CategorySeeder::class);
         $this->call(ClientSeeder::class);
@@ -73,6 +65,5 @@ class DatabaseSeeder extends Seeder
         
         
        /*  Category::factory(20)->create(); */
->>>>>>> origin/comprasventas2
     }
 }

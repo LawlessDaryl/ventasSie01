@@ -608,71 +608,18 @@
                 </li>
 
                 <li>
-<<<<<<< HEAD
-                    <a href="{{ url('products') }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="feather feather-watch">
-                            <circle cx="12" cy="12" r="7"></circle>
-                            <polyline points="12 9 12 12 13.5 13.5"></polyline>
-                            <path
-                                d="M16.51 17.35l-.35 3.83a2 2 0 0 1-2 1.82H9.83a2 2 0 0 1-2-1.82l-.35-3.83m.01-10.7l.35-3.83A2 2 0 0 1 9.83 1h4.35a2 2 0 0 1 2 1.82l.35 3.83">
-                            </path>
-                        </svg>
-=======
                     <a href="{{url('products')}}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-package"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
->>>>>>> origin/comprasventas2
                         Productos </a>
                 </li>
 
                 <li>
-<<<<<<< HEAD
-                    <a href="{{ url('transacciones') }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="feather feather-watch">
-                            <circle cx="12" cy="12" r="7"></circle>
-                            <polyline points="12 9 12 12 13.5 13.5"></polyline>
-                            <path
-                                d="M16.51 17.35l-.35 3.83a2 2 0 0 1-2 1.82H9.83a2 2 0 0 1-2-1.82l-.35-3.83m.01-10.7l.35-3.83A2 2 0 0 1 9.83 1h4.35a2 2 0 0 1 2 1.82l.35 3.83">
-                            </path>
-                        </svg>
-                        Transacciones</a>
-=======
                     <a href="{{url('transacciones')}}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-repeat"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
                         Devolucion en Compras</a>
->>>>>>> origin/comprasventas2
                 </li>
 
                 <li>
-<<<<<<< HEAD
-                    <a href="{{ url('proveedores') }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="feather feather-watch">
-                            <circle cx="12" cy="12" r="7"></circle>
-                            <polyline points="12 9 12 12 13.5 13.5"></polyline>
-                            <path
-                                d="M16.51 17.35l-.35 3.83a2 2 0 0 1-2 1.82H9.83a2 2 0 0 1-2-1.82l-.35-3.83m.01-10.7l.35-3.83A2 2 0 0 1 9.83 1h4.35a2 2 0 0 1 2 1.82l.35 3.83">
-                            </path>
-                        </svg>
-                        Proveedores</a>
-                </li>
-                <li>
-                    <a href="{{ url('compras') }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="feather feather-watch">
-                            <circle cx="12" cy="12" r="7"></circle>
-                            <polyline points="12 9 12 12 13.5 13.5"></polyline>
-                            <path
-                                d="M16.51 17.35l-.35 3.83a2 2 0 0 1-2 1.82H9.83a2 2 0 0 1-2-1.82l-.35-3.83m.01-10.7l.35-3.83A2 2 0 0 1 9.83 1h4.35a2 2 0 0 1 2 1.82l.35 3.83">
-                            </path>
-                        </svg>
-                        Compras</a>
-=======
                     <a href="{{url('proveedores')}}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                         Proveedores</a>
@@ -686,7 +633,6 @@
                     <a href="{{url('destino_prod')}}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-archive"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line></svg>
                         Almacen Producto</a>
->>>>>>> origin/comprasventas2
                 </li>
             </ul>
         </div>
@@ -705,23 +651,9 @@
                         Unidades </a>
                 </li>
                 <li>
-<<<<<<< HEAD
-                    <a href="{{ url('locations') }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="feather feather-watch">
-                            <circle cx="12" cy="12" r="7"></circle>
-                            <polyline points="12 9 12 12 13.5 13.5"></polyline>
-                            <path
-                                d="M16.51 17.35l-.35 3.83a2 2 0 0 1-2 1.82H9.83a2 2 0 0 1-2-1.82l-.35-3.83m.01-10.7l.35-3.83A2 2 0 0 1 9.83 1h4.35a2 2 0 0 1 2 1.82l.35 3.83">
-                            </path>
-                        </svg>
-                        Destino</a>
-=======
                     <a href="{{url('locations')}}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-watch"><circle cx="12" cy="12" r="7"></circle><polyline points="12 9 12 12 13.5 13.5"></polyline><path d="M16.51 17.35l-.35 3.83a2 2 0 0 1-2 1.82H9.83a2 2 0 0 1-2-1.82l-.35-3.83m.01-10.7l.35-3.83A2 2 0 0 1 9.83 1h4.35a2 2 0 0 1 2 1.82l.35 3.83"></path></svg>    
                     Mobiliario</a>
->>>>>>> origin/comprasventas2
                 </li>
 
                 <li>
@@ -737,16 +669,12 @@
                         </svg>
                         Marcas</a>
                 </li>
-<<<<<<< HEAD
-
-=======
                 <li>
                     <a href="{{url('destino')}}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-watch"><circle cx="12" cy="12" r="7"></circle><polyline points="12 9 12 12 13.5 13.5"></polyline><path d="M16.51 17.35l-.35 3.83a2 2 0 0 1-2 1.82H9.83a2 2 0 0 1-2-1.82l-.35-3.83m.01-10.7l.35-3.83A2 2 0 0 1 9.83 1h4.35a2 2 0 0 1 2 1.82l.35 3.83"></path></svg>    
                     Locacion/Estancia</a>
                 </li>
                  
->>>>>>> origin/comprasventas2
             </ul>
         </div>
 
@@ -958,8 +886,6 @@
                         </svg>
                         Denominaciones </a>
                 </li>
-<<<<<<< HEAD
-=======
                 <li>
                     <a href="{{ url('estadisticas') }}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trending-up"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
@@ -1015,7 +941,6 @@
                 </li> --}}
                 @endif
 
->>>>>>> origin/comprasventas2
             </ul>
         </div>
 
