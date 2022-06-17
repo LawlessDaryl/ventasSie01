@@ -89,11 +89,15 @@ class PruebaImport implements ToCollection,WithHeadingRow,WithBatchInserts,WithC
                 if ($mm != null) {
                     $detail1 = $this->products[$row['nombre']];
                     $detail= Product::find($detail1);
-                    $detail->industria= $this->categories[$row['industria']];
-                    $detail->unidad= $this->categories[$row['unidad']];
-                    $detail->marca= $this->categories[$row['marca']];
-                    $detail->precio_venta= $this->categories[$row['precio venta']];
-                    $detail->caracteristicas= $this->categories[$row['caracteristica']];
+                    $detail->unidad= $row['unidad'];
+                    $detail->marca= $row['marca'];
+                    $detail->industria= $row['industria'];
+                    $detail->caracteristicas= $row['caracteristica'];
+                    $detail->precio_venta= $row['precioventa'];
+                    if ($row['subcategoria'] != 'No definido') {
+                        $detail->category_id =$this->categories[$row['subcategoria']];
+                    }
+
                     $detail->save();
                 }
 

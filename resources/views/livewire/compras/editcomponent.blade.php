@@ -371,7 +371,7 @@
                         </div>
                         <div class="row align-items-center justify-content-center">
 
-                                <button class="btn btn-info m-3 p-2"  wire:click.prevent="guardarCompra()">GUARDAR</button>
+                                <button class="btn btn-info m-3 p-2"  wire:click.prevent="guardarCompra()">ACTUALIZAR</button>
                                 <button class="btn btn-danger m-3 p-2"  wire:click.prevent="exit()" > CANCELAR</button>
                             
                         </div>

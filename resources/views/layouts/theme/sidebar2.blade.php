@@ -559,6 +559,11 @@
 											<i class="fa fas fa-minus"></i>
 											Almacen Producto </a>
 									</li>
+									<li>
+										<a href="{{url('ingreso/salida')}}">
+											<i class="fa fas fa-minus"></i>
+											Entrada/Salida de Productos </a>
+									</li>
 								</ul>
 							</div>
 						</li>

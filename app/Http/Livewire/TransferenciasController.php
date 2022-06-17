@@ -40,11 +40,11 @@ class TransferenciasController extends Component
         ->join('destinos as destino1','destino1.id','transferences.id_destino')
         ->join('sucursals as suc_destino','suc_destino.id','destino1.sucursal_id')
         ->select('transferences.created_at as fecha_tr','transferences.id as t_id',
-        'users.*','suc_origen.name as origen_name',
+        'users.*','suc_origen.name as origen_name','origen.id as orih',
         'suc_destino.name as destino_name','estado_transferencias.estado as estado_tr','estado_transferencias.op',
         'origen.nombre as origen','destino1.nombre as dst')
         ->whereIn('origen.id',$this->vs)
-        ->OrWhereIn('destino1.id',$this->vs)        
+        ->OrWhereIn('destino1.id',$this->vs)
         ->orderBy('fecha_tr','desc')
         ->get();
         $this->data_origen= $data_or->where('op','Activo');

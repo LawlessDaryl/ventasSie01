@@ -50,6 +50,7 @@ class EditarCompraDetalleController extends Component
    
     public function mount()
     {
+      
 
         $this->ide=session('id_compra');
         EditarCompra::clear();
@@ -65,7 +66,7 @@ class EditarCompraDetalleController extends Component
         $this->tipo_transaccion= $this->aux->transaccion;
         $this->pago_parcial = $this->aux->saldo>0? $this->aux->importe_total-$this->aux->saldo:0;
         $this->destino = $this->aux->destino_id;
-        $this->destino1 = $this->aux->destino_id;
+        $this->destino2 =$this->aux->destino_id;
         $this->tipo_transaccion = $this->aux->transaccion;
         $this->tipo_documento = $this->aux->tipo_doc;
         $this->total_compra= $this->aux->importe_total;
@@ -79,8 +80,11 @@ class EditarCompraDetalleController extends Component
 
         $this->verPermisos();
 
-  
-    }
+
+                  
+                        
+                    
+ }
     public function render()
     {
         if (strlen($this->search) > 0)
@@ -483,9 +487,8 @@ class EditarCompraDetalleController extends Component
        
          $this->compraCredito();
     
+        
 
-                $bn = CompraDetalle::where('compra_id',$this->ide);
-                $bn->forceDelete();
                
         DB::beginTransaction();
 
@@ -507,16 +510,25 @@ class EditarCompraDetalleController extends Component
 
             if ($this->ide)
             {
+                $bn = CompraDetalle::where('compra_id',$this->ide)->get();
+
+                foreach ($bn as $b) {
+                    $q=ProductosDestino::where('product_id',$b->product_id)
+                    ->where('destino_id',$this->destino)->value('stock');
+                    ProductosDestino::updateOrCreate(['product_id' => $b->product_id, 'destino_id'=>$this->destino],['stock'=>$q-$b->cantidad]);
+
+                }
+
                 $bn = CompraDetalle::where('compra_id',$this->ide);
-                $bn->delete();
-                dd($bn);
+                $bn->forceDelete();
+              
                 $items = EditarCompra::getContent();
                 foreach ($items as $item) {
                     CompraDetalle::create([
-                        'precio' => $item->price,
+                        'precio' => $this->tipo_documento== 'FACTURA'?$item->price*0.87:$item->price,
                         'cantidad' => $item->quantity,
                         'product_id' => $item->id,
-                        //'compra_id' => $->id,
+                        'compra_id' => $this->ide,
                         'destino_id'=>$this->destino
                         
                     ]);
@@ -531,6 +543,19 @@ class EditarCompraDetalleController extends Component
 
                 }
             }
+
+            $auxi2=Compra::find($this->ide);
+            $auxi2->importe_total=$this->total_compra;
+            $auxi2->descuento=$this->descuento;
+            $auxi2->transaccion=$this->tipo_transaccion;
+            $auxi2->tipo_doc=$this->tipo_documento;
+            $auxi2->nro_documento=$this->nro_documento;
+            $auxi2->lote_compra=$this->lote_compra;
+            $auxi2->observacion=$this->observacion;
+            $auxi2->proveedor_id=Provider::where('nombre_prov',$this->provider)->value('id');
+            $auxi2->destino_id=$this->destino;
+            $auxi2->user_id=Auth()->user()->id;
+            $auxi2->save();
 
             DB::commit();
 
@@ -549,10 +574,10 @@ class EditarCompraDetalleController extends Component
 
             $this->total = EditarCompra::getTotal();
             $this->itemsQuantity = EditarCompra::getTotalQuantity();
-            $this->emit('save-ok', 'venta registrada con exito');
+           
 
             redirect('/compras');
-            //$this->emit('print-ticket', $sale->id);
+            
         } catch (Exception $e) {
             DB::rollback();
             dd($e->getMessage());
@@ -560,15 +585,7 @@ class EditarCompraDetalleController extends Component
         }
     }
 
-    public function EditCompra($id){
-        $cp=Compra::find($id);
-        
-        foreach ($cp->compradetalle as $data) 
-        {
-            
-        }
-
-    }
+  
 
 
 

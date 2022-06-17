@@ -75,7 +75,7 @@
                                                 <h6 class="text-center">{{ $data_td->name }}</h6>
                                             </td>
                                             
-                                            @if ($data_td->estado_tr =='Recibido' or $data_td->estado_tr =='Rechazado')
+                                            @if ($data_td->estado_tr =='Recibido' or $data_td->estado_tr =='Rechazado' or !(in_array($data_td->orih, $vs)))
                                             <td class="text-center">
                                                 <a href="javascript:void(0)" wire:key="foo" wire:click="ver({{$data_td->t_id}})" 
                                                     class="btn btn-dark p-1 m-0" title="Ver">
@@ -85,7 +85,7 @@
                                                     class="btn btn-dark p-1 m-0" title="Ver">
                                                     <i class="fas fa-print"></i>
                                                 </a>
-                                               
+                                                
                                             
                                             </td>
                                             @else
