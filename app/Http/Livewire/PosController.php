@@ -161,9 +161,6 @@ class PosController extends Component
         ->get();
 
 
-
-
-
         return view('livewire.pos.component', [
             'denominations' => Denomination::orderBy('id', 'asc')->get(),
             'cart' => Cart::getContent()->sortBy('name'),
@@ -929,6 +926,7 @@ class PosController extends Component
                     'change' => $this->change,
                     'tipopago' => $tipopago->nombre,
                     'factura' => $this->facturasino,
+                    'cartera_id' => $cartera->id,
                     'movimiento_id' => $Movimiento->id,
                     'user_id' => Auth()->user()->id
                 ]);
@@ -943,6 +941,7 @@ class PosController extends Component
                     'tipopago' => $tipopago->nombre,
                     'factura' => $this->facturasino,
                     'movimiento_id' => $Movimiento->id,
+                    'cartera_id' => $cartera->id,
                     'observacion' => $this->observacion,
                     'user_id' => Auth()->user()->id
                 ]);
@@ -1390,10 +1389,6 @@ class PosController extends Component
     //Listar todas las carteras que correspondan a la sucursal y a la caja
     public function listarcarteras()
     {
-        
-
-
-
         $carteras = Caja::join('carteras as car', 'cajas.id', 'car.caja_id')
         ->join('cartera_movs as cartmovs', 'car.id', 'cartmovs.cartera_id')
         ->join('movimientos as mov', 'mov.id', 'cartmovs.movimiento_id')
@@ -1404,7 +1399,6 @@ class PosController extends Component
         ->where('mov.type', 'APERTURA')
         ->select('car.id as idcartera', 'car.nombre as nombrecartera', 'car.descripcion as dc','car.tipo as tipo')
         ->get();
-
         return $carteras;
     }
 

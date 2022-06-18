@@ -4,23 +4,23 @@
       <ul class="nav">
         <li class="nav-item">
           <a class="nav-link" href="https://www.themekita.com">
-            ThemeKita
+            {{-- ThemeKita --}}
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">
-            Help
+            {{-- Help --}}
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">
-            Licenses
+            {{-- Licenses --}}
           </a>
         </li>
       </ul>
     </nav>
     <div class="copyright ml-auto">
-      2018, made with <i class="fa fa-heart heart text-danger"></i> by <a href="https://www.themekita.com">ThemeKita</a>
+      Desarrrollado por  <i class="fas fa-laptop text-danger"></i> <a href="https://www.emnuelsie.com">SIE EMANUEL</a>
     </div>				
   </div>
 </footer>

@@ -50,12 +50,8 @@
                   </table>
                   <br>
                   <p class="text-center">Se generará un egreso de Bs {{$this->totabs()}} de 
-                 
-                    @if($this->obtenertipopago() == "EFECTIVO")
-                    Caja
-                    @else
-                    {{$this->obtenertipopago()}}
-                    @endif
+                    <br>
+                    <b>{{$this->obtenertipopago()}}</b>
                  .</p>
 
             </div>
