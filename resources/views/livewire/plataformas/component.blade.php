@@ -7,7 +7,7 @@
                 </h4>
                 <ul class="tabs tab-pills">
 
-                    <a href="javascript:void(0)" class="btn btn-warning" wire:click="Agregar()">Agregar</a>
+                    <a href="javascript:void(0)" class="btn btn-dark" wire:click="Agregar()">Agregar</a>
                     
                 </ul>
             </div>
@@ -73,7 +73,7 @@
                                         </a>
                                         <a href="javascript:void(0)"
                                             onclick="Confirm('{{ $p->id }}','{{ $p->nombre }}')"
-                                            class="btn btn-warning" title="Delete">
+                                            class="btn btn-dark" title="Delete">
                                             <i class="fas fa-trash"></i>
                                         </a>
 

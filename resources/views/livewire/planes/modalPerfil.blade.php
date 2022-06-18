@@ -37,7 +37,7 @@
                     </div>
                 </div>
                 <div>
-                    <a href="javascript:void(0)" class="btn btn-warning"
+                    <a href="javascript:void(0)" class="btn btn-dark"
                         wire:click.prevent="ModificarPerfil()">Modificar</a>
                 </div>
             </div>

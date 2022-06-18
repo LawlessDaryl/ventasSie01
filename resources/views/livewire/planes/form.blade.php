@@ -116,7 +116,7 @@
                                                     <td class="text-center">
                                                         <a href="javascript:void(0)"
                                                             wire:click="AgregarCuenta({{ $ap->id }})"
-                                                            class="btn btn-warning mtmobile" title="Seleccionar">
+                                                            class="btn btn-dark mtmobile" title="Seleccionar">
                                                             <i class="fas fa-check"></i>
                                                         </a>
                                                     </td>
@@ -181,7 +181,7 @@
                                                         <td class="text-center">
                                                             <a href="javascript:void(0)"
                                                                 wire:click="QuitarCuenta({{ $ap->id }})"
-                                                                class="btn btn-warning mtmobile" title="Remover">
+                                                                class="btn btn-dark mtmobile" title="Remover">
                                                                 <i class="fa-solid fa-x"></i>
                                                             </a>
                                                         </td>
@@ -189,30 +189,13 @@
                                                 @endforeach
                                             </tbody>
                                         </table>
-                                        {{-- <tfoot>
-                                                <tr>
-                                                    <td colspan="1" class="text-left">
-                                                        <span><b>TOTAL: </b></span>
-                                                    </td>
-                                                    <td class="text-right " colspan="2">
-                                                        <span><strong>
-                                                                @if ($accounts->count() > 0)
-                                                                    Bs.
-                                                                    {{ number_format($accounts[0]->Plataforma->precioEntera, 2) * $accounts->Count() * $meses }}
-                                                                @endif
-                                                            </strong></span>
-                                                    </td>
-                                                </tr>
-                                            </tfoot> --}}
                                     </div>
                                 </div>
                             </div>
                         @endif
                     @endif
                     @if ($mostrartabla == 2)
-
                         <div class="col-sm-12 col-md-12">
-
                             <div class="widget-content widget-content-area row">
                                 <h6>SELECCIONE UNA CUENTA PARA SUMAR UN PERFIL</h6>
                                 <div class="table-responsive table-wrapper-scroll-y my-custom-scrollbar">
@@ -272,7 +255,7 @@
                                                         <td>
                                                             <a href="javascript:void(0)"
                                                                 wire:click="AgregarPerfil({{ $ap->id }})"
-                                                                class="btn btn-warning mtmobile" title="Seleccionar">
+                                                                class="btn btn-dark mtmobile" title="Seleccionar">
                                                                 <i class="fas fa-check"></i>
                                                             </a>
                                                         </td>
@@ -347,37 +330,18 @@
                                                         <td>
                                                             <a href="javascript:void(0)"
                                                                 wire:click="EditarPerf({{ $ap->id }})"
-                                                                class="btn btn-warning mtmobile" title="EDITAR">
+                                                                class="btn btn-dark mtmobile" title="EDITAR">
                                                                 <i class="fa-solid fa-file-signature"></i>
                                                             </a>
                                                             <a href="javascript:void(0)"
                                                                 wire:click="QuitarPerfil({{ $ap->id }})"
-                                                                class="btn btn-warning mtmobile" title="Remover">
+                                                                class="btn btn-dark mtmobile" title="Remover">
                                                                 <i class="fa-solid fa-x"></i>
                                                             </a>
                                                         </td>
                                                     </tr>
                                                 @endforeach
                                             </tbody>
-                                            {{-- <tfoot>
-                                                <tr>
-                                                    <td colspan="1" class="text-left">
-                                                        <span><b>TOTAL: </b></span>
-                                                    </td>
-                                                    <td class="text-right " colspan="4">
-                                                        <span><strong>
-                                                                @if ($profiles->count() > 0)
-                                                                    Bs.
-                                                                    @foreach ($profiles[0]->CuentaPerfil as $item)
-                                                                        @if ($item->status = 'SinAsignar')
-                                                                            {{ number_format($item->Cuenta->Plataforma->precioPerfil * $profiles->Count() * $meses) }}
-                                                                        @endif
-                                                                    @endforeach
-                                                                @endif
-                                                            </strong></span>
-                                                    </td>
-                                                </tr>
-                                            </tfoot> --}}
                                         </table>
                                     </div>
                                 </div>
@@ -474,7 +438,7 @@
                                                                     <td class="text-center">
                                                                         <a href="javascript:void(0)"
                                                                             wire:click="Seleccionar('{{ $d->celular }}','{{ $d->nombre }}')"
-                                                                            class="btn btn-warning mtmobile"
+                                                                            class="btn btn-dark mtmobile"
                                                                             title="Seleccionar">
                                                                             <i class="fas fa-check"></i>
                                                                         </a>
@@ -511,8 +475,6 @@
                             </label>
                             <select wire:model="tipopago" class="form-control">
                                 <option value="EFECTIVO" selected>EFECTIVO</option>
-                                <option value="Banco">CUENTA BANCARIA</option>
-                                <option value="TigoStreaming">TIGO MONEY</option>
                             </select>
                             @error('tipopago')
                                 <span class="text-danger er">{{ $message }}</span>
@@ -542,6 +504,8 @@
                             @enderror
                         </div>
                     </div>
+                </div>
+                <div class="row">
                     <div class="col-sm-12">
                         <div class="form-group custom-file">
                             <input type="file" class="custom-file-input form-control" wire:model="comprobante"
@@ -554,12 +518,12 @@
             </div>
             <div class="modal-footer">
                 <button type="button" wire:click.prevent="CargarAnterior()"
-                    class="btn btn-warning close-btn text-info">CARGAR
+                    class="btn btn-dark close-btn text-info">CARGAR
                     ANTERIOR</button>
                 <button type="button" wire:click.prevent="resetUI()"
-                    class="btn btn-warning close-btn text-info">LIMPIAR</button>
+                    class="btn btn-dark close-btn text-info">LIMPIAR</button>
                 <button type="button" wire:click.prevent="Store()"
-                    class="btn btn-warning close-btn text-info">GUARDAR</button>
+                    class="btn btn-dark close-btn text-info">GUARDAR</button>
             </div>
         </div>
     </div>

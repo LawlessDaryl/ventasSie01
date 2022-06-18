@@ -20,21 +20,20 @@
                     <div class="col-sm-12 col-md-4">
                         <div class="form-group">
                             <h6>NOMBRE PERFIL</h6>
-                            <input type="text" wire:model="perfil1COMBO" class="form-control">
-
-                            @error('nombreCliente')
-                                <span class="text-danger er">{{ $message }}</span>
-                            @enderror
+                            <h6 class="form-control"><strong>
+                                    {{ $perfil1COMBO }}
+                                </strong>
+                            </h6>
                         </div>
                     </div>
 
                     <div class="col-sm-12 col-md-4">
                         <div class="form-group">
                             <h6>PIN PERFIL</h6>
-                            <input type="text" wire:model="PIN1COMBO" class="form-control">
-                            @error('celular')
-                                <span class="text-danger er">{{ $message }}</span>
-                            @enderror
+                            <h6 class="form-control"><strong>
+                                    {{ $PIN1COMBO }}
+                                </strong>
+                            </h6>
                         </div>
                     </div>
 
@@ -49,7 +48,7 @@
 
                     <div class="col-sm-12 col-md-12">
                         <div class="form-group text-center mt-4">
-                            <a href="javascript:void(0)" class="btn btn-warning"
+                            <a href="javascript:void(0)" class="btn btn-dark"
                                 wire:click.prevent="cambiarCuentaPlat1()">Cambiar de cuenta perfil plataforma 1</a>
                         </div>
                     </div>
@@ -82,38 +81,40 @@
                                                 @endif
                                                 @if ($cuentasConEspaciosP1)
                                                     @foreach ($cuentasConEspaciosP1 as $item)
-                                                        <tr>
-                                                            <td class="text-center">
-                                                                <h6 class="text-center">
-                                                                    {{ $item->account_name }}
-                                                                </h6>
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <h6 class="text-center">
-                                                                    {{ $item->number_profiles }}
-                                                                </h6>
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <h6 class="text-center">
-                                                                    {{ \Carbon\Carbon::parse($item->expiration_account)->format('d/m/Y') }}
-                                                                </h6>
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <h6 class="text-center">
-                                                                    {{ $item->cantiadadQueSePuedeCrear }}
-                                                                </h6>
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <h6 class="text-center">
-                                                                    <a href="javascript:void(0)"
-                                                                        wire:click="SeleccionarCuenta1('{{ $item->id }}')"
-                                                                        class="btn btn-warning mtmobile"
-                                                                        title="Seleccionar">
-                                                                        <i class="fas fa-check"></i>
-                                                                    </a>
-                                                                </h6>
-                                                            </td>
-                                                        </tr>
+                                                        @if ($item->espacios > 0)
+                                                            <tr>
+                                                                <td class="text-center">
+                                                                    <h6 class="text-center">
+                                                                        {{ $item->account_name }}
+                                                                    </h6>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <h6 class="text-center">
+                                                                        {{ $item->number_profiles }}
+                                                                    </h6>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <h6 class="text-center">
+                                                                        {{ \Carbon\Carbon::parse($item->expiration_account)->format('d/m/Y') }}
+                                                                    </h6>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <h6 class="text-center">
+                                                                        {{ $item->espacios }}
+                                                                    </h6>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <h6 class="text-center">
+                                                                        <a href="javascript:void(0)"
+                                                                            onclick="CambiardeCuentaPerf1('{{ $item->id }}','{{ $plataforma1Nombre }}','{{ $item->account_name }}')"
+                                                                            class="btn btn-dark mtmobile"
+                                                                            title="Seleccionar">
+                                                                            <i class="fas fa-check"></i>
+                                                                        </a>
+                                                                    </h6>
+                                                                </td>
+                                                            </tr>
+                                                        @endif
                                                     @endforeach
                                                 @else
                                                     <tr>
@@ -139,20 +140,20 @@
                     <div class="col-sm-12 col-md-4">
                         <div class="form-group">
                             <h6>NOMBRE PERFIL</h6>
-                            <input type="text" wire:model="perfil2COMBO" class="form-control">
-                            @error('nombreCliente')
-                                <span class="text-danger er">{{ $message }}</span>
-                            @enderror
+                            <h6 class="form-control"><strong>
+                                    {{ $perfil2COMBO }}
+                                </strong>
+                            </h6>
                         </div>
                     </div>
 
                     <div class="col-sm-12 col-md-4">
                         <div class="form-group">
                             <h6>PIN PERFIL</h6>
-                            <input type="text" wire:model="PIN2COMBO" class="form-control">
-                            @error('celular')
-                                <span class="text-danger er">{{ $message }}</span>
-                            @enderror
+                            <h6 class="form-control"><strong>
+                                    {{ $PIN2COMBO }}
+                                </strong>
+                            </h6>
                         </div>
                     </div>
 
@@ -167,7 +168,7 @@
 
                     <div class="col-sm-12 col-md-12">
                         <div class="form-group text-center mt-4">
-                            <a href="javascript:void(0)" class="btn btn-warning"
+                            <a href="javascript:void(0)" class="btn btn-dark"
                                 wire:click.prevent="cambiarCuentaPlat2()">Cambiar de cuenta perfil plataforma 2</a>
                         </div>
                     </div>
@@ -200,38 +201,40 @@
                                                 @endif
                                                 @if ($cuentasConEspaciosP2)
                                                     @foreach ($cuentasConEspaciosP2 as $item)
-                                                        <tr>
-                                                            <td class="text-center">
-                                                                <h6 class="text-center">
-                                                                    {{ $item->account_name }}
-                                                                </h6>
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <h6 class="text-center">
-                                                                    {{ $item->number_profiles }}
-                                                                </h6>
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <h6 class="text-center">
-                                                                    {{ \Carbon\Carbon::parse($item->expiration_account)->format('d/m/Y') }}
-                                                                </h6>
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <h6 class="text-center">
-                                                                    {{ $item->cantiadadQueSePuedeCrear }}
-                                                                </h6>
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <h6 class="text-center">
-                                                                    <a href="javascript:void(0)"
-                                                                        wire:click="SeleccionarCuenta2('{{ $item->id }}')"
-                                                                        class="btn btn-warning mtmobile"
-                                                                        title="Seleccionar">
-                                                                        <i class="fas fa-check"></i>
-                                                                    </a>
-                                                                </h6>
-                                                            </td>
-                                                        </tr>
+                                                        @if ($item->espacios > 0)
+                                                            <tr>
+                                                                <td class="text-center">
+                                                                    <h6 class="text-center">
+                                                                        {{ $item->account_name }}
+                                                                    </h6>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <h6 class="text-center">
+                                                                        {{ $item->number_profiles }}
+                                                                    </h6>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <h6 class="text-center">
+                                                                        {{ \Carbon\Carbon::parse($item->expiration_account)->format('d/m/Y') }}
+                                                                    </h6>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <h6 class="text-center">
+                                                                        {{ $item->espacios }}
+                                                                    </h6>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <h6 class="text-center">
+                                                                        <a href="javascript:void(0)"
+                                                                            onclick="CambiardeCuentaPerf2('{{ $item->id }}','{{ $plataforma2Nombre }}','{{ $item->account_name }}')"
+                                                                            class="btn btn-dark mtmobile"
+                                                                            title="Seleccionar">
+                                                                            <i class="fas fa-check"></i>
+                                                                        </a>
+                                                                    </h6>
+                                                                </td>
+                                                            </tr>
+                                                        @endif
                                                     @endforeach
                                                 @else
                                                     <tr>
@@ -257,20 +260,20 @@
                     <div class="col-sm-12 col-md-4">
                         <div class="form-group">
                             <h6>NOMBRE PERFIL</h6>
-                            <input type="text" wire:model="perfil3COMBO" class="form-control">
-                            @error('nombreCliente')
-                                <span class="text-danger er">{{ $message }}</span>
-                            @enderror
+                            <h6 class="form-control"><strong>
+                                    {{ $perfil3COMBO }}
+                                </strong>
+                            </h6>
                         </div>
                     </div>
 
                     <div class="col-sm-12 col-md-4">
                         <div class="form-group">
                             <h6>PIN PERFIL</h6>
-                            <input type="text" wire:model="PIN3COMBO" class="form-control">
-                            @error('celular')
-                                <span class="text-danger er">{{ $message }}</span>
-                            @enderror
+                            <h6 class="form-control"><strong>
+                                    {{ $PIN3COMBO }}
+                                </strong>
+                            </h6>
                         </div>
                     </div>
 
@@ -285,7 +288,7 @@
 
                     <div class="col-sm-12 col-md-12">
                         <div class="form-group text-center mt-4">
-                            <a href="javascript:void(0)" class="btn btn-warning"
+                            <a href="javascript:void(0)" class="btn btn-dark"
                                 wire:click.prevent="cambiarCuentaPlat3()">Cambiar de cuenta perfil plataforma 3</a>
                         </div>
                     </div>
@@ -318,38 +321,40 @@
                                                 @endif
                                                 @if ($cuentasConEspaciosP3)
                                                     @foreach ($cuentasConEspaciosP3 as $item)
-                                                        <tr>
-                                                            <td class="text-center">
-                                                                <h6 class="text-center">
-                                                                    {{ $item->account_name }}
-                                                                </h6>
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <h6 class="text-center">
-                                                                    {{ $item->number_profiles }}
-                                                                </h6>
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <h6 class="text-center">
-                                                                    {{ \Carbon\Carbon::parse($item->expiration_account)->format('d/m/Y') }}
-                                                                </h6>
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <h6 class="text-center">
-                                                                    {{ $item->cantiadadQueSePuedeCrear }}
-                                                                </h6>
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <h6 class="text-center">
-                                                                    <a href="javascript:void(0)"
-                                                                        wire:click="SeleccionarCuenta3('{{ $item->id }}')"
-                                                                        class="btn btn-warning mtmobile"
-                                                                        title="Seleccionar">
-                                                                        <i class="fas fa-check"></i>
-                                                                    </a>
-                                                                </h6>
-                                                            </td>
-                                                        </tr>
+                                                        @if ($item->espacios > 0)
+                                                            <tr>
+                                                                <td class="text-center">
+                                                                    <h6 class="text-center">
+                                                                        {{ $item->account_name }}
+                                                                    </h6>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <h6 class="text-center">
+                                                                        {{ $item->number_profiles }}
+                                                                    </h6>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <h6 class="text-center">
+                                                                        {{ \Carbon\Carbon::parse($item->expiration_account)->format('d/m/Y') }}
+                                                                    </h6>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <h6 class="text-center">
+                                                                        {{ $item->espacios }}
+                                                                    </h6>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <h6 class="text-center">
+                                                                        <a href="javascript:void(0)"
+                                                                            onclick="CambiardeCuentaPerf3('{{ $item->id }}','{{ $plataforma3Nombre }}','{{ $item->account_name }}')"
+                                                                            class="btn btn-dark mtmobile"
+                                                                            title="Seleccionar">
+                                                                            <i class="fas fa-check"></i>
+                                                                        </a>
+                                                                    </h6>
+                                                                </td>
+                                                            </tr>
+                                                        @endif
                                                     @endforeach
                                                 @else
                                                     <tr>
@@ -465,8 +470,8 @@
                             <h6>Tipo de pago</h6>
                             <select wire:model="tipopago" class="form-control">
                                 <option value="EFECTIVO" selected>EFECTIVO</option>
-                                <option value="Banco">CUENTA BANCARIA</option>
-                                <option value="TigoStreaming">TIGO MONEY</option>
+                                {{-- <option value="Banco">CUENTA BANCARIA</option>
+                                <option value="TigoStreaming">TIGO MONEY</option> --}}
                             </select>
                             @error('tipopago')
                                 <span class="text-danger er">{{ $message }}</span>
@@ -496,27 +501,30 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="col-sm-12 col-md-4">
-                        <div class="form-group text-center mt-4">
-                            <a href="javascript:void(0)" class="btn btn-warning"
-                                wire:click.prevent="RenovarCombo()">Renovar combo</a>
-                        </div>
-                    </div>
-                    <div class="col-sm-12 col-md-4">
-                        <div class="form-group text-center mt-4">
-                            <a href="javascript:void(0)" class="btn btn-warning"
-                                wire:click.prevent="VencerCombo()">Vencer combo</a>
-                        </div>
-                    </div>
-                    <div class="col-sm-12 col-md-4">
-                        <div class="form-group text-center mt-4">
-                            <a href="javascript:void(0)" class="btn btn-warning"
-                                wire:click.prevent="UpdateCombo()">Actualizar
-                                datos</a>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group custom-file">
+                            <input type="file" class="custom-file-input form-control" wire:model="comprobante"
+                                accept="image/x-png,image/gif,image/jpeg">
+                            <label class="custom-file-label">Comprobante {{ $comprobante }}</label>
                         </div>
                     </div>
                 </div>
-
+                <div class="row">
+                    <div class="col-sm-12 col-md-4">
+                        <div class="form-group text-center mt-4">
+                            <a href="javascript:void(0)" class="btn btn-dark"
+                                onclick="ConfirmRenovarCombo('{{ $nombreCliente }}')">Renovar combo</a>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-4">
+                        <div class="form-group text-center mt-4">
+                            <a href="javascript:void(0)" class="btn btn-dark"
+                                onclick="ConfirmVencerCombo('{{ $nombreCliente }}')">Vencer combo</a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -67,8 +67,8 @@
                         </div>
                     </div>
                     <div class="col-sm-12 col-md-4 mt-4">
-                        <a class="btn btn-dark btn-block btn btn-warning btn-lg {{ count($data) < 1 ? 'disabled' : '' }}"
-                            href="{{ url('reporteTigo/pdf' .'/' .$userId .'/' .$reportType .'/' .$origenfiltro .'/' .$tipotr .'/' .$dateFrom .'/' .$dateTo) }}">
+                        <a class=" btn btn-dark btn-block {{ count($data) < 1 ? 'disabled' : '' }}"
+                            href="{{ url('reporteTigo/pdf' . '/' . $userId . '/' . $reportType . '/' . $origenfiltro . '/' . $tipotr . '/' . $dateFrom . '/' . $dateTo) }}">
                             Generar
                             PDF</a>
                     </div>
@@ -135,11 +135,13 @@
                                                 </td>
                                             @endcan
                                             <td class="text-center">
-                                                <h6>{{ $d->created_at }}</h6>
+                                                <h6>
+                                                    {{ \Carbon\Carbon::parse($d->created_at)->format('d/m/Y H:i') }}
+                                                </h6>
                                             </td>
-                                            <td>
+                                            <td class="text-center" width="50px">
                                                 <button wire:click.prevent="getDetails({{ $d->id }})"
-                                                    class="btn btn-warning btn-sm" title="Ver observaciones">
+                                                    class="btn btn-dark btn-sm" title="Ver observaciones">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                         viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -149,11 +151,6 @@
                                                         <line x1="21" y1="14" x2="3" y2="14"></line>
                                                         <line x1="18" y1="18" x2="6" y2="18"></line>
                                                     </svg>
-                                                </button>
-                                            </td>
-                                            <td>
-                                                <button class="btn btn-warning btn-sm" title="Editar Transacción" wire:click="editartransaccion({{$d->id}})">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-square"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
                                                 </button>
                                             </td>
                                         </tr>
@@ -230,15 +227,5 @@
         window.livewire.on('show-modal', msg => {
             $('#modalDetails').modal('show')
         });
-        window.livewire.on('mostrareditarmodal', msg => {
-            $('#modificartransaccion').modal({backdrop: 'static', keyboard: false})
-            $('#modificartransaccion').modal('show')
-        });
-        window.livewire.on('mostrarocultar', msg => {
-            $('#modificartransaccion').modal('show')
-        });
-
-
-
     })
 </script>

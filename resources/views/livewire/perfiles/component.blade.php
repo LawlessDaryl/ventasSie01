@@ -159,30 +159,24 @@
                                         </td>
 
                                         <td class="text-center">
-                                            @if ($condicional == 'ocupados')
-                                                @if ($p->estadoCuentaPerfil == 'ACTIVO')
-                                                    <a href="javascript:void(0)"
-                                                        wire:click="Acciones({{ $p->planid }})"
-                                                        class="btn btn-warning" title="Renovación">
-                                                        <i class="fa fas fa-file-signature"></i>
-                                                    </a>
-                                                    {{-- <a href="javascript:void(0)" wire:click="Edit({{ $p->id }})"
-                                                        class="btn btn-warning mtmobile" title="Editar">
-                                                        <i class="fas fa-edit"></i>
-                                                    </a> --}}
-                                                    <a href="javascript:void(0)"
-                                                        wire:click="EditObservaciones('{{ $p->planid }}','{{ $p->id }}')"
-                                                        class="btn btn-warning" title="Observaciones">
-                                                        <i class="fa fas fa-eye"></i>
-                                                    </a>
-                                                @endif
+                                            @if ($p->estadoCuentaPerfil == 'ACTIVO')
+                                                <a href="javascript:void(0)"
+                                                    wire:click="Acciones('{{ $p->IDperfil }}','{{ $p->IDaccountProfile }}','{{ $p->IDaccount }}','{{ $p->IDplanAccount }}','{{ $p->planid }}','{{ $p->clienteID }}','{{ $p->IDplatf }}')"
+                                                    class="btn btn-dark mtmobile" title="Renovación">
+                                                    <i class="fa-regular fa-calendar-check"></i>
+                                                </a>
                                             @endif
+                                            <a href="javascript:void(0)"
+                                                wire:click="EditObservaciones('{{ $p->planid }}','{{ $p->IDperfil }}','{{ $p->clienteID }}')"
+                                                class="btn btn-dark mtmobile" title="Observaciones">
+                                                <i class="fa-solid fa-align-left"></i>
+                                            </a>
                                         </td>
 
                                         <td
                                             style="{{ $p->done == 'NO' ? 'background-color: #d97171 !important' : 'background-color: #09ed3d !important' }}">
                                             @if ($p->done == 'NO')
-                                                <a href="javascript:void(0)" class="btn btn-warning"
+                                                <a href="javascript:void(0)" class="btn btn-dark"
                                                     onclick="ConfirmHecho('{{ $p->planid }}')">
                                                     <i class="fa-regular fa-circle-exclamation"></i>
                                                 </a>
@@ -214,9 +208,7 @@
                                     <th class="table-th text-withe text-center" style="font-size: 80%">IMPORT</th>
                                     <th class="table-th text-withe text-center" style="font-size: 80%">PLAN INICIO</th>
                                     <th class="table-th text-withe text-center" style="font-size: 80%">PLAN FIN</th>
-                                    @if ($condicional == 'combos')
-                                        <th class="table-th text-withe text-center" style="font-size: 80%">ACCIONES</th>
-                                    @endif
+                                    <th class="table-th text-withe text-center" style="font-size: 80%">ACCIONES</th>
                                     <th class="table-th text-withe text-center" style="font-size: 80%">REALIZADO</th>
                                 </tr>
                             </thead>
@@ -243,9 +235,12 @@
                                         <td class="text-center">
                                             <h6 class="text-center">{{ $p->Mov->climov->client->nombre }} <br>
                                                 {{ $p->Mov->climov->client->celular }}</h6>
+                                            @php
+                                                $IDcliente = $p->Mov->climov->client->id;
+                                            @endphp
                                         </td>
                                         <td class="text-center">
-                                            <h6 class="text-center" style="font-size: 80%">
+                                            <h6 class="text-center">
                                                 @if ($condicional == 'combos')
                                                     @foreach ($p->PlanAccounts as $item)
                                                         @if ($item->status == 'ACTIVO')
@@ -283,7 +278,7 @@
                                             </h6>
                                         </td>
                                         <td class="text-center">
-                                            <h6 class="text-center" style="font-size: 80%">
+                                            <h6 class="text-center">
                                                 @if ($condicional == 'combos')
                                                     @foreach ($p->PlanAccounts as $item)
                                                         @if ($item->status == 'ACTIVO')
@@ -345,14 +340,13 @@
                                                         @endif
                                                     @endforeach
                                                 @endif
-
                                             </h6>
                                         </td>
                                         <td class="text-center">
-                                            <h6 class="text-center" style="font-size: 80%">{{ $p->importe }}</h6>
+                                            <h6 class="text-center">{{ $p->importe }}</h6>
                                         </td>
                                         <td class="text-center">
-                                            <h6 class="text-center" style="font-size: 80%">
+                                            <h6 class="text-center">
                                                 {{ \Carbon\Carbon::parse($p->plan_start)->format('d/m/Y') }} </h6>
                                         </td>
                                         <td class="text-center"
@@ -362,31 +356,29 @@
                                                                 @else
                                                                 style="background-color: #FF0000 !important" @endif
                                             @endif>
-                                            <h6 class="text-center" style="font-size: 80%">
+                                            <h6 class="text-center">
                                                 {{ \Carbon\Carbon::parse($p->expiration_plan)->format('d/m/Y') }}
                                             </h6>
                                         </td>
-                                        @if ($condicional == 'combos')
-                                            <td class="text-center">
-                                                @if ($condicional == 'combos')
-                                                    <a href="javascript:void(0)"
-                                                        wire:click="AccionesCombo({{ $p->id }})"
-                                                        class="btn btn-warning" title="Renovación">
-                                                        <i class="fa fas fa-file-signature"></i>
-                                                    </a>
+                                        <td class="text-center">
+                                            @if ($condicional == 'combos')
+                                                <a href="javascript:void(0)"
+                                                    wire:click="AccionesCombo('{{ $p->id }}','{{ $IDcliente }}')"
+                                                    class="btn btn-dark mtmobile" title="Renovación">
+                                                    <i class="fa-regular fa-calendar-check"></i>
+                                                </a>
+                                            @endif
+                                            <a href="javascript:void(0)"
+                                                wire:click="EditCombo('{{ $p->id }}',{{ $p->Mov->climov->client->id }})"
+                                                class="btn btn-dark mtmobile" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        </td>
 
-                                                    <a href="javascript:void(0)"
-                                                        wire:click="EditCombo({{ $p->id }})"
-                                                        class="btn btn-warning" title="Edit">
-                                                        <i class="fas fa-edit"></i>
-                                                    </a>
-                                                @endif
-                                            </td>
-                                        @endif
                                         <td class="text-center"
                                             style="{{ $p->done == 'NO' ? 'background-color: #d97171 !important' : 'background-color: #09ed3d !important' }}">
                                             @if ($p->done == 'NO')
-                                                <a href="javascript:void(0)" class="btn btn-warning"
+                                                <a href="javascript:void(0)" class="btn btn-dark"
                                                     onclick="ConfirmHecho('{{ $p->id }}')">
                                                     <i class="fa-regular fa-circle-exclamation"></i>
                                                 </a>
@@ -541,6 +533,99 @@
                 swal.fire(
                     'Se cambió a realizado'
                 )
+            }
+        })
+    }
+
+    function ConfirmRenovarCombo(nombreCliente) {
+        swal.fire({
+            title: 'CONFIRMAR',
+            icon: 'warning',
+            text: 'Confirmar RENOVAR el combo del cliente ' + '"' + nombreCliente + '"',
+            showCancelButton: true,
+            cancelButtonText: 'Cerrar',
+            cancelButtonColor: '#383838',
+            confirmButtonColor: '#3B3F5C',
+            confirmButtonText: 'Aceptar'
+        }).then(function(result) {
+            if (result.value) {
+                window.livewire.emit('RenovarCombo')
+                Swal.close()
+            }
+        })
+    }
+
+    function ConfirmVencerCombo(nombreCliente) {
+        swal.fire({
+            title: 'CONFIRMAR',
+            icon: 'warning',
+            text: 'Confirmar VENCER el combo del cliente ' + '"' + nombreCliente + '"',
+            showCancelButton: true,
+            cancelButtonText: 'Cerrar',
+            cancelButtonColor: '#383838',
+            confirmButtonColor: '#3B3F5C',
+            confirmButtonText: 'Aceptar'
+        }).then(function(result) {
+            if (result.value) {
+                window.livewire.emit('VencerCombo')
+                Swal.close()
+            }
+        })
+    }
+
+    function CambiardeCuentaPerf1(id, plataforma, cuenta) {
+        swal.fire({
+            title: 'CONFIRMAR',
+            icon: 'warning',
+            text: 'Confirmar cambiar el perfil de la plataforma ' + plataforma + ' a la cuenta ' + cuenta +
+                '?',
+            showCancelButton: true,
+            cancelButtonText: 'Cerrar',
+            cancelButtonColor: '#383838',
+            confirmButtonColor: '#3B3F5C',
+            confirmButtonText: 'Aceptar'
+        }).then(function(result) {
+            if (result.value) {
+                window.livewire.emit('SeleccionarCuenta1', id)
+                Swal.close()
+            }
+        })
+    }
+
+    function CambiardeCuentaPerf2(id, plataforma, cuenta) {
+        swal.fire({
+            title: 'CONFIRMAR',
+            icon: 'warning',
+            text: 'Confirmar cambiar el perfil de la plataforma ' + plataforma + ' a la cuenta ' + cuenta +
+                '?',
+            showCancelButton: true,
+            cancelButtonText: 'Cerrar',
+            cancelButtonColor: '#383838',
+            confirmButtonColor: '#3B3F5C',
+            confirmButtonText: 'Aceptar'
+        }).then(function(result) {
+            if (result.value) {
+                window.livewire.emit('SeleccionarCuenta2', id)
+                Swal.close()
+            }
+        })
+    }
+
+    function CambiardeCuentaPerf3(id, plataforma, cuenta) {
+        swal.fire({
+            title: 'CONFIRMAR',
+            icon: 'warning',
+            text: 'Confirmar cambiar el perfil de la plataforma ' + plataforma + ' a la cuenta ' + cuenta +
+                '?',
+            showCancelButton: true,
+            cancelButtonText: 'Cerrar',
+            cancelButtonColor: '#383838',
+            confirmButtonColor: '#3B3F5C',
+            confirmButtonText: 'Aceptar'
+        }).then(function(result) {
+            if (result.value) {
+                window.livewire.emit('SeleccionarCuenta3', id)
+                Swal.close()
             }
         })
     }

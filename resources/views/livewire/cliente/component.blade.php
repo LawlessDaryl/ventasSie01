@@ -69,7 +69,11 @@
                                         </a>
                                         {{-- <a href="javascript:void(0)"
                                             onclick="Confirm('{{ $c->id }}','{{ $c->nombre }}')"
+<<<<<<< HEAD
                                             class="btn btn-warning" title="Delete">
+=======
+                                            class="btn btn-dark" title="Delete">
+>>>>>>> streamingservicios01
                                             <i class="fas fa-trash"></i>
                                         </a> --}}
                                     </td>

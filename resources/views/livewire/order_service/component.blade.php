@@ -22,6 +22,14 @@
 
             </div>
 
+                    <a href="javascript:void(0)" class="btn btn-dark" wire:click="IrInicio">IR A INICIO</a>
+                    @if(@Auth::user()->hasPermissionTo('Recepcionar_Servicio'))
+                        <a href="javascript:void(0)" class="btn btn-dark" wire:click="GoService">AGREGAR</a>
+                    @endif
+                </ul>
+
+            </div>
+            
             {{-- SEARCH-> --}}
             <div class="row justify-content-between">
                 <div class="col-lg-4 col-md-4 col-sm-12">
@@ -970,7 +978,7 @@
                             </tr>
                         </tfoot>
                     </table>
-                    {{ $data->links() }}
+                {{ $data->links() }}
                 </div>
             </div>
         </div>

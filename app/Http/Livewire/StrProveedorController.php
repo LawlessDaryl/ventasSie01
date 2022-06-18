@@ -70,8 +70,8 @@ class StrProveedorController extends Component
         $messages = [
             'name.required' => 'Ingresa el nombre del proveedor',
             'name.min' => 'El nombre del proveedor debe tener al menos 3 caracteres',
-            'phone.required' => 'Ingresa el numero de contácto del proveedor',
-            'phone.min' => 'El numero de contácto debe tener al menos 3 caracteres',
+            'phone.required' => 'Ingresa el número de contácto del proveedor',
+            'phone.min' => 'El número de contácto debe tener al menos 3 caracteres',
             'mail.required' => 'Ingresa una direccion de correo electrónico',
             'mail.email' => 'Ingresa una dirección de correo válida',
             'mail.unique' => 'El email ya existe en el sistema',
@@ -126,8 +126,8 @@ class StrProveedorController extends Component
         $messages = [
             'name.required' => 'Ingresa el nombre del proveedor',
             'name.min' => 'El nombre del proveedor debe tener al menos 3 caracteres',
-            'phone.required' => 'Ingresa el numero de contácto del proveedor',
-            'phone.min' => 'El numero de contácto debe tener al menos 3 caracteres',
+            'phone.required' => 'Ingresa el número de contácto del proveedor',
+            'phone.min' => 'El número de contácto debe tener al menos 3 caracteres',
             'mail.required' => 'Ingresa una direccion de correo electrónico',
             'mail.email' => 'Ingresa una dirección de correo válida',
             'mail.unique' => 'El email ya existe en el sistema',

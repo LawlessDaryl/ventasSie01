@@ -10,6 +10,7 @@ use App\Models\Sucursal;
 use Barryvdh\DomPDF\Facade as PDF;
 use Carbon\Carbon;
 use App\Models\User;
+use Exception;
 use Illuminate\Support\Facades\DB;
 
 class ExportServicioEntregPdfController extends Controller
@@ -51,7 +52,7 @@ class ExportServicioEntregPdfController extends Controller
         if ($reportType == 1 && ($dateFrom == '' || $dateTo == '')) {
             $dateFrom = Carbon::parse(Carbon::now())->format('Y-m-d');
             $dateTo = Carbon::parse(Carbon::now())->format('Y-m-d');
-            $emit('item', 'Hiciste algo incorrecto, la fecha se actualizó');
+            $this->emit('item', 'Hiciste algo incorrecto, la fecha se actualizó');
         }
 
         if ($dateFrom == "" || $dateTo == "") {
@@ -70,7 +71,7 @@ class ExportServicioEntregPdfController extends Controller
                 $to = Carbon::parse($dateTo)->format('Y-m-d')     . ' 23:59:59';
             } catch (Exception $e) {
                 DB::rollback();
-                $emit('', 'Datos no Validos', $e->getMessage());
+                $this->emit('', 'Datos no Validos', $e->getMessage());
             }
         }
 

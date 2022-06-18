@@ -2,11 +2,19 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Account;
+use App\Models\AccountProfile;
 use App\Models\Caja;
 use App\Models\Cartera;
 use App\Models\CarteraMov;
+use App\Models\CuentaInversion;
 use App\Models\Movimiento;
+use App\Models\Plan;
+use App\Models\PlanAccount;
+use App\Models\Profile;
+use App\Models\Transaccion;
 use App\Models\User;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
@@ -132,6 +140,85 @@ class ReporteMovimientoController extends Component
                 ->where('crms.tipoDeMovimiento', $this->opciones)
                 ->orderBy('movimientos.id', 'desc')
                 ->get();
+        }
+    }
+    public function EliminarTigoMoney()
+    {
+        DB::beginTransaction();
+        try {
+            $transacciones = Transaccion::orderBy('id', 'desc')->get();
+
+            foreach ($transacciones as $transac) {
+                foreach ($transac->movTransac as $value) {
+                    foreach ($value->Movimiento->cartmov as $value2) {
+                        $carteraMov = $value2;
+                        $carteraMov->delete();
+                    }
+                    $clientemov = $value->Movimiento->climov;
+                    if ($clientemov) {
+                        $clientemov->delete();
+                    }
+                    $value->delete();
+                    $value->Movimiento->delete();
+                }
+                $transac->delete();
+            }
+
+            DB::commit();
+            $this->resetUI();
+            $this->emit('tigo-delete', 'Se eliminaron las transacciones tigo money');
+        } catch (Exception $e) {
+            DB::rollback();
+            $this->emit('item-error', 'ERROR' . $e->getMessage());
+        }
+    }
+    public function EliminarStreaming()
+    {
+        DB::beginTransaction();
+        try {
+            $accountProf = AccountProfile::orderby('id', 'desc')->get();
+            foreach ($accountProf as $accPr) {
+                $accPr->delete();
+            }
+            $planAccounts = PlanAccount::orderby('id', 'desc')->get();
+            foreach ($planAccounts as $planAcc) {
+                $planAcc->delete();
+            }
+            $inversiones = CuentaInversion::orderby('id', 'desc')->get();
+            foreach ($inversiones as $inv) {
+                $inv->delete();
+            }
+            $cuentas = Account::orderby('id', 'desc')->get();
+            foreach ($cuentas as $cue) {
+                $cue->delete();
+            }
+            $profiles = Profile::orderby('id', 'desc')->get();
+            foreach ($profiles as $prof) {
+                $prof->delete();
+            }
+
+            $planes = Plan::orderBy('id', 'desc')->get();
+            foreach ($planes as $pl) {
+
+                foreach ($pl->Mov->cartmov as $value2) {
+                    $carteraMov = $value2;
+                    $carteraMov->delete();
+                }
+
+                $clientemov = $pl->Mov->climov;
+                if ($clientemov) {
+                    $clientemov->delete();
+                }
+                $pl->delete();
+                $pl->Mov->delete();
+            }
+
+            DB::commit();
+            $this->resetUI();
+            $this->emit('tigo-delete', 'Se eliminó todo de streaming');
+        } catch (Exception $e) {
+            DB::rollback();
+            $this->emit('item-error', 'ERROR' . $e->getMessage());
         }
     }
     /* ABRIR MODAL */

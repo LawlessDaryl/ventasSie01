@@ -129,8 +129,8 @@
                             </label>
                             <select wire:model="tipopago" class="form-control">
                                 <option value="EFECTIVO" selected>EFECTIVO</option>
-                                <option value="Banco">CUENTA BANCARIA</option>
-                                <option value="TigoStreaming">TIGO MONEY</option>
+                                {{-- <option value="Banco">CUENTA BANCARIA</option>
+                                <option value="TigoStreaming">TIGO MONEY</option> --}}
                             </select>
                             @error('tipopago')
                                 <span class="text-danger er">{{ $message }}</span>
@@ -149,6 +149,15 @@
                             @enderror
                         </div>
                     </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group custom-file">
+                            <input type="file" class="custom-file-input form-control" wire:model="comprobante"
+                                accept="image/x-png,image/gif,image/jpeg">
+                            <label class="custom-file-label">Comprobante {{ $comprobante }}</label>
+                        </div>
+                    </div>
 
                     <div class="col-sm-12 col-md-12">
                         <div class="form-group">
@@ -159,11 +168,12 @@
                             @enderror
                         </div>
                     </div>
-
+                </div>
+                <div class="row">
                     <div class="col-sm-12 col-md-4">
                         <div class="form-group text-center mt-4">
                             <button type="button" @if ($meses == 0) disabled @endif
-                                wire:click.prevent="Renovar()" class="btn btn-warning">Renovar
+                                wire:click.prevent="Renovar()" class="btn btn-dark">Renovar
                                 plan</button>
                         </div>
                     </div>
@@ -178,11 +188,12 @@
 
                     <div class="col-sm-12 col-md-4">
                         <div class="form-group text-center mt-4">
-                            <a href="javascript:void(0)" class="btn btn-warning"
+                            <a href="javascript:void(0)" class="btn btn-dark"
                                 wire:click.prevent="CambiarCuenta()">Buscar otra cuenta (Cambiar)</a>
                         </div>
                     </div>
-
+                </div>
+                <div class="row">
                     @if ($mostrartabla2 == 1)
                         <div class="col-sm-12 col-md-12">
                             <div class="statbox widget box box-shadow">
@@ -243,7 +254,6 @@
                             </div>
                         </div>
                     @endif
-
                 </div>
             </div>
         </div>

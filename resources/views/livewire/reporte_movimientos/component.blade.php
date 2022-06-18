@@ -6,14 +6,22 @@
                     <b>{{ $componentName }} | {{ $pageTitle }}</b>
                 </h4>
                 <ul class="tabs tab-pills">
-                    @if (!empty(session('sesionCaja')))
-                        @can('Ver_Generar_Ingreso_Egreso_Boton')
-                            <a wire:click.prevent="viewDetails()" class="btn btn-warning">
-                                Generar Ingreso/Egreso en cartera
-                            </a>
-                        @endcan
-                    @endif
+                    @can('Ver_Generar_Ingreso_Egreso_Boton')
+                        <a wire:click.prevent="viewDetails()" class="btn btn-dark">
+                            Generar Ingreso/Egreso en cartera
+                        </a>
+                    @endcan
                 </ul>
+                {{-- <ul class="tabs tab-pills">
+                    <a wire:click.prevent="EliminarTigoMoney()" class="btn btn-dark">
+                        Eliminar tigo money
+                    </a>
+                </ul> --}}
+                {{-- <ul class="tabs tab-pills">
+                    <a wire:click.prevent="EliminarStreaming()" class="btn btn-dark">
+                        Eliminar streaming
+                    </a>
+                </ul> --}}
             </div>
             <div class="row">
                 <div class="col-lg-4 col-md-4 col-sm-12">
@@ -204,86 +212,8 @@
             $('#modal-details').modal('hide')
             noty(Msg)
         })
+        window.livewire.on('tigo-delete', Msg => {
+            noty(Msg)
+        })
     });
-
-    function ConfirmVencer(nameperfil) {
-        swal.fire({
-            title: 'CONFIRMAR',
-            icon: 'warning',
-            text: '¿Esta seguro de vencer el perfil ' + nameperfil + ' ?',
-            showCancelButton: true,
-            cancelButtonText: 'Cerrar',
-            cancelButtonColor: '#383838',
-            confirmButtonColor: '#3B3F5C',
-            confirmButtonText: 'Aceptar'
-        }).then(function(result) {
-            if (result.value) {
-                window.livewire.emit('Vencer')
-                swal.fire(
-                    'Se venció el perfil ' + nameperfil,
-                    'El perfil a pasado a vencido.'
-                )
-            }
-        })
-    }
-
-    function ConfirmCambiar(id, nameperfil, email) {
-        swal.fire({
-            title: 'CONFIRMAR',
-            icon: 'warning',
-            text: '¿Esta seguro de cambiar el perfil ' + nameperfil + ' a la cuenta ' + email + ' ?',
-            showCancelButton: true,
-            cancelButtonText: 'Cerrar',
-            cancelButtonColor: '#383838',
-            confirmButtonColor: '#3B3F5C',
-            confirmButtonText: 'Aceptar'
-        }).then(function(result) {
-            if (result.value) {
-                window.livewire.emit('SeleccionarCuenta', id)
-                swal.fire(
-                    'Los datos del perfil actual se cambiaran por los del nuevo automaticamente',
-                    'Se cambio de cuenta el perfil ' + nameperfil + ' de pin a la cuenta ' +
-                    email
-                )
-            }
-        })
-    }
-
-    function ConfirmHecho(id) {
-        swal.fire({
-            title: 'CONFIRMAR',
-            icon: 'warning',
-            text: '¿Ya realizó las acciones correspondientes para este perfil y desea ponerlo en realizado?',
-            showCancelButton: true,
-            cancelButtonText: 'Cerrar',
-            cancelButtonColor: '#383838',
-            confirmButtonColor: '#3B3F5C',
-            confirmButtonText: 'Aceptar'
-        }).then(function(result) {
-            if (result.value) {
-                window.livewire.emit('Realizado', id)
-                swal.fire(
-                    'Se cambió a realizado'
-                )
-            }
-        })
-    }
-
-    function Confirm(id, name) {
-        swal.fire({
-            title: 'CONFIRMAR',
-            icon: 'warning',
-            text: 'Confirmar eliminar el perfil ' + '"' + name + '"',
-            showCancelButton: true,
-            cancelButtonText: 'Cerrar',
-            cancelButtonColor: '#383838',
-            confirmButtonColor: '#3B3F5C',
-            confirmButtonText: 'Aceptar'
-        }).then(function(result) {
-            if (result.value) {
-                window.livewire.emit('deleteRow', id)
-                Swal.close()
-            }
-        })
-    }
 </script>

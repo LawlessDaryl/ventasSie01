@@ -44,7 +44,7 @@
                                                     <tr>
                                                         <th class="table-th text-withe text-center ">Cédula</th>
                                                         <th class="table-th text-withe text-center">Nombre</th>
-                                                        <th class="table-th text-withe text-center">Celular</th>
+                                                        <th class="table-th text-withe text-center">Teléfono</th>
                                                         <th class="table-th text-withe text-center">Acción</th>
                                                     </tr>
                                                 </thead>
@@ -91,7 +91,11 @@
 
             </div>
             <div class="modal-footer">
+<<<<<<< HEAD
                 <button type="button" wire:click.prevent="resetUI()" class="btn btn-warning close-btn text-info"
+=======
+                <button type="button" wire:click.prevent="resetUI()" class="btn btn-dark close-btn text-info"
+>>>>>>> streamingservicios01
                     data-dismiss="modal" style="background: #3b3f5c">CANCELAR</button>
             </div>
         </div>

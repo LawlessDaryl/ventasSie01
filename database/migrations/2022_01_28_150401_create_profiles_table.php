@@ -18,7 +18,7 @@ class CreateProfilesTable extends Migration
             $table->string('nameprofile');
             $table->string('pin');
             $table->enum('status',['ACTIVO','INACTIVO'])->default('ACTIVO');
-            $table->enum('availability',['LIBRE','OCUPADO','VENCIDO'])->default('LIBRE');
+            $table->enum('availability',['LIBRE','OCUPADO','VENCIDO','ANULADO'])->default('LIBRE');
             $table->string('observations')->nullable();
             $table->timestamps();
         });

@@ -142,24 +142,24 @@
                                         @if ($acounts->dias > 5)
                                             <td class="text-center" style="background-color: #09ed3d !important">
                                                 <a href="javascript:void(0)"
-                                                    wire:click="mostrarRenovar({{ $acounts->id }})"
-                                                    class="btn btn-warning" title="Renovar">
+                                                    wire:click="mostrarRenovar({{ $acounts->IDaccount }})"
+                                                    class="btn btn-primary" title="Renovar">
                                                     {{ \Carbon\Carbon::parse($acounts->expiration_account)->format('d/m/Y') }}
                                                 </a>
                                             </td>
                                         @elseif($acounts->dias >= 0 && $acounts->dias <= 5)
                                             <td class="text-center" style="background-color: #f1dc08 !important">
                                                 <a href="javascript:void(0)"
-                                                    wire:click="mostrarRenovar({{ $acounts->id }})"
-                                                    class="btn btn-warning" title="Renovar">
+                                                    wire:click="mostrarRenovar({{ $acounts->IDaccount }})"
+                                                    class="btn btn-primary" title="Renovar">
                                                     {{ \Carbon\Carbon::parse($acounts->expiration_account)->format('d/m/Y') }}
                                                 </a>
                                             </td>
                                         @else
                                             <td class="text-center" style="background-color: #FF0000 !important">
                                                 <a href="javascript:void(0)"
-                                                    wire:click="mostrarRenovar({{ $acounts->id }})"
-                                                    class="btn btn-warning" title="Renovar">
+                                                    wire:click="mostrarRenovar({{ $acounts->IDaccount }})"
+                                                    class="btn btn-primary" title="Renovar">
                                                     {{ \Carbon\Carbon::parse($acounts->expiration_account)->format('d/m/Y') }}
                                                 </a>
                                             </td>
@@ -178,17 +178,19 @@
                                                 <h6 class="text-center">{{ $acounts->perfOcupados }}</h6>
                                             </td>
                                             <td class="text-center">
-                                                <a href="javascript:void(0)" wire:click="Crear({{ $acounts->id }})"
+                                                <a href="javascript:void(0)"
+                                                    wire:click="VerPerfiles({{ $acounts->IDaccount }})"
                                                     class="btn btn-warning" title="Ver Perfiles">
-                                                    <i class="fa fas fa-chalkboard-teacher"></i>
+                                                    <i class="fa-solid fa-user-gear"></i>
                                                 </a>
-                                                <a href="javascript:void(0)" wire:click="Edit({{ $acounts->id }})"
+                                                <a href="javascript:void(0)"
+                                                    wire:click="Edit({{ $acounts->IDaccount }})"
                                                     class="btn btn-warning" title="Editar Cuenta">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
                                                 @if ($acounts->dias <= 3)
                                                     <a href="javascript:void(0)"
-                                                        onclick="ConfirmarInhabilitar('{{ $acounts->id }}','{{ $acounts->perfOcupados }}')"
+                                                        onclick="ConfirmarInhabilitar('{{ $acounts->IDaccount }}','{{ $acounts->perfOcupados }}')"
                                                         class="btn btn-warning" title="Inhabilitar">
                                                         <i class="fas fa-trash"></i>
                                                     </a>
@@ -216,6 +218,7 @@
                                     <th class="table-th text-withe text-center">MAX PERF</th>
                                     <th class="table-th text-withe text-center">INICIO PLAN</th>
                                     <th class="table-th text-withe text-center">EXPIRACIÓN PLAN</th>
+                                    <th class="table-th text-withe text-center">RENOVACION</th>
                                     <th class="table-th text-withe text-center">ACCIONES</th>
                                     <th class="table-th text-withe text-center">REALIZADO</th>
                                 </tr>
@@ -251,8 +254,8 @@
                                             @endif>
                                             @if ($condicional == 'ocupados')
                                                 <a href="javascript:void(0)"
-                                                    wire:click="mostrarRenovar({{ $acounts->id }})"
-                                                    class="btn btn-warning" title="Renovar">
+                                                    wire:click="mostrarRenovar({{ $acounts->IDaccount }})"
+                                                    class="btn btn-primary" title="Renovar">
                                                     {{ \Carbon\Carbon::parse($acounts->expiration_account)->format('d/m/Y') }}
                                                 </a>
                                             @else
@@ -282,17 +285,19 @@
                                         <td class="text-center">
                                             @if ($acounts->plan_status == 'VIGENTE')
                                                 <a href="javascript:void(0)"
-                                                    wire:click="Acciones({{ $acounts->planid }})"
+                                                    wire:click="Acciones('{{ $acounts->planid }}','{{ $acounts->IDplanAccount }}','{{ $acounts->IDaccount }}','{{ $acounts->IDplatf }}','{{ $acounts->clienteID }}')"
                                                     class="btn btn-warning" title="Renovación">
                                                     <i class="fa fas fa-file-signature"></i>
                                                 </a>
                                             @endif
-                                            <a href="javascript:void(0)" wire:click="Edit({{ $acounts->id }})"
+                                        
+                                    
+                                            <a href="javascript:void(0)" wire:click="Edit({{ $acounts->IDaccount }})"
                                                 class="btn btn-warning" title="Editar">
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                             <a href="javascript:void(0)"
-                                                wire:click="EditObservaciones({{ $acounts->planid }})"
+                                                wire:click="EditObservaciones('{{ $acounts->planid }}','{{ $acounts->clienteID }}')"
                                                 class="btn btn-warning" title="Observaciones">
                                                 <i class="fa fas fa-eye"></i>
                                             </a>

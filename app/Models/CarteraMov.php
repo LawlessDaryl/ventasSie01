@@ -11,9 +11,5 @@ class CarteraMov extends Model
 
     protected $fillable = ['type', 'tipoDeMovimiento', 'comentario', 'cartera_id', 'movimiento_id'];
 
-    public function cartera()
-    {
-        return $this->belongsTo(Cartera::class);
-    }
-
+    
 }

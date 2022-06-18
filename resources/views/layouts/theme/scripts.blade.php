@@ -30,7 +30,7 @@ integrity="sha512-hkvXFLlESjeYENO4CNi69z3A1puvONQV5Uh+G4TUDayZxSLyic5Kba9hhuiNLb
     function noty(msg, option = 1) {
         Snackbar.show({
             text: msg.toUpperCase(),
-            actionText: 'Cerrar Exit',
+            actionText: 'Cerrar',
             actionTextColor: '#FFFFFF',
             backgroungColor: option == 1 ? '#FF7900' : '#e7515a',
             pos: 'top-right'

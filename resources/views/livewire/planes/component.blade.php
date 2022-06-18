@@ -86,7 +86,8 @@
                             </thead>
                             <tbody>
                                 @foreach ($planes as $p)
-                                    <tr>
+                                    <tr
+                                        style="{{ $p->estado == 'ANULADO' ? 'background-color: #d97171 !important' : '' }}">
                                         <td class="text-center">
                                             <h6 class="text-center">{{ $p->plataforma }}</h6>
                                         </td>
@@ -120,13 +121,14 @@
                                         </td>
                                         <td class="text-center">
                                             <a href="javascript:void(0)"
-                                                wire:click="VerObservaciones({{ $p->id }})"
-                                                class="btn btn-warning mtmobile" title="Observaciones">
+                                                wire:click="VerObservacionesPerfil('{{ $p->planid }}','{{ $p->IDperfil }}','{{ $p->clienteID }}')"
+                                                class="btn btn-dark mtmobile" title="Observaciones">
                                                 <i class="fa-solid fa-file-signature"></i>
                                             </a>
                                             @if ($p->estado != 'ANULADO')
-                                                <a href="javascript:void(0)" onclick="Confirm({{ $p->id }})"
-                                                    class="btn btn-warning mtmobile" title="Anular">
+                                                <a href="javascript:void(0)"
+                                                    onclick="ConfirmAnularPerfil('{{ $p->planid }}','{{ $p->IDplanAccount }}','{{ $p->IDaccount }}','{{ $p->IDaccountProfile }}','{{ $p->IDperfil }}')"
+                                                    class="btn btn-dark mtmobile" title="Anular">
                                                     <i class="fas fa-trash"></i>
                                                 </a>
                                             @endif
@@ -134,8 +136,8 @@
                                         <td class="text-center"
                                             style="{{ $p->ready == 'NO' ? 'background-color: #d97171 !important' : 'background-color: #09ed3d !important' }}">
                                             @if ($p->ready == 'NO')
-                                                <a href="javascript:void(0)" class="btn btn-warning"
-                                                    onclick="ConfirmHecho('{{ $p->id }}')">
+                                                <a href="javascript:void(0)" class="btn btn-dark"
+                                                    onclick="ConfirmHecho('{{ $p->planid }}')">
                                                     <i class="fa-regular fa-circle-exclamation"></i>
                                                 </a>
                                             @else
@@ -152,8 +154,8 @@
             @elseif($condicional == 'cuentas')
                 <div class="widget-content">
                     <div class="table-responsive">
-                        <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
-                            <thead class="text-white" style="background: #ee761c">
+                        <table class="table table-unbordered table-striped mt-2">
+                            <thead class="text-white" style="background: #3B3F5C">
                                 <tr>
                                     <th class="table-th text-withe text-center">PLATAFORMA</th>
                                     <th class="table-th text-withe text-center">CLIENTE</th>
@@ -201,13 +203,14 @@
                                         </td>
                                         <td class="text-center">
                                             <a href="javascript:void(0)"
-                                                wire:click="VerObservaciones({{ $p->id }})"
-                                                class="btn btn-warning mtmobile" title="Observaciones">
+                                                wire:click="VerObservacionesCuenta('{{ $p->planid }}','{{ $p->clienteID }}')"
+                                                class="btn btn-dark mtmobile" title="Observaciones">
                                                 <i class="fa-solid fa-file-signature"></i>
                                             </a>
                                             @if ($p->estado != 'ANULADO')
-                                                <a href="javascript:void(0)" onclick="Confirm({{ $p->id }})"
-                                                    class="btn btn-warning mtmobile" title="Anular">
+                                                <a href="javascript:void(0)"
+                                                    onclick="ConfirmAnularEntera('{{ $p->planid }}','{{ $p->IDplanAccount }}','{{ $p->IDaccount }}')"
+                                                    class="btn btn-dark mtmobile" title="Anular">
                                                     <i class="fas fa-trash"></i>
                                                 </a>
                                             @endif
@@ -215,8 +218,8 @@
                                         <td class="text-center"
                                             style="{{ $p->ready == 'NO' ? 'background-color: #d97171 !important' : 'background-color: #09ed3d !important' }}">
                                             @if ($p->ready == 'NO')
-                                                <a href="javascript:void(0)" class="btn btn-warning"
-                                                    onclick="ConfirmHecho('{{ $p->id }}')">
+                                                <a href="javascript:void(0)" class="btn btn-dark"
+                                                    onclick="ConfirmHecho('{{ $p->planid }}')">
                                                     <i class="fa-regular fa-circle-exclamation"></i>
                                                 </a>
                                             @else
@@ -233,8 +236,8 @@
             @else
                 <div class="widget-content">
                     <div class="table-responsive">
-                        <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
-                            <thead class="text-white" style="background: #ee761c">
+                        <table class="table table-unbordered table-hover mt-2">
+                            <thead class="text-white" style="background: #3B3F5C">
                                 <tr>
                                     <th class="table-th text-withe text-center" style="font-size: 80%">PLATAFORMAS</th>
                                     <th class="table-th text-withe text-center" style="font-size: 80%">CLIENTE</th>
@@ -253,63 +256,246 @@
                             </thead>
                             <tbody>
                                 @foreach ($planes as $p)
-                                    <tr>
+                                    <tr
+                                        style="{{ $p->status == 'ANULADO' ? 'background-color: #d97171 !important' : '' }}">
                                         <td class="text-center">
                                             <h6 class="text-center">
-                                                @foreach ($p->PlanAccounts as $item)
-                                                    @if ($item->status == 'ACTIVO')
-                                                        {{ $item->Cuenta->Plataforma->nombre }} <br>
-                                                    @endif
-                                                @endforeach
+                                                @if ($p->status == 'VIGENTE')
+                                                    @foreach ($p->PlanAccounts as $item)
+                                                        @if ($item->status == 'ACTIVO' && $item->COMBO == 'PERFIL1')
+                                                            {{ $item->Cuenta->Plataforma->nombre }} <br>
+                                                            @php
+                                                                $plataforma1 = $item->Cuenta->Plataforma->id;
+                                                            @endphp
+                                                        @elseif ($item->status == 'ACTIVO' && $item->COMBO == 'PERFIL2')
+                                                            {{ $item->Cuenta->Plataforma->nombre }} <br>
+                                                            @php
+                                                                $plataforma2 = $item->Cuenta->Plataforma->id;
+                                                            @endphp
+                                                        @elseif ($item->status == 'ACTIVO' && $item->COMBO == 'PERFIL3')
+                                                            {{ $item->Cuenta->Plataforma->nombre }} <br>
+                                                            @php
+                                                                $plataforma3 = $item->Cuenta->Plataforma->id;
+                                                            @endphp
+                                                        @endif
+                                                    @endforeach
+                                                @elseif($p->status == 'ANULADO')
+                                                    @foreach ($p->PlanAccounts as $item)
+                                                        @if ($item->status == 'ANULADO' && $item->COMBO == 'PERFIL1')
+                                                            {{ $item->Cuenta->Plataforma->nombre }} <br>
+                                                            @php
+                                                                $plataforma1 = $item->Cuenta->Plataforma->id;
+                                                            @endphp
+                                                        @elseif ($item->status == 'ANULADO' && $item->COMBO == 'PERFIL2')
+                                                            {{ $item->Cuenta->Plataforma->nombre }} <br>
+                                                            @php
+                                                                $plataforma2 = $item->Cuenta->Plataforma->id;
+                                                            @endphp
+                                                        @elseif ($item->status == 'ANULADO' && $item->COMBO == 'PERFIL3')
+                                                            {{ $item->Cuenta->Plataforma->nombre }} <br>
+                                                            @php
+                                                                $plataforma3 = $item->Cuenta->Plataforma->id;
+                                                            @endphp
+                                                        @endif
+                                                    @endforeach
+                                                @endif
                                             </h6>
                                         </td>
                                         <td class="text-center">
                                             <h6 class="text-center">{{ $p->Mov->climov->client->nombre }} <br>
                                                 {{ $p->Mov->climov->client->celular }}</h6>
+                                            @php
+                                                $IDcliente = $p->Mov->climov->client->id;
+                                            @endphp
                                         </td>
                                         <td class="text-center">
                                             <h6 class="text-center">
-                                                @foreach ($p->PlanAccounts as $item)
-                                                    @if ($item->status == 'ACTIVO')
-                                                        {{ $item->Cuenta->account_name }}
-                                                        <br>
-                                                    @endif
-                                                @endforeach
+                                                @if ($p->status == 'VIGENTE')
+                                                    @foreach ($p->PlanAccounts as $item)
+                                                        @if ($item->status == 'ACTIVO' && $item->COMBO == 'PERFIL1')
+                                                            {{ $item->Cuenta->account_name }} <br>
+                                                        @elseif ($item->status == 'ACTIVO' && $item->COMBO == 'PERFIL2')
+                                                            {{ $item->Cuenta->account_name }} <br>
+                                                        @elseif ($item->status == 'ACTIVO' && $item->COMBO == 'PERFIL3')
+                                                            {{ $item->Cuenta->account_name }} <br>
+                                                        @endif
+                                                    @endforeach
+                                                @elseif($p->status == 'ANULADO')
+                                                    @foreach ($p->PlanAccounts as $item)
+                                                        @if ($item->status == 'ANULADO' && $item->COMBO == 'PERFIL1')
+                                                            {{ $item->Cuenta->account_name }} <br>
+                                                        @elseif ($item->status == 'ANULADO' && $item->COMBO == 'PERFIL2')
+                                                            {{ $item->Cuenta->account_name }} <br>
+                                                        @elseif ($item->status == 'ANULADO' && $item->COMBO == 'PERFIL3')
+                                                            {{ $item->Cuenta->account_name }} <br>
+                                                        @endif
+                                                    @endforeach
+                                                @endif
                                             </h6>
                                         </td>
                                         <td class="text-center">
                                             <h6 class="text-center">
-                                                @foreach ($p->PlanAccounts as $item)
-                                                    @if ($item->status == 'ACTIVO')
-                                                        {{ $item->Cuenta->password_account }}
-                                                        <br>
-                                                    @endif
-                                                @endforeach
+                                                @if ($p->status == 'VIGENTE')
+                                                    @foreach ($p->PlanAccounts as $item)
+                                                        @if ($item->status == 'ACTIVO' && $item->COMBO == 'PERFIL1')
+                                                            {{ $item->Cuenta->password_account }} <br>
+                                                        @elseif ($item->status == 'ACTIVO' && $item->COMBO == 'PERFIL2')
+                                                            {{ $item->Cuenta->password_account }} <br>
+                                                        @elseif ($item->status == 'ACTIVO' && $item->COMBO == 'PERFIL3')
+                                                            {{ $item->Cuenta->password_account }} <br>
+                                                        @endif
+                                                    @endforeach
+                                                @elseif($p->status == 'ANULADO')
+                                                    @foreach ($p->PlanAccounts as $item)
+                                                        @if ($item->status == 'ANULADO' && $item->COMBO == 'PERFIL1')
+                                                            {{ $item->Cuenta->password_account }} <br>
+                                                        @elseif ($item->status == 'ANULADO' && $item->COMBO == 'PERFIL2')
+                                                            {{ $item->Cuenta->password_account }} <br>
+                                                        @elseif ($item->status == 'ANULADO' && $item->COMBO == 'PERFIL3')
+                                                            {{ $item->Cuenta->password_account }} <br>
+                                                        @endif
+                                                    @endforeach
+                                                @endif
                                             </h6>
                                         </td>
                                         <td class="text-center">
                                             <h6 class="text-center">
-                                                @foreach ($p->PlanAccounts as $item)
-                                                    @if ($item->status == 'ACTIVO')
-                                                        {{ \Carbon\Carbon::parse($item->Cuenta->expiration_account)->format('d/m/Y') }}
-                                                        <br>
-                                                    @endif
-                                                @endforeach
+                                                @if ($p->status == 'VIGENTE')
+                                                    @foreach ($p->PlanAccounts as $item)
+                                                        @if ($item->status == 'ACTIVO' && $item->COMBO == 'PERFIL1')
+                                                            @php
+                                                                $planAccount1 = $item->id;
+                                                                $Account1 = $item->Cuenta->id;
+                                                            @endphp
+                                                            {{ \Carbon\Carbon::parse($item->Cuenta->expiration_account)->format('d/m/Y') }}
+                                                            <br>
+                                                        @elseif ($item->status == 'ACTIVO' && $item->COMBO == 'PERFIL2')
+                                                            @php
+                                                                $planAccount2 = $item->id;
+                                                                $Account2 = $item->Cuenta->id;
+                                                            @endphp
+                                                            {{ \Carbon\Carbon::parse($item->Cuenta->expiration_account)->format('d/m/Y') }}
+                                                            <br>
+                                                        @elseif ($item->status == 'ACTIVO' && $item->COMBO == 'PERFIL3')
+                                                            @php
+                                                                $planAccount3 = $item->id;
+                                                                $Account3 = $item->Cuenta->id;
+                                                            @endphp
+                                                            {{ \Carbon\Carbon::parse($item->Cuenta->expiration_account)->format('d/m/Y') }}
+                                                            <br>
+                                                        @endif
+                                                    @endforeach
+                                                @elseif($p->status == 'ANULADO')
+                                                    @foreach ($p->PlanAccounts as $item)
+                                                        @if ($item->status == 'ANULADO' && $item->COMBO == 'PERFIL1')
+                                                            @php
+                                                                $planAccount1 = $item->id;
+                                                                $Account1 = $item->Cuenta->id;
+                                                            @endphp
+                                                            {{ \Carbon\Carbon::parse($item->Cuenta->expiration_account)->format('d/m/Y') }}
+                                                            <br>
+                                                        @elseif ($item->status == 'ANULADO' && $item->COMBO == 'PERFIL2')
+                                                            @php
+                                                                $planAccount2 = $item->id;
+                                                                $Account2 = $item->Cuenta->id;
+                                                            @endphp
+                                                            {{ \Carbon\Carbon::parse($item->Cuenta->expiration_account)->format('d/m/Y') }}
+                                                            <br>
+                                                        @elseif ($item->status == 'ANULADO' && $item->COMBO == 'PERFIL3')
+                                                            @php
+                                                                $planAccount3 = $item->id;
+                                                                $Account3 = $item->Cuenta->id;
+                                                            @endphp
+                                                            {{ \Carbon\Carbon::parse($item->Cuenta->expiration_account)->format('d/m/Y') }}
+                                                            <br>
+                                                        @endif
+                                                    @endforeach
+                                                @endif
                                             </h6>
                                         </td>
                                         <td class="text-center">
                                             <h6 class="text-center">
-                                                @foreach ($p->PlanAccounts as $item)
-                                                    @if ($item->status == 'ACTIVO')
-                                                        @foreach ($item->Cuenta->CuentaPerfiles as $acprof)
-                                                            @if ($acprof->status == 'ACTIVO' && $acprof->plan_id == $p->id)
-                                                                {{ $acprof->Perfil->nameprofile }} <br>
-                                                                {{ $acprof->Perfil->pin }}
-                                                            @endif
-                                                        @endforeach
-                                                        <br>
-                                                    @endif
-                                                @endforeach
+                                                @if ($p->status == 'VIGENTE')
+                                                    @foreach ($p->PlanAccounts as $item)
+                                                        @if ($item->status == 'ACTIVO' && $item->COMBO == 'PERFIL1')
+                                                            @foreach ($item->Cuenta->CuentaPerfiles as $acprof)
+                                                                @if ($acprof->status == 'ACTIVO' && $acprof->COMBO == 'PERFIL1' && $acprof->plan_id == $p->id)
+                                                                    {{ $acprof->Perfil->nameprofile }} <br>
+                                                                    {{ $acprof->Perfil->pin }}
+                                                                    @php
+                                                                        $accountProfile1 = $acprof->id;
+                                                                        $perfil1 = $acprof->Perfil->id;
+                                                                    @endphp
+                                                                @endif
+                                                            @endforeach
+                                                            <br>
+                                                        @elseif ($item->status == 'ACTIVO' && $item->COMBO == 'PERFIL2')
+                                                            @foreach ($item->Cuenta->CuentaPerfiles as $acprof)
+                                                                @if ($acprof->status == 'ACTIVO' && $acprof->COMBO == 'PERFIL2' && $acprof->plan_id == $p->id)
+                                                                    {{ $acprof->Perfil->nameprofile }} <br>
+                                                                    {{ $acprof->Perfil->pin }}
+                                                                    @php
+                                                                        $accountProfile2 = $acprof->id;
+                                                                        $perfil2 = $acprof->Perfil->id;
+                                                                    @endphp
+                                                                @endif
+                                                            @endforeach
+                                                            <br>
+                                                        @elseif ($item->status == 'ACTIVO' && $item->COMBO == 'PERFIL3')
+                                                            @foreach ($item->Cuenta->CuentaPerfiles as $acprof)
+                                                                @if ($acprof->status == 'ACTIVO' && $acprof->COMBO == 'PERFIL3' && $acprof->plan_id == $p->id)
+                                                                    {{ $acprof->Perfil->nameprofile }} <br>
+                                                                    {{ $acprof->Perfil->pin }}
+                                                                    @php
+                                                                        $accountProfile3 = $acprof->id;
+                                                                        $perfil3 = $acprof->Perfil->id;
+                                                                    @endphp
+                                                                @endif
+                                                            @endforeach
+                                                            <br>
+                                                        @endif
+                                                    @endforeach
+                                                @elseif($p->status == 'ANULADO')
+                                                    @foreach ($p->PlanAccounts as $item)
+                                                        @if ($item->status == 'ANULADO' && $item->COMBO == 'PERFIL1')
+                                                            @foreach ($item->Cuenta->CuentaPerfiles as $acprof)
+                                                                @if ($acprof->status == 'ANULADO' && $acprof->COMBO == 'PERFIL1' && $acprof->plan_id == $p->id)
+                                                                    {{ $acprof->Perfil->nameprofile }} <br>
+                                                                    {{ $acprof->Perfil->pin }}
+                                                                    @php
+                                                                        $accountProfile1 = $acprof->id;
+                                                                        $perfil1 = $acprof->Perfil->id;
+                                                                    @endphp
+                                                                @endif
+                                                            @endforeach
+                                                            <br>
+                                                        @elseif ($item->status == 'ANULADO' && $item->COMBO == 'PERFIL2')
+                                                            @foreach ($item->Cuenta->CuentaPerfiles as $acprof)
+                                                                @if ($acprof->status == 'ANULADO' && $acprof->COMBO == 'PERFIL2' && $acprof->plan_id == $p->id)
+                                                                    {{ $acprof->Perfil->nameprofile }} <br>
+                                                                    {{ $acprof->Perfil->pin }}
+                                                                    @php
+                                                                        $accountProfile2 = $acprof->id;
+                                                                        $perfil2 = $acprof->Perfil->id;
+                                                                    @endphp
+                                                                @endif
+                                                            @endforeach
+                                                            <br>
+                                                        @elseif ($item->status == 'ANULADO' && $item->COMBO == 'PERFIL3')
+                                                            @foreach ($item->Cuenta->CuentaPerfiles as $acprof)
+                                                                @if ($acprof->status == 'ANULADO' && $acprof->COMBO == 'PERFIL3' && $acprof->plan_id == $p->id)
+                                                                    {{ $acprof->Perfil->nameprofile }} <br>
+                                                                    {{ $acprof->Perfil->pin }}
+                                                                    @php
+                                                                        $accountProfile3 = $acprof->id;
+                                                                        $perfil3 = $acprof->Perfil->id;
+                                                                    @endphp
+                                                                @endif
+                                                            @endforeach
+                                                            <br>
+                                                        @endif
+                                                    @endforeach
+                                                @endif
                                             </h6>
                                         </td>
                                         <td class="text-center">
@@ -326,13 +512,14 @@
                                         </td>
                                         <td class="text-center">
                                             <a href="javascript:void(0)"
-                                                wire:click="VerObservaciones({{ $p->id }})"
-                                                class="btn btn-warning mtmobile" title="Observaciones">
+                                                wire:click="VerObservacionesCombo('{{ $p->id }}','{{ $IDcliente }}','{{ $perfil1 }}','{{ $perfil2 }}','{{ $perfil3 }}','{{ $plataforma1 }}','{{ $plataforma2 }}','{{ $plataforma3 }}')"
+                                                class="btn btn-dark mtmobile" title="Observaciones">
                                                 <i class="fa-solid fa-file-signature"></i>
                                             </a>
                                             @if ($p->status != 'ANULADO')
-                                                <a href="javascript:void(0)" onclick="Confirm({{ $p->id }})"
-                                                    class="btn btn-warning mtmobile" title="Anular">
+                                                <a href="javascript:void(0)"
+                                                    onclick="ConfirmAnularCombo('{{ $p->id }}','{{ $planAccount1 }}','{{ $planAccount2 }}','{{ $planAccount3 }}','{{ $Account1 }}','{{ $Account2 }}','{{ $Account3 }}','{{ $accountProfile1 }}','{{ $accountProfile2 }}','{{ $accountProfile3 }}','{{ $perfil1 }}','{{ $perfil2 }}','{{ $perfil3 }}')"
+                                                    class="btn btn-dark mtmobile" title="Anular">
                                                     <i class="fas fa-trash"></i>
                                                 </a>
                                             @endif
@@ -340,7 +527,7 @@
                                         <td class="text-center"
                                             style="{{ $p->ready == 'NO' ? 'background-color: #d97171 !important' : 'background-color: #09ed3d !important' }}">
                                             @if ($p->ready == 'NO')
-                                                <a href="javascript:void(0)" class="btn btn-warning"
+                                                <a href="javascript:void(0)" class="btn btn-dark"
                                                     onclick="ConfirmHecho('{{ $p->id }}')">
                                                     <i class="fa-regular fa-circle-exclamation"></i>
                                                 </a>
@@ -362,7 +549,6 @@
     @include('livewire.planes.form')
     @include('livewire.planes.modalObservaciones')
     @include('livewire.planes.modalPerfil')
-    @include('livewire.planes.modalCrearPerfil')
     @include('livewire.planes.modalCombos')
 
 </div>
@@ -370,14 +556,16 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
-        window.livewire.on('item-added', Msg => {
-            $('#theModal').modal('hide')
-            noty(Msg)
-        })
+
         window.livewire.on('item-anulado', Msg => {
             noty(Msg)
         })
         window.livewire.on('item-error', Msg => {
+            noty(Msg)
+        })
+
+        window.livewire.on('item-added', Msg => {
+            $('#theModal').modal('hide')
             noty(Msg)
         })
         window.livewire.on('show-modal', Msg => {
@@ -386,13 +574,7 @@
         window.livewire.on('hide-modal', Msg => {
             $('#theModal').modal('hide')
         })
-        window.livewire.on('show-modal2', Msg => {
-            $('#modal-detailes').modal('show')
-        })
-        window.livewire.on('g-i/e', Msg => {
-            $('#modal-detailes').modal('hide')
-            noty(Msg)
-        })
+
         window.livewire.on('item-actualizado', Msg => {
             $('#Modal_Observaciones').modal('hide')
             noty(Msg)
@@ -409,73 +591,12 @@
             noty(Msg)
         })
 
-        window.livewire.on('show-crearPerfil', Msg => {
-            $('#Modal_crear_perfil').modal('show')
-        })
-        window.livewire.on('mensajeCrearPerf', Msg => {
-            noty(Msg)
-        })
-        window.livewire.on('crearperfil-cerrar', Msg => {
-            $('#Modal_crear_perfil').modal('hide')
-            noty(Msg)
-        })
-
         window.livewire.on('show-modalCombos', Msg => {
             $('#Modal_combos').modal('show')
         })
         window.livewire.on('hide-modalCombos', Msg => {
             $('#Modal_combos').modal('hide')
             noty(Msg)
-        })
-
-        flatpickr(document.getElementsByClassName('flatpickr'), {
-            enableTime: false,
-            dateFormat: 'Y-m-d',
-            locale: {
-                firstDayofweek: 1,
-                weekdays: {
-                    shorthand: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
-                    longhand: [
-                        "Domingo",
-                        "Lunes",
-                        "Martes",
-                        "Miércoles",
-                        "Jueves",
-                        "Viernes",
-                        "Sábado",
-                    ],
-                },
-                months: {
-                    shorthand: [
-                        "Ene",
-                        "Feb",
-                        "Mar",
-                        "Abr",
-                        "May",
-                        "Jun",
-                        "Jul",
-                        "Ago",
-                        "Sep",
-                        "Oct",
-                        "Nov",
-                        "Dic",
-                    ],
-                    longhand: [
-                        "Enero",
-                        "Febrero",
-                        "Marzo",
-                        "Abril",
-                        "Mayo",
-                        "Junio",
-                        "Julio",
-                        "Agosto",
-                        "Septiembre",
-                        "Octubre",
-                        "Noviembre",
-                        "Diciembre",
-                    ],
-                },
-            }
         })
 
     });
@@ -500,7 +621,7 @@
         })
     }
 
-    function Confirm(id) {
+    function ConfirmAnularPerfil(plan, planAccount, account, accountProfile, Profile) {
         swal.fire({
             title: 'CONFIRMAR',
             icon: 'warning',
@@ -512,7 +633,46 @@
             confirmButtonText: 'Aceptar'
         }).then(function(result) {
             if (result.value) {
-                window.livewire.emit('deleteRow', id)
+                window.livewire.emit('AnularPerfil', plan, planAccount, account, accountProfile, Profile)
+                Swal.close()
+            }
+        })
+    }
+
+    function ConfirmAnularEntera(plan, planAccount, account) {
+        swal.fire({
+            title: 'CONFIRMAR',
+            icon: 'warning',
+            text: '¿Realmente desea Anular esta transacción?',
+            showCancelButton: true,
+            cancelButtonText: 'Cerrar',
+            cancelButtonColor: '#383838',
+            confirmButtonColor: '#3B3F5C',
+            confirmButtonText: 'Aceptar'
+        }).then(function(result) {
+            if (result.value) {
+                window.livewire.emit('AnularEntera', plan, planAccount, account)
+                Swal.close()
+            }
+        })
+    }
+
+    function ConfirmAnularCombo(plan, planAccount1, planAccount2, planAccount3, account1, account2, account3,
+        accountProfile1, accountProfile2, accountProfile3, Profile1, Profile2, Profile3) {
+        swal.fire({
+            title: 'CONFIRMAR',
+            icon: 'warning',
+            text: '¿Realmente desea Anular esta transacción?',
+            showCancelButton: true,
+            cancelButtonText: 'Cerrar',
+            cancelButtonColor: '#383838',
+            confirmButtonColor: '#3B3F5C',
+            confirmButtonText: 'Aceptar'
+        }).then(function(result) {
+            if (result.value) {
+                window.livewire.emit('AnularCombo', plan, planAccount1, planAccount2, planAccount3, account1,
+                    account2, account3,
+                    accountProfile1, accountProfile2, accountProfile3, Profile1, Profile2, Profile3)
                 Swal.close()
             }
         })

@@ -67,7 +67,7 @@
                     </div>
 
                     {{-- <div class="col-sm-2 mt-4">
-                        <a class="btn btn-warning btn-block {{ count($data) < 1 ? 'disabled' : '' }}"
+                        <a class="btn btn-dark btn-block {{ count($data) < 1 ? 'disabled' : '' }}"
                             href="{{ url('reporteStreaming/pdf' .'/' .$userId .'/' .$Perf_Cuenta .'/' .$Vencid_Vigent .'/' .$reportType .'/' .$dateFrom .'/' .$dateTo) }}">Generar
                             PDF</a>
                     </div> --}}
@@ -79,6 +79,7 @@
                             <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
                                 <thead class="text-white" style="background: #ee761c">
                                     <tr>
+                                        <th class="table-th text-withe text-center">Nº</th>
                                         <th class="table-th text-withe text-center">PLATAFORMA</th>
                                         <th class="table-th text-withe text-center">CLIENTE</th>
                                         <th class="table-th text-withe text-center">CELULAR</th>
@@ -104,6 +105,9 @@
 
                                     @foreach ($data as $p)
                                         <tr>
+                                            <td class="text-center">
+                                                <h6 class="text-center">{{ $loop->iteration }}</h6>
+                                            </td>
                                             <td class="text-center">
                                                 <h6 class="text-center">{{ $p->plataforma }}</h6>
                                             </td>
@@ -133,12 +137,12 @@
                                             </td>
                                             <td class="text-center">
                                                 <h6 class="text-center">
-                                                    {{ \Carbon\Carbon::parse($p->planinicio)->format('d:m:Y') }}
+                                                    {{ \Carbon\Carbon::parse($p->planinicio)->format('d/m/Y') }}
                                                 </h6>
                                             </td>
                                             <td class="text-center">
                                                 <h6 class="text-center">
-                                                    {{ \Carbon\Carbon::parse($p->planfin)->format('d:m:Y') }} </h6>
+                                                    {{ \Carbon\Carbon::parse($p->planfin)->format('d/m/Y') }} </h6>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -150,6 +154,7 @@
                             <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
                                 <thead class="text-white" style="background: #ee761c">
                                     <tr>
+                                        <th class="table-th text-withe text-center">Nº</th>
                                         <th class="table-th text-withe text-center">PLATAFORMA</th>
                                         <th class="table-th text-withe text-center">CLIENTE</th>
                                         <th class="table-th text-withe text-center">CELULAR</th>
@@ -174,6 +179,9 @@
                                     @foreach ($data as $p)
                                         <tr>
                                             <td class="text-center">
+                                                <h6 class="text-center">{{ $loop->iteration }}</h6>
+                                            </td>
+                                            <td class="text-center">
                                                 <h6 class="text-center">{{ $p->plataforma }}</h6>
                                             </td>
                                             <td class="text-center">
@@ -196,12 +204,12 @@
                                             </td>
                                             <td class="text-center">
                                                 <h6 class="text-center">
-                                                    {{ \Carbon\Carbon::parse($p->planinicio)->format('d:m:Y') }}
+                                                    {{ \Carbon\Carbon::parse($p->planinicio)->format('d/m/Y') }}
                                                 </h6>
                                             </td>
                                             <td class="text-center">
                                                 <h6 class="text-center">
-                                                    {{ \Carbon\Carbon::parse($p->planfin)->format('d:m:Y') }} </h6>
+                                                    {{ \Carbon\Carbon::parse($p->planfin)->format('d/m/Y') }} </h6>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -212,8 +220,8 @@
                     @elseif ($Perf_Cuenta == 2)
                         <div class="widget-content">
                             <div class="table-responsive">
-                                <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
-                                    <thead class="text-white" style="background: #ee761c">
+                                <table class="table table-unbordered table-hover mt-2">
+                                    <thead class="text-white" style="background: #3B3F5C">
                                         <tr>
                                             <th class="table-th text-withe text-center">
                                                 PLATAFORMAS</th>

@@ -64,4 +64,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(SucursalUser::class);
     }
+    public function movimientos()
+    {
+        return $this->hasMany(Movimiento::class);
+    }
 }
