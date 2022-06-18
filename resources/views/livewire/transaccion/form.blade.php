@@ -12,23 +12,6 @@
             </div>
             <div class="modal-body">
                 <div class='row'>
-<<<<<<< HEAD
-                    <div class="col-sm-6 col-md-6">
-
-                        <div class="col-sm-12 col-md-12">
-                            <div class="form-group">
-                                <label>
-                                    <h6>Origen transacción</h6>
-                                </label>
-                                <select wire:model.lazy="origen" class="form-control">
-                                    <option value="Elegir" disabled selected>Elegir</option>
-
-                                    @foreach ($origenes as $orige)
-                                        <option value="{{ $orige->id }}">{{ $orige->nombre }}</option>
-                                    @endforeach
-                                </select>
-                                @error('origen')
-=======
                     <div class="col-sm-12 col-md-6">
                         <div class="col-sm-12 col-md-12">
                             <div class="form-group">
@@ -143,7 +126,6 @@
                                 <input @if ($mostrartelf == 0) disabled @endif type="number"
                                     wire:model.lazy="celular" class="form-control">
                                 @error('celular')
->>>>>>> streamingservicios01
                                     <span class="text-danger er">{{ $message }}</span>
                                 @enderror
                             </div>
