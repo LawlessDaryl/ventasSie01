@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '68c1479ba6bf53bca50b9b7fbfbfce9b0aa81a43',
+        'reference' => 'a33cf6baf4b31b5c1f318d1f7c3d2c8271f57adf',
         'name' => 'laravel/laravel',
         'dev' => true,
     ),
@@ -436,7 +436,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '68c1479ba6bf53bca50b9b7fbfbfce9b0aa81a43',
+            'reference' => 'a33cf6baf4b31b5c1f318d1f7c3d2c8271f57adf',
             'dev_requirement' => false,
         ),
         'laravel/sail' => array(
@@ -563,15 +563,6 @@
             'install_path' => __DIR__ . '/../markbaker/matrix',
             'aliases' => array(),
             'reference' => 'c66aefcafb4f6c269510e9ac46b82619a904c576',
-            'dev_requirement' => false,
-        ),
-        'milon/barcode' => array(
-            'pretty_version' => '9.0.0',
-            'version' => '9.0.0.0',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../milon/barcode',
-            'aliases' => array(),
-            'reference' => '6859fe19808380a0b40916d0009d7b4b5e04cc25',
             'dev_requirement' => false,
         ),
         'mockery/mockery' => array(
