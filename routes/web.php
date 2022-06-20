@@ -152,7 +152,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('marcas', MarcasController::class)->name('brands');
         Route::get('proveedores', ProvidersController::class)->name('supliers');
         Route::post('importar',[ ProductsController::class,'import'])->name('importar');
-        Route::get('ingreso/salida',MercanciaController::class)->name('ingreso_salida');
+        Route::get('operacionesinv',MercanciaController::class)->name('operacionesinv');
     });
         Route::group(['middleware' => ['permission:Compras_Index']], function () {
         Route::get('compras', ComprasController::class)->name('compras');

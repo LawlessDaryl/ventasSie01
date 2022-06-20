@@ -331,7 +331,6 @@ class PermissionSeeder extends Seeder
             'name' => 'Modificar_Detalle_Serv',
             'guard_name' => 'web'
         ]);
-<<<<<<< HEAD
 
 
         Permission::create([
@@ -354,8 +353,7 @@ class PermissionSeeder extends Seeder
             'name' => 'Reportes_Inventarios_Export',
             'guard_name' =>'web'
         ]);
+
       
-=======
->>>>>>> streamingservicios01
     }
 }

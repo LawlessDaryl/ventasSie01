@@ -560,7 +560,7 @@
 											Almacen Producto </a>
 									</li>
 									<li>
-										<a href="{{url('ingreso/salida')}}">
+										<a href="{{url('operacionesinv')}}">
 											<i class="fa fas fa-minus"></i>
 											Entrada/Salida de Productos </a>
 									</li>
