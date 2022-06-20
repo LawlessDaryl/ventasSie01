@@ -178,13 +178,6 @@
 											Origen CRUD </a>
 									  </li>
 								  	@endcan
-									  @can('Origen_Index')
-									  <li>
-										  <a href="{{ url('origenes') }}">
-											<i class="fa fas fa-minus"></i>
-											Origen CRUD </a>
-									  </li>
-								  @endcan
 								  @can('Motivo_Index')
 									  <li>
 										  <a href="{{ url('motivos') }}">

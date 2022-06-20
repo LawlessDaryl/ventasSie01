@@ -69,11 +69,7 @@
                                         </a>
                                         {{-- <a href="javascript:void(0)"
                                             onclick="Confirm('{{ $c->id }}','{{ $c->nombre }}')"
-<<<<<<< HEAD
                                             class="btn btn-warning" title="Delete">
-=======
-                                            class="btn btn-dark" title="Delete">
->>>>>>> streamingservicios01
                                             <i class="fas fa-trash"></i>
                                         </a> --}}
                                     </td>
@@ -91,55 +87,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        flatpickr(document.getElementsByClassName('flatpickr'), {
-            enableTime: false,
-            dateFormat: 'd-m-Y',
-            locale: {
-                firstDayofweek: 1,
-                weekdays: {
-                    shorthand: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
-                    longhand: [
-                        "Domingo",
-                        "Lunes",
-                        "Martes",
-                        "Miércoles",
-                        "Jueves",
-                        "Viernes",
-                        "Sábado",
-                    ],
-                },
-                months: {
-                    shorthand: [
-                        "Ene",
-                        "Feb",
-                        "Mar",
-                        "Abr",
-                        "May",
-                        "Jun",
-                        "Jul",
-                        "Ago",
-                        "Sep",
-                        "Oct",
-                        "Nov",
-                        "Dic",
-                    ],
-                    longhand: [
-                        "Enero",
-                        "Febrero",
-                        "Marzo",
-                        "Abril",
-                        "Mayo",
-                        "Junio",
-                        "Julio",
-                        "Agosto",
-                        "Septiembre",
-                        "Octubre",
-                        "Noviembre",
-                        "Diciembre",
-                    ],
-                },
-            }
-        })
+        
 
         window.livewire.on('item-added', Msg => {
             $('#theModal').modal('hide')
