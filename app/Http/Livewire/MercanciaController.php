@@ -30,7 +30,7 @@ class MercanciaController extends Component
         ->section('content');
     }
 
-    public function Seleccionar(){
-        $this->col->push($);
+    public function Seleccionar($id){
+        $this->col->push($id);
     }
 }
