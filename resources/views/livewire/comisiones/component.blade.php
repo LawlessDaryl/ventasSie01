@@ -1,16 +1,8 @@
 <div class="row sales layout-top-spacing">
     <div class="col-sm-12">
         <div class="widget widget-chart-one">
-            <div class="widget-heading">
-                <h4 class="card-title">
-                    <b>{{ $componentName }} | {{ $pageTitle }}</b>
-                </h4>
-                <ul class="tabs tab-pills">
-
-                    <a href="javascript:void(0)" class="btn btn-warning" wire:click="Agregar()">Agregar</a>
-
-                </ul>
-            </div>
+            
+            <br>
             @include('common.searchbox')
 
             <div class="widget-content">

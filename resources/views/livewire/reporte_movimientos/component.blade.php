@@ -5,9 +5,9 @@
                 <h4 class="card-title">
                     <b>{{ $componentName }} | {{ $pageTitle }}</b>
                 </h4>
-                <ul class="tabs tab-pills">
+                <ul class="text-right">
                     @can('Ver_Generar_Ingreso_Egreso_Boton')
-                        <a wire:click.prevent="viewDetails()" class="btn btn-dark">
+                        <a wire:click.prevent="viewDetails()" class="btn btn-warning">
                             Generar Ingreso/Egreso en cartera
                         </a>
                     @endcan
@@ -25,20 +25,21 @@
             </div>
             <div class="row">
                 <div class="col-lg-4 col-md-4 col-sm-12">
-                    <div class="input-group mb-4">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text input-gp">
-                                <i class="fas fa-search"></i>
-                            </span>
-                        </div>
-                        <input type="text" wire:model="search" placeholder="Buscar" class="form-control">
-                    </div>
-                </div>
 
-                <div class="col-sm-12 col-md-2">
                     <div class="form-group">
-                        <h6 class="form-control"><strong> TIPO: </strong></h6>
+                        <div class="input-group mb-4">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text input-gp">
+                                    <i class="fas fa-search"></i>
+                                </span>
+                            </div>
+                            <input type="text" wire:model="search" placeholder="Buscar" class="form-control">
+                        </div>
                     </div>
+
+                    
+
+
                 </div>
 
                 <div class="col-sm-12 col-md-2">
