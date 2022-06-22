@@ -120,9 +120,12 @@ class PosController extends Component
             "pd.stock as stock")
             ->where("des.nombre", 'TIENDA')
             ->where("des.sucursal_id", $this->idsucursal())
-            ->where('products.nombre', 'like', '%' . $this->nombreproducto . '%')->orderBy('products.nombre', 'desc')
+            ->where(function($query){
+                $query->where('products.nombre', 'like', '%' . $this->nombreproducto . '%')
+                      ->orWhere('products.codigo', 'like', '%' . $this->nombreproducto . '%');  
+                          
+            })
             ->get();
-
             if ($datosnombreproducto->count() > 0)
             {
                 $this->BuscarProductoNombre = 1;
