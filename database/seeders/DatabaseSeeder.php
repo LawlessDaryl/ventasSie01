@@ -32,10 +32,10 @@ class DatabaseSeeder extends Seeder
         $this->call(CarteraSeeder::class);
 
         $this->call(PermissionSeeder::class);
-        //$this->call(RoleSeeder::class);
-        //$this->call(ModelHasRolesSeeder::class);
+        $this->call(RoleSeeder::class);
+        $this->call(ModelHasRolesSeeder::class);
        // $this->call(DestinoSeeder::class);
-        //$this->call(RoleHasPermissionSeeder::class);
+        $this->call(RoleHasPermissionSeeder::class);
       //  $this->call(ProcedenciaSeeder::class);
 /*
         $this->call(TypeworkSeeder::class);
