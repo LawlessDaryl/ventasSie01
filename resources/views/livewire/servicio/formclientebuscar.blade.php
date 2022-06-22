@@ -91,11 +91,7 @@
 
             </div>
             <div class="modal-footer">
-<<<<<<< HEAD
-                <button type="button" wire:click.prevent="resetUI()" class="btn btn-warning close-btn text-info"
-=======
                 <button type="button" wire:click.prevent="resetUI()" class="btn btn-dark close-btn text-info"
->>>>>>> streamingservicios01
                     data-dismiss="modal" style="background: #3b3f5c">CANCELAR</button>
             </div>
         </div>

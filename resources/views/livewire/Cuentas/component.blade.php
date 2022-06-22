@@ -1,29 +1,34 @@
 <div class="row sales layout-top-spacing">
     <div class="col-sm-12">
         <div class="widget widget-chart-one">
-            <div class="widget-heading">
-                <h4 class="card-title">
-                    <b>{{ $componentName }} | {{ $pageTitle }}</b>
-                </h4>
-                <ul class="tabs tab-pills">
+            <div class="row">
+                <div class="col-6">
+                    <h2>
+                        <b>{{ $componentName }} | {{ $pageTitle }}</b>
+                    </h2>
+                </div>
+                <div class="col-6 text-right">
                     <a href="javascript:void(0)" class="btn btn-warning" wire:click="Agregar()">Agregar</a>
-                </ul>
+
+                </div>
             </div>
             <div class="row">
                 <div class="col-lg-4 col-md-4 col-sm-12">
-                    <div class="input-group mb-4">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text input-gp">
-                                <i class="fas fa-search"></i>
-                            </span>
+                    <div class="form-group">
+                        <div class="input-group mb-4">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text input-gp">
+                                    <i class="fas fa-search"></i>
+                                </span>
+                            </div>
+                            <input type="text" wire:model="search" placeholder="Buscar" class="form-control">
                         </div>
-                        <input type="text" wire:model="search" placeholder="Buscar" class="form-control">
                     </div>
                 </div>
                 @if ($condicional == 'cuentas')
                     <div class="col-sm-12 col-md-2">
                         <div class="form-group">
-                            <h6 class="form-control"><strong>TIPO: </strong></h6>
+                            <h6 class="text-right"><strong>TIPO: </strong></h6>
                         </div>
                     </div>
                     <div class="col-sm-12 col-md-2">
@@ -38,7 +43,7 @@
                 @endif
                 <div class="col-sm-12 col-md-2">
                     <div class="form-group">
-                        <h6 class="form-control"><strong>PLATAFORMA: </strong></h6>
+                        <h6 class="text-right"><strong>PLATAFORMA: </strong></h6>
                     </div>
                 </div>
                 <div class="col-sm-12 col-md-2">

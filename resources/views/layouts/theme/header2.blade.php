@@ -74,7 +74,7 @@
 
 
 
-        <li class="nav-item dropdown hidden-caret">
+        {{-- <li class="nav-item dropdown hidden-caret">
           <a class="nav-link dropdown-toggle" href="#" id="messageDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="fa fa-envelope"></i>
           </a>
@@ -143,7 +143,7 @@
               <a class="see-all" href="javascript:void(0);">See all messages<i class="fa fa-angle-right"></i> </a>
             </li>
           </ul>
-        </li>
+        </li> --}}
         <li class="nav-item dropdown hidden-caret">
           <a class="nav-link dropdown-toggle" href="#" id="notifDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="fa fa-bell"></i>
@@ -202,7 +202,8 @@
             </li>
           </ul>
         </li>
-        <li class="nav-item dropdown hidden-caret">
+
+        {{-- <li class="nav-item dropdown hidden-caret">
           <a class="nav-link" data-toggle="dropdown" href="#" aria-expanded="false">
             <i class="fas fa-layer-group"></i>
           </a>
@@ -254,7 +255,8 @@
               </div>
             </div>
           </div>
-        </li>
+        </li> --}}
+
         <li class="nav-item dropdown hidden-caret">
           <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false">
             <div class="avatar-sm">

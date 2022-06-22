@@ -44,7 +44,7 @@
     <div class="col-sm-12 col-md-6">
         <div class="form-group">
             <h6>Fecha de Nacimiento</h6>
-            <input type="text" wire:model="fnacim" class="form-control flatpickr" placeholder="Click para elegir">
+            <input type="date" wire:model="fnacim" class="form-control flatpickr" placeholder="Click para elegir">
             @error('fnacim')
                 <span class="text-danger er">{{ $message }}</span>
             @enderror

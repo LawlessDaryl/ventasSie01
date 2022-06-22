@@ -47,27 +47,22 @@
 							<div class="collapse" id="dashboard">
 								<ul class="nav nav-collapse">
 									<li>
-										<a href="demo1/index.html">
-											<span class="sub-item">Servicio Técnico</span>
+										<a href="{{ url('reportentregservices') }}">
+											<span class="sub-item">Servicios</span>
 										</a>
 									</li>
 									<li>
-										<a href="demo2/index.html">
-											<span class="sub-item">Ventas</span>
-										</a>
-									</li>
-									<li>
-										<a href="demo2/index.html">
+										<a href="{{ url('reportStreaming') }}">
 											<span class="sub-item">Streaming</span>
 										</a>
 									</li>
 									<li>
-										<a href="demo2/index.html">
-											<span class="sub-item">Cursos</span>
+										<a href="{{ url('salemovimientodiario') }}">
+											<span class="sub-item">Ventas</span>
 										</a>
 									</li>
 									<li>
-										<a href="demo2/index.html">
+										<a href="#">
 											<span class="sub-item">Todos</span>
 										</a>
 									</li>
@@ -178,13 +173,6 @@
 											Origen CRUD </a>
 									  </li>
 								  	@endcan
-									  @can('Origen_Index')
-									  <li>
-										  <a href="{{ url('origenes') }}">
-											<i class="fa fas fa-minus"></i>
-											Origen CRUD </a>
-									  </li>
-								  @endcan
 								  @can('Motivo_Index')
 									  <li>
 										  <a href="{{ url('motivos') }}">

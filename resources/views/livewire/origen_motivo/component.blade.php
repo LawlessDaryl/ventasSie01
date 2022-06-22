@@ -8,20 +8,25 @@
             </div>
 
             <div class="widget-content">
-                <div class="form-inline">
-                    <div class="form-group mr-5">
-                        <select wire:model="origen" class="form-control">
-                            <option value="Elegir" selected>==Seleccione el Origen==</option>
-                            @foreach ($origenes as $origen)
-                                <option value="{{ $origen->id }}" selected>{{ $origen->nombre }}</option>
-                            @endforeach
-                        </select>
-                    </div>
 
-                    <button wire:click.prevent="SyncAll()" type="button"
+                <div class="row">
+                    <div class="col-3">
+                        <div class="form-group mr-5">
+                            <select wire:model="origen" class="form-control">
+                                <option value="Elegir" selected>==Seleccione el Origen==</option>
+                                @foreach ($origenes as $origen)
+                                    <option value="{{ $origen->id }}" selected>{{ $origen->nombre }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-9 text-right">
+                        <button wire:click.prevent="SyncAll()" type="button"
                         class="btn btn-warning">Sincronizar todos</button>
                     <button onclick="Revocar()" type="button" class="btn btn-warning">Revocar todos</button>
+                    </div>
                 </div>
+
 
 
                 <div class="row mt-3">
