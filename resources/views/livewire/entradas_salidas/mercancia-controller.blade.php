@@ -9,6 +9,12 @@
                 <ul class="tabs tab-pills">
                     <a href="javascript:void(0)" class="btn btn-warning" data-toggle="modal"
                     data-target="#operacion">Registrar<br/>Operacion</a>
+                    <a href="javascript:void(0)"
+                     wire:click="Incrementar()"
+                 class="btn btn-warning"
+                    title="increment">
+                    Incrementar
+                    </a>
                      
                 </ul>
                
@@ -99,12 +105,11 @@
    <script>
     document.addEventListener('DOMContentLoaded', function() {
 
-        window.livewire.on('purchase-deleted', msg => {
-            noty(msg)
+        window.livewire.on('product-added', msg => {
+            $('#operacion').modal('hide')
+            
         });
-        window.livewire.on('purchase-error', msg => {
-            noty(msg)
-        });
+       
      
     })
     </script>
