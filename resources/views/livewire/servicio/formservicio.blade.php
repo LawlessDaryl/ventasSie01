@@ -46,6 +46,7 @@
                     </div>
 
                     <div class="col-lg-4 col-sm-12 col-md-6">
+                        <div class="form-group">
                         <label><h6>Marca/Modelo *</h6></label>
                         <datalist id="colores">
                             @foreach ($marcas as $cat)
@@ -57,7 +58,7 @@
                         <input list="colores" wire:model.lazy="marc" name="colores" type="text" class="form-control">
                         @error('marc') <span class="text-danger er">{{ $message }}</span>@enderror
                     </div>
-
+                </div>
                     <div class="col-lg-6 col-sm-12 col-md-8">
                         <div class="form-group">
                             <label><h6>Estado del Equipo *</h6></label>

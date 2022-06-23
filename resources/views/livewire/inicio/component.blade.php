@@ -266,16 +266,17 @@
                     </div>
                 </div>
                 @endif
-
+  
 
 
 
 
 
             </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
+         
+            <div class="widget-content">
+                <div class="table-responsive">
+                    <table class="table table-head-bg-primary table-hover">
                         <thead class="text-white" style="background: #ee761c">
                             <tr>
                                 <th class="table-th text-withe text-center">#</th>
@@ -305,7 +306,7 @@
                                             @endif
 
                                             {{-- style="{{ substr($d->horas, 0, 3) <= 24? 'background-color: #FF0000 !important': 'background-color: #d6ec02 !important' }}"> --}}
-                                            <h6>{{ $loop->iteration }}</h6>
+                                            <h6 style="color:#ffffff">{{ $loop->iteration }}</h6>
                                         </td>
                                         @foreach ($d->movservices as $mv)
                                             <td class="text-center">

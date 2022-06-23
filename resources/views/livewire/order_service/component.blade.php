@@ -5,17 +5,17 @@
                 <h4 class="card-title" >
                     <b>{{ $componentName }} | {{ $pageTitle }}</b>
                 </h4>
-                <ul class="tabs tab-pills">
+                <ul class="col-md-2 ml-auto">
 
                     {{-- @if (@Auth::user()->hasPermissionTo('Modificar_Detalle_Serv_Entregado'))
-                    <a href="javascript:void(0)" class="btn btn-warning" 
+                    <a href="javascript:void(0)" class="btn btn-warning btn-sm" 
                     wire:click="DeleteAllServices()">VACIAR BD SERVICIOS</a>
                     @endif --}}
 
-                    <a href="javascript:void(0)" class="btn btn-warning" wire:click="IrInicio" >IR A
+                    <a href="javascript:void(0)" class="btn btn-warning btn-sm" wire:click="IrInicio" >IR A
                         INICIO</a>
                     @if (@Auth::user()->hasPermissionTo('Recepcionar_Servicio'))
-                        <a href="javascript:void(0)" class="btn btn-warning" wire:click="GoService"
+                        <a href="javascript:void(0)" class="btn btn-warning btn-sm" wire:click="GoService"
                             >AGREGAR</a>
                     @endif
                 </ul>
@@ -23,8 +23,13 @@
             </div>
 
             {{-- SEARCH-> --}}
-            <div class="row justify-content-between">
-                <div class="col-lg-4 col-md-4 col-sm-12">
+           
+           
+
+
+            <div class="row row-demo-grid">
+
+                <div class="col-md-4">
                     <div class="input-group mb-4">
                         <div class="input-group-prepend">
                             <span class="input-group-text input-gp">
@@ -37,7 +42,7 @@
                     </div>
 
                 </div>
-
+                <div class="col-md-2">
                 <div class="form-group">
                     <div class="n-chk">
                         <label class="new-control new-radio radio-classic-primary">
@@ -48,6 +53,8 @@
                         </label>
                     </div>
                 </div>
+            </div>
+                <div class="col-md-2">
                 <div class="form-group">
                     <div class="n-chk">
                         <label class="new-control new-radio radio-classic-primary">
@@ -58,8 +65,10 @@
                         </label>
                     </div>
                 </div>
-
-                <div class="col-lg-2 col-md-4 col-sm-12">
+            </div>
+            <div class="col-md-2">
+            </div>
+            <div class="col-md-2">
                     <select wire:model.lazy="opciones" class="form-control" >
                         <option value="PENDIENTE">PENDIENTE</option>
                         <option value="PROCESO">PROCESO</option>
@@ -77,6 +86,7 @@
                     @enderror
                 </div>
             </div>
+            
             @if ($opciones == 'fechas')
                 <div class="row">
                     <div class="col-sm-2">
@@ -135,7 +145,7 @@
 
             <div class="widget-content">
                 <div class="table-responsive">
-                    <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
+                    <table class="table table-head-bg-primary table-hover">
                         <thead class="text-white" style="background: #ee761c">
                             <tr>
                                 <th class="table-th text-withe text-center">#</th>
@@ -183,10 +193,13 @@
                                                     $myacuenta += $service->movservices[0]->movs->on_account;
                                                     $mysaldo += $service->movservices[0]->movs->saldo;
                                                 @endphp --}}
-                                                <div class="col-sm-12 col-md-12">
-                                                    <div class="row">
+                                               
+                                                   
+                                                <div class="row row-demo-grid">
+                                                    
                                                         {{-- CLIENTE --}}
-                                                        <div class="col-sm-2">
+                                                        <div class="col-lg-3 col-sm-12 col-md-6">
+                                                        
                                                             @if ($key == 0)
                                                                 <h6 class="table-th text-withe text-center"
                                                                     ><b>
@@ -197,7 +210,7 @@
                                                         {{-- FECHA --}}
                                                         @foreach ($service->movservices as $mm)
                                                             @if ($mm->movs->status == 'INACTIVO' && $mm->movs->type == 'ANULADO')
-                                                                <div class="col-sm-2">
+                                                            <div class="col-lg-1 col-sm-12 col-md-6">
                                                                     <h6 class="table-th text-withe text-center"
                                                                         >
                                                                         {{ \Carbon\Carbon::parse($mm->movs->created_at)->format('d/m/Y h:i:s') }}
@@ -207,7 +220,7 @@
                                                         @endforeach
 
                                                         {{-- SERVICIOS --}}
-                                                        <div class="col-sm-4">
+                                                        <div class="col-lg-5 col-sm-12 col-md-6">
                                                             <a href="javascript:void(0)"
                                                                 wire:click="InfoService({{ $service->id }})"
                                                                 title="Ver Servicio">
@@ -259,7 +272,7 @@
                                                                 {{ $service->sucursalServ->name }}</h6>
                                                         </div>
                                                         {{-- ESTADO --}}
-                                                        <div class="col-sm-4">
+                                                        <div class="col-lg-3 col-sm-12 col-md-6">
                                                             @if ($mm->movs->type == 'PENDIENTE' && $mm->movs->status == 'ACTIVO')
                                                                 <h6 class="badge bg-danger text-center"
                                                                     >
@@ -294,14 +307,13 @@
                                                                     @endif
                                                                 @endif
                                                             @endif
-                                                            <h6 class="table-th text-withe text-left"
-                                                                >
+                                                           
                                                                 Serv: {{ $item->type_service }}
-                                                            </h6>
+                                                            
                                                             @if (@Auth::user()->hasPermissionTo('Recepcionar_Servicio'))
                                                                 @if ($mm->movs->type == 'PENDIENTE')
                                                                     <a href="javascript:void(0)"
-                                                                        class="btn btn-warning"
+                                                                        class="btn btn-warning btn-sm"
                                                                         wire:click="Edit({{ $service->id }})"
                                                                         title="Cambiar Estado">{{ $mm->movs->type }}</a>
                                                                 @endif
@@ -310,7 +322,7 @@
                                                             @if (!empty(session('sesionCaja')) && @Auth::user()->hasPermissionTo('Boton_Entregar_Servicio'))
                                                                 @if ($mm->movs->type == 'TERMINADO')
                                                                     <a href="javascript:void(0)"
-                                                                        class="btn btn-warning"
+                                                                        class="btn btn-warning btn-sm"
                                                                         wire:click="DetallesTerminado({{ $service->id }})"
                                                                         title="Cambiar Estado">Entregar</a>
                                                                 @endif
@@ -318,14 +330,14 @@
 
                                                             @if ($mm->movs->type != 'ENTREGADO')
                                                                 <a href="javascript:void(0)"
-                                                                    class="btn btn-warning"
+                                                                    class="btn btn-warning btn-sm"
                                                                     wire:click="Detalles({{ $service->id }})"
-                                                                    title="Cambiar Estado">Detalle</a>
+                                                                    title="Cambiar Estado">DETALLE</a>
                                                             @endif
 
                                                             @if ($mm->movs->type == 'ENTREGADO')
                                                                 <a href="javascript:void(0)"
-                                                                    class="btn btn-warning"
+                                                                    class="btn btn-warning btn-sm"
                                                                     wire:click="DetalleEntregado({{ $service->id }})"
                                                                     title="Ver Detalle">Detalle</a>
                                                             @endif
@@ -334,7 +346,7 @@
                                                                 <br />
                                                             @endif
                                                         </div>
-                                                    </div>
+                                                    
                                                     {{-- BORDE ENTRE SERVICIOS --}}
                                                     @if (count($item->services) - 1 != $key)
                                                         <hr
@@ -394,9 +406,11 @@
                                             </h6>
                                         </td>
                                         {{-- ACCIONES --}}
+                                      
+                                        
                                         <td class="text-center">
                                             <a href="javascript:void(0)"
-                                                class="btn btn-warning"
+                                                class="btn btn-warning btn-sm"
                                                 wire:click="VerOpciones({{ $item->id }})"
                                                 title="Opciones">Opciones</a>
                                         </td>
@@ -472,10 +486,10 @@
                                                     $myacuenta += $service->movservices[0]->movs->on_account;
                                                     $mysaldo += $service->movservices[0]->movs->saldo;
                                                 @endphp --}}
-                                                    <div class="col-sm-12 col-md-12">
-                                                        <div class="row">
+                                                 
+                                                        <div class="row row-demo-grid">
                                                             {{-- CLIENTE --}}
-                                                            <div class="col-sm-2">
+                                                            <div class="col-lg-3 col-sm-12 col-md-6">
                                                                 @if ($key == 0)
                                                                     <h6 class="table-th text-withe text-center"
                                                                         ><b>
@@ -486,7 +500,7 @@
                                                             {{-- FECHA --}}
                                                             @foreach ($service->movservices as $mm)
                                                                 @if ($mm->movs->status == 'ACTIVO' || ($mm->movs->status == 'INACTIVO' && $mm->movs->type == 'ANULADO'))
-                                                                    <div class="col-sm-2">
+                                                                <div class="col-lg-1 col-sm-12 col-md-6">
                                                                         <h6 class="table-th text-withe text-center"
                                                                             >
                                                                             {{ \Carbon\Carbon::parse($mm->movs->created_at)->format('d/m/Y h:i:s') }}
@@ -495,7 +509,7 @@
                                                                 @endif
                                                             @endforeach
                                                             {{-- SERVICIOS --}}
-                                                            <div class="col-sm-4">
+                                                            <div class="col-lg-5 col-sm-12 col-md-6">
                                                                 <a href="javascript:void(0)"
                                                                     wire:click="InfoService({{ $service->id }})"
                                                                     title="Ver Servicio">
@@ -539,7 +553,7 @@
                                                                     {{ $service->sucursalServ->name }}</h6>
                                                             </div>
                                                             {{-- ESTADO --}}
-                                                            <div class="col-sm-4">
+                                                            <div class="col-lg-3 col-sm-12 col-md-6">
                                                                 @if ($mm->movs->type == 'PENDIENTE' && $mm->movs->status == 'ACTIVO')
                                                                     
                                                                     <span class="stamp stamp-md bg-danger mr-3">
@@ -547,16 +561,16 @@
                                                                     </span>
                                                                 @else
                                                                     @if ($mm->movs->type == 'PROCESO' && $mm->movs->status == 'ACTIVO')
-                                                                        <h6 class="badge bg-secondary text-center"
-                                                                            >
+                                                                    <span class="stamp stamp-md bg-secundary mr-3">
+                                                                           
                                                                             <b>{{ $mm->movs->type }}</b>
-                                                                        </h6>
+                                                                        </span>
                                                                     @else
                                                                         @if ($mm->movs->type == 'TERMINADO' && $mm->movs->status == 'ACTIVO')
-                                                                            <h6 class="badge bg-warning text-center"
-                                                                                >
+                                                                        <span class="stamp stamp-md bg-warning mr-3">
+                                                                               
                                                                                 <b>{{ $mm->movs->type }}</b>
-                                                                            </h6>
+                                                                            </span>
                                                                         @else
                                                                             @if ($mm->movs->type == 'ENTREGADO' && $mm->movs->status == 'ACTIVO')
                                                                                 <span class="stamp stamp-md bg-success mr-3">
@@ -564,24 +578,22 @@
                                                                                 </span>
                                                                             @else
                                                                                 @if ($mm->movs->type == 'ANULADO' && $mm->movs->status == 'INACTIVO')
-                                                                                    <h6 class="badge bg-info text-center"
-                                                                                        >
+                                                                                <span class="stamp stamp-md bg-default mr-3">
                                                                                         <b>{{ $mm->movs->type }}</b>
-                                                                                    </h6>
+                                                                                    </span>
                                                                                 @endif
                                                                             @endif
                                                                         @endif
                                                                     @endif
                                                                 @endif
-                                                                <h6 class="table-th text-withe text-left"
-                                                                    >
+                                                                
                                                                     Serv: {{ $item->type_service }}
-                                                                </h6>
+                                                                
                                                                 @if (@Auth::user()->hasPermissionTo('Recepcionar_Servicio'))
                                                                     @if ($mm->movs->type == 'PENDIENTE')
                                                                         <a
                                                                             href="javascript:void(0)"
-                                                                            class="btn btn-warning"
+                                                                            class="btn btn-warning btn-sm"
                                                                             wire:click="Edit({{ $service->id }})"
                                                                             title="Cambiar Estado">{{ $mm->movs->type }}</a>
                                                                     @endif
@@ -591,7 +603,7 @@
                                                                     @if ($mm->movs->type == 'TERMINADO')
                                                                         <a
                                                                             href="javascript:void(0)"
-                                                                            class="btn btn-warning"
+                                                                            class="btn btn-warning btn-sm"
                                                                             wire:click="DetallesTerminado({{ $service->id }})"
                                                                             title="Cambiar Estado">Entregar</a>
                                                                     @endif
@@ -599,16 +611,16 @@
 
                                                                 @if ($mm->movs->type != 'ENTREGADO')
                                                                     <a href="javascript:void(0)"
-                                                                        class="btn btn-warning"
+                                                                        class="btn btn-warning btn-sm"
                                                                         wire:click="Detalles({{ $service->id }})"
-                                                                        title="Cambiar Estado">Detalle</a>
+                                                                        title="Cambiar Estado">DETALLE</a>
                                                                 @endif
 
                                                                 @if ($mm->movs->type == 'ENTREGADO')
                                                                     <a href="javascript:void(0)"
-                                                                        class="btn btn-warning"
+                                                                        class="btn btn-warning btn-sm"
                                                                         wire:click="DetalleEntregado({{ $service->id }})"
-                                                                        title="Ver Detalle">Detalle</a>
+                                                                        title="Ver Detalle">DETALLE</a>
                                                                 @endif
 
                                                                 @if (count($item->services) - 1 != $key)
@@ -622,7 +634,7 @@
                                                                 style="border-color: black; margin-top: 0px; margin-bottom: 3px; margin-left: 5px; margin-right:5px">
                                                             <br />
                                                         @endif
-                                                    </div>
+                                                    
 
                                                     @php
                                                         $mytotal += $mm->movs->import;
@@ -677,9 +689,9 @@
                                             {{-- ACCIONES --}}
                                             <td class="text-center">
                                                 <a href="javascript:void(0)"
-                                                    class="btn btn-warning"
+                                                class="btn btn-warning btn-sm"
                                                     wire:click="VerOpciones({{ $item->id }})"
-                                                    title="Opciones">Opciones</a>
+                                                    title="Opciones">OPCIONES</a>
                                             </td>
                                         </tr>
                                     @else
@@ -705,10 +717,10 @@
                                                 $myacuenta += $service->movservices[0]->movs->on_account;
                                                 $mysaldo += $service->movservices[0]->movs->saldo;
                                             @endphp --}}
-                                                        <div class="col-sm-12 col-md-12">
-                                                            <div class="row">
+                                                        
+                                                            <div class="row row-demo-grid">
                                                                 {{-- CLIENTE --}}
-                                                                <div class="col-sm-2">
+                                                                <div class="col-sm-3">
                                                                     @if ($key == 0)
                                                                         <h6 class="table-th text-withe text-center"
                                                                             ><b>
@@ -719,7 +731,7 @@
                                                                 {{-- FECHA --}}
                                                                 @foreach ($service->movservices as $mm)
                                                                     @if ($mm->movs->status == 'ACTIVO')
-                                                                        <div class="col-sm-2">
+                                                                        <div class="col-sm-1">
                                                                             <h6 class="table-th text-withe text-center"
                                                                                 >
                                                                                 {{ \Carbon\Carbon::parse($mm->movs->created_at)->format('d/m/Y h:i:s') }}
@@ -728,7 +740,7 @@
                                                                     @endif
                                                                 @endforeach
                                                                 {{-- SERVICIOS --}}
-                                                                <div class="col-sm-4">
+                                                                <div class="col-sm-5">
                                                                     <a href="javascript:void(0)"
                                                                         wire:click="InfoService({{ $service->id }})"
                                                                         title="Ver Servicio">
@@ -784,7 +796,7 @@
                                                                         {{ $service->sucursalServ->name }}</h6>
                                                                 </div>
                                                                 {{-- ESTADO --}}
-                                                                <div class="col-sm-4">
+                                                                <div class="col-sm-3">
                                                                     @if ($mm->movs->type == 'PENDIENTE' && $mm->movs->status == 'ACTIVO')
                                                                         <h6 class="badge bg-danger text-center"
                                                                             >
@@ -819,15 +831,14 @@
                                                                             @endif
                                                                         @endif
                                                                     @endif
-                                                                    <h6 class="table-th text-withe text-left"
-                                                                        >
+                                                              
                                                                         Serv: {{ $item->type_service }}
-                                                                    </h6>
+                                                                    
                                                                     @if (@Auth::user()->hasPermissionTo('Recepcionar_Servicio'))
                                                                         @if ($mm->movs->type == 'PENDIENTE')
                                                                             <a
                                                                                 href="javascript:void(0)"
-                                                                                class="btn btn-warning"
+                                                                                class="btn btn-warning btn-sm"
                                                                                 wire:click="Edit({{ $service->id }})"
                                                                                 title="Cambiar Estado">{{ $mm->movs->type }}</a>
                                                                         @endif
@@ -837,7 +848,7 @@
                                                                         @if ($mm->movs->type == 'TERMINADO')
                                                                             <a
                                                                                 href="javascript:void(0)"
-                                                                                class="btn btn-warning"
+                                                                                class="btn btn-warning btn-sm"
                                                                                 wire:click="DetallesTerminado({{ $service->id }})"
                                                                                 title="Cambiar Estado">Entregar</a>
                                                                         @endif
@@ -846,17 +857,17 @@
                                                                     @if ($mm->movs->type != 'ENTREGADO')
                                                                         <a
                                                                             href="javascript:void(0)"
-                                                                            class="btn btn-warning"
+                                                                            class="btn btn-warning btn-sm"
                                                                             wire:click="Detalles({{ $service->id }})"
-                                                                            title="Cambiar Estado">Detalle</a>
+                                                                            title="Cambiar Estado">DETALLE</a>
                                                                     @endif
 
                                                                     @if ($mm->movs->type == 'ENTREGADO')
                                                                         <a
                                                                             href="javascript:void(0)"
-                                                                            class="btn btn-warning"
+                                                                            class="btn btn-warning btn-sm"
                                                                             wire:click="DetalleEntregado({{ $service->id }})"
-                                                                            title="Ver Detalle">Detalle</a>
+                                                                            title="Ver Detalle">DETALLE</a>
                                                                     @endif
 
                                                                     @if (count($item->services) - 1 != $key)
@@ -870,7 +881,7 @@
                                                                     style="border-color: black; margin-top: 0px; margin-bottom: 3px; margin-left: 5px; margin-right:5px">
                                                                 <br />
                                                             @endif
-                                                        </div>
+                                                        
                                                         @php
                                                             $mytotal += $mm->movs->import;
                                                             $myacuenta += $mm->movs->on_account;
@@ -924,9 +935,9 @@
                                                 {{-- ACCIONES --}}
                                                 <td class="text-center">
                                                     <a href="javascript:void(0)"
-                                                        class="btn btn-warning"
+                                                        class="btn btn-warning btn-sm"
                                                         wire:click="VerOpciones({{ $item->id }})"
-                                                        title="Opciones">Opciones</a>
+                                                        title="Opciones">OPCIONES</a>
                                                 </td>
                                             </tr>
                                         @endif
