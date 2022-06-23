@@ -29,6 +29,7 @@
                                 <th class="table-th text-withe">#</th>
                                 <th class="table-th text-withe">NOMBRE</th>
                                 <th class="table-th text-withe text-center">DESCRIPCION</th>
+                                <th class="table-th text-withe text-center">SUBCATEGORIAS</th>
                                 <th class="table-th text-withe text-center">ACCIONES</th>
                              
                             </tr>
@@ -45,8 +46,13 @@
                                         
                                         <h6>{{ $category->name }}</h6>
                                     </td>
+                                   
                                     <td>
                                         <h6>{{ $category->descripcion }}</h6>
+                                   
+                                    </td>
+                                    <td>
+                                        <h6>{{ $category->subcategories()}}</h6>
                                    
                                     </td>
                                    

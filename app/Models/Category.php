@@ -15,6 +15,11 @@ class Category extends Model
     {
         return $this->hasMany(Product::class);
     }
+
+    public function subcategories(){
+      return Category::where('categoria_padre',$this->id)
+        ->count();
+    }
     public function getImagenAttribute()
     {
         if ($this->image == null) {
