@@ -44,6 +44,9 @@
                                         @foreach ($listacarteras as $cartera)
                                         <option value="{{$cartera->idcartera}}">{{ucwords(strtolower($cartera->nombrecartera)) .' - ' .ucwords(strtolower($cartera->dc))}}</option>
                                         @endforeach
+                                        @foreach ($listacarterasg as $carteras)
+                                        <option value="{{$carteras->idcartera}}">{{ucwords(strtolower($carteras->nombrecartera)) .' - ' .ucwords(strtolower($carteras->dc))}}</option>
+                                        @endforeach
                                     </select>
                                     </div>
 

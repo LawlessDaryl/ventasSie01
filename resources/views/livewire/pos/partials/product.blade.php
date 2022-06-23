@@ -1,33 +1,26 @@
-<div class="col-lg-6">
+<div class="col-lg-4">
     @if($BuscarProductoNombre != 0)
     
-    <div class="table-responsive table-wrapper-scroll-y">
+    <div class="table-wrapper">
         {{-- <div class="table-responsive table-wrapper-scroll-y my-custom-scrollbar"> --}}
 
             <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
-                <thead class="text-white" style="background: #ee761c">
+                <thead>
                 <tr>
-                    <th class="table-th text-center text-white">IMAGEN</th>
-                    <th class="table-th text-left text-white">DESCRIPCIóN</th>
+                    <th class="table-th text-left text-white">DESCRIPCION</th>
                     <th class="table-th text-right text-white">PRECIO</th>
                     {{-- <th width="12%" class="table-th text-center text-white">Stock</th> --}}
-                    <th class="table-th text-center text-white">ACCIONES</th>
+                    <th class="table-th text-center text-white" style="max-height: 10px;">ACCION</th>
                     
                 </tr>
             </thead>
             <tbody>
                 @foreach ($datosnombreproducto as $p)
                 <tr>
-                    {{-- Imagen Producto --}}
-                    <td class="text-center">
-                        <span>
-                            <img src="{{('storage/productos/'.$p->image) }}"
-                                height="40" class="rounded">
-                        </span>
-                    </td>
                     {{-- Descripciòn Producto --}}
                     <td>
                         <h6>{{ $p->nombre }}</h6>
+                        <h6><b>({{ $p->barcode }})</b></h6>
                     </td>
                     {{-- Precio Producto--}}
                     <td class="text-right">
@@ -38,8 +31,8 @@
                         <h6>{{$p->stock}}</h6>
                     </td> --}}
                     {{-- Acciones --}}
-                    <td class="text-center">
-                        <button  wire:click="pasaralcarrito({{ $p->id }})" class="btn btn-warning btn-sm">
+                    <td class="text-center" style="max-height: 10px;">
+                        <button  wire:click="pasaralcarrito({{ $p->id }})" class="btn btn-sm" style="background-color: rgb(10, 137, 235); color:aliceblue">
                             <i class="fas fa-plus"></i>
                         </td>
                 </tr>

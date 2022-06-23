@@ -1,9 +1,9 @@
-<div class="col-md-6 col-lg-6" style="border-left: thick solid #b4b4b1;" >
+<div class="col-md-6 col-lg-8" style="border-left: thick solid #b4b4b1;" >
     @if ($anonimo == 1)
     
     <div class="row">
 
-        <div class="col-sm-12 col-md-4">
+        <div class="col-sm-12 col-md-3">
             <div class="form-group">
                 <input type="text" wire:model="nit" class="form-control" placeholder="NIT">
                 @error('nit')
@@ -11,12 +11,12 @@
                 @enderror
             </div>
         </div>
-        <div class="col-sm-12 col-md-4">
+        <div class="col-sm-12 col-md-3">
             <div class="form-group">
                 <input type="text" wire:model="razonsocial" class="form-control" placeholder="RAZON SOCIAL">
             </div>
         </div>
-        <div class="col-sm-12 col-md-4">
+        <div class="col-sm-12 col-md-3">
             <div class="form-group">
                 <input type="text" wire:model="celular" class="form-control" placeholder="CELULAR">
             </div>

@@ -63,6 +63,12 @@ class PosController extends Component
         $this->crearpdf = false;
         $listac = $this->listarcarteras();
         $this->tipopago = 'Elegir';
+
+
+
+
+
+
         foreach($listac as $list)
         {
             if($list->tipo == 'CajaFisica')
@@ -164,6 +170,8 @@ class PosController extends Component
         ->get();
 
 
+
+
         return view('livewire.pos.component', [
             'denominations' => Denomination::orderBy('id', 'asc')->get(),
             'cart' => Cart::getContent()->sortBy('name'),
@@ -171,6 +179,7 @@ class PosController extends Component
             'datosnombreproducto' => $datosnombreproducto,
             'listdestinos' =>$listardestinos,
             'listacarteras' => $this->listarcarteras(),
+            'listacarterasg' => $this->listarcarterasg(),
 
            
 
@@ -1390,22 +1399,49 @@ class PosController extends Component
 
 
     //Listar todas las carteras que correspondan a la sucursal y a la caja
+    // public function listarcarteras()
+    // {
+    //     $carteras = Caja::join('carteras as car', 'cajas.id', 'car.caja_id')
+    //     ->join('cartera_movs as cartmovs', 'car.id', 'cartmovs.cartera_id')
+    //     ->join('movimientos as mov', 'mov.id', 'cartmovs.movimiento_id')
+    //     ->where('cajas.estado', 'Abierto')
+    //     ->where('mov.user_id', Auth()->user()->id)
+    //     ->where('mov.status', 'ACTIVO')
+    //     ->where('mov.type', 'APERTURA')
+    //     ->where(function($query){
+    //         $query->where('cajas.sucursal_id', $this->idsucursal())
+    //               ->orWhere('cajas.nombre', 'Caja General');  
+                      
+    //     })
+    //     ->select('car.id as idcartera', 'car.nombre as nombrecartera', 'car.descripcion as dc','car.tipo as tipo')
+    //     ->get();
+    //     return $carteras;
+    // }
+
     public function listarcarteras()
     {
         $carteras = Caja::join('carteras as car', 'cajas.id', 'car.caja_id')
         ->join('cartera_movs as cartmovs', 'car.id', 'cartmovs.cartera_id')
         ->join('movimientos as mov', 'mov.id', 'cartmovs.movimiento_id')
         ->where('cajas.estado', 'Abierto')
-        ->where('cajas.sucursal_id', $this->idsucursal())
         ->where('mov.user_id', Auth()->user()->id)
         ->where('mov.status', 'ACTIVO')
         ->where('mov.type', 'APERTURA')
+        ->where('cajas.sucursal_id', $this->idsucursal())
+        ->select('car.id as idcartera', 'car.nombre as nombrecartera', 'car.descripcion as dc','car.tipo as tipo')
+        ->get();
+
+        return $carteras;
+    }
+    public function listarcarterasg()
+    {
+        $carteras = Caja::join('carteras as car', 'cajas.id', 'car.caja_id')
+        ->where('cajas.id', 1)  
+        
         ->select('car.id as idcartera', 'car.nombre as nombrecartera', 'car.descripcion as dc','car.tipo as tipo')
         ->get();
         return $carteras;
     }
-
-
 
 
     

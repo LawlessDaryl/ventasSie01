@@ -9,9 +9,8 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/forms/switches.css') }}">
 
 
-{{-- Estilo para el boton Descuento con estilo flotante --}}
 <style>
-
+    /* Estilo para el boton Descuento con estilo flotante */
     .btn-flotante {
     font-size: 16px; /* Cambiar el tamaño de la tipografia */
     text-transform: uppercase; /* Texto en mayusculas */
@@ -22,7 +21,7 @@
     background-color: rgba(255, 255, 255, 0.6); /* Color de fondo */
     padding: 18px 30px; /* Relleno del boton */
     position: fixed;
-    top: 170px;
+    top: 220px;
     right: 50px;
     transition: all 300ms ease 0ms;
     box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
@@ -40,6 +39,43 @@
         right: 20px;
         }
     }
+
+
+
+    /* Estilos para las tablas */
+    .table-wrapper {
+    width: 105%;/* Anchura de ejemplo */
+    height: 500px; /* Altura de ejemplo */
+    overflow: auto;
+    }
+
+    .table-wrapper table {
+    border-collapse: separate;
+    border-spacing: 0;
+    }
+
+    .table-wrapper table thead {
+    position: -webkit-sticky; /* Safari... */
+    position: sticky;
+    top: 0;
+    left: 0;
+    }
+
+    .table-wrapper table thead th {
+    border: 1px solid #000;
+    background: #ee761c;
+    }
+    .table-wrapper table tbody td {
+    border: 1px solid #000;
+    }
+
+
+    /* Quitar Spinner Input */
+    input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
 </style>
 
 {{-- Estilos para una tabla en el modal Stock Insuficiente --}}
@@ -57,7 +93,7 @@
 
 
 @if($this->verificarcajaabierta() > 0)
-<div class="row sales layout-top-spacing">
+<div class="row">
     <div class="col-sm-12" >
 
             <!-- Secciones para las Ventas -->
@@ -91,7 +127,7 @@
                 <div class="col-12 col-lg-12">
                     <div class="row">
                         <!-- Cuadro de Busqueda de Productos -->
-                        <div class="col-md-6 col-lg-6" style="border-left: thick solid #b4b4b1;" >
+                        <div class="col-md-6 col-lg-4" style="border-left: thick solid #b4b4b1;" >
 
                             <div class="input-group mb-12">
                                 <div class="input-group-prepend">
@@ -110,14 +146,12 @@
 
                  
                 <br>
-                <div class="widget-content">
-                    <div class="row">
-                        <!-- Cuadros de Productos Encontrados Manualmente -->
-                        @include('livewire.pos.partials.product')
-                        <!-- Cuadros de Productos para Vender Shopping Cart -->
-                        @include('livewire.pos.partials.detail')
-                    </div>
-                </div> 
+                <div class="row">
+                    <!-- Cuadros de Productos Encontrados Manualmente -->
+                    @include('livewire.pos.partials.product')
+                    <!-- Cuadros de Productos para Vender Shopping Cart -->
+                    @include('livewire.pos.partials.detail')
+                </div>
                 <!-- linea Divisoria -->
                 {{-- <hr style="height:3px;border:none;color:rgb(189, 188, 188);background-color:rgb(230, 152, 64);" /> --}}
                 <!-- -------- -->

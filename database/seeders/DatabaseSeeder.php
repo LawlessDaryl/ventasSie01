@@ -20,8 +20,8 @@ class DatabaseSeeder extends Seeder
       $this->call(SucursalUserSeeder::class);
       
         // \App\Models\User::fctory(10)->create();
-      /*  $this->call(DenominationSeeder::class);
-        $this->call(CategorySeeder::class);*/
+       $this->call(DenominationSeeder::class);
+        /* $this->call(CategorySeeder::class);*/
 
        // $this->call(UserSeeder::class);
 
