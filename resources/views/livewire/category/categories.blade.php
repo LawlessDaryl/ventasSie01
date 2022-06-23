@@ -1,19 +1,19 @@
 <div class="row sales layout-top-spacing">
     <div class="col-sm-12">
         <div class="widget widget-chart-one">
-            <div class="widget-heading">
+            <div>
                 <h4 class="card-title">
                     <b>{{ $componentName }} | {{ $pageTitle }}</b>
                 </h4>
-                <ul class="tabs tab-pills">
+                <ul class="row justify-content-end">
                    
-                    <a href="javascript:void(0)" class="btn btn-warning" data-toggle="modal"
+                    <a href="javascript:void(0)" class="btn btn-warning m-1" wire:click="$set('selected_id','0')" data-toggle="modal"
                         data-target="#theModal">Agregar Categoria</a>
-                    <a href="javascript:void(0)" class="btn btn-warning" data-toggle="modal"
+                    <a href="javascript:void(0)" class="btn btn-warning m-1" wire:click="$set('selected_id','0')" data-toggle="modal"
                         data-target="#theModal_s">Agregar Subcategoria</a>
-                    <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
+                    <a href="javascript:void(0)" class="btn btn-dark m-1" data-toggle="modal"
                         data-target="#modalimportcat">Importar Categorias</a>
-                    <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
+                    <a href="javascript:void(0)" class="btn btn-dark m-1" data-toggle="modal"
                         data-target="#modalimportsubcat">Importar SubCategorias</a>
                     
                 </ul>
@@ -61,7 +61,7 @@
                                             class="btn btn-warning mtmobile" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <a href="javascript:void(0)" onclick="Confirm('{{ $category->id }}','{{ $category->name }}'"
+                                        <a href="javascript:void(0)" onclick="Confirm('{{ $category->id }}','{{ $category->name }}','{{$category->products->count()}}','{{$category->subcategories()}}')"
                                            class="btn btn-dark"
                                             title="Delete">
                                             <i class="fas fa-trash"></i>
@@ -113,13 +113,15 @@
 
     });
 
-    function Confirm(id, name, products) {
-        if (products > 0) {
+    function Confirm(id, name,products,subcategories) {
+        if (products > 0 || subcategories>0) {
+            const auxiliar= subcategories;
+            const letras=auxiliar>0?'y subcategorias relacionadas':'no tiene ninguna subcategoria';
             swal.fire({
                 title: 'PRECAUCION',
                 icon: 'warning',
-                text: 'No se puede eliminar la categoria, ' + name + ' porque tiene ' 
-                + products + ' productos relacionados'
+                text: 'No se puede eliminar la categoria, ' + name + ' porque tiene'+ 
+            'productos relacionados/'+ letras
             })
             return;
         }

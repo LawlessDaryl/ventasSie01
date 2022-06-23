@@ -6,10 +6,10 @@
                 <h4 class="card-title">
                     <b>Compras</b>
                 </h4>
-                <ul class="tabs tab-pills">
-                        <a href="detalle_compras" class="btn btn-dark" >Registrar<br/>Compra</a>
+                <ul class="row justify-content-end">
+                        <a href="detalle_compras" class="btn btn-dark m-1" >Registrar Compra</a>
                         <a href="{{ url('reporteCompras/pdf' . '/' . $filtro . '/' . $fecha .'/'
-                        . $from. '/' . $to . '/' .$search)}}" class="btn btn-dark p-3" >Imprimir</a>
+                        . $from. '/' . $to . '/' .$search)}}" class="btn btn-warning m-1" >Imprimir</a>
                 </ul>
                
             </div>

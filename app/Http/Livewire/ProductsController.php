@@ -146,7 +146,8 @@ class ProductsController extends Component
         $rules = [
             'nombre' => 'required|unique:products|min:5',
             'costo' => 'required',
-            'precio_venta' => 'required',
+            'codigo'=>'required|unique:products',
+            'precio_venta' => 'required|gt:costo',
             'selected_id2' => 'required|not_in:Elegir'
         ];
 
@@ -155,7 +156,9 @@ class ProductsController extends Component
             'nombre.unique' => 'Ya existe el nombre del producto',
             'nombre.min' => 'El nombre debe  contener al menos 5 caracteres',
             'costo.required' =>'El costo es requerido',
+            'codigo.required' =>'El codigo es requerido',
             'precio_venta.required'=> 'El precio es requerido',
+            'precio_venta.gt'=> 'El precio debe ser mayor o igual al costo',
             'selected_id2.required' => 'La categoria es requerida',
             'selected_id2.not_in' => 'Elegir un nombre de categoria diferente de Elegir'
         ];

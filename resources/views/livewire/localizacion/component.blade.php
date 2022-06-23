@@ -5,11 +5,11 @@
                 <h4 class="card-title">
                     <b>{{ $componentName }} | {{ $pageTitle }}</b>
                 </h4>
-                <ul class="tabs tab-pills">
-                    <a href="javascript:void(0)" class="btn btn-warning" data-toggle="modal"
+                <ul class="row justify-content-end">
+                    <a href="javascript:void(0)" class="btn btn-warning m-1" data-toggle="modal"
                         data-target="#theModal">Agregar</a>
            
-                    <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
+                    <a href="javascript:void(0)" class="btn btn-dark m-1" data-toggle="modal"
                         data-target="#asignar_mobiliario">Asignar Mobiliario</a>
                 </ul>
 

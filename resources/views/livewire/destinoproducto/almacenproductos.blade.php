@@ -44,10 +44,10 @@
                 <h4 class="card-title">
                     <b>Almacen Producto</b>
                 </h4>
-                <ul class="tabs tab-pills">
+                <ul class="row justify-content-end">
                     
-                        <a href="transferencia" class="btn btn-dark" >Transferir <br/>Productos</a>
-                        <a href="transferencias" class="btn btn-dark">Ver<br/>Transferencias</a>
+                        <a href="transferencia" class="btn btn-success m-1" >Transferir Productos</a>
+                        <a href="transferencias" class="btn btn-dark m-1">Ver Transferencias</a>
                       
                     
                 </ul>

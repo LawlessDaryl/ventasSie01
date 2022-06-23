@@ -32,7 +32,7 @@ class TransferirProductoController extends Component
 
     public $selected_id,$search,$cantidad,
     $itemsQuantity,$selected_3,$selected_origen=0,$selected_destino,$observacion,$tipo_tr,$estado,$vs=[];
-    private $pagination = 10;
+ 
     public function paginationView()
     {
         return 'vendor.livewire.bootstrap';
@@ -55,7 +55,8 @@ class TransferirProductoController extends Component
                                             $query->where('prod.nombre', 'like', '%' . $this->search . '%')
                                             ->orWhere('prod.codigo','like','%'.$this->search.'%')
                                             ->orWhere('prod.marca','like','%'.$this->search.'%')
-                                            ->orWhere('prod.id','like','%'.$this->search.'%');
+                                            ->orWhere('prod.id','like','%'.$this->search.'%')
+                                            ->take(6);
                                         })
                                         ->select('prod.nombre as name','dest.nombre as nombre_destino','dest.id as dest_id','prod.id as prod_id','productos_destinos.stock as stock')
                                         ->orderBy('prod.nombre','desc')

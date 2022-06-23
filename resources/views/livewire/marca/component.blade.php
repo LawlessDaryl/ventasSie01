@@ -5,9 +5,9 @@
                 <h4 class="card-title">
                     <b>{{ $componentName }} | {{ $pageTitle }}</b>
                 </h4>
-                <ul class="tabs tab-pills">
+                <ul class="row justify-content-end">
                     
-                        <a href="javascript:void(0)" class="btn btn-warning" data-toggle="modal"
+                        <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
                         data-target="#theModal">Agregar Marca</a>
                     
                 </ul>
@@ -19,7 +19,6 @@
                     <table class="table table-unbordered table-hover mt-2">
                         <thead class="text-white" style="background: #3B3F5C">
                             <tr>
-                               
                                 <th class="table-th text-withe text-center">NOMBRE</th>                                
                                 <th class="table-th text-withe text-center">ACCIONES</th>
                             </tr>

@@ -179,11 +179,7 @@ class PosController extends Component
             'datosnombreproducto' => $datosnombreproducto,
             'listdestinos' =>$listardestinos,
             'listacarteras' => $this->listarcarteras(),
-            'listacarterasg' => $this->listarcarterasg(),
-
-           
-
-
+            'listacarterasg' => $this->listarcarterasg()
 
         ])
             ->extends('layouts.theme.app')
@@ -1430,14 +1426,12 @@ class PosController extends Component
         ->where('cajas.sucursal_id', $this->idsucursal())
         ->select('car.id as idcartera', 'car.nombre as nombrecartera', 'car.descripcion as dc','car.tipo as tipo')
         ->get();
-
         return $carteras;
     }
     public function listarcarterasg()
     {
         $carteras = Caja::join('carteras as car', 'cajas.id', 'car.caja_id')
-        ->where('cajas.id', 1)  
-        
+        ->where('cajas.id', 1)
         ->select('car.id as idcartera', 'car.nombre as nombrecartera', 'car.descripcion as dc','car.tipo as tipo')
         ->get();
         return $carteras;
