@@ -60,7 +60,7 @@ class TransferirProductoController extends Component
                                         })
                                         ->select('prod.nombre as name','dest.nombre as nombre_destino','dest.id as dest_id','prod.id as prod_id','productos_destinos.stock as stock')
                                         ->orderBy('prod.nombre','desc')
-                                        ->paginate($this->pagination);
+                                        ->get();
                                         }
                                         else{
                                          $almacen=null;

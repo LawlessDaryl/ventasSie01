@@ -146,7 +146,7 @@
                                     @endforeach
                                 </tbody>
                             </table>
-                            {{$destinos_almacen->links() }}
+                        
 
                         </div>
                     
