@@ -34,21 +34,21 @@ class DatabaseSeeder extends Seeder
         $this->call(PermissionSeeder::class);
         $this->call(RoleSeeder::class);
         $this->call(ModelHasRolesSeeder::class);
-       // $this->call(DestinoSeeder::class);
+       $this->call(DestinoSeeder::class);
         $this->call(RoleHasPermissionSeeder::class);
-      //  $this->call(ProcedenciaSeeder::class);
+      $this->call(ProcedenciaSeeder::class);
 /*
         $this->call(TypeworkSeeder::class);
         $this->call(CatProdServiceSeeder::class);
         $this->call(SubCatProdServicesSeeder::class);
         /* TIGO MONEY */
-       /* $this->call(OrigenSeeder::class);
+       $this->call(OrigenSeeder::class);
         $this->call(MotivoSeeder::class);
         $this->call(ComisionSeeder::class);
         $this->call(OrigenMotivoSeeder::class);
         $this->call(OrigenMotivoComisionSeeder::class);
         /* STREAMING */
-       /* $this->call(ProveedorSeeder::class);
+        $this->call(ProveedorSeeder::class);
         $this->call(PlatformSeeder::class);
         $this->call(EmailSeeder::class);
         $this->call(AccountSeeder::class);
@@ -65,8 +65,8 @@ class DatabaseSeeder extends Seeder
         $this->call(ProviderSeeder::class);
        
        
-       // $this->call(CompraSeeder::class);
-        //$this->call(CompraDetalleSeeder::class);
+        // $this->call(CompraSeeder::class);
+        // $this->call(CompraDetalleSeeder::class);
         
         
        /*  Category::factory(20)->create(); */

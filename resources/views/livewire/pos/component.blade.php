@@ -288,7 +288,7 @@ input[type=number]::-webkit-outer-spin-button {
 </div>
 @else
 
-    @if(@Auth::user()->hasPermissionTo('Editar_Venta_Sin_Corte_Caja'))
+    @if(@Auth::user()->hasPermissionTo('Ventaseditarsincortecaja'))
     <div class="row">
         <div class="col-sm-12" >
     

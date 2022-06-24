@@ -852,6 +852,7 @@ class PosController extends Component
 
             return;
         }
+        
         DB::beginTransaction();
 
         try {
@@ -1009,6 +1010,7 @@ class PosController extends Component
             // Creando Cartera Movimiento
             CarteraMov::create([
                 'type' => "INGRESO",
+                'tipoDeMovimiento' => "VENTA",
                 'comentario' => "Venta",
                 'cartera_id' => $cartera->id,
                 'movimiento_id' => $Movimiento->id,
@@ -1445,16 +1447,37 @@ class PosController extends Component
         ->orderBy('sale_details.id', 'asc')
         ->get();
 
+
+
+
+        //ELIMINAMOS TODOS LOS REGISTROS CORRESPONDIENTES A LA VENTA
+
         //Eliminamos todos los detalles de la venta
         foreach ($detalles as $item)
         {
+            //Eliminando los productos de Detalle Venta
             SaleDetail::where('id', $item->iddetalleventa)->delete();
+
+            //Incrementando los stocks en la Tienda de la Venta a Editar
+            $tiendaproducto = ProductosDestino::join("products as p", "p.id", "productos_destinos.product_id")
+            ->join('destinos as des', 'des.id', 'productos_destinos.destino_id')
+            ->select("productos_destinos.id as id","p.nombre as name",
+            "productos_destinos.stock as stock")
+            ->where("p.id", $item->idproduct)
+            ->where("des.nombre", 'TIENDA')
+            ->where("des.sucursal_id", $this->idsucursal())
+            ->get()->first();
+
+            $tiendaproducto->update([
+                'stock' => $tiendaproducto->stock + $item->cantidad
+                ]);
+
         }
 
         //Pasamos el contenido del carrito en una variable
         $items = Cart::getContent();
+        //Volvemos a llenar los detalles de la venta con el id de la Venta
         foreach ($items as $item) {
-
             SaleDetail::create([
                 'price' => $item->price,
                 'quantity' => $item->quantity,
@@ -1462,19 +1485,19 @@ class PosController extends Component
                 'sale_id' => session('sesionidventa'),
             ]);
 
-        //Decrementando el stock en tienda
-        $tiendaproducto = ProductosDestino::join("products as p", "p.id", "productos_destinos.product_id")
-        ->join('destinos as des', 'des.id', 'productos_destinos.destino_id')
-        ->select("productos_destinos.id as id","p.nombre as name",
-        "productos_destinos.stock as stock")
-        ->where("p.id", $item->id)
-        ->where("des.nombre", 'TIENDA')
-        ->where("des.sucursal_id", $this->idsucursal())
-        ->get()->first();
+            //Decrementando el stock en tienda
+            $tiendaproducto = ProductosDestino::join("products as p", "p.id", "productos_destinos.product_id")
+            ->join('destinos as des', 'des.id', 'productos_destinos.destino_id')
+            ->select("productos_destinos.id as id","p.nombre as name",
+            "productos_destinos.stock as stock")
+            ->where("p.id", $item->id)
+            ->where("des.nombre", 'TIENDA')
+            ->where("des.sucursal_id", $this->idsucursal())
+            ->get()->first();
 
-        $tiendaproducto->update([
-            'stock' => $tiendaproducto->stock - $item->quantity
-            ]);
+            $tiendaproducto->update([
+                'stock' => $tiendaproducto->stock - $item->quantity
+                ]);
         }
 
         $venta = Sale::find(session('sesionidventa'));

@@ -245,6 +245,11 @@ class PermissionSeeder extends Seeder
             'name' => 'VentasDevolucionesFiltrar',
             'guard_name' =>'web'
         ]);
+        //Poder editar venta sin corte de caja
+        Permission::create([
+            'name' => 'Ventaseditarsincortecaja',
+            'guard_name' =>'web'
+        ]);
 
 
 
