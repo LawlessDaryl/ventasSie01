@@ -75,6 +75,7 @@ class DetalleComprasController extends Component
         ->orWhere('codigo','like','%'.$this->search.'%')
         ->orWhere('marca','like','%'.$this->search.'%')
         ->orWhere('id','like','%'.$this->search.'%')
+        ->take(5)
         ->get();
         else
         $prod = "cero";
