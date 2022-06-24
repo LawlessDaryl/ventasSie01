@@ -287,13 +287,17 @@ class SaleDevolutionController extends Component
         ->get()->first();
 
 
+        if($this->bs > 0)
+        {
+            // Creando Movimiento
+            $Movimiento = Movimiento::create([
+                'type' => "DEVOLUCIONVENTA",
+                'import' => $this->bs,
+                'user_id' => Auth()->user()->id,
+            ]);
+        }
 
-        // Creando Movimiento
-        $Movimiento = Movimiento::create([
-            'type' => "DEVOLUCIONVENTA",
-            'import' => $this->bs,
-            'user_id' => Auth()->user()->id,
-        ]);
+
         //Creando Movimiento del Cliente
         ClienteMov::create([
             'movimiento_id' => $Movimiento->id,
@@ -303,13 +307,17 @@ class SaleDevolutionController extends Component
         $cartera = Cartera::where('tipo', 'cajafisica')
                     ->where('caja_id', $cajausuario->id)
                     ->get()->first();
-        // Creando Cartera Movimiento
-        CarteraMov::create([
-            'type' => "EGRESO",
-            'comentario' => "Devolución Venta",
-            'cartera_id' => $cartera->id,
-            'movimiento_id' => $Movimiento->id,
-        ]);
+                    
+        if($this->bs > 0)
+        {
+            // Creando Cartera Movimiento
+            CarteraMov::create([
+                'type' => "EGRESO",
+                'comentario' => "Devolución Venta",
+                'cartera_id' => $cartera->id,
+                'movimiento_id' => $Movimiento->id,
+            ]);
+        }
 
 
         //Registrando el Producto Entrante

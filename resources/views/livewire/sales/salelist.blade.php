@@ -155,9 +155,9 @@
                                             <button wire:click="mostraranularmodal({{$d->id}})" class="btn btn" title="Anular Venta" style="background-color: red; color:white">
                                                 <i class="fas fa-trash-alt"></i>
                                             </button>
-                                            {{-- <button wire:click="editsale({{$d->id}})" class="btn btn" title="Editar Venta" style="background-color: rgb(13, 175, 220); color:white">
+                                            <button wire:click="editsale({{$d->id}})" class="btn btn" title="Editar Venta" style="background-color: rgb(13, 175, 220); color:white">
                                                 <i class="fas fa-edit"></i>
-                                            </button> --}}
+                                            </button>
                                             @endif
                                         @endif
                                         <button wire:click="crearcomprobante({{$d->id}})" class="btn btn" title="Crear Comprobante" style="background-color: rgb(0, 104, 21); color:white">
