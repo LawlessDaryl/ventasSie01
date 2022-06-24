@@ -72,14 +72,14 @@
 
 
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <button title="Eliminar Producto" onclick="Confirm('{{ $item->id }}','removeItem','¿Confirmas Eliminar el Registro?')" class="btn btn-sm" style="background-color: red; color:aliceblue">
+                                <button title="Eliminar Producto" onclick="Confirm('{{ $item->id }}','removeItem','¿Confirmas Eliminar el Registro?')" class="btn btn-sm" style="background-color: red; color:white">
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
-                                <button title="Quitar una unidad" wire:click.prevent="decreaseQty({{ $item->id }})" class="btn btn-sm" style="background-color: rgb(99, 123, 142); color:aliceblue">
+                                <button title="Quitar una unidad" wire:click.prevent="decreaseQty({{ $item->id }})" class="btn btn-sm" style="background-color: rgb(99, 123, 142); color:white">
                                     <i class="fas fa-minus"></i>
                                 </button>
     
-                                <button title="Incrementar una unidad" wire:click.prevent="increaseQty({{ $item->id }})" class="btn btn-sm" style="background-color: rgb(10, 137, 235); color:aliceblue">
+                                <button title="Incrementar una unidad" wire:click.prevent="increaseQty({{ $item->id }})" class="btn btn-sm" style="background-color: rgb(10, 137, 235); color:white">
                                     <i class="fas fa-plus"></i>
                                 </button>
                             </div>

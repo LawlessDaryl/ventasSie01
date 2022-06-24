@@ -14,13 +14,12 @@
                     <thead class="text-white" style="background: #ee761c">
                       <tr>
                         <th>No</th>
-                        <th>Imagen</th>
                         <th>Nombre</th>
-                        <th class="text-right">Precio Original</th>
-                        <th>Descuento</th>
-                        <th>Precio Venta</th>
+                        <th class="text-center">Precio Original (Bs)</th>
+                        <th>Descuento <br> o Recargo</th>
+                        <th>Precio Venta (Bs)</th>
                         <th>Cantidad</th>
-                        <th>Total</th>
+                        <th>Total (Bs)</th>
                       </tr>
                     </thead>
                     
@@ -30,38 +29,34 @@
                             <td class="table-th text-withe text-center">
                                 {{$loop->iteration}}
                             </td>
-                            <td class="table-th text-withe text-center">
-                                <img src="{{('storage/productos/'.$dv->image) }}"
-                                height="25" class="rounded">
-                            </td>
                             <td class="table-th text-withe text-left">
                                 {{ $dv->nombre }}
                             </td>
                             <td class="table-th text-withe text-right">
-                                {{ number_format($dv->po, 2) }} Bs
+                                {{ number_format($dv->po, 2) }}
                             </td>
 
 
 
-                            @if($dv->po-$dv->pv == 0)
+                            @if($dv->pv-$dv->po == 0)
                             <td class="table-th text-withe text-right">
-                                {{ number_format($dv->po-$dv->pv, 2) }} Bs
+                                {{ number_format($dv->pv-$dv->po, 2) }}
                             </td>
                             @else
                             <td class="table-th text-withe text-right" style="background-color: rgb(248, 231, 197, 0.5)">
-                                {{ number_format($dv->po-$dv->pv, 2) }} Bs
+                                {{ number_format($dv->pv-$dv->po, 2) }}
                             </td>
                             @endif
 
 
                             <td class="table-th text-withe text-right">
-                                {{ number_format($dv->pv, 2) }} Bs
+                                {{ number_format($dv->pv, 2) }}
                             </td>
                             <td class="table-th text-withe text-center">
                                 {{ $dv->cantidad }}
                             </td>
                             <td class="table-th text-withe text-right">
-                                {{ number_format($dv->pv*$dv->cantidad, 2) }} Bs
+                                {{ number_format($dv->pv*$dv->cantidad, 2) }}
                             </td>
                         </tr>
                         @endforeach
@@ -93,11 +88,6 @@
                                 --------
                             </b>
                         </td>
-                        <td class="text-right">
-                            <b>
-                                --------
-                            </b>
-                        </td>
                         <td class="text-center">
                             <b>
                                 {{$this->totalitems()}}
@@ -106,7 +96,7 @@
                         <td class="text-right">
                             
                             <b>
-                                {{number_format( $this->totabs(), 2) }} Bs
+                                {{number_format( $this->totabs(), 2) }}
                             </b>
                         </td>
                       </tr>

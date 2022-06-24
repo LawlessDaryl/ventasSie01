@@ -58,10 +58,10 @@
                             <h6>Seleccionar Usuario</h6>
                         </div>
                         <select wire:model="usuarioseleccionado" class="form-control">
+                            <option value="Todos" selected><b>Todos los Usuarios</b></option>
                             @foreach ($listausuarios as $u)
                             <option value="{{$u->id}}">{{$u->nombreusuario}}</option>
                             @endforeach
-                            <option value="Todos" selected>Todos los Usuarios</option>
                         </select>
                 </div>
                 @endif
@@ -101,22 +101,30 @@
                                     Celular:{{ $d->celular }}
                                 </td>
                                 <td class="table-th text-withe text-center">
-                                    Descuento Bs {{number_format( $this->totaldescuento($d->id), 2) }}
-                                    <br>
-                                    <b>Total Bs {{number_format( $d->totalbs - $d->cambio, 2) }}</b>
-                                    <br>
-                                    Cambio Bs {{number_format( $d->cambio, 2) }}
+                                    @if($this->totaldescuento($d->id) > 0)
+                                        Recargo Bs {{number_format( $this->totaldescuento($d->id), 2) }}
+                                        <br>
+                                        <b>Total Bs {{number_format( $d->totalbs - $d->cambio, 2) }}</b>
+                                        <br>
+                                        Cambio Bs {{number_format( $d->cambio, 2) }}
+                                    @else
+                                        Descuento Bs {{number_format( $this->totaldescuento($d->id), 2) }}
+                                        <br>
+                                        <b>Total Bs {{number_format( $d->totalbs - $d->cambio, 2) }}</b>
+                                        <br>
+                                        Cambio Bs {{number_format( $d->cambio, 2) }}
+                                    @endif
                                 </td>
-                                <td class="table-th text-withe text-center">
+                                <td class="text-center">
                                     {{ $d->user }}
                                 </td>
-                                <td class="table-th text-withe text-center">
+                                <td class="text-center">
                                     {{ $d->tipopago }}
                                 </td>
-                                <td class="table-th text-withe text-center">
+                                <td class="text-center">
                                     {{ $d->factura }}
                                 </td>
-                                <td class="table-th text-withe text-center">
+                                <td class="text-center">
                                     {{ $d->obs }}
                                 </td>
                                 <td class="table-th text-withe text-center">
@@ -127,7 +135,7 @@
                                 @if($d->status == 'CANCELED')
                                 <td class="table-th text-withe text-center">
                                     <span class="stamp stamp-md bg-danger mr-3">
-										Anulado
+										ANULADO
 									</span>
                                 </td>
                                 @else
@@ -139,17 +147,20 @@
                                 @endif
                                 <td class="text-center">
                                     <div class="btn-group" role="group" aria-label="Basic example">
-                                        <button wire:click="cambiaridventa({{ $d->id }})" class="btn btn-warning" title="Ver detalles de la venta">
+                                        <button wire:click="cambiaridventa({{ $d->id }})" class="btn btn" title="Ver detalles de la venta" style="background-color: rgb(10, 137, 235); color:white">
                                             <i class="fas fa-bars"></i>
                                         </button>
                                         @if($this->verificarpermiso())
                                             @if($d->status != 'CANCELED')
-                                                <button wire:click="mostraranularmodal({{$d->id}})" class="btn btn-warning" title="Anular Venta">
-                                                    <i class="fas fa-trash-alt"></i>
-                                                </button>
+                                            <button wire:click="mostraranularmodal({{$d->id}})" class="btn btn" title="Anular Venta" style="background-color: red; color:white">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                            {{-- <button wire:click="editsale({{$d->id}})" class="btn btn" title="Editar Venta" style="background-color: rgb(13, 175, 220); color:white">
+                                                <i class="fas fa-edit"></i>
+                                            </button> --}}
                                             @endif
                                         @endif
-                                        <button wire:click="crearcomprobante({{$d->id}})" class="btn btn-warning" title="Crear Comprobante">
+                                        <button wire:click="crearcomprobante({{$d->id}})" class="btn btn" title="Crear Comprobante" style="background-color: rgb(0, 104, 21); color:white">
                                             <i class="fas fa-print"></i>
                                         </button>
                                     </div>
@@ -188,6 +199,9 @@
         });
         window.livewire.on('show-anularcerrar', msg => {
             $('#anular').modal('hide')
+        });
+        window.livewire.on('show-editar', msg => {
+            $('#editarventa').modal('show')
         });
         
     });

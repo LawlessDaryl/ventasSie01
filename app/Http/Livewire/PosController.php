@@ -1442,6 +1442,64 @@ class PosController extends Component
         ->get();
         return $carteras;
     }
+    public function actualizarventa()
+    {
+        //Obtenemos detalles de la venta
+        $detalles = SaleDetail::join('sales as s', 's.id', 'sale_details.sale_id')
+        ->select('sale_details.id as iddetalleventa','sale_details.sale_id as idsale','sale_details.product_id as idproduct','sale_details.quantity as cantidad','sale_details.price as precio')
+        ->where('sale_details.sale_id', session('sesionidventa'))
+        ->orderBy('sale_details.id', 'asc')
+        ->get();
+
+        //Eliminamos todos los detalles de la venta
+        foreach ($detalles as $item)
+        {
+            SaleDetail::where('id', $item->iddetalleventa)->delete();
+        }
+
+        //Pasamos el contenido del carrito en una variable
+        $items = Cart::getContent();
+        foreach ($items as $item) {
+
+            SaleDetail::create([
+                'price' => $item->price,
+                'quantity' => $item->quantity,
+                'product_id' => $item->id,
+                'sale_id' => session('sesionidventa'),
+            ]);
+
+        //Decrementando el stock en tienda
+        $tiendaproducto = ProductosDestino::join("products as p", "p.id", "productos_destinos.product_id")
+        ->join('destinos as des', 'des.id', 'productos_destinos.destino_id')
+        ->select("productos_destinos.id as id","p.nombre as name",
+        "productos_destinos.stock as stock")
+        ->where("p.id", $item->id)
+        ->where("des.nombre", 'TIENDA')
+        ->where("des.sucursal_id", $this->idsucursal())
+        ->get()->first();
+
+        $tiendaproducto->update([
+            'stock' => $tiendaproducto->stock - $item->quantity
+            ]);
+        }
+
+        $venta = Sale::find(session('sesionidventa'));
+        
+        $venta->update([
+            'cash' => $this->total + $venta->change,
+            ]);
+
+        //Vaciamos todas las variables
+        $this->cancelaractualizarventa();
+    }
+    public function cancelaractualizarventa()
+    {
+        //Limpiamos el carrito de compras
+        Cart::clear();
+        //Limpiamos la variable de sesión
+        session(['sesionidventa' => null]);
+        return redirect('salelist');
+    }
 
 
     

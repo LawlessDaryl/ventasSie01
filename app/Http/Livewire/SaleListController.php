@@ -20,6 +20,7 @@ use App\Models\SaleDetail;
 use App\Models\User;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\DB;
+use Darryldecode\Cart\Facades\CartFacade as Cart;
 use Exception;
 
 
@@ -48,8 +49,7 @@ class SaleListController extends Component
     public function render()
     {
 
-
-        if($this->usuarioseleccionado > 1)
+        if($this->usuarioseleccionado > 0)
         {
             $data = Sale::join('users as u', 'u.id', 'sales.user_id')
             ->join("movimientos as m", "m.id", "sales.movimiento_id")
@@ -60,7 +60,7 @@ class SaleListController extends Component
             'u.name as user','c.razon_social as rz','c.cedula as ci','c.celular as celular')
             ->where('u.id', $this->usuarioseleccionado)
             ->orderBy('sales.id', 'desc')
-            ->paginate(5);
+            ->paginate(50);
         }
         else
         {
@@ -72,7 +72,7 @@ class SaleListController extends Component
             'sales.tipopago as tipopago','sales.change as cambio','sales.factura as factura','sales.status as status',
             'u.name as user','c.razon_social as rz','c.cedula as ci','c.celular as celular')
             ->orderBy('sales.id', 'desc')
-            ->paginate(5);
+            ->paginate(50);
         }
 
         //Listando Todos los Usuarios
@@ -134,7 +134,7 @@ class SaleListController extends Component
         $totaldescuento = 0;
         foreach($descuento as $d)
         {
-            $totaldescuento = (($d->po - $d->pv)*$d->cantidad) + $totaldescuento;
+            $totaldescuento = (($d->pv - $d->po)*$d->cantidad) + $totaldescuento;
         }
         return $totaldescuento;
     }
@@ -318,6 +318,29 @@ class SaleListController extends Component
             $totalbs = $d->totalbs - $d->cambio;
         }
         return $totalbs;
+    }
+    //Metodo para llamar a la venta modal para editar una Venta
+    public function editsale($idventa)
+    {
+        //Limpiamos el carrito de compras
+        Cart::clear();
+        //Obtenemos detalles de la venta
+        $detalles = SaleDetail::join('sales as s', 's.id', 'sale_details.sale_id')
+        ->join("products as p", "p.id", "sale_details.product_id")
+        ->select('p.id as idproducto','p.image as image','p.nombre as nombre','sale_details.price as po',
+        'sale_details.price as pv','sale_details.quantity as cantidad')
+        ->where('sale_details.sale_id', $idventa)
+        ->orderBy('sale_details.id', 'asc')
+        ->get();
+        //Llenamos el carrito con las productos y sus cantidades 
+        foreach ($detalles as $item)
+        {
+            Cart::add($item->idproducto, $item->nombre, $item->po, $item->cantidad, $item->image);
+        }
+        //Creando variable de sesión con el id de la venta
+        session(['sesionidventa' => $idventa]);
+        //session('sesionidventa')
+        return redirect('pos');
     }
 
 }

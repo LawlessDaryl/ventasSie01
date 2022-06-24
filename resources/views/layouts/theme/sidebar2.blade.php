@@ -641,7 +641,7 @@
 									<li>
 										<a href="{{ url('salemovimientodiario') }}">
 											<i class="fa fas fa-minus"></i>
-											Movimiento Diario </a>
+											Movimiento Diario Ventas</a>
 									</li>
 
 

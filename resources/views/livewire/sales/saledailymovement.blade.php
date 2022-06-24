@@ -129,15 +129,13 @@
                               <tr class="tablehead">
                                 <th class="text-center">N°</th>
                                 <th>FECHA</th>
-                                <th>USUARIO</th>
                                 <th>CARTERA</th>
                                 <th>CAJA</th>
-                                <th>MOVIMIENTO</th>
-                                <th class="text-right">IMPORTE</th>
+                                <th>INGRESO</th>
+                                <th class="text-right">EGRESO</th>
                                 <th class="text-center">MOTIVO</th>
                                 @if($this->verificarpermiso() == true)
                                 <th class="text-right">UTILIDAD</th>
-                                <th class="text-center">SUCURSAL</th>
                                 @endif
                               </tr>
                             </thead>
@@ -151,26 +149,26 @@
                                             {{ date("d/m/Y h:i A", strtotime($item->fecha)) }}
                                         </td>
                                         <td>
-                                            {{ ucwords($item->nombreusuario) }}
-                                        </td>
-                                        <td>
                                             {{ ucwords(strtolower($item->nombrecartera)) }}
                                         </td>
                                         <td>
                                             {{ ucwords($item->nombrecaja) }}
                                         </td>
+                                       
+                                        <td >
                                         @if($item->tipo == "INGRESO")
-                                        <td style="color: rgb(8, 157, 212)">
-                                            <b>{{ $item->tipo }}</b>
-                                        </td>
-                                        @else
-                                        <td style="color: rgb(205, 21, 0)">
-                                            <b>{{ $item->tipo}}</b>
+                                       
+                                        {{ ucwords($item->importe) }} Bs
                                         </td>
                                         @endif
-                                        <td class="text-right">
-                                            {{ ucwords($item->importe) }} Bs
-                                        </td>
+                                        <td >
+                                        @if($item->tipo == "EGRESO")
+                                       
+                                        {{ ucwords($item->importe) }} Bs
+                                        
+                                        @endif
+                                    </td>
+                                       
                                         <td class="text-center">
                                             {{ ucwords($item->motivo) }}
                                         </td>
@@ -179,9 +177,6 @@
                                             @if($this->buscarventa($item->idmovimiento)->count() > 0)
                                              {{ number_format($this->buscarutilidad($this->buscarventa($item->idmovimiento)->first()->idventa), 2) }} Bs
                                             @endif
-                                        </td>
-                                        <td class="text-center">
-                                            {{ ucwords($item->nombresucursal) }}
                                         </td>
                                         @endif
                                     </tr>
