@@ -79,7 +79,7 @@ class CategoriesController extends Component
     public function Store()
     {
         $this->selected_id=0;
-        $rules = ['name' => 'required|unique:categories|min:3'];
+        $rules = ['name' => 'required|unique:categories|min:4'];
         $messages = [
             'name.required' => 'El nombre de la categoría es requerido',
             'name.unique' => 'Ya existe el nombre de la categoría',
@@ -112,7 +112,7 @@ class CategoriesController extends Component
 
     public function Store_Subcategoria()
     {
-        $this->selected_id=0;
+        
         $rules = ['name' => 'required|unique:categories|min:3'];
         $messages = [
             'name.required' => 'El nombre de la categoría es requerido',
@@ -132,12 +132,10 @@ class CategoriesController extends Component
         $this->emit('item-added', 'Categoría Registrada');
     }
 
-
     public function Update()
     {
         $rules = [
-            'name' => "required|min:3|unique:categories,name,{$this->selected_id}"
-        ];
+            'name' => "required|min:3|unique:categories,name,{$this->selected_id}"];
         $messages = [
             'name.required' => 'El nombre de la categoría es requerido',
             'name.unique' => 'Ya existe el nombre de la categoría',
@@ -145,7 +143,6 @@ class CategoriesController extends Component
         ];
         $this->validate($rules, $messages);
         $category = Category::find($this->selected_id);
-
         $category->update([
             'name' => $this->name,
             'descripcion'=>$this->descripcion

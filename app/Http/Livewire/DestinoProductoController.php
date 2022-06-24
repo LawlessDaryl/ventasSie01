@@ -21,7 +21,7 @@ class DestinoProductoController extends Component
     use WithPagination;
 
     public $selected_id,$search,$selected_ubicacion,$componentName,$title,$sql,$prod,$grouped;
-    private $pagination = 10;
+    private $pagination = 50;
     public function paginationView()
     {
         return 'vendor.livewire.bootstrap';

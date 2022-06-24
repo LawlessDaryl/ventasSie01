@@ -5,9 +5,9 @@
                 <h4 class="card-title">
                     <b>{{ $componentName }} | {{ $pageTitle }}</b>
                 </h4>
-                <ul class="tabs tab-pills">
+                <ul class="row justify-content-end">
                     
-                        <a href="javascript:void(0)" class="btn btn-warning" data-toggle="modal"
+                        <a href="javascript:void(0)" class="btn btn-dark m-1" data-toggle="modal"
                         data-target="#theModal">Agregar Proveedor</a>
                     
                 </ul>

@@ -6,9 +6,9 @@
                 <h4 class="card-title">
                     <b>Entrada Salida Productos</b>
                 </h4>
-                <ul class="tabs tab-pills">
-                    <a href="javascript:void(0)" class="btn btn-warning" data-toggle="modal"
-                    data-target="#operacion">Registrar<br/>Operacion</a>
+                <ul class="row justify-content-end">
+                    <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
+                    data-target="#operacion">Registrar Operacion</a>
                     <a href="javascript:void(0)"
                      wire:click="Incrementar()"
                  class="btn btn-warning"

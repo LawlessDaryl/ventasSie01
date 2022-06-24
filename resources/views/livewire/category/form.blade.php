@@ -2,7 +2,7 @@
 <div class="row">
     <div class="col-lg-12">
         <div class="form-group">
-            {{$selected_id=0}}
+          
              <label> Nombre </label>
             
             <input type="text" wire:model.lazy="name" class="form-control" placeholder="ej: Impresoras">
