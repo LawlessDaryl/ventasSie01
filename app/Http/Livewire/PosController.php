@@ -65,19 +65,26 @@ class PosController extends Component
         $this->tipopago = 'Elegir';
 
 
-
-
-
-
-        foreach($listac as $list)
+        if(session('sesionidventa') > 0)
         {
-            if($list->tipo == 'CajaFisica')
-            {
-                $this->tipopago = $list->idcartera;
-                break;
-            }
-            
+            $venta = Sale::find(session('sesionidventa'));
+            $this->tipopago = $venta->cartera_id;
         }
+        else
+        {
+            foreach($listac as $list)
+            {
+                if($list->tipo == 'CajaFisica')
+                {
+                    $this->tipopago = $list->idcartera;
+                    break;
+                }
+                
+            }
+        }
+
+
+
         $this->actualizardescuento();
         $this->listadestinos = $this->buscarxproducto(1);
         $this->listasucursales = $this->buscarxproductosucursal(1);
@@ -914,8 +921,8 @@ class PosController extends Component
             ->get()->first();
 
             //Tipo de Pago en la Venta
-            $cartera = Cartera::where('id', $this->tipopago)
-                    ->where('caja_id', $cajausuario->id)->get()->first();
+            $cartera = Cartera::where('id', $this->tipopago)->get()->first();
+                    
             //Cambiando valor de $facturasino dependiendo del valor de $factura
             $this->ventafactura();
             //Guardando total Bs para crear comprobante en PDF
@@ -1471,7 +1478,6 @@ class PosController extends Component
             $tiendaproducto->update([
                 'stock' => $tiendaproducto->stock + $item->cantidad
                 ]);
-
         }
 
         //Pasamos el contenido del carrito en una variable
@@ -1500,10 +1506,26 @@ class PosController extends Component
                 ]);
         }
 
-        $venta = Sale::find(session('sesionidventa'));
         
+        // $venta->update([
+        //     'cash' => $this->total + $venta->change,
+        //     ]);
+
+        $tipopago = Cartera::find($this->tipopago);
+
+        //dd($tipopago->nombre);
+
+        $cartera = Cartera::where('id', $this->tipopago)->get()->first();
+
+        $venta = Sale::find(session('sesionidventa'));
+
         $venta->update([
-            'cash' => $this->total + $venta->change,
+            'total' => Cart::getTotal(),
+            'items' => $this->itemsQuantity,
+            'tipopago' => $tipopago->nombre,
+            'factura' => $this->facturasino,
+            'cartera_id' => $cartera->id,
+            'observacion' => $this->observacion,
             ]);
 
         //Vaciamos todas las variables

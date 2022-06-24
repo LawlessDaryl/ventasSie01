@@ -55,7 +55,7 @@ class SaleListController extends Component
             ->join("movimientos as m", "m.id", "sales.movimiento_id")
             ->join("cliente_movs as cm", "cm.movimiento_id", "m.id")
             ->join("clientes as c", "c.id", "cm.cliente_id")
-            ->select('sales.id as id','sales.cash as totalbs','sales.created_at as fecha','sales.observacion as obs',
+            ->select('sales.id as id','sales.cash as totalbs', 'sales.total as totalbsventa', 'sales.created_at as fecha','sales.observacion as obs',
             'sales.tipopago as tipopago','sales.change as cambio','sales.factura as factura','sales.status as status',
             'u.name as user','c.razon_social as rz','c.cedula as ci','c.celular as celular')
             ->where('u.id', $this->usuarioseleccionado)
@@ -68,7 +68,7 @@ class SaleListController extends Component
             ->join("movimientos as m", "m.id", "sales.movimiento_id")
             ->join("cliente_movs as cm", "cm.movimiento_id", "m.id")
             ->join("clientes as c", "c.id", "cm.cliente_id")
-            ->select('sales.id as id','sales.cash as totalbs','sales.created_at as fecha','sales.observacion as obs',
+            ->select('sales.id as id','sales.cash as totalbs', 'sales.total as totalbsventa', 'sales.created_at as fecha','sales.observacion as obs',
             'sales.tipopago as tipopago','sales.change as cambio','sales.factura as factura','sales.status as status',
             'u.name as user','c.razon_social as rz','c.cedula as ci','c.celular as celular')
             ->orderBy('sales.id', 'desc')
@@ -94,7 +94,7 @@ class SaleListController extends Component
         ->join("movimientos as m", "m.id", "sales.movimiento_id")
         ->join("cliente_movs as cm", "cm.movimiento_id", "m.id")
         ->join("clientes as c", "c.id", "cm.cliente_id")
-        ->select('sales.id as id','sales.cash as totalbs','sales.created_at as fecha',
+        ->select('sales.id as id','sales.cash as totalbs', 'sales.total as totalbsventa','sales.created_at as fecha',
         'sales.tipopago as tipopago','sales.change as cambio',
         'u.name as user','c.razon_social as rz','c.cedula as ci','c.celular as celular')
         ->where('u.id',Auth()->user()->id)
@@ -159,22 +159,8 @@ class SaleListController extends Component
     //Obtener el total Bs de una venta
     public function totabs()
     {
-        $venta = Sale::join('users as u', 'u.id', 'sales.user_id')
-        ->join("movimientos as m", "m.id", "sales.movimiento_id")
-        ->join("cliente_movs as cm", "cm.movimiento_id", "m.id")
-        ->join("clientes as c", "c.id", "cm.cliente_id")
-        ->select('sales.id as id','sales.cash as totalbs','sales.created_at as fecha',
-        'sales.tipopago as tipopago','sales.change as cambio',
-        'u.name as user','c.razon_social as rz','c.cedula as ci','c.celular as celular')
-        ->where('sales.id', $this->idventa)
-        ->get();
-
-        $totalbs = 0;
-        foreach($venta as $d)
-        {
-            $totalbs = $d->totalbs - $d->cambio;
-        }
-        return $totalbs;
+        $venta = Sale::find($this->idventa);
+        return $venta->total;
     }
     //Metodo para Anular una Venta
     public function mostraranularmodal($idventa)
@@ -306,7 +292,7 @@ class SaleListController extends Component
         ->join("movimientos as m", "m.id", "sales.movimiento_id")
         ->join("cliente_movs as cm", "cm.movimiento_id", "m.id")
         ->join("clientes as c", "c.id", "cm.cliente_id")
-        ->select('sales.id as id','sales.cash as totalbs','sales.created_at as fecha',
+        ->select('sales.id as id','sales.cash as totalbs', 'sales.total as totalbsventa','sales.created_at as fecha',
         'sales.tipopago as tipopago','sales.change as cambio',
         'u.name as user','c.razon_social as rz','c.cedula as ci','c.celular as celular')
         ->where('sales.id', $idventa)

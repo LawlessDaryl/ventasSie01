@@ -39,6 +39,7 @@
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                     <strong>Tipo de Pago</strong>
+
                                     <select wire:model="tipopago" class="form-control">
                                         <option disabled value="Elegir">Elegir</option>
                                         @foreach ($listacarteras as $cartera)
@@ -48,6 +49,7 @@
                                         <option value="{{$carteras->idcartera}}">{{ucwords(strtolower($carteras->nombrecartera)) .' - ' .ucwords(strtolower($carteras->dc))}}</option>
                                         @endforeach
                                     </select>
+                                    
                                     </div>
 
                                 </div>
