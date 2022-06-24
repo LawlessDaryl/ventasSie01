@@ -22,7 +22,7 @@ class ReporteMovimientoController extends Component
 {
     public  $search, $selected_id;
     public  $pageTitle, $componentName, $opciones,
-        $cartera_id, $type, $cantidad, $comentario;
+        $cartera_id, $type, $cantidad, $comentario,$totalesIngresos,$totalesEgresos,$vertotales=0,$importetotalingresos,$importetotalegresos;
     private $pagination = 10;
 
     public function paginationView()
@@ -35,7 +35,6 @@ class ReporteMovimientoController extends Component
         $this->componentName = 'Movimientos';
         $this->selected_id = 0;
         $this->opciones = 'TODAS';
-
         $this->cartera_id = 'Elegir';
         $this->type = 'Elegir';
         $this->cantidad = '';
@@ -59,14 +58,14 @@ class ReporteMovimientoController extends Component
             /* SUMAR TODO LOS INGRESOS DE LA CARTERA */
             $INGRESOS = Cartera::join('cartera_movs as cm', 'carteras.id', 'cm.cartera_id')
                 ->join('movimientos as m', 'm.id', 'cm.movimiento_id')
-                ->where('cm.type', 'INGRESO')
+                ->where('cm.type','INGRESO')
                 ->where('m.status', 'ACTIVO')
                 ->where('carteras.id', $c->id)->sum('m.import');
             /* SUMAR TODO LOS EGRESOS DE LA CARTERA */
             $EGRESOS = Cartera::join('cartera_movs as cm', 'carteras.id', 'cm.cartera_id')
                 ->join('movimientos as m', 'm.id', 'cm.movimiento_id')
                 ->where('cm.type', 'EGRESO')
-                ->where('m.status', 'ACTIVO')
+                ->where('m.status','ACTIVO')
                 ->where('carteras.id', $c->id)->sum('m.import');
             /* REALIZAR CALCULO DE INGRESOS - EGRESOS */
             $c->monto = $INGRESOS - $EGRESOS;
@@ -272,4 +271,59 @@ class ReporteMovimientoController extends Component
         $this->cantidad = '';
         $this->comentario = '';
     }
+
+  public function viewTotales(){
+    $this->vertotales=1;
+    $this->totalesIngresos = Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')
+    ->join('carteras as c', 'c.id', 'crms.cartera_id')
+    ->join('cajas as ca', 'ca.id', 'c.caja_id')
+    ->join('users as u', 'u.id', 'movimientos.user_id')
+    ->select(
+        'movimientos.type as movimientotype',
+        'movimientos.import as mimpor',
+        'crms.type as carteramovtype',
+        'crms.tipoDeMovimiento',
+        'crms.comentario',
+        'c.nombre',
+        'c.descripcion',
+        'c.tipo',
+        'c.telefonoNum',
+        'ca.nombre as cajaNombre',
+        'u.name as usuarioNombre',
+        'movimientos.created_at as movimientoCreacion',
+    )
+    ->where('movimientos.status', 'ACTIVO')
+    ->orderBy('crms.type', 'asc')
+  
+    
+    ->get();
+
+    $this->importetotalingresos= sum::
+
+    $this->totalesEgresos = Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')
+    ->join('carteras as c', 'c.id', 'crms.cartera_id')
+    ->join('cajas as ca', 'ca.id', 'c.caja_id')
+    ->join('users as u', 'u.id', 'movimientos.user_id')
+    ->select(
+        'movimientos.type as movimientotype',
+        'movimientos.import as mimpor',
+        'crms.type as carteramovtype',
+        'crms.tipoDeMovimiento',
+        'crms.comentario',
+        'c.nombre',
+        'c.descripcion',
+        'c.tipo',
+        'c.telefonoNum',
+        'ca.nombre as cajaNombre',
+        'u.name as usuarioNombre',
+        'movimientos.created_at as movimientoCreacion',
+    )
+    ->where('movimientos.status', 'ACTIVO')
+    ->orderBy('crms.type', 'asc')
+  
+    
+    ->get();
+
+
+  }
 }

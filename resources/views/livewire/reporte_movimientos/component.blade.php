@@ -10,6 +10,9 @@
                         <a wire:click.prevent="viewDetails()" class="btn btn-warning">
                             Generar Ingreso/Egreso en cartera
                         </a>
+                        <a wire:click.prevent="viewTotales()" class="btn btn-warning">
+                            Ver Totales
+                        </a>
                     @endcan
                 </ul>
                 {{-- <ul class="tabs tab-pills">
@@ -51,6 +54,7 @@
                             <option value="TIGOMONEY">TIGO MONEY</option>
                             <option value="STREAMING">STREAMING</option>
                             <option value="SERVICIOS">SERVICIOS</option>
+                            <option value="VENTA">VENTAS</option>
                         </select>
                     </div>
                 </div>
@@ -67,7 +71,7 @@
                 </div>
             </div>
 
-            @if ($opciones != 'CORTE')
+            @if ($opciones != 'CORTE' and $vertotales==0)
                 <div class="widget-content">
                     <div class="table-responsive">
                         <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
@@ -153,7 +157,7 @@
                         </table>
                     </div>
                 </div>
-            @else
+            @elseif($vertotales==0)
                 <div class="widget-content">
                     <div class="table-responsive">
                         <table class="table table-unbordered table-hover mt-4">
@@ -198,6 +202,80 @@
                         </table>
                     </div>
                 </div>
+            @endif
+            @if($vertotales==1)
+            <div class="widget-content">
+                <div class="table-responsive">
+                    <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
+                        <thead class="text-white" style="background: #ee761c">
+                            <tr>
+                                <th class="table-th text-withe text-center" style="font-size: 100%">#</th>
+                                <th class="table-th text-withe text-center" style="font-size: 100%">FECHA</th>
+                             
+                                <th class="table-th text-withe text-center" style="font-size: 100%">DETALLE</th>
+                                
+                                <th class="table-th text-withe text-center" style="font-size: 100%">INGRESO</th>
+                                <th class="table-th text-withe text-center" style="font-size: 100%">EGRESO</th>
+                                <th class="table-th text-withe text-center" style="font-size: 100%">UTILIDAD</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($data as $p)
+                                <tr>
+                                    <td>
+                                        <h6 class="text-center" style="font-size: 100%">{{ $p->import }}
+                                        </h6>
+                                    </td>
+                                    <td>
+                                        <h6 class="text-center" style="font-size: 100%">
+                                            {{ $p->carteramovtype }}</h6>
+                                    </td>
+                                    @if ($opciones != 'EGRESO/INGRESO')
+                                        <td>
+                                            <h6 class=" text-center" style="font-size: 100%">
+                                                {{ $p->tipoDeMovimiento }}</h6>
+                                        </td>
+                                    @endif
+                                    <td>
+                                        <h6 class="text-center" style="font-size: 100%">{{ $p->nombre }}
+                                        </h6>
+                                    </td>
+                                    @if ($opciones != 'EGRESO/INGRESO')
+                                        <td>
+                                            <h6 class="text-center" style="font-size: 100%">
+                                                {{ $p->descripcion }}
+                                            </h6>
+                                        </td>
+                                        {{-- <td>
+                                            <h6 class="text-center" style="font-size: 100%">{{ $p->tipo }}
+                                            </h6>
+                                        </td> --}}
+                                        <td>
+                                            <h6 class="text-center" style="font-size: 100%">
+                                                {{ $p->telefonoNum }}
+                                            </h6>
+                                        </td>
+                                    @endif
+                                    <td>
+                                        <h6 class="text-center" style="font-size: 100%">
+                                            {{ $p->cajaNombre }}
+                                        </h6>
+                                    </td>
+                                    <td>
+                                        <h6 class="text-center" style="font-size: 100%">
+                                            {{ $p->usuarioNombre }}</h6>
+                                    </td>
+                                    <td>
+                                        <h6 class="text-center" style="font-size: 100%">
+                                            {{ \Carbon\Carbon::parse($p->movimientoCreacion)->format('d/m/Y H:i') }}
+                                        </h6>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
             @endif
         </div>
     </div>
