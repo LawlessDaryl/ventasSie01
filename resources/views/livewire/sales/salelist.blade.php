@@ -104,13 +104,13 @@
                                     @if($this->totaldescuento($d->id) > 0)
                                         Recargo Bs {{number_format( $this->totaldescuento($d->id), 2) }}
                                         <br>
-                                        <b>Total Bs {{number_format( $d->totalbs - $d->cambio, 2) }}</b>
+                                        <b>Total Bs {{number_format( $d->totalbsventa, 2) }}</b>
                                         <br>
                                         Cambio Bs {{number_format( $d->cambio, 2) }}
                                     @else
                                         Descuento Bs {{number_format( $this->totaldescuento($d->id), 2) }}
                                         <br>
-                                        <b>Total Bs {{number_format( $d->totalbs - $d->cambio, 2) }}</b>
+                                        <b>Total Bs {{number_format( $d->totalbsventa, 2) }}</b>
                                         <br>
                                         Cambio Bs {{number_format( $d->cambio, 2) }}
                                     @endif
