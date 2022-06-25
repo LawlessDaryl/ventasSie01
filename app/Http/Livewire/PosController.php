@@ -1437,6 +1437,7 @@ class PosController extends Component
         ->get();
         return $carteras;
     }
+    //Listar las carteras generales
     public function listarcarterasg()
     {
         $carteras = Caja::join('carteras as car', 'cajas.id', 'car.caja_id')
@@ -1445,9 +1446,11 @@ class PosController extends Component
         ->get();
         return $carteras;
     }
+
+    //Editar una venta ya existente
     public function actualizarventa()
     {
-        //Obtenemos detalles de la venta
+        //Obtenemos detalles de la venta a travéz de una variable de sesión
         $detalles = SaleDetail::join('sales as s', 's.id', 'sale_details.sale_id')
         ->select('sale_details.id as iddetalleventa','sale_details.sale_id as idsale','sale_details.product_id as idproduct','sale_details.quantity as cantidad','sale_details.price as precio')
         ->where('sale_details.sale_id', session('sesionidventa'))
@@ -1506,27 +1509,47 @@ class PosController extends Component
                 ]);
         }
 
-        
-        // $venta->update([
-        //     'cash' => $this->total + $venta->change,
-        //     ]);
+        //Obtenemos los datos del tipo de pago escogido $this->tipopago=idcartera
+        $cartera = Cartera::find($this->tipopago);
 
-        $tipopago = Cartera::find($this->tipopago);
+        //Cambiando valor de $facturasino dependiendo del valor de $factura
+        $this->ventafactura();
 
-        //dd($tipopago->nombre);
-
-        $cartera = Cartera::where('id', $this->tipopago)->get()->first();
-
+        //Buscamos la venta para actualizar sus parámetros
         $venta = Sale::find(session('sesionidventa'));
 
         $venta->update([
             'total' => Cart::getTotal(),
             'items' => $this->itemsQuantity,
-            'tipopago' => $tipopago->nombre,
+            'tipopago' => $cartera->nombre,
             'factura' => $this->facturasino,
             'cartera_id' => $cartera->id,
             'observacion' => $this->observacion,
             ]);
+        $venta->save();
+
+
+        //Modificamos el importe del movimiento generado de la venta
+        $row_movimiento = Movimiento::find($venta->movimiento_id);
+        $row_movimiento->update([
+            'import' => $venta->total,
+            ]);
+        $row_movimiento->save();
+
+
+
+        //Obtenemos el idcarteramovimiento de la venta
+        $idcarteramovimiento = Movimiento::join("cartera_movs as cm", "cm.movimiento_id", "movimientos.id")
+            ->select("cm.id as cartera_mov_id")
+            ->where("movimientos.id", $venta->movimiento_id)
+            ->get()->first();
+
+        //Cambiamos el idcartera del movimiento  (cuando se cambie el tipo de pago de la venta)
+        $row_carteramov = CarteraMov::find($idcarteramovimiento->cartera_mov_id);
+        $row_carteramov->update([
+            'cartera_id' => $cartera->id,
+            ]);
+        $row_carteramov->save();
 
         //Vaciamos todas las variables
         $this->cancelaractualizarventa();

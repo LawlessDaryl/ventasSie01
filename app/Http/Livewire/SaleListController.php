@@ -201,22 +201,29 @@ class SaleListController extends Component
     {
         //dd($this->idventa);
         // Creando Movimiento
-        $Movimiento = Movimiento::create([
-            'type' => "ANULARVENTA",
-            'import' => $this->totabs(),
-            'user_id' => Auth()->user()->id,
-        ]);
+        // $Movimiento = Movimiento::create([
+        //     'type' => "ANULARVENTA",
+        //     'import' => $this->totabs(),
+        //     'user_id' => Auth()->user()->id,
+        // ]);
 
         //Obteniendo Información de la Venta
         $venta = Sale::find($this->idventa);
 
+        $movimiento = Movimiento::find($venta->movimiento_id);
+
+        $movimiento->update([
+            'status' => 'INACTIVO'
+            ]);
+        $movimiento->save();
+        
         // Creando Cartera Movimiento
-        CarteraMov::create([
-            'type' => "EGRESO",
-            'comentario' => "Por Venta Anulada",
-            'cartera_id' => $venta->cartera_id,
-            'movimiento_id' => $Movimiento->id,
-        ]);
+        // CarteraMov::create([
+        //     'type' => "EGRESO",
+        //     'comentario' => "Por Venta Anulada",
+        //     'cartera_id' => $venta->cartera_id,
+        //     'movimiento_id' => $Movimiento->id,
+        // ]);
 
         //Actualizando variable $listadetalles
         $this->listardetalleventas();

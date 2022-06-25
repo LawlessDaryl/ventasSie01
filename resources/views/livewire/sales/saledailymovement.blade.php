@@ -131,11 +131,11 @@
                                 <th>FECHA</th>
                                 <th>CARTERA</th>
                                 <th>CAJA</th>
-                                <th>INGRESO</th>
-                                <th class="text-right">EGRESO</th>
-                                <th class="text-center">MOTIVO</th>
+                                <th class="text-right">INGRESO (Bs)</th>
+                                <th class="text-right">EGRESO (Bs)</th>
+                                <th class="text-right">MOTIVO</th>
                                 @if($this->verificarpermiso() == true)
-                                <th class="text-right">UTILIDAD</th>
+                                <th class="text-right">UTILIDAD (Bs)</th>
                                 @endif
                               </tr>
                             </thead>
@@ -155,27 +155,27 @@
                                             {{ ucwords($item->nombrecaja) }}
                                         </td>
                                        
-                                        <td >
+                                        <td  class="text-right">
                                         @if($item->tipo == "INGRESO")
                                        
-                                        {{ ucwords($item->importe) }} Bs
+                                        {{ ucwords($item->importe) }}
                                         </td>
                                         @endif
-                                        <td >
+                                        <td class="text-right">
                                         @if($item->tipo == "EGRESO")
                                        
-                                        {{ ucwords($item->importe) }} Bs
+                                        {{ ucwords($item->importe) }}
                                         
                                         @endif
                                     </td>
                                        
-                                        <td class="text-center">
+                                        <td class="text-right">
                                             {{ ucwords($item->motivo) }}
                                         </td>
                                         @if($this->verificarpermiso() == true)
                                         <td class="text-right">
                                             @if($this->buscarventa($item->idmovimiento)->count() > 0)
-                                             {{ number_format($this->buscarutilidad($this->buscarventa($item->idmovimiento)->first()->idventa), 2) }} Bs
+                                             {{ number_format($this->buscarutilidad($this->buscarventa($item->idmovimiento)->first()->idventa), 2) }}
                                             @endif
                                         </td>
                                         @endif

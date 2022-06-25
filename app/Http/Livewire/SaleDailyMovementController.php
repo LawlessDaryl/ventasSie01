@@ -120,7 +120,8 @@ class SaleDailyMovementController extends Component
                     ->select('c.id as idcartera','cartera_movs.created_at as fecha','u.name as nombreusuario',
                     'cartera_movs.comentario as motivo','m.import as importe','ca.nombre as nombrecaja',
                     'cartera_movs.type as tipo','c.nombre as nombrecartera','s.name as nombresucursal','m.id as idmovimiento')
-                    ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta','Por Venta Anulada'])
+                    ->where('m.status','<>','INACTIVO')
+                    ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta'])
                     ->whereDate('cartera_movs.created_at', date('Y/m/d'))
                     ->orderBy('cartera_movs.created_at', 'asc')
                     ->get();
@@ -139,7 +140,8 @@ class SaleDailyMovementController extends Component
                     'cartera_movs.comentario as motivo','m.import as importe','ca.nombre as nombrecaja',
                     'cartera_movs.type as tipo','c.nombre as nombrecartera','s.name as nombresucursal','m.id as idmovimiento')
                     ->where('ca.id',$this->caja)
-                    ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta','Por Venta Anulada'])
+                    ->where('m.status','<>','INACTIVO')
+                    ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta'])
                     ->whereDate('cartera_movs.created_at', date('Y/m/d'))
                     ->orderBy('cartera_movs.created_at', 'asc')
                     ->get();
@@ -163,7 +165,8 @@ class SaleDailyMovementController extends Component
                     'cartera_movs.comentario as motivo','m.import as importe','ca.nombre as nombrecaja',
                     'cartera_movs.type as tipo','c.nombre as nombrecartera','s.name as nombresucursal','m.id as idmovimiento')
                     ->where('s.id',$this->sucursal,)
-                    ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta','Por Venta Anulada'])
+                    ->where('m.status','<>','INACTIVO')
+                    ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta'])
                     ->whereDate('cartera_movs.created_at', date('Y/m/d'))
                     ->get();
                 }
@@ -184,7 +187,8 @@ class SaleDailyMovementController extends Component
                     'cartera_movs.type as tipo','c.nombre as nombrecartera','s.name as nombresucursal','m.id as idmovimiento')
                     ->where('s.id',$this->sucursal,)
                     ->where('ca.id',$this->caja)
-                    ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta','Por Venta Anulada'])
+                    ->where('m.status','<>','INACTIVO')
+                    ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta'])
                     ->whereDate('cartera_movs.created_at', date('Y/m/d'))
                     ->get();
                 }
@@ -207,7 +211,8 @@ class SaleDailyMovementController extends Component
                     'cartera_movs.comentario as motivo','m.import as importe','ca.nombre as nombrecaja',
                     'cartera_movs.type as tipo','c.nombre as nombrecartera','s.name as nombresucursal','m.id as idmovimiento')
                     ->where('s.id',$this->sucursal,)
-                    ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta','Por Venta Anulada'])
+                    ->where('m.status','<>','INACTIVO')
+                    ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta'])
                     ->whereDate('cartera_movs.created_at', date('Y/m/d'))
                     ->get();
                 }
@@ -232,7 +237,8 @@ class SaleDailyMovementController extends Component
                     ->select('c.id as idcartera','cartera_movs.created_at as fecha','u.name as nombreusuario',
                     'cartera_movs.comentario as motivo','m.import as importe','ca.nombre as nombrecaja',
                     'cartera_movs.type as tipo','c.nombre as nombrecartera','s.name as nombresucursal','m.id as idmovimiento')
-                    ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta','Por Venta Anulada'])
+                    ->where('m.status','<>','INACTIVO')
+                    ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta'])
                     
                     ->whereYear('cartera_movs.created_at','>=' , date("Y", strtotime($this->dateFrom)))
                     ->whereMonth('cartera_movs.created_at','>=' , date("m", strtotime($this->dateFrom)))
@@ -260,7 +266,8 @@ class SaleDailyMovementController extends Component
                     'cartera_movs.comentario as motivo','m.import as importe','ca.nombre as nombrecaja',
                     'cartera_movs.type as tipo','c.nombre as nombrecartera','s.name as nombresucursal','m.id as idmovimiento')
                     ->where('ca.id',$this->caja)
-                    ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta','Por Venta Anulada'])
+                    ->where('m.status','<>','INACTIVO')
+                    ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta'])
                     
                     ->whereYear('cartera_movs.created_at','>=' , date("Y", strtotime($this->dateFrom)))
                     ->whereMonth('cartera_movs.created_at','>=' , date("m", strtotime($this->dateFrom)))
@@ -294,7 +301,8 @@ class SaleDailyMovementController extends Component
                     'cartera_movs.comentario as motivo','m.import as importe','ca.nombre as nombrecaja',
                     'cartera_movs.type as tipo','c.nombre as nombrecartera','s.name as nombresucursal','m.id as idmovimiento')
                     ->where('s.id',$this->sucursal,)
-                    ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta','Por Venta Anulada'])
+                    ->where('m.status','<>','INACTIVO')
+                    ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta'])
                     
                     ->whereYear('cartera_movs.created_at','>=' , date("Y", strtotime($this->dateFrom)))
                     ->whereMonth('cartera_movs.created_at','>=' , date("m", strtotime($this->dateFrom)))
@@ -325,7 +333,8 @@ class SaleDailyMovementController extends Component
                     'cartera_movs.type as tipo','c.nombre as nombrecartera','s.name as nombresucursal','m.id as idmovimiento')
                     ->where('s.id',$this->sucursal,)
                     ->where('ca.id',$this->caja)
-                    ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta','Por Venta Anulada'])
+                    ->where('m.status','<>','INACTIVO')
+                    ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta'])
                     
                     ->whereYear('cartera_movs.created_at','>=' , date("Y", strtotime($this->dateFrom)))
                     ->whereMonth('cartera_movs.created_at','>=' , date("m", strtotime($this->dateFrom)))
@@ -358,7 +367,8 @@ class SaleDailyMovementController extends Component
                     'cartera_movs.comentario as motivo','m.import as importe','ca.nombre as nombrecaja',
                     'cartera_movs.type as tipo','c.nombre as nombrecartera','s.name as nombresucursal','m.id as idmovimiento')
                     ->where('s.id',$this->sucursal,)
-                    ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta','Por Venta Anulada'])
+                    ->where('m.status','<>','INACTIVO')
+                    ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta'])
                     
                     ->whereYear('cartera_movs.created_at','>=' , date("Y", strtotime($this->dateFrom)))
                     ->whereMonth('cartera_movs.created_at','>=' , date("m", strtotime($this->dateFrom)))

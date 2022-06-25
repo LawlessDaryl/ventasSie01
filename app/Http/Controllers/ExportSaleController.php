@@ -49,7 +49,8 @@ class ExportSaleController extends Controller
         // INNER JOIN sucursal_users su ON su.sucursal_id = s.id
         // where su.user_id=2
 
-
+        $row_venta = Sale::find($idventa);
+        $total = $row_venta->total;
 
         $fecha = Carbon::parse(Carbon::now());
 

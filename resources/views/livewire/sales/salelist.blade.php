@@ -75,7 +75,7 @@
                 <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4" style="min-width: 1500px;">
                     <thead class="text-white" style="background: #ee761c">
                         <tr>
-                            <th class="table-th text-withe text-center">No</th>
+                            <th class="table-th text-withe text-center">Código Venta</th>
                             <th class="table-th text-withe text-center">Cliente</th>
                             <th class="table-th text-withe text-center">Totales Bs</th>
                             <th class="table-th text-withe text-center">Usuario</th>
@@ -91,7 +91,9 @@
                             @foreach ($data as $d)
                             <tr>
                                 <td class="table-th text-withe text-center">
-                                    {{$loop->iteration}}
+                                    <span class="stamp stamp" style="background-color: #ee761c">
+                                        {{$d->id}}
+									</span>
                                 </td>
                                 <td class="table-th text-withe text-center">
                                     Ci:{{ $d->ci }}
