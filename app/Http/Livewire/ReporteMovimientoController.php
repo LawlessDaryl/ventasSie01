@@ -293,12 +293,13 @@ class ReporteMovimientoController extends Component
         'movimientos.created_at as movimientoCreacion',
     )
     ->where('movimientos.status', 'ACTIVO')
+    ->where('crms.type', 'INGRESO')
     ->orderBy('crms.type', 'asc')
   
     
     ->get();
 
-    $this->importetotalingresos= sum::
+    //$this->importetotalingresos= sum::
 
     $this->totalesEgresos = Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')
     ->join('carteras as c', 'c.id', 'crms.cartera_id')
@@ -319,6 +320,7 @@ class ReporteMovimientoController extends Component
         'movimientos.created_at as movimientoCreacion',
     )
     ->where('movimientos.status', 'ACTIVO')
+    ->where('crms.type', 'EGRESO')
     ->orderBy('crms.type', 'asc')
   
     

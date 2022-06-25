@@ -220,56 +220,29 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($data as $p)
+                            @foreach ($totalesIngresos as $p)
                                 <tr>
                                     <td>
-                                        <h6 class="text-center" style="font-size: 100%">{{ $p->import }}
+                                        <h6 class="text-center" style="font-size: 100%">{{ $loop->iteration }}
                                         </h6>
-                                    </td>
-                                    <td>
-                                        <h6 class="text-center" style="font-size: 100%">
-                                            {{ $p->carteramovtype }}</h6>
-                                    </td>
-                                    @if ($opciones != 'EGRESO/INGRESO')
-                                        <td>
-                                            <h6 class=" text-center" style="font-size: 100%">
-                                                {{ $p->tipoDeMovimiento }}</h6>
-                                        </td>
-                                    @endif
-                                    <td>
-                                        <h6 class="text-center" style="font-size: 100%">{{ $p->nombre }}
-                                        </h6>
-                                    </td>
-                                    @if ($opciones != 'EGRESO/INGRESO')
-                                        <td>
-                                            <h6 class="text-center" style="font-size: 100%">
-                                                {{ $p->descripcion }}
-                                            </h6>
-                                        </td>
-                                        {{-- <td>
-                                            <h6 class="text-center" style="font-size: 100%">{{ $p->tipo }}
-                                            </h6>
-                                        </td> --}}
-                                        <td>
-                                            <h6 class="text-center" style="font-size: 100%">
-                                                {{ $p->telefonoNum }}
-                                            </h6>
-                                        </td>
-                                    @endif
-                                    <td>
-                                        <h6 class="text-center" style="font-size: 100%">
-                                            {{ $p->cajaNombre }}
-                                        </h6>
-                                    </td>
-                                    <td>
-                                        <h6 class="text-center" style="font-size: 100%">
-                                            {{ $p->usuarioNombre }}</h6>
                                     </td>
                                     <td>
                                         <h6 class="text-center" style="font-size: 100%">
                                             {{ \Carbon\Carbon::parse($p->movimientoCreacion)->format('d/m/Y H:i') }}
                                         </h6>
                                     </td>
+                                  
+                                    <td>
+                                        <h6 class="text-center" style="font-size: 100%">
+                                            {{ $p->carteramovtype }}-{{ $p->tipoDeMovimiento }}-   {{ $p->cajaNombre }}-{{ $p->usuarioNombre }}</h6>
+                              
+                                  
+                                    </td>
+                                    <td>
+                                        <h6 class="text-center" style="font-size: 100%">{{ $p->mimpor }}
+                                        </h6>
+                                    </td>
+                                    
                                 </tr>
                             @endforeach
                         </tbody>
