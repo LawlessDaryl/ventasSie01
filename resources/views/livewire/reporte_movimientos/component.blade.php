@@ -242,9 +242,43 @@
                                         <h6 class="text-center" style="font-size: 100%">{{ $p->mimpor }}
                                         </h6>
                                     </td>
+                                    <td>
+                                        <h6 class="text-center" style="font-size: 100%">
+                                        </h6>
+                                    </td>
                                     
                                 </tr>
                             @endforeach
+                            @foreach ($totalesEgresos as $p)
+                            <tr>
+                                <td>
+                                    <h6 class="text-center" style="font-size: 100%">{{ $loop->iteration }}
+                                    </h6>
+                                </td>
+                                <td>
+                                    <h6 class="text-center" style="font-size: 100%">
+                                        {{ \Carbon\Carbon::parse($p->movimientoCreacion)->format('d/m/Y H:i') }}
+                                    </h6>
+                                </td>
+                              
+                                <td>
+                                    <h6 class="text-center" style="font-size: 100%">
+                                        {{ $p->carteramovtype }}-{{ $p->tipoDeMovimiento }}-   {{ $p->cajaNombre }}-{{ $p->usuarioNombre }}</h6>
+                          
+                              
+                                </td>
+                               
+                                <td>
+                                    <h6 class="text-center" style="font-size: 100%">
+                                    </h6>
+                                </td>
+                                <td>
+                                    <h6 class="text-center" style="font-size: 100%">{{ $p->mimpor }}
+                                    </h6>
+                                </td>
+                                
+                            </tr>
+                        @endforeach
                         </tbody>
                     </table>
                 </div>
