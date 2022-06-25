@@ -5,14 +5,15 @@
                 <h4 class="card-title">
                     <b>{{ $componentName }} | {{ $pageTitle }}</b>
                 </h4>
-                <ul class="text-right">
+                <ul class="row justify-content-end">
                     @can('Ver_Generar_Ingreso_Egreso_Boton')
                         <a wire:click.prevent="viewDetails()" class="btn btn-warning">
                             Generar Ingreso/Egreso en cartera
                         </a>
                         <a wire:click.prevent="viewTotales()" class="btn btn-warning">
-                            Ver Totales
+                            Ver Resumen
                         </a>
+                 
                     @endcan
                 </ul>
                 {{-- <ul class="tabs tab-pills">
@@ -27,7 +28,7 @@
                 </ul> --}}
             </div>
             <div class="row">
-                <div class="col-lg-4 col-md-4 col-sm-12">
+                <div class="col-lg-3 col-md-4 col-sm-12">
 
                     <div class="form-group">
                         <div class="input-group mb-4">
@@ -45,7 +46,7 @@
 
                 </div>
 
-                <div class="col-sm-12 col-md-2">
+                <div class="col-sm-12 col-md-2 col-lg-2">
                     <div class="form-group">
                         <select wire:model="opciones" class="form-control">
                             <option value="TODAS">TODAS</option>
@@ -56,6 +57,30 @@
                             <option value="SERVICIOS">SERVICIOS</option>
                             <option value="VENTA">VENTAS</option>
                         </select>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-2">
+                    <div class="form-group">
+                                            
+
+                                    <label>Fecha inicial</label>
+                                    <input type="date" wire:model="fromDate" class="form-control">
+                                    @error('fromDate')
+                                    <span class="text-danger">{{ $message}}</span>
+                                    @enderror
+                   </div>
+                </div>
+                <div class="col-sm-12 col-md-2">
+                   <div class="form-group">
+
+                   
+
+                                    <label>Fecha final</label>
+                                    <input type="date" wire:model="toDate" class="form-control">
+                                    @error('toDate')
+                                    <span class="text-danger">{{ $message}}</span>
+                                    @enderror
+                                
                     </div>
                 </div>
                 <div class="col-sm-12 col-md-12">
@@ -148,7 +173,7 @@
                                         </td>
                                         <td>
                                             <h6 class="text-center" style="font-size: 100%">
-                                                {{ \Carbon\Carbon::parse($p->movimientoCreacion)->format('d/m/Y H:i') }}
+                                                {{\Carbon\Carbon::parse($p->movimientoCreacion)->format('d/m/Y H:i') }}
                                             </h6>
                                         </td>
                                     </tr>
@@ -246,6 +271,15 @@
                                         <h6 class="text-center" style="font-size: 100%">
                                         </h6>
                                     </td>
+                                    <td>
+                                        <h6 class="text-center" style="font-size: 100%">
+                                            @if($p->tipoDeMovimiento == 'VENTA')
+                                             {{ number_format($this->buscarutilidad($this->buscarventa($p->movid)->first()->idventa), 2) }}
+                                             @elseif($p->tipoDeMovimiento == 'SERVICIOS')
+                                             {{ $this->buscarservicio($p->movid)}}
+                                            @endif
+                                        </h6>
+                                    </td>
                                     
                                 </tr>
                             @endforeach
@@ -263,7 +297,7 @@
                               
                                 <td>
                                     <h6 class="text-center" style="font-size: 100%">
-                                        {{ $p->carteramovtype }}-{{ $p->tipoDeMovimiento }}-   {{ $p->cajaNombre }}-{{ $p->usuarioNombre }}</h6>
+                                        {{ $p->carteramovtype }}-{{ $p->tipoDeMovimiento }}-{{ $p->cajaNombre }}-{{ $p->usuarioNombre }}</h6>
                           
                               
                                 </td>
@@ -274,6 +308,10 @@
                                 </td>
                                 <td>
                                     <h6 class="text-center" style="font-size: 100%">{{ $p->mimpor }}
+                                    </h6>
+                                </td>
+                                <td>
+                                    <h6 class="text-center" style="font-size: 100%">
                                     </h6>
                                 </td>
                                 

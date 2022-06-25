@@ -25,4 +25,5 @@ class Movimiento extends Model
     {
         return $this->hasMany(CarteraMov::class);
     }
+ 
 }
