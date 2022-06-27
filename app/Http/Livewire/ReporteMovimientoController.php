@@ -27,7 +27,7 @@ class ReporteMovimientoController extends Component
     public  $search, $selected_id;
     public  $pageTitle, $componentName, $opciones,
         $cartera_id, $type, $cantidad, $comentario,$totalesIngresos,$totalesEgresos,$vertotales=0,$importetotalingresos,$importetotalegresos,$fromDate,$toDate,
-        $operacionefectivoing,$noefectivo,$operacionefectivoeg,$noefectivoeg,$subtotalcaja,$utilidadtotal=0;
+        $operacionefectivoing,$noefectivo,$operacionefectivoeg,$noefectivoeg,$subtotalcaja,$utilidadtotal=5;
     private $pagination = 10;
 
     public function paginationView()
@@ -195,9 +195,11 @@ class ReporteMovimientoController extends Component
 
         $utilidad2=$serv[0]->ms- $serv[0]->mc;
         $this->utilidadtotal=$this->utilidadtotal+$utilidad2;
-      
+        
        return $utilidad2;
     }
+
+  
 
     //Buscar la utilidad de una venta mediante el idventa
     /*public function buscarutilidadservicio($ss)
@@ -351,6 +353,7 @@ class ReporteMovimientoController extends Component
     }
 
   public function viewTotales(){
+    $this->utilidadtotal=0;
     $this->vertotales=1;
     $this->totalesIngresos = Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')
     ->join('carteras as c', 'c.id', 'crms.cartera_id')
@@ -364,7 +367,7 @@ class ReporteMovimientoController extends Component
         'crms.comentario',
         'c.nombre',
         'c.descripcion',
-        'c.tipo',
+        'c.tipo as ctipo',
         'c.telefonoNum',
         'ca.nombre as cajaNombre',
         'u.name as usuarioNombre',
@@ -382,9 +385,9 @@ class ReporteMovimientoController extends Component
     ->get();
 
     $this->importetotalingresos= $this->totalesIngresos->sum('mimpor');
-    $this->operacionefectivoing= $this->totalesIngresos->where('c.tipo','CajaFisica')->sum('mimpor');
-    $this->noefectivoing=$this->totalesIngresos->where('c.tipo','!=','CajaFisica')->sum('mimpor');
-    //dd($this->importetotalingresos);
+    $this->operacionefectivoing= $this->totalesIngresos->where('ctipo','CajaFisica')->sum('mimpor');
+    $this->noefectivoing=$this->totalesIngresos->where('ctipo','!=','CajaFisica')->sum('mimpor');
+
 
     $this->totalesEgresos = Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')
     ->join('carteras as c', 'c.id', 'crms.cartera_id')
@@ -398,7 +401,7 @@ class ReporteMovimientoController extends Component
         'crms.comentario',
         'c.nombre',
         'c.descripcion',
-        'c.tipo',
+        'c.tipo as ctipo',
         'c.telefonoNum',
         'ca.nombre as cajaNombre',
         'u.name as usuarioNombre',
@@ -415,11 +418,21 @@ class ReporteMovimientoController extends Component
     
     ->get();
 
+    foreach ($this->totalesIngresos as $var) {
+        if($var->tipoDeMovimiento == 'VENTA')
+         $this->utilidadtotal= $this->utilidadtotal+($this->buscarutilidad($this->buscarventa($p->movid)->first()->idventa)) ;
+        elseif($var->tipoDeMovimiento == 'SERVICIOS')
+        $this->utilidadtotal= $this->utilidadtotal+ ($this->buscarservicio($var->movid));
+
+
+    }
+
 
     $this->importetotalegresos= $this->totalesEgresos->sum('mimpor');
-    $this->operacionefectivoeg= $this->totalesEgresos->where('c.tipo','CajaFisica')->sum('mimpor');
-    $this->noefectivoeg=  $this->totalesEgresos->where('c.tipo','!=','CajaFisica')->sum('mimpor');
+    $this->operacionefectivoeg= $this->totalesEgresos->where('ctipo','CajaFisica')->sum('mimpor');
+    $this->noefectivoeg=  $this->totalesEgresos->where('ctipo','!=','CajaFisica')->sum('mimpor');
     $this->subtotalcaja= $this->importetotalingresos-$this->importetotalegresos;
+   // $this->utilidadtotal=$this->utilidadtotal+0;
 
 
   }
