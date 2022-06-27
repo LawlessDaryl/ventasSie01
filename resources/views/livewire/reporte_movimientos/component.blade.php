@@ -259,7 +259,7 @@
                                   
                                     <td>
                                         <h6 class="text-center" style="font-size: 100%">
-                                            {{ $p->carteramovtype }}-{{ $p->tipoDeMovimiento }}-   {{ $p->cajaNombre }}-{{ $p->usuarioNombre }}</h6>
+                                            {{ $p->carteramovtype }},{{ $p->tipoDeMovimiento }},{{ $p->tipo =='CajaFisica'?'EFECTIVO':$p->tipo }}- Usuario: {{ $p->usuarioNombre }}</h6>
                               
                                   
                                     </td>
@@ -316,11 +316,43 @@
                                 </td>
                                 
                             </tr>
+
+
+                           
+
                         @endforeach
+                        <tfoot>
+                            <tr>
+                                <td colspan="4">
+                                     <h5 class="text-dark">TOTAL INGRESOS Bs</h5>
+                                     <h5 class="text-dark">OPERACIONES EN EFECTIVO Bs</h5>
+                                     <h5 class="text-dark">BANCOS/SISTEMA/TELEFONO Bs</h5>
+                                     <h5 class="text-dark">TOTAL EGRESOS Bs</h5>
+                                     <h5 class="text-dark">SUB TOTAL EN CAJA Bs </h5>
+                                     <h5 class="text-dark">TOTAL TRANSACCIONES BANCO/TARJ. CREDITO/DEBITO Bs  </h5>
+                                     <h5 class="text-dark">TOTAL EFECTIVO EN CAJA Bs </h5>
+                                     <h5 class="text-dark">UTILIDAD Bs  </h5>
+                                </td>
+                                <td>
+                                    <h5 class="text-dark text-center">{{$importetotalingresos}}</h5>
+                                    <h5 class="text-dark text-center">{{$operacionefectivoing}}</h5>
+                                    <h5 class="text-dark text-center">{{$noefectivoing}}</h5>
+                                    <h5 class="text-dark text-center">{{$importetotalegresos}}</h5>
+                                    <h5 class="text-dark text-center">{{$subtotalcaja}}</h5>
+                                    <h5 class="text-dark text-center">{{$noefectivoing-$noefectivoeg}}</h5>
+                                    <h5 class="text-dark text-center">{{$subtotalcaja-$noefectivoing+$noefectivoeg}}</h5>
+                                    <h5 class="text-dark text-center">{{$utilidadtotal}}</h5>
+                                </td>
+                            </tr>
+                            
+                    </tfoot>
                         </tbody>
                     </table>
                 </div>
             </div>
+
+           
+
             @endif
         </div>
     </div>

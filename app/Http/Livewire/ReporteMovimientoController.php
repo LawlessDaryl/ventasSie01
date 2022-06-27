@@ -26,7 +26,8 @@ class ReporteMovimientoController extends Component
 {
     public  $search, $selected_id;
     public  $pageTitle, $componentName, $opciones,
-        $cartera_id, $type, $cantidad, $comentario,$totalesIngresos,$totalesEgresos,$vertotales=0,$importetotalingresos,$importetotalegresos,$fromDate,$toDate;
+        $cartera_id, $type, $cantidad, $comentario,$totalesIngresos,$totalesEgresos,$vertotales=0,$importetotalingresos,$importetotalegresos,$fromDate,$toDate,
+        $operacionefectivoing,$noefectivo,$operacionefectivoeg,$noefectivoeg,$subtotalcaja,$utilidadtotal=0;
     private $pagination = 10;
 
     public function paginationView()
@@ -179,6 +180,7 @@ class ReporteMovimientoController extends Component
             $utilidad = $utilidad + ($item->cantidad * $item->precio) - ($item->cantidad * $item->costoproducto);
         }
 
+        $this->utilidadtotal=$this->utilidadtotal+$utilidad;
         return $utilidad;
     }
 
@@ -190,8 +192,11 @@ class ReporteMovimientoController extends Component
                 ->where('movimientos.id',$idmovimiento)
                 ->select('movimientos.import as ms','services.costo as mc')
                 ->get();
+
+        $utilidad2=$serv[0]->ms- $serv[0]->mc;
+        $this->utilidadtotal=$this->utilidadtotal+$utilidad2;
       
-       return $serv[0]->ms- $serv[0]->mc;
+       return $utilidad2;
     }
 
     //Buscar la utilidad de una venta mediante el idventa
@@ -376,7 +381,10 @@ class ReporteMovimientoController extends Component
     
     ->get();
 
-    //$this->importetotalingresos= sum::
+    $this->importetotalingresos= $this->totalesIngresos->sum('mimpor');
+    $this->operacionefectivoing= $this->totalesIngresos->where('c.tipo','CajaFisica')->sum('mimpor');
+    $this->noefectivoing=$this->totalesIngresos->where('c.tipo','!=','CajaFisica')->sum('mimpor');
+    //dd($this->importetotalingresos);
 
     $this->totalesEgresos = Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')
     ->join('carteras as c', 'c.id', 'crms.cartera_id')
@@ -406,6 +414,12 @@ class ReporteMovimientoController extends Component
   
     
     ->get();
+
+
+    $this->importetotalegresos= $this->totalesEgresos->sum('mimpor');
+    $this->operacionefectivoeg= $this->totalesEgresos->where('c.tipo','CajaFisica')->sum('mimpor');
+    $this->noefectivoeg=  $this->totalesEgresos->where('c.tipo','!=','CajaFisica')->sum('mimpor');
+    $this->subtotalcaja= $this->importetotalingresos-$this->importetotalegresos;
 
 
   }
