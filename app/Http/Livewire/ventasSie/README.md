@@ -1,2 +1,0 @@
-# ventasSie
-ventasSie
