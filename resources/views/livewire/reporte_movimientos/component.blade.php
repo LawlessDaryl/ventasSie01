@@ -13,13 +13,8 @@
                         <a wire:click.prevent="viewTotales()" class="btn btn-warning">
                             Ver Resumen
                         </a>
-<<<<<<< HEAD
-                        <a wire:click.prevent="printresumen()" class="btn btn-warning">
-                            Imprimir Resumen
-=======
                         <a wire:click.prevent="crearpdf()" class="btn btn-warning">
                             Generar PDF
->>>>>>> 588de1d2288b1fd3bd16de686c98a6bdebc376a8
                         </a>
                  
                     @endcan
