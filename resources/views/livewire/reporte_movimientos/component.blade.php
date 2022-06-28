@@ -8,13 +8,16 @@
                 <ul class="row justify-content-end">
                     @can('Ver_Generar_Ingreso_Egreso_Boton')
                         <a wire:click.prevent="viewDetails()" class="btn btn-warning">
-                            Generar Ingreso/Egreso en cartera
+                            Generar Ingreso/Egreso en Cartera
                         </a>
                         <a wire:click.prevent="viewDetailsR()" class="btn btn-warning">
                             Generar Recaudo
                         </a>
                         <a wire:click.prevent="viewTotales()" class="btn btn-warning">
                             Ver Resumen
+                        </a>
+                        <a wire:click.prevent="crearpdf()" class="btn btn-warning">
+                            Generar PDF
                         </a>
                  
                     @endcan
@@ -51,7 +54,7 @@
 
                 <div class="col-sm-12 col-md-2 col-lg-2">
                     <div class="form-group">
-                        <select wire:model="opciones" class="form-control">
+                        <select wire:model="opciones" class="form-control" wire:click="$set('vertotales','0')">
                             <option value="TODAS">TODAS</option>
                             <option value="EGRESO/INGRESO">INGRESOS Y EGRESOS</option>
                             <option value="CORTE">CORTES</option>

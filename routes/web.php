@@ -6,10 +6,12 @@ use App\Http\Controllers\ExportSaleController;
 use App\Http\Controllers\ExportServicioPdfController;
 use App\Http\Controllers\ExportStreamingPdfController;
 use App\Http\Controllers\ExportTigoPdfController;
+use App\Http\Controllers\ExportMovimientoController;
 use App\Http\Controllers\ImprimirController;
 use App\Http\Controllers\ExportComprasController;
 use App\Http\Controllers\ExportSaleMovDiaController;
 use App\Http\Controllers\ExportTransferenciaController;
+use App\Http\Controllers\ExportMovDiaGenController;
 use App\Http\Livewire\ArqueosStreamingController;
 use App\Http\Livewire\ArqueosTigoController;
 use App\Http\Livewire\AsignarController;
@@ -101,6 +103,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('carteras', CarteraController::class)->name('cartera')->middleware('permission:Cartera_Index');
     Route::get('cortecajas', CorteCajaController::class)->name('cortecaja')->middleware('permission:Corte_Caja_Index');
     Route::get('movimientos', ReporteMovimientoController::class)->name('movimiento');
+    Route::get('report/pdfmovdiageneral', [ExportMovDiaGenController::class, 'reportPDFMovDiaGeneral']);
 
     /* TIGO MONEY */
     Route::get('origenes', OrigenController::class)->name('origen')->middleware('permission:Origen_Index');
@@ -111,6 +114,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('tigomoney', TransaccionController::class)->name('tigomoney')->middleware('permission:Tigo_Money_Index');
     Route::get('arqueostigo', ArqueosTigoController::class)->name('arqueostigo')->middleware('permission:Arqueos_Tigo_Index');
     Route::get('reportestigo', ReportesTigoController::class)->name('reportestigo')->middleware('permission:Reportes_Tigo_Index');
+    Route::get('Movimientodiario/pdf', [ExportMovimientoController::class, 'printPdf'])->name('movimiento.pdf');
     Route::get('ReporteGananciaTg', ReporGananciaTgController::class)->name('ReporteGananciaTg')->middleware('permission:Rep_Gan_Tigo_Index');
     Route::group(['middleware' => ['permission:Report_Tigo_Export']], function () {
         Route::get('reporteTigo/pdf/{user}/{type}/{origen}/{motivo}/{f1}/{f2}', [ExportTigoPdfController::class, 'reporteTigoPDF']);
