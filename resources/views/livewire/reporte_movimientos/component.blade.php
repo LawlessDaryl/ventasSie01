@@ -10,6 +10,9 @@
                         <a wire:click.prevent="viewDetails()" class="btn btn-warning">
                             Generar Ingreso/Egreso en cartera
                         </a>
+                        <a wire:click.prevent="viewDetailsR()" class="btn btn-warning">
+                            Generar Recaudo
+                        </a>
                         <a wire:click.prevent="viewTotales()" class="btn btn-warning">
                             Ver Resumen
                         </a>
@@ -360,6 +363,7 @@
         </div>
     </div>
     @include('livewire.reporte_movimientos.modalDetails')
+    @include('livewire.reporte_movimientos.modalDetailsR')
 </div>
 
 <script>
@@ -369,6 +373,13 @@
         })
         window.livewire.on('hide-modal', Msg => {
             $('#modal-details').modal('hide')
+            noty(Msg)
+        })
+        window.livewire.on('show-modalR', Msg => {
+        $('#modal-detailsr').modal('show')
+        })
+        window.livewire.on('hide-modalR', Msg => {
+            $('#modal-detailsr').modal('hide')
             noty(Msg)
         })
         window.livewire.on('tigo-delete', Msg => {

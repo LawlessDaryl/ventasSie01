@@ -61,7 +61,7 @@ class ReporteMovimientoController extends Component
         $carterasSucursal = Cartera::join('cajas as c', 'carteras.caja_id', 'c.id')
             ->join('sucursals as s', 's.id', 'c.sucursal_id')
             ->where('s.id', $SucursalUsuario->id)
-            ->select('carteras.id', 'carteras.nombre as carteraNombre', 'c.nombre as cajaNombre', DB::raw('0 as monto'))->get();
+            ->select('carteras.id', 'carteras.nombre as carteraNombre', 'c.nombre as cajaNombre', 'carteras.tipo as tipo', DB::raw('0 as monto'))->get();
         foreach ($carterasSucursal as $c) {
             /* SUMAR TODO LOS INGRESOS DE LA CARTERA */
             $INGRESOS = Cartera::join('cartera_movs as cm', 'carteras.id', 'cm.cartera_id')
@@ -344,6 +344,56 @@ class ReporteMovimientoController extends Component
         $this->emit('hide-modal', 'Se generó el ingreso/egreso');
         $this->resetUI();
     }
+
+
+
+
+    public function viewDetailsR()
+    {
+        $this->emit('show-modalR', 'open modal');
+    }
+    public function GenerarR()
+    {
+        $rules = [ /* Reglas de validacion */
+          
+            'cartera_id' => 'required|not_in:Elegir',
+            'cantidad' => 'required|not_in:0',
+         
+        ];
+        $messages = [ /* mensajes de validaciones */
+           
+            'cartera_id.not_in' => 'Seleccione un valor distinto a Elegir',
+            'cartera_id.not_in' => 'Seleccione un valor distinto a Elegir',
+            'cantidad.required' => 'Ingrese un monto válido',
+            'cantidad.not_in' => 'Ingrese un monto válido',
+           
+        ];
+
+        $this->validate($rules, $messages);
+
+        $mvt = Movimiento::create([
+            'type' => 'TERMINADO',
+            'status' => 'ACTIVO',
+            'import' => $this->cantidad,
+            'user_id' => Auth()->user()->id,
+        ]);
+
+        CarteraMov::create([
+            'type' => 'EGRESO',
+            'tipoDeMovimiento' => 'EGRESO/INGRESO',
+            'comentario' => 'RECAUDO DEL DIA',
+            'cartera_id' => $this->cartera_id,
+            'movimiento_id' => $mvt->id
+        ]);
+
+        $this->emit('hide-modalR', 'SE GENERO EL RECAUDO');
+        $this->resetUI();
+    }
+
+
+
+
+
     public function resetUI()
     {
         $this->cartera_id = 'Elegir';
