@@ -164,6 +164,14 @@ class ReporteMovimientoController extends Component
         return $venta;
     }
 
+    public function printresumen(){
+        session(['fecha_movimiento_inicio' => Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',
+    'fecha_movimiento_fin'=> Carbon::parse($this->toDate)->format('Y-m-d') . ' 00:00:00']);
+
+        return redirect()->route('movimiento.pdf');
+    }
+
+
     //Buscar la utilidad de una venta mediante el idventa
     public function buscarutilidad($idventa)
     {
@@ -420,7 +428,7 @@ class ReporteMovimientoController extends Component
 
     foreach ($this->totalesIngresos as $var) {
         if($var->tipoDeMovimiento == 'VENTA')
-         $this->utilidadtotal= $this->utilidadtotal+($this->buscarutilidad($this->buscarventa($p->movid)->first()->idventa)) ;
+         $this->utilidadtotal= $this->utilidadtotal+($this->buscarutilidad($this->buscarventa($var->movid)->first()->idventa)) ;
         elseif($var->tipoDeMovimiento == 'SERVICIOS')
         $this->utilidadtotal= $this->utilidadtotal+ ($this->buscarservicio($var->movid));
 

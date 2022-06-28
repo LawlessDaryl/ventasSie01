@@ -13,6 +13,9 @@
                         <a wire:click.prevent="viewTotales()" class="btn btn-warning">
                             Ver Resumen
                         </a>
+                        <a wire:click.prevent="printresumen()" class="btn btn-warning">
+                            Imprimir Resumen
+                        </a>
                  
                     @endcan
                 </ul>
@@ -48,7 +51,7 @@
 
                 <div class="col-sm-12 col-md-2 col-lg-2">
                     <div class="form-group">
-                        <select wire:model="opciones" class="form-control">
+                        <select wire:model="opciones" class="form-control" wire:click="$set('vertotales','0')">
                             <option value="TODAS">TODAS</option>
                             <option value="EGRESO/INGRESO">INGRESOS Y EGRESOS</option>
                             <option value="CORTE">CORTES</option>
