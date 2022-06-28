@@ -13,55 +13,43 @@ use App\Models\Sucursal;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class ExportSaleMovDiaController extends Controller
+class ExportMovDiaGenController extends Controller
 {
-    public function reportPDFMovDiaVenta()
+    public function reportPDFMovDiaGeneral()
     {
         //$value = session('tablareporte');
         //dd($value);
 
-        $permiso = $this->verificarpermiso();
+        //$permiso = $this->verificarpermiso();
 
-        $utilidad = $this->totalutilidad();
+        $totalesIngresos = session('totalesIngresos');
+        $totalesEgresos = session('totalesEgresos');
 
-        $value = $this->creararray();
+        $values = session('variablesmovidia');
+       
+        
 
-        $ingreso = $this->totalingresos();
+        $importetotalingresos = $values[0];
+        $operacionefectivoing = $values[1];
+        $noefectivoing = $values[2];
+        $importetotalegresos = $values[3];
+        $subtotalcaja = $values[4];
+        $utilidadtotal = $values[5];
+        $noefectivoing = $values[6];
+        $noefectivoeg = $values[7];
 
-        $egreso = $this->totalegresos();
-
-        $listacarteras = $this->totalcarteras();
 
 
-
-        //Volviendo la variable global en null despues de cumplir su función
-        session(['tablareporte' => null]);
-        $pdf = PDF::loadView('livewire.pdf.reportemovdiaventas', compact('value','permiso','ingreso','egreso','listacarteras','utilidad'));
-        return $pdf->stream('Reporte_Movimiento_Diario.pdf'); 
+        //dd($values[0]);
+        $pdf = PDF::loadView('livewire.pdf.reportemovdiageneral', compact('totalesIngresos','totalesEgresos','importetotalingresos','operacionefectivoing','noefectivoing','importetotalegresos','subtotalcaja','utilidadtotal','noefectivoing','noefectivoeg'));
+        return $pdf->stream('Reporte_Movimiento_Diario_General.pdf'); 
     }
 
 
     //Crear array donde sereeemplazan los id de las movimientos por las utilidades
     public function creararray()
     {
-        $contador = 0;
-        $tabla = session('tablareporte');
-        //dd($tabla[0]['idmovimiento']);
-        foreach ($tabla as $item)
-        {
-            if($this->buscarventa($item['idmovimiento'])->count() > 0 )
-            {
-                //dd($item);
-                //dd($tabla[array($item)]['idmovimiento']);
-                //dd($item['idmovimiento']);
-                $tabla[$contador]['idmovimiento'] = $this->buscarutilidad($this->buscarventa($item['idmovimiento'])->first()->idventa);
-            }
-            else
-            {
-                $tabla[$contador]['idmovimiento'] = '-';
-            }
-            $contador++;
-        }
+        $tabla = session('tablamovdiageneral');
         return $tabla;
     }
 
@@ -163,20 +151,6 @@ class ExportSaleMovDiaController extends Controller
         return $carteras;
 
         
-    }
-    
-    public function totalutilidad()
-    {
-        $totalutilidad = 0;
-
-        $tabla = session('tablareporte');
-
-
-        foreach ($tabla as $item)
-        {
-            $totalutilidad = $this->buscarutilidad($this->buscarventa($item['idmovimiento'])->first()->idventa) + $totalutilidad;
-        }
-        return $totalutilidad;
     }
 
 

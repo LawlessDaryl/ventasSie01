@@ -8,13 +8,18 @@
                 <ul class="row justify-content-end">
                     @can('Ver_Generar_Ingreso_Egreso_Boton')
                         <a wire:click.prevent="viewDetails()" class="btn btn-warning">
-                            Generar Ingreso/Egreso en cartera
+                            Generar Ingreso/Egreso en Cartera
                         </a>
                         <a wire:click.prevent="viewTotales()" class="btn btn-warning">
                             Ver Resumen
                         </a>
+<<<<<<< HEAD
                         <a wire:click.prevent="printresumen()" class="btn btn-warning">
                             Imprimir Resumen
+=======
+                        <a wire:click.prevent="crearpdf()" class="btn btn-warning">
+                            Generar PDF
+>>>>>>> 588de1d2288b1fd3bd16de686c98a6bdebc376a8
                         </a>
                  
                     @endcan

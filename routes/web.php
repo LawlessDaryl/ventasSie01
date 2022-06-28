@@ -11,6 +11,7 @@ use App\Http\Controllers\ImprimirController;
 use App\Http\Controllers\ExportComprasController;
 use App\Http\Controllers\ExportSaleMovDiaController;
 use App\Http\Controllers\ExportTransferenciaController;
+use App\Http\Controllers\ExportMovDiaGenController;
 use App\Http\Livewire\ArqueosStreamingController;
 use App\Http\Livewire\ArqueosTigoController;
 use App\Http\Livewire\AsignarController;
@@ -102,6 +103,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('carteras', CarteraController::class)->name('cartera')->middleware('permission:Cartera_Index');
     Route::get('cortecajas', CorteCajaController::class)->name('cortecaja')->middleware('permission:Corte_Caja_Index');
     Route::get('movimientos', ReporteMovimientoController::class)->name('movimiento');
+    Route::get('report/pdfmovdiageneral', [ExportMovDiaGenController::class, 'reportPDFMovDiaGeneral']);
 
     /* TIGO MONEY */
     Route::get('origenes', OrigenController::class)->name('origen')->middleware('permission:Origen_Index');

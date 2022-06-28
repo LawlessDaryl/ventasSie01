@@ -24,6 +24,7 @@
     font-size: 11px;
     text-align:center;
     border-spacing:  0px;
+    /* font-size: 8px; */
     }
     .estilostable2 {
     font-size: 11px;
@@ -65,7 +66,7 @@
             <th class="text-center" style="width: 90px;">MOTIVO</th>
             @if($permiso == true)
             <th class="text-center">UTILIDAD</th>
-            <th class="text-center" style="width: 90px;">SUCURSAL</th>
+            {{-- <th class="text-center" style="width: 90px;">SUCURSAL</th> --}}
             @endif
           </tr>
         </thead>
@@ -108,92 +109,72 @@
                         {{ number_format($item['idmovimiento'],2) }} Bs
                         @endif
                     </td>
-                    <td class="text-center">
+                    {{-- <td class="text-center">
                     {{ ucwords($item['nombresucursal']) }}
-                    </td>
+                    </td> --}}
                     @endif
                 </tr>
                 @endforeach
+
+
+                
+                <tr>
+                    <td colspan="10"></td>
+                </tr>
+
+                <br>
+
+                @if($permiso == true)
+                <tr>
+                    <td colspan="8" class="text-left">
+                        TOTAL UTILIDAD
+                    </td>
+                    <td class="text-right">
+                        {{number_format($utilidad,2)}}
+                    </td>
+                </tr>
+                @endif
+                <tr>
+                    <td colspan="8">
+
+                    </td>
+                </tr>
+
+                @foreach($listacarteras as $cartera)
+
+                    @if($cartera->totales != 0)
+                    <tr>
+                        <td colspan="8">Total en Cartera: {{ucwords(strtolower($cartera->nombre))}}</td>
+                        <td class="text-right">{{number_format($cartera->totales,2)}}</td>
+                    </tr>
+                    @endif
+                @endforeach
+
+
+
+
+
+
+
+
+                <tr>
+
+                    <td colspan="8">TOTAL INGRESOS</td>
+                    <td class="text-right">{{number_format($ingreso,2)}} </td>
+                </tr>
+
+                <tr>
+
+                    <td colspan="8">TOTAL EGRESOS</td>
+                    <td class="text-right">{{number_format($egreso,2)}} </td>
+                </tr>
+                <tr>
+
+                    <td class="text-letf" colspan="8">TOTAL INGRESOS - EGRESOS</td>
+                    <td class="text-right"> <b>{{number_format( $ingreso - $egreso,2)}}</b> </td>
+                </tr>
         </tbody>
     </table>
-
-
-    <br>
-    <br>
-
-    <div class="">
-            
-
-
-            <table class="estilostable2" style="color: rgb(0, 0, 0)">
-                <thead>
-                    <tr class="tablehead">
-                    <th>TOTAL INGRESO</th>
-                    <th>-</th>
-                    <th>TOTAL EGRESO</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="seleccionar">
-                        <td class="text-center">
-                            {{number_format($ingreso,2)}} Bs
-                        </td>
-                        <td>
-                            -
-                        </td>
-                        <td>
-                            {{number_format($egreso,2)}} Bs
-                        </td>
-                    </tr>
-                    <tr style="background-color: rgb(0, 0, 0)">
-                        <td class="text-center">
-                            
-                        </td>
-                        <td>
-                            
-                        </td>
-                        <td>
-                            
-                        </td>
-                    </tr>
-
-
-                    @foreach($listacarteras as $cartera)
-
-                        @if($cartera->totales != 0)
-
-
-
-
-
-                        
-
-                            <tr class="seleccionar">
-                                <td class="text-left">
-                                    Total en {{ucwords(strtolower($cartera->nombre))}}
-                                </td>
-                                <td>
-                                    -
-                                </td>
-                                <td>
-                                    {{number_format($cartera->totales,2)}} Bs
-                                </td>
-                            </tr>
-
-
-
-
-
-
-                        @endif
-                    @endforeach
-
-
-                </tbody>
-            </table>
-
-        
-    </div>
 
 </body>
 </html>

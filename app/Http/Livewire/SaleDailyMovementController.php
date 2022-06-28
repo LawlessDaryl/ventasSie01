@@ -410,6 +410,7 @@ class SaleDailyMovementController extends Component
         
         $ingreso = $this->totalingresos();
         $egreso = $this->totalegresos();
+        $utilidad = $this->totalutilidad();
 
         $listacarteras = $this->totalcarteras();
 
@@ -421,6 +422,7 @@ class SaleDailyMovementController extends Component
             'listacarteras' => $listacarteras,
             'ingreso' => $ingreso,
             'egreso' => $egreso,
+            'utilidad' => $utilidad,
         ])
         ->extends('layouts.theme.app')
         ->section('content');
@@ -532,6 +534,17 @@ class SaleDailyMovementController extends Component
            }
        }
        return $totalegreso;
+    }
+    public function totalutilidad()
+    {
+        $totalutilidad = 0;
+        $tabla = $this->listareportes;
+
+        foreach ($tabla as $item)
+        {
+            $totalutilidad = $this->buscarutilidad($this->buscarventa($item->idmovimiento)->first()->idventa) + $totalutilidad;
+        }
+        return $totalutilidad;
     }
 
 

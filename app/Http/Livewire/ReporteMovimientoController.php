@@ -19,8 +19,9 @@ use App\Models\User;
 
 use Carbon\Carbon;
 use Exception;
-use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
 
 class ReporteMovimientoController extends Component
 {
@@ -29,6 +30,9 @@ class ReporteMovimientoController extends Component
         $cartera_id, $type, $cantidad, $comentario,$totalesIngresos,$totalesEgresos,$vertotales=0,$importetotalingresos,$importetotalegresos,$fromDate,$toDate,
         $operacionefectivoing,$noefectivo,$operacionefectivoeg,$noefectivoeg,$subtotalcaja,$utilidadtotal=5;
     private $pagination = 10;
+
+    //Crear Pdf 
+    public $tablamovdiageneral, $opcionespdf;
 
     public function paginationView()
     {
@@ -360,88 +364,108 @@ class ReporteMovimientoController extends Component
         $this->comentario = '';
     }
 
-  public function viewTotales(){
-    $this->utilidadtotal=0;
-    $this->vertotales=1;
-    $this->totalesIngresos = Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')
-    ->join('carteras as c', 'c.id', 'crms.cartera_id')
-    ->join('cajas as ca', 'ca.id', 'c.caja_id')
-    ->join('users as u', 'u.id', 'movimientos.user_id')
-    ->select(
-        'movimientos.type as movimientotype',
-        'movimientos.import as mimpor',
-        'crms.type as carteramovtype',
-        'crms.tipoDeMovimiento',
-        'crms.comentario',
-        'c.nombre',
-        'c.descripcion',
-        'c.tipo as ctipo',
-        'c.telefonoNum',
-        'ca.nombre as cajaNombre',
-        'u.name as usuarioNombre',
-        'movimientos.created_at as movimientoCreacion',
-        'movimientos.id as movid'
-    )
-    ->where('movimientos.status', 'ACTIVO')
-    ->where('crms.type', 'INGRESO')
-    ->where('crms.tipoDeMovimiento', '!=' , 'TIGOMONEY')
-    ->where('crms.tipoDeMovimiento', '!=' , 'STREAMING')
-    ->whereBetween('movimientos.created_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
-    ->orderBy('crms.tipoDeMovimiento', 'asc')
-  
+    public function viewTotales(){
+        $this->utilidadtotal=0;
+        $this->vertotales=1;
+        $this->totalesIngresos = Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')
+        ->join('carteras as c', 'c.id', 'crms.cartera_id')
+        ->join('cajas as ca', 'ca.id', 'c.caja_id')
+        ->join('users as u', 'u.id', 'movimientos.user_id')
+        ->select(
+            'movimientos.type as movimientotype',
+            'movimientos.import as mimpor',
+            'crms.type as carteramovtype',
+            'crms.tipoDeMovimiento',
+            'crms.comentario',
+            'c.nombre',
+            'c.descripcion',
+            'c.tipo as ctipo',
+            'c.telefonoNum',
+            'ca.nombre as cajaNombre',
+            'u.name as usuarioNombre',
+            'movimientos.created_at as movimientoCreacion',
+            'movimientos.id as movid'
+        )
+        ->where('movimientos.status', 'ACTIVO')
+        ->where('crms.type', 'INGRESO')
+        ->where('crms.tipoDeMovimiento', '!=' , 'TIGOMONEY')
+        ->where('crms.tipoDeMovimiento', '!=' , 'STREAMING')
+        ->whereBetween('movimientos.created_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
+        ->orderBy('crms.tipoDeMovimiento', 'asc')
     
-    ->get();
+        
+        ->get();
 
-    $this->importetotalingresos= $this->totalesIngresos->sum('mimpor');
-    $this->operacionefectivoing= $this->totalesIngresos->where('ctipo','CajaFisica')->sum('mimpor');
-    $this->noefectivoing=$this->totalesIngresos->where('ctipo','!=','CajaFisica')->sum('mimpor');
+        $this->importetotalingresos= $this->totalesIngresos->sum('mimpor');
+        $this->operacionefectivoing= $this->totalesIngresos->where('ctipo','CajaFisica')->sum('mimpor');
+        $this->noefectivoing=$this->totalesIngresos->where('ctipo','!=','CajaFisica')->sum('mimpor');
 
 
-    $this->totalesEgresos = Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')
-    ->join('carteras as c', 'c.id', 'crms.cartera_id')
-    ->join('cajas as ca', 'ca.id', 'c.caja_id')
-    ->join('users as u', 'u.id', 'movimientos.user_id')
-    ->select(
-        'movimientos.type as movimientotype',
-        'movimientos.import as mimpor',
-        'crms.type as carteramovtype',
-        'crms.tipoDeMovimiento',
-        'crms.comentario',
-        'c.nombre',
-        'c.descripcion',
-        'c.tipo as ctipo',
-        'c.telefonoNum',
-        'ca.nombre as cajaNombre',
-        'u.name as usuarioNombre',
-        'movimientos.created_at as movimientoCreacion',
-    )
-    ->where('movimientos.status', 'ACTIVO')
-    ->where('crms.type', 'EGRESO')
-    ->where('crms.tipoDeMovimiento', '!=' , 'TIGOMONEY')
-    ->where('crms.tipoDeMovimiento', '!=' , 'STREAMING')
-    ->whereBetween('movimientos.created_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
+        $this->totalesEgresos = Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')
+        ->join('carteras as c', 'c.id', 'crms.cartera_id')
+        ->join('cajas as ca', 'ca.id', 'c.caja_id')
+        ->join('users as u', 'u.id', 'movimientos.user_id')
+        ->select(
+            'movimientos.type as movimientotype',
+            'movimientos.import as mimpor',
+            'crms.type as carteramovtype',
+            'crms.tipoDeMovimiento',
+            'crms.comentario',
+            'c.nombre',
+            'c.descripcion',
+            'c.tipo as ctipo',
+            'c.telefonoNum',
+            'ca.nombre as cajaNombre',
+            'u.name as usuarioNombre',
+            'movimientos.created_at as movimientoCreacion',
+        )
+        ->where('movimientos.status', 'ACTIVO')
+        ->where('crms.type', 'EGRESO')
+        ->where('crms.tipoDeMovimiento', '!=' , 'TIGOMONEY')
+        ->where('crms.tipoDeMovimiento', '!=' , 'STREAMING')
+        ->whereBetween('movimientos.created_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
 
-    ->orderBy('crms.tipoDeMovimiento', 'asc')
-  
+        ->orderBy('crms.tipoDeMovimiento', 'asc')
     
-    ->get();
+        
+        ->get();
 
-    foreach ($this->totalesIngresos as $var) {
-        if($var->tipoDeMovimiento == 'VENTA')
-         $this->utilidadtotal= $this->utilidadtotal+($this->buscarutilidad($this->buscarventa($var->movid)->first()->idventa)) ;
-        elseif($var->tipoDeMovimiento == 'SERVICIOS')
-        $this->utilidadtotal= $this->utilidadtotal+ ($this->buscarservicio($var->movid));
+        foreach ($this->totalesIngresos as $var) {
+            if($var->tipoDeMovimiento == 'VENTA')
+            $this->utilidadtotal= $this->utilidadtotal+($this->buscarutilidad($this->buscarventa($var->movid)->first()->idventa)) ;
+            elseif($var->tipoDeMovimiento == 'SERVICIOS')
+            $this->utilidadtotal= $this->utilidadtotal+ ($this->buscarservicio($var->movid));
+
+
+        }
+
+
+        $this->importetotalegresos= $this->totalesEgresos->sum('mimpor');
+        $this->operacionefectivoeg= $this->totalesEgresos->where('ctipo','CajaFisica')->sum('mimpor');
+        $this->noefectivoeg=  $this->totalesEgresos->where('ctipo','!=','CajaFisica')->sum('mimpor');
+        $this->subtotalcaja= $this->importetotalingresos-$this->importetotalegresos;
+    // $this->utilidadtotal=$this->utilidadtotal+0;
 
 
     }
 
 
-    $this->importetotalegresos= $this->totalesEgresos->sum('mimpor');
-    $this->operacionefectivoeg= $this->totalesEgresos->where('ctipo','CajaFisica')->sum('mimpor');
-    $this->noefectivoeg=  $this->totalesEgresos->where('ctipo','!=','CajaFisica')->sum('mimpor');
-    $this->subtotalcaja= $this->importetotalingresos-$this->importetotalegresos;
-   // $this->utilidadtotal=$this->utilidadtotal+0;
+    public function crearpdf()
+    {
+        $this->viewTotales();
+        //dd($this->totalesIngresos);
+        //Pasando la tabla a la variable tablereport para crear PDF
+        session(['totalesIngresos' => $this->totalesIngresos]);
+        session(['totalesEgresos' => $this->totalesEgresos]);
+
+        $values = [$this->importetotalingresos, $this->operacionefectivoing, $this->noefectivoing, $this->importetotalegresos, $this->subtotalcaja, $this->utilidadtotal, $this->noefectivoing, $this->noefectivoeg];
+
+        session(['variablesmovidia' => $values]);
 
 
-  }
+        //dd(session('tablamovdiageneral'));
+
+        //Redireccionando para crear el comprobante con sus respectvas variables
+        return redirect::to('report/pdfmovdiageneral');
+    }
 }
