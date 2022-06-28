@@ -62,9 +62,9 @@
 										</a>
 									</li>
 									<li>
-										<a href="#">
-											<span class="sub-item">Todos</span>
-										</a>
+										<a href="{{ url('movimientos') }}">
+											<i class="fa fas fa-minus"></i>
+											Reportes Movimientos</a>
 									</li>
 								</ul>
 							</div>

@@ -1,44 +1,3 @@
-@section('css')
-
-
-{{-- Estilos para la tabla Movimiento Diario --}}
-<style>
-
-
-    .contenedortabla{
-        /* overflow:scroll; */
-        overflow-x:auto;
-        /* max-height: 100%; */
-        /* min-height:200px; */
-        /* max-width: 100%; */
-        /* min-width:100px; */
-    }
-
-    .estilostable {
-    width: 100%;
-    min-width: 1000px;
-    }
-    .estilostotales {
-    width: 100%;
-    }
-    .seleccionar:hover {
-    background-color: skyblue;
-    cursor: pointer;
-    /* box-shadow: 10px 10px 0px 0px #46A2FD, 20px 20px #83C1FD, 30px 30px 14px #ACD5FD; */
-    /* transform: translate(-5px, -5px); */
-
-    background: #f1eaa9d2;
-	transform: translate(0px, -4px);;
-	transition-duration: 0.3s;
-    }
-    .tablehead{
-        background-color: #383938;
-        color: aliceblue;
-    }
-</style>
-@endsection
-
-
 <div class="row sales layout-top-spacing">
     <div class="col-sm-12" >
 
@@ -123,9 +82,9 @@
     
                     <br>
     
-                    <div class="contenedortabla">
-                        <table class="estilostable" style="color: rgb(0, 0, 0)">
-                            <thead>
+                    <div class="table-responsive">
+                        <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
+                            <thead class="text-white" style="background: #ee761c">
                               <tr class="tablehead">
                                 <th class="text-center">N°</th>
                                 <th>FECHA</th>
@@ -181,100 +140,65 @@
                                         @endif
                                     </tr>
                                     @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>  
-
-                <br>
-                <br>
-
-                <div class="row">
-                    <div class="col-lg-4">
-                        
-                    </div>
-                    <div style="color: black" class="col-lg-4 text-center">
-                        
-
-
-
-                        <table class="estilostotales" style="color: rgb(0, 0, 0)">
-                            <thead>
-                              <tr class="tablehead">
-                                <th>TOTAL INGRESO</th>
-                                <th>TOTAL EGRESO</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="seleccionar">
-                                    <td class="text-center">
-                                        {{number_format($ingreso,2)}} Bs
-                                    </td>
-                                    <td>
-                                        {{number_format($egreso,2)}} Bs
-                                    </td>
-                                </tr>
-                                <tr style="background-color: rgb(0, 0, 0)">
-                                    <td class="text-center">
-                                        
-                                    </td>
-                                    <td>
-                                        
-                                    </td>
-                                </tr>
-
-
-                                @foreach($listacarteras as $cartera)
-
-                                    @if($cartera->totales != 0)
-
-
-
-
-
                                     
 
-                                        <tr class="seleccionar">
-                                            <td class="text-left">
-                                                Total en {{ucwords(strtolower($cartera->nombre))}}
-                                            </td>
-                                            <td>
-                                                {{number_format($cartera->totales,2)}} Bs
-                                            </td>
+                                    <tr>
+                                        <td colspan="8"></td>
+                                    </tr>
+
+
+                                        
+                                    <tr>
+                                        <td colspan="7">
+                                            <b>TOTAL UTILIDAD</b>
+                                        </td>
+                                        <td class="text-right">
+                                            <b>{{number_format($utilidad,2)}}</b>
+                                        </td>
+                                    </tr>
+                                        
+                                    <tr>
+                                        <td colspan="8">
+
+                                        </td>
+                                    </tr>
+
+                                    @foreach($listacarteras as $cartera)
+
+                                        @if($cartera->totales != 0)
+                                        <tr>
+                                            <td colspan="7"><b>Total en Cartera: {{ucwords(strtolower($cartera->nombre))}}</b></td>
+                                            <td class="text-right"><b>{{number_format($cartera->totales,2)}}</b></td>
                                         </tr>
+                                        @endif
+                                    @endforeach
 
 
 
 
 
 
-                                    @endif
-                                @endforeach
 
+
+                                    <tr>
+
+                                        <td colspan="7"><b>TOTAL INGRESOS</b></td>
+                                        <td class="text-right"> <b>{{number_format($ingreso,2)}}</b> </td>
+                                    </tr>
+
+                                    <tr>
+
+                                        <td colspan="7"><b>TOTAL EGRESOS</b></td>
+                                        <td class="text-right"> <b>{{number_format($egreso,2)}}</b> </td>
+                                    </tr>
+                                    <tr>
+
+                                        <td colspan="7"><b>TOTAL INGRESOS - EGRESOS</b></td>
+                                        <td class="text-right"> <b>{{number_format( $ingreso - $egreso,2)}}</b> </td>
+                                    </tr>
 
                             </tbody>
                         </table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                    </div>
-                    
-                    <div class="col-lg-4">
-                        
                     </div>
                 </div>
 
