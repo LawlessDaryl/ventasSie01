@@ -29,7 +29,10 @@ class SaleListController extends Component
     use WithFileUploads;
     use WithPagination;
 
-    public $componentName, $idventa, $usuarioseleccionado;
+    public $componentName, $idventa, $usuarioseleccionado, $mostrarcliente;
+
+    //Cambiar Usuario Vendedor
+    public $nombreusuariovendedor, $idventaeditar;
     public function paginationView()
     {
         return 'vendor.livewire.bootstrap';
@@ -38,7 +41,7 @@ class SaleListController extends Component
     {
         $this->listadetalles = [];
         $this->componentName = 'Lista de Ventas';
-        //$this->listarventas();
+        $this->mostrarcliente = 'No';
         $this->listardetalleventas();
         $this->idventa = 1;
         $this->usuarioseleccionado = Auth()->user()->id;
@@ -55,8 +58,9 @@ class SaleListController extends Component
             ->join("movimientos as m", "m.id", "sales.movimiento_id")
             ->join("cliente_movs as cm", "cm.movimiento_id", "m.id")
             ->join("clientes as c", "c.id", "cm.cliente_id")
+            ->join("carteras as carts", "carts.id", "sales.cartera_id")
             ->select('sales.id as id','sales.cash as totalbs', 'sales.total as totalbsventa', 'sales.created_at as fecha','sales.observacion as obs',
-            'sales.tipopago as tipopago','sales.change as cambio','sales.factura as factura','sales.status as status',
+            'sales.tipopago as tipopago','sales.change as cambio','sales.factura as factura','sales.status as status','carts.nombre as cartera',
             'u.name as user','c.razon_social as rz','c.cedula as ci','c.celular as celular')
             ->where('u.id', $this->usuarioseleccionado)
             ->orderBy('sales.id', 'desc')
@@ -68,21 +72,22 @@ class SaleListController extends Component
             ->join("movimientos as m", "m.id", "sales.movimiento_id")
             ->join("cliente_movs as cm", "cm.movimiento_id", "m.id")
             ->join("clientes as c", "c.id", "cm.cliente_id")
+            ->join("carteras as carts", "carts.id", "sales.cartera_id")
             ->select('sales.id as id','sales.cash as totalbs', 'sales.total as totalbsventa', 'sales.created_at as fecha','sales.observacion as obs',
-            'sales.tipopago as tipopago','sales.change as cambio','sales.factura as factura','sales.status as status',
+            'sales.tipopago as tipopago','sales.change as cambio','sales.factura as factura','sales.status as status','carts.nombre as cartera',
             'u.name as user','c.razon_social as rz','c.cedula as ci','c.celular as celular')
             ->orderBy('sales.id', 'desc')
             ->paginate(50);
         }
 
         //Listando Todos los Usuarios
-        $listausuarios = User::select("users.id as id","users.name as nombreusuario")
+        $listausuarios = User::select("users.id as id","users.name as nombreusuario","userS.profile as rol")
         ->get();
 
-
+    
         return view('livewire.sales.salelist', [
             'data' => $data,
-            'listausuarios' => $listausuarios,
+            'listausuarios' => $listausuarios
         ])
         ->extends('layouts.theme.app')
         ->section('content');
@@ -161,6 +166,12 @@ class SaleListController extends Component
     {
         $venta = Sale::find($this->idventa);
         return $venta->total;
+    }
+    //Obtener el total Bs de una venta
+    public function observacion()
+    {
+        $venta = Sale::find($this->idventa);
+        return $venta->observacion;
     }
     //Metodo para Anular una Venta
     public function mostraranularmodal($idventa)
@@ -334,6 +345,25 @@ class SaleListController extends Component
         session(['sesionidventa' => $idventa]);
         //session('sesionidventa')
         return redirect('pos');
+    }
+
+    public function cambiarusuario(Sale $venta)
+    {
+        $this->idventaeditar = $venta->id;
+        $this->nombreusuariovendedor = User::find($venta->user_id)->name;
+        $this->emit('show-cam-user');
+    }
+    public function seleccionarusuario($usuario)
+    {
+        $venta = Sale::find($this->idventaeditar);
+
+
+        $venta->update([
+            'user_id' => $usuario,
+            ]);
+        $venta->save();
+
+        $this->emit('hide-cam-user');
     }
 
 }

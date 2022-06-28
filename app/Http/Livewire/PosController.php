@@ -130,7 +130,7 @@ class PosController extends Component
             $datosnombreproducto = Product::join("productos_destinos as pd", "pd.product_id", "products.id")
             ->join('destinos as des', 'des.id', 'pd.destino_id')
             ->select("products.id as id","products.nombre as nombre", "products.image as image", "products.precio_venta as precio_venta",
-            "pd.stock as stock")
+            "pd.stock as stock", "products.codigo as barcode")
             ->where("des.nombre", 'TIENDA')
             ->where("des.sucursal_id", $this->idsucursal())
             ->where(function($query){
@@ -421,7 +421,7 @@ class PosController extends Component
         );
         $this->total = Cart::getTotal();
         $this->itemsQuantity = Cart::getTotalQuantity();
-        $this->emit('scan-ok', 'Producto agregado');
+        //$this->emit('scan-ok', 'Producto agregado');
         //Para Actualizar el Total Descuento
         $this->actualizardescuento();
     }

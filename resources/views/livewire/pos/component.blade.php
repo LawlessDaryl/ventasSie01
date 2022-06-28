@@ -45,7 +45,7 @@
     /* Estilos para las tablas */
     .table-wrapper {
     width: 105%;/* Anchura de ejemplo */
-    height: 500px; /* Altura de ejemplo */
+    height: 400px; /* Altura de ejemplo */
     overflow: auto;
     }
 

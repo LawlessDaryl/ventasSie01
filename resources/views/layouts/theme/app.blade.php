@@ -8,7 +8,7 @@
 	@yield('css')
 </head>
 <body>
-	<div class="wrapper">
+	<div class="wrapper sidebar_minimize">
 		
     @include('layouts.theme.header2')
 

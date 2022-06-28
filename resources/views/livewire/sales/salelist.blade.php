@@ -47,44 +47,59 @@
             
             <div class="row text-center">
                             
-                <div class="col-lg-10 col-md-12 col-sm-12">
+                <div class="col-lg-12 col-md-12 col-sm-12">
                    <h2>Lista de Ventas</h2>
                 </div>
 
 
                 @if($this->verificarpermiso())
-                <div class="col-lg-2 col-md-12 col-sm-12">
-                        <div>
-                            <h6>Seleccionar Usuario</h6>
-                        </div>
-                        <select wire:model="usuarioseleccionado" class="form-control">
-                            <option value="Todos" selected><b>Todos los Usuarios</b></option>
-                            @foreach ($listausuarios as $u)
-                            <option value="{{$u->id}}">{{$u->nombreusuario}}</option>
-                            @endforeach
-                        </select>
+                <div class="col-sm-6 col-md-1">
+                    <div>
+                        <h6>Mostrar Cliente</h6>
+                    </div>
+                    <select wire:model="mostrarcliente" class="form-control">
+                        <option value="No">No</option>
+                        <option value="Si">Si</option>
+                    </select>
+                </div>
+                <div class="col-sm-6 col-md-5">
+                    
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <div>
+                        <h6>Seleccionar Usuario</h6>
+                    </div>
+                    <select wire:model="usuarioseleccionado" class="form-control">
+                        <option value="Todos" selected><b>Todos los Usuarios</b></option>
+                        @foreach ($listausuarios as $u)
+                        <option value="{{$u->id}}">{{$u->nombreusuario}}</option>
+                        @endforeach
+                    </select>
                 </div>
                 @endif
-
-
             </div>
 
 
 
             <div class="table-responsive mb-4 mt-4">
-                <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4" style="min-width: 1500px;">
+                <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4" style="min-width: 1000px;">
                     <thead class="text-white" style="background: #ee761c">
                         <tr>
-                            <th class="table-th text-withe text-center">Código Venta</th>
+                            <th class="table-th text-withe text-center">#</th>
+                            @if($mostrarcliente == 'Si')
                             <th class="table-th text-withe text-center">Cliente</th>
+                            @endif
                             <th class="table-th text-withe text-center">Totales Bs</th>
                             <th class="table-th text-withe text-center">Usuario</th>
                             <th class="table-th text-withe text-center">Tipo Pago</th>
-                            <th class="table-th text-withe text-center">¿Factura?</th>
-                            <th class="table-th text-withe text-center">Observación</th>
+                            {{-- <th class="table-th text-withe text-center">¿Factura?</th> --}}
+                            {{-- <th class="table-th text-withe text-center">Observación</th> --}}
                             <th class="table-th text-withe text-center">Fecha</th>
                             <th class="table-th text-withe text-center">Estado</th>
-                            <th class="table-th text-withe text-center"> Acciònes</th>
+                            <th class="table-th text-withe text-center"> Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -95,6 +110,7 @@
                                         {{$d->id}}
 									</span>
                                 </td>
+                                @if($mostrarcliente == 'Si')
                                 <td class="table-th text-withe text-center">
                                     Ci:{{ $d->ci }}
                                     <br>
@@ -102,6 +118,7 @@
                                     <br>
                                     Celular:{{ $d->celular }}
                                 </td>
+                                @endif
                                 <td class="table-th text-withe text-center">
                                     @if($this->totaldescuento($d->id) > 0)
                                         Recargo Bs {{number_format( $this->totaldescuento($d->id), 2) }}
@@ -121,14 +138,14 @@
                                     {{ $d->user }}
                                 </td>
                                 <td class="text-center">
-                                    {{ $d->tipopago }}
+                                    {{ $d->cartera }}
                                 </td>
-                                <td class="text-center">
+                                {{-- <td class="text-center">
                                     {{ $d->factura }}
-                                </td>
-                                <td class="text-center">
+                                </td> --}}
+                                {{-- <td class="text-center">
                                     {{ $d->obs }}
-                                </td>
+                                </td> --}}
                                 <td class="table-th text-withe text-center">
                                     {{\Carbon\Carbon::parse($d->fecha)->format('d-m-Y')}}
                                     <br>
@@ -148,21 +165,25 @@
                                 </td>
                                 @endif
                                 <td class="text-center">
+
                                     <div class="btn-group" role="group" aria-label="Basic example">
-                                        <button wire:click="cambiaridventa({{ $d->id }})" class="btn btn" title="Ver detalles de la venta" style="background-color: rgb(10, 137, 235); color:white">
+                                        <button wire:click="cambiaridventa({{ $d->id }})" class="btn btn-sm" title="Ver detalles de la venta" style="background-color: rgb(10, 137, 235); color:white">
                                             <i class="fas fa-bars"></i>
                                         </button>
                                         @if($this->verificarpermiso())
                                             @if($d->status != 'CANCELED')
-                                            <button wire:click="mostraranularmodal({{$d->id}})" class="btn btn" title="Anular Venta" style="background-color: red; color:white">
+                                            <button wire:click="mostraranularmodal({{$d->id}})" class="btn btn-sm" title="Anular Venta" style="background-color: red; color:white">
                                                 <i class="fas fa-trash-alt"></i>
                                             </button>
-                                            <button wire:click="editsale({{$d->id}})" class="btn btn" title="Editar Venta" style="background-color: rgb(13, 175, 220); color:white">
+                                            <button wire:click="editsale({{$d->id}})" class="btn btn-sm" title="Editar Venta" style="background-color: rgb(13, 175, 220); color:white">
                                                 <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button wire:click="cambiarusuario({{$d->id}})" class="btn btn-sm" title="Cambiar Usuario Vendedor" style="background: #ee761c; color:white">
+                                                <i class="fas fa-user-edit"></i>
                                             </button>
                                             @endif
                                         @endif
-                                        <button wire:click="crearcomprobante({{$d->id}})" class="btn btn" title="Crear Comprobante" style="background-color: rgb(0, 104, 21); color:white">
+                                        <button wire:click="crearcomprobante({{$d->id}})" class="btn btn-sm" title="Crear Comprobante" style="background-color: rgb(0, 104, 21); color:white">
                                             <i class="fas fa-print"></i>
                                         </button>
                                     </div>
@@ -177,6 +198,7 @@
 
         @include('livewire.sales.salelistmodaldetalles')
         @include('livewire.sales.salelistmodalanular')
+        @include('livewire.sales.modalcambiarusuario')
 
 
 
@@ -204,6 +226,12 @@
         });
         window.livewire.on('show-editar', msg => {
             $('#editarventa').modal('show')
+        });
+        window.livewire.on('show-cam-user', msg => {
+            $('#cambiarusuario').modal('show')
+        });
+        window.livewire.on('hide-cam-user', msg => {
+            $('#cambiarusuario').modal('hide')
         });
         
     });

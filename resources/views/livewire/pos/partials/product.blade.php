@@ -8,7 +8,6 @@
                 <thead>
                 <tr>
                     <th class="table-th text-left text-white">DESCRIPCION</th>
-                    <th class="table-th text-right text-white">PRECIO</th>
                     {{-- <th width="12%" class="table-th text-center text-white">Stock</th> --}}
                     <th class="table-th text-center text-white" style="max-height: 10px;">ACCION</th>
                     
@@ -21,10 +20,7 @@
                     <td>
                         <h6>{{ $p->nombre }}</h6>
                         <h6><b>({{ $p->barcode }})</b></h6>
-                    </td>
-                    {{-- Precio Producto--}}
-                    <td class="text-right">
-                        {{ $p->precio_venta }} Bs
+                        <h6>{{ $p->precio_venta }} Bs</h6>
                     </td>
                     {{-- Stock Disponible --}}
                     {{-- <td  class="text-center">
