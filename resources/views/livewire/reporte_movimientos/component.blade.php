@@ -78,15 +78,25 @@
                 </div>
                 <div class="col-sm-12 col-md-2">
                    <div class="form-group">
-
-                   
-
                                     <label>Fecha final</label>
                                     <input type="date" wire:model="toDate" class="form-control">
                                     @error('toDate')
                                     <span class="text-danger">{{ $message}}</span>
                                     @enderror
                                 
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-2">
+                   <div class="form-group">
+                                    <label>Cajas</label>
+                                    <select wire:model="caja" class="form-control">
+                                        @foreach ($cajas2 as $item)
+                                        <option value="{{$item->id}}">{{$item->nombre}}</option>
+                                        @endforeach
+                                        <option value="TODAS">TODAS</option>
+                                       
+                                    </select>
+                                           
                     </div>
                 </div>
                 <div class="col-sm-12 col-md-12">
@@ -335,13 +345,16 @@
                             <tr>
                                 <td colspan="4">
                                      <h5 class="text-dark-right" style="border-bottom:2rem">TOTAL INGRESOS Bs</h5>
+                                  
                                      <h5 class="text-dark">OPERACIONES EN EFECTIVO Bs</h5>
                                      <h5 class="text-dark">BANCOS/SISTEMA/TELEFONO Bs</h5>
                                      <h5 class="text-dark">TOTAL EGRESOS Bs</h5>
                                      <h5 class="text-dark">SUB TOTAL EN CAJA Bs </h5>
                                      <h5 class="text-dark">TOTAL TRANSACCIONES BANCO/TARJ. CREDITO/DEBITO Bs  </h5>
                                      <h5 class="text-dark">TOTAL EFECTIVO EN CAJA Bs </h5>
-                                     <h5 class="text-dark">UTILIDAD Bs  </h5>
+                                     <h5 class="text-dark">UTILIDAD Bs</h5>
+                                     <h5 class="text-dark">APERTURA Bs</h5>
+
                                 </td>
                                 <td>
                                     <h5 class="text-dark text-center">{{number_format($importetotalingresos),2}}</h5>
@@ -352,6 +365,7 @@
                                     <h5 class="text-dark text-center">{{number_format($noefectivoing-$noefectivoeg),2}}</h5>
                                     <h5 class="text-dark text-center">{{number_format($subtotalcaja-$noefectivoing+$noefectivoeg),2}}</h5>
                                     <h5 class="text-dark text-center">{{number_format($utilidadtotal),2}}</h5>
+                                    <h5 class="text-dark text-center">{{number_format($ops),2}}</h5>
                                 </td>
                             </tr>
                             
