@@ -417,9 +417,11 @@ class ReporteMovimientoController extends Component
     }
 
     public function viewTotales(){
+       //
         $this->utilidadtotal=0;
         $this->vertotales=1;
-        if ($this->caja == 'TODAS') {
+        if ($this->caja == 'TODAS')
+        {
             $this->totalesIngresos = Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')
             ->join('carteras as c', 'c.id', 'crms.cartera_id')
             ->join('cajas as ca', 'ca.id', 'c.caja_id')
@@ -630,5 +632,7 @@ class ReporteMovimientoController extends Component
         $this->ops= $carteras->sum('monto');
 
     }
+
+    
 
 }

@@ -154,7 +154,6 @@ class TransaccionController extends Component
                     'transaccions.estado as estado'
                 )
                 ->whereBetween('transaccions.created_at', [$from, $to])
-                ->where('m.user_id', $user_id)
                 ->where('c.cedula', 'like', '%' . $this->search . '%')
                 ->orWhere('ori.nombre', 'like', '%' . $this->search . '%')
                 ->orWhere('mot.nombre', 'like', '%' . $this->search . '%')
@@ -186,7 +185,6 @@ class TransaccionController extends Component
                     'transaccions.estado as estado'
                 )
                 ->whereBetween('transaccions.created_at', [$from, $to])
-                ->where('m.user_id', $user_id)
                 ->where('ca.id', $cajausuario->id)
                 ->orderBy('transaccions.created_at', 'desc')
                 ->paginate($this->pagination);
@@ -660,7 +658,6 @@ class TransaccionController extends Component
             'motivo' => 'required|not_in:Elegir',
             'origen' => 'required|not_in:Elegir',
             'montoB' => 'required|numeric|min:1|not_in:0',
-            'requerimientoComision' => 'required_if:MostrarRadioButton,1',
         ];
         $messages = [ /* mensajes de validaciones */
             'cedula.required_if' => 'Ingrese la cedula del solicitante',
@@ -674,7 +671,6 @@ class TransaccionController extends Component
             'montoB.min' => 'Ingrese un monto mayor a 0',
             'montoB.not_in' => 'Ingrese un monto válido',
             'montoB.integer' => 'El monto debe ser un número',
-            'requerimientoComision.required_if' => 'Seleccionar si o no es requerido',
         ];
 
         $this->validate($rules, $messages);
@@ -964,6 +960,7 @@ class TransaccionController extends Component
             $this->emit('item-error', 'ERROR' . $e->getMessage());
         }
     }
+
     /* LISTENERS */
     protected $listeners = ['deleteRow' => 'Anular'];
     /* ANULAR TRANSACCION */
@@ -984,6 +981,7 @@ class TransaccionController extends Component
         $tran->save();
         $this->emit('item-anulado', 'Se anuló la transacción');
     }
+
     public function VerObservaciones(Transaccion $tr)
     {
         $this->selected_id = $tr->id;

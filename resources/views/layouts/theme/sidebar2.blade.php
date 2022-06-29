@@ -66,6 +66,11 @@
 											<i class="fa fas fa-minus"></i>
 											Reportes Movimientos</a>
 									</li>
+									<li>
+										<a href="{{ url('resumen_movimientos') }}">
+											<i class="fa fas fa-minus"></i>
+											Resumen Reportes</a>
+									</li>
 								</ul>
 							</div>
 						</li>
