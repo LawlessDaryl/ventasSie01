@@ -179,7 +179,7 @@ class ReporteMovimientoController extends Component
 
 
     //Buscar la utilidad de una venta mediante el idventa
-    public function buscarutilidad($idventa)
+    public function utilidadventa($idventa)
     {
         $utilidadventa = Sale::join('sale_details as sd', 'sd.sale_id', 'sales.id')
         ->join('products as p', 'p.id', 'sd.product_id')
@@ -198,7 +198,7 @@ class ReporteMovimientoController extends Component
         return $utilidad;
     }
 
-    public function buscarservicio($idmovimiento)
+    public function utilidadservicio($idmovimiento)
     {
        
         $serv = Service::join('mov_services as m', 'm.service_id', 'services.id')
@@ -208,7 +208,7 @@ class ReporteMovimientoController extends Component
                 ->get();
 
         $utilidad2=$serv[0]->ms- $serv[0]->mc;
-        $this->utilidadtotal=$this->utilidadtotal+$utilidad2;
+      
         
        return $utilidad2;
     }

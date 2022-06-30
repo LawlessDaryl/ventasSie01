@@ -266,14 +266,6 @@ class SaleDevolutionController extends Component
         {
             $this->observaciondevolucion = "No se coloco ningún Motivo";
         }
-        //Creando un registro en la tabla devolución
-        DevolutionSale::create([
-            'tipo_dev' => "MONETARIO",
-            'monto_dev' => $this->bs,
-            'observations' => $this->observaciondevolucion,
-            'product_id' => $this->identrante,
-            'user_id' => Auth()->user()->id
-        ]);
         /* Caja en la cual se encuentra el usuario */
         $cajausuario = Caja::join('sucursals as s', 's.id', 'cajas.sucursal_id')
         ->join('sucursal_users as su', 'su.sucursal_id', 's.id')
@@ -298,6 +290,15 @@ class SaleDevolutionController extends Component
         }
 
 
+        //Creando un registro en la tabla devolución
+        DevolutionSale::create([
+            'tipo_dev' => "MONETARIO",
+            'monto_dev' => $this->bs,
+            'observations' => $this->observaciondevolucion,
+            'product_id' => $this->identrante,
+            'user_id' => Auth()->user()->id,
+            'movimiento_id' => $Movimiento->id
+        ]);
         //Creando Movimiento del Cliente
         ClienteMov::create([
             'movimiento_id' => $Movimiento->id,
@@ -313,6 +314,7 @@ class SaleDevolutionController extends Component
             // Creando Cartera Movimiento
             CarteraMov::create([
                 'type' => "EGRESO",
+                'tipoDeMovimiento' => "VENTA",
                 'comentario' => "Devolución Venta",
                 'cartera_id' => $cartera->id,
                 'movimiento_id' => $Movimiento->id,

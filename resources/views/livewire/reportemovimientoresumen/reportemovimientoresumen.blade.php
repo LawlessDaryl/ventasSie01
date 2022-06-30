@@ -69,7 +69,7 @@
        
         </ul>
         <div class="table-responsive">
-            <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
+            <table class="table table-hover table table-bordered table-bordered-bd-warning">
                 <thead class="text-white" style="background: #ee761c">
                     <tr>
                         <th class="table-th text-withe text-center" style="font-size: 100%">#</th>
@@ -85,116 +85,141 @@
                 <tbody>
                     
                     @foreach ($totalesIngresosV as $p)
+                        <tr style="background-color: rgb(247, 239, 236)">
+                            <td>
+                                {{ $loop->iteration }}
+                            </td>
+                            <td>
+                                {{ \Carbon\Carbon::parse($p->movimientoCreacion)->format('d/m/Y H:i') }}
+                            </td>
+                          
+                            <td>
+                                <b>{{ $p->tipoDeMovimiento }},{{ $p->ctipo =='CajaFisica'?'Efectivo':$p->ctipo }},({{ $p->nombrecartera }}(</b>
+                            </td>
+                            <td>
+                                {{ $p->importe }}
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                {{ $p->utilidadventa }}
+                            </td>
+
+                            
+                        </tr>
                         <tr>
-                            <td>
-                                <h6 class="text-center" style="font-size: 100%">{{ $loop->iteration }}
-                                </h6>
-                            </td>
-                            <td>
-                                <h6 class="text-center" style="font-size: 100%">
-                                    {{ \Carbon\Carbon::parse($p->movimientoCreacion)->format('d/m/Y H:i') }}
-                                </h6>
-                            </td>
-                          
-                            <td>
-                                <h6 class="text-center" style="font-size: 100%">
-                                    {{ $p->tipoDeMovimiento }},{{ $p->ctipo =='CajaFisica'?'Efectivo':$p->ctipo }},{{ $p->nombrecartera }}</h6>
-                      
-                          
-                            </td>
-                            <td>
-                                <h6 class="text-center" style="font-size: 100%">{{ $p->importe }}
-                                </h6>
-                            </td>
+                            <td></td>
+                            <td></td>
                             <td>
                                 <?php  echo  "$p->detalle"  ?>
                             </td>
-
-                            {{-- <td>
-                                <h6 class="text-center" style="font-size: 100%">
-                                    @if($p->tipoDeMovimiento == 'VENTA')
-
-                                     {{ number_format($this->buscarutilidad($this->buscarventa($p->movid)->first()->idventa), 2) }}
-                                     @elseif($p->tipoDeMovimiento == 'SERVICIOS')
-                                     {{ $this->buscarservicio($p->movid)}}
-                                    @endif
-                                </h6>
-                            </td> --}}
-                            
+                            <td></td>
+                            <td></td>
+                            <td></td>
                         </tr>
                     @endforeach
-                    @foreach ($totalesIngresosSIE as $p)
+                    @foreach ($totalesIngresosS as $p)
                         <tr>
                             <td>
-                                <h6 class="text-center" style="font-size: 100%">{{ $loop->iteration }}
-                                </h6>
+                                {{ $loop->iteration }}
                             </td>
                             <td>
-                                <h6 class="text-center" style="font-size: 100%">
-                                    {{ \Carbon\Carbon::parse($p->movimientoCreacion)->format('d/m/Y H:i') }}
-                                </h6>
+                                {{ \Carbon\Carbon::parse($p->movcreacion)->format('d/m/Y H:i') }}
                             </td>
                           
                             <td>
-                                <h6 class="text-center" style="font-size: 100%">
-                                    {{ $p->tipoDeMovimiento }},{{ $p->ctipo =='CajaFisica'?'Efectivo':$p->ctipo }},{{ $p->nombrecartera }}</h6>
-                      
-                          
+                                {{ $p->tipoDeMovimiento }},{{ $p->ctipo =='CajaFisica'?'Efectivo':$p->ctipo }},({{ $p->nombrecartera }})
                             </td>
                             <td>
-                                <h6 class="text-center" style="font-size: 100%">{{ $p->importe }}
-                                </h6>
+                                {{ $p->importe }}
                             </td>
                             <td>
-                                <h6 class="text-center" style="font-size: 100%">
-                                </h6>
+                                
                             </td>
-                            {{-- <td>
-                                <h6 class="text-center" style="font-size: 100%">
-                                    @if($p->tipoDeMovimiento == 'VENTA')
-                                     {{ number_format($this->buscarutilidad($this->buscarventa($p->movid)->first()->idventa), 2) }}
-                                     @elseif($p->tipoDeMovimiento == 'SERVICIOS')
-                                     {{ $this->buscarservicio($p->movid)}}
-                                    @endif
-                                </h6>
-                            </td> --}}
+                            <td>
+                                {{ $p->utilidadservicios }}
+                            </td>
                             
                         </tr>
                     @endforeach
-                    {{-- @foreach ($totalesEgresos as $p)
+
+                    @foreach ($totalesIngresosIE as $m)
                     <tr>
                         <td>
-                            <h6 class="text-center" style="font-size: 100%">{{ $loop->iteration }}
-                            </h6>
+                            {{ $loop->iteration }}
                         </td>
                         <td>
-                            <h6 class="text-center" style="font-size: 100%">
-                                {{ \Carbon\Carbon::parse($p->movimientoCreacion)->format('d/m/Y H:i') }}
-                            </h6>
+                            {{ \Carbon\Carbon::parse($p->movcreacion)->format('d/m/Y H:i') }}
                         </td>
                       
                         <td>
-                            <h6 class="text-center" style="font-size: 100%">
-                                {{ $p->carteramovtype }}-{{ $p->tipoDeMovimiento }}-{{ $p->cajaNombre }}-{{ $p->usuarioNombre }}</h6>
-                  
-                      
-                        </td>
-                       
-                        <td>
-                            <h6 class="text-center" style="font-size: 100%">
-                            </h6>
+                            {{ $m->ctipo =='CajaFisica'?'Efectivo':$m->ctipo }},({{ $m->nombrecartera }}))
                         </td>
                         <td>
-                            <h6 class="text-center" style="font-size: 100%">{{ $p->mimpor }}
-                            </h6>
+                            {{ $m->importe }}
                         </td>
                         <td>
-                            <h6 class="text-center" style="font-size: 100%">
-                            </h6>
+                            
+                        </td>
+                        <td>
+                            
                         </td>
                         
                     </tr>
-                    @endforeach --}}
+                @endforeach
+
+
+                @foreach ($totalesEgresosV as $p)
+                <tr>
+                    <td>
+                        {{ $loop->iteration }}
+                    </td>
+                    <td>
+                        {{ \Carbon\Carbon::parse($p->movcreacion)->format('d/m/Y H:i') }}
+                    </td>
+                  
+                    <td>
+                        {{ $p->tipoDeMovimiento }},{{ $p->ctipo =='CajaFisica'?'Efectivo':$p->ctipo }},{{ $p->nombrecartera }})
+                    </td>
+                    <td>
+                        
+                    </td>
+                    <td>
+                        {{ $p->importe }}
+                    </td>
+                    <td>
+                        
+                    </td>
+                    
+                </tr>
+            @endforeach
+
+            @foreach ($totalesEgresosIE as $st)
+                <tr>
+                    <td>
+                        {{ $loop->iteration }}
+                    </td>
+                    <td>
+                        {{ \Carbon\Carbon::parse($st->movcreacion)->format('d/m/Y H:i') }}
+                    </td>
+                  
+                    <td>
+                        {{ $st->ctipo =='CajaFisica'?'Efectivo':$st->ctipo }},({{ $st->nombrecartera }})
+                    </td>
+                    <td>
+                     
+                    </td>
+                    <td>
+                        {{ $st->importe }}
+                    </td>
+                    <td>
+                        
+                    </td>
+                    
+                </tr>
+            @endforeach
+
                 
                 </tbody>
             </table>
