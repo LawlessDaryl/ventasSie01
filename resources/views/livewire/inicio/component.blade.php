@@ -1,11 +1,19 @@
-<div class="row sales layout-top-spacing">
+
+    <div class="panel-header bg-warning-gradient">
+        <div class="page-inner py-4">
+            <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row">
+                <div>
+                    <h2 class="text-white pb-2 fw-bold">SERVICIOS Y PENDIENTES PRÓXIMOS A VENCER</h2>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    
+
     <div class="col-sm-12">
         <div class="widget widget-chart-one">
-            <div class="widget-heading">
-                <h4 class="card-title">
-                    <b>SERVICIOS Y PENDIENTES PRÓXIMOS A VENCER</b>
-                </h4>
-            </div>
+         
             <div class="form-group">
                 <div class="row">
 
@@ -602,4 +610,4 @@
 
         </div>
     </div>
-</div>
+
