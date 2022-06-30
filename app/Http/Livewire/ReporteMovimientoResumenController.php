@@ -19,7 +19,7 @@ class ReporteMovimientoResumenController extends Component
     $operacionefectivoing,$noefectivo,$operacionefectivoeg,$noefectivoeg,$subtotalcaja,$utilidadtotal=5,$caja,$ops,$sucursal;
     public function mount()
     {
-        $this->idsucursal = $this->idsucursal();
+        $this->sucursal = $this->idsucursal();
         $this->fromDate= Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->toDate=  Carbon::parse(Carbon::now())->format('Y-m-d');
 
@@ -27,7 +27,6 @@ class ReporteMovimientoResumenController extends Component
     public function render()
     {
         
-       
         $carterasSucursal=0;
         $this->viewTotales();
         return view('livewire.reportemovimientoresumen.reportemovimientoresumen', [
@@ -134,6 +133,7 @@ class ReporteMovimientoResumenController extends Component
            ->where('movimientos.status', 'ACTIVO')
            ->where('crms.type', 'INGRESO')
            ->where('crms.tipoDeMovimiento', 'VENTA')
+           ->where('ca.sucursal_id',$this->sucursal)
            ->whereBetween('movimientos.updated_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
            ->orderBy('movimientos.updated_at', 'asc')
           ->get();
@@ -182,6 +182,7 @@ class ReporteMovimientoResumenController extends Component
            ->where('crms.tipoDeMovimiento', '!=' , 'STREAMING')
            ->where('crms.tipoDeMovimiento', '!=' , 'VENTA')
            ->where('crms.tipoDeMovimiento', '!=' , 'EGRESO/INGRESO')
+           ->where('ca.sucursal_id',$this->sucursal)
            ->whereBetween('movimientos.updated_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
            ->orderBy('movimientos.updated_at', 'asc')
         ->get();
@@ -214,6 +215,7 @@ class ReporteMovimientoResumenController extends Component
             ->where('movimientos.status', 'ACTIVO')
             ->where('crms.type', 'INGRESO')
             ->where('crms.tipoDeMovimiento' , 'EGRESO/INGRESO')
+            ->where('ca.sucursal_id',$this->sucursal)
             ->whereBetween('movimientos.updated_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
             ->orderBy('movimientos.updated_at', 'asc')
         ->get();
@@ -238,6 +240,7 @@ class ReporteMovimientoResumenController extends Component
         ->where('movimientos.status', 'ACTIVO')
         ->where('crms.type', 'EGRESO')
         ->where('crms.tipoDeMovimiento', 'VENTA')
+        ->where('ca.sucursal_id',$this->sucursal)
         ->whereBetween('movimientos.updated_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
         ->orderBy('movimientos.updated_at', 'asc')
        ->get();
@@ -264,12 +267,14 @@ class ReporteMovimientoResumenController extends Component
        ->where('movimientos.status', 'ACTIVO')
        ->where('crms.type', 'EGRESO')
        ->where('crms.tipoDeMovimiento' , 'EGRESO/INGRESO')
+       ->where('ca.sucursal_id',$this->sucursal)
        ->whereBetween('movimientos.updated_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
        ->orderBy('movimientos.updated_at', 'asc')
    ->get();
 
            
         }
+
 
 
 
@@ -328,5 +333,30 @@ class ReporteMovimientoResumenController extends Component
        
          
         return $utilidad2;
+     }
+
+     public function operaciones(){
+        
+        $this->allop(Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',$this->caja);
+        $this->importetotalingresos= $this->totalesIngresos->sum('mimpor');
+        $this->operacionefectivoing= $this->totalesIngresos->where('ctipo','CajaFisica')->sum('mimpor');
+        $this->noefectivoing=$this->totalesIngresos->where('ctipo','!=','CajaFisica')->sum('mimpor');
+
+
+       
+        foreach ($this->totalesIngresos as $var) {
+            
+            if($var->tipoDeMovimiento == 'VENTA')
+            $this->utilidadtotal= $this->utilidadtotal+($this->buscarutilidad($this->buscarventa($var->movid)->first()->idventa)) ;
+            elseif($var->tipoDeMovimiento == 'SERVICIOS')
+            $this->utilidadtotal= $this->utilidadtotal+ ($this->buscarservicio($var->movid));
+
+        }
+
+
+        $this->importetotalegresos= $this->totalesEgresos->sum('mimpor');
+        $this->operacionefectivoeg= $this->totalesEgresos->where('ctipo','CajaFisica')->sum('mimpor');
+        $this->noefectivoeg=  $this->totalesEgresos->where('ctipo','!=','CajaFisica')->sum('mimpor');
+        $this->subtotalcaja= $this->importetotalingresos-$this->importetotalegresos;
      }
 }
