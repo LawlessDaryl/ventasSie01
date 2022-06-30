@@ -21,6 +21,7 @@ class CreateDevolutionSalesTable extends Migration
             $table->enum('estado',['NORMAL','ELIMINADO','TRANSFERIDO'])->default('NORMAL');
             $table->foreignId('product_id')->constrained();
             $table->foreignId('user_id')->constrained();
+            $table->foreignId('movimiento_id')->constrained();
             $table->timestamps();
         });
     }
