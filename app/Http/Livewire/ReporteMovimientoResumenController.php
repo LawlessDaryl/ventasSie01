@@ -59,22 +59,6 @@ class ReporteMovimientoResumenController extends Component
          {
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             $this->totalesIngresosV = Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')
             ->join('carteras as c', 'c.id', 'crms.cartera_id')
             ->join('cajas as ca', 'ca.id', 'c.caja_id')
@@ -217,7 +201,8 @@ class ReporteMovimientoResumenController extends Component
            'movimientos.import as importe',
            'crms.type as carteramovtype',
            'crms.tipoDeMovimiento',
-           'c.nombre',
+          
+           'c.nombre as nombrecartera',
            'c.descripcion',
            'c.tipo as ctipo',
            'movimientos.updated_at as movcreacion',
@@ -226,7 +211,7 @@ class ReporteMovimientoResumenController extends Component
            ->where('crms.type', 'INGRESO')
            ->where('crms.tipoDeMovimiento', 'VENTA')
            ->whereBetween('movimientos.updated_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
-           ->orderBy('crms.tipoDeMovimiento', 'asc')
+           ->orderBy('movimientos.updated_at', 'asc')
           ->get();
           $var="";
           $bn=0;
@@ -250,7 +235,7 @@ class ReporteMovimientoResumenController extends Component
                'movimientos.import as importe',
                'crms.type as carteramovtype',
                'crms.tipoDeMovimiento',
-               'c.nombre',
+               'c.nombre as nombrecartera',
                'c.descripcion',
                'c.tipo as ctipo',
                'c.telefonoNum',
@@ -263,7 +248,7 @@ class ReporteMovimientoResumenController extends Component
            ->where('crms.tipoDeMovimiento', '!=' , 'STREAMING')
            ->where('crms.tipoDeMovimiento', '!=' , 'VENTA')
            ->whereBetween('movimientos.updated_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
-           ->orderBy('crms.tipoDeMovimiento', 'asc')
+           ->orderBy('movimientos.updated_at', 'asc')
         ->get();
 
             // $this->totalesEgresos = Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')

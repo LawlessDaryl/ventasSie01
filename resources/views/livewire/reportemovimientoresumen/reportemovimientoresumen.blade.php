@@ -98,7 +98,7 @@
                           
                             <td>
                                 <h6 class="text-center" style="font-size: 100%">
-                                    {{ $p->tipoDeMovimiento }},{{ $p->ctipo =='CajaFisica'?'EFECTIVO':$p->ctipo }}- Usuario: {{ $p->usuarioNombre }}</h6>
+                                    {{ $p->tipoDeMovimiento }},{{ $p->ctipo =='CajaFisica'?'Efectivo':$p->ctipo }},{{ $p->nombrecartera }}</h6>
                       
                           
                             </td>
@@ -137,7 +137,7 @@
                           
                             <td>
                                 <h6 class="text-center" style="font-size: 100%">
-                                    {{ $p->tipoDeMovimiento }},{{ $p->ctipo =='CajaFisica'?'EFECTIVO':$p->ctipo }}- Usuario: {{ $p->usuarioNombre }}</h6>
+                                    {{ $p->tipoDeMovimiento }},{{ $p->ctipo =='CajaFisica'?'Efectivo':$p->ctipo }},{{ $p->nombrecartera }}</h6>
                       
                           
                             </td>
