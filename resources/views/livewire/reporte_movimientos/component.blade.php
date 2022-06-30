@@ -10,15 +10,7 @@
                         <a wire:click.prevent="viewDetails()" class="btn btn-warning">
                             Generar Ingreso/Egreso en Cartera
                         </a>
-                        <a wire:click.prevent="viewDetailsR()" class="btn btn-warning">
-                            Generar Recaudo
-                        </a>
-                        <a wire:click.prevent="viewTotales()" class="btn btn-warning">
-                            Ver Resumen
-                        </a>
-                        <a wire:click.prevent="crearpdf()" class="btn btn-warning">
-                            Generar PDF
-                        </a>
+                       
                  
                     @endcan
                 </ul>

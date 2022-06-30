@@ -2,8 +2,10 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Caja;
 use App\Models\Movimiento;
 use App\Models\SaleDetail;
+use App\Models\Sucursal;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -11,7 +13,8 @@ use Livewire\Component;
 
 class ReporteMovimientoResumenController extends Component
 {
-    public $idsucursal,$totalesIngresos,$totalesEgresos,$fromDate,$toDate;
+    public $idsucursal,$totalesIngresos,$totalesEgresos,$fromDate,$toDate,$cartera_id, $type, $cantidad, $comentario,$vertotales=0,$importetotalingresos,$importetotalegresos,
+    $operacionefectivoing,$noefectivo,$operacionefectivoeg,$noefectivoeg,$subtotalcaja,$utilidadtotal=5,$caja,$ops,$sucursal;
     public function mount()
     {
         $this->idsucursal = $this->idsucursal();
@@ -26,9 +29,10 @@ class ReporteMovimientoResumenController extends Component
         $carterasSucursal=0;
         $this->viewTotales();
         return view('livewire.reportemovimientoresumen.reportemovimientoresumen', [
-            'carterasSucursal' => $carterasSucursal
-          
-            
+            'carterasSucursal' => $carterasSucursal,
+            'sucursales'=>Sucursal::all(),
+            'cajas'=>Caja::where('cajas.sucursal_id',$this->sucursal)->get()
+
         ])
             ->extends('layouts.theme.app')
             ->section('content');
