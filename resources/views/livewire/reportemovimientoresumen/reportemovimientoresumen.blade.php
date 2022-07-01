@@ -94,7 +94,7 @@
                             </td>
                           
                             <td>
-                                <b>{{ $p->tipoDeMovimiento }},{{ $p->ctipo =='CajaFisica'?'Efectivo':$p->ctipo }},({{ $p->nombrecartera }}(</b>
+                                <b>{{ $p->tipoDeMovimiento }},{{ $p->ctipo =='CajaFisica'?'Efectivo':$p->ctipo }},({{ $p->nombrecartera }})</b>
                             </td>
                             <td>
                                 {{ $p->importe }}
@@ -150,11 +150,11 @@
                             {{ $loop->iteration }}
                         </td>
                         <td>
-                            {{ \Carbon\Carbon::parse($p->movcreacion)->format('d/m/Y H:i') }}
+                            {{ \Carbon\Carbon::parse($m->movcreacion)->format('d/m/Y H:i') }}
                         </td>
                       
                         <td>
-                            {{ $m->ctipo =='CajaFisica'?'Efectivo':$m->ctipo }},({{ $m->nombrecartera }}))
+                            {{ $m->ctipo =='CajaFisica'?'Efectivo':$m->ctipo }}({{ $m->nombrecartera }})
                         </td>
                         <td>
                             {{ $m->importe }}
@@ -205,7 +205,7 @@
                     </td>
                   
                     <td>
-                        {{ $st->ctipo =='CajaFisica'?'Efectivo':$st->ctipo }},({{ $st->nombrecartera }})
+                        {{ $st->ctipo =='CajaFisica'?'Efectivo':$st->ctipo }}({{ $st->nombrecartera }})
                     </td>
                     <td>
                      
@@ -219,41 +219,174 @@
                     
                 </tr>
             @endforeach
-
-                
-                </tbody>
-            </table>
-            <table>
-                <tfoot>
-                    <tr>
-                        <td colspan="4">
-                             <h5 class="text-dark-right" style="border-bottom:2rem">TOTAL INGRESOS Bs</h5>
-                          
-                             <h5 class="text-dark">OPERACIONES EN EFECTIVO Bs</h5>
-                             <h5 class="text-dark">BANCOS/SISTEMA/TELEFONO Bs</h5>
-                             <h5 class="text-dark">TOTAL EGRESOS Bs</h5>
-                             <h5 class="text-dark">SUB TOTAL EN CAJA Bs </h5>
-                             <h5 class="text-dark">TOTAL TRANSACCIONES BANCO/TARJ. CREDITO/DEBITO Bs  </h5>
-                             <h5 class="text-dark">TOTAL EFECTIVO EN CAJA Bs </h5>
-                             <h5 class="text-dark">UTILIDAD Bs</h5>
-                             <h5 class="text-dark">APERTURA Bs</h5>
-    
-                        </td>
-                        {{-- <td>
-                            <h5 class="text-dark text-center">{{number_format($importetotalingresos),2}}</h5>
-                            <h5 class="text-dark text-center">{{number_format($operacionefectivoing),2}}</h5>
-                            <h5 class="text-dark text-center">{{number_format($noefectivoing),2}}</h5>
-                            <h5 class="text-dark text-center">{{number_format($importetotalegresos),2}}</h5>
-                            <h5 class="text-dark text-center">{{number_format($subtotalcaja),2}}</h5>
-                            <h5 class="text-dark text-center">{{number_format($noefectivoing-$noefectivoeg),2}}</h5>
-                            <h5 class="text-dark text-center">{{number_format($subtotalcaja-$noefectivoing+$noefectivoeg),2}}</h5>
-                            <h5 class="text-dark text-center">{{number_format($utilidadtotal),2}}</h5>
-                            <h5 class="text-dark text-center">{{number_format($ops),2}}</h5>
-                        </td> --}}
-                    </tr>
+            <tr>
+                <td>
                     
-            </tfoot>
+                </td>
+                <td>
+                    
+                </td>
+                <td>
+                    
+                </td>
+                <td>
+                    
+                </td>
+                <td>
+                    
+                </td>
+                <td>
+                    
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    
+                </td>
+                <td>
+                    
+                </td>
+                <td>
+                    
+                </td>
+                <td>
+                    <b>{{$this->ingresosTotales}} ig</b>
+                </td>
+                <td>
+                    <b>{{$this->EgresosTotales}}</b>
+                </td>
+                <td>
+                    <b>{{$this->totalutilidadSV}}</b>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    
+                </td>
+                <td>
+                    
+                </td>
+                <td>
+                    
+                </td>
+                <td>
+                    
+                </td>
+                <td>
+                    
+                </td>
+                <td>
+                    
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                     <h5 class="text-dark-right" style="border-bottom:2rem">TOTAL INGRESOS Bs</h5></td>
+                </td>
+                <td>
+                    {{$this->totalutilidadSV}}
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <h5 class="text-dark">OPERACIONES EN EFECTIVO Bs</h5>
+                </td>
+                <td>
+                    {{$this->ingresosTotalesCF}}
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <h5 class="text-dark">BANCOS/SISTEMA/TELEFONO Bs</h5>
+                </td>
+                <td>
+                    {{$this->ingresosTotalesNoCF}}
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <h5 class="text-dark">TOTAL EGRESOS Bs</h5>
+                </td>
+                <td>
+                    {{$this->EgresosTotales}}
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <h5 class="text-dark">SUB TOTAL EN CAJA Bs </h5>
+                </td>
+                <td>
+                    {{$this->subtotalcaja}}
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <h5 class="text-dark">TOTAL EFECTIVO EN CAJA Bs </h5>
+                </td>
+                <td>
+                    
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <h5 class="text-dark">UTILIDAD Bs</h5>
+                </td>
+                <td>
+                    {{$this->ingresosTotales}}
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <h5 class="text-dark">APERTURA Bs</h5>
+                </td>
+                <td>
+                    {{-- Apertura de Caja --}}
+                    {{number_format($ops),2}}
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
+
+                </tbody>
+
+
             </table>
         </div>
+        @include('livewire.reporte_movimientos.modalDetailsR')
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            window.livewire.on('show-modal', Msg => {
+                $('#modal-details').modal('show')
+            })
+            window.livewire.on('hide-modal', Msg => {
+                $('#modal-details').modal('hide')
+                noty(Msg)
+            })
+            window.livewire.on('show-modalR', Msg => {
+            $('#modal-detailsr').modal('show')
+            })
+            window.livewire.on('hide-modalR', Msg => {
+                $('#modal-detailsr').modal('hide')
+                noty(Msg)
+            })
+            window.livewire.on('tigo-delete', Msg => {
+                noty(Msg)
+            })
+        });
+    </script>
 
