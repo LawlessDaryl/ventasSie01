@@ -19,8 +19,8 @@
                 </td>
             </tr>
             <tr>
-                <td width="30%" style="vertical-align: top; padding-top:10px; position:relative;">
-                    <img src="{{ asset('assets/img/sie.png') }}" alt="" class="invoice-logo">
+                <td style="vertical-align: top; padding-top:10px; position:relative;">
+                    <img src="{{ asset('assets/img/sie2022.jpg') }}" alt="" class="invoice-logo" height="70px">
                 </td>
 
                 <td width="70%" class="text-left text-company" style="vertical-align: top; padding-top:10px;">

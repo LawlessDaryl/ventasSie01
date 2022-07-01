@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comprobante de Compra</title>
+    <title>Recibo de Venta</title>
     <link rel="stylesheet" href="{{ asset('css/custom_pdf.css') }}">
     <link rel="stylesheet" href="{{ asset('css/custom_page.css') }}">
     <!-- BEGIN GLOBAL MANDATORY STYLES -->
@@ -25,12 +25,13 @@
         border: 1px solid rgb(255, 255, 255);
         }
         th, td {
-       
+        width: 25%;
         text-align: left;
         vertical-align: top;
         border: 1px solid rgb(255, 255, 255);
         }
     </style>
+
 
 </head>
 
@@ -38,16 +39,18 @@
     <section class="header" style="top: -287px">
         <table cellpadding="0" cellspacing="0" width="100%">
             <tr>
+               
+                <td style="vertical-align: top; padding-top:10px; position:relative;">
+                    <img src="{{ asset('assets/img/sie2022.jpg') }}" alt="" class="invoice-logo" height="70px">
+                </td>
                 <td class="text-center" colspan="2">
-                    <span style="font-size: 25px; font-weight:bold;">Sistema SIE</span>
+                    <span style="font-size: 20px; font-weight:bold;">Comprobante de Compra</span>
+                    <p style="font-size: 20px; font-weight:bold;">Soluciones Informáticas Emanuel</p>
                 </td>
             </tr>
             <tr>
-                <td width="30%" style="vertical-align: top; padding-top:10px; position:relative;">
-                    <img src="{{ asset('assets/img/sie.png') }}" alt="" class="invoice-logo">
-                </td>
 
-                <td width="70%" class="text-left text-company" style="vertical-align: top; padding-top:8px;">
+                <td colspan="2" style="vertical-align: top; padding-top:5px; position:relative;">
                         <span style="font-size: 16px;"><strong>COMPRA N°</strong>{{$data->id}}</span>
                         <br>
                         <span style="font-size: 16px;"><strong>Proveedor:</strong>{{$data->nombre_prov}} </span>
@@ -55,42 +58,42 @@
                         <span style="font-size: 16px;"><strong>Fecha de Compra:</strong>{{$data->fecha_compra}}</span>
                     <br>
 
-                    <span style="font-size: 14px;">Usuario: {{ Auth()->user()->name }}</span>}}
+                    <span style="font-size: 14px;">Usuario: {{ $data->user_id }}</span>
                     <br>
                 </td>
             </tr>
         </table>
     </section>
 
-    <section style="margin-top: -110px;">
+    <div style="margin-top:-100px;">
         <table cellpadding="0" cellspacing="0" class="table-items" width="100%">
             <thead>
                 <tr>
-                    <th width="10%">#</th>
-                    <th width="12%">CODIGO</th>
-                    <th width="10%">DESCRIPCION</th>
-                    <th width="12%">UNIDAD</th>
-                    <th width="12%">CANTIDAD</th>
-                    <th width="12%">COSTO/U</th>
-                    <th width="12%">SUBTOTAL</th>
-                    <th width="12%">DESCUENTO</th>
-                    <th width="12%">TOTAL</th>
+                    <th class="table-th text-left text-dark">#</th>
+                
+                    <th class="table-th text-left text-dark" colspan="2">DESCRIPCION</th>
+                    <th class="table-th text-left text-dark">UNIDAD</th>
+                    <th class="table-th text-left text-dark">CANTIDAD</th>
+                    <th class="table-th text-left text-dark">COSTO/U</th>
+                  
+                 
+                    <th class="table-th text-left text-dark">TOTAL</th>
                    
                 </tr>
             </thead>
 
-            <tbody>
+            <tbody style="background-color: rgb(255, 255, 255)">
                 @foreach ($detalle as $item)
                     <tr>
-                        <td align="center">{{ $nro++ }}</td>
-                        <td align="center">{{ $item->barcode}}</td>
-                        <td align="center">{{ $item->nombre }}</td>
-                        <td align="center">{{ $item->unidad}}</td>
-                        <td align="center">{{ $item->cantidad }}</td>
-                        <td align="center">{{ $item->precio }}</td>
-                        <td align="center">{{ $item->precio*$item->cantidad }}</td>
-                        <td align="center">0</td>
-                        <td align="center">{{ $item->precio*$item->cantidad}}</td>
+                        <td  style="padding: 0%" class="text-right">{{ $nro++ }}</td>
+                       
+                        <td style="padding: 0%" colspan="2">{{ $item->nombre }}</td>
+                         <td style="padding: 0%" class="text-right">{{ $item->unidad}}</td>
+                         <td style="padding: 0%" class="text-right">{{ $item->cantidad }}</td>
+                         <td style="padding: 0%" class="text-right">{{ $item->precio }}</td>
+                  
+               
+                         <td style="padding: 0%" class="text-right">{{ $item->precio*$item->cantidad}}</td>
                     </tr>
                 @endforeach
             </tbody>

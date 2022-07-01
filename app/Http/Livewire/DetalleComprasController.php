@@ -43,7 +43,7 @@ class DetalleComprasController extends Component
     $telefono_prov;
 
     public $nombre,$costo, $precio_venta,$barcode,$codigo,$caracteristicas,$lote,$unidad, $marca, $garantia,$industria,
-    $categoryid,$component,$selected_categoria,$image,$selected_id2;
+    $categoryid,$component,$selected_categoria,$image,$selected_id2,$name,$descripcion;
 
     private $pagination = 5;
    
@@ -165,6 +165,32 @@ class DetalleComprasController extends Component
         $this->codigo= Carbon::now()->format('ymd').mt_rand($min,$max);
     }
 
+    public function StoreCategory(){
+
+        $rules = ['name' => 'required|unique:categories|min:3'];
+        $messages = [
+            'name.required' => 'El nombre de la categoría es requerido',
+            'name.unique' => 'Ya existe el nombre de la categoría',
+            'name.min' => 'El nombre de la categoría debe tener al menos 3 caracteres'
+        ];
+        $this->validate($rules, $messages);
+            $category = Category::create([
+                'name' => $this->name,
+                'descripcion'=>$this->descripcion,
+                'categoria_padre'=>0
+            ]);
+        
+        $category->save();
+        $this->resetCategory();
+        $this->emit('cat-added', 'Categoría Registrada');
+    }
+
+    public function resetCategory(){
+            $this->name="";
+            $this->descripcion="";
+    }
+
+
     public function Store(){
         
         $prod = new Products;
@@ -183,8 +209,10 @@ class DetalleComprasController extends Component
         $prod->industria=$this->industria;
         $prod->categoryid=$this->categoryid;
         $prod->Store();
-        $this->resetUI();
         $this->emit('products_added','ahola');
+        $pr=Product::where('nombre',$this->nombre)->pluck('id');
+        $this->increaseQty($pr);
+        $this->resetUI();
 
     }
 
