@@ -1,5 +1,31 @@
+@section('css')
 
-    <div class="widget-content">
+
+<style>
+    .tablep, .thp, .tdp{
+      margin: 0;
+      width: 100%;
+      background-color: rgb(240, 248, 242);
+      border: 8px solid;
+      border: 1px solid white;
+      border-style: hidden;
+     
+    }
+    
+    .thp, .tdp {
+    
+      text-align: left;
+      border: 0px white !important;
+    
+    }
+    .trp:hover {background-color: rgb(209, 137, 110);}
+</style>
+   
+
+@endsection
+   
+   
+   <div class="widget-content">
         <h4 class="card-title">
             <b>RESUMEN MOVIMIENTOS</b>
         </h4>
@@ -111,8 +137,25 @@
                         <tr>
                             <td></td>
                             <td></td>
-                            <td>
-                                <?php  echo  "$p->detalle"  ?>
+                            <td class="m-0 pl-0">
+                                <table class="tablep p-0 m-0" style="padding: 0">
+                                    <th class="thp" >Nombre Producto</th>
+                                    <th class="thp">Cantidad</th>
+                                    <th class="thp">Precio Venta</th>
+                                    
+                                        @foreach ($p->detalle as $item)
+                                        <tr class="trp">
+                                            <td class="tdp" style="border-style: hidden"> <h6 style="font-size: 11px" >{{$item->nombre}}</h6></td>
+                                            <td class="tdp"  style="border-style: hidden"> <h6 style="font-size: 11px" >{{$item->cant}}</h6></td>
+                                            <td class="tdp"  style="border-style: hidden"> <h6 style="font-size: 11px" >{{$item->pv}}</h6></td>
+                                               
+                                        </tr>
+                                         @endforeach
+                                    
+                                   
+                                    
+                                  </table>
+
                             </td>
                             <td></td>
                             <td></td>

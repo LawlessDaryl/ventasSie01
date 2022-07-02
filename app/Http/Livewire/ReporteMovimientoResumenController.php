@@ -104,18 +104,12 @@ class ReporteMovimientoResumenController extends Component
             ->orderBy('movimientos.updated_at', 'asc')
             ->get();
     
-              $var="";
-              $bn=0;
             foreach ($this->totalesIngresosV as $val)
             {
                 $vs=$this->listardetalleventas($val->idventa);
-                foreach ($vs as $hj) {
-                    $var=$var.++$bn." ".$hj->nombre." ".$hj->pv. " ". $hj->cant;
-                    $var=$var.'<br>';
-                } 
-                $val->detalle=$var;
-                $var="";
-                $bn=0;
+            
+                $val->detalle=$vs;
+                
             }
     
             foreach ($this->totalesIngresosV as $var) 
@@ -274,19 +268,13 @@ class ReporteMovimientoResumenController extends Component
             ->whereBetween('movimientos.updated_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
             ->orderBy('movimientos.updated_at', 'asc')
             ->get();
-    
-              $var="";
-              $bn=0;
+
             foreach ($this->totalesIngresosV as $val)
             {
                 $vs=$this->listardetalleventas($val->idventa);
-                foreach ($vs as $hj) {
-                    $var=$var.++$bn." ".$hj->nombre." ".$hj->pv. " ". $hj->cant;
-                    $var=$var.'<br>';
-                } 
-                $val->detalle=$var;
-                $var="";
-                $bn=0;
+            
+                $val->detalle=$vs;
+                
             }
     
             foreach ($this->totalesIngresosV as $var) 
@@ -440,19 +428,12 @@ class ReporteMovimientoResumenController extends Component
             ->whereBetween('movimientos.updated_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
             ->orderBy('movimientos.updated_at', 'asc')
             ->get();
-    
-              $var="";
-              $bn=0;
-            foreach ($this->totalesIngresosV as $val)
+        foreach ($this->totalesIngresosV as $val)
             {
                 $vs=$this->listardetalleventas($val->idventa);
-                foreach ($vs as $hj) {
-                    $var=$var.++$bn." ".$hj->nombre." ".$hj->pv. " ". $hj->cant;
-                    $var=$var.'<br>';
-                } 
-                $val->detalle=$var;
-                $var="";
-                $bn=0;
+            
+                $val->detalle=$vs;
+                
             }
     
             foreach ($this->totalesIngresosV as $var) 
