@@ -5,15 +5,7 @@
                 <h4 class="card-title">
                     <b>{{ $componentName }} | {{ $pageTitle }}</b>
                 </h4>
-                <ul class="row justify-content-end">
-                    @can('Ver_Generar_Ingreso_Egreso_Boton')
-                        <a wire:click.prevent="viewDetails()" class="btn btn-warning">
-                            Generar Ingreso/Egreso en Cartera
-                        </a>
-                       
-                 
-                    @endcan
-                </ul>
+              
                 {{-- <ul class="tabs tab-pills">
                     <a wire:click.prevent="EliminarTigoMoney()" class="btn btn-dark">
                         Eliminar tigo money
@@ -29,6 +21,7 @@
                 <div class="col-lg-3 col-md-4 col-sm-12">
 
                     <div class="form-group">
+                        <label> Buscar </label>
                         <div class="input-group mb-4">
                             <div class="input-group-prepend">
                                 <span class="input-group-text input-gp">
@@ -46,6 +39,7 @@
 
                 <div class="col-sm-12 col-md-2 col-lg-2">
                     <div class="form-group">
+                        <label> Tipo de movimiento</label>
                         <select wire:model="opciones" class="form-control" wire:click="$set('vertotales','0')">
                             <option value="TODAS">TODAS</option>
                             <option value="EGRESO/INGRESO">INGRESOS Y EGRESOS</option>

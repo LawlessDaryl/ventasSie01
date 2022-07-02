@@ -32,6 +32,7 @@ use App\Http\Livewire\PosController;
 use App\Http\Livewire\RolesController;
 use App\Http\Livewire\PermisosController;
 use App\Http\Livewire\ReportesTigoController;
+use App\Http\Livewire\IngresoEgresoController;
 use App\Http\Livewire\ReporteMovimientoResumenController;
 use App\Http\Livewire\ReportsController;
 use App\Http\Livewire\TransaccionController;
@@ -105,6 +106,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('cortecajas', CorteCajaController::class)->name('cortecaja')->middleware('permission:Corte_Caja_Index');
     Route::get('movimientos', ReporteMovimientoController::class)->name('movimiento');
     Route::get('resumen_movimientos', ReporteMovimientoResumenController::class)->name('r_movimiento');
+    Route::get('ingreso_egreso', IngresoEgresoController::class)->name('ingreso_egreso');
     Route::get('report/pdfmovdiageneral', [ExportMovDiaGenController::class, 'reportPDFMovDiaGeneral']);
 
     /* TIGO MONEY */

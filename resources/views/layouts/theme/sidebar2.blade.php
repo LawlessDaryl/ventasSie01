@@ -71,6 +71,11 @@
 											<i class="fa fas fa-minus"></i>
 											Resumen Reportes</a>
 									</li>
+									<li>
+										<a href="{{ url('ingreso_egreso') }}">
+											<i class="fa fas fa-minus"></i>
+											Ingresos/Egresos</a>
+									</li>
 								</ul>
 							</div>
 						</li>

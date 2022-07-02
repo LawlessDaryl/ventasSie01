@@ -262,7 +262,10 @@
                     
                 </tr>
             @endforeach
-            <tr>
+
+            {{-- pruebasssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss --}}
+
+            {{-- <tr>
                 <td>
                     
                 </td>
@@ -397,12 +400,224 @@
                     <h5 class="text-dark">APERTURA Bs</h5>
                 </td>
                 <td>
-                    {{-- Apertura de Caja --}}
+                    Apertura de Caja
                     {{number_format($ops),2}}
                 </td>
                 <td></td>
                 <td></td>
-            </tr>
+            {{-- </tr> --}}
+
+      
+            <tfoot>
+                <tr>
+                    <td colspan="6" style="background-color: rgb(224, 157, 80)">
+
+                    </td>
+                </tr>
+    {{-- INGRESOS TOTALES --}}
+                 <tr>
+                    <td colspan="3">
+                        <h5 class="text-dark text-right" style="font-size: 1rem!important;"><b> INGRESOS TOTALES </b></h5>
+                    </td>
+                    <td>
+                            {{ number_format($ingresosTotales,2) }}
+                            
+                    </td>
+                    <td colspan="2">
+                    </td>
+                 </tr>
+
+    {{-- DESCOMPOSICION DE LOS INGRESOS TOTALES --}}
+    {{-- OPERACIONES EN EFECTIVO --}}
+    <tr>
+        <td colspan="3">
+            <h5 class="text-dark text-right" style="font-size: 1rem!important;">Operaciones en efectivo</h5>
+        </td>
+        <td>
+                {{ number_format($ingresosTotalesCF,2) }}
+                
+        </td>
+        <td colspan="2">
+        </td>
+     </tr>
+
+     {{-- OPERACIONES NO EFECTIVAS TIGO/SISTEMAS/TELEFONO --}}
+
+     <tr>
+        <td colspan="3">
+            <h5 class="text-dark text-right" style="font-size: 1rem!important;"> Operaciones en TIGO/SISTEMA/TELEFONO </h5>
+        </td>
+        <td>
+                {{ number_format($ingresosTotalesNoCFNoBancos,2) }}
+                
+        </td>
+        <td colspan="2">
+        </td>
+     </tr>
+
+      {{-- OPERACIONES NO EFECTIVAS BANCOS --}}
+
+      <tr>
+        <td colspan="3">
+            <h5 class="text-dark text-right" style="font-size: 1rem!important;"> Operaciones en Bancos </h5>
+        </td>
+        <td>
+                {{ number_format($ingresosTotalesNoCFBancos,2) }}
+                
+        </td>
+        <td colspan="2">
+        </td>
+     </tr>
+       {{-- OPERACIONES DEDUCCION TIGOMONEY --}}
+      <tr>
+        <td colspan="3">
+            <h5 class="text-dark text-right" style="font-size: 1rem!important;"> Saldo en caja fisica de operaciones en Tigo Money </h5>
+        </td>
+        <td>
+                {{ number_format($total,2) }}
+                
+        </td>
+        <td colspan="2">
+        </td>
+     </tr>
+
+     {{-- FIN DESCOMPOSICION DE LOS INGRESOS TOTALES --}}
+
+     {{-- EGRESOS TOTALES --}}
+     <tr>
+        <td colspan="3">
+            <h5 class="text-dark text-right" style="font-size: 1rem!important;"><b> EGRESOS TOTALES </b></h5>
+        </td>
+        <td>
+            
+        </td>
+        <td>
+            {{ number_format($EgresosTotales,2) }}
+        </td>
+
+        <td>
+
+        </td>
+     </tr>
+
+     {{-- DESCOMPOSICION DE LOS INGRESOS TOTALES --}}
+
+     {{-- egresos en efectivo --}}
+     <tr>
+        <td colspan="3">
+            <h5 class="text-dark text-right" style="font-size: 1rem!important;"><b> Egresos en efectivo </b></h5>
+        </td>
+        <td>
+            
+        </td>
+        <td>
+            {{ number_format($EgresosTotalesCF,2) }}
+        </td>
+
+        <td>
+
+        </td>
+     </tr>
+
+     {{-- egresos por sistema --}}
+
+     <tr>
+        <td colspan="3">
+            <h5 class="text-dark text-right" style="font-size: 1rem!important;"><b> Egresos sistema/telefono </b></h5>
+        </td>
+        <td>
+            
+        </td>
+        <td>
+            {{ number_format($EgresosTotalesNoCFNoBancos,2) }}
+        </td>
+
+        <td>
+
+        </td>
+     </tr>
+
+     {{-- EgresosTotalesNoCFBancos --}}
+
+     <tr>
+        <td colspan="3">
+            <h5 class="text-dark text-right" style="font-size: 1rem!important;"><b> Egresos por bancos </b></h5>
+        </td>
+        <td>
+            
+        </td>
+        <td>
+            {{ number_format($EgresosTotalesNoCFBancos,2) }}
+        </td>
+
+        <td>
+
+        </td>
+     </tr>
+
+      {{-- FIN DESCOMPOSICION DE LOS INGRESOS TOTALES --}}
+
+    {{-- subtotalcaja --}}
+
+        <tr>
+            <td colspan="3">
+                <h5 class="text-dark text-right" style="font-size: 1rem!important;"><b> SUBTOTAL EN CAJA </b></h5>
+            </td>
+            <td>
+                    {{ number_format($subtotalcaja,2) }}
+                    
+            </td>
+            <td colspan="2">
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="3">
+                <h5 class="text-dark text-right" style="font-size: 1rem!important;"><b> SALDO EFECTIVO </b></h5>
+            </td>
+            <td>
+                    {{ number_format($operacionesefectivas,2) }}
+                    
+            </td>
+            <td colspan="2">
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="3">
+                <h5 class="text-dark text-right" style="font-size: 1rem!important;"><b> APERTURA </b></h5>
+            </td>
+            <td>
+                    {{ number_format($ops,2) }}
+                    
+            </td>
+            <td colspan="2">
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="3">
+                <h5 class="text-dark text-right" style="font-size: 1rem!important;"><b> APERTURA </b></h5>
+            </td>
+            <td>
+                    {{ number_format($ops,2) }}
+                    
+            </td>
+            <td colspan="2">
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <h5 class="text-dark text-right" style="font-size: 1rem!important;"><b> TOTAL </b></h5>
+            </td>
+            <td>
+                    {{ number_format($operacionesW,2) }}
+                    
+            </td>
+            <td colspan="2">
+            </td>
+        </tr>
+            </tfoot>
 
                 </tbody>
 
