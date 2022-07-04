@@ -19,7 +19,7 @@ use Livewire\Component;
 class ReporteMovimientoResumenController extends Component
 {
     public $idsucursal,$totalesIngresos,$totalesEgresos,$fromDate,$toDate,$cartera_id, $type, $cantidad, $comentario,$vertotales=0,$importetotalingresos,$importetotalegresos,
-    $operacionefectivoing,$noefectivo,$operacionefectivoeg,$noefectivoeg,$subtotalcaja,$utilidadtotal=5,$caja,$ops=0,$sucursal,$total;
+    $operacionefectivoing,$noefectivo,$operacionefectivoeg,$noefectivoeg,$subtotalcaja,$utilidadtotal=5,$caja,$ops=0,$sucursal,$total,$optotal,$sm;
     
     public function mount()
     {
@@ -27,6 +27,9 @@ class ReporteMovimientoResumenController extends Component
         $this->fromDate= Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->toDate=  Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->caja='TODAS';
+        $this->cartera_id=2;
+       
+  
     }
     public function render()
     {
@@ -51,13 +54,21 @@ class ReporteMovimientoResumenController extends Component
         $carterasSucursal = Cartera::join('cajas as c', 'carteras.caja_id', 'c.id')
             ->join('sucursals as s', 's.id', 'c.sucursal_id')
             ->where('s.id', $SucursalUsuario->id)
-            ->select('carteras.id', 'carteras.nombre as carteraNombre', 'c.nombre as cajaNombre', 'carteras.tipo as tipo', DB::raw('0 as monto'))->get();
+            ->select('carteras.id', 'carteras.nombre as carteraNombre', 'c.nombre as cajaNombre','c.monto_base','carteras.tipo as tipo', DB::raw('0 as monto'))->get();
         
-
-        $this->viewTotales();
-
-        $this->allop(Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',$this->sucursal,$this->caja);
-
+            
+            
+            
+            
+            $this->viewTotales();
+            
+            $this->allop(Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',$this->sucursal,$this->caja);
+            $this->operacionrecaudo();
+            
+        $this->sm= Caja::find($this->cartera_id);
+      
+        $this->cantidad = $this->sm->monto_base - $this->optotal;
+      
         return view('livewire.reportemovimientoresumen.reportemovimientoresumen', [
             'carterasSucursal' => $carterasSucursal,
             'sucursales'=>Sucursal::all(),
@@ -239,11 +250,6 @@ class ReporteMovimientoResumenController extends Component
 //operacion auxiliar para deducion de tigo money
 
 
-
-
-
-
-
          }
          else
          {
@@ -286,9 +292,6 @@ class ReporteMovimientoResumenController extends Component
                $var->utilidadventa = $this->utilidadventa($var->idventa);
     
             }
-    
-    
-    
     
             //Totales Ingresos Servicios
             $this->totalesIngresosS = Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')
@@ -446,10 +449,7 @@ class ReporteMovimientoResumenController extends Component
                $var->utilidadventa = $this->utilidadventa($var->idventa);
     
             }
-    
-    
-    
-    
+  
             //Totales Ingresos Servicios
             $this->totalesIngresosS = Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')
             ->join('carteras as c', 'c.id', 'crms.cartera_id')
@@ -771,6 +771,7 @@ class ReporteMovimientoResumenController extends Component
     }
     public function viewDetailsR()
     {
+       
         $this->emit('show-modalR', 'open modal');
     }
     public function resetUI()
@@ -1058,5 +1059,41 @@ class ReporteMovimientoResumenController extends Component
         } else {
             $this->total = $this->telefono + $this->sistema;
         }
+    }
+
+   
+    public function operacionrecaudo(){
+        
+       
+        $carteras = Cartera::join('cajas as c', 'carteras.caja_id', 'c.id')
+            ->join('sucursals as s', 's.id', 'c.sucursal_id')
+            ->where('s.id', $this->cartera_id)
+            ->select('carteras.id', 'carteras.nombre as carteraNombre', 'c.nombre as cajaNombre', 'carteras.tipo as tipo', DB::raw('0 as monto'))->get();
+    
+            foreach ($carteras as $c) {
+            /* SUMAR TODO LOS INGRESOS DE LA CARTERA */
+            $INGRESOS = Cartera::join('cartera_movs as cm', 'carteras.id', 'cm.cartera_id')
+                ->join('movimientos as m', 'm.id', 'cm.movimiento_id')
+                ->where('cm.type','INGRESO')
+                ->where('m.status', 'ACTIVO')
+                ->where('carteras.tipo','!=','Banco')
+                ->where('carteras.tipo','!=','TigoStreaming')
+                ->whereBetween('m.created_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
+                ->where('carteras.id', $c->id)->sum('m.import');
+            /* SUMAR TODO LOS EGRESOS DE LA CARTERA */
+            $EGRESOS = Cartera::join('cartera_movs as cm', 'carteras.id', 'cm.cartera_id')
+                ->join('movimientos as m', 'm.id', 'cm.movimiento_id')
+                ->where('cm.type', 'EGRESO')
+                ->where('m.status','ACTIVO')
+                ->where('carteras.tipo','!=','Banco')
+                ->where('carteras.tipo','!=','TigoStreaming')
+                ->whereBetween('m.created_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
+                ->where('carteras.id', $c->id)->sum('m.import');
+            /* REALIZAR CALCULO DE INGRESOS - EGRESOS */
+            $c->monto = $INGRESOS - $EGRESOS;
+        }
+            $this->optotal = $carteras->sum('monto');
+        
+       
     }
 }

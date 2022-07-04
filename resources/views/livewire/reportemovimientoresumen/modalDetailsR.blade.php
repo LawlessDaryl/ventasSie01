@@ -21,7 +21,8 @@
                                 @foreach ($carterasSucursal as $item)
                                 @if($item->tipo=="CajaFisica")
                                     <option value="{{ $item->id }}">{{ $item->cajaNombre }},
-                                        {{ $item->carteraNombre }}</option>
+                                        {{ $item->carteraNombre }}
+                                    </option>
                                 @endif
                                 
                                 @endforeach
@@ -36,7 +37,7 @@
 
                     <div class="col-sm-12 col-md-3">
                         <div class="form-group">
-                            <h6>Cantidad</h6>
+                            <h6>Monto a recaudar</h6>
                             <input type="number" wire:model.lazy="cantidad" class="form-control">
                             @error('cantidad')
                                 <span class="text-danger er">{{ $message }}</span>

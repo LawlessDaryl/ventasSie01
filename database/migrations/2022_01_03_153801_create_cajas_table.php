@@ -19,6 +19,7 @@ class CreateCajasTable extends Migration
             $table->enum('estado',['Abierto','Cerrado','Inactivo'])->default('Cerrado');
             $table->unsignedBigInteger('sucursal_id');
             $table->foreign('sucursal_id')->references('id')->on('sucursals');
+            $table->integer('monto_base');
             $table->timestamps();
         });
     }

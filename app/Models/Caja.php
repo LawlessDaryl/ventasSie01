@@ -9,7 +9,7 @@ class Caja extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nombre', 'estado', 'sucursal_id'];
+    protected $fillable = ['nombre', 'estado', 'sucursal_id','monto_base'];
 
     public function carteras()
     {
