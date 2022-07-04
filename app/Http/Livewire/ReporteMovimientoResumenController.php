@@ -1069,6 +1069,24 @@ class ReporteMovimientoResumenController extends Component
         session(['totalEgresosV' => $totalesEgresosV]);
         session(['totalEgresosIE' => $totalesEgresosIE]);
 
+
+
+        
+        session(['ingresosTotales' => $this->ingresosTotales]);
+        session(['ingresosTotalesCF' => $this->ingresosTotalesCF]);
+        session(['ingresosTotalesNoCFNoBancos' => $this->ingresosTotalesNoCFNoBancos]);
+        session(['ingresosTotalesNoCFBancos' => $this->ingresosTotalesNoCFBancos]);
+        session(['total' => $this->total]);
+        session(['EgresosTotales' => $this->EgresosTotales]);
+        session(['EgresosTotalesCF' => $this->EgresosTotalesCF]);
+        session(['EgresosTotalesNoCFNoBancos' => $this->EgresosTotalesNoCFNoBancos]);
+        session(['EgresosTotalesNoCFBancos' => $this->EgresosTotalesNoCFBancos]);
+        session(['subtotalcaja' => $this->subtotalcaja]);
+        session(['operacionesefectivas' => $this->operacionesefectivas]);
+        session(['ops' => $this->ops]);
+        session(['operacionesW' => $this->operacionesW]);
+
+
         //Redireccionando para crear el comprobante con sus respectvas variables
         return redirect::to('report/pdfmovdiaresumen');
     }
