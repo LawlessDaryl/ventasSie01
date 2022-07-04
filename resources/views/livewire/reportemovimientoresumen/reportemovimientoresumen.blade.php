@@ -105,7 +105,11 @@
                         
                         <th class="table-th text-withe text-center" style="font-size: 100%">INGRESO</th>
                         <th class="table-th text-withe text-center" style="font-size: 100%">EGRESO</th>
-                        <th class="table-th text-withe text-center" style="font-size: 100%">UTILIDAD</th>
+                        <th class="table-th text-withe text-center" style="font-size: 100%">
+                            @if(@Auth::user()->hasPermissionTo('VentasMovDiaSucursalUtilidad'))
+                            UTILIDAD
+                            @endif
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -129,7 +133,9 @@
                                 
                             </td>
                             <td>
+                                @if(@Auth::user()->hasPermissionTo('VentasMovDiaSucursalUtilidad'))
                                 {{ $p->utilidadventa }}
+                                @endif
                             </td>
 
                             
@@ -216,7 +222,9 @@
                                 
                             </td>
                             <td>
+                                @if(@Auth::user()->hasPermissionTo('VentasMovDiaSucursalUtilidad'))
                                 {{ $p->utilidadservicios }}
+                                @endif
                             </td>
                             
                         </tr>

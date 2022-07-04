@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Caja;
 use App\Models\Cartera;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade as PDF;
@@ -40,6 +41,25 @@ class ExportMovDiaResController extends Controller
         $ops = session('ops');
         $operacionesW = session('operacionesW');
 
+        $caracteristicas = session('caracteristicas');
+
+        $sucursal = $caracteristicas[0];
+        $caja = $caracteristicas[1];
+        $fromDate = $caracteristicas[2];
+        $toDate = $caracteristicas[3];
+
+        
+        if($sucursal != 'TODAS')
+        {
+            //$sucursal = Sucursal::find($sucursal)->name." - ".Sucursal::find($sucursal)->adress;
+            $sucursal = Sucursal::find($sucursal)->name;
+        }
+        
+        if($caja != 'TODAS')
+        {
+            $caja = Caja::find($caja)->nombre;
+        }
+
         $pdf = PDF::loadView('livewire.pdf.reportemovdiaresumen',
         compact('totalesIngresosV','totalesIngresosS','totalesIngresosIE','totalesEgresosV','totalesEgresosIE',
                 'ingresosTotales',
@@ -54,26 +74,16 @@ class ExportMovDiaResController extends Controller
                 'subtotalcaja',
                 'operacionesefectivas',
                 'ops',
-                'operacionesW'));
+                'operacionesW',
+                'sucursal',
+                'caja',
+                'fromDate',
+                'toDate',
+            
+            ));
 
 
 
         return $pdf->stream('Reporte_Movimiento_Diario_Resumen.pdf'); 
-        // $totalesIngresos = session('totalesIngresos');
-        // $totalesEgresos = session('totalesEgresos');
-
-        // $values = session('variablesmovidia');
-       
-        
-
-        // $importetotalingresos = $values[0];
-        // $operacionefectivoing = $values[1];
-        // $noefectivoing = $values[2];
-        // $importetotalegresos = $values[3];
-        // $subtotalcaja = $values[4];
-        // $utilidadtotal = $values[5];
-        // $noefectivoing = $values[6];
-        // $noefectivoeg = $values[7];
-
     }
 }

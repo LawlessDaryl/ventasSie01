@@ -17,17 +17,17 @@
     <style>
         .estilostable {
         width: 100%;
-        font-size: 10px;
+        font-size: 12px;
         border-spacing: 0px;
         color: black;
         }
         .estilostable .tablehead{
             background-color: #dbd4d4;
-            font-size: 8px;
+            font-size: 10px;
         }
         .estilostable2 {
         width: 100%;
-        font-size: 7px;
+        font-size: 9px;
         border-spacing: 0px;
         color: black;
         }
@@ -46,25 +46,56 @@
             border: 0.5px solid rgb(204, 204, 204);
             width: 53px;
             text-align: center;
+            font-size: 8px;
         }
         .filarownombre{
             border: 0.5px solid rgb(204, 204, 204);
             width: 150px;
         }
     
-    
+        .filarowx{
+            border: 0.5px solid rgb(255, 255, 255);
+            width: 100%;
+            text-align: center;
+        }
     
     
         </style>
 </head>
 <body class="row">
+    <table class="filarowx">
+        <tbody>
+            <tr class="filarowx">
+                <td rowspan="2">
+                    <img src="assets/img/fav05.png" width="50" height="50" alt="navbar brand">
+                </td>
+                <td class="text-center">
+                    <h4><b>REPORTE DE MOVIMIENTO DIARIO</b></h4>
+                </td>
+                <td rowspan="2">
+                    <img src="assets/img/fav05.png" width="50" height="50" alt="navbar brand">
+                </td>
+            </tr>
+            <tr>
+                <td class="text-center">
+                    Soluciones Informáticas Emanuel
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+    <table class="estilostable">
+        <tbody>
+            <tr>
+                <td colspan="2"><b>Sucursal:</b> {{$sucursal}}</td>
+                <td><b>Caja:</b> {{$caja}}</td>
+                <td><b>Fecha Inicial:</b> {{\Carbon\Carbon::parse($fromDate)->format('d-m-Y')}}</td>
+                <td><b>Fecha Final:</b> {{\Carbon\Carbon::parse($toDate)->format('d-m-Y')}}</td>
+            </tr>
+        </tbody>
+    </table>
     
-    <center> <b>REPORTE DE MOVIMIENTO DIARIO</b> </center>
-    <center>Soluciones Informáticas Emanuel</center>
-
-    
-    
-
+<br>
 
     <div class="">
         <table class="estilostable">
@@ -74,17 +105,21 @@
                     <th class="text-center">DETALLE</th>
                     <th class="text-right">INGRESO(Bs)</th>
                     <th class="text-right">EGRESO(Bs)</th>
-                    <th class="text-right">UTILIDAD(Bs)</th>
+                    <th class="text-right">
+                        @if(@Auth::user()->hasPermissionTo('VentasMovDiaSucursalUtilidad'))
+                        UTILIDAD(Bs)
+                        @endif
+                    </th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($totalesIngresosV as $row)
-                    <tr>
+                    <tr style="background-color: rgb(235, 235, 235)">
                         <td class="text-center">
-                            {{ \Carbon\Carbon::parse($row['movcreacion'])->format('d/m/Y H:i a') }}
+                            {{ \Carbon\Carbon::parse($row['movcreacion'])->format('d/m/Y H:i') }}
                         </td>
                         <td class="text-center">
-                            {{ $row['tipoDeMovimiento'] }} {{ $row['ctipo'] =='CajaFisica'?'Efectivo':$row['ctipo'] }} ({{ $row['nombrecartera'] }})
+                            {{$row['idventa']}} {{ $row['tipoDeMovimiento'] }} {{ $row['ctipo'] =='CajaFisica'?'Efectivo':$row['ctipo'] }} ({{ $row['nombrecartera'] }})
                         </td>
                         <td class="text-right">
                             {{ $row['importe'] }}
@@ -93,7 +128,9 @@
                             
                         </td>
                         <td class="text-right">
+                            @if(@Auth::user()->hasPermissionTo('VentasMovDiaSucursalUtilidad'))
                             {{ number_format($row['utilidadventa'],2) }}
+                            @endif
                         </td>
                         <td>
                             
@@ -113,7 +150,7 @@
                                             Precio Original
                                         </td>
                                         <td class="filarow">
-                                            Descuento
+                                            Desc/Rec
                                         </td>
                                         <td class="filarowpp">
                                             Precio Venta
@@ -132,22 +169,26 @@
                                         <td class="filarownombre">
                                             {{-- {{rtrim(mb_strimwidth($item['nombre'], 2, 2, '...', 'UTF-8'))}} --}}
                                             {{-- {{$item['nombre']}} --}}
-                                            {{substr($item['nombre'], 0, 40)}}
+                                            {{substr($item['nombre'], 0, 25)}}
                                         </td>
                                         <td class="filarow">
-                                            {{$item['precioventa']}}
+                                            {{number_format($item['po'],2)}}
                                         </td>
                                         <td class="filarow">
-                                            NN
+                                            @if($item['po'] - $item['pv'] == 0)
+                                            {{$item['po'] - $item['pv']}}
+                                            @else
+                                            {{($item['po'] - $item['pv']) * -1}}
+                                            @endif
                                         </td>
                                         <td class="filarow">
-                                            {{$item['pv']}}
+                                            {{number_format($item['pv'],2)}}
                                         </td>
                                         <td class="filarow">
                                             {{$item['cant']}}
                                         </td>
                                         <td class="filarow">
-                                            NN
+                                            {{number_format($item['pv'] * $item['cant'],2)}}
                                         </td>
                                     </tr>
                                     @endforeach
@@ -163,27 +204,29 @@
                 @foreach ($totalesIngresosS as $p)
                 <tr>
                     <td class="text-center">
-                        {{ \Carbon\Carbon::parse($p['movcreacion'])->format('d/m/Y H:i a') }}
+                        {{ \Carbon\Carbon::parse($p['movcreacion'])->format('d/m/Y H:i') }}
                     </td>
                 
                     <td class="text-center">
-                        {{ $p['tipoDeMovimiento'] }},{{ $p['ctipo'] =='CajaFisica'?'Efectivo':$p['ctipo'] }},({{ $p['nombrecartera'] }})
+                        {{ $p['idordenservicio'] }} {{ $p['tipoDeMovimiento'] }} {{ $p['ctipo'] =='CajaFisica'?'Efectivo':$p['ctipo'] }} ({{ $p['nombrecartera'] }})
                     </td>
                     <td class="text-right">
-                        {{ $p['importe'] }}
+                        {{ number_format($p['importe'],2) }}
                     </td>
                     <td>
                         
                     </td>
                     <td class="text-right">
-                        {{ $p['utilidadservicios'] }}
+                        @if(@Auth::user()->hasPermissionTo('VentasMovDiaSucursalUtilidad'))
+                        {{ number_format($p['utilidadservicios'],2) }}
+                        @endif
                     </td>
                 </tr>
                 @endforeach
                 @foreach ($totalesIngresosIE as $ie)
                 <tr>
                     <td class="text-center">
-                        {{ \Carbon\Carbon::parse($ie['movcreacion'])->format('d/m/Y H:i a') }}
+                        {{ \Carbon\Carbon::parse($ie['movcreacion'])->format('d/m/Y H:i') }}
                     </td>
                   
                     <td class="text-center">
@@ -204,7 +247,7 @@
             @foreach ($totalesEgresosV as $px)
                 <tr>
                     <td class="text-center">
-                        {{ \Carbon\Carbon::parse($px['movcreacion'])->format('d/m/Y H:i a') }}
+                        {{ \Carbon\Carbon::parse($px['movcreacion'])->format('d/m/Y H:i') }}
                     </td>
                   
                     <td class="text-center">
@@ -226,7 +269,7 @@
                 @foreach ($totalesEgresosIE as $st)
                 <tr>
                     <td class="text-center">
-                        {{ \Carbon\Carbon::parse($st['movcreacion'])->format('d/m/Y H:i a') }}
+                        {{ \Carbon\Carbon::parse($st['movcreacion'])->format('d/m/Y H:i') }}
                     </td>
                 
                     <td class="text-center">
@@ -243,6 +286,24 @@
                     </td>
                 </tr>
                 @endforeach
+            </tbody>
+            
+        </table>
+
+        <br>
+        <br>
+
+        <table class="estilostable">
+            <thead>
+                <tr class="tablehead">
+                    <th class="text-center"></th>
+                    <th class="text-center"></th>
+                    <th class="text-right"></th>
+                    <th class="text-right"></th>
+                    <th class="text-right"></th>
+                </tr>
+            </thead>
+            <tbody>
             </tbody>
             <tfoot class="estilostable">
                 <tr>
@@ -350,7 +411,7 @@
                     </td>
                 </tr>
 
-                {{-- egresos por sistema --}}
+                {{-- Egresos por sistema --}}
 
                 <tr>
                     <td class="text-right" colspan="3">
@@ -438,7 +499,48 @@
                     </tr>
             </tfoot>
         </table>
+
     </div>
+
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+
+    <table class="filarowx">
+        <tbody>
+            <tr class="filarowx">
+                <td>
+                    
+                </td>
+                <td class="text-center">
+                    <hr style="height: 0.5px;
+                    width: 150px;
+                    background-color: rgb(0, 0, 0);">
+                    Cajero
+                </td>
+                <td>
+                    
+                </td>
+                <td class="text-center">
+                    <hr style="height: 0.5px;
+                    width: 150px;
+                    background-color: rgb(0, 0, 0);">
+                    Revisado por
+                </td>
+                <td>
+                    
+                </td>
+            </tr>
+            {{-- <tr>
+                <td class="text-center">
+                    Soluciones Informáticas Emanuel
+                </td>
+            </tr> --}}
+        </tbody>
+    </table>
 
 
 </body>

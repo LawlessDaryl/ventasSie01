@@ -132,7 +132,10 @@ class ReporteMovimientoResumenController extends Component
             ->join('carteras as c', 'c.id', 'crms.cartera_id')
             ->join('cajas as ca', 'ca.id', 'c.caja_id')
             ->join('users as u', 'u.id', 'movimientos.user_id')
+            ->join('mov_services as ms', 'ms.movimiento_id', 'movimientos.id')
+            ->join('services as ser', 'ser.id', 'ms.service_id')
             ->select(
+                'ser.order_service_id as idordenservicio',
                 'movimientos.import as importe',
                 'crms.type as carteramovtype',
                 'crms.tipoDeMovimiento',
@@ -299,7 +302,10 @@ class ReporteMovimientoResumenController extends Component
             ->join('carteras as c', 'c.id', 'crms.cartera_id')
             ->join('cajas as ca', 'ca.id', 'c.caja_id')
             ->join('users as u', 'u.id', 'movimientos.user_id')
+            ->join('mov_services as ms', 'ms.movimiento_id', 'movimientos.id')
+            ->join('services as ser', 'ser.id', 'ms.service_id')
             ->select(
+                'ser.order_service_id as idordenservicio',
                 'movimientos.import as importe',
                 'crms.type as carteramovtype',
                 'crms.tipoDeMovimiento',
@@ -569,12 +575,13 @@ class ReporteMovimientoResumenController extends Component
          }
  
      }
+     //Lista los detalles de una venta
      public function listardetalleventas($idventa)
      {
          $listadetalles = SaleDetail::join('sales as s', 's.id', 'sale_details.sale_id')
          ->join("products as p", "p.id", "sale_details.product_id")
          ->select('p.nombre as nombre','sale_details.price as pv',
-         'p.precio_venta as precioventa','sale_details.quantity as cant')
+         'p.precio_venta as po','sale_details.quantity as cant')
          ->where('sale_details.sale_id', $idventa)
          ->orderBy('sale_details.id', 'asc')
          ->get();
@@ -1122,6 +1129,9 @@ class ReporteMovimientoResumenController extends Component
         session(['ops' => $this->ops]);
         session(['operacionesW' => $this->operacionesW]);
 
+        //Sucursal, Caja, Fecha de Inicio y Fecha de Fin
+        $caracteristicas = array($this->sucursal, $this->caja, $this->fromDate, $this->toDate);
+        session(['caracteristicas' => $caracteristicas]);
 
         //Redireccionando para crear el comprobante con sus respectvas variables
         return redirect::to('report/pdfmovdiaresumen');
