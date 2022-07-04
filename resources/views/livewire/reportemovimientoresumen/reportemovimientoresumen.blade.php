@@ -595,17 +595,7 @@
             </td>
         </tr>
 
-        <tr>
-            <td colspan="3">
-                <h5 class="text-dark text-right" style="font-size: 1rem!important;"><b> APERTURA </b></h5>
-            </td>
-            <td>
-                    {{ number_format($ops,2) }}
-                    
-            </td>
-            <td colspan="2">
-            </td>
-        </tr>
+     
         <tr>
             <td colspan="3">
                 <h5 class="text-dark text-right" style="font-size: 1rem!important;"><b> TOTAL </b></h5>

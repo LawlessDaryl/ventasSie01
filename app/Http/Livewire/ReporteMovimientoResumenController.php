@@ -661,7 +661,7 @@ class ReporteMovimientoResumenController extends Component
 
         //Ingresos - Egresos
         $this->subtotalcaja= $this->ingresosTotales - $this->EgresosTotales;
-        $this->operacionesefectivas= $this->ingresosTotalesCF - $this->EgresosTotalesCF;
+        $this->operacionesefectivas= $this->ingresosTotalesCF + $this->total-$this->EgresosTotalesCF;
         $this->operacionesW= $this->operacionesefectivas + $this->ops;
 
      }
