@@ -15,6 +15,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+use Illuminate\Support\Facades\Redirect;
 
 class ReporteMovimientoResumenController extends Component
 {
@@ -236,7 +237,7 @@ class ReporteMovimientoResumenController extends Component
            $this->trsbydatecaja();
            $this->operaciones();
 
-//operacion auxiliar para deducion de tigo money
+            //operacion auxiliar para deducion de tigo money
 
 
 
@@ -572,8 +573,8 @@ class ReporteMovimientoResumenController extends Component
      {
          $listadetalles = SaleDetail::join('sales as s', 's.id', 'sale_details.sale_id')
          ->join("products as p", "p.id", "sale_details.product_id")
-         ->select('p.id as idproducto','p.image as image','p.nombre as nombre','p.precio_venta as pv',
-         'sale_details.price as pv','sale_details.quantity as cant')
+         ->select('p.nombre as nombre','sale_details.price as pv',
+         'p.precio_venta as precioventa','sale_details.quantity as cant')
          ->where('sale_details.sale_id', $idventa)
          ->orderBy('sale_details.id', 'asc')
          ->get();
@@ -1058,5 +1059,17 @@ class ReporteMovimientoResumenController extends Component
         } else {
             $this->total = $this->telefono + $this->sistema;
         }
+    }
+
+    public function generarpdf($totalesIngresosV, $totalesIngresosS, $totalesIngresosIE, $totalesEgresosV, $totalesEgresosIE)
+    {
+        session(['totalIngresosV' => $totalesIngresosV]);
+        session(['totalIngresosS' => $totalesIngresosS]);
+        session(['totalIngresosIE' => $totalesIngresosIE]);
+        session(['totalEgresosV' => $totalesEgresosV]);
+        session(['totalEgresosIE' => $totalesEgresosIE]);
+
+        //Redireccionando para crear el comprobante con sus respectvas variables
+        return redirect::to('report/pdfmovdiaresumen');
     }
 }

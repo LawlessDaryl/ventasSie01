@@ -9,7 +9,7 @@
       border: 8px solid;
       border: 1px solid white;
       border-style: hidden;
-     
+     padding: 0%;
     }
     
     .thp, .tdp {
@@ -88,7 +88,7 @@
                     Generar Recaudo
                 </a>
                
-                <a wire:click.prevent="crearpdf()" class="btn btn-warning">
+                <a wire:click.prevent="generarpdf({{$totalesIngresosV}}, {{$totalesIngresosS}}, {{$totalesIngresosIE}}, {{$totalesEgresosV}}, {{$totalesEgresosIE}})" class="btn btn-warning">
                     Generar PDF
                 </a>
          
@@ -137,6 +137,38 @@
                         <tr>
                             <td></td>
                             <td></td>
+
+                            {{-- <td>
+
+
+                                <table class="tablep p-0 m-0">
+                                    <thead class="">
+                                        <tr>
+                                            <th class="">Nombre</th>
+                                            <th class="">Precio Original</th>
+                                            <th class="">Descuento o Recargo</th>
+                                            <th class="">Precio Venta</th>
+                                            <th class="">Cantidad</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                            </td> --}}
+
+
+
+
+
+
                             <td class="m-0 pl-0">
                                 <table class="tablep p-0 m-0" style="padding: 0">
                                     <th class="thp" >Nombre Producto</th>
@@ -157,6 +189,9 @@
                                   </table>
 
                             </td>
+
+
+
                             <td></td>
                             <td></td>
                             <td></td>
