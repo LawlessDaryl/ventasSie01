@@ -1062,9 +1062,9 @@ class ReporteMovimientoResumenController extends Component
         }
     }
 
-<<<<<<< HEAD
    
-    public function operacionrecaudo(){
+    public function operacionrecaudo()
+    {
         
        
         $carteras = Cartera::join('cajas as c', 'carteras.caja_id', 'c.id')
@@ -1095,9 +1095,8 @@ class ReporteMovimientoResumenController extends Component
             $c->monto = $INGRESOS - $EGRESOS;
         }
             $this->optotal = $carteras->sum('monto');
-        
+    }  
        
-=======
     public function generarpdf($totalesIngresosV, $totalesIngresosS, $totalesIngresosIE, $totalesEgresosV, $totalesEgresosIE)
     {
         session(['totalIngresosV' => $totalesIngresosV]);
@@ -1126,6 +1125,5 @@ class ReporteMovimientoResumenController extends Component
 
         //Redireccionando para crear el comprobante con sus respectvas variables
         return redirect::to('report/pdfmovdiaresumen');
->>>>>>> 2d9a99344d22da80b0b9c22a5e8c9695ef29f90f
     }
 }
