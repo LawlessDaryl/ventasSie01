@@ -657,7 +657,7 @@
 
             </table>
         </div>
-        @include('livewire.reporte_movimientos.modalDetailsR')
+        @include('livewire.reportemovimientoresumen.modalDetailsR')
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {

@@ -28,7 +28,9 @@ class ReporteMovimientoResumenController extends Component
         $this->fromDate= Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->toDate=  Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->caja='TODAS';
-        $this->cartera_id=2;
+   
+       
+       
        
   
     }
@@ -55,7 +57,7 @@ class ReporteMovimientoResumenController extends Component
         $carterasSucursal = Cartera::join('cajas as c', 'carteras.caja_id', 'c.id')
             ->join('sucursals as s', 's.id', 'c.sucursal_id')
             ->where('s.id', $SucursalUsuario->id)
-            ->select('carteras.id', 'carteras.nombre as carteraNombre', 'c.nombre as cajaNombre','c.monto_base','carteras.tipo as tipo', DB::raw('0 as monto'))->get();
+            ->select('carteras.id', 'carteras.nombre as carteraNombre', 'c.nombre as cajaNombre','c.id as cid','c.monto_base','carteras.tipo as tipo', DB::raw('0 as monto'))->get();
         
             
             
@@ -64,11 +66,15 @@ class ReporteMovimientoResumenController extends Component
             $this->viewTotales();
             
             $this->allop(Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',$this->sucursal,$this->caja);
-            $this->operacionrecaudo();
+         
+            if ($this->cartera_id != null) {
+                //dd($this->cartera_id);
+                $this->sm = Caja::find($this->cartera_id);
+                $this->operacionrecaudo();
+                $this->cantidad = $this->sm->monto_base - $this->optotal;
+            }
             
-        $this->sm= Caja::find($this->cartera_id);
       
-        $this->cantidad = $this->sm->monto_base - $this->optotal;
       
         return view('livewire.reportemovimientoresumen.reportemovimientoresumen', [
             'carterasSucursal' => $carterasSucursal,

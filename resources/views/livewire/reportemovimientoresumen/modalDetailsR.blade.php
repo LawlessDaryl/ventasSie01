@@ -3,7 +3,7 @@
         <div class="modal-content">
             <div class="modal-header bg-dark">
                 <h5 class="modal-title text-white">
-                    <b>GENERAR RECAUDO</b>
+                    <b>GENERAR RECAUDOs</b>
                 </h5>
                 <button class="close" data-dismiss="modal" type="button" aria-label="Close">
                     <span class="text-white">&times;</span>
@@ -17,10 +17,10 @@
                         <div class="form-group">
                             <h6>Cartera</h6>
                             <select wire:model='cartera_id' class="form-control">
-                                <option value="Elegir" selected disabled>Elegir</option>
+                                <option value=null selected>Elegir</option>
                                 @foreach ($carterasSucursal as $item)
                                 @if($item->tipo=="CajaFisica")
-                                    <option value="{{ $item->id }}">{{ $item->cajaNombre }},
+                                    <option value="{{ $item->cid }}">{{ $item->cajaNombre }},
                                         {{ $item->carteraNombre }}
                                     </option>
                                 @endif
