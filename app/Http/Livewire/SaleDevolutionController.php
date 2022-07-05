@@ -114,7 +114,7 @@ class SaleDevolutionController extends Component
         {
             $devolucionesusuario = DevolutionSale::join("products as p", "p.id", "devolution_sales.product_id")
             ->join("users as u", "u.id", "devolution_sales.user_id")
-            ->select('devolution_sales.id as id', 'p.image as image', 'p.nombre as nombre', 'devolution_sales.monto_dev as monto',
+            ->select('devolution_sales.id as iddevolucion', 'p.image as image', 'p.nombre as nombre', 'devolution_sales.monto_dev as monto',
             'devolution_sales.created_at as fechadevolucion','u.name as nombreusuario', 'devolution_sales.estado as estado',
             'devolution_sales.tipo_dev as tipo','devolution_sales.observations as observacion')
             ->where('nombre', 'like', '%' . $this->search . '%')
@@ -123,7 +123,7 @@ class SaleDevolutionController extends Component
 
             $usuarioespecifico = DevolutionSale::join("products as p", "p.id", "devolution_sales.product_id")
             ->join("users as u", "u.id", "devolution_sales.user_id")
-            ->select('devolution_sales.id as id', 'p.image as image', 'p.nombre as nombre', 'devolution_sales.monto_dev as monto',
+            ->select('devolution_sales.id as iddevolucion', 'p.image as image', 'p.nombre as nombre', 'devolution_sales.monto_dev as monto',
             'devolution_sales.created_at as fechadevolucion','u.name as nombreusuario','devolution_sales.estado as estado',
             'devolution_sales.tipo_dev as tipo','devolution_sales.observations as observacion')
             ->where('nombre', 'like', '%' . $this->search . '%')
@@ -136,7 +136,7 @@ class SaleDevolutionController extends Component
         {
             $devolucionesusuario = DevolutionSale::join("products as p", "p.id", "devolution_sales.product_id")
             ->join("users as u", "u.id", "devolution_sales.user_id")
-            ->select('devolution_sales.id as id', 'p.image as image', 'p.nombre as nombre', 'devolution_sales.monto_dev as monto',
+            ->select('devolution_sales.id as iddevolucion', 'p.image as image', 'p.nombre as nombre', 'devolution_sales.monto_dev as monto',
             'devolution_sales.created_at as fechadevolucion','u.name as nombreusuario', 'devolution_sales.estado as estado',
             'devolution_sales.tipo_dev as tipo','devolution_sales.observations as observacion')
             ->orderBy('devolution_sales.created_at', 'desc')
@@ -144,7 +144,7 @@ class SaleDevolutionController extends Component
 
             $usuarioespecifico = DevolutionSale::join("products as p", "p.id", "devolution_sales.product_id")
             ->join("users as u", "u.id", "devolution_sales.user_id")
-            ->select('devolution_sales.id as id', 'p.image as image', 'p.nombre as nombre', 'devolution_sales.monto_dev as monto',
+            ->select('devolution_sales.id as iddevolucion', 'p.image as image', 'p.nombre as nombre', 'devolution_sales.monto_dev as monto',
             'devolution_sales.created_at as fechadevolucion','u.name as nombreusuario','devolution_sales.estado as estado',
             'devolution_sales.tipo_dev as tipo','devolution_sales.observations as observacion')
             ->where('u.id', $this->usuarioseleccionado)
@@ -278,56 +278,32 @@ class SaleDevolutionController extends Component
         ->select('cajas.id as id')
         ->get()->first();
         
-        if($this->bs > 0)
-        {
-            // Creando Movimiento
-            $Movimiento = Movimiento::create([
-                'type' => "DEVOLUCIONVENTA",
-                'import' => $this->bs,
-                'user_id' => Auth()->user()->id,
-            ]);
-            //Creando un registro en la tabla devolución
-            DevolutionSale::create([
-            'tipo_dev' => "MONETARIO",
-            'monto_dev' => $this->bs,
-            'observations' => $this->observaciondevolucion,
-            'product_id' => $this->identrante,
+        $Movimiento = Movimiento::create([
+            'type' => "DEVOLUCIONVENTA",
+            'import' => $this->bs,
             'user_id' => Auth()->user()->id,
-            'movimiento_id' => $Movimiento->id
-            ]);
-            //Tipo de Pago
-            $cartera = Cartera::where('tipo', 'cajafisica')
-                        ->where('caja_id', $cajausuario->id)
-                        ->get()->first();
-            // Creando Cartera Movimiento
-            CarteraMov::create([
-                'type' => "EGRESO",
-                'tipoDeMovimiento' => "VENTA",
-                'comentario' => "Devolución Venta",
-                'cartera_id' => $cartera->id,
-                'movimiento_id' => $Movimiento->id,
-            ]);
-        }
-        else
-        {
-            // Creando Movimiento
-            $Movimiento = Movimiento::create([
-                'type' => "DEVOLUCIONVENTA",
-                'status' => "INACTIVO",
-                'import' => $this->bs,
-                'user_id' => Auth()->user()->id,
-            ]);
-
-            //Creando un registro en la tabla devolución
-            DevolutionSale::create([
-                'tipo_dev' => "MONETARIO",
-                'monto_dev' => $this->bs,
-                'observations' => $this->observaciondevolucion,
-                'product_id' => $this->identrante,
-                'user_id' => Auth()->user()->id,
-                'movimiento_id' => $Movimiento->id
-                ]);
-        }
+        ]);
+        //Creando un registro en la tabla devolución
+        DevolutionSale::create([
+        'tipo_dev' => "MONETARIO",
+        'monto_dev' => $this->bs,
+        'observations' => $this->observaciondevolucion,
+        'product_id' => $this->identrante,
+        'user_id' => Auth()->user()->id,
+        'movimiento_id' => $Movimiento->id
+        ]);
+        //Tipo de Pago
+        $cartera = Cartera::where('tipo', 'cajafisica')
+                    ->where('caja_id', $cajausuario->id)
+                    ->get()->first();
+        // Creando Cartera Movimiento
+        CarteraMov::create([
+            'type' => "EGRESO",
+            'tipoDeMovimiento' => "VENTA",
+            'comentario' => "Devolución Venta",
+            'cartera_id' => $cartera->id,
+            'movimiento_id' => $Movimiento->id,
+        ]);
 
 
         //Registrando el Producto Entrante
@@ -501,9 +477,11 @@ class SaleDevolutionController extends Component
     protected $listeners = ['eliminardevolucion' => 'Destroy'];
 
     //Eliminar una Devolución
-    public function Destroy(DevolutionSale $id)
+    public function Destroy($id)
     {
-        $id->delete();
+        //Eliminando los productos de Detalle Venta
+        DevolutionSale::where('id', $id)->delete();
+        
         $this->resetUI();
         $this->emit('item-deleted', 'Devolución Eliminada con Éxito');
     }

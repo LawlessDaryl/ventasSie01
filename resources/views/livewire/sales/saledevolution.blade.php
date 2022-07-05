@@ -74,10 +74,10 @@
                             <h6>Seleccionar Usuario</h6>
                         </div>
                         <select wire:model="usuarioseleccionado" class="form-control">
+                            <option value="Todos" selected>Todos los Usuarios</option>
                             @foreach ($listausuarios as $u)
                             <option value="{{$u->id}}">{{$u->nombreusuario}}</option>
                             @endforeach
-                            <option value="Todos" selected>Todos los Usuarios</option>
                         </select>
                 </div>
                 @endif
@@ -149,7 +149,7 @@
                                     @if($this->verificarpermiso() == true)
                                     <td class="text-center">
                                         <a href="javascript:void(0)"
-                                        onclick="Confirm('{{ $item->id }}')"
+                                        onclick="Confirm('{{ $item->iddevolucion }}')"
                                         class="btn btn-dark" title="Eliminar Devolución">
                                                 <i class="fas fa-trash"></i>
                                         </a>
@@ -207,7 +207,7 @@
                                     @if($this->verificarpermiso() == true)
                                     <td class="text-center">
                                         <a href="javascript:void(0)"
-                                        onclick="Confirm('{{ $item->id }}')"
+                                        onclick="Confirm('{{ $item->iddevolucion }}')"
                                         class="btn btn-dark" title="Eliminar Devolución">
                                                 <i class="fas fa-trash"></i>
                                         </a>

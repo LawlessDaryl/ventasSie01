@@ -12,6 +12,7 @@ use Livewire\WithPagination;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 
@@ -405,7 +406,7 @@ class SaleDailyMovementController extends Component
 
         
 
-        //Actualizando la vaiable listareportes para crear el PDF
+        //Actualizando la variable listareportes para crear el PDF
         $this->listareportes = $data;
         
         $ingreso = $this->totalingresos();
@@ -542,7 +543,15 @@ class SaleDailyMovementController extends Component
 
         foreach ($tabla as $item)
         {
-            $totalutilidad = $this->buscarutilidad($this->buscarventa($item->idmovimiento)->first()->idventa) + $totalutilidad;
+            try
+            {
+                $totalutilidad = $this->buscarutilidad($this->buscarventa($item->idmovimiento)->first()->idventa) + $totalutilidad;
+            }
+            catch(Exception $e)
+            {
+
+            }
+
         }
         return $totalutilidad;
     }
