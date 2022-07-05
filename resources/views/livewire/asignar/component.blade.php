@@ -21,6 +21,25 @@
                     <button wire:click.prevent="SyncAll()" type="button" class="btn btn-warning">Sincronizar todos</button>
                     <button onclick="Revocar()" type="button" class="btn btn-warning">Revocar todos</button>
                 </div>
+                <br>
+                <div class="text-right">
+                    <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                      
+                        <div class="btn-group" role="group">
+                          <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Permisos por Area
+                          </button>
+                          <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                            <a class="dropdown-item" href="#">Supervisor Cajero</a>
+                            <a class="dropdown-item" href="#">Cajero</a>
+                            <a class="dropdown-item" href="#">Supervisor Técnico Servicios</a>
+                            <a class="dropdown-item" href="#">Técnico Servicios</a>
+                            <a class="dropdown-item" href="#">Tigo Money</a>
+                            <a class="dropdown-item" href="#">Streaming</a>
+                          </div>
+                        </div>
+                      </div>
+                </div>
 
 
                 <div class="row mt-3">

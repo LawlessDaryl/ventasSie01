@@ -277,8 +277,7 @@ class SaleDevolutionController extends Component
         ->where('mov.type', 'APERTURA')
         ->select('cajas.id as id')
         ->get()->first();
-
-
+        
         if($this->bs > 0)
         {
             // Creando Movimiento
@@ -287,30 +286,19 @@ class SaleDevolutionController extends Component
                 'import' => $this->bs,
                 'user_id' => Auth()->user()->id,
             ]);
-        }
-
-
-        //Creando un registro en la tabla devolución
-        DevolutionSale::create([
+            //Creando un registro en la tabla devolución
+            DevolutionSale::create([
             'tipo_dev' => "MONETARIO",
             'monto_dev' => $this->bs,
             'observations' => $this->observaciondevolucion,
             'product_id' => $this->identrante,
             'user_id' => Auth()->user()->id,
             'movimiento_id' => $Movimiento->id
-        ]);
-        //Creando Movimiento del Cliente
-        ClienteMov::create([
-            'movimiento_id' => $Movimiento->id,
-            'cliente_id' => 1,
-        ]);
-        //Tipo de Pago
-        $cartera = Cartera::where('tipo', 'cajafisica')
-                    ->where('caja_id', $cajausuario->id)
-                    ->get()->first();
-                    
-        if($this->bs > 0)
-        {
+            ]);
+            //Tipo de Pago
+            $cartera = Cartera::where('tipo', 'cajafisica')
+                        ->where('caja_id', $cajausuario->id)
+                        ->get()->first();
             // Creando Cartera Movimiento
             CarteraMov::create([
                 'type' => "EGRESO",
@@ -320,6 +308,119 @@ class SaleDevolutionController extends Component
                 'movimiento_id' => $Movimiento->id,
             ]);
         }
+        else
+        {
+            // Creando Movimiento
+            $Movimiento = Movimiento::create([
+                'type' => "DEVOLUCIONVENTA",
+                'status' => "INACTIVO",
+                'import' => $this->bs,
+                'user_id' => Auth()->user()->id,
+            ]);
+
+            //Creando un registro en la tabla devolución
+            DevolutionSale::create([
+                'tipo_dev' => "MONETARIO",
+                'monto_dev' => $this->bs,
+                'observations' => $this->observaciondevolucion,
+                'product_id' => $this->identrante,
+                'user_id' => Auth()->user()->id,
+                'movimiento_id' => $Movimiento->id
+                ]);
+        }
+
+
+        //Registrando el Producto Entrante
+        //Buscando si existen Productos en Almacen Devoluciones
+        $tiendaproducto = ProductosDestino::join("products as p", "p.id", "productos_destinos.product_id")
+        ->join('destinos as des', 'des.id', 'productos_destinos.destino_id')
+        ->select("productos_destinos.id as id","p.nombre as name",
+        "productos_destinos.stock as stock")
+        ->where("p.id", $this->identrante)
+        ->where("des.nombre", 'Almacen Devoluciones')
+        ->where("des.sucursal_id", $this->idsucursal())
+        ->get();
+
+        //Si existen Productos en Almacen Devoluciones de su Respectiva Sucursal actualizamos su Stock
+        //Si no existen Productos Creamos uno en el Else
+        if($tiendaproducto->count() > 0)
+        {
+            $id = ProductosDestino::join("products as p", "p.id", "productos_destinos.product_id")
+            ->join('destinos as des', 'des.id', 'productos_destinos.destino_id')
+            ->select("productos_destinos.id as id","p.nombre as name",
+            "productos_destinos.stock as stock")
+            ->where("p.id", $this->identrante)
+            ->where("des.nombre", 'Almacen Devoluciones')
+            ->where("des.sucursal_id", $this->idsucursal())
+            ->get()
+            ->first();
+            
+            $orig = ProductosDestino::find($id->id);
+            $orig->update([
+                'stock' => $id->stock + 1,
+            ]);
+            $orig->save();
+        }
+        else
+        {
+            //Buscamos el destino y sucursal donde se encuentra el usuario
+            $destino = Destino::select("destinos.id as id")
+            ->where("destinos.sucursal_id", $this->idsucursal())
+            ->where("destinos.nombre", "Almacen Devoluciones")
+            ->get()
+            ->first();
+
+
+            //Creamos el Producto
+            ProductosDestino::create([
+                'product_id' => $this->identrante,
+                'destino_id' => $destino->id,
+                'stock' => 1
+            ]);
+
+        }
+
+
+        //Reseteamos los datos e información almacenados en la Venta Modal
+        $this->resetUI();
+    }
+
+    //Guardar una devolucion Cuando se devuelve el mismo Producto
+    public  function devolverproducto()
+    {
+        if($this->observaciondevolucion == "")
+        {
+            $this->observaciondevolucion = "No se coloco ningún Motivo";
+        }
+        $Movimiento = Movimiento::create([
+            'type' => "DEVOLUCIONVENTA",
+            'status' => "INACTIVO",
+            'import' => $this->bs,
+            'user_id' => Auth()->user()->id,
+        ]);
+
+        //Creando un registro en la tabla devolución
+        DevolutionSale::create([
+            'tipo_dev' => "PRODUCTO",
+            'monto_dev' => $this->bs,
+            'observations' => $this->observaciondevolucion,
+            'product_id' => $this->identrante,
+            'user_id' => Auth()->user()->id,
+            'movimiento_id' => $Movimiento->id
+            ]);
+
+        /* Caja en la cual se encuentra el usuario */
+        $cajausuario = Caja::join('sucursals as s', 's.id', 'cajas.sucursal_id')
+        ->join('sucursal_users as su', 'su.sucursal_id', 's.id')
+        ->join('carteras as car', 'cajas.id', 'car.caja_id')
+        ->join('cartera_movs as cartmovs', 'car.id', 'cartmovs.cartera_id')
+        ->join('movimientos as mov', 'mov.id', 'cartmovs.movimiento_id')
+        ->where('mov.user_id', Auth()->user()->id)
+        ->where('mov.status', 'ACTIVO')
+        ->where('mov.type', 'APERTURA')
+        ->select('cajas.id as id')
+        ->get()->first();
+
 
 
         //Registrando el Producto Entrante
@@ -364,122 +465,10 @@ class SaleDevolutionController extends Component
             ->first();
 
 
-
             //Creamos el Producto
             ProductosDestino::create([
                 'product_id' => $this->identrante,
                 'destino_id' => $destino->id,
-                'stock' => 1
-            ]);
-
-        }
-
-
-        //Reseteamos los datos e información almacenados en la Venta Modal
-        $this->resetUI();
-    }
-
-    //Guardar una devolucion Cuando se devuelve el mismo Producto
-    public  function devolverproducto()
-    {
-        if($this->observaciondevolucion == "")
-        {
-            $this->observaciondevolucion = "No se coloco ningún Motivo";
-        }
-        DevolutionSale::create([
-            'tipo_dev' => "PRODUCTO",
-            'monto_dev' => 0,
-            'observations' => $this->observaciondevolucion,
-            'product_id' => $this->identrante,
-            'user_id' => Auth()->user()->id
-        ]);
-
-        /* Caja en la cual se encuentra el usuario */
-        $cajausuario = Caja::join('sucursals as s', 's.id', 'cajas.sucursal_id')
-        ->join('sucursal_users as su', 'su.sucursal_id', 's.id')
-        ->join('carteras as car', 'cajas.id', 'car.caja_id')
-        ->join('cartera_movs as cartmovs', 'car.id', 'cartmovs.cartera_id')
-        ->join('movimientos as mov', 'mov.id', 'cartmovs.movimiento_id')
-        ->where('mov.user_id', Auth()->user()->id)
-        ->where('mov.status', 'ACTIVO')
-        ->where('mov.type', 'APERTURA')
-        ->select('cajas.id as id')
-        ->get()->first();
-
-
-
-        // Creando Movimiento
-        $Movimiento = Movimiento::create([
-            'type' => "DEVOLUCIONVENTA",
-            'import' => 0,
-            'user_id' => Auth()->user()->id,
-        ]);
-        //Creando Movimiento del Cliente
-        ClienteMov::create([
-            'movimiento_id' => $Movimiento->id,
-            'cliente_id' => 1,
-        ]);
-        //Tipo de Pago
-        $cartera = Cartera::where('tipo', 'cajafisica')
-                    ->where('caja_id', $cajausuario->id)
-                    ->get()->first();
-        // Creando Cartera Movimiento
-        CarteraMov::create([
-            'type' => "EGRESO",
-            'comentario' => "Devolución Venta",
-            'cartera_id' => $cartera->id,
-            'movimiento_id' => $Movimiento->id,
-        ]);
-
-
-        //Registrando el Producto Entrante
-
-        //Buscando si existen Productos en Almacen Devoluciones
-        $tiendaproducto = ProductosDestino::join("products as p", "p.id", "productos_destinos.product_id")
-        ->join('destinos as des', 'des.id', 'productos_destinos.destino_id')
-        ->select("productos_destinos.id as id","p.nombre as name",
-        "productos_destinos.stock as stock")
-        ->where("p.id", $this->identrante)
-        ->where("des.nombre", 'Almacen Devoluciones')
-        ->where("des.sucursal_id", $this->idsucursal())
-        ->get();
-
-        //Si existen Productos en Almacen Devoluciones de su Respectiva Sucursal actualizamos su Stock
-        //Si no existen Productos Creamos uno en el Else
-        if($tiendaproducto->count() > 0)
-        {
-            $id = ProductosDestino::join("products as p", "p.id", "productos_destinos.product_id")
-            ->join('destinos as des', 'des.id', 'productos_destinos.destino_id')
-            ->select("productos_destinos.id as id","p.nombre as name",
-            "productos_destinos.stock as stock")
-            ->where("p.id", $this->identrante)
-            ->where("des.nombre", 'Almacen Devoluciones')
-            ->where("des.sucursal_id", $this->idsucursal())
-            ->get()
-            ->first();
-            
-            $orig = ProductosDestino::find($id->id);
-            $orig->update([
-                'stock' => $id->stock + 1,
-            ]);
-            $orig->save();
-        }
-        else
-        {
-            //Buscamos la Locacion donde se encuentra el usuario
-            $locacion = Location::join('destinos as des', 'des.id', 'locations.destino_id')
-            ->join('sucursals as s','s.id','des.sucursal_id')
-            ->select("locations.id as id")
-            ->where("s.id", $this->idsucursal())
-            ->where("des.nombre", 'Almacen Devoluciones')
-            ->get()
-            ->first();
-
-
-            //Creamos el Producto
-            ProductosDestino::create([
-                'product_id' => $this->identrante,
-                'location_id' => $locacion->id,
                 'stock' => 1
             ]);
 
