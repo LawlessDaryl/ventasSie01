@@ -21,11 +21,28 @@
                             <input type="text" wire:model.lazy="permissionName" class="form-control" placeholder="ej: Category_Index" maxlength="255">
                         </div>
                         @error('permissionName')<span class="text-danger er">{{ $message }}</span> @enderror
+                        <br>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <span class="fas fa-edit"></span>
+                                </span>
+                            </div>
+                            <input type="text" wire:model.lazy="permissionArea" class="form-control" placeholder="Area a la que pertenece el permiso" maxlength="255">
+                        </div>
+                        @error('permissionArea')<span class="text-danger er">{{ $message }}</span> @enderror
                     </div>
                     
                 </div>
+                <br>
+                <div class="row">
+                    <div class="col-12">
 
-
+                        <textarea class="col-12" wire:model.lazy="permissionDescripcion" placeholder="Descripcion del Permiso" maxlength="500" rows="10"></textarea>
+                        @error('permissionDescripcion')<span class="text-danger er">{{ $message }}</span> @enderror
+                    </div>
+                    
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" wire:click.prevent="resetUI()" class="btn btn-warning close-btn text-info"

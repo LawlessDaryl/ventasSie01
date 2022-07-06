@@ -19,8 +19,10 @@
                         <thead class="text-white" style="background: #ee761c">
                             <tr>
                                 <th class="table-th text-withe">ID</th>
-                                <th class="table-th text-withe text-center">DESCRIPCION</th>                                                             
-                                <th class="table-th text-withe text-center">ACCIONES</th>
+                                <th class="table-th text-withe text-center">NOMBRE</th>                                                         
+                                <th class="table-th text-withe text-center">AREA</th>                                                         
+                                <th class="table-th text-withe text-center">DESCRIPCION</th>                                                         
+                                <th class="table-th text-withe text-center">ACCIONES</th>    
                             </tr>
                         </thead>
                         <tbody>
@@ -31,6 +33,12 @@
                                     </td>
                                     <td>
                                         <h6 class="text-center">{{ ($permiso->name) }}</h6>
+                                    </td> 
+                                    <td>
+                                        <h6 class="text-center">{{ ($permiso->area) }}</h6>
+                                    </td> 
+                                    <td>
+                                        <h6 class="text-center">{{ ($permiso->descripcion) }}</h6>
                                     </td>                           
                                     
                                     <td class="text-center">

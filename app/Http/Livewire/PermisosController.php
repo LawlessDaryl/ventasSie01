@@ -11,7 +11,7 @@ use App\Models\User;
 class PermisosController extends Component
 {
     use WithPagination;
-    public $permissionName, $search, $selected_id, $pageTitle, $componentName;
+    public $permissionName,$permissionArea,$permissionDescripcion, $search, $selected_id, $pageTitle, $componentName;
     private $pagination = 20;
 
     public function paginationView()
@@ -57,7 +57,7 @@ class PermisosController extends Component
 
         $this->validate($rules, $messages);
 
-        Permission::create(['name' => $this->permissionName]);
+        Permission::create(['name' => $this->permissionName,'area' => $this->permissionArea,'descripcion' => $this->permissionDescripcion]);
 
         $this->emit('item-added', 'Se registró el permiso con éxito');
         $this->resetUI();
@@ -67,6 +67,8 @@ class PermisosController extends Component
     {
         $this->selected_id = $permiso->id;
         $this->permissionName = $permiso->name;
+        $this->permissionArea = $permiso->area;
+        $this->permissionDescripcion = $permiso->descripcion;
 
         $this->emit('show-modal', 'Show modal ');
     }
@@ -85,6 +87,8 @@ class PermisosController extends Component
 
         $role = Permission::find($this->selected_id);
         $role->name = $this->permissionName;
+        $role->area = $this->permissionArea;
+        $role->descripcion = $this->permissionDescripcion;
         $role->save();
 
         $this->emit('item-update', 'Se actualizó el permiso con éxito');
@@ -125,6 +129,8 @@ class PermisosController extends Component
     public function resetUI()
     {
         $this->permissionName = '';
+        $this->permissionArea = '';
+        $this->permissionDescripcion = '';
         $this->search = '';
         $this->selected_id = 0;
         $this->resetValidation();

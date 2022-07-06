@@ -17,40 +17,41 @@
                             @endforeach
                         </select>
                     </div>
-
-                    <button wire:click.prevent="SyncAll()" type="button" class="btn btn-warning">Sincronizar todos</button>
-                    <button onclick="Revocar()" type="button" class="btn btn-warning">Revocar todos</button>
+                    <div class="form-group mr-5">
+                        <select wire:model="permisosseleccionado" class="form-control">
+                            <option value="Todos"><b>Todos los Permisos</b></option>
+                            @foreach ($listaareas as $u)
+                            <option value="{{$u->area}}">{{$u->area}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @if($permisosseleccionado != "Todos")
+                    <button wire:click.prevent="SyncAll2()" type="button" class="btn btn-warning">Sincronizar Todos Area</button>
+                    @else
+                    <button wire:click.prevent="SyncAll()" type="button" class="btn btn-warning">Sincronizar Todos</button>
+                    <button onclick="Revocar()" type="button" class="btn btn-warning">Revocar Todos</button>
+                    @endif
                 </div>
                 <br>
                 <div class="text-right">
-                    <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-                      
-                        <div class="btn-group" role="group">
-                          <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Permisos por Area
-                          </button>
-                          <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                            <a class="dropdown-item" href="#">Supervisor Cajero</a>
-                            <a class="dropdown-item" href="#">Cajero</a>
-                            <a class="dropdown-item" href="#">Supervisor Técnico Servicios</a>
-                            <a class="dropdown-item" href="#">Técnico Servicios</a>
-                            <a class="dropdown-item" href="#">Tigo Money</a>
-                            <a class="dropdown-item" href="#">Streaming</a>
-                          </div>
-                        </div>
-                      </div>
+
+                    
                 </div>
 
-
-                <div class="row mt-3">
+                <div class="row">
                     <div class="col-sm-12">
                         <div class="table-responsive">
-                            <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
+
+                            @if($permisosseleccionado == "Todos")
+                            <table class="table table-hover table table-bordered table-bordered-bd-warning">
                                 <thead class="text-white" style="background: #ee761c">
                                     <tr>
                                         <th class="table-th text-withe text-center">ID</th>
+                                        <th class="table-th text-withe text-center">#</th>
                                         <th class="table-th text-withe text-center">PERMISO</th>
                                         <th class="table-th text-withe text-center">ROLES CON EL PERMISO</th>
+                                        <th class="table-th text-withe text-center">AREA</th>
+                                        <th class="table-th text-withe text-center">DESCRIPCION</th>
                                 </thead>
                                 <tbody>
                                     @foreach ($permisos as $permiso)
@@ -58,37 +59,40 @@
                                         <td>
                                             <h6 class="text-center">{{$permiso->id}}</h6>
                                         </td>
-                                        <td class="">
-                                            <div class="row">
+                                        <td>
 
-                                                <div class="col-2 text-center">
-                                                    <label class="colorinput">
-                                                        <input name="color" type="checkbox" value="warning" class="colorinput-input"
-                                                         
-                                                    wire:change="SyncPermiso($('#p' + {{ $permiso->id 
+                                            <div class="col-2 text-center">
+                                                <label class="colorinput">
+                                                    <input name="color" type="checkbox" value="warning" class="colorinput-input"
+                                                     
+                                                wire:change="SyncPermiso($('#p' + {{ $permiso->id 
+                                                }}).is(':checked'), '{{$permiso->name}}')"
+                                                id="p{{ $permiso->id }}"
+                                                value="{{ $permiso->id }}"
+                                            class="new-control-input" 
+                                            {{ $permiso->checked == 1 ? 'checked' : '' }}
+                                                    >
+                                                    <span class="colorinput-color bg-warning"></span>
+                                                </label>
+                                                
+
+                                            {{-- <label class="new-control new-checkbox checkbox-primary">
+                                                <input type="checkbox" 
+                                                wire:change="SyncPermiso($('#p' + {{ $permiso->id 
                                                     }}).is(':checked'), '{{$permiso->name}}')"
                                                     id="p{{ $permiso->id }}"
                                                     value="{{ $permiso->id }}"
                                                 class="new-control-input" 
                                                 {{ $permiso->checked == 1 ? 'checked' : '' }}
-                                                        >
-                                                        <span class="colorinput-color bg-warning"></span>
-                                                    </label>
-                                                    
-    
-                                                {{-- <label class="new-control new-checkbox checkbox-primary">
-                                                    <input type="checkbox" 
-                                                    wire:change="SyncPermiso($('#p' + {{ $permiso->id 
-                                                        }}).is(':checked'), '{{$permiso->name}}')"
-                                                        id="p{{ $permiso->id }}"
-                                                        value="{{ $permiso->id }}"
-                                                    class="new-control-input" 
-                                                    {{ $permiso->checked == 1 ? 'checked' : '' }}
-                                                    >
-                                                    <span class="new-control-indicator"></span>
-                                                    <h6>{{ $permiso->name}}</h6>
-                                                </label> --}}
-                                                </div>
+                                                >
+                                                <span class="new-control-indicator"></span>
+                                                <h6>{{ $permiso->name}}</h6>
+                                            </label> --}}
+                                            </div>
+
+                                        </td>
+                                        <td class="">
+                                            <div class="row">
                                                 <div class="">
                                                     {{ $permiso->name}}
                                                 </div>
@@ -100,11 +104,83 @@
                                         <td class="text-center">
                                             <h6>{{ \App\Models\User::permission($permiso->name)->count() }}</h6>
                                         </td>
+                                        <td class="text-center">
+                                            {{$permiso->area}}
+                                        </td>
+                                        <td class="text-center">
+                                            {{$permiso->descripcion}}
+                                        </td>
                                     </tr>
                                     @endforeach
                                 </tbody>
                             </table>
                             {{ $permisos->links() }}
+
+                            @else
+                            
+                            <table class="table table-hover table table-bordered table-bordered-bd-warning">
+                                <thead class="text-white" style="background: #ee761c">
+                                    <tr>
+                                        <th class="table-th text-withe text-center">ID</th>
+                                        <th class="table-th text-withe text-center">#</th>
+                                        <th class="table-th text-withe text-center">PERMISO</th>
+                                        <th class="table-th text-withe text-center">ROLES CON EL PERMISO</th>
+                                        <th class="table-th text-withe text-center">AREA</th>
+                                        <th class="table-th text-withe text-center">DESCRIPCION</th>
+                                </thead>
+                                <tbody>
+                                    @foreach ($permisosarea as $p)
+                                    <tr>
+                                        <td class="text-center">
+                                            {{$p->id}}
+                                        </td>
+                                        <td>
+                                            
+                                            <div class="col-2 text-center">
+                                                <label class="colorinput">
+                                                    <input name="color" type="checkbox" value="warning" class="colorinput-input"
+                                                     
+                                                wire:change="SyncPermiso($('#p' + {{ $p->id 
+                                                }}).is(':checked'), '{{$p->name}}')"
+                                                id="p{{ $p->id }}"
+                                                value="{{ $p->id }}"
+                                            class="new-control-input" 
+                                            {{ $p->checked2 == 1 ? 'checked' : '' }}
+                                                    >
+                                                    <span class="colorinput-color bg-warning"></span>
+                                                </label>
+                                            </div>
+                                        </td>
+                                        <td class="">
+                                            <div class="row">
+
+                                                <div class="">
+                                                    {{ $p->name}}
+                                                </div>
+
+                                                
+                                            </div>
+                                        </td>
+
+                                        <td class="text-center">
+                                            <h6>{{ \App\Models\User::permission($p->name)->count() }}</h6>
+                                        </td>
+                                        <td class="text-center">
+                                            {{$p->area}}
+                                        </td>
+                                        <td class="text-center">
+                                            {{$p->descripcion}}
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                            {{ $permisosarea->links() }}
+
+
+                            @endif
+
+
                         </div>
                     </div>
                 </div>
