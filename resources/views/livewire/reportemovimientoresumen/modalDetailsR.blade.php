@@ -38,7 +38,7 @@
                     <div class="col-sm-12 col-md-3">
                         <div class="form-group">
                             <h6>Monto a recaudar</h6>
-                            <input type="number" wire:model.lazy="cantidad" class="form-control">
+                            <input type="number" wire:model="cantidad" class="form-control">
                             @error('cantidad')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror

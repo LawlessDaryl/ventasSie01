@@ -638,13 +638,28 @@
                         </td>
                     </tr>
 
+                    @if ($caja != 'TODAS')
+                    <tr>
+                        <td colspan="3">
+                            <h5 class="text-dark text-right" style="font-size: 1rem!important;"><b> RECAUDO </b></h5>
+                        </td>
+                        <td>
+                                {{ number_format($recaudo,2) }}
+                                
+                        </td>
+                        <td colspan="2">
+                        </td>
+                    </tr>
+                    @endif
+
+                    
                 
                     <tr>
                         <td colspan="3">
                             <h5 class="text-dark text-right" style="font-size: 1rem!important;"><b> TOTAL </b></h5>
                         </td>
-                        <td>
-                                {{ number_format($operacionesW,2) }}
+                        <td wire:key="foo">
+                             {{ number_format($operacionesW,2) }}
                                 
                         </td>
                         <td colspan="2">
@@ -661,13 +676,7 @@
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            window.livewire.on('show-modal', Msg => {
-                $('#modal-details').modal('show')
-            })
-            window.livewire.on('hide-modal', Msg => {
-                $('#modal-details').modal('hide')
-                noty(Msg)
-            })
+         
             window.livewire.on('show-modalR', Msg => {
             $('#modal-detailsr').modal('show')
             })
@@ -675,9 +684,7 @@
                 $('#modal-detailsr').modal('hide')
                 noty(Msg)
             })
-            window.livewire.on('tigo-delete', Msg => {
-                noty(Msg)
-            })
+          
         });
     </script>
 

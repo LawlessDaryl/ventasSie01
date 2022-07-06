@@ -48,6 +48,7 @@ class ReporteMovimientoResumenController extends Component
         else
         {
             $cajab=Caja::where('cajas.sucursal_id',$this->sucursal)->where('cajas.nombre','!=','Caja General')->get();
+         
         }
 
         $carterasSucursal = Cartera::join('cajas as c', 'carteras.caja_id', 'c.id')
@@ -69,7 +70,7 @@ class ReporteMovimientoResumenController extends Component
                // dd($this->sm);
                 $this->operacionrecaudo();
                 
-                $this->cantidad =   $this->optotal- $this->sm->monto_base;
+                $this->cantidad = number_format($this->optotal- $this->sm->monto_base,2)  ;
             }
             
       
@@ -668,10 +669,28 @@ class ReporteMovimientoResumenController extends Component
         //Ingresos - Egresos
         $this->subtotalcaja= $this->ingresosTotales - $this->EgresosTotales;
         $this->operacionesefectivas= $this->ingresosTotalesCF + $this->total-$this->EgresosTotalesCF;
-        $this->operacionesW= $this->operacionesefectivas + $this->ops;
+
+        if ($this->caja != "TODAS") {
+            $this->recaudo=  Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')
+            ->join('carteras as c', 'c.id', 'crms.cartera_id')
+            ->join('cajas as ca', 'ca.id', 'c.caja_id')
+            ->where('movimientos.status', 'ACTIVO')
+            ->where('crms.type', 'EGRESO')
+            ->where('crms.comentario','=', 'RECAUDO DEL DIA')
+           // ->where('ca.id',$this->caja)
+            ->whereBetween('movimientos.updated_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
+            ->select('movimientos.import')->value('movimientos.import');
+           
+        }
+    
+        else{
+            $this->recaudo=0;
+        }
+       
+
+        $this->operacionesW= $this->operacionesefectivas + $this->ops - $this->recaudo;
 
      
-        
 
      }
 
@@ -708,7 +727,8 @@ class ReporteMovimientoResumenController extends Component
                 ->where('cm.type', 'INGRESO')
                 ->where('m.status', 'ACTIVO')
                 ->whereBetween('m.created_at',[$fechainicial,$fecha])
-                ->where('carteras.id', $c->id)->sum('m.import');
+                ->where('carteras.id', $c->id)
+                ->sum('m.import');
             /* SUMAR TODO LOS EGRESOS DE LA CARTERA */
             $MONTO2 = Cartera::join('cartera_movs as cm', 'carteras.id', 'cm.cartera_id')
                 ->join('movimientos as m', 'm.id', 'cm.movimiento_id')
@@ -743,6 +763,7 @@ class ReporteMovimientoResumenController extends Component
 
     public function GenerarR()
     {
+      
         $rules = [ /* Reglas de validacion */
           
             'cartera_id' => 'required|not_in:Elegir',
@@ -750,8 +771,7 @@ class ReporteMovimientoResumenController extends Component
          
         ];
         $messages = [ /* mensajes de validaciones */
-           
-            'cartera_id.not_in' => 'Seleccione un valor distinto a Elegir',
+   
             'cartera_id.not_in' => 'Seleccione un valor distinto a Elegir',
             'cantidad.required' => 'Ingrese un monto válido',
             'cantidad.not_in' => 'Ingrese un monto válido',
@@ -771,7 +791,7 @@ class ReporteMovimientoResumenController extends Component
             'type' => 'EGRESO',
             'tipoDeMovimiento' => 'EGRESO/INGRESO',
             'comentario' => 'RECAUDO DEL DIA',
-            'cartera_id' => $this->cartera_id,
+            'cartera_id' => Cartera::where('caja_id',$this->cartera_id)->pluck('id') ,
             'movimiento_id' => $mvt->id
         ]);
 
@@ -785,10 +805,10 @@ class ReporteMovimientoResumenController extends Component
     }
     public function resetUI()
     {
-        $this->cartera_id = 'Elegir';
-        $this->type = 'Elegir';
-        $this->cantidad = '';
-        $this->comentario = '';
+        $this->cartera_id = null;
+      
+        $this->cantidad = null;
+        $this->comentario = null;
     }
 
     public function trsbydatecaja()
@@ -1075,7 +1095,7 @@ class ReporteMovimientoResumenController extends Component
     {
     
         $from = date('2015-01-01');
-        $to = date($this->fromDate);
+        $to = Carbon::parse($this->fromDate)->format('Y-m-d') . ' 23:59:59';
 
         $carteras2 = Cartera::join('cajas as c', 'carteras.caja_id', 'c.id')
             ->where( 'c.id', $this->cartera_id )
