@@ -164,7 +164,6 @@ class SaleListController extends Component
     //Obtener el total Bs de una venta
     public function totabs()
     {
-        
         $venta = Sale::find($this->idventa);
         return $venta->total;
     }

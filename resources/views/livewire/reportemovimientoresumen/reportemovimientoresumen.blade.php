@@ -708,13 +708,8 @@
                         <td colspan="3">
                             <h5 class="text-dark text-right" style="font-size: 1rem!important;"><b> TOTAL </b></h5>
                         </td>
-<<<<<<< HEAD
-                        <td wire:key="foo">
-                             {{ number_format($operacionesW,2) }}
-=======
                         <td>
                             {{ number_format($operacionesW,2) }}
->>>>>>> 34c5e2a1d5d7d0b5e000821cd1eb07f9ddbd1f46
                                 
                         </td>
                         <td colspan="2">

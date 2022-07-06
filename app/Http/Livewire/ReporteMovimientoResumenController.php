@@ -60,17 +60,17 @@ class ReporteMovimientoResumenController extends Component
             
             
             
-            $this->viewTotales();
             
             $this->allop(Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',$this->sucursal,$this->caja);
+            $this->viewTotales();
          
             if ($this->cartera_id != null) {
                 //dd($this->cartera_id);
                 $this->sm = Caja::find($this->cartera_id);
                // dd($this->sm);
                 $this->operacionrecaudo();
-                
-                $this->cantidad = number_format($this->optotal- $this->sm->monto_base,2)  ;
+               
+                $this->cantidad = $this->optotal- $this->sm->monto_base  ;
             }
             
       
