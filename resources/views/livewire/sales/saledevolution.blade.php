@@ -7,6 +7,39 @@
 
 <link href="assets/css/scrollspyNav.css" rel="stylesheet" type="text/css" />
 <link href="assets/css/components/tabs-accordian/custom-accordions.css" rel="stylesheet" type="text/css" />
+
+
+
+<style>
+    /* Estilos para las tablas */
+    .table-wrapper {
+    width: 100%;/* Anchura de ejemplo */
+    height: 200px; /* Altura de ejemplo */
+    overflow: auto;
+    }
+
+    .table-wrapper table {
+    border-collapse: separate;
+    border-spacing: 0;
+    }
+
+    .table-wrapper table thead {
+    position: -webkit-sticky; /* Safari... */
+    position: sticky;
+    top: 0;
+    left: 0;
+    }
+
+    .table-wrapper table thead th {
+    border: 1px solid #000;
+    background: #ee761c;
+    }
+    .table-wrapper table tbody td {
+    border: 1px solid #000;
+    }
+</style>
+
+
 @endsection
 <div class="row sales layout-top-spacing">
     <div class="col-sm-12" >
@@ -17,10 +50,7 @@
                 <h4 class="card-title">
                     <b>{{ $componentName }} | {{ $pageTitle }}</b>
                 </h4>
-                <ul class="tabs tab-pills">
-                    <p class=""> <h3>Devoluciones</h3> </p>
-                </ul>
-                <ul class="tabs tab-pills">
+                <ul class="text-right">
                     {{-- <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
                         data-target="#theModal">Devolución Por Venta</a> --}}
                         
@@ -44,10 +74,10 @@
                             <h6>Seleccionar Usuario</h6>
                         </div>
                         <select wire:model="usuarioseleccionado" class="form-control">
+                            <option value="Todos" selected>Todos los Usuarios</option>
                             @foreach ($listausuarios as $u)
                             <option value="{{$u->id}}">{{$u->nombreusuario}}</option>
                             @endforeach
-                            <option value="Todos" selected>Todos los Usuarios</option>
                         </select>
                 </div>
                 @endif
@@ -56,12 +86,11 @@
             </div>
 
             <div class="widget-content">
-                <div class="table-responsive">
-                    <table class="table table-unbordered table-hover mt-2">
-                        <thead class="text-white" style="background: #3B3F5C">
+                <div class="table-responsive mb-4 mt-4">
+                    <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4" style="min-width: 1000px;">
+                        <thead class="text-white" style="background: #ee761c">
                             <tr>
                                 <th class="table-th text-withe text-center">No</th>
-                                <th class="table-th text-withe text-center">Imagen Producto</th>
                                 <th class="table-th text-withe text-left">Nombre Producto</th>
                                 <th class="table-th text-withe text-right">Monto Devuelto</th>
                                 <th class="table-th text-withe text-center">Fecha Devolución</th>
@@ -71,7 +100,7 @@
                                 <th class="table-th text-withe text-center">Estado</th>
                                 @if($this->verificarpermiso() == true)
                                 <th class="table-th text-withe text-center">Acción</th>
-                                <th class="table-th text-withe text-center">Eliminar</th>
+                                {{-- <th class="table-th text-withe text-center">Eliminar</th> --}}
                                 @endif
                             </tr>
                         </thead>
@@ -83,12 +112,6 @@
                                 <tr>
                                     <td class="text-center">
                                         {{$loop->iteration}}
-                                    </td>
-                                    <td class="text-center">
-                                        <span>
-                                            <img src="{{('storage/productos/'.$item->image) }}"
-                                                height="40" class="rounded">
-                                        </span>
                                     </td>
                                     <td class="text-left">
                                         <h6>{{ $item->nombre }}</h6>
@@ -126,7 +149,7 @@
                                     @if($this->verificarpermiso() == true)
                                     <td class="text-center">
                                         <a href="javascript:void(0)"
-                                        onclick="Confirm('{{ $item->id }}')"
+                                        onclick="Confirm('{{ $item->iddevolucion }}')"
                                         class="btn btn-dark" title="Eliminar Devolución">
                                                 <i class="fas fa-trash"></i>
                                         </a>
@@ -147,12 +170,6 @@
                                 <tr>
                                     <td class="text-center">
                                         {{$loop->iteration}}
-                                    </td>
-                                    <td class="text-center">
-                                        <span>
-                                            <img src="{{('storage/productos/'.$item->image) }}"
-                                                height="40" class="rounded">
-                                        </span>
                                     </td>
                                     <td class="text-left">
                                         <h6>{{ $item->nombre }}</h6>
@@ -190,17 +207,17 @@
                                     @if($this->verificarpermiso() == true)
                                     <td class="text-center">
                                         <a href="javascript:void(0)"
-                                        onclick="Confirm('{{ $item->id }}')"
+                                        onclick="Confirm('{{ $item->iddevolucion }}')"
                                         class="btn btn-dark" title="Eliminar Devolución">
                                                 <i class="fas fa-trash"></i>
                                         </a>
                                     </td>
-                                    <td>
+                                    {{-- <td>
                                         
                                         <button class="btn btn-dark">
                                             Transferir Producto
                                         </button>
-                                    </td>
+                                    </td> --}}
                                     @endif
                                 </tr>
                             @endforeach

@@ -1169,6 +1169,8 @@ class ReporteMovimientoResumenController extends Component
         session(['caracteristicas' => $caracteristicas]);
 
         //Redireccionando para crear el comprobante con sus respectvas variables
-        return redirect::to('report/pdfmovdiaresumen');
+        //return redirect::to('report/pdfmovdiaresumen');
+
+        $this->emit('opentap');
     }
 }

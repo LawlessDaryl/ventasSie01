@@ -52,30 +52,31 @@
 
                         @if($BuscarProductoNombre != 0)
     
-                        <div class="table-responsive table-wrapper-scroll-y my-custom-scrollbar">
-
-                            <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
-                                <thead class="text-white" style="background: #ee761c">
-                                    <tr>
-                                        <th class="table-th text-center text-white">IMAGEN</th>
-                                        <th class="table-th text-left text-white">DESCRIPCIóN</th>
-                                        <th class="table-th text-right text-white">COSTO</th>
-                                        <th class="table-th text-right text-white">PRECIO</th>
-                                        {{-- <th width="12%" class="table-th text-center text-white">Stock</th> --}}
-                                        <th colspan="2" class="table-th text-center text-white">ACCION</th>
-                                        
-                                    </tr>
-                                </thead>
+                        <div class="table-wrapper">
+                            {{-- <div class="table-responsive table-wrapper-scroll-y my-custom-scrollbar"> --}}
+                    
+                                <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
+                                    <thead>
+                                        <tr>
+                                            {{-- <th class="table-th text-center text-white">IMAGEN</th> --}}
+                                            <th class="table-th text-left text-white">DESCRIPCIóN</th>
+                                            <th class="table-th text-right text-white">COSTO</th>
+                                            <th class="table-th text-right text-white">PRECIO</th>
+                                            {{-- <th width="12%" class="table-th text-center text-white">Stock</th> --}}
+                                            <th colspan="2" class="table-th text-center text-white">ACCION</th>
+                                            
+                                        </tr>
+                                    </thead>
                                 <tbody>
                                     @foreach ($datosnombreproducto as $p)
                                     <tr>
                                         {{-- Imagen Producto --}}
-                                        <td class="text-center">
+                                        {{-- <td class="text-center">
                                             <span>
                                                 <img src="{{('storage/productos/'.$p->image) }}"
                                                     height="40" class="rounded">
                                             </span>
-                                        </td>
+                                        </td> --}}
                                         {{-- Descripciòn Producto --}}
                                         <td>
                                             <h6>{{ $p->nombre }}</h6>
@@ -85,7 +86,7 @@
                                         </td>
                                         {{-- Precio Producto--}}
                                         <td class="text-right">
-                                            <h6>{{ $p->precio_venta }} Bs</h6>
+                                            <h6>{{ $p->precio_venta }}</h6>
                                         </td>
                                         {{-- Stock Disponible --}}
                                         {{-- <td  class="text-center">

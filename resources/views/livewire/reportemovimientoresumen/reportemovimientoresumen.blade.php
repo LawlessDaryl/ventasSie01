@@ -19,6 +19,55 @@
     
     }
     .trp:hover {background-color: rgb(209, 137, 110);}
+
+
+
+
+
+    .estilostable {
+        width: 100%;
+        font-size: 12px;
+        border-spacing: 0px;
+        color: black;
+        }
+        .estilostable .tablehead{
+            background-color: #dbd4d4;
+            font-size: 10px;
+        }
+        .estilostable2 {
+        width: 100%;
+        font-size: 9px;
+        border-spacing: 0px;
+        color: black;
+        padding: 0px;
+        }
+        .estilostable2 .tablehead{
+            background-color: white;
+        }
+        .fnombre{
+            border: 0.5px solid rgb(204, 204, 204);
+        }
+        .filarow{
+            border: 0.5px solid rgb(204, 204, 204);
+            width: 10px;
+            text-align: center;
+        }
+        .filarowpp{
+            border: 0.5px solid rgb(204, 204, 204);
+            width: 20px;
+            text-align: center;
+            font-size: 8px;
+        }
+        .filarownombre{
+            border: 0.5px solid rgb(204, 204, 204);
+            width: 150px;
+        }
+    
+        .filarowx{
+            border: 0.5px solid rgb(255, 255, 255);
+            width: 100%;
+            text-align: center;
+        }
 </style>
    
 
@@ -119,22 +168,22 @@
                             <td>
                                 {{ $loop->iteration }}
                             </td>
-                            <td>
+                            <td class="text-center">
                                 {{ \Carbon\Carbon::parse($p->movimientoCreacion)->format('d/m/Y H:i') }}
                             </td>
                           
-                            <td>
-                                <b>{{ $p->tipoDeMovimiento }},{{ $p->ctipo =='CajaFisica'?'Efectivo':$p->ctipo }},({{ $p->nombrecartera }})</b>
+                            <td class="text-center">
+                                <b>{{ $p->idventa }},{{ $p->tipoDeMovimiento }},{{ $p->ctipo =='CajaFisica'?'Efectivo':$p->ctipo }},({{ $p->nombrecartera }})</b>
                             </td>
-                            <td>
-                                {{ $p->importe }}
+                            <td class="text-right">
+                                {{ number_format($p->importe,2) }}
                             </td>
                             <td>
                                 
                             </td>
-                            <td>
+                            <td class="text-right">
                                 @if(@Auth::user()->hasPermissionTo('VentasMovDiaSucursalUtilidad'))
-                                {{ $p->utilidadventa }}
+                                {{ number_format($p->utilidadventa,2) }}
                                 @endif
                             </td>
 
@@ -143,61 +192,62 @@
                         <tr>
                             <td></td>
                             <td></td>
-
-                            {{-- <td>
-
-
-                                <table class="tablep p-0 m-0">
-                                    <thead class="">
+                            <td>
+                                <table class="estilostable2">
+                                    <thead>
                                         <tr>
-                                            <th class="">Nombre</th>
-                                            <th class="">Precio Original</th>
-                                            <th class="">Descuento o Recargo</th>
-                                            <th class="">Precio Venta</th>
-                                            <th class="">Cantidad</th>
+                                            <td class="fnombre">
+                                                Nombre
+                                            </td>
+                                            <td class="filarowpp">
+                                                Precio Original
+                                            </td>
+                                            <td class="filarow">
+                                                Desc/Rec
+                                            </td>
+                                            <td class="filarowpp">
+                                                Precio Venta
+                                            </td>
+                                            <td class="filarow">
+                                                Cantidad
+                                            </td>
+                                            <td class="filarow">
+                                                Total
+                                            </td>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
+                                        @foreach($p->detalle as $item)
+                                        <tr class="">
+                                            <td class="filarownombre">
+                                                {{-- {{rtrim(mb_strimwidth($item['nombre'], 2, 2, '...', 'UTF-8'))}} --}}
+                                                {{-- {{$item['nombre']}} --}}
+                                                {{substr($item->nombre, 0, 17)}}
+                                            </td>
+                                            <td class="filarow">
+                                                {{number_format($item->po,2)}}
+                                            </td>
+                                            <td class="filarow">
+                                                @if($item->po - $item->pv == 0)
+                                                {{$item->po - $item->pv}}
+                                                @else
+                                                {{($item->po - $item->pv) * -1}}
+                                                @endif
+                                            </td>
+                                            <td class="filarow">
+                                                {{number_format($item->pv,2)}}
+                                            </td>
+                                            <td class="filarow">
+                                                {{$item->cant}}
+                                            </td>
+                                            <td class="filarow">
+                                                {{number_format($item->pv * $item->cant,2)}}
+                                            </td>
                                         </tr>
+                                        @endforeach
                                     </tbody>
-
                                 </table>
-                            </td> --}}
-
-
-
-
-
-
-                            <td class="m-0 pl-0">
-                                <table class="tablep p-0 m-0" style="padding: 0">
-                                    <th class="thp" >Nombre Producto</th>
-                                    <th class="thp">Cantidad</th>
-                                    <th class="thp">Precio Venta</th>
-                                    
-                                        @foreach ($p->detalle as $item)
-                                        <tr class="trp">
-                                            <td class="tdp" style="border-style: hidden"> <h6 style="font-size: 11px" >{{$item->nombre}}</h6></td>
-                                            <td class="tdp"  style="border-style: hidden"> <h6 style="font-size: 11px" >{{$item->cant}}</h6></td>
-                                            <td class="tdp"  style="border-style: hidden"> <h6 style="font-size: 11px" >{{$item->pv}}</h6></td>
-                                               
-                                        </tr>
-                                         @endforeach
-                                    
-                                   
-                                    
-                                  </table>
-
                             </td>
-
-
-
                             <td></td>
                             <td></td>
                             <td></td>
@@ -212,18 +262,18 @@
                                 {{ \Carbon\Carbon::parse($p->movcreacion)->format('d/m/Y H:i') }}
                             </td>
                           
-                            <td>
-                                {{ $p->tipoDeMovimiento }},{{ $p->ctipo =='CajaFisica'?'Efectivo':$p->ctipo }},({{ $p->nombrecartera }})
+                            <td class="text-center">
+                                {{ $p->idordenservicio }},{{ $p->tipoDeMovimiento }},{{ $p->ctipo =='CajaFisica'?'Efectivo':$p->ctipo }},({{ $p->nombrecartera }})
                             </td>
-                            <td>
-                                {{ $p->importe }}
+                            <td class="text-right">
+                                {{ number_format($p->importe,2) }}
                             </td>
                             <td>
                                 
                             </td>
-                            <td>
+                            <td class="text-right">
                                 @if(@Auth::user()->hasPermissionTo('VentasMovDiaSucursalUtilidad'))
-                                {{ $p->utilidadservicios }}
+                                {{ number_format($p->utilidadservicios,2) }}
                                 @endif
                             </td>
                             
@@ -239,11 +289,11 @@
                             {{ \Carbon\Carbon::parse($m->movcreacion)->format('d/m/Y H:i') }}
                         </td>
                       
-                        <td>
+                        <td class="text-center">
                             {{ $m->ctipo =='CajaFisica'?'Efectivo':$m->ctipo }}({{ $m->nombrecartera }})
                         </td>
-                        <td>
-                            {{ $m->importe }}
+                        <td class="text-right">
+                            {{ number_format($m->importe,2) }}
                         </td>
                         <td>
                             
@@ -265,14 +315,14 @@
                         {{ \Carbon\Carbon::parse($p->movcreacion)->format('d/m/Y H:i') }}
                     </td>
                   
-                    <td>
-                        {{ $p->tipoDeMovimiento }},{{ $p->ctipo =='CajaFisica'?'Efectivo':$p->ctipo }},{{ $p->nombrecartera }})
+                    <td class="text-center">
+                        {{ $p->tipoDeMovimiento }},Devolución,{{ $p->ctipo =='CajaFisica'?'Efectivo':$p->ctipo }},{{ $p->nombrecartera }})
                     </td>
                     <td>
                         
                     </td>
-                    <td>
-                        {{ $p->importe }}
+                    <td class="text-right">
+                        {{ number_format($p->importe,2) }}
                     </td>
                     <td>
                         
@@ -290,14 +340,14 @@
                         {{ \Carbon\Carbon::parse($st->movcreacion)->format('d/m/Y H:i') }}
                     </td>
                 
-                    <td>
+                    <td class="text-center">
                         {{ $st->ctipo =='CajaFisica'?'Efectivo':$st->ctipo }}({{ $st->nombrecartera }})
                     </td>
                     <td>
                     
                     </td>
-                    <td>
-                        {{ $st->importe }}
+                    <td class="text-right">
+                        {{ number_format($st->importe,2) }}
                     </td>
                     <td>
                         
@@ -658,8 +708,13 @@
                         <td colspan="3">
                             <h5 class="text-dark text-right" style="font-size: 1rem!important;"><b> TOTAL </b></h5>
                         </td>
+<<<<<<< HEAD
                         <td wire:key="foo">
                              {{ number_format($operacionesW,2) }}
+=======
+                        <td>
+                            {{ number_format($operacionesW,2) }}
+>>>>>>> 34c5e2a1d5d7d0b5e000821cd1eb07f9ddbd1f46
                                 
                         </td>
                         <td colspan="2">
@@ -684,7 +739,16 @@
                 $('#modal-detailsr').modal('hide')
                 noty(Msg)
             })
-          
+            window.livewire.on('tigo-delete', Msg => {
+                noty(Msg)
+            })
+            //Llamando a una nueva pestaña donde estará el pdf modal
+            window.livewire.on('opentap', Msg => {
+                var win = window.open('report/pdfmovdiaresumen');
+                // Cambiar el foco al nuevo tab (punto opcional)
+                //win.focus();
+
+            });
         });
     </script>
 
