@@ -119,7 +119,7 @@ class IngresoEgresoController extends Component
      
 
 
-        return view('livewire.reportemovimientoresumen.ingreso-egreso',[
+        return view('livewire.reportemovimientoresumen.ingresoegreso',[
             'carterasSucursal'=>$carterasSucursal,
             'cajas2'=> Caja::all(),
             'data'=>$this->data

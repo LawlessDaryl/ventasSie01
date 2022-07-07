@@ -67,12 +67,12 @@
 											Reportes Movimientos</a>
 									</li>
 									<li>
-										<a href="{{ url('resumen_movimientos') }}">
+										<a href="{{ url('resumenmovimientos') }}">
 											<i class="fa fas fa-minus"></i>
 											Resumen Reportes</a>
 									</li>
 									<li>
-										<a href="{{ url('ingreso_egreso') }}">
+										<a href="{{ url('ingresoegreso') }}">
 											<i class="fa fas fa-minus"></i>
 											Ingresos/Egresos</a>
 									</li>

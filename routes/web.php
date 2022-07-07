@@ -106,8 +106,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('carteras', CarteraController::class)->name('cartera')->middleware('permission:Cartera_Index');
     Route::get('cortecajas', CorteCajaController::class)->name('cortecaja')->middleware('permission:Corte_Caja_Index');
     Route::get('movimientos', ReporteMovimientoController::class)->name('movimiento');
-    Route::get('resumen_movimientos', ReporteMovimientoResumenController::class)->name('r_movimiento');
-    Route::get('ingreso_egreso', IngresoEgresoController::class)->name('ingreso_egreso');
+    Route::get('resumenmovimientos', ReporteMovimientoResumenController::class)->name('r_movimiento');
+    Route::get('ingresoegreso', IngresoEgresoController::class)->name('ingreso_egreso');
     //aaaaa
     Route::get('report/pdfmovdiageneral', [ExportMovDiaGenController::class, 'reportPDFMovDiaGeneral']);
 

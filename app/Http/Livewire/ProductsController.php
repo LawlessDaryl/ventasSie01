@@ -367,7 +367,7 @@ class ProductsController extends Component
         
         $file = $request->file('import_file');
 
-        Excel::import(new PruebaImport,$file);
+        Excel::import(new ProductsImport,$file);
        
         return redirect()->route('productos');
     }
