@@ -44,6 +44,15 @@
                             @enderror
                         </div>
                     </div>
+                    <div class="col-sm-12 col-md-3">
+                        <div class="form-group">
+                        <div>RECAUDO</div>
+                        <br>
+                      <h6 for="">{{$recaudo}}</h6>
+                      </div>
+                    </div>
+
+
 
                
 

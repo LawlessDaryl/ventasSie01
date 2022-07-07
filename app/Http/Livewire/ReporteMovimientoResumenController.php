@@ -70,7 +70,7 @@ class ReporteMovimientoResumenController extends Component
                // dd($this->sm);
                 $this->operacionrecaudo();
                
-                $this->cantidad = $this->optotal- $this->sm->monto_base  ;
+               
             }
             
       
@@ -686,11 +686,8 @@ class ReporteMovimientoResumenController extends Component
         else{
             $this->recaudo=0;
         }
-       
 
         $this->operacionesW= $this->operacionesefectivas + $this->ops - $this->recaudo;
-
-     
 
      }
 
@@ -711,10 +708,13 @@ class ReporteMovimientoResumenController extends Component
                 $carteras = Cartera::join('cajas','cajas.id','carteras.caja_id')
                 ->where('carteras.tipo','CajaFisica')
                 ->where('cajas.sucursal_id',$sucursal)
-                ->select('carteras.id as id', DB::raw('0 as monto'))->get();
+                ->select('carteras.id as id', DB::raw('0 as monto'))
+                ->get();
             }
             else{
-                $carteras = Cartera::where('carteras.tipo','CajaFisica')->select('id', 'nombre', 'descripcion', DB::raw('0 as monto'))->get();
+             $carteras = Cartera::where('carteras.tipo','CajaFisica')
+             ->select('id', 'nombre', 'descripcion', DB::raw('0 as monto'))
+             ->get();
             }
          }
 
@@ -737,6 +737,7 @@ class ReporteMovimientoResumenController extends Component
                 ->whereBetween('m.created_at',[$fechainicial,$fecha])
                 ->where('carteras.id', $c->id)->sum('m.import');
             /* REALIZAR CALCULO DE INGRESOS - EGRESOS */
+            
             $c->monto = $MONTO - $MONTO2;
         } 
 
@@ -763,6 +764,7 @@ class ReporteMovimientoResumenController extends Component
 
     public function GenerarR()
     {
+        $carterarec=Cartera::where('carteras.caja_id',$this->cartera_id)->where('carteras.tipo','CajaFisica')->select('carteras.id')->value('carteras.id');
       
         $rules = [ /* Reglas de validacion */
           
@@ -791,7 +793,7 @@ class ReporteMovimientoResumenController extends Component
             'type' => 'EGRESO',
             'tipoDeMovimiento' => 'EGRESO/INGRESO',
             'comentario' => 'RECAUDO DEL DIA',
-            'cartera_id' => Cartera::where('caja_id',$this->cartera_id)->pluck('id') ,
+            'cartera_id' =>  $carterarec,
             'movimiento_id' => $mvt->id
         ]);
 
@@ -1135,7 +1137,7 @@ class ReporteMovimientoResumenController extends Component
 
     
             $this->optotal = $carteras2->sum('monto');
-            
+            $this->recaudo = $this->optotal- $this->sm->monto_base  ;
             
     }  
        
