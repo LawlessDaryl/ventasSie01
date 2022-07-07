@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="tabsModalLabel">Devolución Producto</h5>
+          <h5 class="modal-title" id="tabsModalLabel">Nueva Devolución</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -30,22 +30,22 @@
                         
                         <div class="row text-center">
                             
-                            <div class="col-lg-6 col-md-12 col-sm-12">
+                            <div class="col-lg-12 col-md-12 col-sm-12">
                                 <div class="input-group mb-4">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text input-gp">
                                             <i class="fas fa-search"></i>
                                         </span>
                                     </div>
-                                    <input type="text" wire:model="nombreproducto" placeholder="Buscar Producto..." class="form-control">
+                                    <input type="text" wire:model="nombreproducto" placeholder="Buscar Producto por Nombre o Código..." class="form-control">
                                 </div>
                             </div>
-                            <div class="col-md-6 mb-6">
+                            {{-- <div class="col-md-6 mb-6">
                                 <select wire:model="tipodevolucion" class="form-control  basic">
                                     <option value="monetario" selected="selected">Devolución Monetaria</option>
                                     <option value="productoigualitario" >Devolución Cambio Igualitario</option>
                                 </select>
-                            </div>
+                            </div> --}}
                         </div>
                         
 
@@ -55,47 +55,25 @@
                         <div class="table-wrapper">
                             {{-- <div class="table-responsive table-wrapper-scroll-y my-custom-scrollbar"> --}}
                     
-                                <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
+                                <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4" style="min-height: 150px;">
                                     <thead>
                                         <tr>
                                             {{-- <th class="table-th text-center text-white">IMAGEN</th> --}}
-                                            <th class="table-th text-left text-white">DESCRIPCIóN</th>
-                                            <th class="table-th text-right text-white">COSTO</th>
-                                            <th class="table-th text-right text-white">PRECIO</th>
-                                            {{-- <th width="12%" class="table-th text-center text-white">Stock</th> --}}
-                                            <th colspan="2" class="table-th text-center text-white">ACCION</th>
+                                            <th class="table-th text-left text-white">DESCRIPCIÓN</th>
+                                            <th colspan="2" class="table-th text-center text-white">#</th>
                                             
                                         </tr>
                                     </thead>
                                 <tbody>
                                     @foreach ($datosnombreproducto as $p)
                                     <tr>
-                                        {{-- Imagen Producto --}}
-                                        {{-- <td class="text-center">
-                                            <span>
-                                                <img src="{{('storage/productos/'.$p->image) }}"
-                                                    height="40" class="rounded">
-                                            </span>
-                                        </td> --}}
                                         {{-- Descripciòn Producto --}}
                                         <td>
-                                            <h6>{{ $p->nombre }}</h6>
+                                            {{ $p->nombre }} - {{ $p->barcode }} :: <b>{{ $p->precio_venta }}Bs</b>
                                         </td>
-                                        <td class="text-right">
-                                            <h6>{{ $p->costoproducto }}</h6>
-                                        </td>
-                                        {{-- Precio Producto--}}
-                                        <td class="text-right">
-                                            <h6>{{ $p->precio_venta }}</h6>
-                                        </td>
-                                        {{-- Stock Disponible --}}
-                                        {{-- <td  class="text-center">
-                                            <h6>{{$p->stock}}</h6>
-                                        </td> --}}
-                                        {{-- Acciones --}}
                                         <td class="text-center">
-                                            <button  wire:click="entry({{ $p->llaveid }})" title="Producto que nos devuelve el Cliente" class="btn btn-dark mbmobile">
-                                                Devolver
+                                            <button wire:click="entry({{$p->llaveid}})" class="btn btn-sm" title="Editar Venta" style="background-color: rgb(13, 175, 220); color:white;">
+                                                <i class="far fa-check-square"></i>
                                             </button>
                                         </td>
                                     </tr>
@@ -123,27 +101,17 @@
                         @if($productoentrante == 1)
                         <hr style="height:3px;border:none;color:rgb(189, 188, 188);background-color:rgb(230, 152, 64);" />
 
-                            <table class="table" style="background-color: rgb(234, 210, 187)">
+                            <table class="table">
                                 <tbody>
                                     @foreach ($ppee as $p)
-                                    <tr>
-                                        {{-- Imagen Producto --}}
-                                        <td class="text-center">
-                                            <span>
-                                                <img src="{{('storage/productos/'.$p->image) }}"
-                                                    height="40" class="rounded">
-                                            </span>
-                                        </td>
+                                    <tr style="background-color: rgb(231, 255, 10)">
                                         {{-- Descripciòn Producto --}}
                                         <td>
-                                            <h6>{{ $p->nombre }}</h6>
-                                        </td>
-                                        <td>
-                                            <p style="background-color: white">Producto que nos están devolviendo</p>
+                                            {{ $p->nombre }}
                                         </td>
                                         {{-- Precio Producto--}}
                                         <td class="text-right">
-                                            <h6>{{ $p->precio_venta }} Bs</h6>
+                                            {{ $p->precio_venta }} Bs
                                         </td>
                                     </tr>
                                     @endforeach
@@ -163,19 +131,9 @@
                                     <tbody>
                                         @foreach ($ppee as $p)
                                         <tr>
-                                            {{-- Imagen Producto --}}
-                                            <td class="text-center">
-                                                <span>
-                                                    <img src="{{('storage/productos/'.$p->image) }}"
-                                                        height="40" class="rounded">
-                                                </span>
-                                            </td>
                                             {{-- Descripciòn Producto --}}
                                             <td>
                                                 <h6>{{ $p->nombre }}</h6>
-                                            </td>
-                                            <td>
-                                                <p style="background-color: white">Producto que nosotros estamos devolviendo</p>
                                             </td>
                                             {{-- Precio Producto--}}
                                             <td class="text-right">
@@ -186,26 +144,70 @@
                                     </tbody>
                                 </table>
                                 <hr style="height:3px;border:none;color:rgb(189, 188, 188);background-color:rgb(230, 152, 64);" />
-                                <br>
-                                <br>
+                                
+                                <div class="form-row text-center">
+                                    <div class="col-md-3 mb-3">
+                                        <label for="validationCustom02">Monto Bs</label>
+                                        <input wire:model="bs" type="number" class="form-control" placeholder="Ingrese Bs" required>
+                                        <p style="color: crimson">Se Generará un Egreso de este Monto</p>
+                                    </div>
+
+
+                                    <div class="form-row text-center">
+                                        <div class="col-md-3 mb-3">
+                                        <strong>Tipo de Pago</strong>
+    
+                                        <select wire:model="tipopago" class="form-control">
+                                            <option disabled value="Elegir">Elegir</option>
+                                            {{-- @foreach ($listacarteras as $cartera)
+                                            <option value="{{$cartera->idcartera}}">{{ucwords(strtolower($cartera->nombrecartera)) .' - ' .ucwords(strtolower($cartera->dc))}}</option>
+                                            @endforeach
+                                            @foreach ($listacarterasg as $carteras)
+                                            <option value="{{$carteras->idcartera}}">{{ucwords(strtolower($carteras->nombrecartera)) .' - ' .ucwords(strtolower($carteras->dc))}}</option>
+                                            @endforeach --}}
+                                        </select>
+                                        
+                                        </div>
+    
+                                    </div>
+
+
+
+
+                                    <div class="col-md-6 mb-9">
+                                        <label for="validationCustom02">Motivo</label>
+                                        <textarea class="form-control" placeholder="Ingrese el Motivo de la Devolución..." aria-label="With textarea" wire:model="observaciondevolucion"></textarea>
+                                    </div>
+
+
+
+
+                                </div>
+                                <hr style="height:3px;border:none;color:rgb(189, 188, 188);background-color:rgb(230, 152, 64);" />
                             @else
-                            <div class="form-row text-center">
-                                <div class="col-md-3 mb-3">
+                            <div class="row text-center">
+                                <div class="col-sm-6 col-md-2">
                                     <label for="validationCustom02">Monto Bs</label>
                                     <input wire:model="bs" type="number" class="form-control" placeholder="Ingrese Bs" required>
                                     <p style="color: crimson">Se Generará un Egreso de este Monto</p>
                                 </div>
+                                <div class="col-sm-6 col-md-3">
+                                    <strong>Elegir Cartera</strong>
 
-
-
-
-
-
-                                <div class="col-md-9 mb-9">
+                                    <select wire:model="tipopago" class="form-control">
+                                        <option disabled value="Elegir">Elegir</option>
+                                        @foreach ($listacarteras as $cartera)
+                                        <option value="{{$cartera->idcartera}}">{{ucwords(strtolower($cartera->nombrecartera)) .' - ' .ucwords(strtolower($cartera->dc))}}</option>
+                                        @endforeach
+                                        @foreach ($listacarterasg as $carteras)
+                                        <option value="{{$carteras->idcartera}}">{{ucwords(strtolower($carteras->nombrecartera)) .' - ' .ucwords(strtolower($carteras->dc))}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-sm-6 col-md-7">
                                     <label for="validationCustom02">Motivo</label>
                                     <textarea class="form-control" placeholder="Ingrese el Motivo de la Devolución..." aria-label="With textarea" wire:model="observaciondevolucion"></textarea>
                                 </div>
-
                             </div>
                             <hr style="height:3px;border:none;color:rgb(189, 188, 188);background-color:rgb(230, 152, 64);" />
                             @endif
@@ -286,13 +288,13 @@
                                     <h4>Historial de Ventas del Producto Seleccionado</h4>
                                 </div>
                                 <br>
-                                <div class="table-responsive mb-4">
-                                    <table id="show-hide-col" class="table table-hover" style="width:100%">
+                                <div class="table-wrapper2">
+                                    {{-- <div class="table-responsive table-wrapper-scroll-y my-custom-scrollbar"> --}}
+                            
+                                        <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4" style="min-height: 150px;">
                                         <thead style="border-bottom: none; align-items: center;">
                                             <tr>
-                                                <th>Producto Buscado</th>
                                                 <th>Fecha de la Venta</th>
-                                                {{-- <th>Cantidad Total</th> --}}
                                                 <th>Usuario Responsable</th>
                                                 <th colspan="4"> Mostrar Detalles</th>
                                             </tr>
@@ -301,20 +303,8 @@
                                             @foreach ($historialventa as $p)
                                             <tr>
                                                 <td class="text-center">
-                                                    <span>
-                                                        <img src="{{('storage/productos/'.$p->image) }}"
-                                                            height="40" class="rounded">
-                                                    </span>
+                                                    {{$p->fechaventa}}
                                                 </td>
-                                                <td class="text-center">
-                                                    <p>{{$this->cambiarformatofecha($p->fechaventa)}}</p>
-                                                </td>
-                                                {{-- <td class="text-center">
-                                                    <p>{{ $p->totalbs }} Bs</p>
-                                                </td> --}}
-                                                {{-- <td class="text-center">
-                                                    <p>{{ $p->items }}</p>
-                                                </td> --}}
                                                 <td class="text-center">
                                                     <p>{{ $p->nombreusuario }}</p>
                                                 </td>
@@ -324,20 +314,16 @@
                                                             <div class="card-header" id="...">
                                                                 <section class="mb-0 mt-0">
                                                                     <div role="menu" class="collapsed" data-toggle="collapse" data-target="#defaultAccordion{{ $p->id }}" aria-expanded="true" aria-controls="defaultAccordion{{ $p->id }}">
-                                                                         {{-- IIIIIIIIIIIIIIIIIIIIIIIIIIIIDetallesIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII --}}
-                                                                              |||||||||||||||||||||||||||||MostratOcultar|||||||||||||||||||||||||||
+                                                                         MostratOcultar
                                                                     </div>
                                                                 </section>
                                                             </div>
                                                     
                                                             <div id="defaultAccordion{{ $p->id }}" class="collapse" aria-labelledby="..." data-parent="#toggleAccordion">
-                                                                <div class="card-body">
-                                                                
-                                                                    
-                                                                    
-
-
-                                                                    <table>
+                                                                <div class="table-wrapper">
+                                                                    {{-- <div class="table-responsive table-wrapper-scroll-y my-custom-scrollbar"> --}}
+                                                            
+                                                                        <table class="" style="min-height: 150px;">
                                                                         <thead class="text-white" style="background: #e4e0e0 ">
                                                                             <tr>
                                                                                 <th class="table-th text-left text-dark" colspan="2">Nombre Producto</th>
@@ -398,9 +384,7 @@
                             <br>
                             <br>
                             <br>
-                            <br>
                             <p class="text-center">¡No Existen Ventas del Producto Seleccionado en los Últimos 30 Días!</p>
-                            <br>
                             <br>
                             <br>
                             <br>
