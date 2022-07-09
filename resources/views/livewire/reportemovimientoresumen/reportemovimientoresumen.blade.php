@@ -721,9 +721,11 @@
 
 
             </table>
-        </div>
+        
         @include('livewire.reportemovimientoresumen.modalDetailsR')
-    </div>
+
+</div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
          

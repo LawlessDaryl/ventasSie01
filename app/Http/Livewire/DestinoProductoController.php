@@ -20,7 +20,7 @@ class DestinoProductoController extends Component
     use WithFileUploads;
     use WithPagination;
 
-    public $selected_id,$search,$selected_ubicacion,$componentName,$title,$sql,$prod,$grouped;
+    public $selected_id,$search,$selected_ubicacion,$componentName,$title,$sql,$prod,$grouped,$productoajuste,$cantidad,$productid;
     private $pagination = 50;
     public function paginationView()
     {
@@ -146,6 +146,23 @@ class DestinoProductoController extends Component
      
     
     }
+
+    public function ajuste(Product $prod){
+
+        $this->productoajuste=$prod->nombre;
+        $this->productid = $prod->id;
+        $this->emit('show-modal-ajuste');
+    }
     
+    public function guardarajuste(){
+       
+        ProductosDestino::where('productos_destinos.destino_id',$this->selected_id)->where('productos_destinos.product_id',$this->productid)
+        ->update(['stock' => $this->cantidad]);;
+       
+
+        $this->emit('hide-modal-ajuste');
+        $this->cantidad= null;
+        
+    }
 
 }

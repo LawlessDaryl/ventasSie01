@@ -15,7 +15,7 @@
     }
 
     .estilostable {
-    width: 100%;
+    width: 98%;
     min-width: 1000px;
     }
     .estilostotales {
@@ -93,11 +93,12 @@
                                 <th class="table-th text-withe text-center">ITEM</th>
                                 <th class="table-th text-withe text-center">IMAGEN</th>                              
                                 <th class="table-th text-withe text-center">PRODUCTO</th>                              
-                                <th class="table-th text-withe text-center">STOCK</th>   
+                                <th class="table-th text-withe text-center">STOCK</th>
                                 @if ($selected_id == 'General' || $selected_id == null)
                                 <th class="table-th text-withe text-center">CANT.MIN</th>                                       
-                                <th class="table-th text-withe text-center">ACCIONES</th>
+                               
                                 @endif                           
+                                <th class="table-th text-withe text-center">ACCIONES</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -129,19 +130,23 @@
                                     <td>
                                     <center>{{ $destino->cantidad_minima }}</center> 
                                   </td>
-                                  <td class="text-center">
-                                    <button wire:click="ver({{ $destino->id }})" type="button" class="btn btn-secondary" style="background-color: rgb(12, 100, 194)">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                                  <td>
+                                    <button wire:click="ver({{ $destino->id }})" type="button" class="btn btn-secondary p-1" style="background-color: rgb(12, 100, 194)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
                                     </button>
+                                   
                                   </td>
                                     @else
                                     <td>
                                       <h6 class="text-center">{{ $destino->stock }}</h6>
+                                    </td>
+                                      <td>
+                                      <button  wire:click="ajuste({{ $destino->id }})" class="btn btn-success p-1" title="Ajuste de inventarios" style="background-color: rgb(13, 175, 220); color:white">
+                                        <i class="fas fa-pen"></i>
+                                    </button>
                                   </td>
                                     @endif
-                                    
-                                    
-                                   
+
                                 </tr>
                             @endforeach
                         </tbody>
@@ -159,6 +164,7 @@
    
    
     @include('livewire.destinoproducto.detallemobiliario')
+    @include('livewire.destinoproducto.ajusteinventario')
     </div>
 @section('javascript')
 <script>
@@ -169,6 +175,12 @@
             $('#mobil').modal('show')
            
         });
+        window.livewire.on('show-modal-ajuste', msg => {
+            $('#ajustesinv').modal('show')
+        });  
+        window.livewire.on('hide-modal-ajuste', msg => {
+            $('#ajustesinv').modal('hide')
+        });  
        
     });
 
