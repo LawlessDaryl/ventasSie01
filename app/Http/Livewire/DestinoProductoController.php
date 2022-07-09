@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 use App\Models\Category;
 use App\Models\Destino;
+use App\Models\Location;
 use App\Models\LocationProducto;
 use App\Models\Product;
 use App\Models\ProductosDestino;
@@ -20,8 +21,9 @@ class DestinoProductoController extends Component
     use WithFileUploads;
     use WithPagination;
 
-    public $selected_id,$search,$selected_ubicacion,$componentName,$title,$sql,$prod,$grouped,$productoajuste,$cantidad,$productid;
+    public $selected_id,$search,$selected_ubicacion,$componentName,$title,$sql,$prod,$grouped,$productoajuste,$cantidad,$productid,$productstock,$mobiliario,$mobs,$mop_prod=0;
     private $pagination = 50;
+   
     public function paginationView()
     {
         return 'vendor.livewire.bootstrap';
@@ -150,19 +152,44 @@ class DestinoProductoController extends Component
     public function ajuste(Product $prod){
 
         $this->productoajuste=$prod->nombre;
-        $this->productid = $prod->id;
+        $this->productid=$prod->id;
+        $this->productstock=ProductosDestino::where('productos_destinos.product_id',$prod->id)->where('productos_destinos.destino_id',$this->selected_id)->value('stock');
+
+        $this->mobs = Location::where('locations.destino_id',$this->selected_id)
+        ->select('locations.*')
+        ->get();
+
+        $this->mop_prod = LocationProducto::where('location_productos.product',$this->productid)->get();
+
         $this->emit('show-modal-ajuste');
     }
     
     public function guardarajuste(){
        
         ProductosDestino::where('productos_destinos.destino_id',$this->selected_id)->where('productos_destinos.product_id',$this->productid)
-        ->update(['stock' => $this->cantidad]);;
-       
+        ->update(['stock' => $this->productstock+ $this->cantidad ]);
+
+       if ($this->mobiliario) {
+        
+        LocationProducto::create([
+            'product'=>$this->productid,
+            'location'=>$this->mobiliario
+        ]);
+       }
 
         $this->emit('hide-modal-ajuste');
         $this->cantidad= null;
         
+    }
+    protected $listeners = ['vaciarDestino' => 'vaciarAlmacen'];
+
+    public function vaciarAlmacen(){
+
+        $auxi2=ProductosDestino::where('productos_destinos.destino_id',$this->selected_id)->get();
+        foreach ($auxi2 as $data) {
+        $data->stock = 0;
+        $data->save();
+        }
     }
 
 }

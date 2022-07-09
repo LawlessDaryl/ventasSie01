@@ -48,10 +48,8 @@
                     
                         <a href="transferencia" class="btn btn-success m-1" >Transferir Productos</a>
                         <a href="transferencias" class="btn btn-dark m-1">Ver Transferencias</a>
-                      
-                    
+                       
                 </ul>
-               
             </div>
           
 
@@ -72,15 +70,18 @@
 
                     <div class="form-group">
                         <select wire:model='selected_id' class="form-control">
-                            <option value="General">Almacen Total</option>
+                            <option value="General">Almacen General</option>
                           @foreach ($data_suc as $data)
-                          <option value="{{ $data->id }}">{{ $data->sucursal }}-{{$data->destino}}</option>
+                            <option value="{{ $data->id }}">{{ $data->sucursal }}-{{$data->destino}}</option>
                           @endforeach
-                         
-                         
                         </select>
                       </div>
                 </div>
+                @if ($selected_id != 'General')
+                    <div class="col-12 col-lg-1 col-md-3">
+                        <button type="button" class="btn btn-danger" onclick="Confirmarvaciado()">Vaciar Almacen</button>
+                    </div>
+                @endif
             </div>
           
           
@@ -115,7 +116,7 @@
                                         <span>
                                             <img src="{{('storage/productos/'.$destino->image) }}"
                                                 height="40" class="rounded">
-                                        </span>
+                                        </span> 
                                     </td>
                                     <td>
                                         <strong>{{$destino->nombre}}</strong>
@@ -184,7 +185,23 @@
        
     });
 
-
+    function Confirmarvaciado() {
+        swal.fire({
+            title: 'CONFIRMAR',
+            icon: 'warning',
+            text: '¿Esta seguro de vaciar el stock del almacen ?',
+            showCancelButton: true,
+            cancelButtonText: 'Cerrar',
+            cancelButtonColor: '#383838',
+            confirmButtonColor: '#3B3F5C',
+            confirmButtonText: 'Aceptar'
+        }).then(function(result) {
+            if (result.value) {
+                window.livewire.emit('vaciarDestino')
+                Swal.close()
+            }
+        })
+    }
 
 
 </script>
