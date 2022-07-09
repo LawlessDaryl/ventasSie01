@@ -37,6 +37,64 @@
     .table-wrapper table tbody td {
     border: 1px solid #000;
     }
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    .table-wrapper2 {
+    width: 100%;/* Anchura de ejemplo */
+    height: 575px; /* Altura de ejemplo */
+    overflow: auto;
+    }
+
+    .table-wrapper2 table {
+    border-collapse: separate;
+    border-spacing: 0;
+    }
+
+    .table-wrapper2 table thead {
+    position: -webkit-sticky; /* Safari... */
+    position: sticky;
+    top: 0;
+    left: 0;
+    }
+
+    .table-wrapper2 table thead th {
+    border: 1px solid #000;
+    background: #ee761c;
+    }
+    .table-wrapper2 table tbody td {
+    border: 1px solid #000;
+    }
+
+
 </style>
 
 
@@ -55,7 +113,7 @@
                         data-target="#theModal">Devolución Por Venta</a> --}}
                         
                     <a href="javascript:void(0)" type="button" class="btn btn-info mb-2 mr-2" data-toggle="modal" data-target="#tabsModal">
-                    Devolución Por Producto</a>
+                    Nueva Devolución</a>
                 </ul>
                 
             </div>
@@ -92,9 +150,10 @@
                             <tr>
                                 <th class="table-th text-withe text-center">No</th>
                                 <th class="table-th text-withe text-left">Nombre Producto</th>
-                                <th class="table-th text-withe text-right">Monto Devuelto</th>
+                                <th class="table-th text-withe text-center">Cartera</th>
+                                <th class="table-th text-withe text-center">Monto Devuelto</th>
                                 <th class="table-th text-withe text-center">Fecha Devolución</th>
-                                <th class="table-th text-withe text-center">ARTÍCULO DEVUELTO</th>
+                                {{-- <th class="table-th text-withe text-center">ARTÍCULO DEVUELTO</th> --}}
                                 <th class="table-th text-withe text-center">Usuario</th>
                                 <th class="table-th text-withe text-center">Motivo</th>
                                 <th class="table-th text-withe text-center">Estado</th>
@@ -116,19 +175,22 @@
                                     <td class="text-left">
                                         <h6>{{ $item->nombre }}</h6>
                                     </td>
+                                    <td class="text-center">
+                                        {{ $item->cartera }}
+                                    </td>
                                     <td class="text-right">
                                         <h6>{{ $item->monto }} Bs</h6>
                                     </td>
                                     <td>
                                         <h6 class="text-center">{{  $this->cambiarformatofecha($item->fechadevolucion)  }}</h6>
                                     </td>
-                                    <td>
+                                    {{-- <td>
                                         @if($item->tipo == 'MONETARIO')
                                         <h6 style="color: chocolate" class="text-center">{{ $item->tipo }}</h6>
                                         @else
                                         <h6 style="color: rgb(6, 21, 179)" class="text-center">{{ $item->tipo }}</h6>
                                         @endif
-                                    </td>
+                                    </td> --}}
                                     <td>
                                         <h6 class="text-center">{{ $item->nombreusuario }}</h6>
                                     </td>
@@ -153,13 +215,13 @@
                                         class="btn btn-dark" title="Eliminar Devolución">
                                                 <i class="fas fa-trash"></i>
                                         </a>
-                                    </td>
+                                    {{-- </td>
                                     <td>
                                         
                                         <button class="btn btn-dark">
                                             Transferir Producto
                                         </button>
-                                    </td>
+                                    </td> --}}
                                     @endif
                                 </tr>
                             @endforeach
@@ -174,19 +236,22 @@
                                     <td class="text-left">
                                         <h6>{{ $item->nombre }}</h6>
                                     </td>
+                                    <td class="text-center">
+                                        {{ $item->cartera }}
+                                    </td>
                                     <td class="text-right">
                                         <h6>{{ $item->monto }} Bs</h6>
                                     </td>
                                     <td>
                                         <h6 class="text-center">{{  $this->cambiarformatofecha($item->fechadevolucion)  }}</h6>
                                     </td>
-                                    <td>
+                                    {{-- <td>
                                         @if($item->tipo == 'MONETARIO')
                                         <h6 style="color: chocolate" class="text-center">{{ $item->tipo }}</h6>
                                         @else
                                         <h6 style="color: rgb(6, 21, 179)" class="text-center">{{ $item->tipo }}</h6>
                                         @endif
-                                    </td>
+                                    </td> --}}
                                     <td>
                                         <h6 class="text-center">{{ $item->nombreusuario }}</h6>
                                     </td>
