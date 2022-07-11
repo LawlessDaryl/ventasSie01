@@ -69,18 +69,14 @@
                             </thead>
                               <tbody>
                                 @if ($mop_prod)
-                                    
-                               
-                                
                                     @foreach ($mop_prod as $item)
                                   <tr>
                                     <td wire:key="item-{{ $item->id }}">
-
                                         {{$item->locations->tipo}} {{$item->locations->codigo}}
                                     </td>
-                                 
-                            
-                               
+                                    <td>
+                                      <i class=" btn fas fa-trash" wire:click="eliminarmob({{$item->id}} )"></i>
+                                    </td>
                                   </tr>
 
                                        
@@ -103,17 +99,17 @@
                 </div>
 
                 </div>
-                <div class="row justify-content-center">
+                <div class="row justify-content-center p-1">
 
-                    <div class="col-lg-4">
-                        <div class="form-group">
-                          
-                            <button type="button" wire:click="guardarajuste()"
-                            class="btn btn-danger fas fa-save text-center"> Guardar</button>
+                        <div class="col-lg-4">
+                                <button type="button" wire:click="guardarajuste()"
+                                class="btn btn-danger text-center"> <i class=" fas fa-save"></i> Guardar</button>
                         </div>
-    
-                        
-                    </div>
+                        <div class="col-lg-4">
+                                <button type="button" wire:click="resetajuste()"
+                                class="btn btn-success text-center"> Cancelar </button>
+                        </div>
+                    
                 </div>
             </div>
   

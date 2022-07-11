@@ -184,8 +184,14 @@ class DestinoProductoController extends Component
         ]);
        }
 
-        $this->emit('hide-modal-ajuste');
+       
+        $this->resetajuste();
+       
+    }
+    public function resetajuste(){
         $this->cantidad= null;
+        $this->mobiliario = null;
+        $this->emit('hide-modal-ajuste');
         
     }
     protected $listeners = ['vaciarDestino' => 'vaciarAlmacen'];
@@ -203,6 +209,10 @@ class DestinoProductoController extends Component
 
       
         $id->delete();
+       
+        $aux= Product::find($this->productid);
+        $this->ajuste($aux);
+        $this->emit('show-modal-ajuste');
     }
 
 }
