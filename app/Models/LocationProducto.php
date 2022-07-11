@@ -15,5 +15,9 @@ class LocationProducto extends Model
     {
         return $this->belongsTo(Product::class,'product','id');
     }
+    public function locations()
+    {
+        return $this->belongsTo(Location::class,'location','id');
+    }
 }
 

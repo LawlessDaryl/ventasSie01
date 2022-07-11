@@ -155,11 +155,18 @@ class DestinoProductoController extends Component
         $this->productid=$prod->id;
         $this->productstock=ProductosDestino::where('productos_destinos.product_id',$prod->id)->where('productos_destinos.destino_id',$this->selected_id)->value('stock');
 
-        $this->mobs = Location::where('locations.destino_id',$this->selected_id)
-        ->select('locations.*')
-        ->get();
+        // $this->mobs = Location::join('location_productos','location_productos.location','locations.id')
+        // ->where('locations.destino_id',$this->selected_id)
+        // ->where('loca')
+        // ->select('locations.*')
+        // ->get();
 
         $this->mop_prod = LocationProducto::where('location_productos.product',$this->productid)->get();
+
+        $arr= $this->mop_prod->pluck('location');
+
+        
+        $this->mobs = Location::whereNotIn('id',$arr)->get();
 
         $this->emit('show-modal-ajuste');
     }
@@ -190,6 +197,12 @@ class DestinoProductoController extends Component
         $data->stock = 0;
         $data->save();
         }
+    }
+
+    public function eliminarmob(LocationProducto $id){
+
+      
+        $id->delete();
     }
 
 }

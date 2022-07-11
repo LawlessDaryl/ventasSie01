@@ -60,15 +60,35 @@
                     <div class="col-lg-5">
                         <div class="form-group">
                           <table>
-                             
+                            <thead>
+                                <tr>
+                                    <th class="table-th text-withe text-center"></th>
+                                    <th class="table-th text-withe text-center"></th>                              
+                                 
+                                </tr>
+                            </thead>
                               <tbody>
                                 @if ($mop_prod)
                                     
-                                 @foreach ($mop_prod as $item)
-                                    <td>
-                                        {{$item->location}}
+                               
+                                
+                                    @foreach ($mop_prod as $item)
+                                  <tr>
+                                    <td wire:key="item-{{ $item->id }}">
+
+                                        {{$item->locations->tipo}} {{$item->locations->codigo}}
                                     </td>
-                                 @endforeach
+                                 
+                            
+                               
+                                  </tr>
+
+                                       
+                                    
+                                    @endforeach
+                              
+                               
+                                
                                  @else
                                  <td>
                                     Sin mobiliarios
@@ -101,55 +121,3 @@
     </div>
 </div>
 
-<section class="container">
-    <div>
-        <select id="leftValues" size="5" multiple></select>
-    </div>
-    <div>
-        <input type="button" id="btnLeft" value="&lt;&lt;" />
-        <input type="button" id="btnRight" value="&gt;&gt;" />
-    </div>
-    <div>
-        <select id="rightValues" size="4" multiple>
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-        </select>
-        <div>
-            <input type="text" id="txtRight" />
-        </div>
-    </div>
-</section>
-
-SELECT, INPUT[type="text"] {
-    width: 160px;
-    box-sizing: border-box;
-}
-SECTION {
-    padding: 8px;
-    background-color: #f0f0f0;
-    overflow: auto;
-}
-SECTION > DIV {
-    float: left;
-    padding: 4px;
-}
-SECTION > DIV + DIV {
-    width: 40px;
-    text-align: center;
-}
-
-$("#btnLeft").click(function () {
-    var selectedItem = $("#rightValues option:selected");
-    $("#leftValues").append(selectedItem);
-});
-
-$("#btnRight").click(function () {
-    var selectedItem = $("#leftValues option:selected");
-    $("#rightValues").append(selectedItem);
-});
-
-$("#rightValues").change(function () {
-    var selectedItem = $("#rightValues option:selected");
-    $("#txtRight").val(selectedItem.text());
-});
