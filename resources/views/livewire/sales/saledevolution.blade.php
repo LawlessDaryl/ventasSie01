@@ -99,7 +99,7 @@
 
 
 @endsection
-<div class="row sales layout-top-spacing">
+<div class="row">
     <div class="col-sm-12" >
 
         
@@ -129,7 +129,7 @@
                 @if($this->verificarpermiso() == true)
                 <div class="col-lg-2 col-md-12 col-sm-12">
                         <div>
-                            <h6>Seleccionar Usuario</h6>
+                            Seleccionar Usuario
                         </div>
                         <select wire:model="usuarioseleccionado" class="form-control">
                             <option value="Todos" selected>Todos los Usuarios</option>
@@ -149,14 +149,15 @@
                         <thead class="text-white" style="background: #ee761c">
                             <tr>
                                 <th class="table-th text-withe text-center">No</th>
-                                <th class="table-th text-withe text-left">Nombre Producto</th>
+                                <th class="table-th text-withe text-center">Fecha</th>
+                                <th class="table-th text-withe text-left">Nombre</th>
                                 <th class="table-th text-withe text-center">Cartera</th>
-                                <th class="table-th text-withe text-center">Monto Devuelto</th>
-                                <th class="table-th text-withe text-center">Fecha Devolución</th>
-                                {{-- <th class="table-th text-withe text-center">ARTÍCULO DEVUELTO</th> --}}
+                                <th class="table-th text-withe text-center">Monto</th>
+                                <th class="table-th text-withe text-center">Locacion</th>
+                                <th class="table-th text-withe text-center">Artículo Devuelto</th>
                                 <th class="table-th text-withe text-center">Usuario</th>
                                 <th class="table-th text-withe text-center">Motivo</th>
-                                <th class="table-th text-withe text-center">Estado</th>
+                                {{-- <th class="table-th text-withe text-center">Estado</th> --}}
                                 @if($this->verificarpermiso() == true)
                                 <th class="table-th text-withe text-center">Acción</th>
                                 {{-- <th class="table-th text-withe text-center">Eliminar</th> --}}
@@ -172,56 +173,53 @@
                                     <td class="text-center">
                                         {{$loop->iteration}}
                                     </td>
+                                    <td>
+                                        {{$item->fechadevolucion}}
+                                    </td>
                                     <td class="text-left">
-                                        <h6>{{ $item->nombre }}</h6>
+                                        {{ $item->nombre }}
                                     </td>
                                     <td class="text-center">
+                                        @if($item->tipo == 'PRODUCTO')
+                                        No Corresponde
+                                        @else
                                         {{ $item->cartera }}
+                                        @endif
                                     </td>
                                     <td class="text-right">
-                                        <h6>{{ $item->monto }} Bs</h6>
+                                        {{ $item->monto }} Bs
                                     </td>
                                     <td>
-                                        <h6 class="text-center">{{  $this->cambiarformatofecha($item->fechadevolucion)  }}</h6>
+                                        {{  $item->destino  }}
+                                    </td>
+                                    <td>
+                                        @if($item->tipo == 'MONETARIO')
+                                        <h6 style="color: chocolate" class="text-center">{{ $item->tipo }}
+                                        @else
+                                        <h6 style="color: rgb(6, 21, 179)" class="text-center">{{ $item->tipo }}
+                                        @endif
+                                    </td>
+                                    <td>
+                                        {{ $item->nombreusuario }}
+                                    </td>
+                                    <td>
+                                        {{ $item->observacion }}
                                     </td>
                                     {{-- <td>
-                                        @if($item->tipo == 'MONETARIO')
-                                        <h6 style="color: chocolate" class="text-center">{{ $item->tipo }}</h6>
+                                        @if($item->estado == 'NORMAL')
+                                        <h6 style="color: rgb(50, 0, 131)" class="text-center">{{ $item->estado }}
                                         @else
-                                        <h6 style="color: rgb(6, 21, 179)" class="text-center">{{ $item->tipo }}</h6>
+                                        <h6 style="color: rgb(0, 209, 49)" class="text-center">{{ $item->estado }}
                                         @endif
                                     </td> --}}
-                                    <td>
-                                        <h6 class="text-center">{{ $item->nombreusuario }}</h6>
-                                    </td>
-                                    <td>
-                                        <h6 class="text-center">{{ $item->observacion }}</h6>
-                                    </td>
-                                    <td>
-                                        @if($item->estado == 'NORMAL')
-                                        <h6 style="color: aqua" class="text-center">{{ $item->estado }}</h6>
-                                        @else
-                                            @if($item->estado == 'ELIMINADO')
-                                            <h6 style="color: red" class="text-center">{{ $item->estado }}</h6>
-                                            @else
-                                            <h6 style="color: rgb(0, 209, 49)" class="text-center">{{ $item->estado }}</h6>
-                                            @endif
-                                        @endif
-                                    </td>
                                     @if($this->verificarpermiso() == true)
                                     <td class="text-center">
-                                        <a href="javascript:void(0)"
+                                        <button href="javascript:void(0)"
                                         onclick="Confirm('{{ $item->iddevolucion }}')"
-                                        class="btn btn-dark" title="Eliminar Devolución">
+                                        class="btn btn-danger" title="Eliminar Devolución">
                                                 <i class="fas fa-trash"></i>
-                                        </a>
-                                    {{-- </td>
-                                    <td>
-                                        
-                                        <button class="btn btn-dark">
-                                            Transferir Producto
                                         </button>
-                                    </td> --}}
+                                    </td>
                                     @endif
                                 </tr>
                             @endforeach
@@ -233,56 +231,57 @@
                                     <td class="text-center">
                                         {{$loop->iteration}}
                                     </td>
+                                    <td>
+                                        {{$item->fechadevolucion}}
+                                    </td>
                                     <td class="text-left">
-                                        <h6>{{ $item->nombre }}</h6>
+                                        {{ $item->nombre }}
                                     </td>
                                     <td class="text-center">
+                                        @if($item->tipo == 'PRODUCTO')
+                                        No Corresponde
+                                        @else
                                         {{ $item->cartera }}
+                                        @endif
                                     </td>
                                     <td class="text-right">
-                                        <h6>{{ $item->monto }} Bs</h6>
+                                        {{ $item->monto }} Bs
                                     </td>
                                     <td>
-                                        <h6 class="text-center">{{  $this->cambiarformatofecha($item->fechadevolucion)  }}</h6>
+                                        {{  $item->destino  }}
+                                    </td>
+                                    <td>
+                                        @if($item->tipo == 'MONETARIO')
+                                        <h6 style="color: chocolate" class="text-center">{{ $item->tipo }}
+                                        @else
+                                        <h6 style="color: rgb(6, 21, 179)" class="text-center">{{ $item->tipo }}
+                                        @endif
+                                    </td>
+                                    <td>
+                                        {{ $item->nombreusuario }}
+                                    </td>
+                                    <td>
+                                        {{ $item->observacion }}
                                     </td>
                                     {{-- <td>
-                                        @if($item->tipo == 'MONETARIO')
-                                        <h6 style="color: chocolate" class="text-center">{{ $item->tipo }}</h6>
-                                        @else
-                                        <h6 style="color: rgb(6, 21, 179)" class="text-center">{{ $item->tipo }}</h6>
-                                        @endif
-                                    </td> --}}
-                                    <td>
-                                        <h6 class="text-center">{{ $item->nombreusuario }}</h6>
-                                    </td>
-                                    <td>
-                                        <h6 class="text-center">{{ $item->observacion }}</h6>
-                                    </td>
-                                    <td>
                                         @if($item->estado == 'NORMAL')
-                                        <h6 style="color: rgb(29, 134, 148)" class="text-center">{{ $item->estado }}</h6>
+                                        <h6 style="color: rgb(29, 134, 148)" class="text-center">{{ $item->estado }}
                                         @else
                                             @if($item->estado == 'ELIMINADO')
-                                            <h6 style="color: red" class="text-center">{{ $item->estado }}</h6>
+                                            <h6 style="color: red" class="text-center">{{ $item->estado }}
                                             @else
-                                            <h6 style="color: rgb(0, 209, 49)" class="text-center">{{ $item->estado }}</h6>
+                                            <h6 style="color: rgb(0, 209, 49)" class="text-center">{{ $item->estado }}
                                             @endif
                                         @endif
-                                    </td>
+                                    </td> --}}
                                     @if($this->verificarpermiso() == true)
                                     <td class="text-center">
-                                        <a href="javascript:void(0)"
+                                        <button href="javascript:void(0)"
                                         onclick="Confirm('{{ $item->iddevolucion }}')"
-                                        class="btn btn-dark" title="Eliminar Devolución">
+                                        class="btn btn-danger" title="Eliminar Devolución">
                                                 <i class="fas fa-trash"></i>
-                                        </a>
-                                    </td>
-                                    {{-- <td>
-                                        
-                                        <button class="btn btn-dark">
-                                            Transferir Producto
                                         </button>
-                                    </td> --}}
+                                    </td>
                                     @endif
                                 </tr>
                             @endforeach
@@ -311,8 +310,6 @@
 @section('javascript')
 
 
-@endsection
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         window.livewire.on('item-deleted', msg => {
@@ -324,7 +321,7 @@
         swal.fire({
             title: 'CONFIRMAR',
             icon: 'warning',
-            text: '¿Seguro que quiere eliminar esta Devolución? ',
+            text: '¿Seguro que quiere Eliminar esta Devolución? Se reventiran todos los cambios guardados',
             showCancelButton: true,
             cancelButtonText: 'Cerrar',
             cancelButtonColor: '#383838',
@@ -342,3 +339,5 @@
         alert("HOLA");
     }
 </script>
+
+@endsection

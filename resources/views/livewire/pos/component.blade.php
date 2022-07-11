@@ -155,7 +155,7 @@ input[type=number]::-webkit-outer-spin-button {
                 <!-- linea Divisoria -->
                 {{-- <hr style="height:3px;border:none;color:rgb(189, 188, 188);background-color:rgb(230, 152, 64);" /> --}}
                 <!-- -------- -->
-            @include('livewire.pos.partials.coins')
+                @include('livewire.pos.partials.coins')
 
 
             </div>

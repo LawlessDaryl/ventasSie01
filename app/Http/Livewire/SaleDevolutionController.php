@@ -31,7 +31,7 @@ class SaleDevolutionController extends Component
     private $pagination = 10;
     
     
-    public $identrante, $tipodevolucion, $observaciondevolucion, $bs, $usuarioseleccionado, $tipopago;
+    public $identrante, $tipodevolucion, $observaciondevolucion, $bs, $usuarioseleccionado, $tipopago, $destino;
 
     public function paginationView()
     {
@@ -43,7 +43,7 @@ class SaleDevolutionController extends Component
         $this->componentName = 'Ventas';
         $this->ProductSelectNombre = 1;
         $this->selected_id = 0;
-        //$this->tipodevolucion = 'monetario';
+        $this->tipodevolucion = 'monetario';
         $this->usuarioseleccionado = Auth()->user()->id;
 
         $this->tipopago = 'Elegir';
@@ -57,6 +57,7 @@ class SaleDevolutionController extends Component
                 }
                 
             }
+        $this->destino = $this->listardestinos()->first()->iddestino;
         
     }
     public function render()
@@ -128,23 +129,33 @@ class SaleDevolutionController extends Component
         //Listar, Buscar y filtrar la tabla de Devoluciones por Usuario
         if (strlen($this->search) > 0)
         {
-            $devolucionesusuario = DevolutionSale::join("products as p", "p.id", "devolution_sales.product_id")
+            $data = DevolutionSale::join("products as p", "p.id", "devolution_sales.product_id")
             ->join("users as u", "u.id", "devolution_sales.user_id")
+            ->join("destinos as des","des.id","devolution_sales.destino_id")
             ->join("carteras as c","c.id","devolution_sales.cartera_id")
             ->select('devolution_sales.id as iddevolucion', 'p.image as image','c.nombre as cartera', 'p.nombre as nombre', 'devolution_sales.monto_dev as monto',
             'devolution_sales.created_at as fechadevolucion','u.name as nombreusuario', 'devolution_sales.estado as estado',
-            'devolution_sales.tipo_dev as tipo','devolution_sales.observations as observacion')
-            ->where('nombre', 'like', '%' . $this->search . '%')
+            'devolution_sales.tipo_dev as tipo','devolution_sales.observations as observacion','des.nombre as destino')
+            ->where(function($query){
+                $query->where('p.nombre', 'like', '%' . $this->search . '%')
+                      ->orWhere('p.codigo', 'like', '%' . $this->search . '%');  
+                          
+            })
             ->orderBy('devolution_sales.created_at', 'desc')
             ->paginate($this->pagination);
 
             $usuarioespecifico = DevolutionSale::join("products as p", "p.id", "devolution_sales.product_id")
             ->join("users as u", "u.id", "devolution_sales.user_id")
+            ->join("destinos as des","des.id","devolution_sales.destino_id")
             ->join("carteras as c","c.id","devolution_sales.cartera_id")
             ->select('devolution_sales.id as iddevolucion', 'p.image as image','c.nombre as cartera', 'p.nombre as nombre', 'devolution_sales.monto_dev as monto',
             'devolution_sales.created_at as fechadevolucion','u.name as nombreusuario','devolution_sales.estado as estado',
-            'devolution_sales.tipo_dev as tipo','devolution_sales.observations as observacion')
-            ->where('nombre', 'like', '%' . $this->search . '%')
+            'devolution_sales.tipo_dev as tipo','devolution_sales.observations as observacion','des.nombre as destino')
+            ->where(function($query){
+                $query->where('p.nombre', 'like', '%' . $this->search . '%')
+                      ->orWhere('p.codigo', 'like', '%' . $this->search . '%');  
+                          
+            })
             ->where('u.id', $this->usuarioseleccionado)
             ->orderBy('devolution_sales.created_at', 'desc')
             ->paginate($this->pagination);
@@ -152,21 +163,23 @@ class SaleDevolutionController extends Component
 
         else
         {
-            $devolucionesusuario = DevolutionSale::join("products as p", "p.id", "devolution_sales.product_id")
+            $data = DevolutionSale::join("products as p", "p.id", "devolution_sales.product_id")
             ->join("users as u", "u.id", "devolution_sales.user_id")
+            ->join("destinos as des","des.id","devolution_sales.destino_id")
             ->join("carteras as c","c.id","devolution_sales.cartera_id")
             ->select('devolution_sales.id as iddevolucion', 'p.image as image','c.nombre as cartera', 'p.nombre as nombre', 'devolution_sales.monto_dev as monto',
             'devolution_sales.created_at as fechadevolucion','u.name as nombreusuario', 'devolution_sales.estado as estado',
-            'devolution_sales.tipo_dev as tipo','devolution_sales.observations as observacion')
+            'devolution_sales.tipo_dev as tipo','devolution_sales.observations as observacion','des.nombre as destino')
             ->orderBy('devolution_sales.created_at', 'desc')
             ->paginate($this->pagination);
 
             $usuarioespecifico = DevolutionSale::join("products as p", "p.id", "devolution_sales.product_id")
             ->join("users as u", "u.id", "devolution_sales.user_id")
+            ->join("destinos as des","des.id","devolution_sales.destino_id")
             ->join("carteras as c","c.id","devolution_sales.cartera_id")
             ->select('devolution_sales.id as iddevolucion', 'p.image as image','c.nombre as cartera', 'p.nombre as nombre', 'devolution_sales.monto_dev as monto',
             'devolution_sales.created_at as fechadevolucion','u.name as nombreusuario','devolution_sales.estado as estado',
-            'devolution_sales.tipo_dev as tipo','devolution_sales.observations as observacion')
+            'devolution_sales.tipo_dev as tipo','devolution_sales.observations as observacion','des.nombre as destino')
             ->where('u.id', $this->usuarioseleccionado)
             ->orderBy('devolution_sales.created_at', 'desc')
             ->paginate($this->pagination);
@@ -203,14 +216,22 @@ class SaleDevolutionController extends Component
             'datosnombreproducto' => $datosnombreproducto,
             'ppee' => $pe,
             'usuarioespecifico' => $usuarioespecifico,
-            'data' => $devolucionesusuario,
+            'data' => $data,
             'listausuarios' => $listausuarios,
             'historialventa' => $historialventa,
             'listacarteras' => $this->listarcarteras(),
-            'listacarterasg' => $this->listarcarterasg()
+            'listacarterasg' => $this->listarcarterasg(),
+            'listardestinos' => $this->listardestinos()
         ])
         ->extends('layouts.theme.app')
         ->section('content');
+    }
+    public function listardestinos()
+    {
+        $destinos = Destino::where('destinos.sucursal_id', $this->idsucursal())
+        ->select('destinos.nombre as nombredestino','destinos.id as iddestino')
+        ->get();
+        return $destinos;
     }
     public function listarcarteras()
     {
@@ -293,17 +314,9 @@ class SaleDevolutionController extends Component
         ->first();
         $this->bs = $precio->precio_venta;
     }
-    public function cambiarformatofecha($fecha)
-    {
-        $hora = date("h:i:s a", strtotime($fecha));
-        $fecha = date("d/m/Y", strtotime($fecha));
-
-        
-        return $hora." - ".$fecha;
-    }
 
     //Guarda la Devolución cuando se devuelve dinero
-    public function guardardevolucion()
+    public function guardardevolucionmonetaria()
     {
         $Movimiento = Movimiento::create([
             'type' => "DEVOLUCIONVENTA",
@@ -319,7 +332,8 @@ class SaleDevolutionController extends Component
         'product_id' => $this->identrante,
         'user_id' => Auth()->user()->id,
         'movimiento_id' => $Movimiento->id,
-        'cartera_id' => $cartera->id
+        'cartera_id' => $cartera->id,
+        'destino_id' => $this->destino
         ]);
         // Creando Cartera Movimiento
         CarteraMov::create([
@@ -333,16 +347,14 @@ class SaleDevolutionController extends Component
 
         //Registrando el Producto Entrante
         //Buscando si existen Productos en Almacen Devoluciones
-        $tiendaproducto = ProductosDestino::join("products as p", "p.id", "productos_destinos.product_id")
-        ->join('destinos as des', 'des.id', 'productos_destinos.destino_id')
-        ->select("productos_destinos.id as id","p.nombre as name",
-        "productos_destinos.stock as stock")
-        ->where("p.id", $this->identrante)
-        ->where("des.nombre", 'Almacen Devoluciones')
+        $tiendaproducto = ProductosDestino::join('destinos as des', 'des.id', 'productos_destinos.destino_id')
+        ->select("productos_destinos.id as id")
+        ->where("productos_destinos.product_id", $this->identrante)
+        ->where("productos_destinos.destino_id", $this->destino)
         ->where("des.sucursal_id", $this->idsucursal())
         ->get();
 
-        //Si existen Productos en Almacen Devoluciones de su Respectiva Sucursal actualizamos su Stock
+        //Si existen Productos en el destino de su Respectiva Sucursal actualizamos su Stock
         //Si no existen Productos Creamos uno en el Else
         if($tiendaproducto->count() > 0)
         {
@@ -351,7 +363,7 @@ class SaleDevolutionController extends Component
             ->select("productos_destinos.id as id","p.nombre as name",
             "productos_destinos.stock as stock")
             ->where("p.id", $this->identrante)
-            ->where("des.nombre", 'Almacen Devoluciones')
+            ->where("des.id", $this->destino)
             ->where("des.sucursal_id", $this->idsucursal())
             ->get()
             ->first();
@@ -367,7 +379,105 @@ class SaleDevolutionController extends Component
             //Buscamos el destino y sucursal donde se encuentra el usuario
             $destino = Destino::select("destinos.id as id")
             ->where("destinos.sucursal_id", $this->idsucursal())
-            ->where("destinos.nombre", "Almacen Devoluciones")
+            ->where("destinos.id", $this->destino)
+            ->get()
+            ->first();
+
+
+            //Creamos el Producto
+            ProductosDestino::create([
+                'product_id' => $this->identrante,
+                'destino_id' => $destino->id,
+                'stock' => 1
+            ]);
+
+        }
+
+
+        //Reseteamos los datos e información almacenados en la Venta Modal
+        $this->resetUI();
+    }
+    //Guarda la Devolución cuando se devuelve dinero
+    public function guardardevolucionproducto()
+    {
+        $Movimiento = Movimiento::create([
+            'type' => "DEVOLUCIONVENTA",
+            'import' => 0,
+            'status' => 'INACTIVO',
+            'user_id' => Auth()->user()->id,
+        ]);
+        $cartera = Cartera::find($this->tipopago);
+        //Creando un registro en la tabla devolución
+        DevolutionSale::create([
+        'tipo_dev' => "PRODUCTO",
+        'monto_dev' => 0,
+        'observations' => $this->observaciondevolucion,
+        'product_id' => $this->identrante,
+        'user_id' => Auth()->user()->id,
+        'movimiento_id' => $Movimiento->id,
+        'cartera_id' => $cartera->id,
+        'destino_id' => $this->destino
+        ]);
+
+
+
+         //Decrementando el stock en tienda
+         $tienda = ProductosDestino::join("products as p", "p.id", "productos_destinos.product_id")
+         ->join('destinos as des', 'des.id', 'productos_destinos.destino_id')
+         ->select("productos_destinos.id as id","p.nombre as name",
+         "productos_destinos.stock as stock")
+         ->where("p.id", $this->identrante)
+         ->where("des.nombre", 'TIENDA')
+         ->where("des.sucursal_id", $this->idsucursal())
+         ->get()->first();
+
+
+         $tienda->update([
+             'stock' => $tienda->stock - 1
+         ]);
+
+
+
+
+
+
+
+        //Registrando el Producto Entrante
+        //Buscando si existen Productos en Almacen Devoluciones
+        $tiendaproducto = ProductosDestino::join('destinos as des', 'des.id', 'productos_destinos.destino_id')
+        ->select("productos_destinos.id as id")
+        ->where("productos_destinos.product_id", $this->identrante)
+        ->where("productos_destinos.destino_id", $this->destino)
+        ->where("des.sucursal_id", $this->idsucursal())
+        ->get();
+
+
+        //Si existen Productos en el destino de su Respectiva Sucursal actualizamos su Stock
+        //Si no existen Productos Creamos uno en el Else
+        if($tiendaproducto->count() > 0)
+        {
+            $id = ProductosDestino::join("products as p", "p.id", "productos_destinos.product_id")
+            ->join('destinos as des', 'des.id', 'productos_destinos.destino_id')
+            ->select("productos_destinos.id as id","p.nombre as name",
+            "productos_destinos.stock as stock")
+            ->where("p.id", $this->identrante)
+            ->where("des.id", $this->destino)
+            ->where("des.sucursal_id", $this->idsucursal())
+            ->get()
+            ->first();
+            
+            $orig = ProductosDestino::find($id->id);
+            $orig->update([
+                'stock' => $id->stock + 1,
+            ]);
+            $orig->save();
+        }
+        else
+        {
+            //Buscamos el destino y sucursal donde se encuentra el usuario
+            $destino = Destino::select("destinos.id as id")
+            ->where("destinos.sucursal_id", $this->idsucursal())
+            ->where("destinos.id", $this->destino)
             ->get()
             ->first();
 
@@ -386,117 +496,34 @@ class SaleDevolutionController extends Component
         $this->resetUI();
     }
 
-    //Guardar una devolucion Cuando se devuelve el mismo Producto
-    public  function devolverproducto()
-    {
-        if($this->observaciondevolucion == "")
-        {
-            $this->observaciondevolucion = "No se coloco ningún Motivo";
-        }
-
-        $Movimiento = Movimiento::create([
-            'type' => "DEVOLUCIONVENTA",
-            'status' => "INACTIVO",
-            'import' => 0,
-            'user_id' => Auth()->user()->id,
-        ]);
-
-        //Creando un registro en la tabla devolución
-        DevolutionSale::create([
-            'tipo_dev' => "PRODUCTO",
-            'monto_dev' => 0,
-            'observations' => $this->observaciondevolucion,
-            'product_id' => $this->identrante,
-            'user_id' => Auth()->user()->id,
-            'movimiento_id' => $Movimiento->id
-            ]);
-        //Registrando el Producto Entrante
-
-        //Buscando si existen Productos en Almacen Devoluciones
-        $tiendaproducto = ProductosDestino::join("products as p", "p.id", "productos_destinos.product_id")
-        ->join('destinos as des', 'des.id', 'productos_destinos.destino_id')
-        ->select("productos_destinos.id as id","p.nombre as name",
-        "productos_destinos.stock as stock")
-        ->where("p.id", $this->identrante)
-        ->where("des.nombre", 'Almacen Devoluciones')
-        ->where("des.sucursal_id", $this->idsucursal())
-        ->get();
-
-        //Si existen Productos en Almacen Devoluciones de su Respectiva Sucursal actualizamos su Stock
-        //Si no existen Productos Creamos uno en el Else
-        if($tiendaproducto->count() > 0)
-        {
-            $id = ProductosDestino::join("products as p", "p.id", "productos_destinos.product_id")
-            ->join('destinos as des', 'des.id', 'productos_destinos.destino_id')
-            ->select("productos_destinos.id as id","p.nombre as name",
-            "productos_destinos.stock as stock")
-            ->where("p.id", $this->identrante)
-            ->where("des.nombre", 'Almacen Devoluciones')
-            ->where("des.sucursal_id", $this->idsucursal())
-            ->get()
-            ->first();
-            
-            $orig = ProductosDestino::find($id->id);
-            $orig->update([
-                'stock' => $id->stock + 1,
-            ]);
-            $orig->save();
-        }
-        else
-        {
-            //Buscamos el destino y sucursal donde se encuentra el usuario
-            $destino = Destino::select("destinos.id as id")
-            ->where("destinos.sucursal_id", $this->idsucursal())
-            ->where("destinos.nombre", "Almacen Devoluciones")
-            ->get()
-            ->first();
-
-
-            //Creamos el Producto
-            ProductosDestino::create([
-                'product_id' => $this->identrante,
-                'destino_id' => $destino->id,
-                'stock' => 1
-            ]);
-
-        }
-
-        //Decrementamos el Stock del Producto que estamos Devolviendo
-        $idproducto = ProductosDestino::join("products as p", "p.id", "productos_destinos.product_id")
-            ->join('destinos as des', 'des.id', 'productos_destinos.destino_id')
-            ->select("productos_destinos.id as id","p.nombre as name",
-            "productos_destinos.stock as stock")
-            ->where("p.id", $this->identrante)
-            ->where("des.nombre", 'Tienda')
-            ->where("des.sucursal_id", $this->idsucursal())
-            ->get()
-            ->first();
-            
-            $producto = ProductosDestino::find($idproducto->id);
-            $producto->update([
-                'stock' => $idproducto->stock - 1,
-            ]);
-            $producto->save();
-
-
-
-
-        $this->resetUI();
-    }
-
 
     protected $listeners = ['eliminardevolucion' => 'Destroy'];
 
-    //Eliminar una Devolución
+    //Eliminar o Anular una Devolución
     public function Destroy(DevolutionSale $id)
     {
         //Encontrando el Id de la Tabla Movimiento  a actualizar (para anular ese movimiento)
-
         $movimiento = Movimiento::find($id->movimiento_id);
         $movimiento->update([
             'status' => 'INACTIVO'
         ]);
         $movimiento->save();
+
+
+        //Decrementamos el stock de la locacion donde se guardo la devolucion
+        $tiendaproducto = ProductosDestino::join('destinos as des', 'des.id', 'productos_destinos.destino_id')
+        ->select("productos_destinos.id as id","productos_destinos.stock as stock")
+        ->where("productos_destinos.product_id", $id->product_id)
+        ->where("productos_destinos.destino_id", $id->destino_id)
+        ->where("des.sucursal_id", $this->idsucursal())
+        ->get()
+        ->first();
+
+        $tiendaproducto->update([
+            'stock' => $tiendaproducto->stock - 1
+        ]);
+        $tiendaproducto->save();
+
 
         //Eliminando la devolucion
         DevolutionSale::where('id', $id->id)->delete();

@@ -20,17 +20,14 @@
               <div class="tab-content" id="myTabContent">
 
                 <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                     
-                    
-                    
-
-                    
-                    
+                    @if($productoentrante == 1)
+                        <div class="text-center">
+                            Se encontraron <b>{{$historialventa->count()}} ventas de este producto en los ultimos 30 dias</b>
+                        </div>
+                    @endif
                     <div class="modal-body">
-                        
                         <div class="row text-center">
-                            
-                            <div class="col-lg-12 col-md-12 col-sm-12">
+                            <div class="col-lg-7 col-md-9 col-sm-12">
                                 <div class="input-group mb-4">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text input-gp">
@@ -40,12 +37,12 @@
                                     <input type="text" wire:model="nombreproducto" placeholder="Buscar Producto por Nombre o Código..." class="form-control">
                                 </div>
                             </div>
-                            {{-- <div class="col-md-6 mb-6">
+                            <div class="col-lg-5 col-md-3 col-sm-12">
                                 <select wire:model="tipodevolucion" class="form-control  basic">
                                     <option value="monetario" selected="selected">Devolución Monetaria</option>
-                                    <option value="productoigualitario" >Devolución Cambio Igualitario</option>
+                                    <option value="productoigualitario" >Devolución por Producto</option>
                                 </select>
-                            </div> --}}
+                            </div>
                         </div>
                         
 
@@ -54,7 +51,6 @@
     
                         <div class="table-wrapper">
                             {{-- <div class="table-responsive table-wrapper-scroll-y my-custom-scrollbar"> --}}
-                    
                                 <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4" style="min-height: 150px;">
                                     <thead>
                                         <tr>
@@ -127,17 +123,20 @@
                         @if($productoentrante == 1)
                         
                             @if($tipodevolucion == 'productoigualitario')
-                                <table class="table" style="background-color: rgb(193, 242, 246)">
+                            <div class="text-center">
+                                <b>Se descontara una Unidad del Stock de la Tienda del Producto </b>
+                            </div>
+                                <table class="table" style="background-color: rgb(34, 211, 255)">
                                     <tbody>
                                         @foreach ($ppee as $p)
                                         <tr>
                                             {{-- Descripciòn Producto --}}
                                             <td>
-                                                <h6>{{ $p->nombre }}</h6>
+                                                {{ $p->nombre }}
                                             </td>
                                             {{-- Precio Producto--}}
                                             <td class="text-right">
-                                                <h6>{{ $p->precio_venta }} Bs</h6>
+                                                {{ $p->precio_venta }} Bs
                                             </td>
                                         </tr>
                                         @endforeach
@@ -146,35 +145,16 @@
                                 <hr style="height:3px;border:none;color:rgb(189, 188, 188);background-color:rgb(230, 152, 64);" />
                                 
                                 <div class="form-row text-center">
-                                    <div class="col-md-3 mb-3">
-                                        <label for="validationCustom02">Monto Bs</label>
-                                        <input wire:model="bs" type="number" class="form-control" placeholder="Ingrese Bs" required>
-                                        <p style="color: crimson">Se Generará un Egreso de este Monto</p>
+
+                                    <div class="col-md-3 mb-9">
+                                        <label for="validationCustom02">El Producto Irá a:</label>
+                                    <select wire:model="destino" class="form-control">
+                                        @foreach ($listardestinos as $d)
+                                        <option value="{{$d->iddestino}}">{{ucwords(strtolower($d->nombredestino))}}</option>
+                                        @endforeach
+                                    </select>
                                     </div>
-
-
-                                    <div class="form-row text-center">
-                                        <div class="col-md-3 mb-3">
-                                        <strong>Tipo de Pago</strong>
-    
-                                        <select wire:model="tipopago" class="form-control">
-                                            <option disabled value="Elegir">Elegir</option>
-                                            {{-- @foreach ($listacarteras as $cartera)
-                                            <option value="{{$cartera->idcartera}}">{{ucwords(strtolower($cartera->nombrecartera)) .' - ' .ucwords(strtolower($cartera->dc))}}</option>
-                                            @endforeach
-                                            @foreach ($listacarterasg as $carteras)
-                                            <option value="{{$carteras->idcartera}}">{{ucwords(strtolower($carteras->nombrecartera)) .' - ' .ucwords(strtolower($carteras->dc))}}</option>
-                                            @endforeach --}}
-                                        </select>
-                                        
-                                        </div>
-    
-                                    </div>
-
-
-
-
-                                    <div class="col-md-6 mb-9">
+                                    <div class="col-md-9 mb-9">
                                         <label for="validationCustom02">Motivo</label>
                                         <textarea class="form-control" placeholder="Ingrese el Motivo de la Devolución..." aria-label="With textarea" wire:model="observaciondevolucion"></textarea>
                                     </div>
@@ -204,7 +184,15 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-sm-6 col-md-7">
+                                <div class="col-sm-6 col-md-3">
+                                    <label for="validationCustom02">El Producto Irá a:</label>
+                                    <select wire:model="destino" class="form-control">
+                                        @foreach ($listardestinos as $d)
+                                        <option value="{{$d->iddestino}}">{{ucwords(strtolower($d->nombredestino))}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-sm-6 col-md-4">
                                     <label for="validationCustom02">Motivo</label>
                                     <textarea class="form-control" placeholder="Ingrese el Motivo de la Devolución..." aria-label="With textarea" wire:model="observaciondevolucion"></textarea>
                                 </div>
@@ -224,13 +212,13 @@
             
                                 @if($tipodevolucion == 'monetario')
                                     
-                                        <button type="button" data-dismiss="modal" wire:click.prevent="guardardevolucion()" 
-                                        class="btn btn-primary">Guardar Devolución</button>
+                                        <button type="button" data-dismiss="modal" wire:click.prevent="guardardevolucionmonetaria()" 
+                                        class="btn btn-primary">Guardar Devolución Monetaria</button>
                                 @else
                                     {{-- Verificamos si existe stock del producto que queremos devolver --}}
                                         @if($this->verificarstock() == true)
-                                        <button type="button" data-dismiss="modal" wire:click.prevent="devolverproducto()" 
-                                        class="btn btn-primary">Devolver Producto</button>
+                                        <button type="button" data-dismiss="modal" wire:click.prevent="guardardevolucionproducto()" 
+                                        class="btn btn-primary">Guardar Devolucion por Producto</button>
                                         @else
                                         <br>
                                         <br>
