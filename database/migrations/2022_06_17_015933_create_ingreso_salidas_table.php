@@ -15,9 +15,17 @@ class CreateIngresoSalidasTable extends Migration
     {
         Schema::create('ingreso_salidas', function (Blueprint $table) {
             $table->id();
+            $table->enum('proceso',['ENTRADA','SALIDA']);
+            $table->unsignedBigInteger('destino');
+            $table->foreign('destino')->references('id')->on('destinos');
+            $table->enum('concepto',['INGRESOEGRESO','AJUSTE','INICIAL']);
+            $table->string('observacion',500);
             $table->timestamps();
         });
     }
+
+
+    
 
     /**
      * Reverse the migrations.

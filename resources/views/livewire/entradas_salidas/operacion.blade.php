@@ -23,10 +23,12 @@
                             @enderror                                          
                         </div>
                         <div class="form-group">
-                            <strong style="color: rgb(74, 74, 74)">Seleccione destino:</strong>
-                            <select wire:model='destino' class="form-control">
-                                <option value="Entrada" selected>Entrada</option>
-                                <option value="Salida">Salida</option>
+                            <strong style="color: rgb(74, 74, 74)">Seleccione la locacions:</strong>
+                            <select wire:model='destinosucursal' class="form-control">
+                                <option value="Elegir">Elegir</option>
+                                @foreach ($destinosp as $item)
+                                <option value="{{$item->id}}">{{$item->sucursal}}-{{$item->destino}}</option>
+                                @endforeach
                             </select>
                             @error('destino')
                                 <span class="text-danger er">{{ $message }}</span>
@@ -35,13 +37,21 @@
                         <div class="form-group">
                             <strong style="color: rgb(74, 74, 74)">Seleccione el concepto:</strong>
                             <select wire:model='concepto' class="form-control">
-                                <option value="obsequio" selected>Ingreso de productos en calidad de obsequio</option>
+                                <option value="obsequio" selected>Ingreso/Salida de productos</option>
                                 <option value="ajuste" selected>Ingreso/Salida por ajuste de inventarios</option>
                                 <option value="Inventario Inicial">Inventario Inicial</option>
                               
                                 
                             </select>
                             @error('concepto')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror                                        
+                        </div>
+                        <div class="form-group">
+                            <strong style="color: rgb(74, 74, 74)">Agregue una observacion:</strong>
+                            <input type="text" class="form-control" wire:model='observacion'>
+                           
+                            @error('observacion')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror                                        
                         </div>
@@ -71,18 +81,14 @@
                                                     <table class="table table-hover table-sm" style="width:100%">
                                                         <thead class="text-white" style="background: #3B3F5C">
                                                             <tr>
-                                                                <th class="table-th text-withe text-center">CORREO</th>
-                                                                <th class="table-th text-withe">CONTRASEÑA</th>
-                                                                <th class="table-th text-withe">SELECIONAR</th>
+                                                                <th class="table-th text-withe text-center">Producto</th>
+                                                                <th class="table-th text-withe">Accion</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             @foreach ($sm as $d)
                                                                 <tr>
-                                                                    <td class="text-center">
-                                                                        <h6 class="text-center">{{ $d->id }}
-                                                                        </h6>
-                                                                    </td>
+                                                              
                                                                     <td class="text-center">
                                                                         <h6 class="text-center">{{ $d->nombre }}
                                                                         </h6>
