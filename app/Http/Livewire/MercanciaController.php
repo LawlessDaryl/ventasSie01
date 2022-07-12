@@ -63,10 +63,5 @@ class MercanciaController extends Component
             }
         }
 
-
-       
-      
-        
-
     }
 }

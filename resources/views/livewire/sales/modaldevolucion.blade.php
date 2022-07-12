@@ -208,7 +208,7 @@
                             @if($productoentrante == 1)
                             <div class="text-center">
 
-                            <button class="btn" data-dismiss="modal" wire:click.prevent="resetUI()"><i class="flaticon-cancel-12"></i> Cancelar Todo</button>
+                                <button class="btn" data-dismiss="modal" wire:click.prevent="resetUI()"><i class="flaticon-cancel-12"></i> Cancelar Todo</button>
             
                                 @if($tipodevolucion == 'monetario')
                                     
@@ -225,8 +225,6 @@
                                         <h4>No  Existe Stock en Tienda Disponible para Devolver</h4>
                                         @endif
                                 @endif
-                        
-                    {{-- --------------- --}}
                             </div>
                             @endif
 
@@ -410,8 +408,6 @@
                 </div> --}}
           </div>
         
-          <div class="modal-footer">
-            
         </div>
       </div>
     </div>
