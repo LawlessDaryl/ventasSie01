@@ -12,6 +12,7 @@ use App\Models\MovService;
 use App\Models\Service;
 use App\Models\OrderService;
 use App\Models\SubCatProdService;
+use App\Models\Sucursal;
 use App\Models\TypeWork;
 use App\Models\User;
 use Carbon\Carbon;
@@ -36,6 +37,14 @@ class InicioController extends Component
 
 
     private $pagination = 10;
+
+    //Mejoras
+
+    //Variable para seleccionar la sucursal 
+    public $sucursal_id;
+    //Variable para seleccionar el tipo de Servicio
+    public $tipo_servicio;
+
     public function paginationView()
     {
         return 'vendor.livewire.bootstrap';
@@ -43,6 +52,13 @@ class InicioController extends Component
 
     public function mount()
     {
+        $this->sucursal_id = $this->idsucursal();
+        $this->type = "PENDIENTE";
+
+
+
+
+
         $this->pageTitle = 'Listado';
         $this->componentName = 'Ordenes de Servicio';
         $this->usuarioId = -1;
@@ -63,9 +79,11 @@ class InicioController extends Component
         $this->nombreUsuario = '';
         /* $this->opciones = 'PENDIENTE'; */
         $this->tipopago = 'EFECTIVO';
-        if((Auth::user()->hasPermissionTo('Recepcionar_Servicio')) && (Auth::user()->hasPermissionTo('Boton_Entregar_Servicio'))){
+        if((Auth::user()->hasPermissionTo('Recepcionar_Servicio')) && (Auth::user()->hasPermissionTo('Boton_Entregar_Servicio')))
+        {
             $this->condicional = 'Pendientes';
-        }elseif(Auth::user()->hasPermissionTo('Boton_Entregar_Servicio'))
+        }
+        elseif(Auth::user()->hasPermissionTo('Boton_Entregar_Servicio'))
         {
             $this->condicional = 'TerminadosTodos';
         }elseif(Auth::user()->hasPermissionTo('Recepcionar_Servicio'))
@@ -81,6 +99,13 @@ class InicioController extends Component
 
     public function render()
     {
+        //Listar las sucursales
+        $listasucursales = Sucursal::all();
+
+
+
+
+
         $data = Caja::join('sucursals as s', 's.id', 'cajas.sucursal_id')
             ->join('sucursal_users as su', 'su.sucursal_id', 's.id')
             ->join('carteras as car', 'cajas.id', 'car.caja_id')
@@ -92,22 +117,28 @@ class InicioController extends Component
             ->select('cajas.*', 's.name as sucursal')
             ->get()->first();
          
-        if ($data) {
+        if($data)
+        {
             session(['sesionCaja' => $data->nombre]);
-        } else{
+        }
+        else
+        {
             session(['sesionCaja' => null]);
         }
 
         $this->horaActual = date("d-m-y H:i:s ");
 
         $user = User::find(Auth()->user()->id);
-        foreach($user->sucursalusers as $usersuc){
-            if($usersuc->estado == 'ACTIVO'){
+        foreach($user->sucursalusers as $usersuc)
+        {
+            if($usersuc->estado == 'ACTIVO')
+            {
                 $this->sucursal= $usersuc->sucursal->id;
             }
         }
 
-        if (strlen($this->search) > 0) {
+        if (strlen($this->search) > 0)
+        {
             if ($this->condicional == 'TerminadosTodos'){
                 if ($this->catprodservid != 'Todos') {
                     $orderservices = Service::join('order_services as os', 'os.id', 'services.order_service_id')
@@ -209,512 +240,188 @@ class InicioController extends Component
 
             }
         }
-        else{
-
-        
-
-        /* dd($horaActual); */
-        if ($this->condicional == 'Pendientes') {
-            if($this->condicion == 'Todos'){
-                if ($this->catprodservid != 'Todos') {
+        else
+        {
+            //Si selecciona Todas las Sucursales
+            if($this->sucursal_id == 'Todos')
+            {
+                if ($this->catprodservid == 'Todos')
+                {
                     $orderservices = Service::join('order_services as os', 'os.id', 'services.order_service_id')
-                        ->join('mov_services as ms', 'services.id', 'ms.service_id')
-                        ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
-                        ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
-                        ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                        ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                        ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
-                        ->join('users as u', 'u.id', 'mov.user_id')
-                        ->select(
-                            'services.*',
-                            DB::raw('0 as horas')
-                        )
-                        ->where('mov.type', 'PENDIENTE')
-                        ->where('mov.status', 'ACTIVO')
-                        ->where('cat.id', $this->catprodservid)
-                        ->where('os.status', 'ACTIVO')
-                        ->orderBy('services.fecha_estimada_entrega', 'asc')
-                        ->distinct()
-                        ->get();
-                        foreach ($orderservices as $c) {
+                            ->join('mov_services as ms', 'services.id', 'ms.service_id')
+                            ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+                            ->select(
+                                'services.*',
+                                DB::raw('0 as horas')
+                            )
+                            ->where('mov.type', $this->type)
+                            ->where('mov.status', 'ACTIVO')
+                            ->where('os.status', 'ACTIVO')
+                            ->orderBy('services.fecha_estimada_entrega', 'asc')
+                            ->distinct()
+                            ->get();
+                            
+                        foreach ($orderservices as $c)
+                        {
                             $date1 = new DateTime($c->fecha_estimada_entrega);
                             $date2 = new DateTime("now");
                             $diff = $date2->diff($date1);
-                            if ($diff->invert != 1) {
-                                $c->horas = (($diff->days * 24)) + ($diff->h) /* . ' horas' */;
-                            } else {
+                            if ($diff->invert != 1)
+                            {
+                                $c->horas = (($diff->days * 24)) + ($diff->h);
+                            }
+                            else
+                            {
                                 $c->horas = 'EXPIRADO';
                             }
                         }
-                } else {
-                    $orderservices = Service::join('order_services as os', 'os.id', 'services.order_service_id')
-                        ->join('mov_services as ms', 'services.id', 'ms.service_id')
-                        ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                        ->select(
-                            'services.*',
-                            DB::raw('0 as horas')/* ,
-                            DB::raw('0 as minutos') */
-                        )
-                        ->where('mov.type', 'PENDIENTE')
-                        ->where('mov.status', 'ACTIVO')
-                        ->where('os.status', 'ACTIVO')
-                        ->orderBy('services.fecha_estimada_entrega', 'asc')
-                        ->distinct()
-                        ->get();
-                        
-                    foreach ($orderservices as $c) {
-                        $date1 = new DateTime($c->fecha_estimada_entrega);
-                        $date2 = new DateTime("now");
-                        $diff = $date2->diff($date1);
-                        if ($diff->invert != 1) {
-                            $c->horas = (($diff->days * 24)) + ($diff->h) /* . ' horas' */;
-                        } else {
-                            $c->horas = 'EXPIRADO';
-                        }
-                    }
                 }
-            }elseif($this->condicion == 'MiSucursal'){
-                if ($this->catprodservid != 'Todos') {
+                else
+                {
                     $orderservices = Service::join('order_services as os', 'os.id', 'services.order_service_id')
-                        ->join('mov_services as ms', 'services.id', 'ms.service_id')
-                        ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
-                        ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
-                        ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                        ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                        ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
-                        ->join('users as u', 'u.id', 'mov.user_id')
-                        ->join('sucursal_users as suu', 'u.id', 'suu.user_id')
-                        ->join('sucursals as suc', 'suc.id', 'suu.sucursal_id')
-                        ->select(
-                            'services.*',
-                            DB::raw('0 as horas')
-                        )
-                        ->where('mov.type', 'PENDIENTE')
-                        ->where('mov.status', 'ACTIVO')
-                        ->where('cat.id', $this->catprodservid)
-                        ->where('os.status', 'ACTIVO')
-                        ->where('services.sucursal_id',$this->sucursal)
-                        /* ->where('suu.estado','ACTIVO') */
-                        ->orderBy('services.fecha_estimada_entrega', 'asc')
-                        ->distinct()
-                        ->get();
-                        foreach ($orderservices as $c) {
+                            ->join('mov_services as ms', 'services.id', 'ms.service_id')
+                            ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
+                            ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
+                            ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+                            ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
+                            ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
+                            ->join('users as u', 'u.id', 'mov.user_id')
+                            ->select(
+                                'services.*',
+                                DB::raw('0 as horas')
+                            )
+                            ->where('mov.type', $this->type)
+                            ->where('mov.status', 'ACTIVO')
+                            ->where('cat.id', $this->catprodservid)
+                            ->where('os.status', 'ACTIVO')
+                            ->orderBy('services.fecha_estimada_entrega', 'asc')
+                            ->distinct()
+                            ->get();
+                            foreach ($orderservices as $c) {
+                                $date1 = new DateTime($c->fecha_estimada_entrega);
+                                $date2 = new DateTime("now");
+                                $diff = $date2->diff($date1);
+                                if ($diff->invert != 1) {
+                                    $c->horas = (($diff->days * 24)) + ($diff->h) /* . ' horas' */;
+                                } else {
+                                    $c->horas = 'EXPIRADO';
+                                }
+                            }
+                }
+            }
+            else
+            {
+                if ($this->catprodservid == 'Todos')
+                {
+                    $orderservices = Service::join('order_services as os', 'os.id', 'services.order_service_id')
+                            ->join('mov_services as ms', 'services.id', 'ms.service_id')
+                            ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+                            ->join('cat_prod_services as cps', 'cps.id', 'services.cat_prod_service_id')
+                            ->select('services.fecha_estimada_entrega as fecha_estimada_entrega',
+                            'cps.nombre as nombrecategoria',
+                            'services.marca as marca',
+                            'services.detalle as detalle',
+                            'services.falla_segun_cliente as falla_segun_cliente',
+                            'services.id as id',
+                            'os.id as id_orden',
+                            DB::raw('0 as horas'),
+                            DB::raw('0 as receptor'))
+                            ->where('mov.type', $this->type)
+                            ->where('mov.status', 'ACTIVO')
+                            ->where('os.status', 'ACTIVO')
+                            ->where('services.sucursal_id',$this->sucursal_id)
+                            ->orderBy('services.fecha_estimada_entrega', 'asc')
+                            ->distinct()
+                            ->get();
+                            
+                        foreach ($orderservices as $c)
+                        {
+                            $c->receptor = $this->obtenerreceptor($c->id);
                             $date1 = new DateTime($c->fecha_estimada_entrega);
                             $date2 = new DateTime("now");
                             $diff = $date2->diff($date1);
-                            if ($diff->invert != 1) {
-                                $c->horas = (($diff->days * 24)) + ($diff->h) /* . ' horas' */;
-                            } else {
+                            if ($diff->invert != 1)
+                            {
+                                $c->horas = (($diff->days * 24)) + ($diff->h);
+                            }
+                            else
+                            {
                                 $c->horas = 'EXPIRADO';
                             }
                         }
-                } else {
+                }
+                else
+                {
                     $orderservices = Service::join('order_services as os', 'os.id', 'services.order_service_id')
-                        ->join('mov_services as ms', 'services.id', 'ms.service_id')
-                        ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                        ->join('users as u', 'u.id', 'mov.user_id')
-                        ->join('sucursal_users as suu', 'u.id', 'suu.user_id')
-                        ->join('sucursals as suc', 'suc.id', 'suu.sucursal_id')
-                        ->select(
-                            'services.*',
-                            DB::raw('0 as horas')/* ,
-                            DB::raw('0 as minutos') */
-                        )
-                        ->where('mov.type', 'PENDIENTE')
-                        ->where('mov.status', 'ACTIVO')
-                        ->where('os.status', 'ACTIVO')
-                        ->where('services.sucursal_id',$this->sucursal)
-                        /* ->where('suu.estado','ACTIVO') */
-                        ->orderBy('services.fecha_estimada_entrega', 'asc')
-                        ->distinct()
-                        ->get();
-                        
-                    foreach ($orderservices as $c) {
-                        $date1 = new DateTime($c->fecha_estimada_entrega);
-                        $date2 = new DateTime("now");
-                        $diff = $date2->diff($date1);
-
-                        /* $this->diffmin = (($diff->days * 24)* 60) + ($diff->i); */
-                        
-                        if ($diff->invert != 1) {
-                            $c->horas = (($diff->days * 24)) + ($diff->h)/*  . ' horas' */;
-                            /* $c->minutos = (($diff->days * 24* 60)) + ($diff->i); */
-                            /* $this->diffmin; */
-                        } else {
-                            $c->horas = 'EXPIRADO';
-                            /* $c->minutos = 'EXPIRADO'; */
-                        }
-                    }
+                            ->join('mov_services as ms', 'services.id', 'ms.service_id')
+                            ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
+                            ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
+                            ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+                            ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
+                            ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
+                            ->join('users as u', 'u.id', 'mov.user_id')
+                            ->select(
+                                'services.*',
+                                DB::raw('0 as horas')
+                            )
+                            ->where('mov.type', $this->type)
+                            ->where('mov.status', 'ACTIVO')
+                            ->where('cat.id', $this->catprodservid)
+                            ->where('os.status', 'ACTIVO')
+                            ->where('services.sucursal_id',$this->sucursal_id)
+                            ->orderBy('services.fecha_estimada_entrega', 'asc')
+                            ->distinct()
+                            ->get();
+                            foreach ($orderservices as $c) {
+                                $date1 = new DateTime($c->fecha_estimada_entrega);
+                                $date2 = new DateTime("now");
+                                $diff = $date2->diff($date1);
+                                if ($diff->invert != 1) {
+                                    $c->horas = (($diff->days * 24)) + ($diff->h) /* . ' horas' */;
+                                } else {
+                                    $c->horas = 'EXPIRADO';
+                                }
+                            }
                 }
             }
 
-        }elseif ($this->condicional == 'Terminados') {
-            
-            if ($this->catprodservid != 'Todos') {
-                
-                $orderservices = Service::join('order_services as os', 'os.id', 'services.order_service_id')
-                    ->join('mov_services as ms', 'services.id', 'ms.service_id')
-                    ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
-                    ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
-                    ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                    ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                    ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
-                    ->join('users as u', 'u.id', 'mov.user_id')
-                    ->select(
-                        'services.*',
-                        DB::raw('0 as dias')
-                    )
-                    ->where('mov.type', 'TERMINADO')
-                    ->where('mov.user_id', Auth()->user()->id)
-                    ->where('mov.status', 'ACTIVO')
-                    ->where('cat.id', $this->catprodservid)
-                    ->where('os.status', 'ACTIVO')
-                    ->orderBy('services.fecha_estimada_entrega', 'asc')
-                    ->distinct()
-                    ->get();
-                    foreach ($orderservices as $c) {
-                        /* $date1 = new DateTime($c->fecha_estimada_entrega);
-                        $date2 = new DateTime("now");
-                        $diff = $date2->diff($date1);
-                        if ($diff->invert == 1) {
-                            $c->dias = (($diff->days)) + ($diff->d);
-                        } */
-
-                        foreach($c->movservices as $mm){
-                            if($mm->movs->type == 'TERMINADO'){
-                                $date1 = new DateTime($mm->movs->created_at);
-                                $date2 = new DateTime("now");
-                                $diff = $date2->diff($date1);
-                                if ($diff->invert == 1) {
-                                    $c->dias = (($diff->days)) + ($diff->d);
-                                    $c->dias = $c->dias / 2;
-                                }
-                            }
-                        }
-
-                    }
-                    
-
-
-            } else {
-                
-                $orderservices = Service::join('order_services as os', 'os.id', 'services.order_service_id')
-                    ->join('mov_services as ms', 'services.id', 'ms.service_id')
-                    ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
-                    ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
-                    ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                    ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                    ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
-                    ->join('users as u', 'u.id', 'mov.user_id')
-                    ->select(
-                        'services.*',
-                        DB::raw('0 as dias')/* ,
-                        DB::raw('0 as minutos') */
-                    )
-                    ->where('mov.type', 'TERMINADO')
-                    ->where('mov.user_id', Auth()->user()->id)
-                    ->where('mov.status', 'ACTIVO')
-                    ->where('os.status', 'ACTIVO')
-                    ->orderBy('services.fecha_estimada_entrega', 'asc')
-                    ->distinct()
-                    ->get();
-                    
-                    foreach ($orderservices as $c) {
-                        /* $date1 = new DateTime($c->fecha_estimada_entrega);
-                        $date2 = new DateTime("now");
-                        $diff = $date2->diff($date1);
-                        
-                        if ($diff->invert == 1) {
-                            $c->dias = (($diff->days)) + ($diff->d);
-                        } */
-
-                        foreach($c->movservices as $mm){
-                            if($mm->movs->type == 'TERMINADO'){
-                                $date1 = new DateTime($mm->movs->created_at);
-                                $date2 = new DateTime("now");
-                                $diff = $date2->diff($date1);
-                                
-                                if ($diff->invert == 1) {
-                                    $c->dias = (($diff->days)) + ($diff->d);
-                                    $c->dias = $c->dias / 2;
-
-                                }
-                            }
-                        }
-
-                    }
-            }
-        }elseif($this->condicional == 'TerminadosTodos'){
-            if ($this->catprodservid != 'Todos') {
-                
-                $orderservices = Service::join('order_services as os', 'os.id', 'services.order_service_id')
-                    ->join('mov_services as ms', 'services.id', 'ms.service_id')
-                    ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
-                    ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
-                    ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                    ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                    ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
-                    ->join('users as u', 'u.id', 'mov.user_id')
-                    ->join('sucursal_users as suu', 'u.id', 'suu.user_id')
-                    ->join('sucursals as suc', 'suc.id', 'suu.sucursal_id')
-                    ->select(
-                        'services.*',
-                        DB::raw('0 as dias')
-                    )
-                    ->where('mov.type', 'TERMINADO')
-                    /* ->where('mov.user_id', Auth()->user()->id) */
-                    ->where('mov.status', 'ACTIVO')
-                    ->where('cat.id', $this->catprodservid)
-                    ->where('os.status', 'ACTIVO')
-                    ->where('services.sucursal_id',$this->sucursal)
-                    /* ->where('suu.estado','ACTIVO') */
-                    ->orderBy('services.fecha_estimada_entrega', 'asc')
-                    ->distinct()
-                    ->get();
-                    foreach ($orderservices as $c) {
-                        /* $date1 = new DateTime($c->fecha_estimada_entrega);
-                        $date2 = new DateTime("now");
-                        $diff = $date2->diff($date1);
-                        if ($diff->invert == 1) {
-                            $c->dias = (($diff->days)) + ($diff->d);
-                        } */
-
-                        foreach($c->movservices as $mm){
-                            if($mm->movs->type == 'TERMINADO'){
-                                $date1 = new DateTime($mm->movs->created_at);
-                                $date2 = new DateTime("now");
-                                $diff = $date2->diff($date1);
-                                if ($diff->invert == 1) {
-                                    $c->dias = (($diff->days)) + ($diff->d);
-                                    $c->dias = $c->dias / 2;
-                                }
-                            }
-                        }
-
-                    }
-            } else {
-                $orderservices = Service::join('order_services as os', 'os.id', 'services.order_service_id')
-                    ->join('mov_services as ms', 'services.id', 'ms.service_id')
-                    ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
-                    ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
-                    ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                    ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                    ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
-                    ->join('users as u', 'u.id', 'mov.user_id')
-                    ->join('sucursal_users as suu', 'u.id', 'suu.user_id')
-                    ->join('sucursals as suc', 'suc.id', 'suu.sucursal_id')
-                    ->select(
-                        'services.*',
-                        DB::raw('0 as dias')/* ,
-                        DB::raw('0 as minutos') */
-                    )
-                    ->where('mov.type', 'TERMINADO')
-                    /* ->where('mov.user_id', Auth()->user()->id) */
-                    ->where('mov.status', 'ACTIVO')
-                    ->where('os.status', 'ACTIVO')
-                    ->where('services.sucursal_id',$this->sucursal)
-                    /* ->where('suu.estado','ACTIVO') */
-                    ->orderBy('services.fecha_estimada_entrega', 'asc')
-                    ->distinct()
-                    ->get();
-                    
-                    foreach ($orderservices as $c) {
-                        /* $date1 = new DateTime($c->fecha_estimada_entrega);
-                        $date2 = new DateTime("now");
-                        $diff = $date2->diff($date1);
-                        
-                        if ($diff->invert == 1) {
-                            $c->dias = (($diff->days)) + ($diff->d);
-                        } */
-
-                        foreach($c->movservices as $mm){
-                            if($mm->movs->type == 'TERMINADO'){
-                                $date1 = new DateTime($mm->movs->created_at);
-                                $date2 = new DateTime("now");
-                                $diff = $date2->diff($date1);
-                                if ($diff->invert == 1) {
-                                    $c->dias = (($diff->days)) + ($diff->d);
-                                    $c->dias = $c->dias / 2;
-                                }
-                            }
-                        }
-
-                    }
-            }
-        }elseif($this->condicional == 'EntregadosPropios'){
-            if ($this->catprodservid != 'Todos') {
-                $orderservices = Service::join('order_services as os', 'os.id', 'services.order_service_id')
-                    ->join('mov_services as ms', 'services.id', 'ms.service_id')
-                    ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
-                    ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
-                    ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                    ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                    ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
-                    ->join('users as u', 'u.id', 'mov.user_id')
-                    ->select(
-                        'services.*',
-                        DB::raw('0 as horas')
-                    )
-                    ->where('mov.type', 'ENTREGADO')
-                    ->where('mov.user_id', Auth()->user()->id)
-                    ->where('mov.status', 'ACTIVO')
-                    ->where('cat.id', $this->catprodservid)
-                    ->where('os.status', 'ACTIVO')
-                    ->orderBy('services.fecha_estimada_entrega', 'asc')
-                    ->distinct()
-                    ->get();
-                    foreach ($orderservices as $c) {
-                        $date1 = new DateTime($c->fecha_estimada_entrega);
-                        $date2 = new DateTime("now");
-                        $diff = $date2->diff($date1);
-                        if ($diff->invert != 1) {
-                            $c->horas = (($diff->days * 24)) + ($diff->h) /* . ' horas' */;
-                        } else {
-                            $c->horas = 'EXPIRADO';
-                        }
-                    }
-            } else {
-
-                $orderservices = Service::join('order_services as os', 'os.id', 'services.order_service_id')
-                    ->join('mov_services as ms', 'services.id', 'ms.service_id')
-                    ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
-                    ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
-                    ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                    ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                    ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
-                    ->join('users as u', 'u.id', 'mov.user_id')
-                    ->select(
-                        'services.*',
-                        DB::raw('0 as horas')
-                    )
-                    ->where('mov.type', 'ENTREGADO')
-                    ->where('mov.user_id', Auth()->user()->id)
-                    ->where('mov.status', 'ACTIVO')
-                    ->where('os.status', 'ACTIVO')
-                    ->orderBy('services.fecha_estimada_entrega', 'asc')
-                    ->distinct()
-                    ->get();
-                    foreach ($orderservices as $c) {
-                        $date1 = new DateTime($c->fecha_estimada_entrega);
-                        $date2 = new DateTime("now");
-                        $diff = $date2->diff($date1);
-                        if ($diff->invert != 1) {
-                            $c->horas = (($diff->days * 24)) + ($diff->h) /* . ' horas' */;
-                        } else {
-                            $c->horas = 'EXPIRADO';
-                        }
-                    }
-            }
-        }    
-        else {
-
-            if ($this->catprodservid != 'Todos') {
-                $orderservices = Service::join('order_services as os', 'os.id', 'services.order_service_id')
-                    ->join('mov_services as ms', 'services.id', 'ms.service_id')
-                    ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
-                    ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
-                    ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                    ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                    ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
-                    ->join('users as u', 'u.id', 'mov.user_id')
-                    ->select(
-                        'services.*',
-                        DB::raw('0 as horas')
-                    )
-                    ->where('mov.type', 'PROCESO')
-                    ->where('mov.user_id', Auth()->user()->id)
-                    ->where('mov.status', 'ACTIVO')
-                    ->where('cat.id', $this->catprodservid)
-                    ->where('os.status', 'ACTIVO')
-                    ->orderBy('services.fecha_estimada_entrega', 'asc')
-                    ->distinct()
-                    ->get();
-                    foreach ($orderservices as $c) {
-                        $date1 = new DateTime($c->fecha_estimada_entrega);
-                        $date2 = new DateTime("now");
-                        $diff = $date2->diff($date1);
-                        if ($diff->invert != 1) {
-                            $c->horas = (($diff->days * 24)) + ($diff->h) /* . ' horas' */;
-                        } else {
-                            $c->horas = 'EXPIRADO';
-                        }
-                    }
-            } else {
-
-                $orderservices = Service::join('order_services as os', 'os.id', 'services.order_service_id')
-                    ->join('mov_services as ms', 'services.id', 'ms.service_id')
-                    ->join('cat_prod_services as cat', 'cat.id', 'services.cat_prod_service_id')
-                    ->join('sub_cat_prod_services as scps', 'cat.id', 'scps.cat_prod_service_id')
-                    ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-                    ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-                    ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
-                    ->join('users as u', 'u.id', 'mov.user_id')
-                    ->select(
-                        'services.*',
-                        DB::raw('0 as horas')
-                    )
-                    ->where('mov.type', 'PROCESO')
-                    ->where('mov.user_id', Auth()->user()->id)
-                    ->where('mov.status', 'ACTIVO')
-                    ->where('os.status', 'ACTIVO')
-                    ->orderBy('services.fecha_estimada_entrega', 'asc')
-                    ->distinct()
-                    ->get();
-                    foreach ($orderservices as $c) {
-                        $date1 = new DateTime($c->fecha_estimada_entrega);
-                        $date2 = new DateTime("now");
-                        $diff = $date2->diff($date1);
-                        if ($diff->invert != 1) {
-                            $c->horas = (($diff->days * 24)) + ($diff->h) /* . ' horas' */;
-                        } else {
-                            $c->horas = 'EXPIRADO';
-                        }
-                    }
-            }
         }
-    }
+
+
+
+
         $users = User::all();
         $typew = TypeWork::orderBy('name', 'asc')->get();
         $dato1 = CatProdService::orderBy('nombre', 'asc')->get();
 
 
         return view('livewire.inicio.component', [
+            'listasucursales' => $listasucursales,
             'data' => $orderservices,
             'users' => $users,
             'work' => $typew,
             'cate' => $dato1,
-            'ordserv' => OrderService::orderBy('order_services.id', 'asc')
-                ->get()
+            'ordserv' => OrderService::orderBy('order_services.id', 'asc')->get()
         ])
             ->extends('layouts.theme.app')
             ->section('content');
     }
 
-    public function GoOrderservice()
+    //Obtener el Nombre del usuario que recepciona el servicio (Buscando por le Id del Servicio)
+    public function obtenerreceptor($id)
     {
-        $this->redirect('orderservice');
+        $listamovimientos = MovService::select("mov_services.movimiento_id as id")
+        ->where("mov_services.service_id",$id)->get();
+        foreach($listamovimientos as $mov)
+        {
+            $movimiento = Movimiento::find($mov->id);
+            if($movimiento->type == "PENDIENTE")
+            {
+                return User::find($movimiento->user_id)->name;
+                break;
+            }
+        }
     }
-
-    public function ListadoTipo()
-    {
-        $orderservices = OrderService::join(
-            'services as s',
-            'order_services.id',
-            's.order_service_id'
-        )
-            ->join('mov_services as ms', 's.id', 'ms.service_id')
-            ->join('cat_prod_services as cat', 'cat.id', 's.cat_prod_service_id')
-            ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-            ->join('cliente_movs as cliemov', 'mov.id', 'cliemov.movimiento_id')
-            ->join('clientes as c', 'c.id', 'cliemov.cliente_id')
-            ->where('mov.status', 'like', 'ACTIVO')
-            ->where('mov.type', $this->opciones)
-            ->select('order_services.*')
-            ->orderBy('order_services.id', 'desc')
-            ->distinct()
-            ->get();
-    }
-
 
 
     public function resetUI()
@@ -760,5 +467,18 @@ class InicioController extends Component
         $this->tipopago = 'EFECTIVO';
 
         $this->resetValidation();
+    }
+
+
+    //Obtener el Id de la Sucursal Donde esta el Usuario
+    public function idsucursal()
+    {
+        $idsucursal = User::join("sucursal_users as su","su.user_id","users.id")
+        ->select("su.sucursal_id as id","users.name as n")
+        ->where("users.id",Auth()->user()->id)
+        ->where("su.estado","ACTIVO")
+        ->get()
+        ->first();
+        return $idsucursal->id;
     }
 }
