@@ -105,13 +105,18 @@ Route::middleware(['auth'])->group(function () {
     Route::get('cajas', CajasController::class)->name('caja')->middleware('permission:Caja_Index');
     Route::get('carteras', CarteraController::class)->name('cartera')->middleware('permission:Cartera_Index');
     Route::get('cortecajas', CorteCajaController::class)->name('cortecaja')->middleware('permission:Corte_Caja_Index');
-    Route::get('movimientos', ReporteMovimientoController::class)->name('movimiento');
-    Route::get('resumenmovimientos', ReporteMovimientoResumenController::class)->name('r_movimiento');
-    Route::get('ingresoegreso', IngresoEgresoController::class)->name('ingreso_egreso');
-    //aaaaa
-    Route::get('report/pdfmovdiageneral', [ExportMovDiaGenController::class, 'reportPDFMovDiaGeneral']);
 
-    Route::get('report/pdfmovdiaresumen', [ExportMovDiaResController::class, 'reportPDFMovDiaResumen']);
+    Route::group(['middleware' => ['permission:Reporte_Movimientos_General']], function () {
+        Route::get('movimientos', ReporteMovimientoController::class)->name('movimiento');
+        Route::get('resumenmovimientos', ReporteMovimientoResumenController::class)->name('r_movimiento');
+        Route::get('ingresoegreso', IngresoEgresoController::class)->name('ingreso_egreso');
+        //aaaaa
+        Route::get('report/pdfmovdiageneral', [ExportMovDiaGenController::class, 'reportPDFMovDiaGeneral']);
+    
+        Route::get('report/pdfmovdiaresumen', [ExportMovDiaResController::class, 'reportPDFMovDiaResumen']);
+    });
+
+   
 
     /* TIGO MONEY */
     Route::get('origenes', OrigenController::class)->name('origen')->middleware('permission:Origen_Index');

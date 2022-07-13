@@ -5,10 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class IngresoSalida extends Model
+class DetalleOperacion extends Model
 {
     use HasFactory;
-    protected $fillable= ['proceso','destino','user_id','concepto','observacion'];
-    
+    protected $fillable= ['product_id','cantidad','id_operacion'];
 }
-
