@@ -623,9 +623,16 @@ class ReporteMovimientoResumenController extends Component
 
      public function operaciones()
      {
+        $this->subtotalesIngresos = $this->totalesIngresosV->sum('importe') + $this->totalesIngresosS->sum('importe') + $this->totalesIngresosIE->sum('importe');
         //Totales carteras
-        
-        $this->ingresosTotales = $this->totalesIngresosV->sum('importe') + $this->totalesIngresosS->sum('importe') + $this->totalesIngresosIE->sum('importe')+ $this->total;
+        if ($this->total>0) {
+            
+            $this->ingresosTotales = $this->totalesIngresosV->sum('importe') + $this->totalesIngresosS->sum('importe') + $this->totalesIngresosIE->sum('importe')+ $this->total;
+        }
+        else{
+            $this->ingresosTotales = $this->totalesIngresosV->sum('importe') + $this->totalesIngresosS->sum('importe') + $this->totalesIngresosIE->sum('importe');
+
+        }
 
         //Totales carteras tipo Caja Fisica
         $this->ingresosTotalesCF = $this->totalesIngresosV->where('ctipo','CajaFisica')->sum('importe') + $this->totalesIngresosS->where('ctipo','CajaFisica')->sum('importe') + $this->totalesIngresosIE->where('ctipo','CajaFisica')->sum('importe');
@@ -637,17 +644,20 @@ class ReporteMovimientoResumenController extends Component
 
         $this->ingresosTotalesNoCFBancos = $this->totalesIngresosV->where('ctipo','=','Banco')->sum('importe') + $this->totalesIngresosS->where('ctipo','=','Banco')->sum('importe') + $this->totalesIngresosIE->where('ctipo','=','Banco')->sum('importe');
       
-
-
-
         //Total Utilidad Ventas y Servicios
         $this->totalutilidadSV = $this->totalesIngresosV->sum('utilidadventa') + $this->totalesIngresosS->sum('utilidadservicios');
 
-
-
-
         //Total Egresos
-        $this->EgresosTotales = $this->totalesEgresosV->sum('importe') + $this->totalesEgresosIE->sum('importe');
+
+        if ($this->total<0) {
+            
+            $this->EgresosTotales = $this->totalesEgresosV->sum('importe') + $this->totalesEgresosIE->sum('importe')+ ($this->total*-1);
+        }
+        else{
+            $this->EgresosTotales = $this->totalesEgresosV->sum('importe') + $this->totalesEgresosIE->sum('importe');
+
+        }
+
         // egresos totales por caja fisica
         $this->EgresosTotalesCF = $this->totalesEgresosV->where('ctipo','CajaFisica')->sum('importe') + $this->totalesEgresosIE->where('ctipo','CajaFisica')->sum('importe');
 

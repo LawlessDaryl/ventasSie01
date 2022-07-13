@@ -129,7 +129,7 @@
                             <label>
                                 <h6>Agregar</h6>
                             </label>
-                            <button type="button" wire:click="Añadirarray"
+                            <button type="button" wire:click="addProduct()"
                             class="btn btn-warning fas fa-arrow-down"></button>
                         </div>
 

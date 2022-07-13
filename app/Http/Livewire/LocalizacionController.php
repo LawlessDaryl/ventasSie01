@@ -138,7 +138,7 @@ class LocalizacionController extends Component
     public function Edit(Location $loc)
     {
         $this->selected_id = $loc->id;
-        $this->aparador = $loc->tipo;
+        $this->tipo = $loc->tipo;
         $this->codigo = $loc->codigo;
         $this->descripcion = $loc->descripcion;
         $this->destino = $loc->destino_id;
@@ -152,14 +152,14 @@ class LocalizacionController extends Component
         $rules = [
            
             'codigo' => 'required',
-            'aparador' => 'required',
+            'tipo' => 'required',
             'destino' => 'required',
             'descripcion' => 'required',
         ];
         $messages = [
            
             'codigo.required' => 'El codigo es requerido',
-            'aparador.required' => 'El nombre de tipo aparador es requerido',
+            'tipo.required' => 'El nombre de tipo aparador es requerido',
             'destino.required' => 'La ubicacion es requerido',
             'descripcion.required' => 'La descripcion es requerida',
         ];
@@ -169,7 +169,7 @@ class LocalizacionController extends Component
             'codigo' => $this->codigo,
             'descripcion' => $this->descripcion,
             'destino_id' => $this->destino,
-            'tipo' => $this->aparador
+            'tipo' => $this->tipo
         ]);
        
         $this->resetUI();
@@ -215,6 +215,7 @@ class LocalizacionController extends Component
     public function resetUI()
     {
         $this->tipo =null;
+        $this->selected_id=null;
         $this->codigo=null;
         $this->descripcion= null;
         $this->sucursal= null ;

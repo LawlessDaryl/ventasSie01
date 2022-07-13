@@ -181,3 +181,17 @@ class IngresoEgresoController extends Component
     }
 
 }
+
+//datos de apertura
+
+// apertura        10441.28
+// recaudo 1900
+
+
+// ferrufino
+// apertura 2729
+// recaudo 510
+
+// peru
+//  apertura  731.5
+// recaudo 260

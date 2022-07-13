@@ -6,7 +6,7 @@
                     <b>{{ $componentName }} | {{ $pageTitle }}</b>
                 </h4>
                 <ul class="row justify-content-end">
-                    <a href="javascript:void(0)" class="btn btn-warning m-1" data-toggle="modal"
+                    <a href="javascript:void(0)" class="btn btn-warning m-1" data-toggle="modal" wire:click="$set('selected_id', 0)"
                         data-target="#theModal">Agregar</a>
            
                     <a href="javascript:void(0)" class="btn btn-dark m-1" data-toggle="modal"

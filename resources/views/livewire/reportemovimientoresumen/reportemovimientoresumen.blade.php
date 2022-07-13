@@ -356,150 +356,6 @@
                 </tr>
                 @endforeach
 
-            {{-- pruebasssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss --}}
-
-            {{-- <tr>
-                <td>
-                    
-                </td>
-                <td>
-                    
-                </td>
-                <td>
-                    
-                </td>
-                <td>
-                    
-                </td>
-                <td>
-                    
-                </td>
-                <td>
-                    
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    
-                </td>
-                <td>
-                    
-                </td>
-                <td>
-                    
-                </td>
-                <td>
-                    <b>{{$this->ingresosTotales}} ig</b>
-                </td>
-                <td>
-                    <b>{{$this->EgresosTotales}}</b>
-                </td>
-                <td>
-                    <b>{{$this->totalutilidadSV}}</b>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    
-                </td>
-                <td>
-                    
-                </td>
-                <td>
-                    
-                </td>
-                <td>
-                    
-                </td>
-                <td>
-                    
-                </td>
-                <td>
-                    
-                </td>
-            </tr>
-            <tr>
-                <td colspan="3">
-                     <h5 class="text-dark-right" style="border-bottom:2rem">TOTAL INGRESOS Bs</h5></td>
-                </td>
-                <td>
-                    {{$this->totalutilidadSV}}
-                </td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td colspan="3">
-                    <h5 class="text-dark">OPERACIONES EN EFECTIVO Bs</h5>
-                </td>
-                <td>
-                    {{$this->ingresosTotalesCF}}
-                </td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td colspan="3">
-                    <h5 class="text-dark">BANCOS/SISTEMA/TELEFONO Bs</h5>
-                </td>
-                <td>
-                    {{$this->ingresosTotalesNoCF}}
-                </td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td colspan="3">
-                    <h5 class="text-dark">TOTAL EGRESOS Bs</h5>
-                </td>
-                <td>
-                    {{$this->EgresosTotales}}
-                </td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td colspan="3">
-                    <h5 class="text-dark">SUB TOTAL EN CAJA Bs </h5>
-                </td>
-                <td>
-                    {{$this->subtotalcaja}}
-                </td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td colspan="3">
-                    <h5 class="text-dark">TOTAL EFECTIVO EN CAJA Bs </h5>
-                </td>
-                <td>
-                    
-                </td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td colspan="3">
-                    <h5 class="text-dark">UTILIDAD Bs</h5>
-                </td>
-                <td>
-                    {{$this->ingresosTotales}}
-                </td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td colspan="3">
-                    <h5 class="text-dark">APERTURA Bs</h5>
-                </td>
-                <td>
-                    Apertura de Caja
-                    {{number_format($ops),2}}
-                </td>
-                <td></td>
-                <td></td>
-            {{-- </tr> --}}
-
       
             <tfoot>
                 <tr>
@@ -507,220 +363,204 @@
 
                     </td>
                 </tr>
-                {{-- INGRESOS TOTALES --}}
-                <tr>
-                <td colspan="3">
-                    <h5 class="text-dark text-right" style="font-size: 1rem!important;"><b> INGRESOS TOTALES </b></h5>
-                </td>
-                <td>
-                        {{ number_format($ingresosTotales,2) }}
-                        
-                </td>
-                <td colspan="2">
-                </td>
-                </tr>
 
-                {{-- DESCOMPOSICION DE LOS INGRESOS TOTALES --}}
-                {{-- OPERACIONES EN EFECTIVO --}}
-                <tr>
-                    <td colspan="3">
-                        <h5 class="text-dark text-right" style="font-size: 1rem!important;">Operaciones en efectivo</h5>
-                    </td>
-                    <td>
-                            {{ number_format($ingresosTotalesCF,2) }}
-                            
-                    </td>
-                    <td colspan="2">
-                    </td>
-                </tr>
-
-                {{-- OPERACIONES NO EFECTIVAS TIGO/SISTEMAS/TELEFONO --}}
-
-                <tr>
-                    <td colspan="3">
-                        <h5 class="text-dark text-right" style="font-size: 1rem!important;"> Operaciones en TIGO/SISTEMA/TELEFONO </h5>
-                    </td>
-                    <td>
-                            {{ number_format($ingresosTotalesNoCFNoBancos,2) }}
-                            
-                    </td>
-                    <td colspan="2">
-                    </td>
-                </tr>
-
-                {{-- OPERACIONES NO EFECTIVAS BANCOS --}}
-
-                <tr>
-                    <td colspan="3">
-                        <h5 class="text-dark text-right" style="font-size: 1rem!important;"> Operaciones en Bancos </h5>
-                    </td>
-                    <td>
-                            {{ number_format($ingresosTotalesNoCFBancos,2) }}
-                            
-                    </td>
-                    <td colspan="2">
-                    </td>
-                </tr>
-                {{-- OPERACIONES DEDUCCION TIGOMONEY --}}
-                <tr>
-                    <td colspan="3">
-                        <h5 class="text-dark text-right" style="font-size: 1rem!important;"> Saldo en caja fisica de operaciones en Tigo Money </h5>
-                    </td>
-                    <td>
-                            {{ number_format($total,2) }}
-                            
-                    </td>
-                    <td colspan="2">
-                    </td>
-                </tr>
-
-                {{-- FIN DESCOMPOSICION DE LOS INGRESOS TOTALES --}}
-
-                {{-- EGRESOS TOTALES --}}
-                <tr>
-                    <td colspan="3">
-                        <h5 class="text-dark text-right" style="font-size: 1rem!important;"><b> EGRESOS TOTALES </b></h5>
-                    </td>
-                    <td>
-                        
-                    </td>
-                    <td>
+                      {{-- SUBTOTAL OPERACIONES --}}
+                      <tr>
+                        <td colspan="3">
+                            <h5 class="text-dark text-right" style="font-size: 1rem!important;"><b> TOTAL OPERACIONES </b></h5>
+                        </td>
+                        <td>
+                                {{ number_format($subtotalesIngresos,2) }}
+                                
+                        </td>
+                        <td>
                         {{ number_format($EgresosTotales,2) }}
-                    </td>
-
-                    <td>
-
-                    </td>
-                </tr>
-
-                {{-- DESCOMPOSICION DE LOS INGRESOS TOTALES --}}
-
-                {{-- egresos en efectivo --}}
-                <tr>
-                    <td colspan="3">
-                        <h5 class="text-dark text-right" style="font-size: 1rem!important;"><b> Egresos en efectivo </b></h5>
-                    </td>
-                    <td>
-                        
-                    </td>
-                    <td>
-                        {{ number_format($EgresosTotalesCF,2) }}
-                    </td>
-
-                    <td>
-
-                    </td>
-                </tr>
-
-                {{-- egresos por sistema --}}
-
-                <tr>
-                    <td colspan="3">
-                        <h5 class="text-dark text-right" style="font-size: 1rem!important;"><b> Egresos sistema/telefono </b></h5>
-                    </td>
-                    <td>
-                        
-                    </td>
-                    <td>
-                        {{ number_format($EgresosTotalesNoCFNoBancos,2) }}
-                    </td>
-
-                    <td>
-
-                    </td>
-                </tr>
-
-                {{-- EgresosTotalesNoCFBancos --}}
-
-                <tr>
-                    <td colspan="3">
-                        <h5 class="text-dark text-right" style="font-size: 1rem!important;"><b> Egresos por bancos </b></h5>
-                    </td>
-                    <td>
-                        
-                    </td>
-                    <td>
-                        {{ number_format($EgresosTotalesNoCFBancos,2) }}
-                    </td>
-
-                    <td>
-
-                    </td>
-                </tr>
-
-                {{-- FIN DESCOMPOSICION DE LOS INGRESOS TOTALES --}}
-
-                {{-- subtotalcaja --}}
-
-                    <tr>
-                        <td colspan="3">
-                            <h5 class="text-dark text-right" style="font-size: 1rem!important;"><b> SUBTOTAL EN CAJA </b></h5>
                         </td>
                         <td>
-                                {{ number_format($subtotalcaja,2) }}
-                                
+                        {{ number_format($totalutilidadSV,2) }}
                         </td>
-                        <td colspan="2">
-                        </td>
-                    </tr>
+                        </tr>
 
-                    <tr>
-                        <td colspan="3">
-                            <h5 class="text-dark text-right" style="font-size: 1rem!important;"><b> SALDO EFECTIVO </b></h5>
-                        </td>
-                        <td>
-                                {{ number_format($operacionesefectivas,2) }}
-                                
-                        </td>
-                        <td colspan="2">
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td colspan="3">
-                            <h5 class="text-dark text-right" style="font-size: 1rem!important;"><b> APERTURA </b></h5>
-                        </td>
-                        <td>
-                                {{ number_format($ops,2) }}
-                                
-                        </td>
-                        <td colspan="2">
-                        </td>
-                    </tr>
-
-                    @if ($caja != 'TODAS')
-                    <tr>
-                        <td colspan="3">
-                            <h5 class="text-dark text-right" style="font-size: 1rem!important;"><b> RECAUDO </b></h5>
-                        </td>
-                        <td>
-                                {{ number_format($recaudo,2) }}
-                                
-                        </td>
-                        <td colspan="2">
-                        </td>
-                    </tr>
-                    @endif
-
-                    
-                
-                    <tr>
-                        <td colspan="3">
-                            <h5 class="text-dark text-right" style="font-size: 1rem!important;"><b> TOTAL </b></h5>
-                        </td>
-                        <td>
-                            {{ number_format($operacionesW,2) }}
-                                
-                        </td>
-                        <td colspan="2">
-                        </td>
-                    </tr>
             </tfoot>
 
         </tbody>
 
 
+
+
+
+
             </table>
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="table-responsive col-lg-9">
+                        <table class="table table-hover table table-bordered table-bordered-bd-warning">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <h5 class="text-dark text-right" ><b> Ingresos Totales </b></h5>
+                                    </td>
+                                    <td>
+                                        {{ number_format($subtotalesIngresos,2)}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <h5 class="text-dark text-right" ><b> Ingresos en Efectivo </b></h5>
+                                    </td>
+                                    <td>
+                                        {{ number_format($ingresosTotalesCF,2)}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <h5 class="text-dark text-right" ><b> Ingresos sistema/telefono/tigostreaming </b></h5>
+                                    </td>
+                                    <td>
+                                        {{ number_format($ingresosTotalesNoCFNoBancos,2)}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <h5 class="text-dark text-right" ><b> Ingresos por Bancos </b></h5>
+                                    </td>
+                                    <td>
+                                        {{ number_format($ingresosTotalesNoCFBancos,2)}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <h5 class="text-dark text-right" ><b> Saldo por Operaciones en TigoMoney </b></h5>
+                                    </td>
+                                    @if ($total>0)
+                                    <td>
+                                        {{ number_format($ingresosTotalesNoCFBancos,2)}}
+                                    </td>
+                                    @else
+                                    <td>
+                                       0.00
+                                    </td>
+                                    @endif
+                                </tr>
+                            </tbody>
+                           
+                        </table>
+                    </div>
+                  
+                </div>
+                <div class="col-lg-6">
+                    <div class="table-responsive col-lg-9">
+                        <table class="table table-hover table table-bordered table-bordered-bd-warning">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <h5 class="text-dark text-right" ><b> Egresos Totales </b></h5>
+                                    </td>
+                                    <td>
+                                        {{ number_format($EgresosTotales,2)}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <h5 class="text-dark text-right" ><b> Egresos en Efectivo </b></h5>
+                                    </td>
+                                    <td>
+                                        {{ number_format($EgresosTotalesCF,2)}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <h5 class="text-dark text-right" ><b> Egresos sistema/telefono </b></h5>
+                                    </td>
+                                    <td>
+                                        {{ number_format($EgresosTotalesNoCFNoBancos,2)}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <h5 class="text-dark text-right" ><b> Egresos por Bancos </b></h5>
+                                    </td>
+                                    <td>
+                                        {{ number_format($EgresosTotalesNoCFBancos,2)}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <h5 class="text-dark text-right" ><b> Saldo por Operaciones en TigoMoney </b></h5>
+                                    </td>
+                                    @if ($total<0)
+                                    <td>
+                                        {{ number_format($total*-1,2)}}
+                                    </td>
+                                    @else
+                                    <td>
+                                       0.00
+                                    </td>
+                                    @endif
+                                </tr>
+                            </tbody>
+                           
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-6">
+                    <div class="table-responsive">
+                        <table class="table table-hover table table-bordered table-bordered-bd-warning">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <h5 class="text-dark text-right" ><b> Saldo Ingresos/Egresos Totales </b></h5>
+                                    </td>
+                                    <td>
+                                        {{ number_format($subtotalcaja,2)}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <h5 class="text-dark text-right" ><b> Saldo en Efectivo </b></h5>
+                                    </td>
+                                    <td>
+                                        {{ number_format($operacionesefectivas,2)}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <h5 class="text-dark text-right" ><b> Apertura </b></h5>
+                                    </td>
+                                    <td>
+                                        {{ number_format($ops,2)}}
+                                    </td>
+                                </tr>
+                                @if ($caja != 'TODAS')
+                                 <tr>
+                                    <td>
+                                           <h5 class="text-dark text-right"><b> RECAUDO </b></h5>
+                                    </td>
+                                    <td>
+                                     {{ number_format($recaudo,2) }}
+                                
+                                    </td>
+                        
+                                 </tr>
+                                 @endif
+
+                                <tr>
+                                    <td>
+                                        <h5 class="text-dark text-right" ><b> Total </b></h5>
+                                    </td>
+                                    <td>
+                                        {{ number_format($operacionesW,2)}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         
         @include('livewire.reportemovimientoresumen.modalDetailsR')
 

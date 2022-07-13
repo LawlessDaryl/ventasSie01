@@ -47,7 +47,7 @@ class MercanciaController extends Component
        
         $this->col->add($id);
         $this->searchproduct= $id->nombre;
-        $this->emit('product-added');
+       // $this->emit('product-added');
     }
 
     public function Incrementar(){
@@ -63,5 +63,9 @@ class MercanciaController extends Component
             }
         }
 
+    }
+
+    public function addProduct(){
+        
     }
 }
