@@ -162,8 +162,6 @@
          
     </div>
       
-   
-   
     @include('livewire.destinoproducto.detallemobiliario')
     @include('livewire.destinoproducto.ajusteinventario')
     </div>

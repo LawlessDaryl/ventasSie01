@@ -3,6 +3,8 @@
 namespace App\Http\Livewire;
 use App\Models\Category;
 use App\Models\Destino;
+use App\Models\DetalleOperacion;
+use App\Models\IngresoSalida;
 use App\Models\Location;
 use App\Models\LocationProducto;
 use App\Models\Product;
@@ -21,7 +23,7 @@ class DestinoProductoController extends Component
     use WithFileUploads;
     use WithPagination;
 
-    public $selected_id,$search,$selected_ubicacion,$componentName,$title,$sql,$prod,$grouped,$productoajuste,$cantidad,$productid,$productstock,$mobiliario,$mobs,$mop_prod=0;
+    public $selected_id,$search,$selected_ubicacion,$componentName,$title,$sql,$prod,$grouped,$stocks,$productoajuste,$cantidad,$productid,$productstock,$mobiliario,$mobs,$mop_prod=0;
     private $pagination = 50;
    
     public function paginationView()
@@ -155,12 +157,6 @@ class DestinoProductoController extends Component
         $this->productid=$prod->id;
         $this->productstock=ProductosDestino::where('productos_destinos.product_id',$prod->id)->where('productos_destinos.destino_id',$this->selected_id)->value('stock');
 
-        // $this->mobs = Location::join('location_productos','location_productos.location','locations.id')
-        // ->where('locations.destino_id',$this->selected_id)
-        // ->where('loca')
-        // ->select('locations.*')
-        // ->get();
-
         $this->mop_prod = LocationProducto::where('location_productos.product',$this->productid)->get();
 
         $arr= $this->mop_prod->pluck('location');
@@ -172,9 +168,10 @@ class DestinoProductoController extends Component
     }
     
     public function guardarajuste(){
-       
+        $stockactual=ProductosDestino::where('productos_destinos.product_id',$this->productid)->where('productos_destinos.destino_id',$this->selected_id)->value('stock');
+
         ProductosDestino::where('productos_destinos.destino_id',$this->selected_id)->where('productos_destinos.product_id',$this->productid)
-        ->update(['stock' => $this->productstock+ $this->cantidad ]);
+        ->update(['stock' => $stockactual + $this->cantidad ]);
 
        if ($this->mobiliario) {
         
@@ -203,6 +200,39 @@ class DestinoProductoController extends Component
         $data->stock = 0;
         $data->save();
         }
+    }
+
+    public function vaciarProducto(){
+
+        $auxi2=ProductosDestino::where('productos_destinos.destino_id',$this->selected_id)->where('productos_destinos.product_id',$this->productid)->get();
+   // dd($auxi2->values('stock'));
+        if ( $auxi2->pluck('stock')[0]>0) {
+         $operacion= IngresoSalida::create([
+        'proceso'=>'Salida',
+        'destino'=>$this->selected_id,
+        'user_id'=> Auth()->user()->id,
+        'concepto'=>'AJUSTE',
+        'observacion'=>'Ajuste de inventarios por producto'
+             ]);
+
+        // dd($auxi2->pluck('stock')[0]);
+        DetalleOperacion::create([
+        'product_id'=>$this->productid,
+        'cantidad'=> $auxi2->pluck('stock')[0],
+        'id_operacion'=>$operacion->id
+    ]);
+   }
+      
+        foreach ($auxi2 as $data) 
+        {
+            $data->stock = 0;
+            $data->save();
+        }
+
+        $aux= Product::find($this->productid);
+        $this->ajuste($aux);
+        $this->emit('show-modal-ajuste');
+
     }
 
     public function eliminarmob(LocationProducto $id){

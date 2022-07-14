@@ -384,30 +384,24 @@
             </tfoot>
 
         </tbody>
-
-
-
-
-
-
             </table>
 
             <div class="row">
                 <div class="col-lg-6">
                     <div class="table-responsive col-lg-9">
-                        <table class="table table-hover table table-bordered table-bordered-bd-warning">
+                        <table>
                             <tbody>
                                 <tr>
                                     <td>
-                                        <h5 class="text-dark text-right" ><b> Ingresos Totales </b></h5>
+                                        <h5 class="text-dark text-left" ><b> Ingresos Totales </b></h5>
                                     </td>
                                     <td>
-                                        {{ number_format($subtotalesIngresos,2)}}
+                                        <b>{{ number_format($subtotalesIngresos,2)}}</b>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <h5 class="text-dark text-right" ><b> Ingresos en Efectivo </b></h5>
+                                        <h5 class="text-dark text-center" ><b> Ingresos en Efectivo </b></h5>
                                     </td>
                                     <td>
                                         {{ number_format($ingresosTotalesCF,2)}}
@@ -423,7 +417,7 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <h5 class="text-dark text-right" ><b> Ingresos por Bancos </b></h5>
+                                        <h5 class="text-dark text-center" ><b> Ingresos por Bancos </b></h5>
                                     </td>
                                     <td>
                                         {{ number_format($ingresosTotalesNoCFBancos,2)}}
@@ -451,7 +445,7 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="table-responsive col-lg-9">
-                        <table class="table table-hover table table-bordered table-bordered-bd-warning">
+                        <table>
                             <tbody>
                                 <tr>
                                     <td>
@@ -509,7 +503,7 @@
             <div class="row justify-content-center">
                 <div class="col-lg-6">
                     <div class="table-responsive">
-                        <table class="table table-hover table table-bordered table-bordered-bd-warning">
+                        <table>
                             <tbody>
                                 <tr>
                                     <td>

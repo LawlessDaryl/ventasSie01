@@ -10,7 +10,7 @@
                     <div class="col-sm-12 col-md-5 col-lg-8">
                         <div class="form-group">
                             <label>
-                                <h6> <b>Producto</b> </h6>
+                                <h6><b>Producto</b></h6> <button class="btn btn-danger text-center" type="button" wire:click="vaciarProducto()">Vaciar Stock</button>
                             </label>
                            <h6>{{$productoajuste}}</h6>
                         </div>
@@ -79,12 +79,7 @@
                                     </td>
                                   </tr>
 
-                                       
-                                    
                                     @endforeach
-                              
-                               
-                                
                                  @else
                                  <td>
                                     Sin mobiliarios
@@ -115,5 +110,5 @@
   
         </div>
     </div>
-</div>
+
 

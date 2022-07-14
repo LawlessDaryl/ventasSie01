@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class IngresoSalida extends Model
 {
     use HasFactory;
+    
     protected $fillable= ['proceso','destino','user_id','concepto','observacion'];
     
 }
