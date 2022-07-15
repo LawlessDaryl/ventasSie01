@@ -33,10 +33,12 @@ class DestinoProductoController extends Component
     
     public function mount()
     {
+
         $this->selected_id="General";
         $this->componentName='crear';
         $this->title='ssss';
         $this->pr=20;
+      
     
     }
     public function cerrar(){
@@ -167,24 +169,55 @@ class DestinoProductoController extends Component
         $this->emit('show-modal-ajuste');
     }
     
-    public function guardarajuste(){
+ 
+    public function incrementar(){
         $stockactual=ProductosDestino::where('productos_destinos.product_id',$this->productid)->where('productos_destinos.destino_id',$this->selected_id)->value('stock');
 
         ProductosDestino::where('productos_destinos.destino_id',$this->selected_id)->where('productos_destinos.product_id',$this->productid)
         ->update(['stock' => $stockactual + $this->cantidad ]);
-
-       if ($this->mobiliario) {
-        
-        LocationProducto::create([
-            'product'=>$this->productid,
-            'location'=>$this->mobiliario
-        ]);
-       }
-
        
-        $this->resetajuste();
-       
+
+        $auxi2=ProductosDestino::where('productos_destinos.destino_id',$this->selected_id)->where('productos_destinos.product_id',$this->productid)->get();
+        // dd($auxi2->values('stock'));
+             if ( $auxi2->pluck('stock')[0]>0) {
+              $operacion= IngresoSalida::create([
+             'proceso'=>'Entrada',
+             'destino'=>$this->selected_id,
+             'user_id'=> Auth()->user()->id,
+             'concepto'=>'AJUSTE',
+             'observacion'=>'Ajuste de inventarios por producto'
+                  ]);
+     
+             // dd($auxi2->pluck('stock')[0]);
+             DetalleOperacion::create([
+             'product_id'=>$this->productid,
+             'cantidad'=> $this->cantidad,
+             'id_operacion'=>$operacion->id
+         ]);
+        }
+        $aux= Product::find($this->productid);
+        $this->ajuste($aux);
+        $this->emit('show-modal-ajuste');
+
     }
+
+    public function asignmob(){
+        if ($this->mobiliario) {
+        
+            LocationProducto::create([
+                'product'=>$this->productid,
+                'location'=>$this->mobiliario
+            ]);
+           }
+           $this->mobiliario = null;
+           $aux= Product::find($this->productid);
+           $this->ajuste($aux);
+           $this->emit('show-modal-ajuste');
+    
+    }
+
+  
+
     public function resetajuste(){
         $this->cantidad= null;
         $this->mobiliario = null;
@@ -233,6 +266,10 @@ class DestinoProductoController extends Component
         $this->ajuste($aux);
         $this->emit('show-modal-ajuste');
 
+    }
+
+    public function guardarRegistro(){
+        
     }
 
     public function eliminarmob(LocationProducto $id){
