@@ -17,7 +17,7 @@
                             <ul class="tabs tab-pills text-right">
                                 <a href="{{ url('orderservice') }}" class="btn btn-warning">Ir a Orden de Servicio</a>
                             </ul>
-                            @endif
+                        @endif
                     </div>
 
                 </div>
