@@ -1,171 +1,244 @@
 @section('css')
-<style>
-    .servicioscss {
-    border: 1px solid #000000;
-    border-radius: 10px;
-    background-color: #ffffff;
-    border-top: 4px;
-    padding: 5px;
-    }
-</style>
-@endsection
-
-
-<div class="row sales layout-top-spacing">
-    <div class="col-sm-12">
-        <div class="widget widget-chart-one">
-
-            <div class="form-group">
-                <div class="row">
-
-                    <div class="col-12 col-sm-12 col-md-4 text-center">
-
+    <style>
+        .tablaservicios {
+            width: 100%;
+            min-width: 1100px;
+        }
+        .tablaservicios thead {
+            background-color: #1572e8;
+            color: white;
+        }
+        .tablaservicios th, td {
+            border: 0.5px solid #1571e894;
+            padding: 4px;
+        }
+        .tablaservicios tr:hover {
+            background-color: rgba(0, 174, 255, 0.2);
+        }
+        .detalleservicios{
+            
+            border: 1px solid #1572e8;
+            border-radius: 10px;
+            background-color: #ffffff00;
+            /* border-top: 4px; */
+            padding: 5px;
+        }
+        .asignar :hover {
+            background-color: rgba(129, 251, 255, 0.486);
+        }
+        .imprimir :hover {
+            background-color: rgba(18, 107, 240, 0.486);
+        }
+        .modificar :hover {
+            background-color: rgba(10, 175, 4, 0.486);
+        }
+        .anular :hover {
+            background-color: rgba(204, 184, 1, 0.486);
+        }
+        .eliminar :hover {
+            background-color: rgba(224, 5, 5, 0.486);
+        }
+    </style>
+    @endsection
+    
+    
+    <div class="row sales layout-top-spacing">
+        <div class="col-sm-12">
+            <div class="widget widget-chart-one">
+    
+                <div class="form-group">
+                    <div class="row">
+    
+                        <div class="col-12 col-sm-12 col-md-4 text-center">
+    
+                        </div>
+    
+                        <div class="col-12 col-sm-12 col-md-4 text-center">
+                            <h2><b>Órden de Servicio</b></h2>
+                            Ordenados por Fecha de Recepción
+                        </div>
+    
+                        <div class="col-12 col-sm-12 col-md-4">
+                            @if(@Auth::user()->hasPermissionTo('Recepcionar_Servicio'))
+                                <ul class="tabs tab-pills text-right">
+                                    <a href="{{ url('service') }}" class="btn btn-outline-primary">Nuevo Servicio</a>
+                                    <a href="{{ url('inicio') }}" class="btn btn-outline-primary">Ir a Lista Servicios</a>
+                                </ul>
+                            @endif
+                        </div>
+    
                     </div>
-
-                    <div class="col-12 col-sm-12 col-md-4 text-center">
-                        <h2><b>Órden de Servicio</b></h2>
-                        Ordenados por Fecha de Recepción
-                    </div>
-
-                    <div class="col-12 col-sm-12 col-md-4">
-                        @if(@Auth::user()->hasPermissionTo('Recepcionar_Servicio'))
-                            <ul class="tabs tab-pills text-right">
-                                <a href="{{ url('service') }}" class="btn btn-outline-primary">Nuevo Servicio</a>
-                                <a href="{{ url('inicio') }}" class="btn btn-outline-primary">Ir a Lista Servicios</a>
-                            </ul>
-                        @endif
-                    </div>
-
-                </div>
-            </div> 
-
-            <div class="form-group">
-                <div class="row">
-
-                    <div class="col-12 col-sm-6 col-md-3 text-center">
-                        <b>Buscar por Codigo</b>
-                        <div class="form-group">
-                            <div class="input-group mb-4">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text input-gp">
-                                        <i class="fas fa-search"></i>
-                                    </span>
+                </div> 
+    
+                <div class="form-group">
+                    <div class="row">
+    
+                        <div class="col-12 col-sm-6 col-md-3 text-center">
+                            <b>Buscar por Código</b>
+                            <div class="form-group">
+                                <div class="input-group mb-4">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-gp">
+                                            <i class="fas fa-search"></i>
+                                        </span>
+                                    </div>
+                                    <input type="text" wire:model="search" placeholder="Busqueda General..." class="form-control">
                                 </div>
-                                @if($this->type == "PENDIENTE")
-                                    <input type="text" wire:model="search" placeholder="Buscar en Pendientes" class="form-control">
-                                @else
-                                    @if($this->type == "PROCESO")
-                                        <input type="text" wire:model="search" placeholder="Buscar en Procesos" class="form-control">
-                                    @else
-                                        <input type="text" wire:model="search" placeholder="Buscar en Terminados" class="form-control">
-                                    @endif
-                                @endif
                             </div>
                         </div>
-                    </div>
-
-                    <div class="col-12 col-sm-6 col-md-3 text-center">
-                        <b>Seleccionar Sucursal</b>
-                        <div class="form-group">
-                            <select wire:model="sucursal_id" class="form-control">
-                                <option value="Todos">Todas las Sucursales</option>
-                                @foreach($listasucursales as $sucursal)
-                                <option value="{{$sucursal->id}}">{{$sucursal->name}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-sm-6 col-md-3 text-center">
-                        <b>Categoría Trabajo</b>
-                        <div class="form-group">
-                            <select wire:model.lazy="catprodservid" class="form-control">
-                                <option value="Todos" selected>Todos</option>
-                                @foreach ($categorias as $cat)
-                                    <option value="{{ $cat->id }}" selected>{{ $cat->nombre }}</option>
-                                @endforeach
-                            </select>
-                            @error('catprodservid')
-                                <span class="text-danger er">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-sm-6 col-md-3 text-center">
-                        <b>Tipo de Servicio</b>
-                        <div class="form-group">
-                            <select wire:model="type" class="form-control">
-                                <option value="PENDIENTE">Pendientes</option>
-                                <option value="PROCESO">Proceso</option>
-                                <option value="TERMINADO">Terminados</option>
-                                <option value="ENTREGADO">Entregado</option>
-                                <option value="ABANDONADO">Abandonado</option>
-                                <option value="ANULADO">Anulado</option>
-                                <option value="TODOS">Todos</option>
-                                <option value="FECHA">Por Fecha</option>
-                            </select>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-                
-         
-            <div class="widget-content">
-                <div class="table-responsive">
-                    <table class="table table-head-bg-primary table-hover" style="min-width: 1100px;">
-                        <thead class="text-white" style="background: #ee761c">
-                            <tr>
-                                <th class="text-center">#</th>
-                                <th class="text-center">CODIGO</th>
-                                <th class="text-center">FECHA RECEPCION</th>
-                                <th class="text-center">FECHA ENTREGA</th>
-                                <th class="text-center">CLIENTE</th>
-                                <th class="text-center">SERVICIOS</th>
-                                <th class="text-center">ESTADO</th>
-                                <th class="text-center">TOTAL</th>
-                                <th class="text-center">A CUENTA</th>
-                                <th class="text-center">SALDO</th>
-                                <th class="text-center">ACCIONES</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($orden_de_servicio as $os)
-                            <tr>
-                                <td class="text-center">
-                                    {{$os->num}}
-                                </td>
-                                <td class="text-center">
-                                    <span class="stamp stamp" style="background-color: #1572e8">
-                                        {{$os->codigo}}
-                                    </span>
-                                </td>
-                                <td class="text-center">
-                                    {{ \Carbon\Carbon::parse($os->fechacreacion)->format('d/m/Y h:i a') }}
-                                </td>
-                                <td class="text-center">
-                                    
-                                </td>
-                                <td>
-
-                                </td>
-                                <td>
-                                    @foreach ($os->servicios as $d)
-
-                                    <div  class="servicioscss">
-                                        {{ucwords(strtolower($d->nombrecategoria))}} {{ucwords(strtolower($d->marca))}} {{strtolower($d->detalle)}}
-                                        <br>
-                                        <b>Falla Según Cliente:</b> {{ucwords(strtolower($d->falla_segun_cliente))}}
-                                    </div>
+    
+                        <div class="col-12 col-sm-6 col-md-3 text-center">
+                            <b>Seleccionar Sucursal</b>
+                            <div class="form-group">
+                                <select wire:model="sucursal_id" class="form-control">
+                                    <option value="Todos">Todas las Sucursales</option>
+                                    @foreach($listasucursales as $sucursal)
+                                    <option value="{{$sucursal->id}}">{{$sucursal->name}}</option>
                                     @endforeach
-                                </td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
+                                </select>
+                            </div>
+                        </div>
+    
+                        <div class="col-12 col-sm-6 col-md-3 text-center">
+                            <b>Categoría Trabajo</b>
+                            <div class="form-group">
+                                <select wire:model.lazy="catprodservid" class="form-control">
+                                    <option value="Todos" selected>Todos</option>
+                                    @foreach ($categorias as $cat)
+                                        <option value="{{ $cat->id }}" selected>{{ $cat->nombre }}</option>
+                                    @endforeach
+                                </select>
+                                @error('catprodservid')
+                                    <span class="text-danger er">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+    
+                        <div class="col-12 col-sm-6 col-md-3 text-center">
+                            <b>Tipo de Servicio</b>
+                            <div class="form-group">
+                                <select wire:model="type" class="form-control">
+                                    <option value="PENDIENTE">Pendientes</option>
+                                    <option value="PROCESO">Proceso</option>
+                                    <option value="TERMINADO">Terminados</option>
+                                    <option value="ENTREGADO">Entregado</option>
+                                    <option value="ABANDONADO">Abandonado</option>
+                                    <option value="ANULADO">Anulado</option>
+                                    <option value="TODOS">Todos</option>
+                                    <option value="FECHA">Por Fecha</option>
+                                </select>
+                            </div>
+                        </div>
+    
+                    </div>
                 </div>
-                {{ $orden_de_servicio->links() }}
+                    
+             
+                <div class="widget-content">
+                    <div class="table-responsive">
+                        <table class="tablaservicios">
+                            <thead>
+                                <tr>
+                                    <th class="text-center" style="min-width: 20px;">#</th>
+                                    <th class="text-center">CODIGO</th>
+                                    <th class="text-center">FECHA RECEPCION</th>
+                                    <th class="text-center">FECHA ENTREGA</th>
+                                    <th class="text-center">CLIENTE</th>
+                                    <th class="text-center">SERVICIOS</th>
+                                    <th class="text-center">ESTADO</th>
+                                    <th class="text-center">TOTAL</th>
+                                    <th class="text-center">A CUENTA</th>
+                                    <th class="text-center">SALDO</th>
+                                    <th class="text-center">ACCIONES</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($orden_de_servicio as $os)
+                                <tr>
+                                    <td class="text-center" style="min-width: 20px;">
+                                        {{$os->num}}
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="stamp stamp" style="background-color: #1572e8">
+                                            {{$os->codigo}}
+                                        </span>
+                                    </td>
+                                    <td class="text-center">
+                                        {{ \Carbon\Carbon::parse($os->fechacreacion)->format('d/m/Y h:i a') }}
+                                    </td>
+                                    <td class="text-center">
+                                        @foreach ($os->servicios as $d)
+                                        {{ \Carbon\Carbon::parse($d->fecha_estimada_entrega)->format('d/m/Y h:i a') }}
+                                            <br>
+                                        @endforeach
+                                    </td>
+                                    <td class="text-center">
+                                        {{ucwords(strtolower($os->nombrecliente))}}
+                                    </td>
+                                    <td>
+                                        @foreach ($os->servicios as $d)
+    
+                                        <div>
+                                            {{ucwords(strtolower($d->nombrecategoria))}} {{ucwords(strtolower($d->marca))}} {{strtolower($d->detalle)}}
+                                            <br>
+                                            <b>Falla Según Cliente:</b> {{ucwords(strtolower($d->falla_segun_cliente))}}
+                                        </div>
+    
+                                        @endforeach
+                                    </td>
+                                    <td class="text-center">
+                                        @foreach ($os->servicios as $d)
+                                        <span class="stamp stamp" style="background-color: rgb(80, 5, 110)">
+                                        {{$d->estado}}
+                                        </span>
+                                        <br>
+                                        @endforeach
+                                    </td>
+                                    <td class="text-right">
+                                        {{$os->importe}}
+                                    </td>
+                                    <td>
+                                        
+                                    </td>
+                                    <td>
+                                        
+                                    </td>
+                                    <td class="text-center">
+
+
+                                        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                                            <div class="btn-group" role="group">
+                                              <button id="btnGroupDrop1" type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Acciones
+                                              </button>
+                                              <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                                <div class="asignar">
+                                                    <a class="dropdown-item" href="#">Asignar Técnico</a>
+                                                </div>
+                                                <div class="imprimir">
+                                                    <a class="dropdown-item" href="#">Imprimir</a>
+                                                </div>
+                                                <div class="modificar">
+                                                    <a class="dropdown-item" href="#">Modificar Servicio</a>
+                                                </div>
+                                                <div class="anular">
+                                                    <a class="dropdown-item" href="#">Anular Servicio</a>
+                                                </div>
+                                                <div class="eliminar">
+                                                    <a class="dropdown-item" href="#">Eliminar Servicio</a>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    {{ $orden_de_servicio->links() }}
+                </div>
             </div>
         </div>
     </div>
-</div>
+    

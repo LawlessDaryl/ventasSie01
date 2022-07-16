@@ -88,7 +88,7 @@
                               <tr class="tablehead">
                                 <th class="text-center">N°</th>
                                 <th>FECHA</th>
-                                {{-- <th>CARTERA</th> --}}
+                                <th>CARTERA</th>
                                 <th>CAJA</th>
                                 <th class="text-right">INGRESO (Bs)</th>
                                 <th class="text-right">EGRESO (Bs)</th>
@@ -101,15 +101,17 @@
                             <tbody>
                                 @foreach ($data as $item)
                                     <tr class="seleccionar">
-                                        
-                                        {{-- <td>
-                                            {{ date("d/m/Y h:i A", strtotime($item->fecha)) }}
-                                        </td> --}}
-                                        {{-- <td>
-                                            {{ ucwords(strtolower($item->nombrecartera)) }}
-                                        </td> --}}
+                                        <td class="text-center">
+                                            {{$loop->iteration}}
+                                        </td>
                                         <td>
-                                            {{ ucwords($item->nombrecaja) }} ({{ ucwords(strtolower($item->nombrecartera)) }})
+                                            {{ date("d/m/Y h:i A", strtotime($item->fecha)) }}
+                                        </td>
+                                        <td>
+                                            {{ ucwords(strtolower($item->nombrecartera)) }}
+                                        </td>
+                                        <td>
+                                            {{ ucwords($item->nombrecaja) }}
                                         </td>
                                        
                                         <td  class="text-right">
@@ -141,20 +143,60 @@
                                     
 
                                     <tr>
-                                        <td colspan="7"></td>
+                                        <td colspan="8"></td>
                                     </tr>
 
 
-                                        
-                                    <tr>
-                                        <td colspan="6">
-                                            <b>TOTAL UTILIDAD</b>
-                                        </td>
-                                        <td class="text-right">
-                                            <b>{{number_format($utilidad,2)}}</b>
-                                        </td>
-                                    </tr>
-                                        
+                                    @if($this->verificarpermiso() == true)  
+                                        <tr>
+                                            <td colspan="7">
+                                                <b>TOTAL UTILIDAD</b>
+                                            </td>
+                                            <td class="text-right">
+                                                <b>{{number_format($utilidad,2)}}</b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="8">
+
+                                            </td>
+                                        </tr>
+
+                                        @foreach($listacarteras as $cartera)
+
+                                            @if($cartera->totales != 0)
+                                            <tr>
+                                                <td colspan="7"><b>Total en Cartera: {{ucwords(strtolower($cartera->nombre))}}</b></td>
+                                                <td class="text-right"><b>{{number_format($cartera->totales,2)}}</b></td>
+                                            </tr>
+                                            @endif
+                                        @endforeach
+
+
+
+
+
+
+
+
+                                        <tr>
+
+                                            <td colspan="7"><b>TOTAL INGRESOS</b></td>
+                                            <td class="text-right"> <b>{{number_format($ingreso,2)}}</b> </td>
+                                        </tr>
+
+                                        <tr>
+
+                                            <td colspan="7"><b>TOTAL EGRESOS</b></td>
+                                            <td class="text-right"> <b>{{number_format($egreso,2)}}</b> </td>
+                                        </tr>
+                                        <tr>
+
+                                            <td colspan="7"><b>TOTAL INGRESOS - EGRESOS</b></td>
+                                            <td class="text-right"> <b>{{number_format( $ingreso - $egreso,2)}}</b> </td>
+                                        </tr>
+                                    @else
+                                    
                                     <tr>
                                         <td colspan="7">
 
@@ -194,7 +236,7 @@
                                         <td colspan="6"><b>TOTAL INGRESOS - EGRESOS</b></td>
                                         <td class="text-right"> <b>{{number_format( $ingreso - $egreso,2)}}</b> </td>
                                     </tr>
-
+                                    @endif
                             </tbody>
                         </table>
                     </div>
