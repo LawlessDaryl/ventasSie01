@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\Destino;
+use App\Models\IngresoSalida;
 use App\Models\Product;
 use App\Models\ProductosDestino;
 use Livewire\Component;
@@ -22,6 +23,13 @@ class MercanciaController extends Component
     public function render()
     {
 
+        $op_inv= IngresoSalida::join('detalle_operacions','detalle_operacions.id_operacion','ingreso_salidas.id')
+        ->join('destinos','destinos.id','ingreso_salidas.destino')
+        ->join('sucursals','sucursals.id','destinos.sucursal_id')
+        ->join('users','users.id','ingreso_salidas.user_id')
+        ->select('ingreso_salidas.*','detalle_operacions.*','destinos.nombre as destino_nombre','sucursals.name as suc_name','users.name as userop')->get();
+
+
        if (strlen($this->searchproduct) > 0) 
        {
          $this->sm = Product::select('products.*')
@@ -34,11 +42,13 @@ class MercanciaController extends Component
         $this->buscarproducto=0;
        }
 
+
+
        $destinosuc= Destino::join('sucursals as suc','suc.id','destinos.sucursal_id')
        ->select ('suc.name as sucursal','destinos.nombre as destino','destinos.id as destino_id')
        ->get();
 
-        return view('livewire.entradas_salidas.mercancia-controller',['destinosp'=>$destinosuc])
+        return view('livewire.entradas_salidas.mercancia-controller',['operaciones'=>$op_inv,'destinosp'=>$destinosuc])
         ->extends('layouts.theme.app')
         ->section('content');
     }
