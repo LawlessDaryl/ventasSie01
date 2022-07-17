@@ -57,8 +57,12 @@ class OrderServiceController extends Component
                     $orden_de_servicio = OrderService::join('services as s', 's.order_service_id', 'order_services.id')
                     ->join('mov_services as ms', 'ms.service_id', 's.id')
                     ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+                    ->join('cliente_movs as cm', 'cm.movimiento_id', 'mov.id')
+                    ->join('clientes as c', 'c.id', 'cm.cliente_id')
                     ->select("order_services.id as codigo",
                     "order_services.created_at as fechacreacion",
+                    "c.nombre as nombrecliente",
+                    "mov.import as importe",
                     DB::raw('0 as num'),
                     DB::raw('0 as servicios'))
                     ->where('order_services.status', 'ACTIVO')
@@ -122,7 +126,9 @@ class OrderServiceController extends Component
         ->join('cat_prod_services as cps', 'cps.id', 'services.cat_prod_service_id')
         ->select('cps.nombre as nombrecategoria',
         'services.detalle as detalle',
+        'mov.type as estado',
         'services.falla_segun_cliente as falla_segun_cliente',
+        'services.fecha_estimada_entrega as fecha_estimada_entrega',
         'services.marca as marca')
         ->where('mov.type', "PENDIENTE")
         ->where('mov.status', 'ACTIVO')

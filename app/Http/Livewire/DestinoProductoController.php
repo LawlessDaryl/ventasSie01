@@ -23,7 +23,7 @@ class DestinoProductoController extends Component
     use WithFileUploads;
     use WithPagination;
 
-    public $selected_id,$search,$selected_ubicacion,$componentName,$title,$sql,$prod,$grouped,$stocks,$productoajuste,$cantidad,$productid,$productstock,$mobiliario,$mobs,$mop_prod=0;
+    public $selected_id,$search,$selected_ubicacion,$componentName,$title,$sql,$prod,$grouped,$stocks,$productoajuste,$cant_operacion,$opcion_operacion,$obs_operacion,$cantidad,$productid,$productstock,$mobiliario,$mobs,$mop_prod, $active,$toogle;
     private $pagination = 50;
    
     public function paginationView()
@@ -38,7 +38,8 @@ class DestinoProductoController extends Component
         $this->componentName='crear';
         $this->title='ssss';
         $this->pr=20;
-      
+        $this->toogle=1;
+   
     
     }
     public function cerrar(){
@@ -47,6 +48,22 @@ class DestinoProductoController extends Component
 
     public function render()
     {
+
+        if ($this->toogle == 1) {
+            $this->active1="active show";
+            $this->active2="";
+            $this->active3="";
+        }
+        if ($this->toogle == 2) {
+            $this->active1="";
+            $this->active2="active show";
+            $this->active3="";
+        }
+        if ($this->toogle == 3) {
+            $this->active1="";
+            $this->active2="";
+            $this->active3="active show";
+        }
 
         if($this->selected_id !== null){
 
@@ -103,6 +120,8 @@ class DestinoProductoController extends Component
              $sucursal_ubicacion=Destino::join('sucursals as suc','suc.id','destinos.sucursal_id')
                                         ->select ('suc.name as sucursal','destinos.nombre as destino','destinos.id')
                                         ->orderBy('suc.name','asc');
+        
+            
 
                            
 
@@ -115,6 +134,44 @@ class DestinoProductoController extends Component
         ->section('content');
     }
 
+    public function operacionInventario(){
+        $stockactual=ProductosDestino::where('productos_destinos.product_id',$this->productid)->where('productos_destinos.destino_id',$this->selected_id)->value('stock');
+
+        if ($this->opcion_operacion == 'Entrada') {
+            
+            ProductosDestino::where('productos_destinos.destino_id',$this->selected_id)->where('productos_destinos.product_id',$this->productid)
+            ->update(['stock' => $stockactual + $this->cantidad ]);
+        }
+        if ($this->opcion_operacion == 'Salida') {
+            ProductosDestino::where('productos_destinos.destino_id',$this->selected_id)->where('productos_destinos.product_id',$this->productid)
+            ->update(['stock' => $stockactual - $this->cantidad ]);
+        }
+       
+
+        $auxi2=ProductosDestino::where('productos_destinos.destino_id',$this->selected_id)->where('productos_destinos.product_id',$this->productid)->get();
+        // dd($auxi2->values('stock'));
+             if ( $auxi2->pluck('stock')[0]>0) {
+              $operacion= IngresoSalida::create([
+             'proceso'=>$this->opcion_operacion,
+             'destino'=>$this->selected_id,
+             'user_id'=> Auth()->user()->id,
+             'concepto'=>'INGRESOEGRESO',
+             'observacion'=>$this->obs_operacion
+                  ]);
+     
+             // dd($auxi2->pluck('stock')[0]);
+             DetalleOperacion::create([
+             'product_id'=>$this->productid,
+             'cantidad'=> $this->cant_operacion,
+             'id_operacion'=>$operacion->id
+         ]);
+        }
+        $this->cant_operacion=0;
+        $this->obs_operacion=null;
+        $aux= Product::find($this->productid);
+        $this->ajuste($aux);
+        $this->emit('show-modal-ajuste');
+    }
 
     public function ver(Product $prod){
          $this->sql= "select rt,location,dsn,suc_id,loc,loc_cod,stock from ( select products.id as rt,destinos.id as dest,destinos.nombre as dsn, sucursals.name as suc_id,stock from productos_destinos 
@@ -195,11 +252,44 @@ class DestinoProductoController extends Component
              'id_operacion'=>$operacion->id
          ]);
         }
+        $this->cantidad=0;
         $aux= Product::find($this->productid);
         $this->ajuste($aux);
         $this->emit('show-modal-ajuste');
 
     }
+
+    public function disminuir(){
+        $stockactual=ProductosDestino::where('productos_destinos.product_id',$this->productid)->where('productos_destinos.destino_id',$this->selected_id)->value('stock');
+
+        ProductosDestino::where('productos_destinos.destino_id',$this->selected_id)->where('productos_destinos.product_id',$this->productid)
+        ->update(['stock' => $stockactual - $this->cantidad ]);
+       
+
+        $auxi2=ProductosDestino::where('productos_destinos.destino_id',$this->selected_id)->where('productos_destinos.product_id',$this->productid)->get();
+        // dd($auxi2->values('stock'));
+             if ( $auxi2->pluck('stock')[0]>0) {
+              $operacion= IngresoSalida::create([
+             'proceso'=>'Salida',
+             'destino'=>$this->selected_id,
+             'user_id'=> Auth()->user()->id,
+             'concepto'=>'AJUSTE',
+             'observacion'=>'Ajuste de inventarios por producto'
+                  ]);
+     
+             // dd($auxi2->pluck('stock')[0]);
+             DetalleOperacion::create([
+             'product_id'=>$this->productid,
+             'cantidad'=> $this->cantidad,
+             'id_operacion'=>$operacion->id
+         ]);
+        }
+        $this->cantidad=0;
+        $aux= Product::find($this->productid);
+        $this->ajuste($aux);
+        $this->emit('show-modal-ajuste');
+    }
+
 
     public function asignmob(){
         if ($this->mobiliario) {
