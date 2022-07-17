@@ -73,7 +73,7 @@
                             @foreach ($data as $products)
                                 <tr>
                                     <td>
-                                        <h6>{{$nro++}}</h6>
+                                        <h6>{{ ($data->currentpage()-1) * $data->perpage() + $loop->index + 1 }}</h6>
                                     </td>
                                     <td>
                                         <h5> <strong>{{$products->nombre}}</strong> </h5>

@@ -52,6 +52,25 @@ class ProductsController extends Component
         }
     }
 
+
+    public function updatingSearch()
+    {
+        $this->resetPage();
+        
+    }
+
+    public function updatingSelected_categoria()
+    {
+        $this->resetPage();
+        
+    }
+    public function updatingSelected_sub()
+    {
+        $this->resetPage();
+        
+    }
+
+
     public function render()
     {
      /**sssssssss */
@@ -329,6 +348,8 @@ class ProductsController extends Component
 
         $this->resetValidation();//clear the error bag
     }
+
+ 
 
     public function GenerateCode(){
         

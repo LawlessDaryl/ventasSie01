@@ -222,6 +222,8 @@ class DestinoProductoController extends Component
         $this->cantidad= null;
         $this->mobiliario = null;
         $this->emit('hide-modal-ajuste');
+
+        
         
     }
     protected $listeners = ['vaciarDestino' => 'vaciarAlmacen'];
