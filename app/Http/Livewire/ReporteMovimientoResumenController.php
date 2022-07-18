@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Redirect;
 class ReporteMovimientoResumenController extends Component
 {
     public $idsucursal,$totalesIngresos,$totalesEgresos,$fromDate,$toDate,$cartera_id, $type, $cantidad, $comentario,$vertotales=0,$importetotalingresos,$importetotalegresos,
-    $operacionefectivoing,$noefectivo,$operacionefectivoeg,$noefectivoeg,$subtotalcaja,$utilidadtotal=5,$caja,$ops=0,$sucursal,$total,$optotal,$sm;
+    $operacionefectivoing,$noefectivo,$operacionefectivoeg,$noefectivoeg,$subtotalcaja,$utilidadtotal=5,$caja,$ops=0,$sucursal,$total,$optotal,$sm,$diferenciaCaja,$montoDiferencia,$obsDiferencia;
     
     public function mount()
     {
@@ -85,6 +85,11 @@ class ReporteMovimientoResumenController extends Component
             ->section('content');
     }
 
+    public function  updatingSucursal(){
+        
+            $this->caja='TODAS';
+        
+    }
 
     public function viewTotales()
     {
@@ -625,14 +630,10 @@ class ReporteMovimientoResumenController extends Component
      {
         $this->subtotalesIngresos = $this->totalesIngresosV->sum('importe') + $this->totalesIngresosS->sum('importe') + $this->totalesIngresosIE->sum('importe');
         //Totales carteras
-        if ($this->total>0) {
-            
-            $this->ingresosTotales = $this->totalesIngresosV->sum('importe') + $this->totalesIngresosS->sum('importe') + $this->totalesIngresosIE->sum('importe')+ $this->total;
-        }
-        else{
+      
             $this->ingresosTotales = $this->totalesIngresosV->sum('importe') + $this->totalesIngresosS->sum('importe') + $this->totalesIngresosIE->sum('importe');
 
-        }
+        
 
         //Totales carteras tipo Caja Fisica
         $this->ingresosTotalesCF = $this->totalesIngresosV->where('ctipo','CajaFisica')->sum('importe') + $this->totalesIngresosS->where('ctipo','CajaFisica')->sum('importe') + $this->totalesIngresosIE->where('ctipo','CajaFisica')->sum('importe');
@@ -649,14 +650,10 @@ class ReporteMovimientoResumenController extends Component
 
         //Total Egresos
 
-        if ($this->total<0) {
-            
-            $this->EgresosTotales = $this->totalesEgresosV->sum('importe') + $this->totalesEgresosIE->sum('importe')+ ($this->total*-1);
-        }
-        else{
-            $this->EgresosTotales = $this->totalesEgresosV->sum('importe') + $this->totalesEgresosIE->sum('importe');
+        
+        $this->EgresosTotales = $this->totalesEgresosV->sum('importe') + $this->totalesEgresosIE->sum('importe');
 
-        }
+        
 
         // egresos totales por caja fisica
         $this->EgresosTotalesCF = $this->totalesEgresosV->where('ctipo','CajaFisica')->sum('importe') + $this->totalesEgresosIE->where('ctipo','CajaFisica')->sum('importe');
@@ -678,7 +675,7 @@ class ReporteMovimientoResumenController extends Component
 
         //Ingresos - Egresos
         $this->subtotalcaja= $this->ingresosTotales - $this->EgresosTotales;
-        $this->operacionesefectivas= $this->ingresosTotalesCF + $this->total-$this->EgresosTotalesCF;
+        $this->operacionesefectivas= $this->ingresosTotalesCF -$this->EgresosTotalesCF;
 
         if ($this->caja != "TODAS") {
             $this->recaudo=  Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')
@@ -697,8 +694,9 @@ class ReporteMovimientoResumenController extends Component
             $this->recaudo=0;
         }
 
-        $this->operacionesW= $this->operacionesefectivas + $this->ops - $this->recaudo;
-
+        $this->operacionesW= $this->operacionesefectivas + $this->ops + $this->total;
+        $this->operacionesZ=  $this->operacionesW - $this->recaudo;
+        
      }
 
      public function allop($fecha,$sucursal,$caja){

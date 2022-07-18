@@ -3,7 +3,7 @@
         <div class="modal-content">
             <div class="modal-header bg-dark">
                 <h5 class="modal-title text-white">
-                    <b>GENERAR RECAUDOs</b>
+                    <b>Recaudos y Diferencia de Efectivo</b>
                 </h5>
                 <button class="close" data-dismiss="modal" type="button" aria-label="Close">
                     <span class="text-white">&times;</span>
@@ -11,10 +11,10 @@
             </div>
 
             <div class="modal-body">
-                <div class="row">
+                <div class="row pt-1 pb-1 mb-3" style="background-color: rgb(191, 235, 220)">
 
-                    <div class="col-sm-12 col-md-6">
-                        <div class="form-group">
+                    <div class="col-sm-4 col-md-6 col-lg-3">
+                        
                             <h6>Cartera</h6>
                             <select wire:model='cartera_id' class="form-control">
                                 <option value=null selected>Elegir</option>
@@ -30,36 +30,78 @@
                             @error('cartera_id')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror
-                        </div>
+                        
                     </div>
 
                
 
-                    <div class="col-sm-12 col-md-3">
-                        <div class="form-group">
+                    <div class="col-sm-4 col-md-3 col-lg-3">
+                        
                             <h6>Monto a recaudar</h6>
                             <input type="number" wire:model="cantidad" class="form-control">
                             @error('cantidad')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror
-                        </div>
+                        
                     </div>
-                    <div class="col-sm-12 col-md-3">
-                        <div class="form-group">
+                    <div class="col-sm-4 col-md-3 col-lg-3">
+                        
                         <div>RECAUDO</div>
                         <br>
                       <h6 for="">{{$recaudo}}</h6>
-                      </div>
+                      
+                    </div>
+                    <div class="col-sm-12 col-md-3 col-lg-3">
+                        <br>
+                        <a href="javascript:void(0)" class="btn btn-warning pl-1 pr-1" wire:click.prevent="GenerarR()"> <i class="fas fa-check"></i> Generar</a>
                     </div>
 
+                </div>
+                <div class="row pt-1 pb-1" style="background-color: rgb(224, 247, 162)">
 
+                    <div class="col-sm-12 col-md-6 col-lg-2">
+                        <div class="form-group">
+                            <h6>Sobrante/Faltante</h6>
+                            <select wire:model='diferenciaCaja' class="form-control">
+                                <option value=null selected>Elegir</option>
+                                <option value="Sobrante" selected>Sobrante</option>
+                                <option value="Faltante" selected>Faltante</option>
+                             
+                            </select>
+                            @error('diferenciaCaja')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
 
                
 
+                    <div class="col-sm-12 col-md-3 col-lg-3">
+                        <div class="form-group">
+                            <h6>Monto Diferencia</h6>
+                            <input type="number" wire:model="montoDiferencia" class="form-control">
+                            @error('cantidad')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-3 col-lg-4">
+                        <div class="form-group">
+                            <h6>Añadir una Observacion:</h6>
+                            <input type="text" wire:model="obsDiferencia" class="form-control">
+                            @error('obsDiferencia')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-3 col-lg-3">
+                        <br>
+                        <a href="javascript:void(0)" class="btn btn-warning pl-1 pr-1" wire:click.prevent="guardarDiferencia()"> <i class="fas fa-check"></i> Generar</a>
+                    </div>
+                   
+
                 </div>
-                <div>
-                    <a href="javascript:void(0)" class="btn btn-warning" wire:click.prevent="GenerarR()">Generar</a>
-                </div>
+                
 
             </div>
 
