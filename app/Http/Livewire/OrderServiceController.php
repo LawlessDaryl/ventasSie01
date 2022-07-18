@@ -34,6 +34,11 @@ class OrderServiceController extends Component
     // Categorias de los Servicios (Combo en la Vista)
     public $catprodservid;
 
+    //Variables para la ventana modal Detalles Servicio
+    public $responsabletecnico, $nombrecliente, $celularcliente, $fechaestimadaentrega,
+    $tipotrabajo, $detalle, $falla, $diagnostico, $solucion, $detallecosto, $total, $acuenta,
+    $saldo, $estado; 
+
     use WithPagination;
     public function paginationView()
     {
@@ -98,7 +103,48 @@ class OrderServiceController extends Component
             }
             else
             {
+                if ($this->catprodservid == 'Todos')
+                {
+                    $orden_de_servicio = OrderService::join('services as s', 's.order_service_id', 'order_services.id')
+                    ->join('mov_services as ms', 'ms.service_id', 's.id')
+                    ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+                    ->join('cliente_movs as cm', 'cm.movimiento_id', 'mov.id')
+                    ->join('clientes as c', 'c.id', 'cm.cliente_id')
+                    ->select("order_services.id as codigo",
+                    "order_services.created_at as fechacreacion",
+                    "c.nombre as nombrecliente",
+                    "mov.import as importe",
+                    DB::raw('0 as num'),
+                    DB::raw('0 as servicios'))
+                    ->where('order_services.status', 'ACTIVO')
+                    ->where('mov.status', 'ACTIVO')
+                    ->where('s.sucursal_id',$this->sucursal_id)
+                    ->groupBy("order_services.id")
+                    ->orderBy("order_services.id","desc")
+                    ->paginate($this->paginacion);
+        
+        
+                    $x = 1;
+                    foreach ($orden_de_servicio as $os)
+                    {
+                        //Numeración de Paginación
+                        if($orden_de_servicio->currentPage() != 1)
+                        {
+                            $os->num = (($orden_de_servicio->currentPage() - 1) * $this->paginacion) + $x++;
+                        }
+                        else
+                        {
+                            $os->num = $x++;
+                        }
+        
+                        //Obtener los servicios de la orden de servicio
+                        $os->servicios = $this->detalle_orden_de_servicio_modal($os->codigo);
+                    }
+                }
+                else
+                {
 
+                }
             }
         }
         else
@@ -136,7 +182,25 @@ class OrderServiceController extends Component
         ->get();
         return $servicios;
     }
-    //Obtener el Id de la Sucursal Donde esta el Usuario
+    //Obtener el detalle de servicios a travez del id de la orden de servicio
+    public function detalle_orden_de_servicio_modal($id_orden_de_servicio)
+    {
+        $servicios =  Service::join('order_services as os', 'os.id', 'services.order_service_id')
+        ->join('mov_services as ms', 'services.id', 'ms.service_id')
+        ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+        ->join('cat_prod_services as cps', 'cps.id', 'services.cat_prod_service_id')
+        ->select('cps.nombre as nombrecategoria',
+        'services.detalle as detalle',
+        'mov.type as estado',
+        'services.falla_segun_cliente as falla_segun_cliente',
+        'services.fecha_estimada_entrega as fecha_estimada_entrega',
+        'services.marca as marca')
+        ->where('mov.status', 'ACTIVO')
+        ->where('services.order_service_id', $id_orden_de_servicio)
+        ->get();
+        return $servicios;
+    }
+    //Obtener el Id de la Sucursal donde esta el Usuario
     public function idsucursal()
     {
         $idsucursal = User::join("sucursal_users as su","su.user_id","users.id")
@@ -146,5 +210,31 @@ class OrderServiceController extends Component
         ->get()
         ->first();
         return $idsucursal->id;
+    }
+    //Mostrar detalles del servicio en una Ventana Modal
+    public function modalserviciodetalles($type, $codigo)
+    {
+        //dd($type);
+        $detallesservicio =  Service::join('order_services as os', 'os.id', 'services.order_service_id')
+        ->join('mov_services as ms', 'services.id', 'ms.service_id')
+        ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+        ->join('cat_prod_services as cps', 'cps.id', 'services.cat_prod_service_id')
+        ->select('cps.nombre as nombrecategoria',
+        'services.detalle as detalle',
+        'mov.type as estado',
+        'services.falla_segun_cliente as falla_segun_cliente',
+        'services.fecha_estimada_entrega as fecha_estimada_entrega',
+        'services.marca as marca')
+        ->where('mov.type', $type)
+        ->where('mov.status', 'ACTIVO')
+        ->where('services.order_service_id', $codigo)
+        ->get()
+        ->first();
+
+
+        $this->estado = $type;
+        
+        //dd($detallesservicio);
+        $this->emit('show-sd', 'show modal!');
     }
 }
