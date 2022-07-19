@@ -19,8 +19,8 @@ use Illuminate\Support\Facades\Redirect;
 
 class ReporteMovimientoResumenController extends Component
 {
-    public $idsucursal,$totalesIngresos,$totalesEgresos,$fromDate,$toDate,$cartera_id, $type, $cantidad, $comentario,$vertotales=0,$importetotalingresos,$importetotalegresos,
-    $operacionefectivoing,$noefectivo,$operacionefectivoeg,$noefectivoeg,$subtotalcaja,$utilidadtotal=5,$caja,$ops=0,$sucursal,$total,$optotal,$sm,$diferenciaCaja,$montoDiferencia,$obsDiferencia;
+    public $idsucursal,$totalesIngresos,$totalesEgresos,$fromDate,$toDate,$cartera_id,$cartera_id2 ,$type, $cantidad,$tipo,$importe, $comentario,$vertotales=0,$importetotalingresos,$importetotalegresos,
+    $operacionefectivoing,$noefectivo,$operacionefectivoeg,$noefectivoeg,$op_recaudo,$recaudo,$subtotalcaja,$utilidadtotal=5,$caja,$op_sob_falt,$ops=0,$sucursal,$total,$optotal,$sm,$diferenciaCaja,$montoDiferencia,$obsDiferencia;
     
     public function mount()
     {
@@ -678,7 +678,7 @@ class ReporteMovimientoResumenController extends Component
         $this->operacionesefectivas= $this->ingresosTotalesCF -$this->EgresosTotalesCF;
 
         if ($this->caja != "TODAS") {
-            $this->recaudo=  Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')
+            $this->op_recaudo=  Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')
             ->join('carteras as c', 'c.id', 'crms.cartera_id')
             ->join('cajas as ca', 'ca.id', 'c.caja_id')
             ->where('movimientos.status', 'ACTIVO')
@@ -687,15 +687,28 @@ class ReporteMovimientoResumenController extends Component
            // ->where('ca.id',$this->caja)
             ->whereBetween('movimientos.updated_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
             ->select('movimientos.import')->value('movimientos.import');
-           
+        
         }
     
         else{
-            $this->recaudo=0;
+            $this->op_recaudo=0;
         }
 
+        $this->op_sob_falt = Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')
+        ->join('carteras as c', 'c.id', 'crms.cartera_id')
+        ->join('cajas as ca', 'ca.id', 'c.caja_id')
+        ->where('movimientos.status', 'ACTIVO')
+        ->where('ca.id','=',$this->caja)
+        ->where(function($query){
+            $query->where('crms.comentario', 'like', '%' . 'Sobrante' . '%')
+                    ->orWhere('crms.comentario', 'like', '%' . 'Faltante' . '%');              
+        })
+       // ->where('ca.id',$this->caja)
+        ->whereBetween('movimientos.updated_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
+        ->select('movimientos.import','crms.type as tipo_sob_fal')->pluck('movimientos.import','tipo_sob_fal');
+
         $this->operacionesW= $this->operacionesefectivas + $this->ops + $this->total;
-        $this->operacionesZ=  $this->operacionesW - $this->recaudo;
+        $this->operacionesZ=  $this->operacionesW - $this->op_recaudo;
         
      }
 
@@ -774,6 +787,8 @@ class ReporteMovimientoResumenController extends Component
     {
         $carterarec=Cartera::where('carteras.caja_id',$this->cartera_id)->where('carteras.tipo','CajaFisica')->select('carteras.id')->value('carteras.id');
       
+        if ( $this->cartera_id != null || $this->cantidad != null ) {
+                
         $rules = [ /* Reglas de validacion */
           
             'cartera_id' => 'required|not_in:Elegir',
@@ -782,6 +797,7 @@ class ReporteMovimientoResumenController extends Component
         ];
         $messages = [ /* mensajes de validaciones */
    
+            'cartera_id.required'=>'El tipo de cartera es requerido',
             'cartera_id.not_in' => 'Seleccione un valor distinto a Elegir',
             'cantidad.required' => 'Ingrese un monto válido',
             'cantidad.not_in' => 'Ingrese un monto válido',
@@ -804,9 +820,49 @@ class ReporteMovimientoResumenController extends Component
             'cartera_id' =>  $carterarec,
             'movimiento_id' => $mvt->id
         ]);
-
-        $this->emit('hide-modalR', 'SE GENERO EL RECAUDO');
+        $this->emit('hide-modalR', 'Se guardo el registro');
         $this->resetUI();
+    }
+
+    
+    if ( $this->diferenciaCaja != null || $this->montoDiferencia != null or $this->cartera_id2 !=null ) {
+        $carterarec2=Cartera::where('carteras.caja_id',$this->cartera_id2)->where('carteras.tipo','CajaFisica')->select('carteras.id')->value('carteras.id');
+        $rules = [ /* Reglas de validacion */
+            'cartera_id2' => 'required|not_in:Elegir',
+            'diferenciaCaja' => 'not_in:Elegir',
+            'montoDiferencia' => 'required|not_in:0',
+            'obsDiferencia' => 'required',
+        ];
+        $messages = [ /* mensajes de validaciones */
+            'cartera_id2.required'=>'El tipo de cartera es requerido',
+            'cartera_id2.not_in' => 'Seleccione un valor distinto a Elegir',
+            'diferenciaCaja.not_in' => 'Seleccione un valor distinto a Elegir',
+            'montoDiferencia.required' => 'El monto de la diferenia es requerido',
+            'montoDiferencia.not_in' => 'Ingrese un monto válido diferente de cero',
+            'obsDiferencia.required' => 'Ingrese el motivo de la operacion.',
+           
+        ];
+
+        $this->validate($rules, $messages);
+
+        $mvt = Movimiento::create([
+            'type' => 'TERMINADO',
+            'status' => 'ACTIVO',
+            'import' => $this->montoDiferencia,
+            'user_id' => Auth()->user()->id,
+        ]);
+
+        CarteraMov::create([
+            'type' => ($this->diferenciaCaja == 'Sobrante')?'INGRESO':'EGRESO',
+            'tipoDeMovimiento' => 'EGRESO/INGRESO',
+            'comentario' => ($this->diferenciaCaja == 'Sobrante')?'Sobrante'.'('.$this->obsDiferencia.')': 'Faltante'.'('.$this->obsDiferencia.')',
+            'cartera_id' =>  $carterarec2,
+            'movimiento_id' => $mvt->id
+        ]);
+        $this->emit('hide-modalR', 'Se guardo el registro');
+        $this->resetUI();
+    }
+
     }
     public function viewDetailsR()
     {

@@ -48,17 +48,37 @@
                         
                         <div>RECAUDO</div>
                         <br>
-                      <h6 for="">{{$recaudo}}</h6>
+                      <h6>{{number_format($recaudo,2)}}</h6>
                       
                     </div>
                     <div class="col-sm-12 col-md-3 col-lg-3">
                         <br>
-                        <a href="javascript:void(0)" class="btn btn-warning pl-1 pr-1" wire:click.prevent="GenerarR()"> <i class="fas fa-check"></i> Generar</a>
                     </div>
 
                 </div>
                 <div class="row pt-1 pb-1" style="background-color: rgb(224, 247, 162)">
 
+                    <div class="col-sm-4 col-md-6 col-lg-3">
+                        <div class="form-group">
+
+                            <h6>Cartera</h6>
+                            <select wire:model='cartera_id2' class="form-control">
+                                <option value=null selected>Elegir</option>
+                                @foreach ($carterasSucursal as $item)
+                                @if($item->tipo=="CajaFisica")
+                                    <option value="{{ $item->cid }}">{{ $item->cajaNombre }},
+                                        {{ $item->carteraNombre }}
+                                    </option>
+                                @endif
+                                
+                                @endforeach
+                            </select>
+                            @error('cartera_id2')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    
+                </div>
                     <div class="col-sm-12 col-md-6 col-lg-2">
                         <div class="form-group">
                             <h6>Sobrante/Faltante</h6>
@@ -74,13 +94,12 @@
                         </div>
                     </div>
 
-               
-
+            
                     <div class="col-sm-12 col-md-3 col-lg-3">
                         <div class="form-group">
                             <h6>Monto Diferencia</h6>
                             <input type="number" wire:model="montoDiferencia" class="form-control">
-                            @error('cantidad')
+                            @error('montoDiferencia')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror
                         </div>
@@ -94,14 +113,15 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="col-sm-12 col-md-3 col-lg-3">
-                        <br>
-                        <a href="javascript:void(0)" class="btn btn-warning pl-1 pr-1" wire:click.prevent="guardarDiferencia()"> <i class="fas fa-check"></i> Generar</a>
-                    </div>
-                   
-
+                    
                 </div>
                 
+                <div class="col-sm-12 col-md-3 col-lg-12 mt-3">
+                    <div class="row d-flex justify-content-center">
+
+                        <a href="javascript:void(0)" class="btn btn-warning" wire:click.prevent="GenerarR()"> <i class="fas fa-check"></i> Generar</a>
+                    </div>
+                </div>
 
             </div>
 

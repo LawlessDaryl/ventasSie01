@@ -1,6 +1,5 @@
 @section('css')
 
-
 <style>
     .tablep, .thp, .tdp{
       margin: 0;
@@ -385,28 +384,20 @@
         </table>
     </div>
 
-    <div class="row justify-content-end">
-            <div class="col-lg-6">
-                    <div class="table-responsive col-lg-9">
+    <div class="row">
+            <div class="col-lg-5">
+                    <div class="table-responsive">
                         <table>
                             <tbody>
                              
                                 <tr>
                                     <td>
-                                        <h5 class="text-dark text-center" ><b> Ingresos en Efectivo </b></h5>
+                                        <h5 class="text-dark text-center"><b> Ingresos en Efectivo </b></h5>
                                     </td>
                                     <td>
-                                        <h5 class="text-dark text-center" >{{ number_format($ingresosTotalesCF,2)}}</h5>
+                                        <h5 class="text-dark text-center">{{ number_format($ingresosTotalesCF,2)}}</h5>
                                     </td>
                                 </tr>
-                                {{-- <tr>
-                                    <td>
-                                        <h5 class="text-dark text-right" ><b> Ingresos sistema/telefono/tigostreaming </b></h5>
-                                    </td>
-                                    <td>
-                                        {{ number_format($ingresosTotalesNoCFNoBancos,2)}}
-                                    </td>
-                                </tr> --}}
                                 <tr>
                                     <td>
                                         <h5 class="text-dark text-center" ><b> Ingresos por Bancos </b></h5>
@@ -483,7 +474,15 @@
                                     </td>
                                 </tr>
                                
-                                @if ($caja != 'TODAS')
+                                
+                    </div>
+            </div>
+
+           <div class="col-lg-5">
+                <div class="table-responsive">
+                    <table>
+                        <tbody>
+                          @if ($caja != 'TODAS')
                                 <tr style="height: 2rem"></tr>
                            
                                 <tr class="p-5">
@@ -491,9 +490,24 @@
                                           <h5 class="text-dark text-left"><b> Recaudo </b></h5>
                                    </td>
                                    <td>
-                                    <h5 class="text-dark text-center m-0" > {{ number_format($recaudo,2) }}</h5>
+                                    <h5 class="text-dark text-center m-0" > {{ number_format($op_recaudo,2) }}</h5>
                                
                                    </td>
+                       
+                                </tr>
+                                <tr class="p-5">
+
+
+                                    @foreach ($op_sob_falt as $key=>$item)
+                                        
+                                    <td>
+                                           <h5 class="text-dark text-left"><b> {{($key== 'INGRESO' ? 'Sobrante':'Faltante')}} </b></h5>
+                                    </td>
+                                    <td>
+                                     <h5 class="text-dark text-center m-0" > {{ number_format($item,2) }}</h5>
+                                
+                                    </td>
+                                    @endforeach
                        
                                 </tr>
                                 <tr class="p-5">
@@ -501,7 +515,7 @@
                                           <h5 class="text-dark text-left"><b> Nuevo Saldo Caja Fisica </b></h5>
                                    </td>
                                    <td>
-                                    <h5 class="text-dark text-center m-0" > {{ number_format($operacionesW-$recaudo,2) }}</h5>
+                                    <h5 class="text-dark text-center m-0" > {{ number_format($operacionesW-$op_recaudo,2) }}</h5>
                                
                                    </td>
                        
@@ -511,6 +525,7 @@
                         </table>
                     </div>
                 </div>
+
             </div>
         
         @include('livewire.reportemovimientoresumen.modalDetailsR')
