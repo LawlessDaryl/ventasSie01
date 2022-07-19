@@ -38,6 +38,53 @@
     .eliminar :hover {
         background-color: rgba(224, 5, 5, 0.486);
     }
+
+    .detallesservicios {
+        border: 1px solid #aaaaaa;
+        background-color: rgba(255, 255, 255, 0.589);
+        -moz-border-radius: 7px;
+        -webkit-border-radius: 7px;
+        padding: 10px;
+        margin-left: 15%;
+        margin-right: 15%;
+    }
+
+    .pendienteestilos {
+        background-color: rgb(139, 5, 192);
+        cursor:pointer;
+    }
+    .pendienteestilos :hover {
+        background-color: rgb(57, 180, 84);
+    }
+
+
+        /* Estilos para la Tabla - ventana Modal */
+        .table-wrapper {
+            width: 100%;/* Anchura de ejemplo */
+            height: 400px; /* Altura de ejemplo */
+            overflow: auto;
+        }
+
+            .table-wrapper table {
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+            .table-wrapper table thead {
+            position: -webkit-sticky; /* Safari... */
+            position: sticky;
+            top: 0;
+            left: 0;
+        }
+
+            .table-wrapper table thead th {
+            background-color: #1572e8;
+            color: white;
+        }
+            .table-wrapper table tbody td {
+                border: 0.5px solid #1571e894;
+        }
+
 </style>
 @endsection
     
@@ -148,8 +195,6 @@
                                 <th class="text-center">PRECIO SERVICIO</th>
                                 <th class="text-center">USUARIO RECEPTOR</th>
                                 <th class="text-center">ESTADO</th>
-                                {{-- <th class="text-center">A CUENTA</th>
-                                <th class="text-center">SALDO</th> --}}
                                 <th class="text-center">ACCIONES</th>
                             </tr>
                         </thead>
@@ -180,7 +225,7 @@
                                     @foreach ($os->servicios as $d)
 
                                     <div>
-                                        <a href="javascript:void(0)" wire:click.prevent="modalserviciodetalles('{{$d->estado}}' , {{ $os->codigo }})">
+                                        <a href="javascript:void(0)" wire:click.prevent="modalserviciodetalles('{{$d->estado}}' , {{ $d->idservicio }})">
                                             {{ucwords(strtolower($d->nombrecategoria))}} {{ucwords(strtolower($d->marca))}} {{strtolower($d->detalle)}}
                                             <br>
                                             <b>Falla Según Cliente:</b> {{ucwords(strtolower($d->falla_segun_cliente))}}
@@ -198,7 +243,7 @@
                                 <td class="text-center">
                                     @foreach ($os->servicios as $d)
                                         @if($d->estado=="PENDIENTE")
-                                            <span class="stamp stamp" style="background-color: rgb(139, 5, 192)">
+                                            <span wire:click.prevente="modalasignartecnico({{$d->idservicio}})" title="Asignar Técnico Responsable" class="stamp stamp pendienteestilos">
                                                 {{$d->estado}}
                                             </span>
                                         @else
@@ -237,12 +282,6 @@
                                         <br>
                                     @endforeach
                                 </td>
-                                {{-- <td>
-                                    
-                                </td>
-                                <td>
-                                    
-                                </td> --}}
                                 <td class="text-center">
                                     <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
                                         <div class="btn-group" role="group">
@@ -282,6 +321,7 @@
     @include('livewire.order_service.formdetalle')
     @include('livewire.order_service.formdetalleentrega') --}}
     @include('livewire.order_service.modalserviciodetalles')
+    @include('livewire.order_service.modalasignartecnicoresponsable')
     {{-- @include('livewire.order_service.formopciones')
     @include('livewire.order_service.formentregado')
     @include('livewire.order_service.formeliminar')
@@ -290,8 +330,14 @@
     
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        window.livewire.on('show-sd', Msg => {
-                $('#serviciodetalles').modal('show')
-            });
+
+            window.livewire.on('show-sd', Msg => {
+                    $('#serviciodetalles').modal('show')
+                });
+
+            window.livewire.on('show-asignartecnicoresponsable', Msg => {
+                    $('#asignartecnicoresponsable').modal('show')
+                });
+
         });
 </script>

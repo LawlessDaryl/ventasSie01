@@ -35,9 +35,12 @@ class OrderServiceController extends Component
     public $catprodservid;
 
     //Variables para la ventana modal Detalles Servicio
-    public $responsabletecnico, $nombrecliente, $celularcliente, $fechaestimadaentrega,
-    $tipotrabajo, $detalle, $falla, $diagnostico, $solucion, $detallecosto, $total, $acuenta,
-    $saldo, $estado; 
+    public $responsabletecnico, $nombrecliente, $celularcliente, $fechaestimadaentrega, $fallaseguncliente,
+    $tipotrabajo, $detalleservicio, $falla, $diagnostico, $solucion, $precioservicio, $acuenta,
+    $saldo, $estado, $categoriaservicio, $costo, $detallecosto;
+
+    //Variable para almacenar todos los usuarios de servicios
+    public $lista_de_usuarios;
 
     use WithPagination;
     public function paginationView()
@@ -50,6 +53,7 @@ class OrderServiceController extends Component
         $this->type = "PENDIENTE";
         $this->sucursal_id = $this->idsucursal();
         $this->catprodservid = "Todos";
+        $this->lista_de_usuarios = User::all();
     }
     public function render()
     {
@@ -172,6 +176,7 @@ class OrderServiceController extends Component
         ->join('cat_prod_services as cps', 'cps.id', 'services.cat_prod_service_id')
         ->select('cps.nombre as nombrecategoria',
         'services.detalle as detalle',
+        'services.id as idservicio',
         'mov.type as estado',
         'services.falla_segun_cliente as falla_segun_cliente',
         'services.fecha_estimada_entrega as fecha_estimada_entrega',
@@ -182,7 +187,7 @@ class OrderServiceController extends Component
         ->get();
         return $servicios;
     }
-    //Obtener el detalle de servicios a travez del id de la orden de servicio
+    //Obtener el detalle de servicios a travez del id del Servicio
     public function detalle_orden_de_servicio_modal($id_orden_de_servicio)
     {
         $servicios =  Service::join('order_services as os', 'os.id', 'services.order_service_id')
@@ -190,6 +195,7 @@ class OrderServiceController extends Component
         ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
         ->join('cat_prod_services as cps', 'cps.id', 'services.cat_prod_service_id')
         ->select('cps.nombre as nombrecategoria',
+        'services.id as idservicio',
         'services.detalle as detalle',
         'mov.type as estado',
         'services.falla_segun_cliente as falla_segun_cliente',
@@ -198,7 +204,10 @@ class OrderServiceController extends Component
         ->where('mov.status', 'ACTIVO')
         ->where('services.order_service_id', $id_orden_de_servicio)
         ->get();
+
+
         return $servicios;
+
     }
     //Obtener el Id de la Sucursal donde esta el Usuario
     public function idsucursal()
@@ -212,29 +221,61 @@ class OrderServiceController extends Component
         return $idsucursal->id;
     }
     //Mostrar detalles del servicio en una Ventana Modal
-    public function modalserviciodetalles($type, $codigo)
+    public function modalserviciodetalles($type, $idservicio)
     {
-        //dd($type);
         $detallesservicio =  Service::join('order_services as os', 'os.id', 'services.order_service_id')
         ->join('mov_services as ms', 'services.id', 'ms.service_id')
         ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+        ->join('cliente_movs as cm', 'cm.movimiento_id', 'mov.id')
+        ->join('clientes as c', 'c.id', 'cm.cliente_id')
         ->join('cat_prod_services as cps', 'cps.id', 'services.cat_prod_service_id')
+        ->join('type_works as tw', 'tw.id', 'services.type_work_id')
         ->select('cps.nombre as nombrecategoria',
         'services.detalle as detalle',
         'mov.type as estado',
+        'c.nombre as nombrecliente',
+        'mov.on_account as acuenta',
+        'mov.saldo as saldo',
+        'c.celular as celularcliente',
         'services.falla_segun_cliente as falla_segun_cliente',
         'services.fecha_estimada_entrega as fecha_estimada_entrega',
+        'services.detalle as detalleservicio',
+        'services.costo as costo',
+        'services.diagnostico as diagnostico',
+        'services.solucion as solucion',
+        'services.detalle_costo as detallecosto',
+        'mov.import as precioservicio',
+        'tw.name as tipotrabajo',
         'services.marca as marca')
         ->where('mov.type', $type)
         ->where('mov.status', 'ACTIVO')
-        ->where('services.order_service_id', $codigo)
+        ->where('services.id', $idservicio)
         ->get()
         ->first();
 
 
         $this->estado = $type;
+        $this->nombrecliente = $detallesservicio->nombrecliente;
+        $this->celularcliente = $detallesservicio->celularcliente;
+        $this->fechaestimadaentrega = $detallesservicio->fecha_estimada_entrega;
+        $this->categoriaservicio = $detallesservicio->nombrecategoria;
+        $this->detalleservicio = $detallesservicio->detalleservicio;
+        $this->tipotrabajo = $detallesservicio->tipotrabajo;
+        $this->precioservicio = $detallesservicio->precioservicio;
+        $this->fallaseguncliente = $detallesservicio->falla_segun_cliente;
+        $this->acuenta = $detallesservicio->acuenta;
+        $this->saldo = $detallesservicio->saldo;
+        $this->costo = $detallesservicio->costo;
+        $this->detallecosto = $detallesservicio->detallecosto;
+        $this->diagnostico = $detallesservicio->diagnostico;
+        $this->solucion = $detallesservicio->solucion;
         
-        //dd($detallesservicio);
         $this->emit('show-sd', 'show modal!');
+    }
+    //Mostrar una lista de usuarios tecnicos para asignar un servicio en una Ventana Modal
+    public function modalasignartecnico($idservicio)
+    {
+        //dd($this->lista_de_usuarios);
+        $this->emit('show-asignartecnicoresponsable', 'show modal!');
     }
 }

@@ -62,6 +62,13 @@
 
 
 
+
+
+
+
+
+
+
             <div class="col-12 col-sm-4 col-md-1 text-center">
               
             </div>
@@ -81,104 +88,143 @@
 
 
 
-            <div class="col-12 col-sm-4 col-md-6 text-center">
-              <b>Cliente:</b>
+
+
+
+
+
+            <div class="col-12 col-sm-4 col-md-1 text-center">
+              
+            </div>
+
+            <div class="col-12 col-sm-4 col-md-10 text-center" style="color: #000000">
+              <span class="stamp stamp" style="background-color: rgb(0, 158, 97);">
+                {{ ucwords(strtolower($this->categoriaservicio)) }} - {{ ucwords(strtolower($this->tipotrabajo))}}
+              </span>
+            </div>
+
+            <div class="col-12 col-sm-4 col-md-1 text-center">
+            </div>
+
+
+
+
+
+
+
+            
+
+            <div class="col-12 col-sm-4 col-md-6 text-center" style="color: #000000">
+              <h3><b>Cliente:</b> {{ucwords(strtolower($this->nombrecliente))}}</h3>
             </div>
 
             <div class="col-12 col-sm-4 col-md-6 text-center" style="color: #000000">
-              <b>Celular:</b>
+              <h3><b>Celular:</b> {{$this->celularcliente}}</h3>
             </div>
 
 
 
-
-
-
-
-
           </div>
+
+
           <div class="form-row">
-            <div class="col-12 col-sm-4 col-md-10" style="color: #000000">
+
+
+
+            {{-- <div class="col-12 col-sm-4 col-md-10" style="color: #000000">
               <i class="fas fa-calendar-alt"></i>
               Fecha Estimada de Entrega:
-              <br>
               <span class="stamp stamp text-center" style="background-color: aliceblue; color: black;">
-                12/12/1997
+                {{ \Carbon\Carbon::parse($this->fechaestimadaentrega)->format('d/m/Y h:i a') }}
               </span>
+            </div> --}}
+
+
+
+            <div class="col-md-6">
+              <b>
+                Fecha Estimada de Entrega:
+              </b>
+              {{ \Carbon\Carbon::parse($this->fechaestimadaentrega)->format('d/m/Y h:i a') }}
             </div>
-            <div class="form-group col-md-6">
-              <label for="inputPassword4">Total Bs:</label>
-              12/12/1997
+            <div class="col-md-6">
+              <b>
+                Precio Servicio Bs:
+              </b>
+              {{$this->precioservicio}}
             </div>
-            <div class="form-group col-md-6">
-              <label for="inputEmail4">Tipo de Trabajo:</label>
-              12/12/1997
+            <div class="col-md-6">
+              <b>
+                Detalle Producto:
+              </b>
+              {{$this->detalleservicio}}
             </div>
-            <div class="form-group col-md-6">
-              <label for="inputPassword4">Detalle:</label>
-              12/12/1997
+            <div class="col-md-6">
+              <b>
+                A Cuenta Bs:
+              </b>
+              {{$this->acuenta}}
             </div>
-            <div class="form-group col-md-6">
-              <label for="inputEmail4">Detalle:</label>
-              12/12/1997
+            <div class="col-md-6">
+              <b>
+                Costo Servicio Bs:
+              </b>
+              {{$this->costo}}
             </div>
-            <div class="form-group col-md-6">
-              <label for="inputPassword4">Password</label>
-              12/12/1997
+            <div class="col-md-6">
+              <b>
+                Saldo Bs:
+              </b>
+              {{$this->saldo}}
             </div>
-            <div class="form-group col-md-6">
-              <label for="inputEmail4">Diagnóstico:</label>
-              12/12/1997
+            <div class="col-md-6">
+              <b>
+                Detalle Costo
+              </b>
+              {{$this->detallecosto}}
             </div>
-            <div class="form-group col-md-6">
-              <label for="inputPassword4">Password</label>
-              12/12/1997
-            </div>
-            <div class="form-group col-md-6">
-              <label for="inputEmail4">Solución:</label>
-              12/12/1997
-            </div>
-            <div class="form-group col-md-6">
-              <label for="inputPassword4">Password</label>
-              12/12/1997
-            </div>
-            <div class="form-group col-md-6">
-              <label for="inputEmail4">Detalle Costo:</label>
-              12/12/1997
-            </div>
-            <div class="form-group col-md-6">
-              <label for="inputPassword4">Password</label>
-              12/12/1997
-            </div>
+
+
+
           </div>
 
 
-
-
-
-          {{-- <div class="form-row">
-            <div class="form-group col-md-6">
-              <label for="inputCity">City</label>
-              <input type="text" class="form-control" id="inputCity">
-            </div>
-            <div class="form-group col-md-4">
-              <label for="inputState">State</label>
-              <select id="inputState" class="form-control">
-                <option selected>Choose...</option>
-                <option>...</option>
-              </select>
-            </div>
-            <div class="form-group col-md-2">
-              <label for="inputZip">Zip</label>
-              <input type="text" class="form-control" id="inputZip">
-            </div>
-          </div>
-          <button type="submit" class="btn btn-primary">Sign in</button> --}}
         </div>
+        
+        <div class="row text-center">
+          <div class="col-12 col-sm-4 col-md-12 text-center">
+            <b>Falla Según Cliente:</b>
+            <br>
+
+            <div class="detallesservicios">
+              {{$this->fallaseguncliente}}
+            </div>
+            
+            <br>
+          </div>
+          <div class="col-12 col-sm-4 col-md-12 text-center">
+            <b>Diagnóstico</b>
+            <br>
+            <div class="detallesservicios">
+              {{$this->diagnostico}}
+            </div>
+            <br>
+          </div>
+          <div class="col-12 col-sm-4 col-md-12 text-center">
+            <b>Solución:</b>
+            <br>
+            <div class="detallesservicios">
+              {{$this->solucion}}
+            </div>
+            <br>
+          </div>
+        </div>
+
+
         {{-- <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
           <button type="button" class="btn btn-primary">Save changes</button>
         </div> --}}
       </div>
     </div>
-  </div>
+</div>
