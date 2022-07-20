@@ -22,6 +22,8 @@
                     <table class="table table-unbordered table-hover mt-2">
                         <thead class="text-white" style="background: #3B3F5C">
                             <tr>
+                                
+                                <th class="table-th text-withe text-center">#</th>
                                 <th class="table-th text-withe text-center">TIPO</th>
                                 <th class="table-th text-withe text-center">CODIGO</th>
                                 <th class="table-th text-withe text-center">DESCRIPCION</th>
@@ -35,6 +37,9 @@
                         <tbody>
                             @foreach ($data_locations as $location)
                             <tr>
+                                    <td>
+                                        <h6>{{ ($data_locations->currentpage()-1) * $data_locations->perpage() + $loop->index + 1 }}</h6>
+                                    </td>
                                     <td>
                                         <h6 class=" text-center">{{ $location->tipo }}</h6>
                                     </td>

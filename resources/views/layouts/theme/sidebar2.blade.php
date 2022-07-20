@@ -61,21 +61,27 @@
 											<span class="sub-item">Ventas</span>
 										</a>
 									</li>
+									@can('Reporte_Movimientos_General')
 									<li>
 										<a href="{{ url('movimientos') }}">
 											<i class="fa fas fa-minus"></i>
 											Reportes Movimientos</a>
 									</li>
+									@endcan
+									@can('Reporte_Movimientos_General')
 									<li>
 										<a href="{{ url('resumenmovimientos') }}">
 											<i class="fa fas fa-minus"></i>
 											Resumen Reportes</a>
 									</li>
+									@endcan
+									@can('Reporte_Movimientos_General')
 									<li>
 										<a href="{{ url('ingresoegreso') }}">
 											<i class="fa fas fa-minus"></i>
 											Ingresos/Egresos</a>
 									</li>
+									@endcan
 								</ul>
 							</div>
 						</li>
@@ -233,11 +239,13 @@
 											  Reportes Tigo</a>
 									  </li>
 								  @endcan
+								  @can('Reportes_Tigo_Index')
 								  <li>
 									  <a href="{{ url('movimientos') }}">
 										<i class="fa fas fa-minus"></i>
 										  Reportes Movimientos</a>
 								  </li>
+								  @endcan
 								</ul>
 								@endif
 							</div>
@@ -561,6 +569,11 @@
 										<a href="{{url('operacionesinv')}}">
 											<i class="fa fas fa-minus"></i>
 											Entrada/Salida de Productos </a>
+									</li>
+									<li>
+										<a href="{{url('all_transferencias')}}">
+											<i class="fa fas fa-minus"></i>
+											Transferencia de Productos </a>
 									</li>
 								</ul>
 							</div>

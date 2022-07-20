@@ -21,7 +21,7 @@ class LocalizacionController extends Component
     use WithFileUploads;
     public $sucursal, $codigo, $descripcion,$ubicacion, $tipo,$product,$product_name,
     $selected_id, $categoria,$subcategoria,$location, $pageTitle, $componentName,$search,$search2,$destino,$listaproductos,$auxi=[];
-    private $pagination = 8;
+    private $pagination = 20;
     public function paginationView()
     {
         return 'vendor.livewire.bootstrap';

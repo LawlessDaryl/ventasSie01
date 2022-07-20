@@ -347,9 +347,10 @@ class ReporteMovimientoResumenController extends Component
             ->join('cajas as ca', 'ca.id', 'c.caja_id')
             ->join('users as u', 'u.id', 'movimientos.user_id')
             ->select(
-                'movimientos.import as importe',
+                'movimientos.import as importess',
                 'crms.type as carteramovtype',
                 'crms.tipoDeMovimiento',
+                'crms.comentario as coment',
                 'c.nombre as nombrecartera',
                 'c.descripcion',
                 'c.tipo as ctipo',
@@ -406,6 +407,7 @@ class ReporteMovimientoResumenController extends Component
                'movimientos.import as importe',
                'crms.type as carteramovtype',
                'crms.tipoDeMovimiento',
+               'crms.comentario as coment',
                'c.nombre as nombrecartera',
                'c.descripcion',
                'c.tipo as ctipo',
@@ -506,6 +508,7 @@ class ReporteMovimientoResumenController extends Component
                 'movimientos.import as importe',
                 'crms.type as carteramovtype',
                 'crms.tipoDeMovimiento',
+                'crms.comentario as coment',
                 'c.nombre as nombrecartera',
                 'c.descripcion',
                 'c.tipo as ctipo',
@@ -560,6 +563,7 @@ class ReporteMovimientoResumenController extends Component
                'movimientos.import as importe',
                'crms.type as carteramovtype',
                'crms.tipoDeMovimiento',
+               'crms.comentario as coment',
                'c.nombre as nombrecartera',
                'c.descripcion',
                'c.tipo as ctipo',

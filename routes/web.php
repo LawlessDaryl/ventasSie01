@@ -170,6 +170,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('proveedores', ProvidersController::class)->name('supliers');
         Route::post('importar',[ ProductsController::class,'import'])->name('importar');
         Route::get('operacionesinv',MercanciaController::class)->name('operacionesinv');
+       
     });
         Route::group(['middleware' => ['permission:Compras_Index']], function () {
         Route::get('compras', ComprasController::class)->name('compras');
@@ -179,9 +180,9 @@ Route::middleware(['auth'])->group(function () {
    // Route::get('transacciones', TransaccionesController::class)->name('transactions')->middleware('permission:Coins_Index');
         Route::get('destino_prod', DestinoProductoController::class)->name('destination')->middleware('permission:Almacen_Index');
         Route::group(['middleware' => ['permission:Transferencia_Index']], function () {   
-        Route::get('transferencia', TransferirProductoController::class)->name('destination');
+        Route::get('transferencia', TransferirProductoController::class)->name('operacionTransferencia');
         Route::get('destino', DestinoController::class)->name('dest');
-        Route::get('transferencias', TransferenciasController::class);
+        Route::get('all_transferencias', TransferenciasController::class);
         Route::get('trans', EditTransferenceController::class)->name('editdest');});
         Route::group(['middleware' => ['permission:Reportes_Inventarios_Export']], function () {
         Route::get('Compras/pdf/{id}', [ExportComprasController::class, 'PrintCompraPdf']);

@@ -3,14 +3,23 @@
 <div class="row pt-2">
     <div class="col-lg-12 col-12 layout-spacing">
         <div class="statbox widget box box-shadow">
-            <div class="widget-header" style="background-color: rgb(255, 255, 255)">
-                <div class="row mt-3">
-                    <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                        <strong><h3>Transferencias</h3></strong>
+          
+               
+           
+            <div class="widget-content widget-content-area icon-pill">
+                <div class="row mt-3 text-center">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-lg-12">
+                        <h2>TRANSFERENCIAS</h2>
                     </div>
                 </div>
-            </div>
-            <div class="widget-content widget-content-area icon-pill">
+                <div class="d-flex flex-row-reverse">
+           
+                    
+                        <a href="transferencia" class="btn btn-success m-1" >Transferir Productos</a>
+                       
+                       
+                  
+                </div>
                 
                 <ul  class="nav nav-pills mb-3 mt-3" id="pills-tab" role="tablist">
                     

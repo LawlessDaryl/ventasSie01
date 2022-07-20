@@ -87,12 +87,13 @@
                             <thead class="text-white" style="background: #ee761c">
                                 <tr>
                                     <th class="table-th text-withe text-center" style="font-size: 100%">#</th>
-                                    <th class="table-th text-withe text-center" style="font-size: 100%">IMPORTE</th>
-                                    <th class="table-th text-withe text-center" style="font-size: 100%">TIPO DE MOVIMIENTO</th>
-                                    <th class="table-th text-withe text-center" style="font-size: 100%">NOMBRE CARTERA</th>
-                                    <th class="table-th text-withe text-center" style="font-size: 100%">CAJA</th>
-                                    <th class="table-th text-withe text-center" style="font-size: 100%">USUARIO</th>
                                     <th class="table-th text-withe text-center" style="font-size: 100%">FECHA</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 100%">TIPO DE MOVIMIENTO</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 100%">CAJA</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 100%">NOMBRE CARTERA</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 100%">IMPORTE</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 100%">MOTIVO</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 100%">USUARIO</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -103,7 +104,8 @@
                                             </h6>
                                         </td>
                                         <td>
-                                            <h6 class="text-center" style="font-size: 100%">{{ $p->import }}
+                                            <h6 class="text-center" style="font-size: 100%">
+                                                {{\Carbon\Carbon::parse($p->movimientoCreacion)->format('d/m/Y H:i') }}
                                             </h6>
                                         </td>
                                         <td>
@@ -112,24 +114,28 @@
                                         </td>
                                      
                                         <td>
-                                            <h6 class="text-center" style="font-size: 100%">{{ $p->nombre }}
-                                            </h6>
-                                        </td>
-                                   
-                                        <td>
                                             <h6 class="text-center" style="font-size: 100%">
                                                 {{ $p->cajaNombre }}
                                             </h6>
                                         </td>
                                         <td>
+                                            <h6 class="text-center" style="font-size: 100%">{{ $p->nombre }}
+                                            </h6>
+                                        </td>
+                                        <td>
+                                            <h6 class="text-center" style="font-size: 100%">{{ $p->import }}
+                                            </h6>
+                                        </td>
+                                        <td>
+                                            <h6 class="text-center" style="font-size: 100%">{{ $p->comentario }}
+                                            </h6>
+                                        </td>
+                                   
+                                        <td>
                                             <h6 class="text-center" style="font-size: 100%">
                                                 {{ $p->usuarioNombre }}</h6>
                                         </td>
-                                        <td>
-                                            <h6 class="text-center" style="font-size: 100%">
-                                                {{\Carbon\Carbon::parse($p->movimientoCreacion)->format('d/m/Y H:i') }}
-                                            </h6>
-                                        </td>
+                                       
                                     </tr>
                                 @endforeach
                             </tbody>

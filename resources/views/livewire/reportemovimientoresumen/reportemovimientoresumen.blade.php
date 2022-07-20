@@ -289,7 +289,8 @@
                         </td>
                       
                         <td class="text-center">
-                            {{ $m->ctipo =='CajaFisica'?'Efectivo':$m->ctipo }}({{ $m->nombrecartera }})
+                            {{ $m->ctipo =='CajaFisica'?'Efectivo':$m->ctipo }},Motivo:{{$m->coment}}({{ $m->nombrecartera }})
+                            
                         </td>
                         <td class="text-right">
                             {{ number_format($m->importe,2) }}
@@ -340,7 +341,7 @@
                     </td>
                 
                     <td class="text-center">
-                        {{ $st->ctipo =='CajaFisica'?'Efectivo':$st->ctipo }}({{ $st->nombrecartera }})
+                        {{ $st->ctipo =='CajaFisica'?'Efectivo':$st->ctipo }},{{$st->coment}}({{ $st->nombrecartera }})
                     </td>
                     <td>
                     

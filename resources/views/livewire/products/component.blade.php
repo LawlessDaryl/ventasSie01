@@ -11,8 +11,8 @@
                     <a href="javascript:void(0)" class="btn btn-warning m-1" data-toggle="modal"
                         data-target="#modalimport">Subir Productos</a>
                        
-                </ul>
-            </div>
+                    </ul>
+                </div>
             <div class="row">
                 <div class="col-12 col-lg-4 col-md-6">
                     <div class="input-group mb-4">
@@ -21,7 +21,7 @@
                                 <i class="fas fa-search"></i>
                             </span>
                         </div>
-                        <input type="text" wire:model="search" placeholder="Buscar" class="form-control">
+                        <input type="text" wire:model="search" placeholder="Buscar" class="form-control"  wire:keydown.enter="overrideFilter()">
                     </div>
                 </div>
                 <div class="col-12 col-lg-3 col-md-3">

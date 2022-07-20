@@ -22,7 +22,7 @@ class ProductsController extends Component
     public $nombre, $costo, $precio_venta,$cantidad_minima,$name,$descripcion,
     $codigo,$lote,$unidad,$industria,$caracteristicas,$status,$categoryid=null, $search,$estado,
      $image, $selected_id, $pageTitle, $componentName,$cate,$marca,$garantia,$stock,$stock_v
-     ,$selected_categoria,$selected_sub,$nro=1,$sub,$change=[],$estados;
+     ,$selected_categoria,$selected_sub,$nro=1,$sub,$change=[],$estados,$searchData=[],$data2;
 
     private $pagination = 100;
     public $selected_id2;
@@ -62,11 +62,13 @@ class ProductsController extends Component
     public function updatingSelected_categoria()
     {
         $this->resetPage();
+        $this->searchData=[];
         
     }
     public function updatingSelected_sub()
     {
         $this->resetPage();
+        $this->searchData=[];
         
     }
 
@@ -82,18 +84,20 @@ class ProductsController extends Component
             $prod = Product::join('categories as c', 'products.category_id','c.id')
             ->select('products.*', 'c.name as cate')
             ->where('products.status',$this->estados)
-
             ->where(function($query){
                 $query->where('c.categoria_padre',$this->selected_categoria)
                       ->orWhere('c.id',$this->selected_categoria);
             })
             ->where(function($query){
                 $query->where('products.nombre', 'like', '%' . $this->search . '%')
-                        ->orWhere('products.codigo', 'like', '%' . $this->search . '%');  
+                        ->orWhere('products.codigo', 'like', '%' . $this->search . '%')  
+                        ->orWhere('products.marca', 'like', '%' . $this->search . '%')
+                        ->orWhere('products.caracteristicas', 'like', '%' . $this->search . '%') 
+                        ->orWhere('products.costo', 'like', '%' . $this->search . '%')
+                        ->orWhere('products.precio_venta', 'like', '%' . $this->search . '%');
                           
             })
-            ->orderBy('products.id', 'desc')
-            ->paginate($this->pagination);
+            ->orderBy('products.id', 'desc');
         }
         else{
            
@@ -103,11 +107,14 @@ class ProductsController extends Component
             ->where('c.id',$this->selected_sub)
             ->where(function($querys){
                 $querys->where('products.nombre', 'like', '%' . $this->search . '%')
-                        ->orWhere('products.codigo', 'like', '%' . $this->search . '%');
+                        ->orWhere('products.codigo', 'like', '%' . $this->search . '%')
+                        ->orWhere('products.marca', 'like', '%' . $this->search . '%')
+                        ->orWhere('products.caracteristicas', 'like', '%' . $this->search . '%') 
+                        ->orWhere('products.costo', 'like', '%' . $this->search . '%')
+                        ->orWhere('products.precio_venta', 'like', '%' . $this->search . '%');
             })
             
-            ->orderBy('products.id', 'desc')
-            ->paginate($this->pagination);
+            ->orderBy('products.id', 'desc');
            
         }
         }
@@ -120,12 +127,15 @@ class ProductsController extends Component
         ->where(function($querys){
             $querys->where('products.nombre', 'like', '%' . $this->search . '%')
             ->orWhere('products.codigo', 'like', '%' . $this->search . '%')
-            ->orWhere('c.name', 'like', '%' . $this->search . '%');
+            ->orWhere('c.name', 'like', '%' . $this->search . '%')
+            ->orWhere('products.marca', 'like', '%' . $this->search . '%')
+            ->orWhere('products.caracteristicas', 'like', '%' . $this->search . '%') 
+            ->orWhere('products.costo', 'like', '%' . $this->search . '%')
+            ->orWhere('products.precio_venta', 'like', '%' . $this->search . '%');
         })
         
         
-        ->orderBy('products.id', 'desc')
-        ->paginate($this->pagination);
+        ->orderBy('products.id', 'desc');
      }
 
 
@@ -134,8 +144,7 @@ class ProductsController extends Component
                 $prod = Product::join('categories as c', 'products.category_id','c.id')
                 ->select('products.*', 'c.name as cate')
                 ->where('products.status',$this->estados)
-                ->orderBy('products.nombre', 'desc')
-                ->paginate($this->pagination);}
+                ->orderBy('products.nombre', 'desc');}
             
         
         $this->sub= Category::select('categories.*')
@@ -146,10 +155,28 @@ class ProductsController extends Component
         $ss = Category::select('categories.*')
         ->where('categories.categoria_padre',$this->selected_id2)->get();
      
+        if (count($this->searchData)>0) {
+            //dd($this->searchData);
+            foreach ($this->searchData as $data) {
+               $this->data2=$data;
+                $prod =$prod->where(function($querys){
+                    $querys->where('products.nombre', 'like', '%' . $this->data2 . '%')
+                    ->orWhere('products.codigo', 'like', '%' . $this->data2 . '%')
+                    ->orWhere('c.name', 'like', '%' . $this->data2 . '%')
+                    ->orWhere('products.marca', 'like', '%' . $this->data2 . '%')
+                    ->orWhere('products.caracteristicas', 'like', '%' . $this->data2 . '%') 
+                    ->orWhere('products.costo', 'like', '%' . $this->data2 . '%')
+                    ->orWhere('products.precio_venta', 'like', '%' . $this->data2 . '%');
+                })
+                
+                
+                ->orderBy('products.id', 'desc');;
+            }
+        }
       
 
         return view('livewire.products.component', [
-            'data' => $prod,
+            'data' => $prod->paginate($this->pagination),
             'categories'=>Category::where('categories.categoria_padre',0)->orderBy('name', 'asc')->get(),
             'unidades'=>Unidad::orderBy('nombre','asc')->get(),
             'marcas'=>Marca::select('nombre')->orderBy('nombre','asc')->get(),
@@ -347,6 +374,10 @@ class ProductsController extends Component
         $this->image = null;
 
         $this->resetValidation();//clear the error bag
+    }
+
+    public function overrideFilter(){
+        array_push($this->searchData,$this->search);
     }
 
  
