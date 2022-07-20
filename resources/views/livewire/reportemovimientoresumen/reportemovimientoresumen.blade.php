@@ -262,7 +262,7 @@
                             </td>
                           
                             <td class="text-center">
-                                {{ $p->idordenservicio }},{{ $p->tipoDeMovimiento }},{{ $p->ctipo =='CajaFisica'?'Efectivo':$p->ctipo }},({{ $p->nombrecartera }})
+                                <b>{{ $p->idordenservicio }},{{ $p->tipoDeMovimiento }}, {{$p->nombrecategoria}} ,{{ $p->ctipo =='CajaFisica'?'Efectivo':$p->ctipo }},({{ $p->nombrecartera }})</b>
                             </td>
                             <td class="text-right">
                                 {{ number_format($p->importe,2) }}
@@ -277,6 +277,16 @@
                             </td>
                             
                         </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td class="text-center">
+                                {{ucwords(strtolower($p->solucion))}} 
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
                     @endforeach
 
                     @foreach ($totalesIngresosIE as $m)
@@ -289,7 +299,7 @@
                         </td>
                       
                         <td class="text-center">
-                            {{ $m->ctipo =='CajaFisica'?'Efectivo':$m->ctipo }},Motivo:{{$m->coment}}({{ $m->nombrecartera }})
+                            <b>{{ $m->ctipo =='CajaFisica'?'Efectivo':$m->ctipo }},({{ $m->nombrecartera }})</b>
                             
                         </td>
                         <td class="text-right">
@@ -302,6 +312,16 @@
                             
                         </td>
                         
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td class="text-center">
+                            {{$m->coment}}
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                     </tr>
                 @endforeach
 
@@ -316,7 +336,7 @@
                     </td>
                   
                     <td class="text-center">
-                        {{ $p->tipoDeMovimiento }},Devolución,{{ $p->ctipo =='CajaFisica'?'Efectivo':$p->ctipo }},{{ $p->nombrecartera }})
+                        <b>{{ $p->tipoDeMovimiento }},Devolución,{{ $p->ctipo =='CajaFisica'?'Efectivo':$p->ctipo }},{{ $p->nombrecartera }}</b>
                     </td>
                     <td>
                         
@@ -341,7 +361,7 @@
                     </td>
                 
                     <td class="text-center">
-                        {{ $st->ctipo =='CajaFisica'?'Efectivo':$st->ctipo }},{{$st->coment}}({{ $st->nombrecartera }})
+                        <b>{{ $st->ctipo =='CajaFisica'?'Efectivo':$st->ctipo }},({{ $st->nombrecartera }})</b>
                     </td>
                     <td>
                     
@@ -353,6 +373,16 @@
                         
                     </td>
                     
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td class="text-center">
+                        {{$st->coment}}
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
                 </tr>
                 @endforeach
 
@@ -369,15 +399,16 @@
                         <td colspan="3">
                             <h5 class="text-dark text-right" style="font-size: 1rem!important;"><b> TOTAL OPERACIONES </b></h5>
                         </td>
-                        <td>
-                                {{ number_format($subtotalesIngresos,2) }}
-                                
+                        <td class="text-right">
+                            <b>{{ number_format($subtotalesIngresos,2) }}</b>
                         </td>
-                        <td>
-                        {{ number_format($EgresosTotales,2) }}
+                        <td class="text-right">
+                            <b>{{ number_format($EgresosTotales,2) }}</b>
                         </td>
-                        <td>
-                        {{ number_format($totalutilidadSV,2) }}
+                        <td class="text-right">
+                            @if(@Auth::user()->hasPermissionTo('VentasMovDiaSucursalUtilidad'))
+                                <b>{{ number_format($totalutilidadSV,2) }}</b>
+                            @endif
                         </td>
                         </tr>
                     </tfoot>
@@ -483,18 +514,18 @@
                 <div class="table-responsive">
                     <table>
                         <tbody>
-                          @if ($caja != 'TODAS')
+                            @if ($caja != 'TODAS')
                                 <tr style="height: 2rem"></tr>
-                           
+                        
                                 <tr class="p-5">
-                                   <td>
-                                          <h5 class="text-dark text-left"><b> Recaudo </b></h5>
-                                   </td>
-                                   <td>
+                                <td>
+                                        <h5 class="text-dark text-left"><b> Recaudo </b></h5>
+                                </td>
+                                <td>
                                     <h5 class="text-dark text-center m-0" > {{ number_format($op_recaudo,2) }}</h5>
-                               
-                                   </td>
-                       
+                            
+                                </td>
+                    
                                 </tr>
                                 <tr class="p-5">
 
@@ -502,32 +533,32 @@
                                     @foreach ($op_sob_falt as $key=>$item)
                                         
                                     <td>
-                                           <h5 class="text-dark text-left"><b> {{($key== 'INGRESO' ? 'Sobrante':'Faltante')}} </b></h5>
+                                        <h5 class="text-dark text-left"><b> {{($key== 'INGRESO' ? 'Sobrante':'Faltante')}} </b></h5>
                                     </td>
                                     <td>
-                                     <h5 class="text-dark text-center m-0" > {{ number_format($item,2) }}</h5>
+                                    <h5 class="text-dark text-center m-0" > {{ number_format($item,2) }}</h5>
                                 
                                     </td>
                                     @endforeach
-                       
+                    
                                 </tr>
                                 <tr class="p-5">
-                                   <td>
-                                          <h5 class="text-dark text-left"><b> Nuevo Saldo Caja Fisica </b></h5>
-                                   </td>
-                                   <td>
+                                <td>
+                                        <h5 class="text-dark text-left"><b> Nuevo Saldo Caja Fisica </b></h5>
+                                </td>
+                                <td>
                                     <h5 class="text-dark text-center m-0" > {{ number_format($operacionesW-$op_recaudo,2) }}</h5>
-                               
-                                   </td>
-                       
+                            
+                                </td>
+                    
                                 </tr>
-                                @endif
-                            </tbody>
-                        </table>
-                    </div>
+                            @endif
+                        </tbody>
+                    </table>
                 </div>
-
             </div>
+
+        </div>
         
         @include('livewire.reportemovimientoresumen.modalDetailsR')
 

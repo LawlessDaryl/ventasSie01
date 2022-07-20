@@ -141,9 +141,12 @@ class ReporteMovimientoResumenController extends Component
             ->join('users as u', 'u.id', 'movimientos.user_id')
             ->join('mov_services as ms', 'ms.movimiento_id', 'movimientos.id')
             ->join('services as ser', 'ser.id', 'ms.service_id')
+            ->join('cat_prod_services as cps', 'cps.id', 'ser.cat_prod_service_id')
             ->select(
                 'ser.order_service_id as idordenservicio',
                 'movimientos.import as importe',
+                'ser.solucion as solucion',
+                'cps.nombre as nombrecategoria',
                 'crms.type as carteramovtype',
                 'crms.tipoDeMovimiento',
                 'c.nombre as nombrecartera',
@@ -180,6 +183,7 @@ class ReporteMovimientoResumenController extends Component
                 'movimientos.import as importe',
                 'crms.type as carteramovtype',
                 'crms.tipoDeMovimiento',
+                'crms.comentario as coment',
                 'c.nombre as nombrecartera',
                 'c.descripcion',
                 'c.tipo as ctipo',
@@ -236,6 +240,7 @@ class ReporteMovimientoResumenController extends Component
                'movimientos.import as importe',
                'crms.type as carteramovtype',
                'crms.tipoDeMovimiento',
+               'crms.comentario as coment',
                'c.nombre as nombrecartera',
                'c.descripcion',
                'c.tipo as ctipo',
@@ -308,9 +313,12 @@ class ReporteMovimientoResumenController extends Component
             ->join('users as u', 'u.id', 'movimientos.user_id')
             ->join('mov_services as ms', 'ms.movimiento_id', 'movimientos.id')
             ->join('services as ser', 'ser.id', 'ms.service_id')
+            ->join('cat_prod_services as cps', 'cps.id', 'ser.cat_prod_service_id')
             ->select(
                 'ser.order_service_id as idordenservicio',
                 'movimientos.import as importe',
+                'ser.solucion as solucion',
+                'cps.nombre as nombrecategoria',
                 'crms.type as carteramovtype',
                 'crms.tipoDeMovimiento',
                 'c.nombre as nombrecartera',
@@ -347,7 +355,7 @@ class ReporteMovimientoResumenController extends Component
             ->join('cajas as ca', 'ca.id', 'c.caja_id')
             ->join('users as u', 'u.id', 'movimientos.user_id')
             ->select(
-                'movimientos.import as importess',
+                'movimientos.import as importe',
                 'crms.type as carteramovtype',
                 'crms.tipoDeMovimiento',
                 'crms.comentario as coment',
@@ -468,9 +476,14 @@ class ReporteMovimientoResumenController extends Component
             ->join('carteras as c', 'c.id', 'crms.cartera_id')
             ->join('cajas as ca', 'ca.id', 'c.caja_id')
             ->join('users as u', 'u.id', 'movimientos.user_id')
+            ->join('mov_services as ms', 'ms.movimiento_id', 'movimientos.id')
+            ->join('services as ser', 'ser.id', 'ms.service_id')
+            ->join('cat_prod_services as cps', 'cps.id', 'ser.cat_prod_service_id')
             ->select(
+                'ser.order_service_id as idordenservicio',
                 'movimientos.import as importe',
-                'crms.type as carteramovtype',
+                'ser.solucion as solucion',
+                'cps.nombre as nombrecategoria',
                 'crms.tipoDeMovimiento',
                 'c.nombre as nombrecartera',
                 'c.descripcion',
@@ -716,7 +729,8 @@ class ReporteMovimientoResumenController extends Component
         
      }
 
-     public function allop($fecha,$sucursal,$caja){
+     public function allop($fecha,$sucursal,$caja)
+     {
 
 
          $fechainicial= Carbon::parse('2015-01-01')->format('Y-m-d') . ' 00:00:00';
@@ -773,7 +787,7 @@ class ReporteMovimientoResumenController extends Component
        
 
 
-    }
+     }
    
     //Obtener el Id de la Sucursal Donde esta el Usuario
     public function idsucursal()
@@ -1220,19 +1234,18 @@ class ReporteMovimientoResumenController extends Component
 
 
         
-        session(['ingresosTotales' => $this->ingresosTotales]);
-        session(['ingresosTotalesCF' => $this->ingresosTotalesCF]);
-        session(['ingresosTotalesNoCFNoBancos' => $this->ingresosTotalesNoCFNoBancos]);
-        session(['ingresosTotalesNoCFBancos' => $this->ingresosTotalesNoCFBancos]);
+        session(['ingresosTotalesCF' => $this->ingresosTotalesCF]);//
+        session(['subtotalesIngresos' => $this->subtotalesIngresos]);//
+        session(['ingresosTotalesNoCFBancos' => $this->ingresosTotalesNoCFBancos]);//
+        session(['op_recaudo' => $this->op_recaudo]);//
         session(['total' => $this->total]);
-        session(['EgresosTotales' => $this->EgresosTotales]);
-        session(['EgresosTotalesCF' => $this->EgresosTotalesCF]);
-        session(['EgresosTotalesNoCFNoBancos' => $this->EgresosTotalesNoCFNoBancos]);
-        session(['EgresosTotalesNoCFBancos' => $this->EgresosTotalesNoCFBancos]);
         session(['subtotalcaja' => $this->subtotalcaja]);
         session(['operacionesefectivas' => $this->operacionesefectivas]);
         session(['ops' => $this->ops]);
         session(['operacionesW' => $this->operacionesW]);
+        session(['EgresosTotales' => $this->EgresosTotales]);
+        session(['totalutilidadSV' => $this->totalutilidadSV]); 
+        session(['EgresosTotalesCF' => $this->EgresosTotalesCF]); 
 
         //Sucursal, Caja, Fecha de Inicio y Fecha de Fin
         $caracteristicas = array($this->sucursal, $this->caja, $this->fromDate, $this->toDate);

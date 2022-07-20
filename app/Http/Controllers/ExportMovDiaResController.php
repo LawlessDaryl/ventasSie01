@@ -27,19 +27,18 @@ class ExportMovDiaResController extends Controller
 
 
         //Variables para la tfoot
-        $ingresosTotales = session('ingresosTotales');
-        $ingresosTotalesCF = session('ingresosTotalesCF');
-        $ingresosTotalesNoCFNoBancos = session('ingresosTotalesNoCFNoBancos');
+        $ingresosTotalesCF = session('ingresosTotalesCF');//
+        $subtotalesIngresos = session('subtotalesIngresos');//
+        $op_recaudo = session('op_recaudo');//
         $ingresosTotalesNoCFBancos = session('ingresosTotalesNoCFBancos');
         $total = session('total');
-        $EgresosTotales = session('EgresosTotales');
-        $EgresosTotalesCF = session('EgresosTotalesCF');
-        $EgresosTotalesNoCFNoBancos = session('EgresosTotalesNoCFNoBancos');
-        $EgresosTotalesNoCFBancos = session('EgresosTotalesNoCFBancos');
         $subtotalcaja = session('subtotalcaja');
         $operacionesefectivas = session('operacionesefectivas');
         $ops = session('ops');
         $operacionesW = session('operacionesW');
+        $EgresosTotales = session('EgresosTotales');
+        $totalutilidadSV = session('totalutilidadSV');
+        $EgresosTotalesCF = session('EgresosTotalesCF');
 
         $caracteristicas = session('caracteristicas');
 
@@ -62,15 +61,14 @@ class ExportMovDiaResController extends Controller
 
         $pdf = PDF::loadView('livewire.pdf.reportemovdiaresumen',
         compact('totalesIngresosV','totalesIngresosS','totalesIngresosIE','totalesEgresosV','totalesEgresosIE',
-                'ingresosTotales',
                 'ingresosTotalesCF',
-                'ingresosTotalesNoCFNoBancos',
                 'ingresosTotalesNoCFBancos',
-                'total',
+                'subtotalesIngresos',
                 'EgresosTotales',
                 'EgresosTotalesCF',
-                'EgresosTotalesNoCFNoBancos',
-                'EgresosTotalesNoCFBancos',
+                'totalutilidadSV',
+                'op_recaudo',
+                'total',
                 'subtotalcaja',
                 'operacionesefectivas',
                 'ops',
