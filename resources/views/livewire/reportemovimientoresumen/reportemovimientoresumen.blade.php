@@ -560,7 +560,7 @@
 
         </div>
         
-        @include('livewire.reportemovimientoresumen.modalDetailsR')
+        @include('livewire.reportemovimientoresumen.modalDetailsr')
 
  </div>
 

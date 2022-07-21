@@ -15,6 +15,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 
 class ReporteMovimientoResumenController extends Component
@@ -34,55 +35,68 @@ class ReporteMovimientoResumenController extends Component
     {
 
         /* Caja en la cual se encuentra el usuario */
-        $SucursalUsuario = User::join('sucursal_users as su', 'su.user_id', 'users.id')
-        ->join('sucursals as s', 's.id', 'su.sucursal_id')
-        ->where('users.id', Auth()->user()->id)
-        ->where('su.estado', 'ACTIVO')
-        ->select('s.*')
-        ->get()->first();
+       
 
-        if ($this->sucursal == 'TODAS')
-        {
-            $cajab=Caja::where('cajas.nombre','!=','Caja General')->get();
+        if (Auth::user()->hasPermissionTo('Admin_Views')) {
+
+            $sucursals= Sucursal::all();
+            if ($this->sucursal == 'TODAS')
+            {
+                $cajab=Caja::where('cajas.nombre','!=','Caja General')->get();
+            }
+            else
+            {
+                $cajab=Caja::where('cajas.sucursal_id',$this->sucursal)->where('cajas.nombre','!=','Caja General')->get();
+                
+            }
         }
-        else
-        {
+        else{
+            $sucursals=User::join('sucursal_users as su', 'su.user_id', 'users.id')
+                        ->join('sucursals as s', 's.id', 'su.sucursal_id')
+                        ->where('users.id', Auth()->user()->id)
+                        ->where('su.estado', 'ACTIVO')
+                        ->select('s.*')
+                        ->get();
+            //dd($sucursales);
+        
             $cajab=Caja::where('cajas.sucursal_id',$this->sucursal)->where('cajas.nombre','!=','Caja General')->get();
-         
         }
 
         $carterasSucursal = Cartera::join('cajas as c', 'carteras.caja_id', 'c.id')
             ->join('sucursals as s', 's.id', 'c.sucursal_id')
-            ->where('s.id', $SucursalUsuario->id)
+            ->where('s.id', $this->sucursal)
             ->select('carteras.id', 'carteras.nombre as carteraNombre', 'c.nombre as cajaNombre','c.id as cid','c.monto_base','carteras.tipo as tipo', DB::raw('0 as monto'))->get();
         
-            
-            
-            
-            
-            
+ 
             $this->allop(Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',$this->sucursal,$this->caja);
             $this->viewTotales();
          
             if ($this->cartera_id != null) {
-                //dd($this->cartera_id);
-                $this->sm = Caja::find($this->cartera_id);
-               // dd($this->sm);
-                $this->operacionrecaudo();
-               
-               
+               $this->sm = Caja::find($this->cartera_id);
+               $this->operacionrecaudo();
             }
             
       
       
         return view('livewire.reportemovimientoresumen.reportemovimientoresumen', [
             'carterasSucursal' => $carterasSucursal,
-            'sucursales'=>Sucursal::all(),
+            'sucursales'=>$sucursals,
             'cajas'=>$cajab
 
         ])
             ->extends('layouts.theme.app')
             ->section('content');
+    }
+
+    public function idsucursaluser()
+    {
+        $idsucursal = User::join("sucursal_users as su","su.user_id","users.id")
+        ->select("su.sucursal_id as id","users.name as n")
+        ->where("users.id",Auth()->user()->id)
+        ->where("su.estado","ACTIVO")
+        ->get()
+        ->first();
+        return $idsucursal->id;
     }
 
     public function  updatingSucursal(){
@@ -457,11 +471,14 @@ class ReporteMovimientoResumenController extends Component
             ->whereBetween('movimientos.updated_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
             ->orderBy('movimientos.updated_at', 'asc')
             ->get();
-        foreach ($this->totalesIngresosV as $val)
+            foreach ($this->totalesIngresosV as $val)
             {
                 $vs=$this->listardetalleventas($val->idventa);
+               
             
                 $val->detalle=$vs;
+
+              
                 
             }
     
