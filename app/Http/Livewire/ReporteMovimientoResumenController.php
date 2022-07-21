@@ -37,8 +37,8 @@ class ReporteMovimientoResumenController extends Component
         /* Caja en la cual se encuentra el usuario */
        
 
-        if (Auth::user()->hasPermissionTo('Admin_Views')) {
-
+        if (Auth::user()->hasPermissionTo('Admin_Views'))
+        {
             $sucursals= Sucursal::all();
             if ($this->sucursal == 'TODAS')
             {
@@ -50,7 +50,8 @@ class ReporteMovimientoResumenController extends Component
                 
             }
         }
-        else{
+        else
+        {
             $sucursals=User::join('sucursal_users as su', 'su.user_id', 'users.id')
                         ->join('sucursals as s', 's.id', 'su.sucursal_id')
                         ->where('users.id', Auth()->user()->id)

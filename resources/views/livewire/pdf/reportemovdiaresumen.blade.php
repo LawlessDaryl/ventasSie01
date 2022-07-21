@@ -67,13 +67,13 @@
         <tbody>
             <tr class="filarowx">
                 <td rowspan="2">
-                    <img src="assets/img/fav05.png" width="50" height="50" alt="navbar brand">
+                    <img src={{asset('storage/icons/fav05.png')}} width="50" height="50">
                 </td>
                 <td class="text-center">
                     <h4><b>REPORTE DE MOVIMIENTO DIARIO</b></h4>
                 </td>
                 <td rowspan="2">
-                    <img src="assets/img/fav05.png" width="50" height="50" alt="navbar brand">
+                    <img src={{asset('storage/icons/fav05.png')}} width="50" height="50">
                 </td>
             </tr>
             <tr>

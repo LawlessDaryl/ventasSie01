@@ -53,10 +53,11 @@ class OrderServiceController extends Component
         $this->type = "PENDIENTE";
         $this->sucursal_id = $this->idsucursal();
         $this->catprodservid = "Todos";
-        $this->lista_de_usuarios = User::all();
+        $this->lista_de_usuarios = $this->listarusuarios();
     }
     public function render()
     {
+        $this->lista_de_usuarios = $this->listarusuarios();
         if($this->sucursal_id != "Todos")
         {
             if($this->type == "PENDIENTE")
@@ -66,11 +67,13 @@ class OrderServiceController extends Component
                     $orden_de_servicio = OrderService::join('services as s', 's.order_service_id', 'order_services.id')
                     ->join('mov_services as ms', 'ms.service_id', 's.id')
                     ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+                    ->join('users as u', 'u.id', 'mov.user_id')
                     ->join('cliente_movs as cm', 'cm.movimiento_id', 'mov.id')
                     ->join('clientes as c', 'c.id', 'cm.cliente_id')
                     ->select("order_services.id as codigo",
                     "order_services.created_at as fechacreacion",
                     "c.nombre as nombrecliente",
+                    'u.name as usuarioreceptor',
                     "mov.import as importe",
                     DB::raw('0 as num'),
                     DB::raw('0 as servicios'))
@@ -112,10 +115,12 @@ class OrderServiceController extends Component
                     $orden_de_servicio = OrderService::join('services as s', 's.order_service_id', 'order_services.id')
                     ->join('mov_services as ms', 'ms.service_id', 's.id')
                     ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+                    ->join('users as u', 'u.id', 'mov.user_id')
                     ->join('cliente_movs as cm', 'cm.movimiento_id', 'mov.id')
                     ->join('clientes as c', 'c.id', 'cm.cliente_id')
                     ->select("order_services.id as codigo",
                     "order_services.created_at as fechacreacion",
+                    'u.name as usuarioreceptor',
                     "c.nombre as nombrecliente",
                     "mov.import as importe",
                     DB::raw('0 as num'),
@@ -178,6 +183,7 @@ class OrderServiceController extends Component
         'services.detalle as detalle',
         'services.id as idservicio',
         'mov.type as estado',
+        'mov.import as importe',
         'services.falla_segun_cliente as falla_segun_cliente',
         'services.fecha_estimada_entrega as fecha_estimada_entrega',
         'services.marca as marca')
@@ -198,6 +204,7 @@ class OrderServiceController extends Component
         'services.id as idservicio',
         'services.detalle as detalle',
         'mov.type as estado',
+        'mov.import as importe',
         'services.falla_segun_cliente as falla_segun_cliente',
         'services.fecha_estimada_entrega as fecha_estimada_entrega',
         'services.marca as marca')
@@ -277,5 +284,69 @@ class OrderServiceController extends Component
     {
         //dd($this->lista_de_usuarios);
         $this->emit('show-asignartecnicoresponsable', 'show modal!');
+    }
+    //Listar los Usuarios para ser asignados a un servicio Pendiente en una Ventana Modal
+    public function listarusuarios()
+    {
+        $listausuarios1 = User::join('movimientos as m', 'm.user_id', 'users.id')
+        ->join('mov_services as ms', 'ms.movimiento_id', 'm.id')
+        ->join('services as s', 's.id', 'ms.service_id')
+        ->join('order_services as os', 'os.id', 's.order_service_id')
+        ->join('model_has_roles as mhr', 'mhr.model_id', 'users.id')
+        ->join('roles as r', 'r.id', 'mhr.role_id')
+        ->join('role_has_permissions as rhp', 'rhp.role_id', 'r.id')
+        ->join('permissions as p', 'p.id', 'rhp.permission_id')
+        ->select("users.name as nombreusuario",DB::raw('0 as proceso'), DB::raw('0 as terminado'))
+        ->where('os.status', 'ACTIVO')
+        ->where('m.status', 'ACTIVO')
+        ->where('p.name', 'Recepcionar_Servicio')
+        ->distinct()
+        ->orderBy('proceso','asc')
+        ->get();
+
+
+
+        $listausuarios2 = User::join('movimientos as m', 'm.user_id', 'users.id')
+        ->join('mov_services as ms', 'ms.movimiento_id', 'm.id')
+        ->join('services as s', 's.id', 'ms.service_id')
+        ->join('order_services as os', 'os.id', 's.order_service_id')
+        ->select("users.name as nombreusuario", "m.type as type")
+        ->where('os.status', 'ACTIVO')
+        ->where('m.type', "PROCESO")
+        ->where('m.status', 'ACTIVO')
+        ->get();
+
+        $listausuarios3 = User::join('movimientos as m', 'm.user_id', 'users.id')
+        ->join('mov_services as ms', 'ms.movimiento_id', 'm.id')
+        ->join('services as s', 's.id', 'ms.service_id')
+        ->join('order_services as os', 'os.id', 's.order_service_id')
+        ->select("users.name as nombreusuario", "m.type as type")
+        ->where('os.status', 'ACTIVO')
+        ->where('m.type', "TERMINADO")
+        ->where('m.status', 'ACTIVO')
+        ->get();
+        //dd($listausuarios);
+
+        foreach($listausuarios1 as $l)
+        {
+            foreach($listausuarios2 as $n)
+            {
+                if($l->nombreusuario == $n->nombreusuario)
+                {
+                    $l->proceso = $l->proceso + 1;
+                }
+            }
+            foreach($listausuarios3 as $z)
+            {
+                if($l->nombreusuario == $z->nombreusuario)
+                {
+                    $l->terminado = $l->terminado + 1;
+                }
+            }
+        }
+
+        $sorted = $listausuarios1->sortBy('proceso');
+
+        return $sorted;
     }
 }

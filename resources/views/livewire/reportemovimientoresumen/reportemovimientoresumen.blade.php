@@ -168,7 +168,7 @@
                                 {{ $loop->iteration }}
                             </td>
                             <td class="text-center">
-                                {{ \Carbon\Carbon::parse($p->movimientoCreacion)->format('d/m/Y H:i') }}
+                                {{ \Carbon\Carbon::parse($p->movcreacion)->format('d/m/Y H:i') }}
                             </td>
                           
                             <td class="text-center">
@@ -257,7 +257,7 @@
                             <td>
                                 {{ $loop->iteration }}
                             </td>
-                            <td>
+                            <td class="text-center">
                                 {{ \Carbon\Carbon::parse($p->movcreacion)->format('d/m/Y H:i') }}
                             </td>
                           
@@ -294,7 +294,7 @@
                         <td>
                             {{ $loop->iteration }}
                         </td>
-                        <td>
+                        <td class="text-center">
                             {{ \Carbon\Carbon::parse($m->movcreacion)->format('d/m/Y H:i') }}
                         </td>
                       
@@ -331,7 +331,7 @@
                     <td>
                         {{ $loop->iteration }}
                     </td>
-                    <td>
+                    <td class="text-center">
                         {{ \Carbon\Carbon::parse($p->movcreacion)->format('d/m/Y H:i') }}
                     </td>
                   

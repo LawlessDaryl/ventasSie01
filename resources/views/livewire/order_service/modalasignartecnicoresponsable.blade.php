@@ -18,7 +18,7 @@
                 </div>
     
                 <div class="col-12 col-sm-4 col-md-10 text-center" style="color: black;">
-                    <h3>Lista de Usuarios</h3>
+                    <h3>Lista de Usuarios - Servicios</h3>
                 </div>
     
                 <div class="col-12 col-sm-4 col-md-1 text-center">
@@ -29,7 +29,7 @@
             </div>
 
             <div class="table-wrapper">
-                <table class="">
+                <table class="table table">
                     <thead>
                         <tr>
                             <th class="text-center">#</th>
@@ -42,16 +42,16 @@
                         @foreach ($this->lista_de_usuarios as $lu)
                         <tr>
                             <td class="text-center">
-                                {{$lu->id}}
+                                
                             </td>
                             <td>
-                                {{$lu->name}}
+                                {{$lu->nombreusuario}}
                             </td>
                             <td class="text-center">
-                                
+                                {{$lu->proceso}}
                             </td>
                             <td class="text-center">
-                                
+                                {{$lu->terminado}}
                             </td>
                         </tr>
                         @endforeach

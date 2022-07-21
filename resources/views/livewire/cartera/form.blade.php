@@ -26,6 +26,7 @@
                 <option value="Telefono">Telefono</option>
                 <option value="Sistema">Sistema</option>
                 <option value="CajaFisica">Caja Fisica</option>
+                <option value="Banco">Banco</option>
             </select>
             @error('tipo')
                 <span class="text-danger er">{{ $message }}</span>

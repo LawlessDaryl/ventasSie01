@@ -58,7 +58,7 @@
     }
 
 
-        /* Estilos para la Tabla - ventana Modal */
+        /* Estilos para la Tabla - ventana Modal Asignar Técnico  Responsable*/
         .table-wrapper {
             width: 100%;/* Anchura de ejemplo */
             height: 400px; /* Altura de ejemplo */
@@ -224,21 +224,35 @@
                                 <td>
                                     @foreach ($os->servicios as $d)
 
-                                    <div>
-                                        <a href="javascript:void(0)" wire:click.prevent="modalserviciodetalles('{{$d->estado}}' , {{ $d->idservicio }})">
-                                            {{ucwords(strtolower($d->nombrecategoria))}} {{ucwords(strtolower($d->marca))}} {{strtolower($d->detalle)}}
-                                            <br>
-                                            <b>Falla Según Cliente:</b> {{ucwords(strtolower($d->falla_segun_cliente))}}
-                                        </a>
-                                    </div>
+                                        @if($os->servicios->count() == 1)
+                                        <div>
+                                            <a href="javascript:void(0)" wire:click.prevent="modalserviciodetalles('{{$d->estado}}' , {{ $d->idservicio }})">
+                                                {{ucwords(strtolower($d->nombrecategoria))}} {{ucwords(strtolower($d->marca))}} {{strtolower($d->detalle)}}
+                                                <br>
+                                                <b>Falla Según Cliente:</b> {{ucwords(strtolower($d->falla_segun_cliente))}}
+                                            </a>
+                                        </div>
+                                        @else
+                                        <div style="background-color: rgba(255, 230, 210, 0.829);">
+                                            <a href="javascript:void(0)" wire:click.prevent="modalserviciodetalles('{{$d->estado}}' , {{ $d->idservicio }})">
+                                                {{ucwords(strtolower($d->nombrecategoria))}} {{ucwords(strtolower($d->marca))}} {{strtolower($d->detalle)}}
+                                                <br>
+                                                <b>Falla Según Cliente:</b> {{ucwords(strtolower($d->falla_segun_cliente))}}
+                                            </a>
+                                        </div>
+                                        @endif
 
                                     @endforeach
                                 </td>
                                 <td class="text-right">
-                                    {{$os->importe}}
-                                </td>
-                                <td>
 
+                                    @foreach ($os->servicios as $d)
+                                        {{$d->importe}}
+                                        <br>
+                                    @endforeach
+                                </td>
+                                <td class="text-center">
+                                    {{ucwords(strtolower($os->usuarioreceptor))}}
                                 </td>
                                 <td class="text-center">
                                     @foreach ($os->servicios as $d)
