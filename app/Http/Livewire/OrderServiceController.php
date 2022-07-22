@@ -299,7 +299,7 @@ class OrderServiceController extends Component
         ->select("users.name as nombreusuario",DB::raw('0 as proceso'), DB::raw('0 as terminado'))
         ->where('os.status', 'ACTIVO')
         ->where('m.status', 'ACTIVO')
-        ->where('p.name', 'Recepcionar_Servicio')
+        ->where('p.name', 'Aparecer_Lista_Servicios')
         ->distinct()
         ->orderBy('proceso','asc')
         ->get();
@@ -324,8 +324,8 @@ class OrderServiceController extends Component
         ->where('os.status', 'ACTIVO')
         ->where('m.type', "TERMINADO")
         ->where('m.status', 'ACTIVO')
+        ->where('m.created_at', '>=', now()->subDays(7))
         ->get();
-        //dd($listausuarios);
 
         foreach($listausuarios1 as $l)
         {

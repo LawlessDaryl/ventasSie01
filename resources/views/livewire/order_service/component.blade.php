@@ -61,7 +61,7 @@
         /* Estilos para la Tabla - ventana Modal Asignar Técnico  Responsable*/
         .table-wrapper {
             width: 100%;/* Anchura de ejemplo */
-            height: 400px; /* Altura de ejemplo */
+            height: 270px; /* Altura de ejemplo */
             overflow: auto;
         }
 

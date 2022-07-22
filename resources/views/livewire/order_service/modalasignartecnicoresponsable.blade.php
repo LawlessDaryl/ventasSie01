@@ -33,9 +33,9 @@
                     <thead>
                         <tr>
                             <th class="text-center">#</th>
-                            <th>Nombre Usuario</th>
-                            <th class="text-center">Servicios en Proceso</th>
-                            <th class="text-center">Servicios Terminados</th>
+                            <th>Nombre</th>
+                            <th class="text-center">Proceso</th>
+                            <th class="text-center">Terminados</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -56,8 +56,15 @@
                         </tr>
                         @endforeach
                     </tbody>
-                </table>         
+                </table>
+
             </div>
+
+                
+            <b>Proceso:</b>
+            <p>Muestra la Cantidad de Servicios que tiene en Proceso Actualmente</p> 
+            <b>Terminados:</b>
+            <p>Muestra la Cantidad de Servicios Terminados en los últimos 7 Dias</p> 
 
 
         </div>
