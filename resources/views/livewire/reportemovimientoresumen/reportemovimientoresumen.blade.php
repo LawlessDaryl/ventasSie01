@@ -435,7 +435,7 @@
                                         <h5 class="text-dark text-center" ><b> Ingresos por Bancos </b></h5>
                                     </td>
                                     <td>
-                                        <h5 class="text-dark text-center" >{{ number_format($ingresosTotalesNoCFBancos,2)}}</h5>
+                                        <h5 class="text-dark text-center" >{{ number_format($this->ingresosTotalesNoCFBancos,2)}}</h5>
                                     </td>
                                 </tr>
                                 <tr>

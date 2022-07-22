@@ -123,6 +123,7 @@ class ReporteMovimientoResumenController extends Component
             'crms.tipoDeMovimiento',
             'c.nombre as nombrecartera',
             'c.descripcion',
+            'u.id as idusuario',
             'c.tipo as ctipo',
             'movimientos.updated_at as movcreacion',
             'movimientos.id as idmov',DB::raw('0 as detalle'),DB::raw('0 as utilidadventa'))
@@ -134,6 +135,40 @@ class ReporteMovimientoResumenController extends Component
             ->whereBetween('movimientos.updated_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
             ->orderBy('movimientos.updated_at', 'asc')
             ->get();
+
+            $idusuarios = $this->totalesIngresosV->pluck('idusuario');
+            //*dd($idusuarios);
+
+
+if (count($idusuarios)>0) {
+    
+    $auxi= Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')
+    ->join('carteras as c', 'c.id', 'crms.cartera_id')
+    ->join('cajas as ca', 'ca.id', 'c.caja_id')
+    ->join('users as u', 'u.id', 'movimientos.user_id')
+    ->join('sucursal_users as su', 'su.user_id', 'u.id')
+    ->join('sucursals as sus', 'sus.id', 'su.sucursal_id')
+    ->join('sales as s','s.movimiento_id','movimientos.id')
+    ->select('movimientos.import as importe',
+    'u.id as idusuario','sus.id as idsuc')
+    ->where('movimientos.status', 'ACTIVO')
+    ->where('crms.type', 'INGRESO')
+    ->where('crms.comentario','<>', 'RECAUDO DEL DIA')
+    ->where('sus.id',$this->sucursal)
+    ->whereIn('crms.tipoDeMovimiento',['VENTA','SERVICIOS','EGRESO/INGRESO'])
+    ->where('ca.id',1)
+    ->whereIn('u.id',[$idusuarios])
+    ->whereBetween('movimientos.updated_at',[ Carbon::parse($this->fromDate) ,Carbon::parse($this->toDate)])
+    ->get();
+
+    dd($auxi);
+}
+
+    
+
+
+
+
     
             foreach ($this->totalesIngresosV as $val)
             {
@@ -273,10 +308,10 @@ class ReporteMovimientoResumenController extends Component
 
 
            $this->trsbydatecaja();
-           $this->operaciones();
 
             //operacion auxiliar para deducion de tigo money
-
+            
+           $this->operaciones();
 
          }
          else
@@ -666,7 +701,7 @@ class ReporteMovimientoResumenController extends Component
         $this->subtotalesIngresos = $this->totalesIngresosV->sum('importe') + $this->totalesIngresosS->sum('importe') + $this->totalesIngresosIE->sum('importe');
         //Totales carteras
       
-            $this->ingresosTotales = $this->totalesIngresosV->sum('importe') + $this->totalesIngresosS->sum('importe') + $this->totalesIngresosIE->sum('importe');
+        $this->ingresosTotales = $this->totalesIngresosV->sum('importe') + $this->totalesIngresosS->sum('importe') + $this->totalesIngresosIE->sum('importe');
 
         
 
@@ -678,7 +713,7 @@ class ReporteMovimientoResumenController extends Component
 
         //Totales carteras tipo No Caja Fisica CON BANCOS
 
-        $this->ingresosTotalesNoCFBancos = $this->totalesIngresosV->where('ctipo','=','Banco')->sum('importe') + $this->totalesIngresosS->where('ctipo','=','Banco')->sum('importe') + $this->totalesIngresosIE->where('ctipo','=','Banco')->sum('importe');
+        $this->ingresosTotalesNoCFBancos = $this->totalesIngresosV->where('ctipo','Banco')->sum('importe') + $this->totalesIngresosS->where('ctipo','Banco')->sum('importe') + $this->totalesIngresosIE->where('ctipo','Banco')->sum('importe');
       
         //Total Utilidad Ventas y Servicios
         $this->totalutilidadSV = $this->totalesIngresosV->sum('utilidadventa') + $this->totalesIngresosS->sum('utilidadservicios');
