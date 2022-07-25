@@ -139,29 +139,47 @@ class ReporteMovimientoResumenController extends Component
             $idusuarios = $this->totalesIngresosV->pluck('idusuario');
             //*dd($idusuarios);
 
+            $sm=Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')
+            ->join('carteras as c', 'c.id', 'crms.cartera_id')
+            ->join('cajas as ca', 'ca.id', 'c.caja_id')
+            ->where('movimientos.status', 'ACTIVO')
+            ->where('crms.type', 'INGRESO')
+            ->where('ca.id',$this->caja)
+            
+            ->whereBetween('movimientos.updated_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
+            ->distinct()
+            ->pluck('movimientos.user_id');
 
-if (count($idusuarios)>0) {
-    
+            $gh= Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')
+            ->join('carteras as c', 'c.id', 'crms.cartera_id')
+            ->join('cajas as ca', 'ca.id', 'c.caja_id')
+            ->where('movimientos.status', 'ACTIVO')
+            ->where('crms.type', 'INGRESO')
+            ->where('ca.id',1)
+            ->where()
+            ->whereBetween('movimientos.updated_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
+            ->get();
+           // $auxi2= 
+           dd($gh);
+
+
+if (count($sm)>0) {
+  
     $auxi= Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')
     ->join('carteras as c', 'c.id', 'crms.cartera_id')
     ->join('cajas as ca', 'ca.id', 'c.caja_id')
     ->join('users as u', 'u.id', 'movimientos.user_id')
-    ->join('sucursal_users as su', 'su.user_id', 'u.id')
-    ->join('sucursals as sus', 'sus.id', 'su.sucursal_id')
-    ->join('sales as s','s.movimiento_id','movimientos.id')
-    ->select('movimientos.import as importe',
-    'u.id as idusuario','sus.id as idsuc')
     ->where('movimientos.status', 'ACTIVO')
     ->where('crms.type', 'INGRESO')
-    ->where('crms.comentario','<>', 'RECAUDO DEL DIA')
-    ->where('sus.id',$this->sucursal)
-    ->whereIn('crms.tipoDeMovimiento',['VENTA','SERVICIOS','EGRESO/INGRESO'])
-    ->where('ca.id',1)
-    ->whereIn('u.id',[$idusuarios])
-    ->whereBetween('movimientos.updated_at',[ Carbon::parse($this->fromDate) ,Carbon::parse($this->toDate)])
-    ->get();
+    ->whereIn('crms.tipoDeMovimiento',['VENTA','EGRESO/INGRESO','SERVICIOS'])
+   ->where('ca.id',1)
+   ->select('movimientos.import as importe','u.id as idusuario','movimientos.created_at','c.tipo','c.nombre','crms.tipoDeMovimiento')
+   ->whereBetween('movimientos.created_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
+   ->whereIn('movimientos.user_id',$sm)
+   ->sum('movimientos.import');
+    //dd($idusuarios);
+dd($auxi);
 
-    dd($auxi);
 }
 
     
