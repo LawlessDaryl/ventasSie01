@@ -28,8 +28,16 @@
 
             </div>
 
+
+            <div class="text-center">
+                {{ ucwords(strtolower($this->categoriaservicio)) }} | {{ucwords(strtolower($this->detalleservicio))}} |
+                {{ ucwords(strtolower($this->tipotrabajo))}} | {{ucwords(strtolower($this->fallaseguncliente))}}
+            </div>
+
+                <br>
+
             <div class="table-wrapper">
-                <table class="table table">
+                <table class="tablaservicios" style="min-width: 400px;">
                     <thead>
                         <tr>
                             <th class="text-center">#</th>
@@ -40,12 +48,14 @@
                     </thead>
                     <tbody>
                         @foreach ($this->lista_de_usuarios as $lu)
-                        <tr>
+                        <tr class="tablaserviciostr">
                             <td class="text-center">
-                                
+                                {{ $loop->iteration }}
                             </td>
                             <td>
-                                {{$lu->nombreusuario}}
+                                <span wire:click.prevente="asignartecnico({{$lu->idusuario}})" title="Elegir Técnico Responsable" class="stamp stamp nombresestilosmodal">
+                                    {{$lu->nombreusuario}}
+                                </span>
                             </td>
                             <td class="text-center">
                                 {{$lu->proceso}}
@@ -60,11 +70,7 @@
 
             </div>
 
-                
-            <b>Proceso:</b>
-            <p>Muestra la Cantidad de Servicios que tiene en Proceso Actualmente</p> 
-            <b>Terminados:</b>
-            <p>Muestra la Cantidad de Servicios Terminados en los últimos 7 Dias</p> 
+            <br>
 
 
         </div>

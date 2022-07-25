@@ -1,8 +1,8 @@
 <div wire:ignore.self class="modal fade" id="serviciodetalles" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
       <div class="modal-content">
-        <div class="modal-header text-center">
-          <div class="text-center">
+        <div class="modal-header bg-primary text-center">
+          <div class="modal-title text-white">
             <h5>Información del Servicio</h5>
           </div>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -128,19 +128,6 @@
 
 
           <div class="form-row">
-
-
-
-            {{-- <div class="col-12 col-sm-4 col-md-10" style="color: #000000">
-              <i class="fas fa-calendar-alt"></i>
-              Fecha Estimada de Entrega:
-              <span class="stamp stamp text-center" style="background-color: aliceblue; color: black;">
-                {{ \Carbon\Carbon::parse($this->fechaestimadaentrega)->format('d/m/Y h:i a') }}
-              </span>
-            </div> --}}
-
-
-
             <div class="col-md-6">
               <b>
                 Fecha Estimada de Entrega:

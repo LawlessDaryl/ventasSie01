@@ -34,13 +34,16 @@ class OrderServiceController extends Component
     // Categorias de los Servicios (Combo en la Vista)
     public $catprodservid;
 
-    //Variables para la ventana modal Detalles Servicio
+    //Variables para la (Ventana Modal) Detalles Servicio
     public $responsabletecnico, $nombrecliente, $celularcliente, $fechaestimadaentrega, $fallaseguncliente,
     $tipotrabajo, $detalleservicio, $falla, $diagnostico, $solucion, $precioservicio, $acuenta,
     $saldo, $estado, $categoriaservicio, $costo, $detallecosto;
 
-    //Variable para almacenar todos los usuarios de servicios
+    //Variable para almacenar todos los usuarios de servicios (Ventana Modal)
     public $lista_de_usuarios;
+
+    //Id Servicio Seleccionado
+    public $id_servicio;
 
     use WithPagination;
     public function paginationView()
@@ -171,7 +174,6 @@ class OrderServiceController extends Component
             ->extends('layouts.theme.app')
             ->section('content');
     }
-
     //Obtener el detalle de servicios a travez del id de la orden de servicio
     public function detalle_orden_de_servicio($id_orden_de_servicio)
     {
@@ -230,6 +232,12 @@ class OrderServiceController extends Component
     //Mostrar detalles del servicio en una Ventana Modal
     public function modalserviciodetalles($type, $idservicio)
     {
+        $this->detallesservicios($type, $idservicio);
+        $this->emit('show-sd', 'show modal!');
+    }
+    //Llenar las variables globales con los detalles de un servicio
+    public function detallesservicios($type, $idservicio)
+    {
         $detallesservicio =  Service::join('order_services as os', 'os.id', 'services.order_service_id')
         ->join('mov_services as ms', 'services.id', 'ms.service_id')
         ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
@@ -276,14 +284,20 @@ class OrderServiceController extends Component
         $this->detallecosto = $detallesservicio->detallecosto;
         $this->diagnostico = $detallesservicio->diagnostico;
         $this->solucion = $detallesservicio->solucion;
-        
-        $this->emit('show-sd', 'show modal!');
     }
     //Mostrar una lista de usuarios tecnicos para asignar un servicio en una Ventana Modal
     public function modalasignartecnico($idservicio)
     {
-        //dd($this->lista_de_usuarios);
-        $this->emit('show-asignartecnicoresponsable', 'show modal!');
+        $this->id_servicio = $idservicio;
+        $this->detallesservicios('PENDIENTE', $idservicio);
+        if (Auth::user()->hasPermissionTo('Asignar_Tecnico_Servicio'))
+        {
+            $this->emit('show-asignartecnicoresponsable', 'show modal!');
+        }
+        else
+        {
+            dd("asd");
+        }
     }
     //Listar los Usuarios para ser asignados a un servicio Pendiente en una Ventana Modal
     public function listarusuarios()
@@ -296,7 +310,7 @@ class OrderServiceController extends Component
         ->join('roles as r', 'r.id', 'mhr.role_id')
         ->join('role_has_permissions as rhp', 'rhp.role_id', 'r.id')
         ->join('permissions as p', 'p.id', 'rhp.permission_id')
-        ->select("users.name as nombreusuario",DB::raw('0 as proceso'), DB::raw('0 as terminado'))
+        ->select("users.id as idusuario","users.name as nombreusuario",DB::raw('0 as proceso'), DB::raw('0 as terminado'))
         ->where('os.status', 'ACTIVO')
         ->where('m.status', 'ACTIVO')
         ->where('p.name', 'Aparecer_Lista_Servicios')
@@ -324,7 +338,6 @@ class OrderServiceController extends Component
         ->where('os.status', 'ACTIVO')
         ->where('m.type', "TERMINADO")
         ->where('m.status', 'ACTIVO')
-        ->where('m.created_at', '>=', now()->subDays(7))
         ->get();
 
         foreach($listausuarios1 as $l)
@@ -348,5 +361,82 @@ class OrderServiceController extends Component
         $sorted = $listausuarios1->sortBy('proceso');
 
         return $sorted;
+    }
+    //Asignar un Técnico Responsable a un Servicio
+    public function asignartecnico($idusuario)
+    {
+        $service = Service::find($this->id_servicio);
+
+        foreach ($service->movservices as $servmov)
+        {
+            if ($servmov->movs->status == 'ACTIVO' && $servmov->movs->type == 'PENDIENTE')
+            {
+                $movimiento = $servmov->movs;
+                DB::beginTransaction();
+                try
+                {
+                    if (Auth::user()->hasPermissionTo('Asignar_Tecnico_Servicio'))
+                    {
+                        $mv = Movimiento::create([
+                            'type' => 'PROCESO',
+                            'status' => 'ACTIVO',
+                            'import' => $movimiento->import,
+                            'on_account' => $movimiento->on_account,
+                            'saldo' => $movimiento->saldo,
+                            'user_id' => $idusuario,
+                        ]);
+                    }
+                    else
+                    {
+                        $mv = Movimiento::create([
+                            'type' => 'PROCESO',
+                            'status' => 'ACTIVO',
+                            'import' => $movimiento->import,
+                            'on_account' => $movimiento->on_account,
+                            'saldo' => $movimiento->saldo,
+                            'user_id' => Auth()->user()->id,
+                        ]);
+                    }
+                    MovService::create([
+                        'movimiento_id' => $mv->id,
+                        'service_id' => $service->id
+                    ]);
+                    ClienteMov::create([
+                        'movimiento_id' => $mv->id,
+                        'cliente_id' => $movimiento->climov->cliente_id,
+                    ]);
+                    $movimiento->update([
+                        'status' => 'INACTIVO'
+                    ]);
+
+                    DB::commit();
+                    
+                    //$this->emit('product-added', 'Servicio en Proceso');
+                }
+                catch (Exception $e)
+                {
+                    DB::rollback();
+                    $this->emit('item-error', 'ERROR' . $e->getMessage());
+                }
+            }
+        }
+        
+
+        $mv = Movimiento::create([
+            'type' => 'PROCESO',
+            'status' => 'ACTIVO',
+            'import' => $movimiento->import,
+            'on_account' => $movimiento->on_account,
+            'saldo' => $movimiento->saldo,
+            'user_id' => $idusuario,
+        ]);
+
+        $this->emit('show-asignartecnicoresponsablecerrar', 'show modal!');
+
+    }
+    public function editarservicio($type, $idservicio)
+    {
+        $this->detallesservicios($type, $idservicio);
+        $this->emit('show-editarserviciomostrar', 'show modal!');
     }
 }
