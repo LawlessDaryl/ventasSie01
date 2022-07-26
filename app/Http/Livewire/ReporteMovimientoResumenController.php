@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Redirect;
 class ReporteMovimientoResumenController extends Component
 {
     public $idsucursal,$totalesIngresos,$totalesEgresos,$fromDate,$toDate,$cartera_id,$cartera_id2 ,$type, $cantidad,$tipo,$importe, $comentario,$vertotales=0,$importetotalingresos,$importetotalegresos,
-    $operacionefectivoing,$noefectivo,$operacionefectivoeg,$noefectivoeg,$op_recaudo,$recaudo,$subtotalcaja,$utilidadtotal=5,$caja,$op_sob_falt,$ops=0,$sucursal,$total,$optotal,$sm,$diferenciaCaja,$montoDiferencia,$obsDiferencia;
+    $operacionefectivoing,$noefectivo,$operacionefectivoeg,$noefectivoeg,$sumaBanco,$op_recaudo,$recaudo,$subtotalcaja,$utilidadtotal=5,$caja,$op_sob_falt,$ops=0,$sucursal,$total,$optotal,$sm,$diferenciaCaja,$montoDiferencia,$obsDiferencia;
 
     public function mount()
     {
@@ -180,18 +180,19 @@ if (count($sm)>0) {
 //dd($auxi);
 
 }
-$sumaBanco=0;
+$this->sumaBanco=0;
     $consulta= Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')
     ->join('carteras as c', 'c.id', 'crms.cartera_id')
     ->join('cajas as ca', 'ca.id', 'c.caja_id')
     ->join('users as u', 'u.id', 'movimientos.user_id')
-    ->where('ca.id',2)
+    ->where('ca.id',$this->caja)
     ->where('movimientos.type','APERTURA')
     ->where('c.tipo','CajaFisica')
+    ->whereBetween('movimientos.updated_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
     ->select('movimientos.*')
     ->orderBy('movimientos.created_at','desc')
     ->get()->take(3);
-    //->unique('movimientos.created_at');
+    
     foreach ($consulta as $data) {
         if ($data->created_at == $data->updated_at) {
             
@@ -207,9 +208,9 @@ $sumaBanco=0;
             ->get();
             
             
-            $sumaBanco=$ls->sum('import');
+            $this->sumaBanco=$ls->sum('import');
             
-            dump("prichis",$ls);
+            //dump($ls);
         }
         //dd($consulta);
         
@@ -220,16 +221,15 @@ $sumaBanco=0;
         ->where('ca.id',1)
         ->where('movimientos.user_id',$data->user_id)
         ->whereBetween('movimientos.updated_at',[$data->created_at,$data->updated_at])
+        ->whereBetween('movimientos.updated_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
         ->select('movimientos.*')
         ->get();
-        
-        $sumaBanco= $sumaBanco+$ls->sum('import');
-        
-        
-        dump("sechis",$ls);
+       // dump($ls);
+        $this->sumaBanco= $this->sumaBanco+$ls->sum('import');
+
     }
     
-    dump($sumaBanco);
+    //dump($sumaBanco);
 
 
 
