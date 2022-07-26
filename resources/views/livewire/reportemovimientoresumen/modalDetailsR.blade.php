@@ -84,8 +84,8 @@
                             <h6>Sobrante/Faltante</h6>
                             <select wire:model='diferenciaCaja' class="form-control">
                                 <option value=null selected>Elegir</option>
-                                <option value="Sobrante" selected>Sobrante</option>
-                                <option value="Faltante" selected>Faltante</option>
+                                <option value="SOBRANTE" selected>Sobrante</option>
+                                <option value="FALTANTE" selected>Faltante</option>
                              
                             </select>
                             @error('diferenciaCaja')
