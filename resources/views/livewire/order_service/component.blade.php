@@ -214,11 +214,11 @@
                                         </span>
                                     </td>
                                     <td class="text-center">
-                                        {{ \Carbon\Carbon::parse($os->fechacreacion)->format('d/m/Y h:i a') }}
+                                        {{ \Carbon\Carbon::parse($os->fechacreacion)->format('d/m/Y H:i') }}
                                     </td>
                                     <td class="text-center">
                                         @foreach ($os->servicios as $d)
-                                        {{ \Carbon\Carbon::parse($d->fecha_estimada_entrega)->format('d/m/Y h:i a') }}
+                                        {{ \Carbon\Carbon::parse($d->fecha_estimada_entrega)->format('d/m/Y H:i') }}
                                             <br>
                                         @endforeach
                                     </td>
@@ -230,7 +230,7 @@
 
                                             @if($os->servicios->count() == 1)
                                             <div>
-                                                <a href="javascript:void(0)" wire:click.prevent="modalserviciodetalles('{{$d->estado}}' , {{ $d->idservicio }})">
+                                                <a href="javascript:void(0)" wire:click.prevent="modalserviciodetalles('{{$d->estado}}' , {{ $d->idservicio }}, {{ $os->codigo }})">
                                                     {{ucwords(strtolower($d->nombrecategoria))}} {{ucwords(strtolower($d->marca))}} {{strtolower($d->detalle)}}
                                                     <br>
                                                     <b>Falla Según Cliente:</b> {{ucwords(strtolower($d->falla_segun_cliente))}}
@@ -238,7 +238,7 @@
                                             </div>
                                             @else
                                             <div style="background-color: rgba(255, 230, 210, 0.829);">
-                                                <a href="javascript:void(0)" wire:click.prevent="modalserviciodetalles('{{$d->estado}}' , {{ $d->idservicio }})">
+                                                <a href="javascript:void(0)" wire:click.prevent="modalserviciodetalles('{{$d->estado}}' , {{ $d->idservicio }}, {{ $os->codigo }})">
                                                     {{ucwords(strtolower($d->nombrecategoria))}} {{ucwords(strtolower($d->marca))}} {{strtolower($d->detalle)}}
                                                     <br>
                                                     <b>Falla Según Cliente:</b> {{ucwords(strtolower($d->falla_segun_cliente))}}
@@ -261,7 +261,7 @@
                                     <td class="text-center">
                                         @foreach ($os->servicios as $d)
                                             @if($d->estado=="PENDIENTE")
-                                            <span wire:click.prevente="modalasignartecnico({{$d->idservicio}})" title="Asignar Técnico Responsable" class="stamp stamp pendienteestilos">
+                                            <span wire:click.prevente="modalasignartecnico({{$d->idservicio}}, {{$os->codigo}})" title="Asignar Técnico Responsable" class="stamp stamp pendienteestilos">
                                                 {{$d->estado}}
                                             </span>
                                             @else
@@ -302,7 +302,7 @@
                                     </td>
                                     <td class="text-center">
                                         @foreach ($os->servicios as $d)
-                                        <span wire:click.prevente="editarservicio('{{$d->estado}}',{{$d->idservicio}})" title="Editar Servicio" class="stamp stamp botoneditar">
+                                        <span wire:click.prevente="modaleditarservicio('{{$d->estado}}',{{$d->idservicio}},{{$os->codigo}})" title="Editar Servicio" class="stamp stamp botoneditar">
                                             EDITAR
                                         </span>
                                         <br>
@@ -315,20 +315,20 @@
                                                 Opciones
                                                 </button>
                                                 <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                                    <div class="asignar">
-                                                        <a class="dropdown-item" href="#">Asignar Técnico</a>
-                                                    </div>
+                                                    {{-- <div class="asignar">
+                                                        <a class="dropdown-item" href="#">Imprimir Servicio</a>
+                                                    </div> --}}
                                                     <div class="imprimir">
-                                                        <a class="dropdown-item" href="#">Imprimir</a>
+                                                        <a class="dropdown-item" href="{{ url('reporte/pdf' . '/' . $os->codigo) }}">Imprimir Orden de Servicio</a>
                                                     </div>
                                                     <div class="modificar">
-                                                        <a class="dropdown-item" href="#">Modificar Servicio</a>
+                                                        <a class="dropdown-item" href="javascript:void(0)" wire:click="modificarordenservicio({{$os->idcliente}},{{$os->codigo}},'{{$os->tiposervicio}}')">Modificar Orden de Servicio</a>
                                                     </div>
                                                     <div class="anular">
-                                                        <a class="dropdown-item" href="#">Anular Servicio</a>
+                                                        <a class="dropdown-item" href="#">Anular Orden de Servicio</a>
                                                     </div>
                                                     <div class="eliminar">
-                                                        <a class="dropdown-item" href="#">Eliminar Servicio</a>
+                                                        <a class="dropdown-item" href="#">Eliminar Orden de Servicio</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -386,6 +386,28 @@
                 padding: '2em',
             })
         });
+
+
+        
+
+            //Cerrar Ventana Modal y Mostrar Toast Categoría Creada con Éxito
+            window.livewire.on('show-editarservicioocultar', msg => {
+                        $('#editarservicio').modal('hide')
+            const toast = swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 2500,
+            padding: '2em'
+            });
+            toast({
+                type: 'success',
+                title: '¡Servicio Editado Correctamente!',
+                padding: '2em',
+            })
+        });
+
+
     });
 
 </script>

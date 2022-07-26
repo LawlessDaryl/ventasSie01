@@ -3,7 +3,7 @@
         <div class="modal-content">
             <div class="modal-header bg-primary">
                 <h5 class="modal-title text-white">
-                    <b>Editar Servicio</b>
+                    Editar Servicio - Orden de Servicio N°:{{$this->id_orden_de_servicio}}
                 </h5>
                 <h6 class="text-center text-warning" wire:loading>POR FAVOR ESPERE</h6>
             </div>
@@ -11,181 +11,170 @@
 
                 <div class="text-center">
                     <label>
-                        <h5><b>{{strtoupper($this->nombrecliente)}}</b> {{$this->celularcliente}}</h5>
+                        <h5><b>{{strtoupper($this->nombrecliente)}}</b> - {{$this->celularcliente}}</h5>
                     </label>
                 </div>
 
 
-                <form class="needs-validation" novalidate>
-                    {{-- <div class="form-row">
-                        <div class="col-md-4 mb-3">
-                            <label for="validationTooltip01">Tipo de Trabajo</label>
-                            <select class="custom-select form-control" required>
-                                <option value="">Abrir este menú de selección</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label for="validationTooltip02">Tipo de Equipo</label>
-                            <select class="custom-select form-control" required>
-                                <option value="">Abrir este menú de selección</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label for="validationTooltipUsername">Marca/Modelo</label>
-                            <div class="input-group">
-                                <input type="text" class="form-control" id="validationTooltipUsername" placeholder="Huawei, Samsung, etc..." aria-describedby="validationTooltipUsernamePrepend" required>
-                            </div>
-                        </div>
-                    </div> --}}
-
-                    
+                <form class="needs-validation">
 
                     <div class="form-row">
                         <div class="form-row" style="width: 33.33%; margin-right: 7px;">
                             <div class="col-md-12">
                                 <label for="validationTooltip01">Tipo de Trabajo</label>
-                                <select class="custom-select form-control" required>
+                                <select class="custom-select form-control" wire:model.lazy="edit_tipodetrabajo" required>
                                     <option value="">Seleccionar</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
+                                    @foreach ($listatipotrabajo as $item)
+                                        <option value="{{ $item->id }}">{{ ucwords(strtolower($item->name)) }}</option>
+                                    @endforeach
                                 </select>
+                                @error('edit_tipodetrabajo')
+                                    <span class="text-danger er">{{ $message }}</span>
+                                @enderror
                             </div>
+                            
                         </div>
                         <div class="form-row" style="width: 33.33%; margin-right: 7px;">
                             <div class="col-md-12">
-                                <label for="validationTooltip01">Tipo de Equipo</label>
-                                    <select class="custom-select form-control" required>
+                                <label for="validationTooltip01">Categoría Trabajo</label>
+                                    <select class="custom-select form-control" wire:model.lazy="edit_categoriatrabajo"  required>
                                         <option value="">Seleccionar</option>
-                                        <option value="1">One</option>
-                                        <option value="2">Two</option>
-                                        <option value="3">Three</option>
+                                        @foreach ($listacategoriatrabajo as $i)
+                                        <option value="{{ $i->id }}">{{ ucwords(strtolower($i->nombre)) }}</option>
+                                        @endforeach
                                     </select>
+                                    @error('edit_categoriatrabajo')
+                                    <span class="text-danger er">{{ $message }}</span>
+                                    @enderror
                             </div>
                         </div>
                         <div class="form-row" style="width: 33.33%">
                             <div class="col-md-12">
                                 <label for="validationTooltipUsername">Marca/Modelo</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="validationTooltipUsername" placeholder="Huawei, Samsung, etc..." aria-describedby="validationTooltipUsernamePrepend" required>
+                                    <datalist id="marca">
+                                        @foreach ($marcas as $cat)
+                                            <option value="{{ $cat->name }}">{{ $cat->name }}</option>
+                                        @endforeach
+                                    </datalist>
+                                    <input list="marca" type="text" wire:model.lazy="edit_marca" class="form-control"  placeholder="Huawei, Samsung, etc..." required>
                                 </div>
+                                @error('edit_marca')
+                                    <span class="text-danger er">{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
                     </div>
                     <br>
 
 
+
+
+
+
                     <div class="form-row">
-                        <div class="col-md-12">
-                            <label for="validationTooltipUsername">Detalle Equipo</label>
-                            <div class="input-group">
-                                <input type="text" class="form-control" id="validationTooltipUsername" placeholder="Redmi Note 4 Blanco, Huawei Y9 Prime Azul, Portatil Asus sin Cable, Samsung A11 Color Plomo Oscuro, etc..." aria-describedby="validationTooltipUsernamePrepend" required>
+                        <div class="form-row" style="width: 42%; margin-right: 7px;">
+                    
+                            <div class="col-md-12">
+                                <label for="validationTooltipUsername">Detalle Equipo</label>
+                                <div class="input-group">
+                                    <input type="text" wire:model.lazy="edit_detalle" class="form-control"  placeholder="Redmi Note 4 Blanco, Huawei Y9 Prime Azul, Portatil Asus sin Cable, Samsung A11 Color Plomo Oscuro, etc..." required>
+                                </div>
+                                @error('edit_detalle')
+                                    <span class="text-danger er">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            
+                        </div>
+                        <div class="form-row" style="width: 32%; margin-right: 7px;">
+                            <div class="col-md-12">
+                                <label for="validationTooltip01">Fecha de Entrega</label>
+                                <input type="date" wire:model.lazy="edit_fechaestimadaentrega" class="form-control">
                             </div>
                         </div>
+                        <div class="form-row" style="width: 25%">
+                            <div class="col-md-12">
+                                <label for="validationTooltip01">Hora</label>
+                                <input type="time" wire:model.lazy="edit_horaentrega" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="form-row">
                         <div class="col-md-12" style="margin-top: 10px;">
                             <label for="validationTooltipUsername">Falla Según Cliente</label>
                             <div class="input-group">
-                                <input type="text" class="form-control" id="validationTooltipUsername" placeholder="No Funciona Internet, No Carga No Enciende, No da el tecla encendido, etc..." aria-describedby="validationTooltipUsernamePrepend" required>
+                                <input type="text" wire:model.lazy="edit_fallaseguncliente" class="form-control"  placeholder="No Funciona Internet, No Carga, No Enciende, etc..." required>
                             </div>
+                            @error('edit_fallaseguncliente')
+                                    <span class="text-danger er">{{ $message }}</span>
+                            @enderror
                         </div>
                         <div class="col-md-12" style="margin-top: 10px;">
                             <label for="validationTooltipUsername">Diagnóstico Previo</label>
                             <div class="input-group">
-                                <input type="text" class="form-control" id="validationTooltipUsername" placeholder="Configurar Apn, Probar Otro Cable de Carga, Cambiar Tecla Encendido, etc..." aria-describedby="validationTooltipUsernamePrepend" required>
+                                <input type="text" wire:model.lazy="edit_diagnostico" class="form-control"  placeholder="Configurar Apn, Probar Otro Cable de Carga, Cambiar Tecla Encendido, etc..." required>
                             </div>
+                            @error('edit_diagnostico')
+                                    <span class="text-danger er">{{ $message }}</span>
+                            @enderror
                         </div>
                         <div class="col-md-12" style="margin-top: 10px;">
                             <label for="validationTooltipUsername">Solución</label>
                             <div class="input-group">
-                                <input type="text" class="form-control" id="validationTooltipUsername" placeholder="Configurar Apn, Probar Otro Cable de Carga, Cambiar Tecla Encendido, etc..." aria-describedby="validationTooltipUsernamePrepend" required>
+                                <input type="text" wire:model.lazy="edit_solucion" class="form-control"  placeholder="Se Cambio el Socalo, Se Limpio la Placa, Se Reinstalo el Sistema Operativo etc..." required>
                             </div>
+                            @error('edit_solucion')
+                                    <span class="text-danger er">{{ $message }}</span>
+                            @enderror
                         </div>
                     </div>
                     <br>
 
                     
-                    <div class="form-row">
+                    {{-- <div class="form-row">
                         <div class="form-row" style="width: 35%; margin-right: 7px;">
                             <div class="col-md-12">
                                 <label for="validationTooltip01">Fecha de Entrega</label>
-                                <input type="date" wire:model.lazy="fecha_estimada_entrega" class="form-control">
+                                <input type="date" wire:model.lazy="edit_fechaestimadaentrega" class="form-control">
                             </div>
                         </div>
                         <div class="form-row" style="width: 25%; margin-right: 7px;">
                             <div class="col-md-12">
                                 <label for="validationTooltip01">Hora de Entrega</label>
-                                <input type="time" name="hora_entrega" wire:model.lazy="hora_entrega" class="form-control">
+                                <input type="time" wire:model.lazy="edit_horaentrega" class="form-control">
                             </div>
                         </div>
                     </div>
 
-                    <br>
+                    <br> --}}
 
                     <div class="form-row">
                         <div class="form-row" style="width: 33.33%; margin-right: 7px;">
                             <div class="col-md-12">
                                 <label for="validationTooltip01">Precio del Servicio Bs</label>
-                                <select class="custom-select form-control" required>
-                                    <option value="">Seleccionar</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
-                                </select>
+                                <input type="number" wire:model.lazy="edit_precioservicio" class="form-control">
                             </div>
+                            @error('edit_precioservicio')
+                                    <span class="text-danger er">{{ $message }}</span>
+                            @enderror
                         </div>
                         <div class="form-row" style="width: 33.33%; margin-right: 7px;">
                             <div class="col-md-12">
                                 <label for="validationTooltip01">A Cuenta Bs</label>
-                                    <select class="custom-select form-control" required>
-                                        <option value="">Seleccionar</option>
-                                        <option value="1">One</option>
-                                        <option value="2">Two</option>
-                                        <option value="3">Three</option>
-                                    </select>
+                                <input type="number" wire:model="edit_acuenta" class="form-control">
                             </div>
                         </div>
-                        <div class="form-row" style="width: 33.33%">
+                        <div class="form-row text-center" style="width: 33.33%">
                             <div class="col-md-12">
-                                <label for="validationTooltipUsername">Saldo Bs</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="validationTooltipUsername" placeholder="Huawei, Samsung, etc..." aria-describedby="validationTooltipUsernamePrepend" required>
+                                <label>Saldo Bs</label>
+                                <div class="text-center">
+                                    <label for="validationTooltipUsername"> <h2>{{number_format($this->edit_saldo,2)}}</h2> </label>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-
-
-
-                    {{-- <div class="form-row">
-                      <div class="col-md-12">
-                        <label for="validationTooltip03">Estado del Equipo</label>
-                        <input type="text" class="form-control" id="validationTooltip03" placeholder="" required>
-                        <div class="invalid-tooltip">
-                          Please provide a valid city.
-                        </div>
-                      </div>
-                      <div class="col-md-3 mb-3">
-                        <label for="validationTooltip04">State</label>
-                        <input type="text" class="form-control" id="validationTooltip04" placeholder="State" required>
-                        <div class="invalid-tooltip">
-                          Please provide a valid state.
-                        </div>
-                      </div>
-                      <div class="col-md-3 mb-3">
-                        <label for="validationTooltip05">Zip</label>
-                        <input type="text" class="form-control" id="validationTooltip05" placeholder="Zip" required>
-                        <div class="invalid-tooltip">
-                          Please provide a valid zip.
-                        </div>
-                      </div>
-                    </div> --}}
                   </form>
 
 
@@ -193,8 +182,8 @@
 
             <div class="modal-footer">
                 
-                <button type="button" class="btn btn-secondary">Cancelar Servicio</button>
-                <button type="button" class="btn btn-success">Guardar Servicio</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar Todo</button>
+                <button type="button" class="btn btn-success" wire:click="actualizarservicio()">Actualizar Información</button>
 
             </div>
         </div>

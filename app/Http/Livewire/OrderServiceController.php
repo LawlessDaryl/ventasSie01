@@ -37,13 +37,17 @@ class OrderServiceController extends Component
     //Variables para la (Ventana Modal) Detalles Servicio
     public $responsabletecnico, $nombrecliente, $celularcliente, $fechaestimadaentrega, $fallaseguncliente,
     $tipotrabajo, $detalleservicio, $falla, $diagnostico, $solucion, $precioservicio, $acuenta,
-    $saldo, $estado, $categoriaservicio, $costo, $detallecosto;
+    $saldo, $estado, $categoriaservicio, $costo, $detallecosto, $tiposervicio;
 
-    //Variable para almacenar todos los usuarios de servicios (Ventana Modal)
+    //Variable para almacenar todos los usuarios Técnico de servicios (Ventana Modal)
     public $lista_de_usuarios;
 
-    //Id Servicio Seleccionado
-    public $id_servicio;
+    //Id Servicio, Id Orden de Servicio
+    public $id_servicio, $id_orden_de_servicio;
+
+    //Variables para la Ventana Modal Editar Servicio
+    public $edit_tipodetrabajo, $edit_categoriatrabajo, $edit_marca, $edit_detalle, $edit_fallaseguncliente, $edit_diagnostico, $edit_solucion;
+    public $edit_fechaestimadaentrega, $edit_horaentrega, $edit_precioservicio, $edit_acuenta, $edit_saldo;
 
     use WithPagination;
     public function paginationView()
@@ -60,6 +64,10 @@ class OrderServiceController extends Component
     }
     public function render()
     {
+        //Para Actualizar Saldo en la Ventana Modal Editar Servicio
+        $this->edit_saldo = $this->edit_precioservicio - $this->edit_acuenta;
+
+
         $this->lista_de_usuarios = $this->listarusuarios();
         if($this->sucursal_id != "Todos")
         {
@@ -75,7 +83,9 @@ class OrderServiceController extends Component
                     ->join('clientes as c', 'c.id', 'cm.cliente_id')
                     ->select("order_services.id as codigo",
                     "order_services.created_at as fechacreacion",
+                    "order_services.type_service as tiposervicio",
                     "c.nombre as nombrecliente",
+                    "c.id as idcliente",
                     'u.name as usuarioreceptor',
                     "mov.import as importe",
                     DB::raw('0 as num'),
@@ -123,8 +133,10 @@ class OrderServiceController extends Component
                     ->join('clientes as c', 'c.id', 'cm.cliente_id')
                     ->select("order_services.id as codigo",
                     "order_services.created_at as fechacreacion",
+                    "order_services.type_service as tiposervicio",
                     'u.name as usuarioreceptor',
                     "c.nombre as nombrecliente",
+                    "c.id as idcliente",
                     "mov.import as importe",
                     DB::raw('0 as num'),
                     DB::raw('0 as servicios'))
@@ -165,11 +177,13 @@ class OrderServiceController extends Component
         }
 
 
-
         return view('livewire.order_service.component', [
             'orden_de_servicio' => $orden_de_servicio,
             'listasucursales' => Sucursal::all(),
-            'categorias' => CatProdService::orderBy('nombre', 'asc')->get()
+            'categorias' => CatProdService::orderBy('nombre', 'asc')->get(),
+            'listatipotrabajo' => TypeWorK::orderBy('name', 'asc')->get(),
+            'listacategoriatrabajo' => CatProdService::orderBy('nombre', 'asc')->get(),
+            'marcas' => SubCatProdService::orderBy('name', 'asc')->groupBy('name')->get()
         ])
             ->extends('layouts.theme.app')
             ->section('content');
@@ -230,8 +244,11 @@ class OrderServiceController extends Component
         return $idsucursal->id;
     }
     //Mostrar detalles del servicio en una Ventana Modal
-    public function modalserviciodetalles($type, $idservicio)
+    public function modalserviciodetalles($type, $idservicio, $idordendeservicio)
     {
+        //Actualizando variable $id_orden_de_servicio para mostrar el codigo de la orden del servicio en el titulo de la ventana modal
+        $this->id_orden_de_servicio = $idordendeservicio;
+        $this->tiposervicio = OrderService::find($idordendeservicio)->type_service;
         $this->detallesservicios($type, $idservicio);
         $this->emit('show-sd', 'show modal!');
     }
@@ -286,8 +303,11 @@ class OrderServiceController extends Component
         $this->solucion = $detallesservicio->solucion;
     }
     //Mostrar una lista de usuarios tecnicos para asignar un servicio en una Ventana Modal
-    public function modalasignartecnico($idservicio)
+    public function modalasignartecnico($idservicio, $idordendeservicio)
     {
+        //Actualizando variable $id_orden_de_servicio para mostrar el codigo de la orden del servicio en el titulo de la ventana modal
+        $this->id_orden_de_servicio = $idordendeservicio;
+
         $this->id_servicio = $idservicio;
         $this->detallesservicios('PENDIENTE', $idservicio);
         if (Auth::user()->hasPermissionTo('Asignar_Tecnico_Servicio'))
@@ -434,9 +454,127 @@ class OrderServiceController extends Component
         $this->emit('show-asignartecnicoresponsablecerrar', 'show modal!');
 
     }
-    public function editarservicio($type, $idservicio)
+    //Muestra una Ventana Modal con todos los datos de un Servicio
+    public function modaleditarservicio($type, $idservicio, $idordendeservicio)
     {
+        //Actualizando variable $id_orden_de_servicio para mostrar el codigo de la orden del servicio en el titulo de la ventana modal
+        $this->id_orden_de_servicio = $idordendeservicio;
+
+
+        $detallesservicio =  Service::join('order_services as os', 'os.id', 'services.order_service_id')
+        ->join('mov_services as ms', 'services.id', 'ms.service_id')
+        ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+        ->join('cliente_movs as cm', 'cm.movimiento_id', 'mov.id')
+        ->join('clientes as c', 'c.id', 'cm.cliente_id')
+        ->join('cat_prod_services as cps', 'cps.id', 'services.cat_prod_service_id')
+        ->join('type_works as tw', 'tw.id', 'services.type_work_id')
+        ->select('cps.id as idnombrecategoria',
+        'services.detalle as detalle',
+        'mov.type as estado',
+        'c.nombre as nombrecliente',
+        'mov.on_account as acuenta',
+        'mov.saldo as saldo',
+        'c.celular as celularcliente',
+        'services.falla_segun_cliente as falla_segun_cliente',
+        'services.fecha_estimada_entrega as fecha_estimada_entrega',
+        'services.detalle as detalleservicio',
+        'services.costo as costo',
+        'services.diagnostico as diagnostico',
+        'services.solucion as solucion',
+        'services.detalle_costo as detallecosto',
+        'mov.import as precioservicio',
+        'tw.id as idtipotrabajo',
+        'services.marca as marca')
+        ->where('mov.type', $type)
+        ->where('mov.status', 'ACTIVO')
+        ->where('services.id', $idservicio)
+        ->get()
+        ->first();
+
+        $this->id_servicio = $idservicio;
+
+
         $this->detallesservicios($type, $idservicio);
+        $this->edit_tipodetrabajo = $detallesservicio->idtipotrabajo;
+        $this->edit_categoriatrabajo = $detallesservicio->idnombrecategoria;
+        $this->edit_marca = $detallesservicio->marca;
+        $this->edit_detalle = $detallesservicio->detalleservicio;
+        $this->edit_fallaseguncliente = $detallesservicio->falla_segun_cliente;
+        $this->edit_diagnostico = $detallesservicio->diagnostico;
+        $this->edit_solucion = $detallesservicio->solucion;
+        $this->edit_fechaestimadaentrega = substr($detallesservicio->fecha_estimada_entrega, 0, 10);
+        $this->edit_horaentrega = substr($detallesservicio->fecha_estimada_entrega, 11, 14);
+        $this->edit_precioservicio = $detallesservicio->precioservicio;
+        $this->edit_acuenta = $detallesservicio->acuenta;
+        $this->edit_saldo = $this->edit_precioservicio - $this->edit_acuenta;
         $this->emit('show-editarserviciomostrar', 'show modal!');
+    }
+    //Actualizar un Servicio (Tabla servicesy movimientos)
+    public function actualizarservicio()
+    {
+        //Reglas de Validación
+        $rules = [
+            'edit_tipodetrabajo' => 'required|not_in:Seleccionar',
+            'edit_categoriatrabajo' => 'required|not_in:Seleccionar',
+            'edit_marca' => 'required',
+            'edit_detalle' => 'required',
+            'edit_fallaseguncliente' => 'required',
+            'edit_diagnostico' => 'required',
+            'edit_solucion' => 'required',
+            'edit_precioservicio' => 'required',
+        ];
+        $messages = [
+            'edit_tipodetrabajo.required' => 'Elija otra Opción',
+            'edit_categoriatrabajo.required' => 'Elija otra Opción',
+            'edit_marca.required' => 'Información Requerida',
+            'edit_detalle.required' => 'Información Requerida',
+            'edit_fallaseguncliente.required' => 'Información Requerida',
+            'edit_diagnostico.required' => 'Información Requerida',
+            'edit_solucion.required' => 'Información Requerida',
+            'edit_precioservicio.required' => 'Información Requerida',
+        ];
+        $this->validate($rules, $messages);
+
+        $service = Service::find($this->id_servicio);
+
+        $fecha_entrega = Carbon::parse($this->edit_fechaestimadaentrega)->format('Y-m-d') . Carbon::parse($this->edit_horaentrega)->format(' H:i') . ':00';
+
+        $service->update([
+            'type_work_id' => $this->edit_tipodetrabajo,
+            'cat_prod_service_id' => $this->edit_categoriatrabajo,
+            'marca' => $this->edit_marca,
+            'detalle' => $this->edit_detalle,
+            'falla_segun_cliente' => $this->edit_fallaseguncliente,
+            'diagnostico' => $this->edit_diagnostico,
+            'solucion' => $this->edit_solucion,
+            'fecha_estimada_entrega' => $fecha_entrega,
+        ]);
+        $service->save();
+
+
+
+        foreach ($service->movservices as $ms)
+        {
+            $ms->movs->update([
+                'import' => $this->edit_precioservicio,
+                'on_account' => $this->edit_acuenta,
+                'saldo' => $this->edit_saldo,
+            ]);
+        }
+
+        
+        $this->emit('show-editarservicioocultar', 'show modal!');
+    }
+
+    public function modificarordenservicio($idcliente, $codigo, $tiposervicio)
+    {
+        $asd = Cliente::find($idcliente);
+        dd($idcliente);
+
+        session(['clie' => $asd]);
+        session(['od' => $codigo]);
+        session(['tservice' => $tiposervicio]);
+
+        $this->redirect('service');
     }
 }
