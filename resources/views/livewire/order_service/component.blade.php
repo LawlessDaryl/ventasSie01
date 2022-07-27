@@ -47,9 +47,14 @@
         margin-left: 15%;
         margin-right: 15%;
     }
-    /*Estilos para el Boton pendiente en la Tabla*/
+    /*Estilos para el Boton Pendiente en la Tabla*/
     .pendienteestilos {
         background-color: rgb(139, 5, 192);
+        cursor:pointer;
+    }
+    /*Estilos para el Boton Proceso en la Tabla*/
+    .procesoestilos {
+        background-color: rgb(100, 100, 100);
         cursor:pointer;
     }
     /*Estilos para los nombres de los usuarios en la tabla de la ventana modal Asignar Técnico Responsable*/
@@ -261,12 +266,12 @@
                                     <td class="text-center">
                                         @foreach ($os->servicios as $d)
                                             @if($d->estado=="PENDIENTE")
-                                            <span wire:click.prevente="modalasignartecnico({{$d->idservicio}}, {{$os->codigo}})" title="Asignar Técnico Responsable" class="stamp stamp pendienteestilos">
+                                            <span class="stamp stamp pendienteestilos" wire:click.prevent="modalasignartecnico({{$d->idservicio}}, {{$os->codigo}})" title="Asignar Técnico Responsable">
                                                 {{$d->estado}}
                                             </span>
                                             @else
                                                 @if($d->estado=="PROCESO")
-                                                    <span class="stamp stamp" style="background-color: rgb(100, 100, 100)">
+                                                    <span class="stamp stamp procesoestilos" wire:click.prevent="modaleditarservicio('1', '{{$d->estado}}', {{$d->idservicio}}, {{$os->codigo}})" title="Registrar Servicio Terminado o Actualizar Costo Servicio">
                                                         {{$d->estado}}
                                                     </span>
                                                 @else
@@ -302,7 +307,7 @@
                                     </td>
                                     <td class="text-center">
                                         @foreach ($os->servicios as $d)
-                                        <span wire:click.prevente="modaleditarservicio('{{$d->estado}}',{{$d->idservicio}},{{$os->codigo}})" title="Editar Servicio" class="stamp stamp botoneditar">
+                                        <span class="stamp stamp botoneditar" wire:click.prevent="modaleditarservicio('0','{{$d->estado}}',{{$d->idservicio}},{{$os->codigo}})" title="Editar Servicio">
                                             EDITAR
                                         </span>
                                         <br>
@@ -325,10 +330,10 @@
                                                         <a class="dropdown-item" href="javascript:void(0)" wire:click="modificarordenservicio({{$os->idcliente}},{{$os->codigo}},'{{$os->tiposervicio}}')">Modificar Orden de Servicio</a>
                                                     </div>
                                                     <div class="anular">
-                                                        <a class="dropdown-item" href="#">Anular Orden de Servicio</a>
+                                                        <a class="dropdown-item" href="#" onclick="ConfirmarAnular('{{ $os->codigo }}','{{ $os->nombrecliente }}')">Anular Orden de Servicio</a>
                                                     </div>
                                                     <div class="eliminar">
-                                                        <a class="dropdown-item" href="#">Eliminar Orden de Servicio</a>
+                                                        <a class="dropdown-item" href="#" onclick="ConfirmarEliminar('{{ $os->codigo }}','{{ $os->nombrecliente }}')">Eliminar Orden de Servicio</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -366,11 +371,14 @@
         window.livewire.on('show-asignartecnicoresponsable', Msg => {
             $('#asignartecnicoresponsable').modal('show')
         });
+        window.livewire.on('show-registrarterminado', Msg => {
+            $('#registrarterminado').modal('show')
+        });
         window.livewire.on('show-editarserviciomostrar', Msg => {
             $('#editarservicio').modal('show')
         });
 
-        //Cerrar Ventana Modal y Mostrar Toast Categoría Creada con Éxito
+        //Cerrar Ventana Modal y Mostrar Toast Técnico Responsable Asignado Exitosamente
         window.livewire.on('show-asignartecnicoresponsablecerrar', msg => {
             $('#asignartecnicoresponsable').modal('hide')
             const toast = swal.mixin({
@@ -382,7 +390,7 @@
             });
             toast({
                 type: 'success',
-                title: 'Técnico Responsable Asignado con Éxito',
+                title: 'Técnico Responsable Asignado Exitosamente',
                 padding: '2em',
             })
         });
@@ -390,8 +398,8 @@
 
         
 
-            //Cerrar Ventana Modal y Mostrar Toast Categoría Creada con Éxito
-            window.livewire.on('show-editarservicioocultar', msg => {
+        //Cerrar Ventana Modal y Mostrar Toast Servicio Actualizado Correctamente
+        window.livewire.on('show-editarservicioocultar', msg => {
                         $('#editarservicio').modal('hide')
             const toast = swal.mixin({
             toast: true,
@@ -402,13 +410,98 @@
             });
             toast({
                 type: 'success',
-                title: '¡Servicio Editado Correctamente!',
+                title: '¡Servicio Actualizado Correctamente!',
+                padding: '2em',
+            })
+        });
+
+        //Cerrar Ventana Modal y Mostrar Toast Servicio Terminado Exitosamente
+        window.livewire.on('show-terminarservicio', msg => {
+                        $('#editarservicio').modal('hide')
+            const toast = swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 2500,
+            padding: '2em'
+            });
+            toast({
+                type: 'success',
+                title: '¡Servicio Terminado Exitosamente!',
                 padding: '2em',
             })
         });
 
 
+
     });
+
+
+    // Código para lanzar la Alerta de Anulación de Servicio
+    function ConfirmarAnular(codigo, nombrecliente) {
+        swal({
+            title: '¿Anular la Órden de Servicio "' + codigo + '"?',
+            text: "Cliente: " + nombrecliente,
+            type: 'warning',
+            showCancelButton: true,
+            cancelButtonText: 'Cancelar',
+            confirmButtonText: 'Anular Servicio',
+            padding: '2em'
+            }).then(function(result) {
+            if (result.value) {
+                window.livewire.emit('anularservicio', codigo)
+                }
+            })
+    }
+    //Mostrar Mensaje Anulado con Éxito
+    window.livewire.on('orden-anulado', event => {
+            swal(
+                '¡Anulado!',
+                'La Orden de Servicio: "'+ @this.id_orden_de_servicio +'" fue anulado con éxito.',
+                'success'
+                )
+        });
+
+    // Código para lanzar la Alerta de Eliminación del Servicio
+    function ConfirmarEliminar(codigo, nombrecliente) {
+        swal({
+            title: 'Esta realmente seguro de eliminar la Orden de Servicio "' + codigo + '"?',
+            text: "Correspondiente al Cliente " + nombrecliente + ", esta acción es irreversible",
+            type: 'warning',
+            showCancelButton: true,
+            cancelButtonText: 'Cancelar',
+            confirmButtonText: 'Eliminar Servicio',
+            padding: '2em'
+            }).then(function(result) {
+            if (result.value) {
+                window.livewire.emit('eliminarservicio', codigo)
+                }
+            })
+    }
+    //Mostrar Mensaje Eliminado con Éxito
+    window.livewire.on('orden-eliminado', event => {
+                swal(
+                    '¡Orden de Servicio Eliminado!',
+                    'La Orden de Servicio: "'+ @this.id_orden_de_servicio +'" fue Eliminado Exitosamente.',
+                    'success'
+                    )
+            });
+
+            
+            
+    //Mostrar Mensaje No se Puede Eliminar
+    window.livewire.on('entregado-terminado', event => {
+        swal("¡No se puede realizar esta acción!", "No se pueden Anular o Eliminar las Ordenes de Servicio que tengan Servicios Terminados o Entregados", {
+						icon : "info",
+						buttons: {        			
+							confirm: {
+								className : 'btn btn-info'
+							}
+						},
+					});
+            });
+
+
 
 </script>
 <!-- Scripts para el mensaje de confirmacion arriba a la derecha Categoría Creada con Éxito y Alerta de Eliminacion -->

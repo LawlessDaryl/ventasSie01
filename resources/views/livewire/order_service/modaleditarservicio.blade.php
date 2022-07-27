@@ -130,25 +130,28 @@
                             @enderror
                         </div>
                     </div>
+
                     <br>
 
-                    
-                    {{-- <div class="form-row">
-                        <div class="form-row" style="width: 35%; margin-right: 7px;">
-                            <div class="col-md-12">
-                                <label for="validationTooltip01">Fecha de Entrega</label>
-                                <input type="date" wire:model.lazy="edit_fechaestimadaentrega" class="form-control">
-                            </div>
-                        </div>
+                    <div class="form-row">
                         <div class="form-row" style="width: 25%; margin-right: 7px;">
                             <div class="col-md-12">
-                                <label for="validationTooltip01">Hora de Entrega</label>
-                                <input type="time" wire:model.lazy="edit_horaentrega" class="form-control">
+                                <label for="validationTooltip01">Costo Bs</label>
+                                <input type="number" wire:model.lazy="edit_costoservicio" class="form-control">
+                            </div>
+                            @error('edit_costoservicio')
+                                    <span class="text-danger er">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="form-row" style="width: 74%; margin-right: 7px;">
+                            <div class="col-md-12">
+                                <label for="validationTooltip01">Motivo Costo Servicio Bs</label>
+                                <input type="text" wire:model="edit_motivocostoservicio" class="form-control" placeholder="Se Compró Pantalla Nueva, Se Compró Nuevo Sócalo, Se Compró SSD, etc...">
                             </div>
                         </div>
                     </div>
 
-                    <br> --}}
+                    <br>
 
                     <div class="form-row">
                         <div class="form-row" style="width: 33.33%; margin-right: 7px;">
@@ -182,8 +185,11 @@
 
             <div class="modal-footer">
                 
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar Todo</button>
-                <button type="button" class="btn btn-success" wire:click="actualizarservicio()">Actualizar Información</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success" wire:click="actualizarservicio()">Actualizar</button>
+                @if($this->mostrarterminar == "Si")
+                <button type="button" class="btn btn" style="background-color: rgb(224, 146, 0)" wire:click="terminarservicio()" title="Registrar Servicio Terminado con todos estos datos">Terminar Servicio</button>
+                @endif
 
             </div>
         </div>
