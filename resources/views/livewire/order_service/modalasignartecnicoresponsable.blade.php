@@ -1,9 +1,10 @@
 <div wire:ignore.self class="modal fade" id="asignartecnicoresponsable" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
       <div class="modal-content">
-        <div class="modal-header text-center">
-          <div class="text-center">
-            <h5>Asignar Técnico Responsable</h5>
+        <div class="modal-header bg-primary">
+          <div class="modal-title text-white">
+            <h5>Asignar Técnico Responsable - Orden de Servicio N°:{{$this->id_orden_de_servicio}}
+            </h5>
           </div>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>

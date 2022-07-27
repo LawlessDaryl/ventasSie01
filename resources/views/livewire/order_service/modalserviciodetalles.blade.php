@@ -3,7 +3,7 @@
       <div class="modal-content">
         <div class="modal-header bg-primary text-center">
           <div class="modal-title text-white">
-            <h5>Información del Servicio</h5>
+            <h5>Información del Servicio - Orden de Servicio N°:{{$this->id_orden_de_servicio}}</h5>
           </div>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -166,9 +166,14 @@
             </div>
             <div class="col-md-6">
               <b>
-                Detalle Costo
+                Detalle Costo:
               </b>
               {{$this->detallecosto}}
+            </div>
+
+            <div class="col-md-6">
+              <b>Tipo de Servicio:</b>
+              {{$this->tiposervicio}}
             </div>
 
 
