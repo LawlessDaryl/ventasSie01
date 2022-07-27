@@ -248,7 +248,7 @@ class ReporteMovimientoResumenController extends Component
 
 
 
-            $this->totalesIngresosS= $this->totalesIngresosS->concat($totalesIngresosServicios)->concat($this->totalesIngresosServiciosGeneral);
+            $this->totalesIngresosS= $this->totalesIngresosS->concat($totalesIngresosServicios)->concat($totalesIngresosServiciosGeneral);
 
             foreach ($this->totalesIngresosS as $var1)
             {
@@ -304,7 +304,7 @@ class ReporteMovimientoResumenController extends Component
 
 
             
-            $this->totalesIngresosIE= $this->totalesIngresosIE->concat($totalesIngresosIngEg)->concat($this->totalesIngresosIngEgGeneral);
+            $this->totalesIngresosIE= $this->totalesIngresosIE->concat($totalesIngresosIngEg)->concat($totalesIngresosIngEgGeneral);
 
             //TOTALES EGRESOS
 
@@ -1370,7 +1370,7 @@ class ReporteMovimientoResumenController extends Component
 
         $this->ventas=[];
         $this->servicios=[];
-        $this->ingeg=[];
+        $this->ingresoEgreso=[];
         $consulta= Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')
             ->join('carteras as c', 'c.id', 'crms.cartera_id')
             ->join('cajas as ca', 'ca.id', 'c.caja_id')
@@ -1385,8 +1385,7 @@ class ReporteMovimientoResumenController extends Component
 
             foreach ($consulta as $data) {
             if ($data->created_at == $data->updated_at) {
-    
-    
+
                 $ls= Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')
                 ->join('carteras as c', 'c.id', 'crms.cartera_id')
                 ->join('cajas as ca', 'ca.id', 'c.caja_id')
@@ -1398,24 +1397,25 @@ class ReporteMovimientoResumenController extends Component
                 ->get();            
                 $this->sumaBanco=$ls->sum('import');
                 $vent= $ls->where('tipoDeMovimiento','VENTA')->pluck('id');
-                foreach ($vent as $data) {
-                    array_push($this->ventas, $data);
+                foreach ($vent as $dvent) {
+                    array_push($this->ventas, $dvent);
                 }
                 $serv= $ls->where('tipoDeMovimiento','SERVICIOS')->pluck('id');
-                foreach ($serv as $data) {
-                    array_push($this->servicios, $data);
+                foreach ($serv as $dserv) {
+                    array_push($this->servicios, $dserv);
                 }
                 $ing= $ls->where('tipoDeMovimiento','EGRESO/INGRESO')->pluck('id');
-                foreach ($ing as $data) {
-                    array_push($this->ingeg, $data);
+                foreach ($ing as $ding) {
+                    array_push($this->ingresoEgreso, $ding);
                 }
                
-                //dump("primero",$this->ventas);
+                //dump("primero",$ls);
                 //dump("ventas",$this->ventas);
                 
             }
                 //dd($consulta);
 
+               
             $ls= Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')
             ->join('carteras as c', 'c.id', 'crms.cartera_id')
             ->join('cajas as ca', 'ca.id', 'c.caja_id')
@@ -1424,9 +1424,8 @@ class ReporteMovimientoResumenController extends Component
             ->where('movimientos.user_id',$data->user_id)
             ->whereBetween('movimientos.updated_at',[$data->created_at,$data->updated_at])
             ->whereBetween('movimientos.updated_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
-            ->select('movimientos.*','crms.tipoDeMovimiento')
+            ->select('movimientos.id','c.tipo','movimientos.import','crms.tipoDeMovimiento')
             ->get();
-                // dump($ls);
             $this->sumaBanco= $this->sumaBanco+$ls->sum('import');
             $vent= $ls->where('tipoDeMovimiento','VENTA')->pluck('id');
 
@@ -1440,12 +1439,12 @@ class ReporteMovimientoResumenController extends Component
             }
             $ing= $ls->where('tipoDeMovimiento','EGRESO/INGRESO')->pluck('id');
             foreach ($ing as $data) {
-                array_push($this->ingeg, $data);
+                array_push($this->ingresoEgreso, $data);
             }
 
             //$ventasoff= $this->ventas->push($ls->where('tipoDeMovimiento','VENTA')->pluck('id'));
        
-            
+            //dump("raro",$ls);
             
             
         }
