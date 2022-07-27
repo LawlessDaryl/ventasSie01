@@ -21,8 +21,8 @@ use Illuminate\Support\Facades\Redirect;
 class ReporteMovimientoResumenController extends Component
 {
     public $idsucursal,$totalesIngresos,$totalesEgresos,$fromDate,$toDate,$cartera_id,$cartera_id2 ,$type, $cantidad,$tipo,$importe, $comentario,$vertotales=0,$importetotalingresos,$importetotalegresos,
-    $operacionefectivoing,$noefectivo,$operacionefectivoeg,$noefectivoeg,$sumaBanco,$op_recaudo,$recaudo,$subtotalcaja,$utilidadtotal=5,$caja,$op_sob_falt,$ops=0,$sucursal,$total,$optotal,$sm,$diferenciaCaja,$montoDiferencia,$obsDiferencia,
-    $ventas,$servicios,$ingresoEgreso,$totalesIngresosVGeneral;
+    $operacionefectivoing,$noefectivo,$operacionefectivoeg,$noefectivoeg,$sumaBanco,$op_recaudo,$recaudo,$subtotalcaja,$utilidadtotal=5,$caja,$op_sob_falt=0,$ops=0,$sucursal,$total,$optotal,$sm,$diferenciaCaja,$montoDiferencia,$obsDiferencia,
+    $ventas,$servicios,$ingresoEgreso,$totalesIngresosVGeneral,$Banco;
 
     public function mount()
     {
@@ -800,7 +800,7 @@ class ReporteMovimientoResumenController extends Component
 
         //Ingresos - Egresos
         $this->subtotalcaja= $this->ingresosTotales - $this->EgresosTotales;
-        $this->operacionesefectivas= $this->ingresosTotalesCF -$this->EgresosTotalesCF;
+        $this->operacionesefectivas= $this->ingresosTotalesCF - $this->EgresosTotalesCF;
 
         if ($this->caja != "TODAS") {
             $this->op_recaudo=  Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')
@@ -809,7 +809,7 @@ class ReporteMovimientoResumenController extends Component
             ->where('movimientos.status', 'ACTIVO')
             ->where('crms.type', 'EGRESO')
             ->where('crms.comentario','=', 'RECAUDO DEL DIA')
-           // ->where('ca.id',$this->caja)
+            ->where('ca.id',$this->caja)
             ->whereBetween('movimientos.updated_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
             ->select('movimientos.import')->value('movimientos.import');
 
@@ -825,15 +825,28 @@ class ReporteMovimientoResumenController extends Component
         ->where('movimientos.status', 'ACTIVO')
         ->where('ca.id','=',$this->caja)
         ->where(function($query){
-            $query->where('crms.comentario', 'like', '%' . 'Sobrante' . '%')
-                    ->orWhere('crms.comentario', 'like', '%' . 'Faltante' . '%');
+            $query->where('crms.comentario', 'like', '%' . 'SOBRANTE' . '%')
+                    ->orWhere('crms.comentario', 'like', '%' . 'FALTANTE' . '%');
         })
-       // ->where('ca.id',$this->caja)
+       //->where('ca.id',$this->caja)
+   
         ->whereBetween('movimientos.updated_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
-        ->select('movimientos.import','crms.type as tipo_sob_fal')->pluck('movimientos.import','tipo_sob_fal');
-
+        ->select('movimientos.import','crms.tipoDeMovimiento as tipo_sob_fal')->get();
+        $auxi_s_f=0;
+        if (count($this->op_sob_falt)) {
+           
+            if ($this->op_sob_falt[0]->tipo_sob_fal == 'FALTANTE') {
+              
+                $auxi_s_f=$this->op_sob_falt[0]->import*-1;
+            }
+            else{
+                $auxi_s_f=$this->op_sob_falt[0]->import;
+            }
+        }
+      
         $this->operacionesW= $this->operacionesefectivas + $this->ops + $this->total;
-        $this->operacionesZ=  $this->operacionesW - $this->op_recaudo;
+
+        $this->operacionesZ=  $this->operacionesW - $this->op_recaudo+$auxi_s_f;
 
      }
 
@@ -998,7 +1011,6 @@ class ReporteMovimientoResumenController extends Component
     public function resetUI()
     {
         $this->cartera_id = null;
-
         $this->cantidad = null;
         $this->comentario = null;
     }
@@ -1368,6 +1380,7 @@ class ReporteMovimientoResumenController extends Component
     public function operacionEnCajaGeneral(){
         $this->Banco=[];
 
+        //dump($this->Banco);
         $this->ventas=[];
         $this->servicios=[];
         $this->ingresoEgreso=[];
@@ -1378,33 +1391,35 @@ class ReporteMovimientoResumenController extends Component
             ->where('ca.id',$this->caja)
             ->where('movimientos.type','APERTURA')
             ->where('c.tipo','CajaFisica')
-            ->whereBetween('movimientos.updated_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
+            //->whereBetween('movimientos.updated_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
             ->select('movimientos.*','ca.nombre','c.tipo')
             ->orderBy('movimientos.created_at','desc')
             ->get();
 
+      
             foreach ($consulta as $data) {
-            if ($data->created_at == $data->updated_at) {
-
-                $ls= Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')
-                ->join('carteras as c', 'c.id', 'crms.cartera_id')
-                ->join('cajas as ca', 'ca.id', 'c.caja_id')
-                ->join('users as u', 'u.id', 'movimientos.user_id')
-                ->where('ca.id',1)
-                ->where('movimientos.user_id',$data->user_id)
-                ->where('movimientos.updated_at','>',$data->created_at)
-                ->select('movimientos.id','c.tipo','movimientos.import','crms.tipoDeMovimiento')
-                ->get();
-
-                foreach ($ls as $value) {
+                if ($data->created_at == $data->updated_at) {
                     
-                    if (!in_array($value->id, $this->Banco))
-                    {
-                        array_push($this->Banco, $value->import); 
+                    $ls= Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')
+                    ->join('carteras as c', 'c.id', 'crms.cartera_id')
+                    ->join('cajas as ca', 'ca.id', 'c.caja_id')
+                    ->join('users as u', 'u.id', 'movimientos.user_id')
+                    ->where('ca.id',1)
+                    ->where('movimientos.user_id',$data->user_id)
+                    ->where('movimientos.updated_at','>',$data->created_at)
+                    ->select('movimientos.id','c.tipo','movimientos.import','crms.tipoDeMovimiento')
+                    ->get();
+                    
+                    
+                foreach($ls as $value) {
+             
+                        if (!in_array($value->id, $this->Banco))
+                        {
+                            array_push($this->Banco, $value->id);
+                        }
+                        
                     }
-                }
-
-
+                
                 $vent= $ls->where('tipoDeMovimiento','VENTA')->pluck('id');
                 foreach ($vent as $dvent) {
                     array_push($this->ventas, $dvent);
@@ -1422,9 +1437,10 @@ class ReporteMovimientoResumenController extends Component
                 //dump("ventas",$this->ventas);
                 
             }
-                //dd($consulta);
-
-               
+            //dd($consulta);
+            
+            
+            
             $ls= Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')
             ->join('carteras as c', 'c.id', 'crms.cartera_id')
             ->join('cajas as ca', 'ca.id', 'c.caja_id')
@@ -1435,19 +1451,23 @@ class ReporteMovimientoResumenController extends Component
             ->whereBetween('movimientos.updated_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
             ->select('movimientos.id','c.tipo','movimientos.import','crms.tipoDeMovimiento')
             ->get();
-            foreach ($ls as $value) {
-                    
+
+           // dump($data);
+            foreach($ls as $value) {
+             
                 if (!in_array($value->id, $this->Banco))
                 {
-                    array_push($this->Banco, ); 
+                    array_push($this->Banco, $value->id);
                 }
-                }
-
-
+                
+            }
+            //dump($this->Banco);
+            
+            
+            //dump($vent);
             $vent= $ls->where('tipoDeMovimiento','VENTA')->pluck('id');
-
+            
             foreach ($vent as $daven) {
-               //d($data);
                 array_push($this->ventas, $daven);
             }
             $serv= $ls->where('tipoDeMovimiento','SERVICIOS')->pluck('id');
@@ -1457,19 +1477,12 @@ class ReporteMovimientoResumenController extends Component
             $ing= $ls->where('tipoDeMovimiento','EGRESO/INGRESO')->pluck('id');
             foreach ($ing as $daing) {
                 array_push($this->ingresoEgreso, $daing);
-            }
+             }
+     
+             }
 
-            //$ventasoff= $this->ventas->push($ls->where('tipoDeMovimiento','VENTA')->pluck('id'));
-       
-            dump("analyse",$data);
-            
-            
-        }
-
-             foreach ($this->Banco as $databanco) 
-             {
-            
-                 }
-
+             $this->sumaBanco= Movimiento::whereIn('movimientos.id',$this->Banco)->sum('movimientos.import');
+                
+     
             }
 }

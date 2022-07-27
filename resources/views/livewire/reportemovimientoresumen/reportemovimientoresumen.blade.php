@@ -542,13 +542,13 @@
                                 <tr class="p-5">
 
 
-                                    @foreach ($op_sob_falt as $key=>$item)
+                                    @foreach ($op_sob_falt as $values)
                                         
                                     <td>
-                                        <h5 class="text-dark text-left"><b> {{($key== 'INGRESO' ? 'Sobrante':'Faltante')}} </b></h5>
+                                        <h5 class="text-dark text-left"><b> {{$values->tipo_sob_fal}} </b></h5>
                                     </td>
                                     <td>
-                                    <h5 class="text-dark text-center m-0" > {{ number_format($item,2) }}</h5>
+                                    <h5 class="text-dark text-center m-0" > {{ number_format($values->import,2) }}</h5>
                                 
                                     </td>
                                     @endforeach
@@ -559,7 +559,7 @@
                                         <h5 class="text-dark text-left"><b> Nuevo Saldo Caja Fisica </b></h5>
                                 </td>
                                 <td>
-                                    <h5 class="text-dark text-center m-0" > {{ number_format($operacionesW-$op_recaudo,2) }}</h5>
+                                    <h5 class="text-dark text-center m-0" > {{ number_format($operacionesZ,2) }}</h5>
                             
                                 </td>
                     
@@ -572,7 +572,7 @@
 
         </div>
         
-        @include('livewire.reportemovimientoresumen.modalDetailsr')
+    @include('livewire.reportemovimientoresumen.modalDetailsr')
 
  </div>
 
