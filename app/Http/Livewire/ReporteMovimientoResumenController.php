@@ -1366,7 +1366,7 @@ class ReporteMovimientoResumenController extends Component
     }
 
     public function operacionEnCajaGeneral(){
-        $this->sumaBanco=0;
+        $this->Banco=[];
 
         $this->ventas=[];
         $this->servicios=[];
@@ -1379,7 +1379,7 @@ class ReporteMovimientoResumenController extends Component
             ->where('movimientos.type','APERTURA')
             ->where('c.tipo','CajaFisica')
             ->whereBetween('movimientos.updated_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
-            ->select('movimientos.*')
+            ->select('movimientos.*','ca.nombre','c.tipo')
             ->orderBy('movimientos.created_at','desc')
             ->get();
 
@@ -1394,8 +1394,17 @@ class ReporteMovimientoResumenController extends Component
                 ->where('movimientos.user_id',$data->user_id)
                 ->where('movimientos.updated_at','>',$data->created_at)
                 ->select('movimientos.id','c.tipo','movimientos.import','crms.tipoDeMovimiento')
-                ->get();            
-                $this->sumaBanco=$ls->sum('import');
+                ->get();
+
+                foreach ($ls as $value) {
+                    
+                    if (!in_array($value->id, $this->Banco))
+                    {
+                        array_push($this->Banco, $value->import); 
+                    }
+                }
+
+
                 $vent= $ls->where('tipoDeMovimiento','VENTA')->pluck('id');
                 foreach ($vent as $dvent) {
                     array_push($this->ventas, $dvent);
@@ -1426,28 +1435,41 @@ class ReporteMovimientoResumenController extends Component
             ->whereBetween('movimientos.updated_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
             ->select('movimientos.id','c.tipo','movimientos.import','crms.tipoDeMovimiento')
             ->get();
-            $this->sumaBanco= $this->sumaBanco+$ls->sum('import');
+            foreach ($ls as $value) {
+                    
+                if (!in_array($value->id, $this->Banco))
+                {
+                    array_push($this->Banco, ); 
+                }
+                }
+
+
             $vent= $ls->where('tipoDeMovimiento','VENTA')->pluck('id');
 
-            foreach ($vent as $data) {
+            foreach ($vent as $daven) {
                //d($data);
-                array_push($this->ventas, $data);
+                array_push($this->ventas, $daven);
             }
             $serv= $ls->where('tipoDeMovimiento','SERVICIOS')->pluck('id');
-            foreach ($serv as $data) {
-                array_push($this->servicios, $data);
+            foreach ($serv as $daserv) {
+                array_push($this->servicios, $daserv);
             }
             $ing= $ls->where('tipoDeMovimiento','EGRESO/INGRESO')->pluck('id');
-            foreach ($ing as $data) {
-                array_push($this->ingresoEgreso, $data);
+            foreach ($ing as $daing) {
+                array_push($this->ingresoEgreso, $daing);
             }
 
             //$ventasoff= $this->ventas->push($ls->where('tipoDeMovimiento','VENTA')->pluck('id'));
        
-            //dump("raro",$ls);
+            dump("analyse",$data);
             
             
         }
+
+             foreach ($this->Banco as $databanco) 
+             {
+            
+                 }
 
             }
 }
