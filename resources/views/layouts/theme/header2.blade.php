@@ -30,34 +30,16 @@
         
 
 
-
-
-
+      <li class="nav-item dropdown hidden-caret">
+        @if (@Auth::user()->hasPermissionTo('Corte_Caja_Index'))
+        <a href="{{ url('cortecajas') }}" class="btn btn-warning btn-lg active" role="button" aria-pressed="true">CORTE DE CAJA</a>            
+        @endif
+      </li>
         
-        <li class="nav-item dropdown hidden-caret">
-          @if (@Auth::user()->hasPermissionTo('Corte_Caja_Index'))
-          <a href="{{ url('cortecajas') }}" class="btn btn-warning btn-lg active" role="button" aria-pressed="true">CORTE DE CAJA</a>            
-          @endif
-        </li>
 
-        <li class="nav-item dropdown hidden-caret">
-          @if (empty(session('sesionCaja')))
-                <h5 style="background-color: #f57c13; color:#ffffff">No tienes ninguna caja abierta</h5>
-          @else
-              <marquee behavior="" direction="">
-                  <h5 style="background-color: #ff7600; color:#ffffff;font-size:24px">Usted tiene la {{ session('sesionCaja') }} abierta</h5>
-              </marquee>
-          @endif
-        </li>
-
-
-
-
-
-
-
-
-
+      <livewire:home-controller>
+      </livewire:home-controller>
+   
         {{-- <li class="nav-item dropdown hidden-caret">
           <a class="nav-link dropdown-toggle" href="#" id="messageDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="fa fa-envelope"></i>

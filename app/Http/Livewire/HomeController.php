@@ -1,29 +1,17 @@
 <?php
 
-namespace App\Http\Controllers;
+
+namespace App\Http\Livewire;
+
+use Livewire\Component;
 
 use App\Models\Caja;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
-class HomeController extends Controller
+
+class HomeController extends Component
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function index()
+    public function render()
     {
         $data = Caja::join('sucursals as s', 's.id', 'cajas.sucursal_id')
             ->join('sucursal_users as su', 'su.sucursal_id', 's.id')
@@ -41,12 +29,10 @@ class HomeController extends Controller
         } else{
             session(['sesionCaja' => $data[0]->nombre]);
         }
-        if (Auth::user()->hasPermissionTo('Inicio_Index')) {
-            return redirect()->intended("inicio");
-        }else{
-            return redirect()->intended("cortecajas");
-        }
+       
       
-        return view('home');
+        return view('livewire.caja');
     }
 }
+
+
