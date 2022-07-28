@@ -55,10 +55,7 @@
                               @endforeach
                             </select>
                         </div>
-                        
-                       
-                   
-        
+    
                             <div class="form-group">
                                 <select wire:model='selected_id' class="form-control">
                                     <option value="TODOS">Todos</option>
