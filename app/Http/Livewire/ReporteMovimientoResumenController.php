@@ -1409,12 +1409,12 @@ class ReporteMovimientoResumenController extends Component
                     ->where('movimientos.updated_at','>',$data->created_at)
                     ->select('movimientos.*','c.tipo','crms.tipoDeMovimiento')
                     ->get();
-                    
-                    
+                    $ls= $ls->whereBetween('updated_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59']);
+                    //dump($ls);
                 foreach($ls as $value) {
 
                   
-                        if ( $value->created_at >= Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00' and  !in_array($value->id, $this->Banco))
+                        if (!in_array($value->id, $this->Banco))
                         {
                             array_push($this->Banco, $value->id);
                         }
