@@ -18,7 +18,7 @@
 
             <div class="col-12 col-sm-4 col-md-10 text-center">
               @if($this->estado=="PENDIENTE")
-                <div style="background-color: rgb(80, 5, 110); color:aliceblue">
+                <div style="background-color: rgb(161, 0, 224); color:aliceblue">
                   <h2>SERVICIO {{$this->estado}}</h2>
                 </div>
               @else
@@ -76,7 +76,7 @@
             <div class="col-12 col-sm-4 col-md-10 text-center" style="color: #000000">
               <b>Responsable Técnico:</b>
               <span class="stamp stamp" style="background-color: rgb(0, 55, 175);">
-                No Asignado
+                {{$this->responsabletecnico}}
               </span>
             </div>
 

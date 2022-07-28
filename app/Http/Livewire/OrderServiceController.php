@@ -53,6 +53,9 @@ class OrderServiceController extends Component
     //Variable para mostrar el boton 'Terminar Servicio' en la Ventana Modal Editar Servicio
     public $mostrarterminar;
 
+    //tipopago = guarda el id de la cartera :: estadocaja = guarda si se tiene una caja abierta
+    public $tipopago, $estadocaja;
+
     use WithPagination;
     public function paginationView()
     {
@@ -60,11 +63,41 @@ class OrderServiceController extends Component
     }
     public function mount()
     {
-        $this->paginacion = 20;
+        $this->paginacion = 50;
         $this->type = "PENDIENTE";
         $this->sucursal_id = $this->idsucursal();
         $this->catprodservid = "Todos";
         $this->lista_de_usuarios = $this->listarusuarios();
+        $this->mostrarterminar = "No";
+
+        //Variable que guarda el id de la cartera
+        $this->tipopago = 'Elegir';
+
+        //Verificando si el usuario tiene una caja abierta
+        if($this->listarcarteras() == null)
+        {
+            $this->estadocaja = "cerrado";
+        }
+        else
+        {
+            $this->estadocaja = "abierto";
+            //Listando todas las carteras disponibles para la caja abierta
+            $listac = $this->listarcarteras();
+            //Poniendo por defecto la primera cartera de tipo Cajafisica
+            foreach($listac as $list)
+                {
+                    if($list->tipo == 'CajaFisica')
+                    {
+                        $this->tipopago = $list->idcartera;
+                        break;
+                    }
+                    
+                }
+        }
+
+
+
+
     }
     public function render()
     {
@@ -143,7 +176,8 @@ class OrderServiceController extends Component
                     "c.id as idcliente",
                     "mov.import as importe",
                     DB::raw('0 as num'),
-                    DB::raw('0 as servicios'))
+                    DB::raw('0 as servicios'),
+                    DB::raw('0 as tecnicoreceptor'))
                     ->where('order_services.status', 'ACTIVO')
                     ->where('mov.status', 'ACTIVO')
                     ->where('s.sucursal_id',$this->sucursal_id)
@@ -167,6 +201,8 @@ class OrderServiceController extends Component
         
                         //Obtener los servicios de la orden de servicio
                         $os->servicios = $this->detalle_orden_de_servicio_modal($os->codigo);
+                        //Obtener el técnico recptor de la orden de servicio
+                        $os->tecnicoreceptor = $this->obtener_tecnico_receptor($os->codigo);
                     }
                 }
                 else
@@ -187,7 +223,9 @@ class OrderServiceController extends Component
             'categorias' => CatProdService::orderBy('nombre', 'asc')->get(),
             'listatipotrabajo' => TypeWorK::orderBy('name', 'asc')->get(),
             'listacategoriatrabajo' => CatProdService::orderBy('nombre', 'asc')->get(),
-            'marcas' => SubCatProdService::orderBy('name', 'asc')->groupBy('name')->get()
+            'marcas' => SubCatProdService::orderBy('name', 'asc')->groupBy('name')->get(),
+            'listacarteras' => $this->listarcarteras(),
+            'listacarterasg' => $this->listarcarterasg()
         ])
             ->extends('layouts.theme.app')
             ->section('content');
@@ -213,7 +251,7 @@ class OrderServiceController extends Component
         ->get();
         return $servicios;
     }
-    //Obtener el detalle de servicios a travez del id del Servicio
+    //Obtener el detalle de servicios a travez del id de la Orden Servicio
     public function detalle_orden_de_servicio_modal($id_orden_de_servicio)
     {
         $servicios =  Service::join('order_services as os', 'os.id', 'services.order_service_id')
@@ -232,10 +270,44 @@ class OrderServiceController extends Component
         ->where('services.order_service_id', $id_orden_de_servicio)
         ->get();
 
-
         return $servicios;
 
     }
+    //Obtener Técnico Receptor a travéz del id de un servicio
+    public function obtener_tecnico_receptor($idordenservicio)
+    {
+
+        $servicios =  Service::join('order_services as os', 'os.id', 'services.order_service_id')
+        ->join('mov_services as ms', 'services.id', 'ms.service_id')
+        ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+        ->join('cat_prod_services as cps', 'cps.id', 'services.cat_prod_service_id')
+        ->select('cps.nombre as nombrecategoria',
+        'services.id as idservicio',
+        'services.detalle as detalle',
+        'mov.type as estado',
+        'mov.import as importe',
+        'services.falla_segun_cliente as falla_segun_cliente',
+        'services.fecha_estimada_entrega as fecha_estimada_entrega',
+        'services.marca as marca')
+        ->where('services.order_service_id', $idordenservicio)
+        ->get()
+        ->first();
+
+
+
+
+        $servicio = Service::find($servicios->idservicio);
+        foreach ($servicio->movservices as $servmov)
+        {
+            if ($servmov->movs->type == 'PENDIENTE')
+            {
+                return User::find($servmov->movs->user_id)->name;
+                break;
+            }
+        }
+    }
+
+
     //Obtener el Id de la Sucursal donde esta el Usuario
     public function idsucursal()
     {
@@ -262,6 +334,7 @@ class OrderServiceController extends Component
         $detallesservicio =  Service::join('order_services as os', 'os.id', 'services.order_service_id')
         ->join('mov_services as ms', 'services.id', 'ms.service_id')
         ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+        ->join('users as u', 'u.id', 'mov.user_id')
         ->join('cliente_movs as cm', 'cm.movimiento_id', 'mov.id')
         ->join('clientes as c', 'c.id', 'cm.cliente_id')
         ->join('cat_prod_services as cps', 'cps.id', 'services.cat_prod_service_id')
@@ -282,12 +355,23 @@ class OrderServiceController extends Component
         'services.detalle_costo as detallecosto',
         'mov.import as precioservicio',
         'tw.name as tipotrabajo',
+        'u.name as responsabletecnico',
         'services.marca as marca')
         ->where('mov.type', $type)
         ->where('mov.status', 'ACTIVO')
         ->where('services.id', $idservicio)
         ->get()
         ->first();
+
+        if($type == "PENDIENTE")
+        {
+            $this->responsabletecnico = "Sin Asignar";      
+        }
+        else
+        {
+            $this->responsabletecnico = $detallesservicio->responsabletecnico; 
+        }
+
 
 
         $this->estado = $type;
@@ -458,17 +542,21 @@ class OrderServiceController extends Component
         $this->emit('show-asignartecnicoresponsablecerrar', 'show modal!');
 
     }
-    //Muestra una Ventana Modal con todos los datos de un Servicio
-    public function modaleditarservicio($num, $type, $idservicio, $idordendeservicio)
+    //Llama al método modaleditarservicio pero ocultando los parámetros para Terminar un Servicio
+    public function modaleditarservicio1($type, $idservicio, $idordendeservicio)
     {
-        if($num == 1)
-        {
-            $this->mostrarterminar = "Si";
-        }
-        else
-        {
-            $this->mostrarterminar = "No";
-        }
+        $this->mostrarterminar = "No";
+        $this->modaleditarservicio($type, $idservicio, $idordendeservicio);
+    }
+    //Llama al método modaleditarservicio pero mostrando los parámetros para Terminar un Servicio
+    public function modaleditarservicio2($type, $idservicio, $idordendeservicio)
+    {
+        $this->mostrarterminar = "Si";
+        $this->modaleditarservicio($type, $idservicio, $idordendeservicio);
+    }
+    //Muestra una Ventana Modal con todos los datos de un Servicio
+    public function modaleditarservicio($type, $idservicio, $idordendeservicio)
+    {
 
         //Actualizando variable $id_orden_de_servicio para mostrar el codigo de la orden del servicio en el titulo de la ventana modal
         $this->id_orden_de_servicio = $idordendeservicio;
@@ -524,6 +612,132 @@ class OrderServiceController extends Component
         $this->edit_costoservicio = $detallesservicio->costo;
         $this->edit_motivocostoservicio = $detallesservicio->detallecosto;
         $this->emit('show-editarserviciomostrar', 'show modal!');
+    }
+    //Muestra una Ventana Modal para entregar un Servicio
+    public function modalentregarservicio($type, $idservicio, $idordendeservicio)
+    {
+        //Actualizando variable $id_orden_de_servicio para mostrar el codigo de la orden del servicio en el titulo de la ventana modal
+        $this->id_orden_de_servicio = $idordendeservicio;
+
+        //Actualizando el id_servicio para terminar el servicio si así lo requiere el método terminarservicio()
+        $this->id_servicio = $idservicio;
+
+
+
+        $detallesservicio =  Service::join('order_services as os', 'os.id', 'services.order_service_id')
+        ->join('mov_services as ms', 'services.id', 'ms.service_id')
+        ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+        ->join('cliente_movs as cm', 'cm.movimiento_id', 'mov.id')
+        ->join('clientes as c', 'c.id', 'cm.cliente_id')
+        ->join('cat_prod_services as cps', 'cps.id', 'services.cat_prod_service_id')
+        ->join('type_works as tw', 'tw.id', 'services.type_work_id')
+        ->select('cps.id as idnombrecategoria',
+        'services.detalle as detalle',
+        'mov.type as estado',
+        'c.nombre as nombrecliente',
+        'mov.on_account as acuenta',
+        'mov.saldo as saldo',
+        'c.celular as celularcliente',
+        'services.falla_segun_cliente as falla_segun_cliente',
+        'services.fecha_estimada_entrega as fecha_estimada_entrega',
+        'services.detalle as detalleservicio',
+        'services.costo as costo',
+        'services.diagnostico as diagnostico',
+        'services.solucion as solucion',
+        'services.detalle_costo as detallecosto',
+        'mov.import as precioservicio',
+        'tw.id as idtipotrabajo',
+        'services.marca as marca')
+        ->where('mov.type', $type)
+        ->where('mov.status', 'ACTIVO')
+        ->where('services.id', $idservicio)
+        ->get()
+        ->first();
+
+
+
+        $this->detallesservicios($type, $idservicio);
+        $this->edit_tipodetrabajo = $detallesservicio->idtipotrabajo;
+        $this->edit_categoriatrabajo = $detallesservicio->idnombrecategoria;
+        $this->edit_marca = $detallesservicio->marca;
+        $this->edit_detalle = $detallesservicio->detalleservicio;
+        $this->edit_fallaseguncliente = $detallesservicio->falla_segun_cliente;
+        $this->edit_solucion = $detallesservicio->solucion;
+        $this->edit_fechaestimadaentrega = substr($detallesservicio->fecha_estimada_entrega, 0, 10);
+        $this->edit_horaentrega = substr($detallesservicio->fecha_estimada_entrega, 11, 14);
+        $this->edit_precioservicio = $detallesservicio->precioservicio;
+        $this->edit_acuenta = $detallesservicio->acuenta;
+        $this->edit_saldo = $this->edit_precioservicio - $this->edit_acuenta;
+        $this->edit_costoservicio = $detallesservicio->costo;
+        $this->edit_motivocostoservicio = $detallesservicio->detallecosto;
+
+
+
+
+
+
+
+
+
+        $this->emit('show-entregarservicio', 'show modal!');
+    }
+    //Entrega el Servicio Correspondiente, Marca como TERMINADO
+    public function entregarservicio()
+    {
+        $service = Service::find($this->id_servicio);
+
+        
+        foreach ($service->movservices as $servmov)
+        {
+            if ($servmov->movs->status == 'ACTIVO' && $servmov->movs->type == 'TERMINADO')
+            {
+                $movimiento = $servmov->movs;
+
+                DB::beginTransaction();
+                try
+                {
+                    $mv = Movimiento::create([
+                        'type' => 'ENTREGADO',
+                        'status' => 'ACTIVO',
+                        'import' => $movimiento->import,
+                        'on_account' => $movimiento->on_account,
+                        'saldo' => $movimiento->saldo,
+                        'user_id' => $movimiento->user_id,
+                    ]);
+
+
+                    CarteraMov::create([
+                        'type' => 'INGRESO',
+                        'tipoDeMovimiento' => 'SERVICIOS',
+                        'comentario' => '',
+                        'cartera_id' => $this->tipopago,
+                        'movimiento_id' => $mv->id
+                    ]);
+
+                    MovService::create([
+                        'movimiento_id' => $mv->id,
+                        'service_id' => $service->id
+                    ]);
+                    ClienteMov::create([
+                        'movimiento_id' => $mv->id,
+                        'cliente_id' => $movimiento->climov->cliente_id,
+                    ]);
+
+                    DB::commit();
+                    $movimiento->update([
+                        'status' => 'INACTIVO'
+
+                    ]);
+
+                    $this->emit('servicioentregado');
+                }
+                catch(Exception $e)
+                {
+                    DB::rollback();
+                    $this->emit('item-error', 'ERROR' . $e->getMessage());
+                }
+            }
+        }
     }
     //Actualizar un Servicio (Tabla services y movimientos)
     public function actualizarservicio()
@@ -592,7 +806,7 @@ class OrderServiceController extends Component
             }
         }
     }
-    //Termina un Servicio
+    //Registra como Terminado un Servicio
     public function terminarservicio()
     {
         $service = Service::find($this->id_servicio);
@@ -650,7 +864,6 @@ class OrderServiceController extends Component
 
         $this->redirect('service');
     }
-
     /* LISTENERS */
     protected $listeners = [
         'anularservicio' => 'anularordenservicio',
@@ -789,5 +1002,39 @@ class OrderServiceController extends Component
         $this->edit_saldo = $this->edit_precioservicio - $this->edit_acuenta;
 
         $this->emit('show-registrarterminado', 'show modal!');
+    }
+    //Lista las carteras disponibles en la caja que esté abierto
+    public function listarcarteras()
+    {
+        $carteras = Caja::join('carteras as car', 'cajas.id', 'car.caja_id')
+        ->join('cartera_movs as cartmovs', 'car.id', 'cartmovs.cartera_id')
+        ->join('movimientos as mov', 'mov.id', 'cartmovs.movimiento_id')
+        ->where('cajas.estado', 'Abierto')
+        ->where('mov.user_id', Auth()->user()->id)
+        ->where('mov.status', 'ACTIVO')
+        ->where('mov.type', 'APERTURA')
+        ->where('cajas.sucursal_id', $this->idsucursal())
+        ->select('car.id as idcartera', 'car.nombre as nombrecartera', 'car.descripcion as dc','car.tipo as tipo')
+        ->get();
+
+        if($carteras->count() > 0)
+        {
+            return $carteras;
+        }
+        else
+        {
+            return null;
+        }
+
+
+    }
+    //Listar las carteras generales
+    public function listarcarterasg()
+    {
+        $carteras = Caja::join('carteras as car', 'cajas.id', 'car.caja_id')
+        ->where('cajas.id', 1)
+        ->select('car.id as idcartera', 'car.nombre as nombrecartera', 'car.descripcion as dc','car.tipo as tipo')
+        ->get();
+        return $carteras;
     }
 }

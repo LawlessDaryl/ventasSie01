@@ -47,16 +47,84 @@
         margin-left: 15%;
         margin-right: 15%;
     }
+    
     /*Estilos para el Boton Pendiente en la Tabla*/
     .pendienteestilos {
-        background-color: rgb(139, 5, 192);
-        cursor:pointer;
+        background-color: rgb(161, 0, 224);
+        margin: 2px;
+        cursor: pointer;
+        color: white;
+        border-color: rgb(161, 0, 224);
+        border-radius: 7px;
     }
+    .pendienteestilos:hover {
+        background-color: rgb(255, 255, 255);
+        color: rgb(161, 0, 224);
+        transition: all 0.4s ease-out;
+        border-color: rgb(161, 0, 224);
+        transform: translateY(-2px);
+        
+    }
+
+
     /*Estilos para el Boton Proceso en la Tabla*/
     .procesoestilos {
         background-color: rgb(100, 100, 100);
-        cursor:pointer;
+        margin: 2px;
+        cursor: pointer;
+        color: white;
+        border-color: rgb(100, 100, 100);
+        border-radius: 7px;
     }
+    .procesoestilos:hover {
+        background-color: rgb(255, 255, 255);
+        color: rgb(100, 100, 100);
+        transition: all 0.4s ease-out;
+        border-color: rgb(100, 100, 100);
+        transform: translateY(-2px);
+        
+    }
+
+
+    /*Estilos para el Boton Terminado en la Tabla*/
+    .terminadoestilos {
+        background-color: rgb(224, 146, 0);
+        margin: 2px;
+        cursor: pointer;
+        color: white;
+        border-color: rgb(224, 146, 0);
+        border-radius: 7px;
+    }
+    .terminadoestilos:hover {
+        background-color: rgb(255, 255, 255);
+        color: rgb(224, 146, 0);
+        transition: all 0.4s ease-out;
+        border-color: rgb(224, 146, 0);
+        transform: translateY(-2px);
+    }
+
+
+    /*Estilos para el Boton Entregado en la Tabla*/
+    .entregadoestilos {
+        background-color: rgb(22, 192, 0);
+        margin: 2px;
+        /* cursor: pointer; */
+        color: white;
+        border:none;
+        border-radius: 7px;
+    }
+    /* .entregadoestilos:hover {
+        background-color: rgb(255, 255, 255);
+        color: rgb(22, 192, 0);
+        transition: all 0.4s ease-out;
+        border-color: rgb(22, 192, 0);
+        transform: translateY(-2px);
+    } */
+
+
+
+
+
     /*Estilos para los nombres de los usuarios en la tabla de la ventana modal Asignar Técnico Responsable*/
     .nombresestilosmodal {
         background-color: rgb(255, 255, 255);
@@ -66,9 +134,20 @@
     /*Estilos para el Botón Editar Servicio de la Tabla*/
     .botoneditar {
         background-color: #008a5c;
-        color: rgb(255, 255, 255);
-        cursor:pointer;
+        margin: 2px;
+        cursor: pointer;
+        color: white;
+        border-color: #008a5c;
+        border-radius: 7px;
     }
+    .botoneditar:hover {
+        background-color: rgb(255, 255, 255);
+        color: #008a5c;
+        transition: all 0.4s ease-out;
+        border-color: #008a5c;
+        transform: translateY(-2px);
+    }
+
 
 
 
@@ -201,7 +280,7 @@
                                 <th class="text-center">CLIENTE</th>
                                 <th class="text-center">SERVICIOS</th>
                                 <th class="text-center">PRECIO</th>
-                                <th class="text-center">USUARIO RECEPTOR</th>
+                                <th class="text-center">TECNICO RECEPTOR</th>
                                 <th class="text-center">ESTADO</th>
                                 <th class="text-center">EDITAR</th>
                                 <th class="text-center">ACCIONES</th>
@@ -261,39 +340,39 @@
                                         @endforeach
                                     </td>
                                     <td class="text-center">
-                                        {{ucwords(strtolower($os->usuarioreceptor))}}
+                                        {{ucwords(strtolower($os->tecnicoreceptor))}}
                                     </td>
                                     <td class="text-center">
                                         @foreach ($os->servicios as $d)
                                             @if($d->estado=="PENDIENTE")
-                                            <span class="stamp stamp pendienteestilos" wire:click.prevent="modalasignartecnico({{$d->idservicio}}, {{$os->codigo}})" title="Asignar Técnico Responsable">
+                                            <button type="button" class="pendienteestilos" wire:click.prevent="modalasignartecnico({{$d->idservicio}}, {{$os->codigo}})" title="Asignar Técnico Responsable">
                                                 {{$d->estado}}
-                                            </span>
+                                            </button>
                                             @else
                                                 @if($d->estado=="PROCESO")
-                                                    <span class="stamp stamp procesoestilos" wire:click.prevent="modaleditarservicio('1', '{{$d->estado}}', {{$d->idservicio}}, {{$os->codigo}})" title="Registrar Servicio Terminado o Actualizar Costo Servicio">
+                                                    <button type="button" class="procesoestilos" wire:click.prevent="modaleditarservicio2('{{$d->estado}}', {{$d->idservicio}}, {{$os->codigo}})" title="Registrar Servicio Terminado o Actualizar Costo Servicio">
                                                         {{$d->estado}}
-                                                    </span>
+                                                    </button>
                                                 @else
                                                     @if($d->estado=="TERMINADO")
-                                                        <span class="stamp stamp" style="background-color: rgb(224, 146, 0)">
+                                                        <button type="button" class="terminadoestilos" wire:click.prevent="modalentregarservicio('{{$d->estado}}', {{$d->idservicio}}, {{$os->codigo}})" title="Registrar Servicio como Entregado">
                                                             {{$d->estado}}
-                                                        </span>
+                                                        </button>
                                                     @else
                                                         @if($d->estado=="ENTREGADO")
-                                                            <span class="stamp stamp" style="background-color: rgb(22, 192, 0)">
+                                                            <button type="button" class="entregadoestilos">
                                                                 {{$d->estado}}
-                                                            </span>
+                                                            </button>
                                                         @else
                                                             @if($d->estado=="ABANDONADO")
-                                                                <span class="stamp stamp" style="background-color: rgb(186, 238, 0)">
+                                                                <button class="stamp stamp" style="background-color: rgb(186, 238, 0)">
                                                                     {{$d->estado}}
-                                                                </span>
+                                                                </button>
                                                             @else
                                                                 @if($d->estado=="ANULADO")
-                                                                    <span class="stamp stamp" style="background-color: rgb(0, 0, 0)">
+                                                                    <button class="stamp stamp" style="background-color: rgb(0, 0, 0)">
                                                                         {{$d->estado}}
-                                                                    </span>
+                                                                    </button>
                                                                 @else
                                                                     {{$d->estado}}
                                                                 @endif
@@ -307,9 +386,9 @@
                                     </td>
                                     <td class="text-center">
                                         @foreach ($os->servicios as $d)
-                                        <span class="stamp stamp botoneditar" wire:click.prevent="modaleditarservicio('0','{{$d->estado}}',{{$d->idservicio}},{{$os->codigo}})" title="Editar Servicio">
+                                        <button class="botoneditar" wire:click.prevent="modaleditarservicio1('{{$d->estado}}',{{$d->idservicio}},{{$os->codigo}})" title="Editar Servicio">
                                             EDITAR
-                                        </span>
+                                        </button>
                                         <br>
                                         @endforeach
                                     </td>
@@ -354,6 +433,7 @@
     @include('livewire.order_service.modalserviciodetalles')
     @include('livewire.order_service.modalasignartecnicoresponsable')
     @include('livewire.order_service.modaleditarservicio')
+    @include('livewire.order_service.modalentregarservicio')
     {{-- @include('livewire.order_service.formopciones')
     @include('livewire.order_service.formentregado')
     @include('livewire.order_service.formeliminar')
@@ -376,6 +456,9 @@
         });
         window.livewire.on('show-editarserviciomostrar', Msg => {
             $('#editarservicio').modal('show')
+        });
+        window.livewire.on('show-entregarservicio', Msg => {
+            $('#entregarservicio').modal('show')
         });
 
         //Cerrar Ventana Modal y Mostrar Toast Técnico Responsable Asignado Exitosamente
@@ -428,6 +511,23 @@
             toast({
                 type: 'success',
                 title: '¡Servicio Terminado Exitosamente!',
+                padding: '2em',
+            })
+        });
+
+        //Cerrar Ventana Modal y Mostrar Toast Servicio Entregado Exitosamente
+        window.livewire.on('servicioentregado', msg => {
+                        $('#entregarservicio').modal('hide')
+            const toast = swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 2500,
+            padding: '2em'
+            });
+            toast({
+                type: 'success',
+                title: '¡Servicio Marcado como Entregado Exitosamente!',
                 padding: '2em',
             })
         });
