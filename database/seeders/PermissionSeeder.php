@@ -336,6 +336,10 @@ class PermissionSeeder extends Seeder
             'name' => 'Modificar_Detalle_Serv',
             'guard_name' => 'web'
         ]);
+        Permission::create([    /* PERMITIR VER REPORTES DE LA CANTIDAD DE VENTAS POR USUARIO */
+            'name' => 'Reportes_Sale_Index',
+            'guard_name' => 'web'
+        ]);
 
 
         Permission::create([
