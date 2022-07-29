@@ -63,10 +63,21 @@
 
                     <div class="col-sm-12 col-md-6">
                         <div class="form-group">
-                            <label>
-                                <h6>Buscar producto</h6>
+                            <label class="d-flex row ml-2">
+                                <h6>Producto</h6> <button class="btn btn-dark btn-sm ml-2"> <i class="fas fa-search"></i></button>
                             </label>
+                            @if ($result)
+                            <div class="input-group mb-4">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text input-gp">
+                                        <i class="fas fa-trash"></i>
+                                    </span>
+                                </div>
+                                <input type="text" wire:model="result" placeholder="Buscar" class="form-control">
+                            </div>
+                            @else
                             <input wire:model="searchproduct" class="form-control">
+                            @endif
                             
                         </div>
                         @if ($buscarproducto != 0)

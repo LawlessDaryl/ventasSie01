@@ -6,17 +6,17 @@
                 <h4 class="card-title">
                     <b>Control Entrada y Salida de Productos</b>
                 </h4>
-                {{-- <ul class="row justify-content-end">
+                <ul class="row justify-content-end">
                     <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
                     data-target="#operacion">Registrar Operacion</a>
-                    <a href="javascript:void(0)"
+                    {{-- <a href="javascript:void(0)"
                      wire:click="Incrementar()"
                         class="btn btn-warning"
                     title="increment">
                     Incrementar
-                    </a>
+                    </a> --}}
                      
-                </ul> --}}
+                </ul>
                
             </div>
 
@@ -126,6 +126,7 @@
 
             </div>
 @include('livewire.entradas_salidas.operacion')
+@include('livewire.entradas_salidas.buscarproducto')
         </div>
     </div>
    </div>
