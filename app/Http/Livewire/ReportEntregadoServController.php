@@ -279,10 +279,12 @@ class ReportEntregadoServController extends Component
                         'mov.import as import',
                         DB::raw('0 as utilidad')
                     )
-
+                    
+                  
                     ->where('ca.id', '1')
                     ->where('mov.type', 'ENTREGADO')
                     ->whereBetween('mov.created_at', [$from, $to])
+                  
                     ->distinct()
                     ->get();
                 $this->contador = $this->data->count();

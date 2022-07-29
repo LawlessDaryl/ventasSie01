@@ -258,7 +258,7 @@
                                 <option value="ENTREGADO">Entregado</option>
                                 <option value="ABANDONADO">Abandonado</option>
                                 <option value="ANULADO">Anulado</option>
-                                <option value="TODOS">Todos</option>
+                                <option value="Todos">Todos</option>
                                 <option value="FECHA">Por Fecha</option>
                             </select>
                         </div>
@@ -277,7 +277,7 @@
                                 <th class="text-center">CODIGO</th>
                                 <th class="text-center">FECHA RECEPCION</th>
                                 <th class="text-center">FECHA ENTREGA</th>
-                                <th class="text-center">CLIENTE</th>
+                                <th class="text-center">TECNICO RESPONSABLE</th>
                                 <th class="text-center">SERVICIOS</th>
                                 <th class="text-center">PRECIO</th>
                                 <th class="text-center">TECNICO RECEPTOR</th>
@@ -307,9 +307,16 @@
                                         @endforeach
                                     </td>
                                     <td class="text-center">
-                                        {{ucwords(strtolower($os->nombrecliente))}}
+                                        @foreach ($os->servicios as $rt)
+                                        {{ucwords(strtolower($rt->responsabletecnico))}}
+                                        <br>
+                                        @endforeach
                                     </td>
                                     <td>
+
+                                        
+                                        Cliente: {{ucwords(strtolower($os->nombrecliente))}}
+
                                         @foreach ($os->servicios as $d)
 
                                             @if($os->servicios->count() == 1)
@@ -333,14 +340,16 @@
                                         @endforeach
                                     </td>
                                     <td class="text-right">
-
                                         @foreach ($os->servicios as $d)
                                             {{$d->importe}}
                                             <br>
                                         @endforeach
                                     </td>
                                     <td class="text-center">
-                                        {{ucwords(strtolower($os->tecnicoreceptor))}}
+                                        @foreach ($os->servicios as $dss)
+                                            {{ucwords(strtolower($dss->tecnicoreceptor))}}
+                                            <br>
+                                        @endforeach
                                     </td>
                                     <td class="text-center">
                                         @foreach ($os->servicios as $d)
@@ -565,7 +574,7 @@
     // Código para lanzar la Alerta de Eliminación del Servicio
     function ConfirmarEliminar(codigo, nombrecliente) {
         swal({
-            title: 'Esta realmente seguro de eliminar la Orden de Servicio "' + codigo + '"?',
+            title: '¿Eliminar la Orden de Servicio "' + codigo + '"?',
             text: "Correspondiente al Cliente " + nombrecliente + ", esta acción es irreversible",
             type: 'warning',
             showCancelButton: true,
