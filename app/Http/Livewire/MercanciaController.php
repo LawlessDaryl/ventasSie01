@@ -16,14 +16,13 @@ class MercanciaController extends Component
 
     public function mount(){
         $this->col=collect([]);
-
+        $this->tipo_proceso= "Entrada";
 
     }
 
     public function render()
     {
-
-        $op_inv= IngresoSalida::join('detalle_operacions','detalle_operacions.id_operacion','ingreso_salidas.id')
+        $op_inv = IngresoSalida::join('detalle_operacions','detalle_operacions.id_operacion','ingreso_salidas.id')
         ->join('destinos','destinos.id','ingreso_salidas.destino')
         ->join('sucursals','sucursals.id','destinos.sucursal_id')
         ->join('users','users.id','ingreso_salidas.user_id')
@@ -35,7 +34,7 @@ class MercanciaController extends Component
          $this->sm = Product::select('products.*')
           ->where('products.nombre','like', '%' . $this->searchproduct . '%')
           ->orWhere('products.codigo', 'like', '%' . $this->searchproduct . '%')
-          ->get();
+          ->get()->take(3);
           $this->buscarproducto=1;
        }
        else{
@@ -83,8 +82,26 @@ class MercanciaController extends Component
     
     public function addProduct(Product $id){
         
-        $this->col->push(['product-id'=> $id->nombre,'costo'=>12]);
-
+        $this->col->push(['product_id'=> $id->id,'product-name'=>$id->nombre,'costo'=>$this->costo,'cantidad'=>$this->cantidad]);
+        $this->result=null;
+        $this->cantidad=null;
+        $this->costo=null;
         //dump($this->col);
+    }
+
+    public function eliminaritem($id){
+ 
+    $item=null;
+    foreach ($this->col as $key => $value) {
+   
+     if ($value['product_id'] == $id) {
+        $item=$key;
+        break;
+         }
+        }
+    
+      $this->col->pull($item);
+     
+
     }
 }

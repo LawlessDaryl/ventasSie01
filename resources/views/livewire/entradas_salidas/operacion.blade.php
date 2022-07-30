@@ -1,3 +1,28 @@
+@section('css')
+
+
+{{-- Estilos para la tabla Movimiento Diario --}}
+<style>
+
+
+.tablaservicios {
+        width: 100%;
+       
+    }
+    .tablaservicios thead {
+        background-color: #3b3034;
+        color: white;
+    }
+    .tablaservicios th, td {
+        border: 0.5px solid #4d3e43;
+        padding: 4px;
+    }
+    .tablaservicios tr:hover {
+        background-color: rgba(230, 227, 89, 0.336);
+    }
+</style>
+@endsection
+
 <div wire:ignore.self class="modal fade" id="operacion" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
@@ -135,6 +160,8 @@
                             
                         </div>
                     </div>
+                    @if ($tipo_proceso == 'Entrada')
+                        
                     <div class="col-lg-2 ml-1 p-0">
                         <div class="form-group">
                             <label>
@@ -144,6 +171,7 @@
                             
                         </div>
                     </div>
+                    @endif
                     <div class="col-lg-1 ml-1 p-0">
                         <div class="form-group">
                             <label>
@@ -158,14 +186,49 @@
                 </div>
 
                 <div class="row">
-                    <div class="col">
+                    <div class="col-lg-12">
 
                         @if (count($col)>0)
                             
-                        @foreach ($col as $key=>$value)
-                         <h6>{{$value['product-id']}}</h6><h6>{{$value['costo']}}</h6>
-                         <h6>{{$col}}</h6>
-                        @endforeach
+                         <div class="table-responsive">
+                            <table  class="tablaservicios">
+                                <thead>
+                                    <tr>
+                                        <th class="table-th text-withe text-center">#</th>
+                                        <th class="table-th text-withe text-center">PRODUCTO</th>                              
+                                        <th class="table-th text-withe text-center">COSTO</th>                              
+                                        <th class="table-th text-withe text-center">CANTIDAD</th>
+                                        <th class="table-th text-withe text-center">Acc.</th>
+                                      
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($col as $key=>$value)
+                                    <tr>
+                                        <td>
+                                            {{$loop->iteration}}
+                                        </td>
+                                        <td>
+                                            <h6>{{$value['product-name']}}</h6>
+                                        </td>
+                                        <td>
+                                            <h6>{{$value['costo']}}</h6>
+                                        </td>
+                                        <td>
+                                            <h6>{{$value['cantidad']}}</h6>
+                                        </td>
+                                        <td>
+                                            <i class=" btn btn-sm fas fa-trash" wire:click="eliminaritem({{$value['product_id']}} )"></i>
+                                        </td>
+                                    </tr>
+                                 
+                                  
+                                   @endforeach
+                                </tbody>
+                             </table>
+                            </div> 
+                            
+                       
                         @endif
                     </div>
                 </div>

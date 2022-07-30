@@ -15,9 +15,9 @@ class CreateLotesTable extends Migration
     {
         Schema::create('lotes', function (Blueprint $table) {
             $table->id();
-            $table->decimal('precio_compra',10,2);
-            $table->unsignedBigInteger('id_det_compra');
-            $table->foreign('id_det_compra')->references('id')->on('compra_detalles');
+            $table->decimal('existencia',10,2);
+            $table->enum('status',['Activo','Inactivo']);
+       
             $table->timestamps();
         });
     }
