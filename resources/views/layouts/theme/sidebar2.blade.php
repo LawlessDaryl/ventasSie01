@@ -666,6 +666,11 @@
 											<i class="fa fas fa-minus"></i>
 											Movimiento Diario Ventas</a>
 									</li>
+									<li>
+										<a href="{{ url('ventasreportecantidad') }}">
+											<i class="fa fas fa-minus"></i>
+											Reporte Ventas Usuarios</a>
+									</li>
 
 
 

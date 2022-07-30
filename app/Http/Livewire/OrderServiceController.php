@@ -108,7 +108,7 @@ class OrderServiceController extends Component
         $this->lista_de_usuarios = $this->listarusuarios();
         if($this->sucursal_id != "Todos")
         {
-            if($this->type == "PENDIENTE")
+            if($this->type != "Todos")
             {
                 if ($this->catprodservid == 'Todos')
                 {
@@ -128,7 +128,7 @@ class OrderServiceController extends Component
                     DB::raw('0 as num'),
                     DB::raw('0 as servicios'))
                     ->where('order_services.status', 'ACTIVO')
-                    ->where('mov.type', "PENDIENTE")
+                    ->where('mov.type', $this->type)
                     ->where('mov.status', 'ACTIVO')
                     ->where('s.sucursal_id',$this->sucursal_id)
                     ->groupBy("order_services.id")
@@ -148,9 +148,8 @@ class OrderServiceController extends Component
                         {
                             $os->num = $x++;
                         }
-        
                         //Obtener los servicios de la orden de servicio
-                        $os->servicios = $this->detalle_orden_de_servicio($os->codigo);
+                        $os->servicios = $this->detalle_orden_de_servicio($this->type, $os->codigo);
                     }
                 }
                 else
@@ -176,8 +175,7 @@ class OrderServiceController extends Component
                     "c.id as idcliente",
                     "mov.import as importe",
                     DB::raw('0 as num'),
-                    DB::raw('0 as servicios'),
-                    DB::raw('0 as tecnicoreceptor'))
+                    DB::raw('0 as servicios'))
                     ->where('order_services.status', 'ACTIVO')
                     ->where('mov.status', 'ACTIVO')
                     ->where('s.sucursal_id',$this->sucursal_id)
@@ -200,9 +198,7 @@ class OrderServiceController extends Component
                         }
         
                         //Obtener los servicios de la orden de servicio
-                        $os->servicios = $this->detalle_orden_de_servicio_modal($os->codigo);
-                        //Obtener el técnico recptor de la orden de servicio
-                        $os->tecnicoreceptor = $this->obtener_tecnico_receptor($os->codigo);
+                        $os->servicios = $this->detalle_orden_de_servicio('Todos', $os->codigo);
                     }
                 }
                 else
@@ -231,78 +227,107 @@ class OrderServiceController extends Component
             ->section('content');
     }
     //Obtener el detalle de servicios a travez del id de la orden de servicio
-    public function detalle_orden_de_servicio($id_orden_de_servicio)
+    public function detalle_orden_de_servicio($tipo, $id_orden_de_servicio)
     {
-        $servicios =  Service::join('order_services as os', 'os.id', 'services.order_service_id')
-        ->join('mov_services as ms', 'services.id', 'ms.service_id')
-        ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-        ->join('cat_prod_services as cps', 'cps.id', 'services.cat_prod_service_id')
-        ->select('cps.nombre as nombrecategoria',
-        'services.detalle as detalle',
-        'services.id as idservicio',
-        'mov.type as estado',
-        'mov.import as importe',
-        'services.falla_segun_cliente as falla_segun_cliente',
-        'services.fecha_estimada_entrega as fecha_estimada_entrega',
-        'services.marca as marca')
-        ->where('mov.type', "PENDIENTE")
-        ->where('mov.status', 'ACTIVO')
-        ->where('services.order_service_id', $id_orden_de_servicio)
-        ->get();
+        if($tipo != 'Todos')
+        {
+            $servicios =  Service::join('order_services as os', 'os.id', 'services.order_service_id')
+            ->join('mov_services as ms', 'services.id', 'ms.service_id')
+            ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+            ->join('cat_prod_services as cps', 'cps.id', 'services.cat_prod_service_id')
+            ->select('cps.nombre as nombrecategoria',
+            'services.detalle as detalle',
+            'services.id as idservicio',
+            'mov.type as estado',
+            'mov.import as importe',
+            'services.falla_segun_cliente as falla_segun_cliente',
+            'services.fecha_estimada_entrega as fecha_estimada_entrega',
+            'services.marca as marca',
+            DB::raw('0 as responsabletecnico'),
+            DB::raw('0 as tecnicoreceptor'))
+            ->where('mov.type', $tipo)
+            ->where('mov.status', 'ACTIVO')
+            ->where('services.order_service_id', $id_orden_de_servicio)
+            ->get();
+
+
+            foreach ($servicios as $ser)
+            {
+                $ser->responsabletecnico = $this->obtener_tecnico_responsable($ser->idservicio);
+                $ser->tecnicoreceptor = $this->obtener_tecnico_receptor($ser->idservicio);
+            }
+
+        }
+        else
+        {
+            $servicios =  Service::join('order_services as os', 'os.id', 'services.order_service_id')
+            ->join('mov_services as ms', 'services.id', 'ms.service_id')
+            ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+            ->join('cat_prod_services as cps', 'cps.id', 'services.cat_prod_service_id')
+            ->select('cps.nombre as nombrecategoria',
+            'services.id as idservicio',
+            'services.detalle as detalle',
+            'mov.type as estado',
+            'mov.import as importe',
+            'services.falla_segun_cliente as falla_segun_cliente',
+            'services.fecha_estimada_entrega as fecha_estimada_entrega',
+            'services.marca as marca',
+            DB::raw('0 as responsabletecnico'),
+            DB::raw('0 as tecnicoreceptor'))
+            ->where('mov.status', 'ACTIVO')
+            ->where('services.order_service_id', $id_orden_de_servicio)
+            ->get();
+
+            foreach ($servicios as $ser)
+            {
+                $ser->responsabletecnico = $this->obtener_tecnico_responsable($ser->idservicio);
+                $ser->tecnicoreceptor = $this->obtener_tecnico_receptor($ser->idservicio);
+            }
+        }
+
+
+
         return $servicios;
     }
-    //Obtener el detalle de servicios a travez del id de la Orden Servicio
-    public function detalle_orden_de_servicio_modal($id_orden_de_servicio)
+    //Obtener Técnico Receptor a travéz del id de una Orden de Servicio
+    public function obtener_tecnico_receptor($idservicio)
     {
-        $servicios =  Service::join('order_services as os', 'os.id', 'services.order_service_id')
-        ->join('mov_services as ms', 'services.id', 'ms.service_id')
-        ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-        ->join('cat_prod_services as cps', 'cps.id', 'services.cat_prod_service_id')
-        ->select('cps.nombre as nombrecategoria',
-        'services.id as idservicio',
-        'services.detalle as detalle',
-        'mov.type as estado',
-        'mov.import as importe',
-        'services.falla_segun_cliente as falla_segun_cliente',
-        'services.fecha_estimada_entrega as fecha_estimada_entrega',
-        'services.marca as marca')
-        ->where('mov.status', 'ACTIVO')
-        ->where('services.order_service_id', $id_orden_de_servicio)
-        ->get();
-
-        return $servicios;
-
-    }
-    //Obtener Técnico Receptor a travéz del id de un servicio
-    public function obtener_tecnico_receptor($idordenservicio)
-    {
-
-        $servicios =  Service::join('order_services as os', 'os.id', 'services.order_service_id')
-        ->join('mov_services as ms', 'services.id', 'ms.service_id')
-        ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
-        ->join('cat_prod_services as cps', 'cps.id', 'services.cat_prod_service_id')
-        ->select('cps.nombre as nombrecategoria',
-        'services.id as idservicio',
-        'services.detalle as detalle',
-        'mov.type as estado',
-        'mov.import as importe',
-        'services.falla_segun_cliente as falla_segun_cliente',
-        'services.fecha_estimada_entrega as fecha_estimada_entrega',
-        'services.marca as marca')
-        ->where('services.order_service_id', $idordenservicio)
-        ->get()
-        ->first();
-
-
-
-
-        $servicio = Service::find($servicios->idservicio);
+        $servicio = Service::find($idservicio);
         foreach ($servicio->movservices as $servmov)
         {
             if ($servmov->movs->type == 'PENDIENTE')
             {
                 return User::find($servmov->movs->user_id)->name;
                 break;
+            }
+        }
+    }
+    //Obtener Técnico Responsable a travéz del id de un servicio
+    public function obtener_tecnico_responsable($idservicio)
+    {
+        $servicio = Service::find($idservicio);
+        foreach ($servicio->movservices as $servmov)
+        {
+            if($servmov->movs->type == 'PENDIENTE' && $servmov->movs->status == 'ACTIVO')
+            {
+                return "No Asignado";
+            }
+            else
+            {
+
+                if ($servmov->movs->type == 'PROCESO'  && $servmov->movs->status == 'ACTIVO')
+                {
+                    return User::find($servmov->movs->user_id)->name;
+                    break;
+                }
+                else
+                {
+                    if (($servmov->movs->type == 'TERMINADO'|| $servmov->movs->type == 'ENTREGADO') && $servmov->movs->status == 'ACTIVO')
+                    {
+                        return User::find($servmov->movs->user_id)->name;
+                        break;
+                    }
+                }
             }
         }
     }
@@ -363,9 +388,11 @@ class OrderServiceController extends Component
         ->get()
         ->first();
 
+        $detallesservicio->responsabletecnico = $this->obtener_tecnico_responsable($idservicio);
+
         if($type == "PENDIENTE")
         {
-            $this->responsabletecnico = "Sin Asignar";      
+            $this->responsabletecnico = "No Asignado";      
         }
         else
         {
@@ -827,7 +854,7 @@ class OrderServiceController extends Component
                             'import' => $movimiento->import,
                             'on_account' => $movimiento->on_account,
                             'saldo' => $movimiento->saldo,
-                            'user_id' => Auth()->user()->id,
+                            'user_id' => $movimiento->user_id,
                         ]);
                     }
 
