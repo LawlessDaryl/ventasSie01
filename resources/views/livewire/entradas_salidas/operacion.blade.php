@@ -64,14 +64,14 @@
                     <div class="col-sm-12 col-md-6">
                         <div class="form-group">
                             <label class="d-flex row ml-2">
-                                <h6>Producto</h6> <button class="btn btn-dark btn-sm ml-2"> <i class="fas fa-search"></i></button>
+                                <h6>Producto</h6>
                             </label>
                             @if ($result)
                             <div class="input-group mb-4">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text input-gp">
-                                        <i class="fas fa-trash"></i>
-                                    </span>
+                                    <a class="input-group-text input-gp btn btn-dark" wire:click="deleteItem()">
+                                        <i class="fas fa-times"></i>
+                                    </a>
                                 </div>
                                 <input type="text" wire:model="result" placeholder="Buscar" class="form-control">
                             </div>
@@ -126,7 +126,7 @@
                     @endif
                     </div>
 
-                    <div class="col-lg-4">
+                    <div class="col-lg-2 ml-1 p-0">
                         <div class="form-group">
                             <label>
                                 <h6>Cantidad</h6>
@@ -135,16 +135,38 @@
                             
                         </div>
                     </div>
-                    <div class="col-lg-1">
+                    <div class="col-lg-2 ml-1 p-0">
+                        <div class="form-group">
+                            <label>
+                                <h6>Costo/Valor</h6>
+                            </label>
+                            <input wire:model="costo" class="form-control">
+                            
+                        </div>
+                    </div>
+                    <div class="col-lg-1 ml-1 p-0">
                         <div class="form-group">
                             <label>
                                 <h6>Agregar</h6>
                             </label>
-                            <button type="button" wire:click="addProduct()"
+                            <button type="button" wire:click="addProduct({{$selected}})"
                             class="btn btn-warning fas fa-arrow-down"></button>
                         </div>
 
                         
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+
+                        @if (count($col)>0)
+                            
+                        @foreach ($col as $key=>$value)
+                         <h6>{{$value['product-id']}}</h6><h6>{{$value['costo']}}</h6>
+                         <h6>{{$col}}</h6>
+                        @endforeach
+                        @endif
                     </div>
                 </div>
             </div>

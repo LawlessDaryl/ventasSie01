@@ -12,10 +12,10 @@ use Carbon\Carbon;
 class MercanciaController extends Component
 {
 
-    public  $fecha,$buscarproducto=0,$searchproduct,$sm,$concepto,$destino,$tipo_proceso,$col,$destinosucursal,$observacion,$cantidad,$result;
+    public  $fecha,$buscarproducto=0,$selected,$searchproduct,$costo,$sm,$concepto,$destino,$tipo_proceso,$col,$destinosucursal,$observacion,$cantidad,$result;
 
     public function mount(){
-        $this->col=collect();
+        $this->col=collect([]);
 
 
     }
@@ -56,7 +56,8 @@ class MercanciaController extends Component
     public function Seleccionar(Product $id){
        
         $this->result= $id->nombre;
-        $this->buscarproducto=0;
+        $this->selected=$id->id;
+        $this->searchproduct=null;
         // $this->emit('product-added');
     }
     
@@ -74,9 +75,16 @@ class MercanciaController extends Component
         }
         
     }
+
+    public function deleteItem(){
+        $this->result=0;
+
+    }
     
     public function addProduct(Product $id){
         
-        $this->col->add($id);
+        $this->col->push(['product-id'=> $id->nombre,'costo'=>12]);
+
+        //dump($this->col);
     }
 }
