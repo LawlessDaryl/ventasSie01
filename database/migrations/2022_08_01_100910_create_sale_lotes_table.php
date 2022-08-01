@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDetalleOperacionsTable extends Migration
+class CreateSaleLotesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,11 @@ class CreateDetalleOperacionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('detalle_operacions', function (Blueprint $table) {
+        Schema::create('sale_lotes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('product_id')->constrained();
+            $table->foreignId('sale_id')->constrained();
+            $table->foreignId('lote_id')->constrained();
             $table->integer('cantidad');
-            $table->unsignedBigInteger('id_operacion');
-            $table->foreign('id_operacion')->references('id')->on('ingreso_salidas');
             $table->timestamps();
         });
     }
@@ -30,6 +29,6 @@ class CreateDetalleOperacionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('detalle_operacions');
+        Schema::dropIfExists('sale_lotes');
     }
 }

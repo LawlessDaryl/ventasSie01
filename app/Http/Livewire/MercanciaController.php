@@ -31,11 +31,13 @@ class MercanciaController extends Component
 
        if (strlen($this->searchproduct) > 0) 
        {
+
          $this->sm = Product::select('products.*')
           ->where('products.nombre','like', '%' . $this->searchproduct . '%')
           ->orWhere('products.codigo', 'like', '%' . $this->searchproduct . '%')
           ->get()->take(3);
           $this->buscarproducto=1;
+          
        }
        else{
         $this->buscarproducto=0;

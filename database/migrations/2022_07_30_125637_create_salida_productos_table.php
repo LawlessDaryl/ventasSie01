@@ -19,7 +19,7 @@ class CreateSalidaProductosTable extends Migration
             $table->foreign('destino')->references('id')->on('destinos');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->enum('concepto',['EGRESO','AJUSTE']);
+            $table->enum('concepto',['SALIDA','AJUSTE']);
             $table->string('observacion',500);
             $table->timestamps();
         });
