@@ -56,6 +56,12 @@ class OrderServiceController extends Component
     //tipopago = guarda el id de la cartera :: estadocaja = guarda si se tiene una caja abierta
     public $tipopago, $estadocaja;
 
+    //Variables para editar un servicio terminado
+    public $edit_precioservicioterminado, $edit_acuentaservicioterminado, $edit_saldoterminado;
+
+    //Variable para cambiar técnico responsable seleccionar
+    public $id_usuario;
+
     use WithPagination;
     public function paginationView()
     {
@@ -103,8 +109,10 @@ class OrderServiceController extends Component
     {
         //Para Actualizar Saldo en la Ventana Modal Editar Servicio
         $this->edit_saldo = $this->edit_precioservicio - $this->edit_acuenta;
+        //Para Actualizar Saldo en la Ventana Modal Editar Servicio Terminado
+        $this->edit_saldoterminado = $this->edit_precioservicioterminado - $this->edit_acuentaservicioterminado;
 
-
+        //Listar a los usuarios tecnicos responsables
         $this->lista_de_usuarios = $this->listarusuarios();
         if($this->sucursal_id != "Todos")
         {
@@ -331,8 +339,6 @@ class OrderServiceController extends Component
             }
         }
     }
-
-
     //Obtener el Id de la Sucursal donde esta el Usuario
     public function idsucursal()
     {
@@ -507,6 +513,7 @@ class OrderServiceController extends Component
             if ($servmov->movs->status == 'ACTIVO' && $servmov->movs->type == 'PENDIENTE')
             {
                 $movimiento = $servmov->movs;
+                
                 DB::beginTransaction();
                 try
                 {
@@ -518,20 +525,16 @@ class OrderServiceController extends Component
                             'import' => $movimiento->import,
                             'on_account' => $movimiento->on_account,
                             'saldo' => $movimiento->saldo,
-                            'user_id' => $idusuario,
+                            'user_id' => $idusuario
                         ]);
                     }
                     else
                     {
-                        $mv = Movimiento::create([
-                            'type' => 'PROCESO',
-                            'status' => 'ACTIVO',
-                            'import' => $movimiento->import,
-                            'on_account' => $movimiento->on_account,
-                            'saldo' => $movimiento->saldo,
-                            'user_id' => Auth()->user()->id,
-                        ]);
+                        dd("Si no tiene permiso");
                     }
+
+
+
                     MovService::create([
                         'movimiento_id' => $mv->id,
                         'service_id' => $service->id
@@ -572,12 +575,14 @@ class OrderServiceController extends Component
     //Llama al método modaleditarservicio pero ocultando los parámetros para Terminar un Servicio
     public function modaleditarservicio1($type, $idservicio, $idordendeservicio)
     {
+        $this->type = $type;
         $this->mostrarterminar = "No";
         $this->modaleditarservicio($type, $idservicio, $idordendeservicio);
     }
     //Llama al método modaleditarservicio pero mostrando los parámetros para Terminar un Servicio
     public function modaleditarservicio2($type, $idservicio, $idordendeservicio)
     {
+        $this->type = $type;
         $this->mostrarterminar = "Si";
         $this->modaleditarservicio($type, $idservicio, $idordendeservicio);
     }
@@ -604,6 +609,7 @@ class OrderServiceController extends Component
         'c.nombre as nombrecliente',
         'mov.on_account as acuenta',
         'mov.saldo as saldo',
+        'mov.user_id as idusuario',
         'c.celular as celularcliente',
         'services.falla_segun_cliente as falla_segun_cliente',
         'services.fecha_estimada_entrega as fecha_estimada_entrega',
@@ -638,6 +644,7 @@ class OrderServiceController extends Component
         $this->edit_saldo = $this->edit_precioservicio - $this->edit_acuenta;
         $this->edit_costoservicio = $detallesservicio->costo;
         $this->edit_motivocostoservicio = $detallesservicio->detallecosto;
+        $this->id_usuario = $detallesservicio->idusuario;
         $this->emit('show-editarserviciomostrar', 'show modal!');
     }
     //Muestra una Ventana Modal para entregar un Servicio
@@ -814,6 +821,7 @@ class OrderServiceController extends Component
         
         $ser->update([
             'import' => $this->edit_precioservicio,
+            'user_id' => $this->id_usuario,
             'on_account' => $this->edit_acuenta,
             'saldo' => $this->edit_saldo,
         ]);
@@ -1064,4 +1072,80 @@ class OrderServiceController extends Component
         ->get();
         return $carteras;
     }
+
+    public function modaleditarservicioterminado($type, $idservicio, $idordendeservicio)
+    {
+        
+        //Actualizando variable $id_orden_de_servicio para mostrar el codigo de la orden del servicio en el titulo de la ventana modal
+        $this->id_orden_de_servicio = $idordendeservicio;
+
+        //Actualizando el id_servicio para terminar el servicio si así lo requiere el método terminarservicio()
+        $this->id_servicio = $idservicio;
+
+        $detallesservicio =  Service::join('order_services as os', 'os.id', 'services.order_service_id')
+        ->join('mov_services as ms', 'services.id', 'ms.service_id')
+        ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+        ->join('cliente_movs as cm', 'cm.movimiento_id', 'mov.id')
+        ->join('clientes as c', 'c.id', 'cm.cliente_id')
+        ->join('cat_prod_services as cps', 'cps.id', 'services.cat_prod_service_id')
+        ->join('type_works as tw', 'tw.id', 'services.type_work_id')
+        ->select('cps.id as idnombrecategoria',
+        'services.detalle as detalle',
+        'mov.type as estado',
+        'c.nombre as nombrecliente',
+        'mov.on_account as acuenta',
+        'mov.saldo as saldo',
+        'mov.user_id as idusuario',
+        'c.celular as celularcliente',
+        'services.falla_segun_cliente as falla_segun_cliente',
+        'services.fecha_estimada_entrega as fecha_estimada_entrega',
+        'services.detalle as detalleservicio',
+        'services.costo as costo',
+        'services.diagnostico as diagnostico',
+        'services.solucion as solucion',
+        'services.detalle_costo as detallecosto',
+        'mov.import as precioservicio',
+        'tw.id as idtipotrabajo',
+        'services.marca as marca')
+        ->where('mov.type', $type)
+        ->where('mov.status', 'ACTIVO')
+        ->where('services.id', $idservicio)
+        ->get()
+        ->first();
+
+
+
+        $this->id_usuario = $detallesservicio->idusuario;
+        $this->edit_precioservicioterminado = $detallesservicio->precioservicio;
+        $this->edit_acuentaservicioterminado = $detallesservicio->acuenta;
+        $this->edit_saldoterminado = $this->edit_precioservicioterminado - $this->edit_acuentaservicioterminado;
+        
+        $this->emit('show-editarservicioterminado', 'show modal!');
+    }
+
+    public function actualizarservicioterminado()
+    {
+        //Reglas de Validación
+        $rules = [
+            'edit_precioservicioterminado' => 'required',
+        ];
+        $messages = [
+            'edit_precioservicioterminado.required' => 'Información Requerida',
+        ];
+        $this->validate($rules, $messages);
+
+        //Editar solo el movimiento que esté activo
+        $servicio = $this->saberactivo($this->id_servicio);
+        
+        $servicio->update([
+            'import' => $this->edit_precioservicioterminado,
+            'user_id' => $this->id_usuario,
+            'on_account' => $this->edit_acuentaservicioterminado,
+            'saldo' => $this->edit_saldoterminado,
+        ]);
+
+        $this->emit('show-editarservicioterminadoocultar', 'show modal!');
+    }
+
+
 }

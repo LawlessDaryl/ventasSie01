@@ -149,7 +149,22 @@
     }
 
 
-
+    /*Estilos para el Botón Editar Servicio Terminado de la Tabla*/
+    .botoneditarterminado {
+        background-color: #004585;
+        margin: 2px;
+        cursor: pointer;
+        color: white;
+        border-color: #004585;
+        border-radius: 7px;
+    }
+    .botoneditarterminado:hover {
+        background-color: rgb(255, 255, 255);
+        color: #004585;
+        transition: all 0.4s ease-out;
+        border-color: #000458508a5c;
+        transform: translateY(-2px);
+    }
 
 
     /* Estilos para la Tabla - Ventana Modal Asignar Técnico  Responsable*/
@@ -255,9 +270,9 @@
                                 <option value="PENDIENTE">Pendientes</option>
                                 <option value="PROCESO">Proceso</option>
                                 <option value="TERMINADO">Terminados</option>
-                                <option value="ENTREGADO">Entregado</option>
-                                <option value="ABANDONADO">Abandonado</option>
-                                <option value="ANULADO">Anulado</option>
+                                <option value="ENTREGADO">Entregados</option>
+                                {{-- <option value="ABANDONADO">Abandonados</option> --}}
+                                <option value="ANULADO">Anulados</option>
                                 <option value="Todos">Todos</option>
                                 <option value="FECHA">Por Fecha</option>
                             </select>
@@ -277,7 +292,7 @@
                                 <th class="text-center">CODIGO</th>
                                 <th class="text-center">FECHA RECEPCION</th>
                                 <th class="text-center">FECHA ENTREGA</th>
-                                <th class="text-center">TECNICO RESPONSABLE</th>
+                                <th class="text-center">RESPONSABLE TECNICO</th>
                                 <th class="text-center">SERVICIOS</th>
                                 <th class="text-center">PRECIO</th>
                                 <th class="text-center">TECNICO RECEPTOR</th>
@@ -301,10 +316,23 @@
                                         {{ \Carbon\Carbon::parse($os->fechacreacion)->format('d/m/Y H:i') }}
                                     </td>
                                     <td class="text-center">
+
+                                        @if($os->servicios->count() == 1)
+                                            @foreach ($os->servicios as $d)
+                                            {{ \Carbon\Carbon::parse($d->fecha_estimada_entrega)->format('d/m/Y H:i') }}
+                                            @endforeach
+                                        @else
                                         @foreach ($os->servicios as $d)
+                                        
                                         {{ \Carbon\Carbon::parse($d->fecha_estimada_entrega)->format('d/m/Y H:i') }}
-                                            <br>
+                                        <br> <br>
                                         @endforeach
+                                        @endif
+
+                                        
+
+
+
                                     </td>
                                     <td class="text-center">
                                         @foreach ($os->servicios as $rt)
@@ -313,8 +341,6 @@
                                         @endforeach
                                     </td>
                                     <td>
-
-                                        
                                         Cliente: {{ucwords(strtolower($os->nombrecliente))}}
 
                                         @foreach ($os->servicios as $d)
@@ -395,9 +421,15 @@
                                     </td>
                                     <td class="text-center">
                                         @foreach ($os->servicios as $d)
-                                        <button class="botoneditar" wire:click.prevent="modaleditarservicio1('{{$d->estado}}',{{$d->idservicio}},{{$os->codigo}})" title="Editar Servicio">
-                                            EDITAR
-                                        </button>
+                                            @if($d->estado != "ENTREGADO")
+                                                <button class="botoneditar" wire:click.prevent="modaleditarservicio1('{{$d->estado}}',{{$d->idservicio}},{{$os->codigo}})" title="Editar Servicio">
+                                                    EDITAR
+                                                </button>
+                                            @else
+                                                <button class="botoneditarterminado" wire:click.prevent="modaleditarservicioterminado('{{$d->estado}}',{{$d->idservicio}},{{$os->codigo}})" title="Editar Precio Servicio">
+                                                    EDITAR
+                                                </button>
+                                            @endif
                                         <br>
                                         @endforeach
                                     </td>
@@ -436,17 +468,11 @@
             </div>
         </div>
     </div>
-    {{-- @include('livewire.order_service.form')
-    @include('livewire.order_service.formdetalle')
-    @include('livewire.order_service.formdetalleentrega') --}}
     @include('livewire.order_service.modalserviciodetalles')
     @include('livewire.order_service.modalasignartecnicoresponsable')
     @include('livewire.order_service.modaleditarservicio')
+    @include('livewire.order_service.modaleditarservicioterminado')
     @include('livewire.order_service.modalentregarservicio')
-    {{-- @include('livewire.order_service.formopciones')
-    @include('livewire.order_service.formentregado')
-    @include('livewire.order_service.formeliminar')
-    @include('livewire.order_service.formanular') --}}
 </div>
     
 @section('javascript')
@@ -465,6 +491,9 @@
         });
         window.livewire.on('show-editarserviciomostrar', Msg => {
             $('#editarservicio').modal('show')
+        });
+        window.livewire.on('show-editarservicioterminado', Msg => {
+            $('#editarservicioterminado').modal('show')
         });
         window.livewire.on('show-entregarservicio', Msg => {
             $('#entregarservicio').modal('show')
@@ -503,6 +532,22 @@
             toast({
                 type: 'success',
                 title: '¡Servicio Actualizado Correctamente!',
+                padding: '2em',
+            })
+        });
+        //Cerrar Ventana Modal y Mostrar Toast Precio del Servicio Terminado Actualizado Correctamente
+        window.livewire.on('show-editarservicioterminadoocultar', msg => {
+                        $('#editarservicioterminado').modal('hide')
+            const toast = swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3500,
+            padding: '2em'
+            });
+            toast({
+                type: 'success',
+                title: '¡Precio del Servicio Terminado Actualizado Correctamente!',
                 padding: '2em',
             })
         });
