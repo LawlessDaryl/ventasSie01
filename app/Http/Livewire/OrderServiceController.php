@@ -34,6 +34,15 @@ class OrderServiceController extends Component
     public $sucursal_id;
     // Categorias de los Servicios (Combo en la Vista)
     public $catprodservid;
+    //Tipo de Fechas (Servicios de Hoy, Servicios por Fechas)
+    public $tipofecha;
+    //Fechas de Inicio y Fin
+    public $dateFrom, $dateTo;
+    //Variable para Ocultar o Mostrar mas Filtros
+    public $masfiltros;
+    //Lista de Usuarios en la Vista
+    public $usuario;
+
 
     //Variables para la (Ventana Modal) Detalles Servicio
     public $responsabletecnico, $nombrecliente, $celularcliente, $fechaestimadaentrega, $fallaseguncliente,
@@ -59,8 +68,9 @@ class OrderServiceController extends Component
     //Variables para editar un servicio terminado
     public $edit_precioservicioterminado, $edit_acuentaservicioterminado, $edit_saldoterminado;
 
-    //Variable para cambiar técnico responsable seleccionar
-    public $id_usuario;
+    //Variables para cambiar técnico responsable
+    public $id_usuario, $tipo;
+
 
     use WithPagination;
     public function paginationView()
@@ -73,6 +83,11 @@ class OrderServiceController extends Component
         $this->type = "PENDIENTE";
         $this->sucursal_id = $this->idsucursal();
         $this->catprodservid = "Todos";
+        $this->tipofecha = 'hoy';
+        $this->masfiltros = false;
+        $this->usuarios = 'Todos';
+        $this->dateFrom = Carbon::parse(Carbon::now())->format('Y-m-d');
+        $this->dateTo = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->lista_de_usuarios = $this->listarusuarios();
         $this->mostrarterminar = "No";
 
@@ -107,6 +122,9 @@ class OrderServiceController extends Component
     }
     public function render()
     {
+
+
+
         //Para Actualizar Saldo en la Ventana Modal Editar Servicio
         $this->edit_saldo = $this->edit_precioservicio - $this->edit_acuenta;
         //Para Actualizar Saldo en la Ventana Modal Editar Servicio Terminado
@@ -233,6 +251,18 @@ class OrderServiceController extends Component
         ])
             ->extends('layouts.theme.app')
             ->section('content');
+    }
+    //Mostrar u Ocultar Mas filtros en la Vista
+    public function mostrarocultarmasfiltros()
+    {
+        if($this->masfiltros)
+        {
+            $this->masfiltros = false;
+        }
+        else
+        {
+            $this->masfiltros = true;
+        }
     }
     //Obtener el detalle de servicios a travez del id de la orden de servicio
     public function detalle_orden_de_servicio($tipo, $id_orden_de_servicio)
@@ -575,14 +605,14 @@ class OrderServiceController extends Component
     //Llama al método modaleditarservicio pero ocultando los parámetros para Terminar un Servicio
     public function modaleditarservicio1($type, $idservicio, $idordendeservicio)
     {
-        $this->type = $type;
+        $this->tipo = $type;
         $this->mostrarterminar = "No";
         $this->modaleditarservicio($type, $idservicio, $idordendeservicio);
     }
     //Llama al método modaleditarservicio pero mostrando los parámetros para Terminar un Servicio
     public function modaleditarservicio2($type, $idservicio, $idordendeservicio)
     {
-        $this->type = $type;
+        $this->tipo = $type;
         $this->mostrarterminar = "Si";
         $this->modaleditarservicio($type, $idservicio, $idordendeservicio);
     }

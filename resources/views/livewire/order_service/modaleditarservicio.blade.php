@@ -190,7 +190,7 @@
                         </div>
                         <div class="form-row" style="width: 50%; margin-right: 7px;">
                             <div class="col-md-12 text-center">
-                                @if($this->type == 'PENDIENTE')
+                                @if($this->tipo == 'PENDIENTE')
                                 <label for="validationTooltip01">Cambiar Técnico Receptor</label>
                                 @else
                                 <label for="validationTooltip01">Cambiar Técnico Responsable</label>

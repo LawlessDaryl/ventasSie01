@@ -212,8 +212,17 @@
                             <ul class="tabs tab-pills text-right">
                                 <a href="{{ url('service') }}" class="btn btn-outline-primary">Nuevo Servicio</a>
                                 <a href="{{ url('inicio') }}" class="btn btn-outline-primary">Ir a Lista Servicios</a>
+
+                                <div class="custom-control custom-switch" style="padding-top: 5px;">
+                                    <input type="checkbox" class="custom-control-input" id="customSwitches"
+                                    wire:change="mostrarocultarmasfiltros()" {{ $masfiltros ? 'checked' : '' }}>
+                                    <label class="custom-control-label" for="customSwitches">+Filtros</label>
+                                </div>
+
                             </ul>
                         @endif
+
+                          
                     </div>
 
                 </div>
@@ -274,7 +283,6 @@
                                 {{-- <option value="ABANDONADO">Abandonados</option> --}}
                                 <option value="ANULADO">Anulados</option>
                                 <option value="Todos">Todos</option>
-                                <option value="FECHA">Por Fecha</option>
                             </select>
                         </div>
                     </div>
@@ -283,6 +291,88 @@
             </div>
                 
             
+
+
+
+
+
+
+
+
+
+
+
+            @if($this->masfiltros)
+
+            <div class="form-group">
+                <div class="row">
+
+                    <div class="col-12 col-sm-6 col-md-3 text-center">
+                        <b>Seleccione Usuario</b>
+                        <div class="form-group">
+                            <select wire:model="usuario" class="form-control">
+                                <option value="Todos">Todos</option>
+                                @foreach($this->lista_de_usuarios as $i)
+                                <option value="{{$i->idusuario}}">{{$i->nombreusuario}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-sm-6 col-md-3 text-center">
+                        <b>Tipo de Fecha</b>
+                        <div class="form-group">
+                            <select wire:model="tipofecha" class="form-control">
+                                <option value="Todos" selected>Todas las Fechas</option>
+                                <option value="Dias">Servicios del Día</option>
+                                <option value="Rango">Servicios por Fechas</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-sm-6 col-md-3 text-center">
+                        <b>Fecha Inicio</b>
+                        <div class="form-group">
+                            <input @if ($tipofecha != 'Rango') disabled @endif type="date" wire:model="dateFrom" class="form-control flatpickr" >
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-sm-6 col-md-3 text-center">
+                        <b>Fecha Fin</b>
+                        <div class="form-group">
+                            <input @if ($tipofecha != 'Rango') disabled @endif type="date" wire:model="dateTo" class="form-control flatpickr" >
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            @endif
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             <div class="widget-content">
                 <div class="table-responsive">
                     <table class="tablaservicios">
