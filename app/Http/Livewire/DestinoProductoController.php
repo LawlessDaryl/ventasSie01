@@ -150,7 +150,8 @@ class DestinoProductoController extends Component
 
         $auxi2=ProductosDestino::where('productos_destinos.destino_id',$this->selected_id)->where('productos_destinos.product_id',$this->productid)->get();
         // dd($auxi2->values('stock'));
-             if ( $auxi2->pluck('stock')[0]>0) {
+             if ( $auxi2->pluck('stock')[0]>0)
+              {
               $operacion= IngresoSalida::create([
              'proceso'=>$this->opcion_operacion,
              'destino'=>$this->selected_id,

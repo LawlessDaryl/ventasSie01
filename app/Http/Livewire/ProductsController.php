@@ -174,7 +174,6 @@ class ProductsController extends Component
             }
         }
       
-
         return view('livewire.products.component', [
             'data' => $prod->paginate($this->pagination),
             'categories'=>Category::where('categories.categoria_padre',0)->orderBy('name', 'asc')->get(),
