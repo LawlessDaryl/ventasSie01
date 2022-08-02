@@ -3,9 +3,11 @@
 namespace App\Http\Livewire;
 
 use App\Models\Destino;
+use App\Models\IngresoProductos;
 use App\Models\IngresoSalida;
 use App\Models\Product;
 use App\Models\ProductosDestino;
+use App\Models\SalidaProductos;
 use Livewire\Component;
 use Carbon\Carbon;
 
@@ -106,4 +108,42 @@ class MercanciaController extends Component
      
 
     }
+
+    public function Traspaso(){
+
+        $auxi= IngresoSalida::where('proceso','Entrada')->get();
+
+        foreach ($auxi as $data) {
+            
+            $entrada = IngresoProductos::create([
+                'destino' => $data->destino,
+                'user_id' => $data->user_id,
+                'concepto'=>$data->concepto,
+                'observacion'=>$data->observacion
+                
+            ]);
+        }
+
+        //dd($auxi);
+
+    }
+    public function TraspasoSalida(){
+
+        $auxi= IngresoSalida::where('proceso','Salida')->get();
+
+        foreach ($auxi as $data) {
+            
+            SalidaProductos::create([
+                'destino' => $data->destino,
+                'user_id' => $data->user_id,
+                'concepto'=>$data->concepto,
+                'observacion'=>$data->observacion
+                
+            ]);
+        }
+
+        //dd($auxi);
+
+    }
 }
+
