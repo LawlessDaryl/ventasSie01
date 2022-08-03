@@ -346,20 +346,6 @@
 
             @endif
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             <div class="widget-content">
                 <div class="table-responsive">
                     <table class="tablaservicios">
@@ -368,7 +354,7 @@
                                 <th class="text-center" style="min-width: 20px;">#</th>
                                 <th class="text-center">CODIGO</th>
                                 <th class="text-center">FECHA RECEPCION</th>
-                                <th class="text-center">FECHA ENTREGA</th>
+                                <th class="text-center">FECHA ESTIMADA ENTREGA</th>
                                 <th class="text-center">RESPONSABLE TECNICO</th>
                                 <th class="text-center">SERVICIOS</th>
                                 <th class="text-center">PRECIO</th>
@@ -576,9 +562,11 @@
                                                         EDITAR
                                                     </button>
                                                 @else
+                                                    @if(@Auth::user()->hasPermissionTo('Modificar_Detalle_Serv_Entregado'))
                                                     <button class="botoneditarterminado" wire:click.prevent="modaleditarservicioterminado('{{$d->estado}}',{{$d->idservicio}},{{$os->codigo}})" title="Editar Precio Servicio">
                                                         EDITAR
                                                     </button>
+                                                    @endif
                                                 @endif
                                             @endforeach
                                         @else
@@ -597,9 +585,6 @@
                                                         </button>
                                                     </div>
                                                 @endif
-
-
-
 
 
                                             @endforeach
@@ -624,15 +609,21 @@
                                                     <div class="imprimir">
                                                         <a class="dropdown-item" href="{{ url('reporte/pdf' . '/' . $os->codigo) }}">Imprimir Orden de Servicio</a>
                                                     </div>
+                                                    @if(@Auth::user()->hasPermissionTo('Modificar_Detalle_Serv'))
                                                     <div class="modificar">
                                                         <a class="dropdown-item" href="javascript:void(0)" wire:click="modificarordenservicio({{$os->idcliente}},{{$os->codigo}},'{{$os->tiposervicio}}')">Modificar Orden de Servicio</a>
                                                     </div>
+                                                    @endif
+                                                    @if(@Auth::user()->hasPermissionTo('Anular_Servicio'))
                                                     <div class="anular">
                                                         <a class="dropdown-item" href="#" onclick="ConfirmarAnular('{{ $os->codigo }}','{{ $os->nombrecliente }}')">Anular Orden de Servicio</a>
                                                     </div>
+                                                    @endif
+                                                    @if(@Auth::user()->hasPermissionTo('Eliminar_Servicio'))
                                                     <div class="eliminar">
                                                         <a class="dropdown-item" href="#" onclick="ConfirmarEliminar('{{ $os->codigo }}','{{ $os->nombrecliente }}')">Eliminar Orden de Servicio</a>
                                                     </div>
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
@@ -725,7 +716,7 @@
             });
             toast({
                 type: 'success',
-                title: '¡Precio del Servicio Terminado Actualizado Correctamente!',
+                title: '¡Servicio Terminado Actualizado Correctamente!',
                 padding: '2em',
             })
         });
@@ -832,6 +823,10 @@
 						},
 					});
             });
+
+
+
+            
 
 
 
