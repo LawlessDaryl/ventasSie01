@@ -1,3 +1,26 @@
+@section('css')
+<style>
+/* Estilos para la Tabla - Ventana Modal Buscar Cliente*/
+.table-wrapper {
+    width: 100%;/* Anchura de ejemplo */
+    height: 350px; /* Altura de ejemplo */
+    overflow: auto;
+}
+
+.table-wrapper table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.table-wrapper table thead {
+    position: -webkit-sticky; /* Safari... */
+    position: sticky;
+    top: 0;
+    left: 0;
+}
+</style>
+ @endsection
+
 <div class="row sales layout-top-spacing">
     <div class="col-sm-12">
         <div class="widget widget-chart-one">
