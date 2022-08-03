@@ -274,7 +274,7 @@ class TransferirProductoController extends Component
             $this->resetUI();
            
             $this->itemsQuantity = Transferencia::getTotalQuantity();
-            redirect('/transferencias');
+            redirect('/all_transferencias');
         
         } catch (Exception $e) {
             DB::rollback();

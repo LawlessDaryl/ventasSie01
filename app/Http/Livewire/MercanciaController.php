@@ -21,7 +21,6 @@ class MercanciaController extends Component
         $this->tipo_proceso= "Entrada";
 
     }
-
     public function render()
     {
         $op_inv = IngresoSalida::join('detalle_operacions','detalle_operacions.id_operacion','ingreso_salidas.id')
@@ -114,32 +113,77 @@ class MercanciaController extends Component
         $auxi= IngresoSalida::where('proceso','Entrada')->get();
 
         foreach ($auxi as $data) {
-            
+
+
+
             $entrada = IngresoProductos::create([
                 'destino' => $data->destino,
                 'user_id' => $data->user_id,
-                'concepto'=>$data->concepto,
+                'concepto'=>'INICIAL',
                 'observacion'=>$data->observacion
-                
             ]);
+
+            $newdata=DetalleOperacion::join('ingreso_salidas','ingreso_salidas.id',$data->id)->get();
+
+            foreach ($newdata as $dat) {
+
+               $lot= Lote::create([
+                    'existencia'=>$dat->cantidad,
+                    'status'=>'Activo'
+                ]);
+
+                DetalleEntradaProductos::create([
+
+                    'product_id'=>$dat->product_id,
+                    'cantidad'=>$dat->cantidad,
+                    'id_entrada'=>$entrada->id_operacion,
+                    'lote_id'=>$lot->id
+    
+                ]);
+    
+            }
+        
+
+
+            
+
         }
-
         //dd($auxi);
-
     }
-    public function TraspasoSalida(){
+        public function TraspasoSalida(){
 
         $auxi= IngresoSalida::where('proceso','Salida')->get();
 
+   
+
+    
         foreach ($auxi as $data) {
-            
-            SalidaProductos::create([
+
+
+
+            $salida = SalidaProductos::create([
                 'destino' => $data->destino,
                 'user_id' => $data->user_id,
                 'concepto'=>$data->concepto,
                 'observacion'=>$data->observacion
-                
             ]);
+
+            $newdata=DetalleOperacion::join('ingreso_salidas','ingreso_salidas.id',$data->id)->get();
+
+            foreach ($newdata as $dat) {
+                DetalleSalidaProductos::create([
+                    'product_id'=>$dat->product_id,
+                    'cantidad'=>$dat->cantidad,
+                    'id_salida'=>$salida->id_operacion
+                
+                ]);
+    
+            }
+        
+
+
+            
+
         }
 
         //dd($auxi);
