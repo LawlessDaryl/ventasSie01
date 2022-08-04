@@ -81,7 +81,7 @@ class OrderServiceController extends Component
     }
     public function mount()
     {
-        $this->paginacion = 50;
+        $this->paginacion = 10;
         $this->type = 'PENDIENTE';
         $this->sucursal_id = $this->idsucursal();
         $this->catprodservid = 'Todos';
