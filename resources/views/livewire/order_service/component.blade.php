@@ -51,7 +51,6 @@
     /*Estilos para el Boton Pendiente en la Tabla*/
     .pendienteestilos {
         background-color: rgb(161, 0, 224);
-        margin: 2px;
         cursor: pointer;
         color: white;
         border-color: rgb(161, 0, 224);
@@ -70,7 +69,6 @@
     /*Estilos para el Boton Proceso en la Tabla*/
     .procesoestilos {
         background-color: rgb(100, 100, 100);
-        margin: 2px;
         cursor: pointer;
         color: white;
         border-color: rgb(100, 100, 100);
@@ -89,7 +87,7 @@
     /*Estilos para el Boton Terminado en la Tabla*/
     .terminadoestilos {
         background-color: rgb(224, 146, 0);
-        margin: 2px;
+        
         cursor: pointer;
         color: white;
         border-color: rgb(224, 146, 0);
@@ -107,7 +105,6 @@
     /*Estilos para el Boton Entregado en la Tabla*/
     .entregadoestilos {
         background-color: rgb(22, 192, 0);
-        margin: 2px;
         /* cursor: pointer; */
         color: white;
         border:none;
@@ -134,7 +131,7 @@
     /*Estilos para el Botón Editar Servicio de la Tabla*/
     .botoneditar {
         background-color: #008a5c;
-        margin: 2px;
+        
         cursor: pointer;
         color: white;
         border-color: #008a5c;
@@ -149,7 +146,22 @@
     }
 
 
-
+    /*Estilos para el Botón Editar Servicio Terminado de la Tabla*/
+    .botoneditarterminado {
+        background-color: #004585;
+        
+        cursor: pointer;
+        color: white;
+        border-color: #004585;
+        border-radius: 7px;
+    }
+    .botoneditarterminado:hover {
+        background-color: rgb(255, 255, 255);
+        color: #004585;
+        transition: all 0.4s ease-out;
+        border-color: #000458508a5c;
+        transform: translateY(-2px);
+    }
 
 
     /* Estilos para la Tabla - Ventana Modal Asignar Técnico  Responsable*/
@@ -197,8 +209,17 @@
                             <ul class="tabs tab-pills text-right">
                                 <a href="{{ url('service') }}" class="btn btn-outline-primary">Nuevo Servicio</a>
                                 <a href="{{ url('inicio') }}" class="btn btn-outline-primary">Ir a Lista Servicios</a>
+
+                                <div class="custom-control custom-switch" style="padding-top: 5px;">
+                                    <input type="checkbox" class="custom-control-input" id="customSwitches"
+                                    wire:change="mostrarocultarmasfiltros()" {{ $masfiltros ? 'checked' : '' }}>
+                                    <label class="custom-control-label" for="customSwitches">+Filtros</label>
+                                </div>
+
                             </ul>
                         @endif
+
+                          
                     </div>
 
                 </div>
@@ -225,10 +246,10 @@
                         <b>Seleccionar Sucursal</b>
                         <div class="form-group">
                             <select wire:model="sucursal_id" class="form-control">
-                                <option value="Todos">Todas las Sucursales</option>
                                 @foreach($listasucursales as $sucursal)
                                 <option value="{{$sucursal->id}}">{{$sucursal->name}}</option>
                                 @endforeach
+                                <option value="Todos">Todas las Sucursales</option>
                             </select>
                         </div>
                     </div>
@@ -239,7 +260,7 @@
                             <select wire:model.lazy="catprodservid" class="form-control">
                                 <option value="Todos" selected>Todos</option>
                                 @foreach ($categorias as $cat)
-                                    <option value="{{ $cat->id }}" selected>{{ $cat->nombre }}</option>
+                                    <option value="{{ $cat->id }}">{{ ucwords(strtolower($cat->nombre)) }}</option>
                                 @endforeach
                             </select>
                             @error('catprodservid')
@@ -255,11 +276,10 @@
                                 <option value="PENDIENTE">Pendientes</option>
                                 <option value="PROCESO">Proceso</option>
                                 <option value="TERMINADO">Terminados</option>
-                                <option value="ENTREGADO">Entregado</option>
-                                <option value="ABANDONADO">Abandonado</option>
-                                <option value="ANULADO">Anulado</option>
+                                <option value="ENTREGADO">Entregados</option>
+                                {{-- <option value="ABANDONADO">Abandonados</option> --}}
+                                <option value="ANULADO">Anulados</option>
                                 <option value="Todos">Todos</option>
-                                <option value="FECHA">Por Fecha</option>
                             </select>
                         </div>
                     </div>
@@ -268,6 +288,64 @@
             </div>
                 
             
+
+
+
+
+
+
+
+
+
+
+
+            @if($this->masfiltros)
+
+            <div class="form-group">
+                <div class="row">
+
+                    <div class="col-12 col-sm-6 col-md-3 text-center">
+                        <b>Seleccione Usuario</b>
+                        <div class="form-group">
+                            <select wire:model="usuario" class="form-control">
+                                @foreach($this->lista_de_usuarios as $i)
+                                <option value="{{$i->idusuario}}">{{$i->nombreusuario}}</option>
+                                @endforeach
+                                <option value="Todos">Todos</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-sm-6 col-md-3 text-center">
+                        <b>Tipo de Fecha</b>
+                        <div class="form-group">
+                            <select wire:model="tipofecha" class="form-control">
+                                <option value="Todos" selected>Todas las Fechas</option>
+                                <option value="Dia">Recepcionados Hoy</option>
+                                <option value="Rango">Recepcionados por Fechas</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-sm-6 col-md-3 text-center">
+                        <b>Fecha Inicio</b>
+                        <div class="form-group">
+                            <input @if ($tipofecha != 'Rango') disabled @endif type="date" wire:model="dateFrom" class="form-control flatpickr" >
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-sm-6 col-md-3 text-center">
+                        <b>Fecha Fin</b>
+                        <div class="form-group">
+                            <input @if ($tipofecha != 'Rango') disabled @endif type="date" wire:model="dateTo" class="form-control flatpickr" >
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            @endif
+
             <div class="widget-content">
                 <div class="table-responsive">
                     <table class="tablaservicios">
@@ -276,8 +354,8 @@
                                 <th class="text-center" style="min-width: 20px;">#</th>
                                 <th class="text-center">CODIGO</th>
                                 <th class="text-center">FECHA RECEPCION</th>
-                                <th class="text-center">FECHA ENTREGA</th>
-                                <th class="text-center">TECNICO RESPONSABLE</th>
+                                <th class="text-center">FECHA ESTIMADA ENTREGA</th>
+                                <th class="text-center">RESPONSABLE TECNICO</th>
                                 <th class="text-center">SERVICIOS</th>
                                 <th class="text-center">PRECIO</th>
                                 <th class="text-center">TECNICO RECEPTOR</th>
@@ -290,7 +368,7 @@
                             @foreach ($orden_de_servicio as $os)
                                 <tr class="tablaserviciostr">
                                     <td class="text-center" style="min-width: 20px;">
-                                        {{$os->num}}
+                                        {{ ($orden_de_servicio->currentpage()-1) * $orden_de_servicio->perpage() + $loop->index + 1 }}
                                     </td>
                                     <td class="text-center">
                                         <span class="stamp stamp" style="background-color: #1572e8">
@@ -301,21 +379,35 @@
                                         {{ \Carbon\Carbon::parse($os->fechacreacion)->format('d/m/Y H:i') }}
                                     </td>
                                     <td class="text-center">
+
+                                        @if($os->servicios->count() == 1)
+                                            @foreach ($os->servicios as $d)
+                                            {{ \Carbon\Carbon::parse($d->fecha_estimada_entrega)->format('d/m/Y H:i') }}
+                                            @endforeach
+                                        @else
                                         @foreach ($os->servicios as $d)
-                                        {{ \Carbon\Carbon::parse($d->fecha_estimada_entrega)->format('d/m/Y H:i') }}
-                                            <br>
+                                            <div style="padding-top: 15px;">
+                                                {{ \Carbon\Carbon::parse($d->fecha_estimada_entrega)->format('d/m/Y H:i') }}
+                                            </div>
                                         @endforeach
+                                        @endif
+
                                     </td>
                                     <td class="text-center">
-                                        @foreach ($os->servicios as $rt)
-                                        {{ucwords(strtolower($rt->responsabletecnico))}}
-                                        <br>
-                                        @endforeach
+                                        @if($os->servicios->count() == 1)
+                                            @foreach ($os->servicios as $rt)
+                                            {{ucwords(strtolower($rt->responsabletecnico))}}
+                                            @endforeach
+                                        @else
+                                            @foreach ($os->servicios as $rt)
+                                                <div style="padding-top: 15px;">
+                                                    {{ucwords(strtolower($rt->responsabletecnico))}}
+                                                </div>
+                                            @endforeach
+                                        @endif
                                     </td>
                                     <td>
-
-                                        
-                                        Cliente: {{ucwords(strtolower($os->nombrecliente))}}
+                                        Cliente: {{ucwords(strtolower($os->nombrecliente))}} | Sucursal: {{$os->nombresucursal}}
 
                                         @foreach ($os->servicios as $d)
 
@@ -340,66 +432,169 @@
                                         @endforeach
                                     </td>
                                     <td class="text-right">
-                                        @foreach ($os->servicios as $d)
-                                            {{$d->importe}}
-                                            <br>
-                                        @endforeach
+                                        
+                                        @if($os->servicios->count() == 1)
+                                            @foreach ($os->servicios as $d)
+                                                {{$d->importe}}
+                                            @endforeach
+                                        @else
+                                            @foreach ($os->servicios as $d)
+                                                <div style="padding-top: 15px;">
+                                                    {{$d->importe}}
+                                                </div>
+                                            @endforeach
+                                        @endif
+
                                     </td>
                                     <td class="text-center">
-                                        @foreach ($os->servicios as $dss)
-                                            {{ucwords(strtolower($dss->tecnicoreceptor))}}
-                                            <br>
-                                        @endforeach
+                                        
+                                        @if($os->servicios->count() == 1)
+                                            @foreach ($os->servicios as $dss)
+                                                {{ucwords(strtolower($dss->tecnicoreceptor))}}
+                                            @endforeach
+                                        @else
+                                            @foreach ($os->servicios as $dss)
+                                                <div style="padding-top: 15px;">
+                                                    {{ucwords(strtolower($dss->tecnicoreceptor))}}
+                                                </div>
+                                            @endforeach
+                                        @endif
+
                                     </td>
                                     <td class="text-center">
-                                        @foreach ($os->servicios as $d)
-                                            @if($d->estado=="PENDIENTE")
-                                            <button type="button" class="pendienteestilos" wire:click.prevent="modalasignartecnico({{$d->idservicio}}, {{$os->codigo}})" title="Asignar Técnico Responsable">
-                                                {{$d->estado}}
-                                            </button>
-                                            @else
-                                                @if($d->estado=="PROCESO")
-                                                    <button type="button" class="procesoestilos" wire:click.prevent="modaleditarservicio2('{{$d->estado}}', {{$d->idservicio}}, {{$os->codigo}})" title="Registrar Servicio Terminado o Actualizar Costo Servicio">
-                                                        {{$d->estado}}
-                                                    </button>
+
+                                        @if($os->servicios->count() == 1)
+                                            @foreach ($os->servicios as $d)
+                                                @if($d->estado=="PENDIENTE")
+                                                <button type="button" class="pendienteestilos" wire:click.prevent="modalasignartecnico({{$d->idservicio}}, {{$os->codigo}})" title="Asignar Técnico Responsable">
+                                                    {{$d->estado}}
+                                                </button>
                                                 @else
-                                                    @if($d->estado=="TERMINADO")
-                                                        <button type="button" class="terminadoestilos" wire:click.prevent="modalentregarservicio('{{$d->estado}}', {{$d->idservicio}}, {{$os->codigo}})" title="Registrar Servicio como Entregado">
+                                                    @if($d->estado=="PROCESO")
+                                                        <button type="button" class="procesoestilos" wire:click.prevent="modaleditarservicio2('{{$d->estado}}', {{$d->idservicio}}, {{$os->codigo}})" title="Registrar Servicio Terminado o Actualizar Costo Servicio">
                                                             {{$d->estado}}
                                                         </button>
                                                     @else
-                                                        @if($d->estado=="ENTREGADO")
-                                                            <button type="button" class="entregadoestilos">
+                                                        @if($d->estado=="TERMINADO")
+                                                            <button type="button" class="terminadoestilos" wire:click.prevent="modalentregarservicio('{{$d->estado}}', {{$d->idservicio}}, {{$os->codigo}})" title="Registrar Servicio como Entregado">
                                                                 {{$d->estado}}
                                                             </button>
                                                         @else
-                                                            @if($d->estado=="ABANDONADO")
-                                                                <button class="stamp stamp" style="background-color: rgb(186, 238, 0)">
+                                                            @if($d->estado=="ENTREGADO")
+                                                                <button type="button" class="entregadoestilos">
                                                                     {{$d->estado}}
                                                                 </button>
                                                             @else
-                                                                @if($d->estado=="ANULADO")
-                                                                    <button class="stamp stamp" style="background-color: rgb(0, 0, 0)">
+                                                                @if($d->estado=="ABANDONADO")
+                                                                    <button class="stamp stamp" style="background-color: rgb(186, 238, 0)">
                                                                         {{$d->estado}}
                                                                     </button>
                                                                 @else
-                                                                    {{$d->estado}}
+                                                                    @if($d->estado=="ANULADO")
+                                                                        <button class="stamp stamp" style="background-color: rgb(0, 0, 0)">
+                                                                            {{$d->estado}}
+                                                                        </button>
+                                                                    @else
+                                                                        {{$d->estado}}
+                                                                    @endif
                                                                 @endif
                                                             @endif
                                                         @endif
                                                     @endif
                                                 @endif
-                                            @endif
-                                            <br>
-                                        @endforeach
+                                            @endforeach
+                                        @else
+                                            @foreach ($os->servicios as $d)
+                                                @if($d->estado=="PENDIENTE")
+                                                <button type="button" style="margin-top: 17px;" class="pendienteestilos" wire:click.prevent="modalasignartecnico({{$d->idservicio}}, {{$os->codigo}})" title="Asignar Técnico Responsable">
+                                                    {{$d->estado}}
+                                                </button>
+                                                @else
+                                                    @if($d->estado=="PROCESO")
+                                                        <button type="button" style="margin-top: 17px;" class="procesoestilos" wire:click.prevent="modaleditarservicio2('{{$d->estado}}', {{$d->idservicio}}, {{$os->codigo}})" title="Registrar Servicio Terminado o Actualizar Costo Servicio">
+                                                            {{$d->estado}}
+                                                        </button>
+                                                    @else
+                                                        @if($d->estado=="TERMINADO")
+                                                            <button type="button" style="margin-top: 17px;" class="terminadoestilos" wire:click.prevent="modalentregarservicio('{{$d->estado}}', {{$d->idservicio}}, {{$os->codigo}})" title="Registrar Servicio como Entregado">
+                                                                {{$d->estado}}
+                                                            </button>
+                                                        @else
+                                                            @if($d->estado=="ENTREGADO")
+                                                                <button type="button" style="margin-top: 17px;" class="entregadoestilos">
+                                                                    {{$d->estado}}
+                                                                </button>
+                                                            @else
+                                                                @if($d->estado=="ABANDONADO")
+                                                                    <button class="stamp stamp" style="background-color: rgb(186, 238, 0)">
+                                                                        {{$d->estado}}
+                                                                    </button>
+                                                                @else
+                                                                    @if($d->estado=="ANULADO")
+                                                                        <button class="stamp stamp" style="background-color: rgb(0, 0, 0)">
+                                                                            {{$d->estado}}
+                                                                        </button>
+                                                                    @else
+                                                                        {{$d->estado}}
+                                                                    @endif
+                                                                @endif
+                                                            @endif
+                                                        @endif
+                                                    @endif
+                                                @endif
+                                                <br>
+                                            @endforeach
+                                        @endif
+
+
+
+
+
+                                        
                                     </td>
                                     <td class="text-center">
-                                        @foreach ($os->servicios as $d)
-                                        <button class="botoneditar" wire:click.prevent="modaleditarservicio1('{{$d->estado}}',{{$d->idservicio}},{{$os->codigo}})" title="Editar Servicio">
-                                            EDITAR
-                                        </button>
-                                        <br>
-                                        @endforeach
+
+
+                                        @if($os->servicios->count() == 1)
+                                            @foreach ($os->servicios as $d)
+                                                @if($d->estado != "ENTREGADO")
+                                                    <button class="botoneditar" wire:click.prevent="modaleditarservicio1('{{$d->estado}}',{{$d->idservicio}},{{$os->codigo}})" title="Editar Servicio">
+                                                        EDITAR
+                                                    </button>
+                                                @else
+                                                    @if(@Auth::user()->hasPermissionTo('Modificar_Detalle_Serv_Entregado'))
+                                                    <button class="botoneditarterminado" wire:click.prevent="modaleditarservicioterminado('{{$d->estado}}',{{$d->idservicio}},{{$os->codigo}})" title="Editar Precio Servicio">
+                                                        EDITAR
+                                                    </button>
+                                                    @endif
+                                                @endif
+                                            @endforeach
+                                        @else
+                                            @foreach ($os->servicios as $d)
+
+                                                @if($d->estado != "ENTREGADO")
+                                                    <div style="padding-top: 15px;">
+                                                        <button class="botoneditar" wire:click.prevent="modaleditarservicio1('{{$d->estado}}',{{$d->idservicio}},{{$os->codigo}})" title="Editar Servicio">
+                                                            EDITAR
+                                                        </button>
+                                                    </div>
+                                                @else
+                                                    <div style="padding-top: 15px;">
+                                                        <button class="botoneditarterminado" wire:click.prevent="modaleditarservicioterminado('{{$d->estado}}',{{$d->idservicio}},{{$os->codigo}})" title="Editar Precio Servicio">
+                                                            EDITAR
+                                                        </button>
+                                                    </div>
+                                                @endif
+
+
+                                            @endforeach
+                                        @endif
+
+
+
+
+
+                                        
                                     </td>
                                     <td class="text-center">
                                         <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
@@ -414,15 +609,21 @@
                                                     <div class="imprimir">
                                                         <a class="dropdown-item" href="{{ url('reporte/pdf' . '/' . $os->codigo) }}">Imprimir Orden de Servicio</a>
                                                     </div>
+                                                    @if(@Auth::user()->hasPermissionTo('Modificar_Detalle_Serv'))
                                                     <div class="modificar">
                                                         <a class="dropdown-item" href="javascript:void(0)" wire:click="modificarordenservicio({{$os->idcliente}},{{$os->codigo}},'{{$os->tiposervicio}}')">Modificar Orden de Servicio</a>
                                                     </div>
+                                                    @endif
+                                                    @if(@Auth::user()->hasPermissionTo('Anular_Servicio'))
                                                     <div class="anular">
                                                         <a class="dropdown-item" href="#" onclick="ConfirmarAnular('{{ $os->codigo }}','{{ $os->nombrecliente }}')">Anular Orden de Servicio</a>
                                                     </div>
+                                                    @endif
+                                                    @if(@Auth::user()->hasPermissionTo('Eliminar_Servicio'))
                                                     <div class="eliminar">
                                                         <a class="dropdown-item" href="#" onclick="ConfirmarEliminar('{{ $os->codigo }}','{{ $os->nombrecliente }}')">Eliminar Orden de Servicio</a>
                                                     </div>
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
@@ -436,17 +637,11 @@
             </div>
         </div>
     </div>
-    {{-- @include('livewire.order_service.form')
-    @include('livewire.order_service.formdetalle')
-    @include('livewire.order_service.formdetalleentrega') --}}
     @include('livewire.order_service.modalserviciodetalles')
     @include('livewire.order_service.modalasignartecnicoresponsable')
     @include('livewire.order_service.modaleditarservicio')
+    @include('livewire.order_service.modaleditarservicioterminado')
     @include('livewire.order_service.modalentregarservicio')
-    {{-- @include('livewire.order_service.formopciones')
-    @include('livewire.order_service.formentregado')
-    @include('livewire.order_service.formeliminar')
-    @include('livewire.order_service.formanular') --}}
 </div>
     
 @section('javascript')
@@ -465,6 +660,9 @@
         });
         window.livewire.on('show-editarserviciomostrar', Msg => {
             $('#editarservicio').modal('show')
+        });
+        window.livewire.on('show-editarservicioterminado', Msg => {
+            $('#editarservicioterminado').modal('show')
         });
         window.livewire.on('show-entregarservicio', Msg => {
             $('#entregarservicio').modal('show')
@@ -503,6 +701,22 @@
             toast({
                 type: 'success',
                 title: '¡Servicio Actualizado Correctamente!',
+                padding: '2em',
+            })
+        });
+        //Cerrar Ventana Modal y Mostrar Toast Precio del Servicio Terminado Actualizado Correctamente
+        window.livewire.on('show-editarservicioterminadoocultar', msg => {
+                        $('#editarservicioterminado').modal('hide')
+            const toast = swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3500,
+            padding: '2em'
+            });
+            toast({
+                type: 'success',
+                title: '¡Servicio Terminado Actualizado Correctamente!',
                 padding: '2em',
             })
         });
@@ -609,6 +823,10 @@
 						},
 					});
             });
+
+
+
+            
 
 
 

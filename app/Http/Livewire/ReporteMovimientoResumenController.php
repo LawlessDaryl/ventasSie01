@@ -783,20 +783,12 @@ class ReporteMovimientoResumenController extends Component
 
         // egresos totales por caja fisica
         $this->EgresosTotalesCF = $this->totalesEgresosV->where('ctipo','CajaFisica')->sum('importe') + $this->totalesEgresosIE->where('ctipo','CajaFisica')->sum('importe');
-
          // egresos totales por bancos
          $this->EgresosTotalesNoCFNoBancos = $this->totalesEgresosV->where('ctipo','!=','CajaFisica')->where('ctipo','!=','Banco')->sum('importe') + $this->totalesEgresosIE->where('ctipo','!=','CajaFisica')->where('ctipo','!=','Banco')->sum('importe');
-
       // egresos totales por bancos
-
          $this->EgresosTotalesNoCFBancos = $this->totalesEgresosV->where('ctipo','=','Banco')->sum('importe') + $this->totalesEgresosIE->where('ctipo','=','Banco')->sum('importe');
         //Total Transacciones Banco, Tigo, Sistema, Streaming
         //$this->TotalTransccioneSistema=  $this->totalesEgresos->where('ctipo','!=','CajaFisica')->sum('importe');
-
-
-
-
-
         //$this->operacionefectivoeg= $this->totalesEgresos->where('ctipo','CajaFisica')->sum('importe');
 
         //Ingresos - Egresos
@@ -813,13 +805,10 @@ class ReporteMovimientoResumenController extends Component
             ->where('ca.id',$this->caja)
             ->whereBetween('movimientos.updated_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
             ->select('movimientos.import')->value('movimientos.import');
-
         }
-
         else{
             $this->op_recaudo=0;
         }
-
         $this->op_sob_falt = Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')
         ->join('carteras as c', 'c.id', 'crms.cartera_id')
         ->join('cajas as ca', 'ca.id', 'c.caja_id')
@@ -903,12 +892,6 @@ class ReporteMovimientoResumenController extends Component
         }
 
         $this->ops= $carteras->sum('monto');
-
-
-
-
-
-
      }
 
     //Obtener el Id de la Sucursal Donde esta el Usuario
