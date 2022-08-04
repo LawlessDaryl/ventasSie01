@@ -84,7 +84,7 @@
                                  <label>Sucursal</label>
                                  <select wire:model="sucursal" class="form-control">
                                      @foreach ($sucursales as $item)
-                                     <option value="{{$item->id}}">{{$item->name}}</option>
+                                     <option wire:key="item-{{ $item->id }}" value="{{$item->id}}">{{$item->name}}</option>
                                      @endforeach
                                      <option value="TODAS">TODAS</option>
                                     
@@ -97,7 +97,7 @@
                                  <label>Caja</label>
                                  <select wire:model="caja" class="form-control">
                                      @foreach ($cajas as $item)
-                                     <option value="{{$item->id}}">{{$item->nombre}}</option>
+                                     <option  wire:key="item-{{ $item->id }}" value="{{$item->id}}">{{$item->nombre}}</option>
                                      @endforeach
                                      <option value="TODAS">TODAS</option>
                                     
@@ -132,11 +132,11 @@
         <ul class="row justify-content-end">
          
               
-                <a wire:click.prevent="viewDetailsR()" class="btn btn-warning">
+                <a wire:click="viewDetailsR()" class="btn btn-warning">
                     Generar Recaudo
                 </a>
                
-                <a wire:click.prevent="generarpdf({{$totalesIngresosV}}, {{$totalesIngresosS}}, {{$totalesIngresosIE}}, {{$totalesEgresosV}}, {{$totalesEgresosIE}})" class="btn btn-warning">
+                <a wire:click="generarpdf({{$totalesIngresosV}}, {{$totalesIngresosS}}, {{$totalesIngresosIE}}, {{$totalesEgresosV}}, {{$totalesEgresosIE}})" class="btn btn-warning">
                     Generar PDF
                 </a>
          
