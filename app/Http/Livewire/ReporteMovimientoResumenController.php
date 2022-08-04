@@ -129,15 +129,15 @@ class ReporteMovimientoResumenController extends Component
             'c.descripcion',
             'u.id as idusuario',
             'c.tipo as ctipo',
-            'movimientos.updated_at as movcreacion',
+            'movimientos.created_at as movcreacion',
             'movimientos.id as idmov',DB::raw('0 as detalle'),DB::raw('0 as utilidadventa'))
             ->where('movimientos.status', 'ACTIVO')
             ->where('crms.type', 'INGRESO')
-            ->where('crms.comentario','<>', 'RECAUDO DEL DIA')
+            ->where('crms.comentario','<>','RECAUDO DEL DIA')
             ->where('crms.tipoDeMovimiento', 'VENTA')
             ->where('ca.id',$this->caja)
-            ->whereBetween('movimientos.updated_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
-            ->orderBy('movimientos.updated_at', 'asc')
+            ->whereBetween('movimientos.created_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
+            ->orderBy('movimientos.created_at', 'asc')
             ->get();
 
             $this->totalesIngresosVGeneral = Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')
@@ -204,7 +204,7 @@ class ReporteMovimientoResumenController extends Component
                 'c.descripcion',
                 'c.tipo as ctipo',
                 'c.telefonoNum',
-                'movimientos.updated_at as movcreacion',
+                'movimientos.created_at as movcreacion',
                 'movimientos.id as idmov',
                 DB::raw('0 as utilidadservicios'))
             ->where('movimientos.status', 'ACTIVO')
@@ -215,10 +215,11 @@ class ReporteMovimientoResumenController extends Component
             ->where('crms.tipoDeMovimiento', '!=' , 'VENTA')
             ->where('crms.tipoDeMovimiento', '!=' , 'EGRESO/INGRESO')
             ->where('ca.id',$this->caja)
-            ->whereBetween('movimientos.updated_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
-            ->orderBy('movimientos.updated_at', 'asc')
+            ->whereBetween('movimientos.created_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
+            ->orderBy('movimientos.created_at', 'asc')
             ->get();
 
+            //dd($totalesIngresosServicios);
 
             $totalesIngresosServiciosGeneral = Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')
             ->join('carteras as c', 'c.id', 'crms.cartera_id')
@@ -238,12 +239,12 @@ class ReporteMovimientoResumenController extends Component
                 'c.descripcion',
                 'c.tipo as ctipo',
                 'c.telefonoNum',
-                'movimientos.updated_at as movcreacion',
+                'movimientos.created_at as movcreacion',
                 'movimientos.id as idmov',
                 DB::raw('0 as utilidadservicios'))
             ->whereIn('movimientos.id',$this->servicios)
-            ->whereBetween('movimientos.updated_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
-            ->orderBy('movimientos.updated_at', 'asc')
+            ->whereBetween('movimientos.created_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
+            ->orderBy('movimientos.created_at', 'asc')
             ->get();
 
 
@@ -430,7 +431,7 @@ class ReporteMovimientoResumenController extends Component
                 'c.descripcion',
                 'c.tipo as ctipo',
                 'c.telefonoNum',
-                'movimientos.updated_at as movcreacion',
+                'movimientos.created_at as movcreacion',
                 'movimientos.id as idmov',
                 DB::raw('0 as utilidadservicios'))
             ->where('movimientos.status', 'ACTIVO')
@@ -441,8 +442,8 @@ class ReporteMovimientoResumenController extends Component
             ->where('crms.tipoDeMovimiento', '!=' , 'VENTA')
             ->where('crms.tipoDeMovimiento', '!=' , 'EGRESO/INGRESO')
             ->where('ca.sucursal_id',$this->sucursal)
-            ->whereBetween('movimientos.updated_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
-            ->orderBy('movimientos.updated_at', 'asc')
+            ->whereBetween('movimientos.created_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
+            ->orderBy('movimientos.created_at', 'asc')
             ->get();
 
             foreach ($this->totalesIngresosS as $var1)
@@ -597,7 +598,7 @@ class ReporteMovimientoResumenController extends Component
                 'c.descripcion',
                 'c.tipo as ctipo',
                 'c.telefonoNum',
-                'movimientos.updated_at as movcreacion',
+                'movimientos.created_at as movcreacion',
                 'movimientos.id as idmov',
                 DB::raw('0 as utilidadservicios'))
             ->where('movimientos.status', 'ACTIVO')
@@ -607,8 +608,8 @@ class ReporteMovimientoResumenController extends Component
             ->where('crms.tipoDeMovimiento', '!=' , 'STREAMING')
             ->where('crms.tipoDeMovimiento', '!=' , 'VENTA')
             ->where('crms.tipoDeMovimiento', '!=' , 'EGRESO/INGRESO')
-            ->whereBetween('movimientos.updated_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
-            ->orderBy('movimientos.updated_at', 'asc')
+            ->whereBetween('movimientos.created_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
+            ->orderBy('movimientos.created_at', 'asc')
             ->get();
 
             foreach ($this->totalesIngresosS as $var1)

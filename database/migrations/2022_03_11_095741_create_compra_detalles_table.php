@@ -19,7 +19,7 @@ class CreateCompraDetallesTable extends Migration
             $table->integer('cantidad');
             $table->foreignId('product_id')->constrained();
             $table->foreignId('compra_id')->constrained();
-            $table->foreignId('lote_id')->constrained();
+            $table->foreignId('lote_id')->constrained()->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

@@ -43,6 +43,8 @@ class MercanciaController extends Component
         $this->buscarproducto=0;
        }
 
+       
+
 
 
        $destinosuc= Destino::join('sucursals as suc','suc.id','destinos.sucursal_id')
