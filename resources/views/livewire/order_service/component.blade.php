@@ -3,6 +3,7 @@
     .tablaservicios {
         width: 100%;
         min-width: 1100px;
+        min-height: 140px;
     }
     .tablaservicios thead {
         background-color: #1572e8;
@@ -229,7 +230,7 @@
                 <div class="row">
 
                     <div class="col-12 col-sm-6 col-md-3 text-center">
-                        <b>Buscar por Código</b>
+                        <b>Buscar...</b>
                         <div class="form-group">
                             <div class="input-group mb-4">
                                 <div class="input-group-prepend">
@@ -241,7 +242,7 @@
                             </div>
                         </div>
                     </div>
-
+                    @if(Auth::user()->hasPermissionTo('Filtrar_sucursal_Reporte_Servicio'))
                     <div class="col-12 col-sm-6 col-md-3 text-center">
                         <b>Seleccionar Sucursal</b>
                         <div class="form-group">
@@ -253,7 +254,7 @@
                             </select>
                         </div>
                     </div>
-
+                    @endif
                     <div class="col-12 col-sm-6 col-md-3 text-center">
                         <b>Categoría Trabajo</b>
                         <div class="form-group">
@@ -303,7 +304,7 @@
 
             <div class="form-group">
                 <div class="row">
-
+                    @if(Auth::user()->hasPermissionTo('Asignar_Tecnico_Servicio'))
                     <div class="col-12 col-sm-6 col-md-3 text-center">
                         <b>Seleccione Usuario</b>
                         <div class="form-group">
@@ -315,7 +316,7 @@
                             </select>
                         </div>
                     </div>
-
+                    @endif
                     <div class="col-12 col-sm-6 col-md-3 text-center">
                         <b>Tipo de Fecha</b>
                         <div class="form-group">
@@ -407,7 +408,7 @@
                                         @endif
                                     </td>
                                     <td>
-                                        Cliente: {{ucwords(strtolower($os->nombrecliente))}} | Sucursal: {{$os->nombresucursal}}
+                                        Cliente: <b>{{ucwords(strtolower($os->nombrecliente))}}</b> | Sucursal: <b>{{$os->nombresucursal}}</b>
 
                                         @foreach ($os->servicios as $d)
 
@@ -466,12 +467,18 @@
                                         @if($os->servicios->count() == 1)
                                             @foreach ($os->servicios as $d)
                                                 @if($d->estado=="PENDIENTE")
-                                                <button type="button" class="pendienteestilos" wire:click.prevent="modalasignartecnico({{$d->idservicio}}, {{$os->codigo}})" title="Asignar Técnico Responsable">
-                                                    {{$d->estado}}
-                                                </button>
+                                                    @if (Auth::user()->hasPermissionTo('Asignar_Tecnico_Servicio'))
+                                                        <button type="button" class="pendienteestilos" wire:click.prevent="modalasignartecnico({{$d->idservicio}}, {{$os->codigo}})" title="Asignar Técnico Responsable">
+                                                            {{$d->estado}}
+                                                        </button>
+                                                    @else
+                                                        <button type="button" class="pendienteestilos" onclick="ConfirmarTecnicoResponsable('{{ $os->codigo }}','{{ ucwords(strtolower($os->nombrecliente)) }}', {{$d->idservicio}})" title="Ser Técnico Responsable de este Servicio">
+                                                            {{$d->estado}}
+                                                        </button>
+                                                    @endif
                                                 @else
                                                     @if($d->estado=="PROCESO")
-                                                        <button type="button" class="procesoestilos" wire:click.prevent="modaleditarservicio2('{{$d->estado}}', {{$d->idservicio}}, {{$os->codigo}})" title="Registrar Servicio Terminado o Actualizar Costo Servicio">
+                                                        <button type="button" class="procesoestilos" wire:click.prevent="modaleditarservicio2('{{$d->estado}}', {{$d->idservicio}}, {{$os->codigo}})" title="Registrar Servicio Terminado o Actualizar Servicio">
                                                             {{$d->estado}}
                                                         </button>
                                                     @else
@@ -506,12 +513,18 @@
                                         @else
                                             @foreach ($os->servicios as $d)
                                                 @if($d->estado=="PENDIENTE")
-                                                <button type="button" style="margin-top: 17px;" class="pendienteestilos" wire:click.prevent="modalasignartecnico({{$d->idservicio}}, {{$os->codigo}})" title="Asignar Técnico Responsable">
-                                                    {{$d->estado}}
-                                                </button>
+                                                    @if (Auth::user()->hasPermissionTo('Asignar_Tecnico_Servicio'))
+                                                        <button type="button" style="margin-top: 17px;" class="pendienteestilos" wire:click.prevent="modalasignartecnico({{$d->idservicio}}, {{$os->codigo}})" title="Asignar Técnico Responsable">
+                                                            {{$d->estado}}
+                                                        </button>
+                                                    @else
+                                                        <button type="button" style="margin-top: 17px;" class="pendienteestilos" onclick="ConfirmarTecnicoResponsable('{{ $os->codigo }}','{{ ucwords(strtolower($os->nombrecliente)) }}', {{$d->idservicio}})" title="Ser Técnico Responsable de este Servicio">
+                                                            {{$d->estado}}
+                                                        </button>
+                                                    @endif
                                                 @else
                                                     @if($d->estado=="PROCESO")
-                                                        <button type="button" style="margin-top: 17px;" class="procesoestilos" wire:click.prevent="modaleditarservicio2('{{$d->estado}}', {{$d->idservicio}}, {{$os->codigo}})" title="Registrar Servicio Terminado o Actualizar Costo Servicio">
+                                                        <button type="button" style="margin-top: 17px;" class="procesoestilos" wire:click.prevent="modaleditarservicio2('{{$d->estado}}', {{$d->idservicio}}, {{$os->codigo}})" title="Registrar Servicio Terminado o Actualizar Servicio">
                                                             {{$d->estado}}
                                                         </button>
                                                     @else
@@ -566,26 +579,39 @@
                                                     <button class="botoneditarterminado" wire:click.prevent="modaleditarservicioterminado('{{$d->estado}}',{{$d->idservicio}},{{$os->codigo}})" title="Editar Precio Servicio">
                                                         EDITAR
                                                     </button>
+                                                    @else
+                                                        {{-- Espacio para que no se descuadre los botones --}}
+                                                        <div style="padding-top: 15px;">
+                                                            <button style="background-color: #00458500; border-color: #00458500;">
+                                                                
+                                                            </button>
+                                                        </div>
                                                     @endif
                                                 @endif
                                             @endforeach
                                         @else
                                             @foreach ($os->servicios as $d)
-
                                                 @if($d->estado != "ENTREGADO")
-                                                    <div style="padding-top: 15px;">
-                                                        <button class="botoneditar" wire:click.prevent="modaleditarservicio1('{{$d->estado}}',{{$d->idservicio}},{{$os->codigo}})" title="Editar Servicio">
-                                                            EDITAR
-                                                        </button>
-                                                    </div>
+                                                    <button class="botoneditar" style="margin-top: 15px;" wire:click.prevent="modaleditarservicio1('{{$d->estado}}',{{$d->idservicio}},{{$os->codigo}})" title="Editar Servicio">
+                                                        EDITAR
+                                                    </button>
+                                                    <br>
                                                 @else
-                                                    <div style="padding-top: 15px;">
-                                                        <button class="botoneditarterminado" wire:click.prevent="modaleditarservicioterminado('{{$d->estado}}',{{$d->idservicio}},{{$os->codigo}})" title="Editar Precio Servicio">
-                                                            EDITAR
-                                                        </button>
-                                                    </div>
+                                                     @if(@Auth::user()->hasPermissionTo('Modificar_Detalle_Serv_Entregado'))
+                                                        <div style="padding-top: 15px;">
+                                                            <button class="botoneditarterminado" wire:click.prevent="modaleditarservicioterminado('{{$d->estado}}',{{$d->idservicio}},{{$os->codigo}})" title="Editar Precio Servicio">
+                                                                EDITAR
+                                                            </button>
+                                                        </div>
+                                                    @else
+                                                        {{-- Espacio para que no se descuadre los botones --}}
+                                                        <div style="padding-top: 15px;">
+                                                            <button style="background-color: #00458500; border-color: #00458500;">
+                                                                
+                                                            </button>
+                                                        </div>
+                                                    @endif
                                                 @endif
-
 
                                             @endforeach
                                         @endif
@@ -758,6 +784,55 @@
 
 
     });
+
+
+
+
+
+
+
+
+    // Código para lanzar la Alerta de Hacerse Técnico Responsable de un Servicio
+    function ConfirmarTecnicoResponsable(codigo, nombrecliente, idservicio) {
+        swal({
+            title: '¿Quieres ser Responsable Técnico de la Orden de Servicio "' + codigo + '"?',
+            text: "Seras Responsble de un  Servicio del Cliente: " + nombrecliente,
+            type: 'warning',
+            showCancelButton: true,
+            cancelButtonText: 'Que lo haga otro',
+            confirmButtonText: 'Estoy de Acuerdo',
+            padding: '2em'
+            }).then(function(result) {
+            if (result.value) {
+                window.livewire.emit('sertecnicoresponsable', codigo, idservicio)
+                }
+            })
+    }
+    //Mostrar Mensaje Hacerse Técnico Responsable de un Servicio
+    window.livewire.on('responsable-tecnico', event => {
+            swal(
+                '¡Asignado Correctamente!',
+                'Fuiste Asignado a la Orden de Servicio "' + @this.id_orden_de_servicio + '" exitósamente',
+                'success'
+                )
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     // Código para lanzar la Alerta de Anulación de Servicio
