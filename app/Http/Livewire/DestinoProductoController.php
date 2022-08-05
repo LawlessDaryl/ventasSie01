@@ -140,11 +140,11 @@ class DestinoProductoController extends Component
         if ($this->opcion_operacion == 'Entrada') {
             
             ProductosDestino::where('productos_destinos.destino_id',$this->selected_id)->where('productos_destinos.product_id',$this->productid)
-            ->update(['stock' => $stockactual + $this->cantidad ]);
+            ->update(['stock' => $stockactual + $this->cant_operacion ]);
         }
         if ($this->opcion_operacion == 'Salida') {
             ProductosDestino::where('productos_destinos.destino_id',$this->selected_id)->where('productos_destinos.product_id',$this->productid)
-            ->update(['stock' => $stockactual - $this->cantidad ]);
+            ->update(['stock' => $stockactual - $this->cant_operacion ]);
         }
        
 
