@@ -3,6 +3,7 @@
     .tablaservicios {
         width: 100%;
         min-width: 1100px;
+        min-height: 140px;
     }
     .tablaservicios thead {
         background-color: #1572e8;
@@ -50,73 +51,121 @@
     
     /*Estilos para el Boton Pendiente en la Tabla*/
     .pendienteestilos {
+        text-decoration: none !important; 
         background-color: rgb(161, 0, 224);
         cursor: pointer;
         color: white;
         border-color: rgb(161, 0, 224);
         border-radius: 7px;
+        padding-top: 2px;
+        padding-bottom: 2px;
+        padding-left: 5px;
+        padding-right: 5px;
+        box-shadow: none;
+        border-width: 2px;
+        border-style: solid;
+        border-color: rgb(161, 0, 224);
+        display: inline-block;
     }
     .pendienteestilos:hover {
         background-color: rgb(255, 255, 255);
         color: rgb(161, 0, 224);
         transition: all 0.4s ease-out;
         border-color: rgb(161, 0, 224);
-        transform: translateY(-2px);
+        text-decoration: underline;
+        -webkit-transform: scale(1.05);
+        -moz-transform: scale(1.05);
+        -ms-transform: scale(1.05);
+        transform: scale(1.05);
         
     }
 
 
     /*Estilos para el Boton Proceso en la Tabla*/
     .procesoestilos {
+        text-decoration: none !important; 
         background-color: rgb(100, 100, 100);
         cursor: pointer;
-        color: white;
+        color: white; 
         border-color: rgb(100, 100, 100);
         border-radius: 7px;
+        padding-top: 2px;
+        padding-bottom: 2px;
+        padding-left: 5px;
+        padding-right: 5px;
+        box-shadow: none;
+        border-width: 2px;
+        border-style: solid;
+        border-color: rgb(100, 100, 100);
+        display: inline-block;
     }
     .procesoestilos:hover {
         background-color: rgb(255, 255, 255);
-        color: rgb(100, 100, 100);
-        transition: all 0.4s ease-out;
+        color: rgb(100, 100, 100); 
+        transition: all 0.5s ease-out;
         border-color: rgb(100, 100, 100);
-        transform: translateY(-2px);
-        
+        /* transform: translateY(-3px);  */
+
+        text-decoration: underline;
+        -webkit-transform: scale(1.05);
+        -moz-transform: scale(1.05);
+        -ms-transform: scale(1.05);
+        transform: scale(1.05);
     }
 
 
     /*Estilos para el Boton Terminado en la Tabla*/
     .terminadoestilos {
+        text-decoration: none !important; 
         background-color: rgb(224, 146, 0);
-        
         cursor: pointer;
         color: white;
         border-color: rgb(224, 146, 0);
         border-radius: 7px;
+        padding-top: 2px;
+        padding-bottom: 2px;
+        padding-left: 5px;
+        padding-right: 5px;
+        box-shadow: none;
+        border-width: 2px;
+        border-style: solid;
+        border-color: rgb(224, 146, 0);
+        display: inline-block;
     }
     .terminadoestilos:hover {
         background-color: rgb(255, 255, 255);
         color: rgb(224, 146, 0);
         transition: all 0.4s ease-out;
         border-color: rgb(224, 146, 0);
-        transform: translateY(-2px);
+        text-decoration: underline;
+        -webkit-transform: scale(1.05);
+        -moz-transform: scale(1.05);
+        -ms-transform: scale(1.05);
+        transform: scale(1.05);
     }
 
 
     /*Estilos para el Boton Entregado en la Tabla*/
     .entregadoestilos {
+        text-decoration: none !important; 
         background-color: rgb(22, 192, 0);
-        /* cursor: pointer; */
-        color: white;
+        color: white !important; 
+        cursor: default;
         border:none;
         border-radius: 7px;
-    }
-    /* .entregadoestilos:hover {
-        background-color: rgb(255, 255, 255);
-        color: rgb(22, 192, 0);
-        transition: all 0.4s ease-out;
+        padding-top: 2px;
+        padding-bottom: 2px;
+        padding-left: 5px;
+        padding-right: 5px;
+        box-shadow: none;
+        border-width: 2px;
+        border-style: solid;
         border-color: rgb(22, 192, 0);
-        transform: translateY(-2px);
-    } */
+        display: inline-block;
+    }
+    .entregadoestilos:hover {
+        color: rgb(255, 255, 255) !important; 
+    }
 
 
 
@@ -229,7 +278,7 @@
                 <div class="row">
 
                     <div class="col-12 col-sm-6 col-md-3 text-center">
-                        <b>Buscar por Código</b>
+                        <b>Buscar...</b>
                         <div class="form-group">
                             <div class="input-group mb-4">
                                 <div class="input-group-prepend">
@@ -241,7 +290,7 @@
                             </div>
                         </div>
                     </div>
-
+                    @if(Auth::user()->hasPermissionTo('Filtrar_sucursal_Reporte_Servicio'))
                     <div class="col-12 col-sm-6 col-md-3 text-center">
                         <b>Seleccionar Sucursal</b>
                         <div class="form-group">
@@ -253,7 +302,7 @@
                             </select>
                         </div>
                     </div>
-
+                    @endif
                     <div class="col-12 col-sm-6 col-md-3 text-center">
                         <b>Categoría Trabajo</b>
                         <div class="form-group">
@@ -303,7 +352,7 @@
 
             <div class="form-group">
                 <div class="row">
-
+                    @if(Auth::user()->hasPermissionTo('Asignar_Tecnico_Servicio'))
                     <div class="col-12 col-sm-6 col-md-3 text-center">
                         <b>Seleccione Usuario</b>
                         <div class="form-group">
@@ -315,7 +364,7 @@
                             </select>
                         </div>
                     </div>
-
+                    @endif
                     <div class="col-12 col-sm-6 col-md-3 text-center">
                         <b>Tipo de Fecha</b>
                         <div class="form-group">
@@ -407,7 +456,7 @@
                                         @endif
                                     </td>
                                     <td>
-                                        Cliente: {{ucwords(strtolower($os->nombrecliente))}} | Sucursal: {{$os->nombresucursal}}
+                                        Cliente: <b>{{ucwords(strtolower($os->nombrecliente))}}</b> | Sucursal: <b>{{$os->nombresucursal}}</b>
 
                                         @foreach ($os->servicios as $d)
 
@@ -466,24 +515,30 @@
                                         @if($os->servicios->count() == 1)
                                             @foreach ($os->servicios as $d)
                                                 @if($d->estado=="PENDIENTE")
-                                                <button type="button" class="pendienteestilos" wire:click.prevent="modalasignartecnico({{$d->idservicio}}, {{$os->codigo}})" title="Asignar Técnico Responsable">
-                                                    {{$d->estado}}
-                                                </button>
-                                                @else
-                                                    @if($d->estado=="PROCESO")
-                                                        <button type="button" class="procesoestilos" wire:click.prevent="modaleditarservicio2('{{$d->estado}}', {{$d->idservicio}}, {{$os->codigo}})" title="Registrar Servicio Terminado o Actualizar Costo Servicio">
+                                                    @if (Auth::user()->hasPermissionTo('Asignar_Tecnico_Servicio'))
+                                                        <a href="javascript:void(0)" class="pendienteestilos" wire:click.prevent="modalasignartecnico({{$d->idservicio}}, {{$os->codigo}})" title="Asignar Técnico Responsable">
+                                                            {{$d->estado}}
+                                                        </a>
+                                                    @else
+                                                        <button type="button" class="pendienteestilos" onclick="ConfirmarTecnicoResponsable('{{ $os->codigo }}','{{ ucwords(strtolower($os->nombrecliente)) }}', {{$d->idservicio}})" title="Ser Técnico Responsable de este Servicio">
                                                             {{$d->estado}}
                                                         </button>
+                                                    @endif
+                                                @else
+                                                    @if($d->estado == "PROCESO")
+                                                        <a href="javascript:void(0)" class="procesoestilos" wire:click.prevent="modaleditarservicio2('{{$d->estado}}', {{$d->idservicio}}, {{$os->codigo}})" title="Registrar Servicio Terminado o Actualizar Servicio">
+                                                            {{$d->estado}}
+                                                        </a>
                                                     @else
                                                         @if($d->estado=="TERMINADO")
-                                                            <button type="button" class="terminadoestilos" wire:click.prevent="modalentregarservicio('{{$d->estado}}', {{$d->idservicio}}, {{$os->codigo}})" title="Registrar Servicio como Entregado">
+                                                            <a href="javascript:void(0)" class="terminadoestilos" wire:click.prevent="modalentregarservicio('{{$d->estado}}', {{$d->idservicio}}, {{$os->codigo}})" title="Registrar Servicio como Entregado">
                                                                 {{$d->estado}}
-                                                            </button>
+                                                            </a>
                                                         @else
                                                             @if($d->estado=="ENTREGADO")
-                                                                <button type="button" class="entregadoestilos">
+                                                                <a href="javascript:void(0)" class="entregadoestilos">
                                                                     {{$d->estado}}
-                                                                </button>
+                                                                </a>
                                                             @else
                                                                 @if($d->estado=="ABANDONADO")
                                                                     <button class="stamp stamp" style="background-color: rgb(186, 238, 0)">
@@ -506,24 +561,30 @@
                                         @else
                                             @foreach ($os->servicios as $d)
                                                 @if($d->estado=="PENDIENTE")
-                                                <button type="button" style="margin-top: 17px;" class="pendienteestilos" wire:click.prevent="modalasignartecnico({{$d->idservicio}}, {{$os->codigo}})" title="Asignar Técnico Responsable">
-                                                    {{$d->estado}}
-                                                </button>
+                                                    @if (Auth::user()->hasPermissionTo('Asignar_Tecnico_Servicio'))
+                                                        <a href="javascript:void(0)" style="margin-top: 17px;" class="pendienteestilos" wire:click.prevent="modalasignartecnico({{$d->idservicio}}, {{$os->codigo}})" title="Asignar Técnico Responsable">
+                                                            {{$d->estado}}
+                                                        </a>
+                                                    @else
+                                                        <a href="javascript:void(0)" style="margin-top: 17px;" class="pendienteestilos" onclick="ConfirmarTecnicoResponsable('{{ $os->codigo }}','{{ ucwords(strtolower($os->nombrecliente)) }}', {{$d->idservicio}})" title="Ser Técnico Responsable de este Servicio">
+                                                            {{$d->estado}}
+                                                        </a>
+                                                    @endif
                                                 @else
                                                     @if($d->estado=="PROCESO")
-                                                        <button type="button" style="margin-top: 17px;" class="procesoestilos" wire:click.prevent="modaleditarservicio2('{{$d->estado}}', {{$d->idservicio}}, {{$os->codigo}})" title="Registrar Servicio Terminado o Actualizar Costo Servicio">
+                                                        <a href="javascript:void(0)" style="margin-top: 17px;" class="procesoestilos" wire:click.prevent="modaleditarservicio2('{{$d->estado}}', {{$d->idservicio}}, {{$os->codigo}})" title="Registrar Servicio Terminado o Actualizar Servicio">
                                                             {{$d->estado}}
-                                                        </button>
+                                                        </a>
                                                     @else
                                                         @if($d->estado=="TERMINADO")
-                                                            <button type="button" style="margin-top: 17px;" class="terminadoestilos" wire:click.prevent="modalentregarservicio('{{$d->estado}}', {{$d->idservicio}}, {{$os->codigo}})" title="Registrar Servicio como Entregado">
+                                                            <a href="javascript:void(0)" style="margin-top: 17px;" class="terminadoestilos" wire:click.prevent="modalentregarservicio('{{$d->estado}}', {{$d->idservicio}}, {{$os->codigo}})" title="Registrar Servicio como Entregado">
                                                                 {{$d->estado}}
-                                                            </button>
+                                                            </a>
                                                         @else
                                                             @if($d->estado=="ENTREGADO")
-                                                                <button type="button" style="margin-top: 17px;" class="entregadoestilos">
+                                                                <a href="javascript:void(0)" style="margin-top: 17px;" class="entregadoestilos">
                                                                     {{$d->estado}}
-                                                                </button>
+                                                                </a>
                                                             @else
                                                                 @if($d->estado=="ABANDONADO")
                                                                     <button class="stamp stamp" style="background-color: rgb(186, 238, 0)">
@@ -548,10 +609,10 @@
 
 
 
-
-
                                         
                                     </td>
+
+                                    
                                     <td class="text-center">
 
 
@@ -566,26 +627,39 @@
                                                     <button class="botoneditarterminado" wire:click.prevent="modaleditarservicioterminado('{{$d->estado}}',{{$d->idservicio}},{{$os->codigo}})" title="Editar Precio Servicio">
                                                         EDITAR
                                                     </button>
+                                                    @else
+                                                        {{-- Espacio para que no se descuadre los botones --}}
+                                                        <div style="padding-top: 15px;">
+                                                            <button style="background-color: #00458500; border-color: #00458500;">
+                                                                
+                                                            </button>
+                                                        </div>
                                                     @endif
                                                 @endif
                                             @endforeach
                                         @else
                                             @foreach ($os->servicios as $d)
-
                                                 @if($d->estado != "ENTREGADO")
-                                                    <div style="padding-top: 15px;">
-                                                        <button class="botoneditar" wire:click.prevent="modaleditarservicio1('{{$d->estado}}',{{$d->idservicio}},{{$os->codigo}})" title="Editar Servicio">
-                                                            EDITAR
-                                                        </button>
-                                                    </div>
+                                                    <button class="botoneditar" style="margin-top: 15px;" wire:click.prevent="modaleditarservicio1('{{$d->estado}}',{{$d->idservicio}},{{$os->codigo}})" title="Editar Servicio">
+                                                        EDITAR
+                                                    </button>
+                                                    <br>
                                                 @else
-                                                    <div style="padding-top: 15px;">
-                                                        <button class="botoneditarterminado" wire:click.prevent="modaleditarservicioterminado('{{$d->estado}}',{{$d->idservicio}},{{$os->codigo}})" title="Editar Precio Servicio">
-                                                            EDITAR
-                                                        </button>
-                                                    </div>
+                                                     @if(@Auth::user()->hasPermissionTo('Modificar_Detalle_Serv_Entregado'))
+                                                        <div style="padding-top: 15px;">
+                                                            <button class="botoneditarterminado" wire:click.prevent="modaleditarservicioterminado('{{$d->estado}}',{{$d->idservicio}},{{$os->codigo}})" title="Editar Precio Servicio">
+                                                                EDITAR
+                                                            </button>
+                                                        </div>
+                                                    @else
+                                                        {{-- Espacio para que no se descuadre los botones --}}
+                                                        <div style="padding-top: 15px;">
+                                                            <button style="background-color: #00458500; border-color: #00458500;">
+                                                                
+                                                            </button>
+                                                        </div>
+                                                    @endif
                                                 @endif
-
 
                                             @endforeach
                                         @endif
@@ -758,6 +832,55 @@
 
 
     });
+
+
+
+
+
+
+
+
+    // Código para lanzar la Alerta de Hacerse Técnico Responsable de un Servicio
+    function ConfirmarTecnicoResponsable(codigo, nombrecliente, idservicio) {
+        swal({
+            title: '¿Quieres ser Responsable Técnico de la Orden de Servicio "' + codigo + '"?',
+            text: "Seras Responsble de un  Servicio del Cliente: " + nombrecliente,
+            type: 'warning',
+            showCancelButton: true,
+            cancelButtonText: 'Que lo haga otro',
+            confirmButtonText: 'Estoy de Acuerdo',
+            padding: '2em'
+            }).then(function(result) {
+            if (result.value) {
+                window.livewire.emit('sertecnicoresponsable', codigo, idservicio)
+                }
+            })
+    }
+    //Mostrar Mensaje Hacerse Técnico Responsable de un Servicio
+    window.livewire.on('responsable-tecnico', event => {
+            swal(
+                '¡Asignado Correctamente!',
+                'Fuiste Asignado a la Orden de Servicio "' + @this.id_orden_de_servicio + '" exitósamente',
+                'success'
+                )
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     // Código para lanzar la Alerta de Anulación de Servicio

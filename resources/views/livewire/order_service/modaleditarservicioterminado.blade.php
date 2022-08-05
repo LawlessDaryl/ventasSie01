@@ -11,37 +11,38 @@
 
                 <form class="needs-validation">
 
+                    @if (Auth::user()->hasPermissionTo('Cambiar_Tecnico_Responsable'))
 
+                        <div class="form-row">
+                            <div class="form-row" style="width: 25%; margin-right: 7px;">
+                                {{-- <div class="col-md-12">
+                                    <label for="validationTooltip01">Cambiar Técnico</label>
+                                    <input type="number" wire:model.lazy="edit_precioservicioterminado" class="form-control">
+                                </div> --}}
+                            </div>
+                            <div class="form-row" style="width: 50%; margin-right: 7px;">
+                                <div class="col-md-12 text-center">
+                                    <label for="validationTooltip01">Cambiar Técnico Responsable</label>
+                                    <select wire:model="id_usuario" class="form-control">
+                                        @foreach($this->lista_de_usuarios as $i)
+                                        <option value="{{$i->idusuario}}">{{$i->nombreusuario}}</option>
+                                        @endforeach
+                                    </select>
 
-                    <div class="form-row">
-                        <div class="form-row" style="width: 25%; margin-right: 7px;">
-                            {{-- <div class="col-md-12">
-                                <label for="validationTooltip01">Cambiar Técnico</label>
-                                <input type="number" wire:model.lazy="edit_precioservicioterminado" class="form-control">
-                            </div> --}}
-                        </div>
-                        <div class="form-row" style="width: 50%; margin-right: 7px;">
-                            <div class="col-md-12 text-center">
-                                <label for="validationTooltip01">Cambiar Técnico Responsable</label>
-                                <select wire:model="id_usuario" class="form-control">
-                                    @foreach($this->lista_de_usuarios as $i)
-                                    <option value="{{$i->idusuario}}">{{$i->nombreusuario}}</option>
-                                    @endforeach
-                                </select>
-
+                                </div>
+                            </div>
+                            <div class="form-row text-center" style="width: 25%">
+                                {{-- <div class="col-md-12">
+                                    <label>Saldo Bs</label>
+                                    <div class="text-center">
+                                        <label for="validationTooltipUsername"> <h2>{{number_format($this->edit_saldoterminado,2)}}</h2> </label>
+                                    </div>
+                                </div> --}}
                             </div>
                         </div>
-                        <div class="form-row text-center" style="width: 25%">
-                            {{-- <div class="col-md-12">
-                                <label>Saldo Bs</label>
-                                <div class="text-center">
-                                    <label for="validationTooltipUsername"> <h2>{{number_format($this->edit_saldoterminado,2)}}</h2> </label>
-                                </div>
-                            </div> --}}
-                        </div>
-                    </div>
 
                     <br>
+                    @endif
 
                     <div class="form-row">
                         <div class="form-row" style="width: 33.33%; margin-right: 7px;">
