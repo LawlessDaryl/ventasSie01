@@ -39,7 +39,7 @@ class ServiciosController extends Component
     }
     public function mount()
     {
-        $this->pageTitle = 'Detalle de la orden de servicio Noº: ';
+        $this->pageTitle = 'Detalle de la Orden de Servicio Noº: ';
 
         $this->categoryid = 'Elegir';
         $this->typeworkid = 'Elegir';

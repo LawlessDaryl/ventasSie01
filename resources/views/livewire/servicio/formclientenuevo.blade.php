@@ -1,7 +1,7 @@
 <div wire:ignore.self class="modal fade" id="theNewClient" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header bg-dark">
+            <div class="modal-header bg-primary">
                 <h5 class="modal-title text-white">
                     <b>Nuevo</b> | Cliente
                 </h5>

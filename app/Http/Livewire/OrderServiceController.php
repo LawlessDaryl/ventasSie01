@@ -81,7 +81,7 @@ class OrderServiceController extends Component
     }
     public function mount()
     {
-        $this->paginacion = 10;
+        $this->paginacion = 50;
         $this->type = 'PENDIENTE';
         $this->sucursal_id = $this->idsucursal();
         $this->catprodservid = 'Todos';
@@ -120,6 +120,11 @@ class OrderServiceController extends Component
         }
 
 
+        if(session('orderserv') != "")
+        {
+            $this->search = session('orderserv');
+            session(['orderserv' => null]);
+        }
 
 
     }
@@ -1038,7 +1043,8 @@ class OrderServiceController extends Component
                                 {
                                     if($this->tipofecha == 'Dia')
                                     {
-                                        $orden_de_servicio = OrderService::join('services as s', 's.order_service_id', 'order_services.id')
+                                        //Obteniendo todas las ordenes de servicio que no sean Entregadas
+                                        $aa = OrderService::join('services as s', 's.order_service_id', 'order_services.id')
                                         ->join('sucursals as su', 'su.id', 's.sucursal_id')
                                         ->join('mov_services as ms', 'ms.service_id', 's.id')
                                         ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
@@ -1056,9 +1062,72 @@ class OrderServiceController extends Component
                                         DB::raw('0 as servicios'))
                                         ->where('order_services.status', 'ACTIVO')
                                         ->whereBetween('order_services.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
+                                        ->where('mov.user_id', $this->usuario)
                                         ->where('mov.status', 'ACTIVO')
+                                        ->where('mov.type', '<>', 'ENTREGADO')
+                                        ->where('s.sucursal_id',$this->sucursal_id)
+                                        ->groupBy("order_services.id")
+                                        ->orderBy("order_services.id","desc")
+                                        ->get();
+
+
+                                        //Obteniendo todas las ordenes de servicio que sean Terminadas e Inactivas
+                                        $bb = OrderService::join('services as s', 's.order_service_id', 'order_services.id')
+                                        ->join('sucursals as su', 'su.id', 's.sucursal_id')
+                                        ->join('mov_services as ms', 'ms.service_id', 's.id')
+                                        ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+                                        ->join('users as u', 'u.id', 'mov.user_id')
+                                        ->join('cliente_movs as cm', 'cm.movimiento_id', 'mov.id')
+                                        ->join('clientes as c', 'c.id', 'cm.cliente_id')
+                                        ->select("order_services.id as codigo",
+                                        "order_services.created_at as fechacreacion",
+                                        "su.name as nombresucursal",
+                                        "order_services.type_service as tiposervicio",
+                                        "c.nombre as nombrecliente",
+                                        "c.id as idcliente",
+                                        'u.name as usuarioreceptor',
+                                        "mov.import as importe",
+                                        DB::raw('0 as servicios'))
+                                        ->where('order_services.status', 'ACTIVO')
+                                        ->whereBetween('order_services.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
+                                        ->where('mov.type', 'TERMINADO')
+                                        ->where('mov.status', 'INACTIVO')
                                         ->where('mov.user_id', $this->usuario)
                                         ->where('s.sucursal_id',$this->sucursal_id)
+                                        ->groupBy("order_services.id")
+                                        ->orderBy("order_services.id","desc")
+                                        ->get();
+
+                                        //Variable que almacenará a todos los ids de las ordenes de servicio de $aa y $bb
+                                        $ids_orden_servicio[] = 0; 
+
+                                        foreach ($aa as $a)
+                                        {
+                                            array_push($ids_orden_servicio, $a->codigo);
+                                        }
+                                        foreach ($bb as $b)
+                                        {
+                                            array_push($ids_orden_servicio, $b->codigo);
+                                        }
+
+                                        //Consulta de todas las ordenes de servicio que tengan los ids de $ids_orden_servicio[]
+                                        $orden_de_servicio = OrderService::join('services as s', 's.order_service_id', 'order_services.id')
+                                        ->join('sucursals as su', 'su.id', 's.sucursal_id')
+                                        ->join('mov_services as ms', 'ms.service_id', 's.id')
+                                        ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+                                        ->join('users as u', 'u.id', 'mov.user_id')
+                                        ->join('cliente_movs as cm', 'cm.movimiento_id', 'mov.id')
+                                        ->join('clientes as c', 'c.id', 'cm.cliente_id')
+                                        ->select("order_services.id as codigo",
+                                        "order_services.created_at as fechacreacion",
+                                        "su.name as nombresucursal",
+                                        "order_services.type_service as tiposervicio",
+                                        "c.nombre as nombrecliente",
+                                        "c.id as idcliente",
+                                        'u.name as usuarioreceptor',
+                                        "mov.import as importe",
+                                        DB::raw('0 as servicios'))
+                                        ->whereIn('order_services.id', $ids_orden_servicio)
                                         ->groupBy("order_services.id")
                                         ->orderBy("order_services.id","desc")
                                         ->paginate($this->paginacion);
@@ -1071,7 +1140,8 @@ class OrderServiceController extends Component
                                     }
                                     else
                                     {
-                                        $orden_de_servicio = OrderService::join('services as s', 's.order_service_id', 'order_services.id')
+                                        //Obteniendo todas las ordenes de servicio que no sean Entregadas
+                                        $aa = OrderService::join('services as s', 's.order_service_id', 'order_services.id')
                                         ->join('sucursals as su', 'su.id', 's.sucursal_id')
                                         ->join('mov_services as ms', 'ms.service_id', 's.id')
                                         ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
@@ -1089,13 +1159,76 @@ class OrderServiceController extends Component
                                         DB::raw('0 as servicios'))
                                         ->where('order_services.status', 'ACTIVO')
                                         ->whereBetween('order_services.created_at', [Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00', Carbon::parse($this->dateTo)->format('Y-m-d') . ' 23:59:59'])
+                                        ->where('mov.user_id', $this->usuario)
                                         ->where('mov.status', 'ACTIVO')
+                                        ->where('mov.type', '<>', 'ENTREGADO')
+                                        ->where('s.sucursal_id',$this->sucursal_id)
+                                        ->groupBy("order_services.id")
+                                        ->orderBy("order_services.id","desc")
+                                        ->get();
+
+
+                                        //Obteniendo todas las ordenes de servicio que sean Terminadas e Inactivas
+                                        $bb = OrderService::join('services as s', 's.order_service_id', 'order_services.id')
+                                        ->join('sucursals as su', 'su.id', 's.sucursal_id')
+                                        ->join('mov_services as ms', 'ms.service_id', 's.id')
+                                        ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+                                        ->join('users as u', 'u.id', 'mov.user_id')
+                                        ->join('cliente_movs as cm', 'cm.movimiento_id', 'mov.id')
+                                        ->join('clientes as c', 'c.id', 'cm.cliente_id')
+                                        ->select("order_services.id as codigo",
+                                        "order_services.created_at as fechacreacion",
+                                        "su.name as nombresucursal",
+                                        "order_services.type_service as tiposervicio",
+                                        "c.nombre as nombrecliente",
+                                        "c.id as idcliente",
+                                        'u.name as usuarioreceptor',
+                                        "mov.import as importe",
+                                        DB::raw('0 as servicios'))
+                                        ->where('order_services.status', 'ACTIVO')
+                                        ->whereBetween('order_services.created_at', [Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00', Carbon::parse($this->dateTo)->format('Y-m-d') . ' 23:59:59'])
+                                        ->where('mov.type', 'TERMINADO')
+                                        ->where('mov.status', 'INACTIVO')
                                         ->where('mov.user_id', $this->usuario)
                                         ->where('s.sucursal_id',$this->sucursal_id)
                                         ->groupBy("order_services.id")
                                         ->orderBy("order_services.id","desc")
+                                        ->get();
+
+                                        //Variable que almacenará a todos los ids de las ordenes de servicio de $aa y $bb
+                                        $ids_orden_servicio[] = 0; 
+
+                                        foreach ($aa as $a)
+                                        {
+                                            array_push($ids_orden_servicio, $a->codigo);
+                                        }
+                                        foreach ($bb as $b)
+                                        {
+                                            array_push($ids_orden_servicio, $b->codigo);
+                                        }
+
+                                        //Consulta de todas las ordenes de servicio que tengan los ids de $ids_orden_servicio[]
+                                        $orden_de_servicio = OrderService::join('services as s', 's.order_service_id', 'order_services.id')
+                                        ->join('sucursals as su', 'su.id', 's.sucursal_id')
+                                        ->join('mov_services as ms', 'ms.service_id', 's.id')
+                                        ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
+                                        ->join('users as u', 'u.id', 'mov.user_id')
+                                        ->join('cliente_movs as cm', 'cm.movimiento_id', 'mov.id')
+                                        ->join('clientes as c', 'c.id', 'cm.cliente_id')
+                                        ->select("order_services.id as codigo",
+                                        "order_services.created_at as fechacreacion",
+                                        "su.name as nombresucursal",
+                                        "order_services.type_service as tiposervicio",
+                                        "c.nombre as nombrecliente",
+                                        "c.id as idcliente",
+                                        'u.name as usuarioreceptor',
+                                        "mov.import as importe",
+                                        DB::raw('0 as servicios'))
+                                        ->whereIn('order_services.id', $ids_orden_servicio)
+                                        ->groupBy("order_services.id")
+                                        ->orderBy("order_services.id","desc")
                                         ->paginate($this->paginacion);
-                            
+
                                         foreach ($orden_de_servicio as $os)
                                         {
                                             //Obtener los servicios de la orden de servicio
@@ -2447,11 +2580,22 @@ class OrderServiceController extends Component
             ->extends('layouts.theme.app')
             ->section('content');
     }
+
+    //Buscar el Codigo de una Orden de Servicio desde otra Pagina
+    public function buscarid($id)
+    {
+        session(['orderserv' => $id]);
+        /* $this->opciones = 'TODOS'; */
+        /* $this->redirect('orderservice'); */
+        return redirect()->intended("orderservice");
+    }
     //Mostrar u Ocultar Mas filtros en la Vista
     public function mostrarocultarmasfiltros()
     {
         if($this->masfiltros)
         {
+            $this->usuario = 'Todos';
+            $this->tipofecha = 'Todos';
             $this->masfiltros = false;
         }
         else
@@ -2901,16 +3045,52 @@ class OrderServiceController extends Component
     //Llama al método modaleditarservicio pero ocultando los parámetros para Terminar un Servicio
     public function modaleditarservicio1($type, $idservicio, $idordendeservicio)
     {
-        $this->tipo = $type;
-        $this->mostrarterminar = "No";
-        $this->modaleditarservicio($type, $idservicio, $idordendeservicio);
+        if(Auth::user()->hasPermissionTo('Asignar_Tecnico_Servicio'))
+        {
+            $this->tipo = $type;
+            $this->mostrarterminar = "No";
+            $this->modaleditarservicio($type, $idservicio, $idordendeservicio);
+        }
+        else
+        {
+            //Verificamos si el que solicita esta informacion sea el Técnico Responsable del Servicio en proceso
+            if($this->verificartecnicoresponsable($idservicio))
+            {
+                $this->tipo = $type;
+                $this->mostrarterminar = "No";
+                $this->modaleditarservicio($type, $idservicio, $idordendeservicio);
+            }
+            else
+            {
+                $this->emit('acceso-denegado');
+            }
+        }
+        
     }
     //Llama al método modaleditarservicio pero mostrando los parámetros para Terminar un Servicio
     public function modaleditarservicio2($type, $idservicio, $idordendeservicio)
     {
-        $this->tipo = $type;
-        $this->mostrarterminar = "Si";
-        $this->modaleditarservicio($type, $idservicio, $idordendeservicio);
+        if(Auth::user()->hasPermissionTo('Asignar_Tecnico_Servicio'))
+        {
+            $this->tipo = $type;
+            $this->mostrarterminar = "Si";
+            $this->modaleditarservicio($type, $idservicio, $idordendeservicio);
+        }
+        else
+        {
+            //Verificamos si el que solicita esta informacion sea el Técnico Responsable del Servicio en proceso
+            if($this->verificartecnicoresponsable($idservicio))
+            {
+                $this->tipo = $type;
+                $this->mostrarterminar = "Si";
+                $this->modaleditarservicio($type, $idservicio, $idordendeservicio);
+            }
+            else
+            {
+                $this->emit('acceso-denegado');
+            }
+        }
+
     }
     //Muestra una Ventana Modal con todos los datos de un Servicio
     public function modaleditarservicio($type, $idservicio, $idordendeservicio)
@@ -3171,46 +3351,95 @@ class OrderServiceController extends Component
     public function terminarservicio()
     {
         $service = Service::find($this->id_servicio);
+            foreach ($service->movservices as $servmov)
+            {
+                if ($servmov->movs->status == 'ACTIVO' && $servmov->movs->type == 'PROCESO')
+                {
+                    $movimiento = $servmov->movs;
+
+                    DB::beginTransaction();
+                    try
+                    {
+                        if(Auth::user()->hasPermissionTo('Orden_Servicio_Index'))
+                        {
+                            $mv = Movimiento::create([
+                                'type' => 'TERMINADO',
+                                'status' => 'ACTIVO',
+                                'import' => $movimiento->import,
+                                'on_account' => $movimiento->on_account,
+                                'saldo' => $movimiento->saldo,
+                                'user_id' => $movimiento->user_id,
+                            ]);
+                        }
+
+                        MovService::create([
+                            'movimiento_id' => $mv->id,
+                            'service_id' => $service->id
+                        ]);
+                        ClienteMov::create([
+                            'movimiento_id' => $mv->id,
+                            'cliente_id' => $movimiento->climov->cliente_id,
+                        ]);
+
+                        DB::commit();
+                        $movimiento->update([
+                            'status' => 'INACTIVO'
+                        ]);
+                        $this->emit('show-terminarservicio', 'show modal!');
+                    }
+                    catch(Exception $e)
+                    {
+                        DB::rollback();
+                        $this->emit('item-error', 'ERROR' . $e->getMessage());
+                    }
+                }
+            }
+
+        
+    }
+    //Devuelve el id del Ténico Responsable de un Servicio en Proceso
+    public function verificartecnicoresponsable($idservicio)
+    {
+        $service = Service::find($idservicio);
         foreach ($service->movservices as $servmov)
         {
-            if ($servmov->movs->status == 'ACTIVO' && $servmov->movs->type == 'PROCESO')
+            if ($servmov->movs->status == 'ACTIVO' && $servmov->movs->type == 'PENDIENTE')
             {
-                $movimiento = $servmov->movs;
-
-                DB::beginTransaction();
-                try
+                return true;
+                break;
+            }
+            else
+            {
+                if($servmov->movs->status == 'ACTIVO' && $servmov->movs->type == 'PROCESO')
                 {
-                    if(Auth::user()->hasPermissionTo('Orden_Servicio_Index'))
+                    $movimiento = $servmov->movs;
+
+                    if($movimiento->user_id == Auth()->user()->id)
                     {
-                        $mv = Movimiento::create([
-                            'type' => 'TERMINADO',
-                            'status' => 'ACTIVO',
-                            'import' => $movimiento->import,
-                            'on_account' => $movimiento->on_account,
-                            'saldo' => $movimiento->saldo,
-                            'user_id' => $movimiento->user_id,
-                        ]);
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                    break;
+                }
+                else
+                {
+                    if($servmov->movs->status == 'ACTIVO' && $servmov->movs->type == 'TERMINADO')
+                    {
+                        return true;
+                        break;
+                    }
+                    else
+                    {
+                        if($servmov->movs->status == 'ACTIVO' && $servmov->movs->type == 'ENTREGADO')
+                        {
+                            return true;
+                            break;
+                        }
                     }
 
-                    MovService::create([
-                        'movimiento_id' => $mv->id,
-                        'service_id' => $service->id
-                    ]);
-                    ClienteMov::create([
-                        'movimiento_id' => $mv->id,
-                        'cliente_id' => $movimiento->climov->cliente_id,
-                    ]);
-
-                    DB::commit();
-                    $movimiento->update([
-                        'status' => 'INACTIVO'
-                    ]);
-                    $this->emit('show-terminarservicio', 'show modal!');
-                }
-                catch(Exception $e)
-                {
-                    DB::rollback();
-                    $this->emit('item-error', 'ERROR' . $e->getMessage());
                 }
             }
         }
@@ -3477,6 +3706,7 @@ class OrderServiceController extends Component
 
         //Buscando el movimiento de tipo Terminado para actualizar el id Usuario
         $servicio = Service::find($this->id_servicio);
+
         foreach ($servicio->movservices as $servmov)
         {
             if($servmov->movs->type == 'TERMINADO' && $servmov->movs->status == 'INACTIVO')
@@ -3488,8 +3718,20 @@ class OrderServiceController extends Component
                 
                 break;
             }
-        } 
-
+        }
+        
+        foreach ($servicio->movservices as $servmov)
+        {
+            if($servmov->movs->type == 'PROCESO' && $servmov->movs->status == 'INACTIVO')
+            {
+                
+                $servmov->movs->update([
+                    'user_id' => $this->id_usuario,
+                ]);
+                
+                break;
+            }
+        }
         
         $servicio->update([
             'import' => $this->edit_precioservicioterminado,

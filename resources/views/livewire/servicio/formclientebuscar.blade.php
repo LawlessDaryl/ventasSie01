@@ -1,7 +1,7 @@
 <div wire:ignore.self class="modal fade" id="theClient" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header bg-dark">
+            <div class="modal-header bg-primary">
                 <h5 class="modal-title text-white">
                     <b>Buscar</b> | Cliente
                 </h5>
@@ -25,7 +25,7 @@
                     <div class="col-lg-4 col-md-4 col-sm-12">
 
                         <ul class="tabs tab-pills">
-                            <a href="javascript:void(0)" class="btn btn-warning" data-toggle="modal"
+                            <a href="javascript:void(0)" class="btn btn-outline-primary" data-toggle="modal"
                                 data-target="#theNewClient" wire:click.prevent="resetUI()" data-dismiss="modal">Nuevo
                                 Cliente</a>
                         </ul>
@@ -34,37 +34,39 @@
                 @if ($condicion != 0)
 
                 <div class="table-wrapper">
-                    <table class="tablaservicios" style="min-width: 400px;">
-                        <thead class="text-white" style="background: #3B3F5C">
+                    <table class="tablaservicios">
+                        <thead>
                             <tr>
-                                <th class="table-th text-withe text-center ">Cédula</th>
-                                <th class="table-th text-withe text-center">Nombre</th>
-                                <th class="table-th text-withe text-center">Teléfono</th>
-                                <th class="table-th text-withe text-center">Acción</th>
+                                <th class="text-center">Cédula</th>
+                                <th>Nombre</th>
+                                <th class="text-center">Teléfono</th>
+                                <th class="text-center">Acción</th>
                             </tr>
                         </thead>
                         <tbody>
                                 @foreach ($datos as $d)
                                     <tr>
                                         <td class="text-center">
-                                            <h6 class="text-center">{{ $d->cedula }}</h6>
+                                            {{ $d->cedula }}
+                                        </td>
+                                        <td>
+                                            <div style="padding-left: 5px;">
+                                                {{ ucwords(strtolower($d->nombre)) }}
+                                            </div>
                                         </td>
                                         <td class="text-center">
-                                            <h6 class="text-center">{{ $d->nombre }}</h6>
-                                        </td>
-                                        <td class="text-center">
-                                            {{-- <h6 class="text-center">{{ $d->celular }}</h6> --}}
-                                            <input type="number" wire:model.lazy="celular" class="form-control" 
+                                            {{ $d->celular }}
+
+                                            {{-- <input type="number" wire:model.lazy="celular" class="form-control" 
                                             placeholder="{{ $d->celular }}" maxlength="8">
-                                            @error('celular') <span class="text-danger er">{{ $message }}</span>@enderror
+                                            @error('celular') <span class="text-danger er">{{ $message }}</span>@enderror --}}
                                         </td>
                                         <td class="text-center">
                                             <a href="javascript:void(0)"
                                                 wire:click="Seleccionar({{ $d->id }})"
-                                                class="btn btn-warning mtmobile" title="Seleccionar">
+                                                class="btn btn-primary btn-sm" title="Seleccionar Cliente">
                                                 <i class="fas fa-check"></i>
                                             </a>
-                                            
                                         </td>
                                     </tr>
                                 @endforeach
@@ -78,23 +80,10 @@
                 </div>
                 @endif
 
-                <div class="row">
-
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-
-                </div>
-
             </div>
             <div class="modal-footer">
-                <button type="button" wire:click.prevent="resetUI()" class="btn btn-dark close-btn text-info"
-                    data-dismiss="modal" style="background: #3b3f5c">CANCELAR</button>
+                <button type="button" wire:click.prevent="resetUI()" class="btn btn" style="background-color: rgb(0, 56, 161); color: beige;"
+                    data-dismiss="modal">CANCELAR</button>
             </div>
         </div>
     </div>

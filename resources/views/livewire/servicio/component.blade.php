@@ -18,9 +18,43 @@
     top: 0;
     left: 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+.tablaservicios {
+        width: 100%;
+        /* min-width: 1100px; */
+    }
+    .tablaservicios thead {
+        background-color: #1572e8;
+        color: white;
+    }
+    .tablaservicios th, td {
+        border: 0.5px solid #1571e894;
+        /* padding: 4px; */
+    }
+    .tablaservicios tr:hover {
+        background-color: rgba(0, 195, 255, 0.336);
+    }
+
+
+    /*Estilos Hora*/
+
+
+    
+
+
+
 </style>
  @endsection
-
 <div class="row sales layout-top-spacing">
     <div class="col-sm-12">
         <div class="widget widget-chart-one">
@@ -40,59 +74,68 @@
                         <div class="infobox">
                             <b class="info-text">Cliente: </b>
                             @if (!empty($cliente))
-                                {{ $cliente->nombre }}
+                                {{ ucwords(strtolower($cliente->nombre)) }}
                             @else
                                 NO DEFINIDO
                             @endif <br />
 
                             <b class="info-text">Fecha: </b>{{ $from }}<br />
 
-                            <b class="info-text">Registrado por: </b>{{ $usuariolog }} <br />
+                            <b class="info-text">Registrado por (Técnico Receptor): </b>{{ $usuariolog }} <br />
                             <b class="info-text">Tipo de servicio: </b> {{ $typeservice }} <br />
                         </div>
                     </div>
 
                 </div>
+               
+                <div class=" row row-demo-grid"> 
+                    <div  class="col-md-4 ml-auto">
                 @if ($orderservice == 0 || $cliente == '')
-                    <ul class="tabs tab-pills">
-                        <a href="javascript:void(0)" class="btn btn-warning" data-toggle="modal"
+                   
+                        <a href="javascript:void(0)" class="btn btn-outline-primary" data-toggle="modal"
                             data-target="#theClient">ASIGNAR CLIENTE</a>
-                    </ul>
+                   
 
-                    <ul class="tabs tab-pills">
-                        <a href="javascript:void(0)" class="btn btn-warning" data-toggle="modal"
+                  
+                        <a href="javascript:void(0)" class="btn btn-outline-primary" data-toggle="modal"
                             data-target="#theNewClient">NUEVO CLIENTE</a>
-                    </ul>
+                 
                 @endif
+              
                 @if (!empty($cliente))
-                    <ul class="tabs tab-pills">
-                        <a href="javascript:void(0)" class="btn btn-warning" data-toggle="modal"
+              
+               
+                  
+                        <a href="javascript:void(0)" class="btn btn-outline-primary" data-toggle="modal"
                             data-target="#theModal">AGREGAR SERVICIO</a>
-                    </ul>
+                   
+               
                 @endif
                 @if ($orderservice != 0)
-                    <ul class="tabs tab-pills">
-                        <a href="javascript:void(0)" class="btn btn-warning" data-toggle="modal"
+                
+                        <a href="javascript:void(0)" class="btn btn-outline-primary" data-toggle="modal"
                             data-target="#theType">TIPO DE SERVICIO</a>
-                    </ul>
+                        
                 @endif
+            
+            </div>
             </div>
            
 
             <div class="widget-content">
-                <div class="table-responsive">
-                    <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
-                        <thead class="text-white" style="background: #ee761c">
+                <div class="table-wrapper">
+                    <table class="tablaservicios">
+                        <thead>
                             <tr>
                                 <th class="table-th text-withe">#</th>
-                                <th class="table-th text-withe text-center">EQUIPO</th>
-                                <th class="table-th text-withe text-center">MARCA</th>
-                                <th class="table-th text-withe text-center">DETALLE</th>
-                                <th class="table-th text-withe text-center">ESTADO</th>
-                                <th class="table-th text-withe text-center">TOTAL</th>
-                                <th class="table-th text-withe text-center">A CUENTA</th>
-                                <th class="table-th text-withe text-center">SALDO</th>
-                                <th class="table-th text-withe text-center">ACCIONES</th>
+                                <th class="text-center">EQUIPO</th>
+                                <th class="text-center">MARCA</th>
+                                <th class="text-center">DETALLE</th>
+                                <th class="text-center">ESTADO</th>
+                                <th class="text-center">TOTAL</th>
+                                <th class="text-center">A CUENTA</th>
+                                <th class="text-center">SALDO</th>
+                                <th class="text-center">ACCIONES</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -108,7 +151,7 @@
                                         <h6 class="text-center">{{ $item->marca }}</h6>
                                     </td>
                                     <td>
-                                        <h6>{{ $item->detalle }}</h6>
+                                        <h6 class="text-center">{{ $item->detalle }}</h6>
                                     </td>
                                     <td>
                                         <h6 class="text-center">{{ $item->tipo }}</h6>
@@ -125,13 +168,13 @@
                                     </td>
                                     <td class="text-center">
                                         <a href="javascript:void(0)" wire:click="Edit({{ $item->id }})"
-                                            class="btn btn-warning mtmobile" title="Edit">
+                                            class="btn btn-outline-primary btn-sm" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         @if($item->tipo != 'TERMINADO' && $item->tipo != 'ENTREGADO')
                                         <a href="javascript:void(0)"
                                             onclick="Confirm('{{ $item->id }}','{{ $item->category }}','{{ $item->marca }}')"
-                                            class="btn btn-warning" title="Delete">
+                                            class="btn btn-outline-danger btn-sm" title="Eliminar Servicio">
                                             <i class="fas fa-trash"></i>
                                         </a>
                                         @endif
@@ -147,10 +190,10 @@
 
                 <ul class="tabs tab-pills">
                     @if (!empty(session('od')))
-                        <a class="btn btn-dark mb-2" href="{{ url('reporte/pdf' . '/' . $orderservice) }}" 
-                        target="_blank" wire:click="ResetSession">Guardar</a>
+                        <a class="btn btn-outline-primary" href="{{ url('reporte/pdf' . '/' . $orderservice) }}" 
+                        target="_blank" wire:click="ResetSession">IMPRIMIR</a>
                     @endif
-                    <button class="btn btn-dark mb-2" wire:click="ResetSession">Salir</button>
+                    <button class="btn btn-outline-primary" wire:click="ResetSession">IR A ORDENES DE SERVICIOS</button>
                 </ul>
             </div>
         </div>
@@ -160,7 +203,7 @@
     @include('livewire.servicio.formservicio')
     @include('livewire.servicio.formtiposervicio')
 </div>
-
+</div> 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
