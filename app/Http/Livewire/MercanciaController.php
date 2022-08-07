@@ -2,14 +2,21 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\CompraDetalle;
 use App\Models\Destino;
+use App\Models\DetalleEntradaProductos;
+use App\Models\DetalleOperacion;
+use App\Models\DetalleSalidaProductos;
 use App\Models\IngresoProductos;
 use App\Models\IngresoSalida;
+use App\Models\Lote;
 use App\Models\Product;
 use App\Models\ProductosDestino;
 use App\Models\SalidaProductos;
 use Livewire\Component;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use Exception;
 
 class MercanciaController extends Component
 {
@@ -114,10 +121,11 @@ class MercanciaController extends Component
 
         $auxi= IngresoSalida::where('proceso','Entrada')->get();
 
+        DB::beginTransaction();
+
+        try {
+            
         foreach ($auxi as $data) {
-
-
-
             $entrada = IngresoProductos::create([
                 'destino' => $data->destino,
                 'user_id' => $data->user_id,
@@ -125,10 +133,26 @@ class MercanciaController extends Component
                 'observacion'=>$data->observacion
             ]);
 
-            $newdata=DetalleOperacion::join('ingreso_salidas','ingreso_salidas.id',$data->id)->get();
+            $newdata=DetalleOperacion::join('ingreso_salidas','ingreso_salidas.id','detalle_operacions.id')->where("ingreso_salidas.id",$data->id)->get();
 
             foreach ($newdata as $dat) {
 
+                $auxi2= CompraDetalle::where('product_id',$dat->product_id);
+
+                foreach ($auxi2 as $data3) {
+                    if ($data3->created_at>$dat->created_at) {
+                        $lot= Lote::create([
+                            'existencia'=>$auxi2->cantidad,
+                            'status'=>'Activo'
+                        ]);
+                        $data3->update([
+                            'lote_compra'=>$lot->id
+                        ]);
+                        $data3->save();
+                    }
+                }
+
+              
                $lot= Lote::create([
                     'existencia'=>$dat->cantidad,
                     'status'=>'Activo'
@@ -138,30 +162,28 @@ class MercanciaController extends Component
 
                     'product_id'=>$dat->product_id,
                     'cantidad'=>$dat->cantidad,
-                    'id_entrada'=>$entrada->id_operacion,
+                    'id_entrada'=>$entrada->id,
                     'lote_id'=>$lot->id
     
                 ]);
-    
             }
-        
-
-
-            
 
         }
+
+        DB::commit();
+            } catch (Exception $e) {
+        DB::rollback();
+        dd($e->getMessage());
+        
+    }
+
         //dd($auxi);
     }
         public function TraspasoSalida(){
 
         $auxi= IngresoSalida::where('proceso','Salida')->get();
 
-   
-
-    
         foreach ($auxi as $data) {
-
-
 
             $salida = SalidaProductos::create([
                 'destino' => $data->destino,
@@ -182,10 +204,6 @@ class MercanciaController extends Component
     
             }
         
-
-
-            
-
         }
 
         //dd($auxi);

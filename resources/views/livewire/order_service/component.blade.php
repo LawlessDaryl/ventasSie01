@@ -233,6 +233,75 @@
     }
         
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    #preloader_3{
+    position:relative;
+}
+#preloader_3:before{
+    width:20px;
+    height:20px;
+    border-radius:20px;
+    background:blue;
+    content:'';
+    position:absolute;
+    background:#9b59b6;
+    animation: preloader_3_before 1.5s infinite ease-in-out;
+}
+ 
+#preloader_3:after{
+    width:20px;
+    height:20px;
+    border-radius:20px;
+    background:blue;
+    content:'';
+    position:absolute;
+    background:#2ecc71;
+    left:22px;
+    animation: preloader_3_after 1.5s infinite ease-in-out;
+}
+ 
+@keyframes preloader_3_before {
+    0% {transform: translateX(0px) rotate(0deg)}
+    50% {transform: translateX(50px) scale(1.2) rotate(260deg); background:#2ecc71;border-radius:0px;}
+      100% {transform: translateX(0px) rotate(0deg)}
+}
+@keyframes preloader_3_after {
+    0% {transform: translateX(0px)}
+    50% {transform: translateX(-50px) scale(1.2) rotate(-260deg);background:#9b59b6;border-radius:0px;}
+    100% {transform: translateX(0px)}
+}
+
+
+
+
+
+    
+
 </style>
 @endsection
     
@@ -249,7 +318,7 @@
                     </div>
 
                     <div class="col-12 col-sm-12 col-md-4 text-center">
-                        <h2><b>ORDEN DE SERVICIO</b></h2>
+                        <h2><b>ORDENES DE SERVICIO</b></h2>
                         Ordenados por Fecha de Recepción
                     </div>
 
@@ -327,7 +396,7 @@
                                 <option value="TERMINADO">Terminados</option>
                                 <option value="ENTREGADO">Entregados</option>
                                 {{-- <option value="ABANDONADO">Abandonados</option> --}}
-                                <option value="ANULADO">Anulados</option>
+                                {{-- <option value="ANULADO">Anulados</option> --}}
                                 <option value="Todos">Todos</option>
                             </select>
                         </div>
@@ -395,7 +464,26 @@
 
             @endif
 
+
+            <center><div id="preloader_3" wire:loading></div></center>
+
+
+
+            
+
+
+
+
+
+
+            <br>
+
             <div class="widget-content">
+
+                {{-- <h2 class="text-center text-warning" wire:loading>POR FAVOR ESPERE, OBTENIENDO INFORMACION</h2> --}}
+
+            
+
                 <div class="table-responsive">
                     <table class="tablaservicios">
                         <thead>
@@ -462,7 +550,7 @@
 
                                             @if($os->servicios->count() == 1)
                                             <div>
-                                                <a href="javascript:void(0)" wire:click.prevent="modalserviciodetalles('{{$d->estado}}' , {{ $d->idservicio }}, {{ $os->codigo }})">
+                                                <a href="javascript:void(0)" wire:click="modalserviciodetalles('{{$d->estado}}' , {{ $d->idservicio }}, {{ $os->codigo }})">
                                                     {{ucwords(strtolower($d->nombrecategoria))}} {{ucwords(strtolower($d->marca))}} {{strtolower($d->detalle)}}
                                                     <br>
                                                     <b>Falla Según Cliente:</b> {{ucwords(strtolower($d->falla_segun_cliente))}}
@@ -470,7 +558,7 @@
                                             </div>
                                             @else
                                             <div style="background-color: rgba(255, 230, 210, 0.829);">
-                                                <a href="javascript:void(0)" wire:click.prevent="modalserviciodetalles('{{$d->estado}}' , {{ $d->idservicio }}, {{ $os->codigo }})">
+                                                <a href="javascript:void(0)" wire:click="modalserviciodetalles('{{$d->estado}}' , {{ $d->idservicio }}, {{ $os->codigo }})">
                                                     {{ucwords(strtolower($d->nombrecategoria))}} {{ucwords(strtolower($d->marca))}} {{strtolower($d->detalle)}}
                                                     <br>
                                                     <b>Falla Según Cliente:</b> {{ucwords(strtolower($d->falla_segun_cliente))}}
@@ -516,7 +604,7 @@
                                             @foreach ($os->servicios as $d)
                                                 @if($d->estado=="PENDIENTE")
                                                     @if (Auth::user()->hasPermissionTo('Asignar_Tecnico_Servicio'))
-                                                        <a href="javascript:void(0)" class="pendienteestilos" wire:click.prevent="modalasignartecnico({{$d->idservicio}}, {{$os->codigo}})" title="Asignar Técnico Responsable">
+                                                        <a href="javascript:void(0)" class="pendienteestilos" wire:click="modalasignartecnico({{$d->idservicio}}, {{$os->codigo}})" title="Asignar Técnico Responsable">
                                                             {{$d->estado}}
                                                         </a>
                                                     @else
@@ -526,12 +614,12 @@
                                                     @endif
                                                 @else
                                                     @if($d->estado == "PROCESO")
-                                                        <a href="javascript:void(0)" class="procesoestilos" wire:click.prevent="modaleditarservicio2('{{$d->estado}}', {{$d->idservicio}}, {{$os->codigo}})" title="Registrar Servicio Terminado o Actualizar Servicio">
+                                                        <a href="javascript:void(0)" class="procesoestilos" wire:click="modaleditarservicio2('{{$d->estado}}', {{$d->idservicio}}, {{$os->codigo}})" title="Registrar Servicio Terminado o Actualizar Servicio">
                                                             {{$d->estado}}
                                                         </a>
                                                     @else
                                                         @if($d->estado=="TERMINADO")
-                                                            <a href="javascript:void(0)" class="terminadoestilos" wire:click.prevent="modalentregarservicio('{{$d->estado}}', {{$d->idservicio}}, {{$os->codigo}})" title="Registrar Servicio como Entregado">
+                                                            <a href="javascript:void(0)" class="terminadoestilos" wire:click="modalentregarservicio('{{$d->estado}}', {{$d->idservicio}}, {{$os->codigo}})" title="Registrar Servicio como Entregado">
                                                                 {{$d->estado}}
                                                             </a>
                                                         @else
@@ -562,7 +650,7 @@
                                             @foreach ($os->servicios as $d)
                                                 @if($d->estado=="PENDIENTE")
                                                     @if (Auth::user()->hasPermissionTo('Asignar_Tecnico_Servicio'))
-                                                        <a href="javascript:void(0)" style="margin-top: 17px;" class="pendienteestilos" wire:click.prevent="modalasignartecnico({{$d->idservicio}}, {{$os->codigo}})" title="Asignar Técnico Responsable">
+                                                        <a href="javascript:void(0)" style="margin-top: 17px;" class="pendienteestilos" wire:click="modalasignartecnico({{$d->idservicio}}, {{$os->codigo}})" title="Asignar Técnico Responsable">
                                                             {{$d->estado}}
                                                         </a>
                                                     @else
@@ -572,12 +660,12 @@
                                                     @endif
                                                 @else
                                                     @if($d->estado=="PROCESO")
-                                                        <a href="javascript:void(0)" style="margin-top: 17px;" class="procesoestilos" wire:click.prevent="modaleditarservicio2('{{$d->estado}}', {{$d->idservicio}}, {{$os->codigo}})" title="Registrar Servicio Terminado o Actualizar Servicio">
+                                                        <a href="javascript:void(0)" style="margin-top: 17px;" class="procesoestilos" wire:click="modaleditarservicio2('{{$d->estado}}', {{$d->idservicio}}, {{$os->codigo}})" title="Registrar Servicio Terminado o Actualizar Servicio">
                                                             {{$d->estado}}
                                                         </a>
                                                     @else
                                                         @if($d->estado=="TERMINADO")
-                                                            <a href="javascript:void(0)" style="margin-top: 17px;" class="terminadoestilos" wire:click.prevent="modalentregarservicio('{{$d->estado}}', {{$d->idservicio}}, {{$os->codigo}})" title="Registrar Servicio como Entregado">
+                                                            <a href="javascript:void(0)" style="margin-top: 17px;" class="terminadoestilos" wire:click="modalentregarservicio('{{$d->estado}}', {{$d->idservicio}}, {{$os->codigo}})" title="Registrar Servicio como Entregado">
                                                                 {{$d->estado}}
                                                             </a>
                                                         @else
@@ -611,20 +699,18 @@
 
                                         
                                     </td>
-
-                                    
                                     <td class="text-center">
 
 
                                         @if($os->servicios->count() == 1)
                                             @foreach ($os->servicios as $d)
                                                 @if($d->estado != "ENTREGADO")
-                                                    <button class="botoneditar" wire:click.prevent="modaleditarservicio1('{{$d->estado}}',{{$d->idservicio}},{{$os->codigo}})" title="Editar Servicio">
+                                                    <button class="botoneditar" wire:click="modaleditarservicio1('{{$d->estado}}',{{$d->idservicio}},{{$os->codigo}})" title="Editar Servicio">
                                                         EDITAR
                                                     </button>
                                                 @else
                                                     @if(@Auth::user()->hasPermissionTo('Modificar_Detalle_Serv_Entregado'))
-                                                    <button class="botoneditarterminado" wire:click.prevent="modaleditarservicioterminado('{{$d->estado}}',{{$d->idservicio}},{{$os->codigo}})" title="Editar Precio Servicio">
+                                                    <button class="botoneditarterminado" wire:click="modaleditarservicioterminado('{{$d->estado}}',{{$d->idservicio}},{{$os->codigo}})" title="Editar Precio Servicio">
                                                         EDITAR
                                                     </button>
                                                     @else
@@ -640,14 +726,14 @@
                                         @else
                                             @foreach ($os->servicios as $d)
                                                 @if($d->estado != "ENTREGADO")
-                                                    <button class="botoneditar" style="margin-top: 15px;" wire:click.prevent="modaleditarservicio1('{{$d->estado}}',{{$d->idservicio}},{{$os->codigo}})" title="Editar Servicio">
+                                                    <button class="botoneditar" style="margin-top: 15px;" wire:click="modaleditarservicio1('{{$d->estado}}',{{$d->idservicio}},{{$os->codigo}})" title="Editar Servicio">
                                                         EDITAR
                                                     </button>
                                                     <br>
                                                 @else
                                                      @if(@Auth::user()->hasPermissionTo('Modificar_Detalle_Serv_Entregado'))
                                                         <div style="padding-top: 15px;">
-                                                            <button class="botoneditarterminado" wire:click.prevent="modaleditarservicioterminado('{{$d->estado}}',{{$d->idservicio}},{{$os->codigo}})" title="Editar Precio Servicio">
+                                                            <button class="botoneditarterminado" wire:click="modaleditarservicioterminado('{{$d->estado}}',{{$d->idservicio}},{{$os->codigo}})" title="Editar Precio Servicio">
                                                                 EDITAR
                                                             </button>
                                                         </div>
@@ -831,6 +917,63 @@
 
 
 
+        //Mostrar Mensaje Hacerse Técnico Responsable de un Servicio
+        window.livewire.on('responsable-tecnico', event => {
+            swal(
+                '¡Asignado Correctamente!',
+                'Fuiste Asignado a la Orden de Servicio "' + @this.id_orden_de_servicio + '" exitósamente',
+                'success'
+                )
+        });
+
+
+        //Mostrar Mensaje Anulado con Éxito
+        window.livewire.on('orden-anulado', event => {
+            swal(
+                '¡Anulado!',
+                'La Orden de Servicio: "'+ @this.id_orden_de_servicio +'" fue anulado con éxito.',
+                'success'
+                )
+        });
+
+
+
+        //Mostrar Mensaje Eliminado con Éxito
+        window.livewire.on('orden-eliminado', event => {
+                swal(
+                    '¡Orden de Servicio Eliminado!',
+                    'La Orden de Servicio: "'+ @this.id_orden_de_servicio +'" fue Eliminado Exitosamente.',
+                    'success'
+                    )
+            });
+
+            
+            
+        //Mostrar Mensaje No se Puede Eliminar
+        window.livewire.on('entregado-terminado', event => {
+        swal("¡No se puede realizar esta acción!", "No se pueden Anular o Eliminar las Ordenes de Servicio que tengan Servicios Terminados o Entregados", {
+						icon : "info",
+						buttons: {        			
+							confirm: {
+								className : 'btn btn-info'
+							}
+						},
+					});
+            });
+
+
+        //Mostrar Mensaje No puede Editar ni Terminar este Servicio porque no es el Técnico Responsable de este Servicio
+        window.livewire.on('acceso-denegado', event => {
+        swal("¡No puede realizar esta acción!", "No puede Editar o Terminar este Servicio por que no es el Técnico Responsble de este", {
+						icon : "info",
+						buttons: {        			
+							confirm: {
+								className : 'btn btn-info'
+							}
+						},
+					});
+            });
+
     });
 
 
@@ -847,7 +990,7 @@
             text: "Seras Responsble de un  Servicio del Cliente: " + nombrecliente,
             type: 'warning',
             showCancelButton: true,
-            cancelButtonText: 'Que lo haga otro',
+            cancelButtonText: 'Cancelar',
             confirmButtonText: 'Estoy de Acuerdo',
             padding: '2em'
             }).then(function(result) {
@@ -856,14 +999,7 @@
                 }
             })
     }
-    //Mostrar Mensaje Hacerse Técnico Responsable de un Servicio
-    window.livewire.on('responsable-tecnico', event => {
-            swal(
-                '¡Asignado Correctamente!',
-                'Fuiste Asignado a la Orden de Servicio "' + @this.id_orden_de_servicio + '" exitósamente',
-                'success'
-                )
-        });
+    
 
 
 
@@ -899,14 +1035,7 @@
                 }
             })
     }
-    //Mostrar Mensaje Anulado con Éxito
-    window.livewire.on('orden-anulado', event => {
-            swal(
-                '¡Anulado!',
-                'La Orden de Servicio: "'+ @this.id_orden_de_servicio +'" fue anulado con éxito.',
-                'success'
-                )
-        });
+    
 
     // Código para lanzar la Alerta de Eliminación del Servicio
     function ConfirmarEliminar(codigo, nombrecliente) {
@@ -924,28 +1053,7 @@
                 }
             })
     }
-    //Mostrar Mensaje Eliminado con Éxito
-    window.livewire.on('orden-eliminado', event => {
-                swal(
-                    '¡Orden de Servicio Eliminado!',
-                    'La Orden de Servicio: "'+ @this.id_orden_de_servicio +'" fue Eliminado Exitosamente.',
-                    'success'
-                    )
-            });
-
-            
-            
-    //Mostrar Mensaje No se Puede Eliminar
-    window.livewire.on('entregado-terminado', event => {
-        swal("¡No se puede realizar esta acción!", "No se pueden Anular o Eliminar las Ordenes de Servicio que tengan Servicios Terminados o Entregados", {
-						icon : "info",
-						buttons: {        			
-							confirm: {
-								className : 'btn btn-info'
-							}
-						},
-					});
-            });
+    
 
 
 

@@ -1,7 +1,7 @@
 <div wire:ignore.self class="modal fade" id="theModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header bg-dark">
+            <div class="modal-header bg-primary">
                 <h5 class="modal-title text-white">
                     <b>Nuevo servicio de la Orden Nº {{ $orderservice == '0' ? 'NO DEFINIDO' : $orderservice }} </b>
                     | {{ $selected_id > 0 ? 'EDITAR' : 'CREAR' }}
@@ -10,119 +10,161 @@
             </div>
             <div class="modal-body">
 
-                <div class="row">
-                    <div class="col-lg-4 col-sm-12 col-md-6">
-                        <div class="form-group">
-                            <label><h6>Tipo de Trabajo *</h6></label>
-                            <select wire:model.lazy="typeworkid" class="form-control">
-                                <option value="Elegir" disabled selected>Elegir</option>
 
+
+                <div class="form-row">
+                    <div class="form-row" style="width: 33.33%; margin-right: 7px;">
+                        <div class="col-md-12">
+                            <label for="validationTooltip01">Tipo de Trabajo</label>
+                            <select class="custom-select form-control" wire:model.lazy="typeworkid" required>
+                                <option value="Elegir" disabled selected>Elegir</option>
                                 @foreach ($work as $wor)
                                     @if($wor->status=='ACTIVE')
-                                        <option value="{{ $wor->id }}" selected>{{ $wor->name }}</option>
+                                        <option value="{{ $wor->id }}">{{ ucwords(strtolower($wor->name)) }}</option>
                                     @endif
                                 @endforeach
-
                             </select>
-                            @error('typeworkid') <span class="text-danger er">{{ $message }}</span>@enderror
+                            @error('typeworkid')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        
+                    </div>
+                    <div class="form-row" style="width: 33.33%; margin-right: 7px;">
+                        <div class="col-md-12">
+                            <label for="validationTooltip01">Categoría Trabajo</label>
+                                <select class="custom-select form-control" wire:model.lazy="catprodservid"  required>
+                                    <option value="Elegir" disabled selected>Elegir</option>
+                                    @foreach ($cate as $cat)
+                                        @if($cat->estado == 'ACTIVO')
+                                            <option value="{{ $cat->id }}" selected>{{ ucwords(strtolower($cat->nombre)) }}</option>
+                                        @endif
+                                    @endforeach
+                                </select>
+                                @error('catprodservid')
+                                <span class="text-danger er">{{ $message }}</span>
+                                @enderror
                         </div>
                     </div>
-
-                    <div class="col-lg-4 col-sm-12 col-md-6">
-                        <div class="form-group">
-                            <label><h6>Tipo de equipo *</h6></label>
-                            <select wire:model.lazy="catprodservid" class="form-control">
-                                <option value="Elegir" disabled selected>Elegir</option>
-
-                                @foreach ($cate as $cat)
-                                    @if($cat->estado == 'ACTIVO')
-                                        <option value="{{ $cat->id }}" selected>{{ $cat->nombre }}</option>
-                                    @endif
-                                @endforeach
-
-                            </select>
-                            @error('catprodservid') <span class="text-danger er">{{ $message }}</span>@enderror
+                    <div class="form-row" style="width: 33.33%">
+                        <div class="col-md-12">
+                            <label for="validationTooltipUsername">Marca/Modelo</label>
+                            <div class="input-group">
+                                <datalist id="marca">
+                                    @foreach ($marcas as $cat)
+                                        <option value="{{ $cat->name }}">{{ $cat->name }}</option>
+                                    @endforeach
+                                </datalist>
+                                <input list="marca" type="text" wire:model.lazy="marc" class="form-control"  placeholder="Huawei, Samsung, etc..." required>
+                            </div>
+                            @error('marc')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
                         </div>
                     </div>
+                </div>
 
-                    <div class="col-lg-4 col-sm-12 col-md-6">
-                        <label><h6>Marca/Modelo *</h6></label>
-                        <datalist id="colores">
-                            @foreach ($marcas as $cat)
-                                @if($cat->status=='ACTIVE')
-                                    <option value="{{ $cat->name }}" selected>{{ $cat->name }}</option>
-                                @endif
-                            @endforeach
-                        </datalist>
-                        <input list="colores" wire:model.lazy="marc" name="colores" type="text" class="form-control">
-                        @error('marc') <span class="text-danger er">{{ $message }}</span>@enderror
+                <br>
+
+
+                <div class="form-row">
+                    <div class="form-row" style="width: 42%; margin-right: 7px;">
+                
+                        <div class="col-md-12">
+                            <label for="validationTooltipUsername">Detalle Equipo</label>
+                            <div class="input-group">
+                                <input type="text" wire:model.lazy="detalle" class="form-control"  placeholder="Redmi Note 4 Blanco, Huawei Y9 Prime Azul, Portatil Asus sin Cable, Samsung A11 Color Plomo Oscuro, etc..." required>
+                            </div>
+                            @error('detalle')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        
                     </div>
-
-                    <div class="col-lg-6 col-sm-12 col-md-8">
-                        <div class="form-group">
-                            <label><h6>Estado del Equipo *</h6></label>
-                            <input type="text" wire:model.lazy="detalle" class="form-control"
-                                placeholder="ej: Note 7 con protector de pantalla">
-                            @error('detalle') <span class="text-danger er">{{ $message }}</span>@enderror
+                    <div class="form-row" style="width: 32%; margin-right: 7px;">
+                        <div class="col-md-12">
+                            <label for="validationTooltip01">Fecha de Entrega</label>
+                            <input type="date" wire:model.lazy="fecha_estimada_entrega" class="form-control">
                         </div>
                     </div>
-
-
-                    <div class="col-lg-6 col-sm-12 col-md-8">
-                        <div class="form-group">
-                            <label><h6>Falla según el cliente *</h6></label>
-                            <input type="text" wire:model.lazy="falla_segun_cliente" class="form-control"
-                                placeholder="ej: No carga">
-                            @error('falla_segun_cliente') <span
-                                class="text-danger er">{{ $message }}</span>@enderror
+                    <div class="form-row" style="width: 25%">
+                        <div class="col-md-12">
+                            <label for="validationTooltip01">Hora</label>
+                            <input type="time" wire:model.lazy="hora_entrega" class="form-control">
                         </div>
                     </div>
+                </div>
 
-                    <div class="col-lg-6 col-sm-12 col-md-8">
-                        <div class="form-group">
-                            <label><h6>Diagnóstico</h6></label>
-                            <input type="text" wire:model.lazy="diagnostico" class="form-control"
-                                placeholder="ej: Revisión">
-                            @error('diagnostico') <span class="text-danger er">{{ $message }}</span>@enderror
-                        </div>
-                    </div>
 
-                    <div class="col-lg-6 col-sm-12 col-md-8">
-                        <div class="form-group">
-                            <label><h6>Solución</h6></label>
-                            <input type="text" wire:model.lazy="solucion" class="form-control"
-                                placeholder="ej: Revisión">
-                            @error('solucion') <span class="text-danger er">{{ $message }}</span>@enderror
-                        </div>
-                    </div>
 
-                    <div class="col-lg-3 col-sm-12 col-md-4">
-                        <div class="form-group">
-                            <label><h6>Total</h6></label>
-                            <input type="number" wire:model="import" class="form-control" placeholder="ej: 0.0">
-                            @error('import') <span class="text-danger er">{{ $message }}</span>@enderror
+
+                <div class="form-row">
+                    <div class="col-md-12" style="margin-top: 10px;">
+                        <label for="validationTooltipUsername">Falla Según Cliente</label>
+                        <div class="input-group">
+                            <input type="text" wire:model.lazy="falla_segun_cliente" class="form-control"  placeholder="No Funciona Internet, No Carga, No Enciende, etc..." required>
                         </div>
+                        @error('falla_segun_cliente')
+                                <span class="text-danger er">{{ $message }}</span>
+                        @enderror
                     </div>
-                    <div class="col-lg-2 col-sm-12 col-md-4">
-                        <div class="form-group">
-                            <label><h6>A Cuenta</h6></label>
-                            <input type="number" wire:model="on_account" class="form-control"
-                                placeholder="ej: 0.0">
+                    <div class="col-md-12" style="margin-top: 10px;">
+                        <label for="validationTooltipUsername">Diagnóstico Previo</label>
+                        <div class="input-group">
+                            <input type="text" wire:model.lazy="diagnostico" class="form-control"  placeholder="Configurar Apn, Probar Otro Cable de Carga, Cambiar Tecla Encendido, etc..." required>
+                        </div>
+                        @error('diagnostico')
+                                <span class="text-danger er">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="col-md-12" style="margin-top: 10px;">
+                        <label for="validationTooltipUsername">Solución</label>
+                        <div class="input-group">
+                            <input type="text" wire:model.lazy="solucion" class="form-control"  placeholder="Se Cambio el Socalo, Se Limpio la Placa, Se Reinstalo el Sistema Operativo etc..." required>
+                        </div>
+                        @error('solucion')
+                                <span class="text-danger er">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+
+                <br>
+
+
+                <div class="form-row">
+                    <div class="form-row" style="width: 33.33%; margin-right: 7px;">
+                        <div class="col-md-12">
+                            <label for="validationTooltip01">Precio del Servicio Bs</label>
+                            <input type="number" wire:model.lazy="import" class="form-control">
+                        </div>
+                        @error('import')
+                                <span class="text-danger er">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="form-row" style="width: 33.33%; margin-right: 7px;">
+                        <div class="col-md-12">
+                            <label for="validationTooltip01">A Cuenta Bs</label>
+                            <input type="number" wire:model="on_account" class="form-control">
                             @error('on_account') <span class="text-danger er">{{ $message }}</span>@enderror
                         </div>
                     </div>
-
-                    <div class="col-lg-3 col-sm-12 col-md-4">
-                        <div class="form-group">
+                    <div class="form-row text-center" style="width: 33.33%">
+                        <div class="col-md-12">
                             <label><h6>Saldo</h6></label>
-                            <input type="number" wire:model.lazy="saldo" class="form-control" placeholder="ej: 0.0" disabled>
-                            @error('saldo') <span class="text-danger er">{{ $message }}</span>@enderror
+                                <input type="number" wire:model.lazy="saldo" class="form-control text-center" placeholder="ej: 0.0" disabled>
+                                @error('saldo') <span class="text-danger er">{{ $message }}</span>@enderror
                         </div>
                     </div>
+                </div>
 
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            <label><h6>Responsable técnico</h6></label>
+
+
+                <div class="form-row">
+                    <div class="form-row" style="width: 25%; margin-right: 7px;">
+                    </div>
+                    <div class="form-row" style="width: 50%; margin-right: 7px;">
+                        <div class="col-md-12 text-center">
+                            <label><h6>Técnico Receptor</h6></label>
                             <select wire:model="userId" class="form-control" style="font-size: 90%">
                                 <option value="0" disabled selected>Seleccione técnico</option>
                                 @foreach ($users as $user)
@@ -131,25 +173,18 @@
                             </select>
                         </div>
                     </div>
-
-                    <div class="col-lg-4 col-sm-12 col-md-4">
-                        <div class="form-group">
-                            <label><h6>Fecha Entrega</h6></label>
-                            <input type="date" wire:model.lazy="fecha_estimada_entrega" class="form-control">
-                            @error('fecha_estimada_entrega')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
+                    <div class="form-row text-center" style="width: 25%">
                     </div>
+                </div>
 
-                    <div class="col-lg-3 col-sm-12 col-md-4">
-                        <div class="form-group">
-                            <label><h6>Hora Entrega</h6></label>
 
-                            <input type="time" name="hora_entrega" wire:model.lazy="hora_entrega"
-                                class="form-control">
-                        </div>
-                    </div>
+
+
+
+
+
+                <div class="row">
+
                     @if($selected_id > 0)
                     @if($opciones != 'ENTREGADO')
                     <div class="col-lg-5 col-sm-12 col-md-4">
@@ -173,12 +208,6 @@
                                     <option value="TERMINADO" >TERMINADO</option>
                                     <option value="ABANDONADO" >ABANDONADO</option>
                                 @endif
-                                {{-- @if($opciones == 'ENTREGADO')
-                                    <option value="PENDIENTE" >PENDIENTE</option>
-                                    <option value="PROCESO" >PROCESO</option>
-                                    <option value="TERMINADO" >TERMINADO</option>
-                                    <option value="ENTREGADO" >ENTREGADO</option>
-                                @endif --}}
                             </select>
                             @error('opciones') <span class="text-danger er">{{ $message }}</span>@enderror
                         </div>
@@ -186,14 +215,14 @@
                     @endif
                 </div>
                 <div class="modal-footer">
-                    <button type="button" wire:click.prevent="resetUI()" class="btn btn-warning close-btn text-info"
-                        data-dismiss="modal" style="background: #3b3f5c">CANCELAR</button>
+                    <button type="button" wire:click.prevent="resetUI()" class="btn btn" style="background-color: rgb(0, 56, 161); color: beige;"
+                        data-dismiss="modal">CANCELAR</button>
                     @if ($selected_id < 1)
                         <button type="button" wire:click.prevent="Store()"
-                            class="btn btn-warning close-btn text-info">GUARDAR</button>
+                        class="btn btn" style="background-color: rgb(0, 145, 19); color: beige;">GUARDAR</button>
                     @else
                         <button type="button" wire:click.prevent="Update()"
-                            class="btn btn-warning close-btn text-info">ACTUALIZAR</button>
+                        class="btn btn" style="background-color: rgb(0, 85, 124); color: beige;">ACTUALIZAR</button>
                     @endif
 
 
