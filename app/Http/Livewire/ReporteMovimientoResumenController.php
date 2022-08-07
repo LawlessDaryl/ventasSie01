@@ -26,7 +26,7 @@ class ReporteMovimientoResumenController extends Component
 
     public function mount()
     {
-        $this->sucursal = $this->idsucursal();
+        $this->obtenersucursal();
         $this->fromDate= Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->toDate=  Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->caja='TODAS';
@@ -115,6 +115,7 @@ class ReporteMovimientoResumenController extends Component
              $this->operacionEnCajaGeneral();
              //dd($this->ventas);
             //Totales Ingresos Ventas
+           
             $this->totalesIngresosV = new \Illuminate\Database\Eloquent\Collection;
             $totalesIngresosVentas = Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')
             ->join('carteras as c', 'c.id', 'crms.cartera_id')
@@ -895,15 +896,15 @@ class ReporteMovimientoResumenController extends Component
      }
 
     //Obtener el Id de la Sucursal Donde esta el Usuario
-    public function idsucursal()
+    public function obtenersucursal()
     {
-        $this->idsucursal = User::join("sucursal_users as su","su.user_id","users.id")
+        $idsucursal = User::join("sucursal_users as su","su.user_id","users.id")
         ->select("su.sucursal_id as id","users.name as n")
         ->where("users.id",Auth()->user()->id)
         ->where("su.estado","ACTIVO")
         ->get()
         ->first();
-        return $this->idsucursal->id;
+        $this->sucursal=$idsucursal->id;
     }
 
     public function GenerarR()
