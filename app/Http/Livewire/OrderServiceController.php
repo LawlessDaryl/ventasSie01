@@ -3741,10 +3741,13 @@ class OrderServiceController extends Component
 
         $this->emit('show-editarservicioterminadoocultar', 'show modal!');
     }
-
+    //Redireccionar para crear un Nuevo Servicio Eliminando Variables de Sesion
     public function irservicio()
     {
+
         session(['od' => null]);
+        session(['clie' => null]);
+        session(['tservice' => null]);
         $this->redirect('service');
     }
 

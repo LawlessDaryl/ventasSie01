@@ -208,6 +208,10 @@ class PermissionSeeder extends Seeder
             'name' => 'Filtrar_sucursal_Reporte_Servicio',
             'guard_name' => 'web'
         ]);
+        Permission::create([    /* PERMITIR Cambiar al Técnico Responsable */
+            'name' => 'Cambiar_Tecnico_Responsable',
+            'guard_name' => 'web'
+        ]);
         Permission::create([
             'name' => 'admin_estancia_almacen',
             'guard_name' =>'web'
