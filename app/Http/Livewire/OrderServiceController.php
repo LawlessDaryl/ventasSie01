@@ -81,7 +81,7 @@ class OrderServiceController extends Component
     }
     public function mount()
     {
-        $this->paginacion = 50;
+        $this->paginacion = 10;
         $this->type = 'PENDIENTE';
         $this->sucursal_id = $this->idsucursal();
         $this->catprodservid = 'Todos';
@@ -2894,17 +2894,28 @@ class OrderServiceController extends Component
     //Listar los Usuarios para ser asignados a un servicio Pendiente en una Ventana Modal
     public function listarusuarios()
     {
-        $listausuarios1 = User::join('movimientos as m', 'm.user_id', 'users.id')
-        ->join('mov_services as ms', 'ms.movimiento_id', 'm.id')
-        ->join('services as s', 's.id', 'ms.service_id')
-        ->join('order_services as os', 'os.id', 's.order_service_id')
-        ->join('model_has_roles as mhr', 'mhr.model_id', 'users.id')
+        // $listausuarios1 = User::join('movimientos as m', 'm.user_id', 'users.id')
+        // ->join('mov_services as ms', 'ms.movimiento_id', 'm.id')
+        // ->join('services as s', 's.id', 'ms.service_id')
+        // ->join('order_services as os', 'os.id', 's.order_service_id')
+        // ->join('model_has_roles as mhr', 'mhr.model_id', 'users.id')
+        // ->join('roles as r', 'r.id', 'mhr.role_id')
+        // ->join('role_has_permissions as rhp', 'rhp.role_id', 'r.id')
+        // ->join('permissions as p', 'p.id', 'rhp.permission_id')
+        // ->select("users.id as idusuario","users.name as nombreusuario",DB::raw('0 as proceso'), DB::raw('0 as terminado'))
+        // ->where('os.status', 'ACTIVO')
+        // ->where('m.status', 'ACTIVO')
+        // ->where('p.name', 'Aparecer_Lista_Servicios')
+        // ->distinct()
+        // ->orderBy('proceso','asc')
+        // ->get();
+
+
+        $listausuarios1 = User::join('model_has_roles as mhr', 'mhr.model_id', 'users.id')
         ->join('roles as r', 'r.id', 'mhr.role_id')
         ->join('role_has_permissions as rhp', 'rhp.role_id', 'r.id')
         ->join('permissions as p', 'p.id', 'rhp.permission_id')
         ->select("users.id as idusuario","users.name as nombreusuario",DB::raw('0 as proceso'), DB::raw('0 as terminado'))
-        ->where('os.status', 'ACTIVO')
-        ->where('m.status', 'ACTIVO')
         ->where('p.name', 'Aparecer_Lista_Servicios')
         ->distinct()
         ->orderBy('proceso','asc')
@@ -3239,9 +3250,9 @@ class OrderServiceController extends Component
                     $mv = Movimiento::create([
                         'type' => 'ENTREGADO',
                         'status' => 'ACTIVO',
-                        'import' => $movimiento->import,
-                        'on_account' => $movimiento->on_account,
-                        'saldo' => $movimiento->saldo,
+                        'import' => $this->edit_precioservicio,
+                        'on_account' => $this->edit_acuenta,
+                        'saldo' => $this->edit_precioservicio - $this->edit_acuenta,
                         'user_id' => $movimiento->user_id,
                     ]);
 
@@ -3350,6 +3361,8 @@ class OrderServiceController extends Component
     //Registra como Terminado un Servicio
     public function terminarservicio()
     {
+        //Llamando al Método para Actualizar el Servicio Antes de Marcarlo como Terminado
+        $this->actualizarservicio();
         $service = Service::find($this->id_servicio);
             foreach ($service->movservices as $servmov)
             {
@@ -3732,6 +3745,22 @@ class OrderServiceController extends Component
                 break;
             }
         }
+
+        foreach ($servicio->movservices as $servmov)
+        {
+            if($servmov->movs->type == 'ENTREGADO' && $servmov->movs->status == 'ACTIVO')
+            {
+                
+                $servmov->movs->update([
+                    'import' => $this->edit_precioservicioterminado,
+                    'on_account' => $this->edit_acuentaservicioterminado,
+                    'saldo' => $this->edit_saldoterminado,
+                ]);
+                
+                break;
+            }
+        }
+
         
         $servicio->update([
             'import' => $this->edit_precioservicioterminado,
@@ -3740,6 +3769,15 @@ class OrderServiceController extends Component
         ]);
 
         $this->emit('show-editarservicioterminadoocultar', 'show modal!');
+    }
+    //Redireccionar para crear un Nuevo Servicio Eliminando Variables de Sesion
+    public function irservicio()
+    {
+
+        session(['od' => null]);
+        session(['clie' => null]);
+        session(['tservice' => null]);
+        $this->redirect('service');
     }
 
 }

@@ -55,11 +55,11 @@ class TransferirProductoController extends Component
                                             $query->where('prod.nombre', 'like', '%' . $this->search . '%')
                                             ->orWhere('prod.codigo','like','%'.$this->search.'%')
                                             ->orWhere('prod.marca','like','%'.$this->search.'%')
-                                            ->orWhere('prod.id','like','%'.$this->search.'%')
-                                            ->take(6);
+                                            ->orWhere('prod.id','like','%'.$this->search.'%');
                                         })
                                         ->select('prod.nombre as name','dest.nombre as nombre_destino','dest.id as dest_id','prod.id as prod_id','productos_destinos.stock as stock')
                                         ->orderBy('prod.nombre','desc')
+                                        ->take(6)
                                         ->get();
                                         }
                                         else{

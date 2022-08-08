@@ -325,7 +325,7 @@
                     <div class="col-12 col-sm-12 col-md-4">
                         @if(@Auth::user()->hasPermissionTo('Recepcionar_Servicio'))
                             <ul class="tabs tab-pills text-right">
-                                <a href="{{ url('service') }}" class="btn btn-outline-primary">Nuevo Servicio</a>
+                                <a href="javascript:void(0)" wire:click="irservicio()" class="btn btn-outline-primary">Nuevo Servicio</a>
                                 <a href="{{ url('inicio') }}" class="btn btn-outline-primary">Ir a Lista Servicios</a>
 
                                 <div class="custom-control custom-switch" style="padding-top: 5px;">

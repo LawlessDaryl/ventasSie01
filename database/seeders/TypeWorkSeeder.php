@@ -15,6 +15,10 @@ class TypeworkSeeder extends Seeder
     public function run()
     {
         TypeWork::create([
+            'name' => 'Garantia',
+            'status' => 'Active',
+        ]);
+        TypeWork::create([
             'name' => 'Mantenimiento',
             'status' => 'Active',
         ]);
