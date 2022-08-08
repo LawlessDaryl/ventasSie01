@@ -15,7 +15,7 @@ class SubCatProdServicesSeeder extends Seeder
     public function run()
     {
         SubCatProdService::create([
-            'name' => 'LG',
+            'name' => 'Lg',
             'price' => '30',
             'status' => 'Active',
             'cat_prod_service_id' => '1',
@@ -28,6 +28,12 @@ class SubCatProdServicesSeeder extends Seeder
         ]);
         SubCatProdService::create([
             'name' => 'Samsung',
+            'price' => '30',
+            'status' => 'Active',
+            'cat_prod_service_id' => '3',
+        ]);
+        SubCatProdService::create([
+            'name' => 'Huawei',
             'price' => '30',
             'status' => 'Active',
             'cat_prod_service_id' => '3',
