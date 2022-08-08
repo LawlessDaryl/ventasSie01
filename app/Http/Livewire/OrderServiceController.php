@@ -81,7 +81,7 @@ class OrderServiceController extends Component
     }
     public function mount()
     {
-        $this->paginacion = 50;
+        $this->paginacion = 10;
         $this->type = 'PENDIENTE';
         $this->sucursal_id = $this->idsucursal();
         $this->catprodservid = 'Todos';
@@ -3740,6 +3740,12 @@ class OrderServiceController extends Component
         ]);
 
         $this->emit('show-editarservicioterminadoocultar', 'show modal!');
+    }
+
+    public function irservicio()
+    {
+        session(['od' => null]);
+        $this->redirect('service');
     }
 
 }
