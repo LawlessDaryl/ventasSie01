@@ -15,6 +15,10 @@ class PermissionSeeder extends Seeder
     public function run()
     {
         /* ADMINISTRACION */
+        Permission::create([    /* VER EN EL SIDEBAR REPORTES GENERALES */
+            'name' => 'Reporte_Movimientos_General',
+            'guard_name' => 'web'
+        ]);
         Permission::create([    /* INGRESAR A ROLES */
             'name' => 'Roles_Index',
             'guard_name' => 'web'
