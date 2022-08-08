@@ -12,6 +12,7 @@ use App\Models\IngresoSalida;
 use App\Models\Lote;
 use App\Models\Product;
 use App\Models\ProductosDestino;
+use App\Models\SaleDetail;
 use App\Models\SalidaProductos;
 use Livewire\Component;
 use Carbon\Carbon;
@@ -50,10 +51,6 @@ class MercanciaController extends Component
        else{
         $this->buscarproducto=0;
        }
-
-       
-
-
 
        $destinosuc= Destino::join('sucursals as suc','suc.id','destinos.sucursal_id')
        ->select ('suc.name as sucursal','destinos.nombre as destino','destinos.id as destino_id')
@@ -129,7 +126,7 @@ class MercanciaController extends Component
             $entrada = IngresoProductos::create([
                 'destino' => $data->destino,
                 'user_id' => $data->user_id,
-                'concepto'=>'INICIAL',
+                'concepto'=>'ENTRADA',
                 'observacion'=>$data->observacion
             ]);
 
@@ -209,5 +206,85 @@ class MercanciaController extends Component
         //dd($auxi);
 
     }
+
+    public function Verificar()
+    {
+        $v1= CompraDetalle::all();
+
+        foreach ($v1 as $data) {
+            $v2 = DetalleOperacion::join('ingreso_salidas','ingresos_salidas.id','detalle_operacions.id_operacion')
+            ->where('proceso','Entrada')->where('product_id',$data->product_id);
+            if ($v2 != null and $data->created_at> $v1->created_at) {
+                
+            }
+        }
+    }
+
+    //Primero se creo los lotes iniciales de la primera insercion de productos de 200 unidades
+
+    public function CrearLotes(){
+        $auxi= Product::all();
+        $destinos= Destino::all();
+
+        DB::beginTransaction();
+
+        try {
+
+        foreach ($destinos as $data1) {
+            
+            $ingreso= IngresoProductos::create([
+                'destino' => $data1->id,
+                'user_id' => 1,
+                'concepto'=>'INICIAL',
+                'observacion'=>"inventario inicial no real"
+            ]);
+
+
+
+            foreach ($auxi as $data) {
+
+                $lot= Lote::create([
+                    'existencia'=>200,
+                    'status'=>'Activo'
+                ]);
+                $vs=DetalleEntradaProductos::create([
+
+                    'product_id'=>$data->id,
+                    'cantidad'=>200,
+                    'id_entrada'=>$ingreso->id,
+                    'lote_id'=>$lot->id
+    
+                ]);
+
+               
+            }
+        }
+
+
+        DB::commit();
+    } catch (Exception $e) {
+DB::rollback();
+dd($e->getMessage());
+
+}
+
+       
+    }
+
+    public function GeneraVentas(){
+
+
+        
+
+
+        $var3=SaleDetail::where('created_at','<=',);
+
+        foreach ($var3 as $data) {
+            
+        }
+
+    }
+
+    
 }
 
