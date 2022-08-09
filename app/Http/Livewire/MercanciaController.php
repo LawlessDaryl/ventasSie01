@@ -18,6 +18,8 @@ use Livewire\Component;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Exception;
+use Illuminate\Database\Console\Migrations\StatusCommand;
+use Illuminate\Session\ExistenceAwareInterface;
 
 class MercanciaController extends Component
 {
@@ -287,4 +289,8 @@ dd($e->getMessage());
 
     
 }
-
+ Lote
+ -Sta
+ -Ex
+ -PRODUC
+ -COSTO
