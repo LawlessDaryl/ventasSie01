@@ -347,7 +347,7 @@
                 <div class="row">
 
                     <div class="col-12 col-sm-6 col-md-3 text-center">
-                        <b>Buscar...</b>
+                        <b wire:click="limpiarsearch()" style="cursor: pointer;">Buscar...</b>
                         <div class="form-group">
                             <div class="input-group mb-4">
                                 <div class="input-group-prepend">
@@ -952,6 +952,18 @@
         //Mostrar Mensaje No se Puede Eliminar
         window.livewire.on('entregado-terminado', event => {
         swal("¡No se puede realizar esta acción!", "No se pueden Anular o Eliminar las Ordenes de Servicio que tengan Servicios Terminados o Entregados", {
+						icon : "info",
+						buttons: {        			
+							confirm: {
+								className : 'btn btn-info'
+							}
+						},
+					});
+            });
+
+        //Mostrar Mensaje No se Puede Eliminar
+        window.livewire.on('Serviciopendienteocupado', event => {
+        swal("El Servicio ya cuenta con un Responsable Técnico", "Perdon pero el Servicio ya fué asignado a: " + @this.alert_responsabletecnico, {
 						icon : "info",
 						buttons: {        			
 							confirm: {
