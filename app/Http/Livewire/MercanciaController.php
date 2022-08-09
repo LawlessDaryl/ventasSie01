@@ -204,9 +204,7 @@ class MercanciaController extends Component
             }
         
         }
-
         //dd($auxi);
-
     }
 
     public function Verificar()
@@ -224,7 +222,8 @@ class MercanciaController extends Component
 
     //Primero se creo los lotes iniciales de la primera insercion de productos de 200 unidades
 
-    public function CrearLotes(){
+    public function CrearLotes()
+    {
         $auxi= Product::all();
         $destinos= Destino::all();
 
@@ -247,15 +246,18 @@ class MercanciaController extends Component
 
                 $lot= Lote::create([
                     'existencia'=>200,
-                    'status'=>'Activo'
+                    'costo'=>$data->costo,
+                    'status'=>'Activo',
+                    'product_id'=>$data->id
                 ]);
                 $vs=DetalleEntradaProductos::create([
 
                     'product_id'=>$data->id,
+                    'costo'=> $data->costo,
                     'cantidad'=>200,
                     'id_entrada'=>$ingreso->id,
                     'lote_id'=>$lot->id
-    
+                
                 ]);
 
                
@@ -264,33 +266,43 @@ class MercanciaController extends Component
 
 
         DB::commit();
-    } catch (Exception $e) {
-DB::rollback();
-dd($e->getMessage());
-
-}
+        }
+         catch (Exception $e)
+        {
+        DB::rollback();
+        dd($e->getMessage());
+        }
 
        
     }
 
-    public function GeneraVentas(){
+    public function Ventas(){
 
 
+        $auxi= Product::all();
+
+        foreach ($auxi as $value) {
+            $v3=IngresoSalida::join('detalle_operacions','detalle_operacions.id_operacion','ingreso_salidas.id')->where('proceso','Salida')->where('detalle_operacions.product_id', $value->id)->get();
+            //dump($v3);
+
+            if ($v3) {
+                
+                $v4=SaleDetail::where('product_id',$value->id)->where('created_at','<=',$v3->created_at)->get();
+                foreach ($v4 as $data3) {
+                    
+                }
+            }
+        }
         
 
 
-        $var3=SaleDetail::where('created_at','<=',);
+        // $var3=SaleDetail::where('created_at','<=',);
 
-        foreach ($var3 as $data) {
+        // foreach ($var3 as $data) {
             
-        }
+        // }
 
     }
 
     
 }
- Lote
- -Sta
- -Ex
- -PRODUC
- -COSTO

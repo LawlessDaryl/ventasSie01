@@ -17,6 +17,7 @@ class CreateDetalleEntradaProductosTable extends Migration
             $table->id();
             $table->foreignId('product_id')->constrained();
             $table->integer('cantidad');
+            $table->decimal('costo');
             $table->unsignedBigInteger('id_entrada');
             $table->foreign('id_entrada')->references('id')->on('ingreso_productos');
             $table->foreignId('lote_id')->constrained();

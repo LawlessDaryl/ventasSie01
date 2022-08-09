@@ -191,6 +191,7 @@ class UsersController extends Component
             ]);
         }
         $user->syncRoles($this->profile);
+        
         if ($this->image) {
             $customFileName = uniqid() . '_.' . $this->image->extension();
             $this->image->storeAs('public/usuarios', $customFileName);
