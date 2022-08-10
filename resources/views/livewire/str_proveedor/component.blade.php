@@ -37,7 +37,7 @@
                                         <h6 class="text-center">{{ $s->phone }}</h6>
                                     </td>
                                     <td class="text-center">
-                                        <h6 class="text-center">{{ $s->email }}</h6>
+                                        <h6 class="text-center">{{ $s->mail }}</h6> 
                                     </td>
                                     <td class="text-center">
                                         <h6 class="text-center">{{ $s->address }}</h6>
@@ -48,7 +48,7 @@
                                     </td>
                                     <td class="text-center">
                                         <span>
-                                            <img src="{{ asset('storage/proveedores/' . $s->imagen) }}" alt="imagen"
+                                            <img src="{{ asset('storage/proveedores/' . $s->image) }}" alt="imagen"
                                                 class=" rounded" width="70px" height="70px">
                                         </span>
                                     </td>
