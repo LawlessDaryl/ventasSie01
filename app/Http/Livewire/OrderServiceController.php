@@ -224,7 +224,7 @@ class OrderServiceController extends Component
                                     "mov.import as importe",
                                     DB::raw('0 as servicios'))
                                     ->where('order_services.status', 'ACTIVO')
-                                    ->whereBetween('order_services.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
+                                    ->whereBetween('mov.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
                                     ->where('mov.type', $this->type)
                                     ->where('mov.status', 'ACTIVO')
                                     ->where('s.sucursal_id',$this->sucursal_id)
@@ -257,7 +257,7 @@ class OrderServiceController extends Component
                                     "mov.import as importe",
                                     DB::raw('0 as servicios'))
                                     ->where('order_services.status', 'ACTIVO')
-                                    ->whereBetween('order_services.created_at', [Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00', Carbon::parse($this->dateTo)->format('Y-m-d') . ' 23:59:59'])
+                                    ->whereBetween('mov.created_at', [Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00', Carbon::parse($this->dateTo)->format('Y-m-d') . ' 23:59:59'])
                                     ->where('mov.type', $this->type)
                                     ->where('mov.status', 'ACTIVO')
                                     ->where('s.sucursal_id',$this->sucursal_id)
@@ -333,7 +333,7 @@ class OrderServiceController extends Component
                                         "mov.import as importe",
                                         DB::raw('0 as servicios'))
                                         ->where('order_services.status', 'ACTIVO')
-                                        ->whereBetween('order_services.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
+                                        ->whereBetween('mov.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
                                         ->where('mov.type', $this->type)
                                         ->where('mov.status', 'ACTIVO')
                                         ->where('mov.user_id', $this->usuario)
@@ -367,7 +367,7 @@ class OrderServiceController extends Component
                                         "mov.import as importe",
                                         DB::raw('0 as servicios'))
                                         ->where('order_services.status', 'ACTIVO')
-                                        ->whereBetween('order_services.created_at', [Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00', Carbon::parse($this->dateTo)->format('Y-m-d') . ' 23:59:59'])
+                                        ->whereBetween('mov.created_at', [Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00', Carbon::parse($this->dateTo)->format('Y-m-d') . ' 23:59:59'])
                                         ->where('mov.type', $this->type)
                                         ->where('mov.status', 'ACTIVO')
                                         ->where('mov.user_id', $this->usuario)
@@ -440,7 +440,7 @@ class OrderServiceController extends Component
                                         "mov.import as importe",
                                         DB::raw('0 as servicios'))
                                         ->where('order_services.status', 'ACTIVO')
-                                        ->whereBetween('order_services.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
+                                        ->whereBetween('mov.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
                                         ->where('mov.type', 'TERMINADO')
                                         ->where('mov.status', 'INACTIVO')
                                         ->where('mov.user_id', $this->usuario)
@@ -474,7 +474,7 @@ class OrderServiceController extends Component
                                         "mov.import as importe",
                                         DB::raw('0 as servicios'))
                                         ->where('order_services.status', 'ACTIVO')
-                                        ->whereBetween('order_services.created_at', [Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00', Carbon::parse($this->dateTo)->format('Y-m-d') . ' 23:59:59'])
+                                        ->whereBetween('mov.created_at', [Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00', Carbon::parse($this->dateTo)->format('Y-m-d') . ' 23:59:59'])
                                         ->where('mov.type', 'TERMINADO')
                                         ->where('mov.status', 'INACTIVO')
                                         ->where('mov.user_id', $this->usuario)
@@ -553,7 +553,7 @@ class OrderServiceController extends Component
                                     "mov.import as importe",
                                     DB::raw('0 as servicios'))
                                     ->where('order_services.status', 'ACTIVO')
-                                    ->whereBetween('order_services.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
+                                    ->whereBetween('mov.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
                                     ->where('mov.type', $this->type)
                                     ->where('mov.status', 'ACTIVO')
                                     ->where('s.sucursal_id',$this->sucursal_id)
@@ -587,7 +587,7 @@ class OrderServiceController extends Component
                                     "mov.import as importe",
                                     DB::raw('0 as servicios'))
                                     ->where('order_services.status', 'ACTIVO')
-                                    ->whereBetween('order_services.created_at', [Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00', Carbon::parse($this->dateTo)->format('Y-m-d') . ' 23:59:59'])
+                                    ->whereBetween('mov.created_at', [Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00', Carbon::parse($this->dateTo)->format('Y-m-d') . ' 23:59:59'])
                                     ->where('mov.type', $this->type)
                                     ->where('mov.status', 'ACTIVO')
                                     ->where('s.sucursal_id',$this->sucursal_id)
@@ -664,7 +664,7 @@ class OrderServiceController extends Component
                                         "mov.import as importe",
                                         DB::raw('0 as servicios'))
                                         ->where('order_services.status', 'ACTIVO')
-                                        ->whereBetween('order_services.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
+                                        ->whereBetween('mov.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
                                         ->where('mov.type', $this->type)
                                         ->where('mov.status', 'ACTIVO')
                                         ->where('mov.user_id', $this->usuario)
@@ -699,7 +699,7 @@ class OrderServiceController extends Component
                                         "mov.import as importe",
                                         DB::raw('0 as servicios'))
                                         ->where('order_services.status', 'ACTIVO')
-                                        ->whereBetween('order_services.created_at', [Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00', Carbon::parse($this->dateTo)->format('Y-m-d') . ' 23:59:59'])
+                                        ->whereBetween('mov.created_at', [Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00', Carbon::parse($this->dateTo)->format('Y-m-d') . ' 23:59:59'])
                                         ->where('mov.type', $this->type)
                                         ->where('mov.status', 'ACTIVO')
                                         ->where('mov.user_id', $this->usuario)
@@ -774,7 +774,7 @@ class OrderServiceController extends Component
                                         "mov.import as importe",
                                         DB::raw('0 as servicios'))
                                         ->where('order_services.status', 'ACTIVO')
-                                        ->whereBetween('order_services.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
+                                        ->whereBetween('mov.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
                                         ->where('mov.type', 'TERMINADO')
                                         ->where('mov.status', 'INACTIVO')
                                         ->where('mov.user_id', $this->usuario)
@@ -809,7 +809,7 @@ class OrderServiceController extends Component
                                         "mov.import as importe",
                                         DB::raw('0 as servicios'))
                                         ->where('order_services.status', 'ACTIVO')
-                                        ->whereBetween('order_services.created_at', [Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00', Carbon::parse($this->dateTo)->format('Y-m-d') . ' 23:59:59'])
+                                        ->whereBetween('mov.created_at', [Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00', Carbon::parse($this->dateTo)->format('Y-m-d') . ' 23:59:59'])
                                         ->where('mov.type', 'TERMINADO')
                                         ->where('mov.status', 'INACTIVO')
                                         ->where('mov.user_id', $this->usuario)
@@ -890,7 +890,7 @@ class OrderServiceController extends Component
                                     "mov.import as importe",
                                     DB::raw('0 as servicios'))
                                     ->where('order_services.status', 'ACTIVO')
-                                    ->whereBetween('order_services.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
+                                    ->whereBetween('mov.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
                                     ->where('mov.status', 'ACTIVO')
                                     ->where('s.sucursal_id',$this->sucursal_id)
                                     ->groupBy("order_services.id")
@@ -922,7 +922,7 @@ class OrderServiceController extends Component
                                     "mov.import as importe",
                                     DB::raw('0 as servicios'))
                                     ->where('order_services.status', 'ACTIVO')
-                                    ->whereBetween('order_services.created_at', [Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00', Carbon::parse($this->dateTo)->format('Y-m-d') . ' 23:59:59'])
+                                    ->whereBetween('mov.created_at', [Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00', Carbon::parse($this->dateTo)->format('Y-m-d') . ' 23:59:59'])
                                     ->where('mov.status', 'ACTIVO')
                                     ->where('s.sucursal_id',$this->sucursal_id)
                                     ->groupBy("order_services.id")
@@ -1063,7 +1063,7 @@ class OrderServiceController extends Component
                                         "mov.import as importe",
                                         DB::raw('0 as servicios'))
                                         ->where('order_services.status', 'ACTIVO')
-                                        ->whereBetween('order_services.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
+                                        ->whereBetween('mov.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
                                         ->where('mov.user_id', $this->usuario)
                                         ->where('mov.status', 'ACTIVO')
                                         ->where('mov.type', '<>', 'ENTREGADO')
@@ -1091,7 +1091,7 @@ class OrderServiceController extends Component
                                         "mov.import as importe",
                                         DB::raw('0 as servicios'))
                                         ->where('order_services.status', 'ACTIVO')
-                                        ->whereBetween('order_services.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
+                                        ->whereBetween('mov.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
                                         ->where('mov.type', 'TERMINADO')
                                         ->where('mov.status', 'INACTIVO')
                                         ->where('mov.user_id', $this->usuario)
@@ -1160,7 +1160,7 @@ class OrderServiceController extends Component
                                         "mov.import as importe",
                                         DB::raw('0 as servicios'))
                                         ->where('order_services.status', 'ACTIVO')
-                                        ->whereBetween('order_services.created_at', [Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00', Carbon::parse($this->dateTo)->format('Y-m-d') . ' 23:59:59'])
+                                        ->whereBetween('mov.created_at', [Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00', Carbon::parse($this->dateTo)->format('Y-m-d') . ' 23:59:59'])
                                         ->where('mov.user_id', $this->usuario)
                                         ->where('mov.status', 'ACTIVO')
                                         ->where('mov.type', '<>', 'ENTREGADO')
@@ -1188,7 +1188,7 @@ class OrderServiceController extends Component
                                         "mov.import as importe",
                                         DB::raw('0 as servicios'))
                                         ->where('order_services.status', 'ACTIVO')
-                                        ->whereBetween('order_services.created_at', [Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00', Carbon::parse($this->dateTo)->format('Y-m-d') . ' 23:59:59'])
+                                        ->whereBetween('mov.created_at', [Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00', Carbon::parse($this->dateTo)->format('Y-m-d') . ' 23:59:59'])
                                         ->where('mov.type', 'TERMINADO')
                                         ->where('mov.status', 'INACTIVO')
                                         ->where('mov.user_id', $this->usuario)
@@ -1299,7 +1299,7 @@ class OrderServiceController extends Component
                                     "mov.import as importe",
                                     DB::raw('0 as servicios'))
                                     ->where('order_services.status', 'ACTIVO')
-                                    ->whereBetween('order_services.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
+                                    ->whereBetween('mov.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
                                     ->where('mov.status', 'ACTIVO')
                                     ->where('s.sucursal_id',$this->sucursal_id)
                                     ->where('s.cat_prod_service_id',$this->catprodservid)
@@ -1332,7 +1332,7 @@ class OrderServiceController extends Component
                                     "mov.import as importe",
                                     DB::raw('0 as servicios'))
                                     ->where('order_services.status', 'ACTIVO')
-                                    ->whereBetween('order_services.created_at', [Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00', Carbon::parse($this->dateTo)->format('Y-m-d') . ' 23:59:59'])
+                                    ->whereBetween('mov.created_at', [Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00', Carbon::parse($this->dateTo)->format('Y-m-d') . ' 23:59:59'])
                                     ->where('mov.status', 'ACTIVO')
                                     ->where('s.sucursal_id',$this->sucursal_id)
                                     ->where('s.cat_prod_service_id',$this->catprodservid)
@@ -1406,7 +1406,7 @@ class OrderServiceController extends Component
                                     "mov.import as importe",
                                     DB::raw('0 as servicios'))
                                     ->where('order_services.status', 'ACTIVO')
-                                    ->whereBetween('order_services.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
+                                    ->whereBetween('mov.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
                                     ->where('mov.status', 'ACTIVO')
                                     ->where('mov.user_id', $this->usuario)
                                     ->where('s.sucursal_id',$this->sucursal_id)
@@ -1440,7 +1440,7 @@ class OrderServiceController extends Component
                                     "mov.import as importe",
                                     DB::raw('0 as servicios'))
                                     ->where('order_services.status', 'ACTIVO')
-                                    ->whereBetween('order_services.created_at', [Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00', Carbon::parse($this->dateTo)->format('Y-m-d') . ' 23:59:59'])
+                                    ->whereBetween('mov.created_at', [Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00', Carbon::parse($this->dateTo)->format('Y-m-d') . ' 23:59:59'])
                                     ->where('mov.status', 'ACTIVO')
                                     ->where('mov.user_id', $this->usuario)
                                     ->where('s.sucursal_id',$this->sucursal_id)
@@ -1522,7 +1522,7 @@ class OrderServiceController extends Component
                                     "mov.import as importe",
                                     DB::raw('0 as servicios'))
                                     ->where('order_services.status', 'ACTIVO')
-                                    ->whereBetween('order_services.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
+                                    ->whereBetween('mov.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
                                     ->where('mov.type', $this->type)
                                     ->where('mov.status', 'ACTIVO')
                                     ->groupBy("order_services.id")
@@ -1554,7 +1554,7 @@ class OrderServiceController extends Component
                                     "mov.import as importe",
                                     DB::raw('0 as servicios'))
                                     ->where('order_services.status', 'ACTIVO')
-                                    ->whereBetween('order_services.created_at', [Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00', Carbon::parse($this->dateTo)->format('Y-m-d') . ' 23:59:59'])
+                                    ->whereBetween('mov.created_at', [Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00', Carbon::parse($this->dateTo)->format('Y-m-d') . ' 23:59:59'])
                                     ->where('mov.type', $this->type)
                                     ->where('mov.status', 'ACTIVO')
                                     ->groupBy("order_services.id")
@@ -1628,7 +1628,7 @@ class OrderServiceController extends Component
                                         "mov.import as importe",
                                         DB::raw('0 as servicios'))
                                         ->where('order_services.status', 'ACTIVO')
-                                        ->whereBetween('order_services.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
+                                        ->whereBetween('mov.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
                                         ->where('mov.type', $this->type)
                                         ->where('mov.status', 'ACTIVO')
                                         ->where('mov.user_id', $this->usuario)
@@ -1661,7 +1661,7 @@ class OrderServiceController extends Component
                                         "mov.import as importe",
                                         DB::raw('0 as servicios'))
                                         ->where('order_services.status', 'ACTIVO')
-                                        ->whereBetween('order_services.created_at', [Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00', Carbon::parse($this->dateTo)->format('Y-m-d') . ' 23:59:59'])
+                                        ->whereBetween('mov.created_at', [Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00', Carbon::parse($this->dateTo)->format('Y-m-d') . ' 23:59:59'])
                                         ->where('mov.type', $this->type)
                                         ->where('mov.status', 'ACTIVO')
                                         ->where('mov.user_id', $this->usuario)
@@ -1732,7 +1732,7 @@ class OrderServiceController extends Component
                                         "mov.import as importe",
                                         DB::raw('0 as servicios'))
                                         ->where('order_services.status', 'ACTIVO')
-                                        ->whereBetween('order_services.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
+                                        ->whereBetween('mov.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
                                         ->where('mov.type', 'TERMINADO')
                                         ->where('mov.status', 'INACTIVO')
                                         ->where('mov.user_id', $this->usuario)
@@ -1765,7 +1765,7 @@ class OrderServiceController extends Component
                                         "mov.import as importe",
                                         DB::raw('0 as servicios'))
                                         ->where('order_services.status', 'ACTIVO')
-                                        ->whereBetween('order_services.created_at', [Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00', Carbon::parse($this->dateTo)->format('Y-m-d') . ' 23:59:59'])
+                                        ->whereBetween('mov.created_at', [Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00', Carbon::parse($this->dateTo)->format('Y-m-d') . ' 23:59:59'])
                                         ->where('mov.type', 'TERMINADO')
                                         ->where('mov.status', 'INACTIVO')
                                         ->where('mov.user_id', $this->usuario)
@@ -1842,7 +1842,7 @@ class OrderServiceController extends Component
                                     "mov.import as importe",
                                     DB::raw('0 as servicios'))
                                     ->where('order_services.status', 'ACTIVO')
-                                    ->whereBetween('order_services.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
+                                    ->whereBetween('mov.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
                                     ->where('mov.type', $this->type)
                                     ->where('mov.status', 'ACTIVO')
                                     ->where('s.cat_prod_service_id',$this->catprodservid)
@@ -1875,7 +1875,7 @@ class OrderServiceController extends Component
                                     "mov.import as importe",
                                     DB::raw('0 as servicios'))
                                     ->where('order_services.status', 'ACTIVO')
-                                    ->whereBetween('order_services.created_at', [Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00', Carbon::parse($this->dateTo)->format('Y-m-d') . ' 23:59:59'])
+                                    ->whereBetween('mov.created_at', [Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00', Carbon::parse($this->dateTo)->format('Y-m-d') . ' 23:59:59'])
                                     ->where('mov.type', $this->type)
                                     ->where('mov.status', 'ACTIVO')
                                     ->where('s.cat_prod_service_id',$this->catprodservid)
@@ -1951,7 +1951,7 @@ class OrderServiceController extends Component
                                         "mov.import as importe",
                                         DB::raw('0 as servicios'))
                                         ->where('order_services.status', 'ACTIVO')
-                                        ->whereBetween('order_services.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
+                                        ->whereBetween('mov.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
                                         ->where('mov.type', $this->type)
                                         ->where('mov.status', 'ACTIVO')
                                         ->where('mov.user_id', $this->usuario)
@@ -1985,7 +1985,7 @@ class OrderServiceController extends Component
                                         "mov.import as importe",
                                         DB::raw('0 as servicios'))
                                         ->where('order_services.status', 'ACTIVO')
-                                        ->whereBetween('order_services.created_at', [Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00', Carbon::parse($this->dateTo)->format('Y-m-d') . ' 23:59:59'])
+                                        ->whereBetween('mov.created_at', [Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00', Carbon::parse($this->dateTo)->format('Y-m-d') . ' 23:59:59'])
                                         ->where('mov.type', $this->type)
                                         ->where('mov.status', 'ACTIVO')
                                         ->where('mov.user_id', $this->usuario)
@@ -2058,7 +2058,7 @@ class OrderServiceController extends Component
                                         "mov.import as importe",
                                         DB::raw('0 as servicios'))
                                         ->where('order_services.status', 'ACTIVO')
-                                        ->whereBetween('order_services.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
+                                        ->whereBetween('mov.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
                                         ->where('mov.type', 'TERMINADO')
                                         ->where('mov.status', 'INACTIVO')
                                         ->where('mov.user_id', $this->usuario)
@@ -2092,7 +2092,7 @@ class OrderServiceController extends Component
                                         "mov.import as importe",
                                         DB::raw('0 as servicios'))
                                         ->where('order_services.status', 'ACTIVO')
-                                        ->whereBetween('order_services.created_at', [Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00', Carbon::parse($this->dateTo)->format('Y-m-d') . ' 23:59:59'])
+                                        ->whereBetween('mov.created_at', [Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00', Carbon::parse($this->dateTo)->format('Y-m-d') . ' 23:59:59'])
                                         ->where('mov.type', 'TERMINADO')
                                         ->where('mov.status', 'INACTIVO')
                                         ->where('mov.user_id', $this->usuario)
@@ -2171,7 +2171,7 @@ class OrderServiceController extends Component
                                     "mov.import as importe",
                                     DB::raw('0 as servicios'))
                                     ->where('order_services.status', 'ACTIVO')
-                                    ->whereBetween('order_services.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
+                                    ->whereBetween('mov.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
                                     ->where('mov.status', 'ACTIVO')
                                     ->groupBy("order_services.id")
                                     ->orderBy("order_services.id","desc")
@@ -2202,7 +2202,7 @@ class OrderServiceController extends Component
                                     "mov.import as importe",
                                     DB::raw('0 as servicios'))
                                     ->where('order_services.status', 'ACTIVO')
-                                    ->whereBetween('order_services.created_at', [Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00', Carbon::parse($this->dateTo)->format('Y-m-d') . ' 23:59:59'])
+                                    ->whereBetween('mov.created_at', [Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00', Carbon::parse($this->dateTo)->format('Y-m-d') . ' 23:59:59'])
                                     ->where('mov.status', 'ACTIVO')
                                     ->groupBy("order_services.id")
                                     ->orderBy("order_services.id","desc")
@@ -2272,7 +2272,7 @@ class OrderServiceController extends Component
                                     "mov.import as importe",
                                     DB::raw('0 as servicios'))
                                     ->where('order_services.status', 'ACTIVO')
-                                    ->whereBetween('order_services.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
+                                    ->whereBetween('mov.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
                                     ->where('mov.status', 'ACTIVO')
                                     ->where('mov.user_id', $this->usuario)
                                     ->groupBy("order_services.id")
@@ -2304,7 +2304,7 @@ class OrderServiceController extends Component
                                     "mov.import as importe",
                                     DB::raw('0 as servicios'))
                                     ->where('order_services.status', 'ACTIVO')
-                                    ->whereBetween('order_services.created_at', [Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00', Carbon::parse($this->dateTo)->format('Y-m-d') . ' 23:59:59'])
+                                    ->whereBetween('mov.created_at', [Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00', Carbon::parse($this->dateTo)->format('Y-m-d') . ' 23:59:59'])
                                     ->where('mov.status', 'ACTIVO')
                                     ->where('mov.user_id', $this->usuario)
                                     ->groupBy("order_services.id")
@@ -2378,7 +2378,7 @@ class OrderServiceController extends Component
                                     "mov.import as importe",
                                     DB::raw('0 as servicios'))
                                     ->where('order_services.status', 'ACTIVO')
-                                    ->whereBetween('order_services.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
+                                    ->whereBetween('mov.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
                                     ->where('mov.status', 'ACTIVO')
                                     ->where('s.cat_prod_service_id',$this->catprodservid)
                                     ->groupBy("order_services.id")
@@ -2410,7 +2410,7 @@ class OrderServiceController extends Component
                                     "mov.import as importe",
                                     DB::raw('0 as servicios'))
                                     ->where('order_services.status', 'ACTIVO')
-                                    ->whereBetween('order_services.created_at', [Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00', Carbon::parse($this->dateTo)->format('Y-m-d') . ' 23:59:59'])
+                                    ->whereBetween('mov.created_at', [Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00', Carbon::parse($this->dateTo)->format('Y-m-d') . ' 23:59:59'])
                                     ->where('mov.status', 'ACTIVO')
                                     ->where('s.cat_prod_service_id',$this->catprodservid)
                                     ->groupBy("order_services.id")
@@ -2482,7 +2482,7 @@ class OrderServiceController extends Component
                                     "mov.import as importe",
                                     DB::raw('0 as servicios'))
                                     ->where('order_services.status', 'ACTIVO')
-                                    ->whereBetween('order_services.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
+                                    ->whereBetween('mov.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
                                     ->where('mov.status', 'ACTIVO')
                                     ->where('mov.user_id', $this->usuario)
                                     ->where('s.cat_prod_service_id',$this->catprodservid)
@@ -2515,7 +2515,7 @@ class OrderServiceController extends Component
                                     "mov.import as importe",
                                     DB::raw('0 as servicios'))
                                     ->where('order_services.status', 'ACTIVO')
-                                    ->whereBetween('order_services.created_at', [Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00', Carbon::parse($this->dateTo)->format('Y-m-d') . ' 23:59:59'])
+                                    ->whereBetween('mov.created_at', [Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00', Carbon::parse($this->dateTo)->format('Y-m-d') . ' 23:59:59'])
                                     ->where('mov.status', 'ACTIVO')
                                     ->where('mov.user_id', $this->usuario)
                                     ->where('s.cat_prod_service_id',$this->catprodservid)

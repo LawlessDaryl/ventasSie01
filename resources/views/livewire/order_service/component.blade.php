@@ -439,8 +439,8 @@
                         <div class="form-group">
                             <select wire:model="tipofecha" class="form-control">
                                 <option value="Todos" selected>Todas las Fechas</option>
-                                <option value="Dia">Recepcionados Hoy</option>
-                                <option value="Rango">Recepcionados por Fechas</option>
+                                <option value="Dia">Hoy</option>
+                                <option value="Rango">Rango de Fechas</option>
                             </select>
                         </div>
                     </div>
