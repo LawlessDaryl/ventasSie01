@@ -73,6 +73,8 @@ class OrderServiceController extends Component
     //Variables para cambiar técnico responsable
     public $id_usuario, $tipo;
 
+    //Variables para mostrar tecnico responsable en los sweet alerts (Alertas JavaScript)
+    public $alert_responsabletecnico;
 
     use WithPagination;
     public function paginationView()
@@ -2877,19 +2879,28 @@ class OrderServiceController extends Component
     //Mostrar una lista de usuarios tecnicos para asignar un servicio en una Ventana Modal
     public function modalasignartecnico($idservicio, $idordendeservicio)
     {
-        //Actualizando variable $id_orden_de_servicio para mostrar el codigo de la orden del servicio en el titulo de la ventana modal
-        $this->id_orden_de_servicio = $idordendeservicio;
-
-        $this->id_servicio = $idservicio;
-        $this->detallesservicios('PENDIENTE', $idservicio);
-        if (Auth::user()->hasPermissionTo('Asignar_Tecnico_Servicio'))
+        //Verificando que el servicio sea pendiente activo
+        if($this->verificarpendiente($idservicio))
         {
+            //Actualizando variable $id_orden_de_servicio para mostrar el codigo de la orden del servicio en el titulo de la ventana modal
+            $this->id_orden_de_servicio = $idordendeservicio;
+    
+            $this->id_servicio = $idservicio;
+    
+            $this->detallesservicios('PENDIENTE', $idservicio);
+    
             $this->emit('show-asignartecnicoresponsable', 'show modal!');
         }
         else
         {
-            dd("asd");
+            //Si el servicio no es pendiente activo, buscamos con el método el movimiento que sea activo
+            $movimiento = $this->saberactivo($idservicio);
+            //Buscamos el nombre del Responsable Técnico de ese servicio y lo guardamos en una variable para mostrarlo en una alerta
+            $this->alert_responsabletecnico = User::find($movimiento->user_id)->name;
+            $this->emit('Serviciopendienteocupado');
+
         }
+
     }
     //Listar los Usuarios para ser asignados a un servicio Pendiente en una Ventana Modal
     public function listarusuarios()
@@ -2968,9 +2979,22 @@ class OrderServiceController extends Component
     //Ser asignado a un servicio
     public function serasignado($idordenservicio, $idservicio)
     {
-        $this->id_orden_de_servicio = $idordenservicio;
-        $this->id_servicio = $idservicio;
-        $this->asignartecnico(Auth()->user()->id);
+        //Verificando que el servicio sea pendiente activo
+        if($this->verificarpendiente($idservicio))
+        {
+            $this->id_orden_de_servicio = $idordenservicio;
+            $this->id_servicio = $idservicio;
+            $this->asignartecnico(Auth()->user()->id);
+        }
+        else
+        {
+            //Si el servicio no es pendiente activo, buscamos con el método el movimiento que sea activo
+            $movimiento = $this->saberactivo($idservicio);
+            //Buscamos el nombre del Responsable Técnico de ese servicio y lo guardamos en una variable para mostrarlo en una alerta
+            $this->alert_responsabletecnico = User::find($movimiento->user_id)->name;
+            $this->emit('Serviciopendienteocupado');
+
+        }
     }
     //Asignar un Técnico Responsable a un Servicio
     public function asignartecnico($idusuario)
@@ -3024,6 +3048,7 @@ class OrderServiceController extends Component
                     ]);
 
                     DB::commit();
+                    break;
                     
                 }
                 catch (Exception $e)
@@ -3347,9 +3372,9 @@ class OrderServiceController extends Component
         $this->emit('show-editarservicioocultar', 'show modal!');
     }
     //Para saber el estado[ACTIVO,INACTIVO] de un servicio, devuelve el movimiento que sea activo
-    public function saberactivo($id)
+    public function saberactivo($idservicio)
     {
-        $datoscliente = Service::find($id);
+        $datoscliente = Service::find($idservicio);
         foreach ($datoscliente->movservices as $ms)
         {
             if($ms->movs->status == 'ACTIVO')
@@ -3410,7 +3435,7 @@ class OrderServiceController extends Component
 
         
     }
-    //Devuelve el id del Ténico Responsable de un Servicio en Proceso
+    //Devuelve el true o false de un servicio por su Técnico Responsable
     public function verificartecnicoresponsable($idservicio)
     {
         $service = Service::find($idservicio);
@@ -3779,5 +3804,25 @@ class OrderServiceController extends Component
         session(['tservice' => null]);
         $this->redirect('service');
     }
+    //Verifica si un servicio que esté pendiente este activo
+    public function verificarpendiente($idservicio)
+    {
+        $service = Service::find($idservicio);
 
+        foreach ($service->movservices as $servmov)
+        {
+            if ($servmov->movs->status == 'ACTIVO' && $servmov->movs->type == 'PENDIENTE')
+            {
+                $movimiento = $servmov->movs;
+                return true;
+                break;
+            }
+        }
+        return false;
+    }
+    //Limpiar todo el $search
+    public function limpiarsearch()
+    {
+        $this->search = "";
+    }
 }

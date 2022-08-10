@@ -118,8 +118,11 @@
               <h3><b>Cliente:</b> {{ucwords(strtolower($this->nombrecliente))}}</h3>
             </div>
 
-            <div class="col-12 col-sm-4 col-md-6 text-center" style="color: #000000">
-              <h3><b>Celular:</b> {{$this->celularcliente}}</h3>
+            <div class="col-12 col-sm-4 col-md-6 text-center">
+              <h3>
+                <b>Celular:</b> <a style="color: #0080a7" href="https://wa.me/{{$this->celularcliente}}" target="_blank">{{$this->celularcliente}}</a>
+                <i style="color: #0080a7" class="fab fa-whatsapp"></i>
+              </h3>
             </div>
 
 
