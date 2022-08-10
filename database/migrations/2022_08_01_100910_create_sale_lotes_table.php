@@ -15,7 +15,7 @@ class CreateSaleLotesTable extends Migration
     {
         Schema::create('sale_lotes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('sale_id')->constrained();
+            $table->foreignId('sale_detail_id')->constrained();
             $table->foreignId('lote_id')->constrained();
             $table->integer('cantidad');
             $table->timestamps();

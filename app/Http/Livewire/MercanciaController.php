@@ -13,6 +13,7 @@ use App\Models\Lote;
 use App\Models\Product;
 use App\Models\ProductosDestino;
 use App\Models\SaleDetail;
+use App\Models\SaleLote;
 use App\Models\SalidaProductos;
 use Livewire\Component;
 use Carbon\Carbon;
@@ -222,47 +223,45 @@ class MercanciaController extends Component
 
     //Primero se creo los lotes iniciales de la primera insercion de productos de 200 unidades
 
+    
     public function CrearLotes()
     {
         $auxi= Product::all();
         $destinos= Destino::all();
-
         DB::beginTransaction();
 
         try {
 
-        foreach ($destinos as $data1) {
+    
             
-            $ingreso= IngresoProductos::create([
-                'destino' => $data1->id,
-                'user_id' => 1,
-                'concepto'=>'INICIAL',
-                'observacion'=>"inventario inicial no real"
-            ]);
-
-
+            // $ingreso= IngresoProductos::create([
+            //     'destino' => $data1->id,
+            //     'user_id' => 1,
+            //     'concepto'=>'INICIAL',
+            //     'observacion'=>"inventario inicial no real"
+            // ]);
 
             foreach ($auxi as $data) {
 
                 $lot= Lote::create([
-                    'existencia'=>200,
+                    'existencia'=>350,
                     'costo'=>$data->costo,
                     'status'=>'Activo',
                     'product_id'=>$data->id
                 ]);
-                $vs=DetalleEntradaProductos::create([
+                // $vs=DetalleEntradaProductos::create([
 
-                    'product_id'=>$data->id,
-                    'costo'=> $data->costo,
-                    'cantidad'=>200,
-                    'id_entrada'=>$ingreso->id,
-                    'lote_id'=>$lot->id
+                //     'product_id'=>$data->id,
+                //     'costo'=> $data->costo,
+                //     'cantidad'=>200,
+                //     'id_entrada'=>$ingreso->id,
+                //     'lote_id'=>$lot->id
                 
-                ]);
+                // ]);
 
                
             }
-        }
+        
 
 
         DB::commit();
@@ -279,28 +278,84 @@ class MercanciaController extends Component
     public function Ventas(){
 
 
-        $auxi= Product::all();
+        // $auxi= Product::all();
 
-        foreach ($auxi as $value) {
-            $v3=IngresoSalida::join('detalle_operacions','detalle_operacions.id_operacion','ingreso_salidas.id')->where('proceso','Salida')->where('detalle_operacions.product_id', $value->id)->get();
-            //dump($v3);
+        // foreach ($auxi as $value) {
 
-            if ($v3) {
-                
-                $v4=SaleDetail::where('product_id',$value->id)->where('created_at','<=',$v3->created_at)->get();
-                foreach ($v4 as $data3) {
+        //     //dump($v3);
+            
+        //     $v3=IngresoSalida::join('detalle_operacions','detalle_operacions.id_operacion','ingreso_salidas.id')->where('proceso','Salida')->where('detalle_operacions.product_id', $value->id)->get();
+           
+        //     $ent= IngresoSalida::join('detalle_operacions','detalle_operacions.id_operacion','ingreso_salidas.id')->where('detalle_operacions.product_id', $value->id)->get();
+
+        //     $fechainicial= Carbon::parse('2015-01-01')->format('Y-m-d') . ' 00:00:00';
+        //     $fecha_final=0;
+
+        //     // foreach ($v3 as $valu) {
+
+        //     //     if () {
                     
+        //     //     }  
+                
+        //     // }
+
+        //     if (count($v3)>0) {
+        //         dd($ent);
+                
+                $v4=SaleDetail::all();
+
+                foreach ($v4 as $data3) {
+
+                    $lot=Lote::where('product_id',$data3->product_id)->where('status','Activo')->get();
+
+                     //obtener la cantidad del detalle de la venta 
+                    $qq=$data3->quantity;//q=8
+
+                    foreach ($lot as $val) { //lote1= 3 Lote2=3 Lote3=3
+                       
+                        if($qq>0){            //true//5//2
+                            
+                            if ($qq > $val->existencia) {
+
+                                SaleLote::create([
+                                    'sale_detail_id'=>$data3->id,
+                                    'lote_id'=>$val->id,
+                                    'cantidad'=>$val->existencia
+                                    
+                                ]);
+    
+                                $val->update([
+                                    
+                                    'existencia'=>0,
+                                    'status'=>'Inactivo'
+    
+                                ]);
+                                $val->save();
+                                $qq=$qq-$val->existencia;
+                            }
+                            else{
+                                SaleLote::create([
+                                    'sale_id'=>$data3->id,
+                                    'lote_id'=>$val->id,
+                                    'cantidad'=>$qq
+                                ]);
+    
+                                $val->update([ 
+                                    'existencia'=>$val->existencia-$qq
+                                ]);
+                                $val->save();
+                                break;
+                            }
+
+                         
+                        }
+                    }
+
+                  
                 }
-            }
-        }
+     
         
 
-
-        // $var3=SaleDetail::where('created_at','<=',);
-
-        // foreach ($var3 as $data) {
-            
-        // }
 
     }
 
