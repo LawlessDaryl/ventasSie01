@@ -30,6 +30,9 @@ class MercanciaController extends Component
     public function mount(){
         $this->col=collect([]);
         $this->tipo_proceso= "Entrada";
+       // $this->borrarLotes();
+     //$this->ajustarLotes();
+     $this->productosajustados();
 
     }
     public function render()
@@ -232,15 +235,6 @@ class MercanciaController extends Component
 
         try {
 
-    
-            
-            // $ingreso= IngresoProductos::create([
-            //     'destino' => $data1->id,
-            //     'user_id' => 1,
-            //     'concepto'=>'INICIAL',
-            //     'observacion'=>"inventario inicial no real"
-            // ]);
-
             foreach ($auxi as $data) {
 
                 $lot= Lote::create([
@@ -249,16 +243,6 @@ class MercanciaController extends Component
                     'status'=>'Activo',
                     'product_id'=>$data->id
                 ]);
-                // $vs=DetalleEntradaProductos::create([
-
-                //     'product_id'=>$data->id,
-                //     'costo'=> $data->costo,
-                //     'cantidad'=>200,
-                //     'id_entrada'=>$ingreso->id,
-                //     'lote_id'=>$lot->id
-                
-                // ]);
-
                
             }
         
@@ -277,30 +261,6 @@ class MercanciaController extends Component
 
     public function Ventas(){
 
-
-        // $auxi= Product::all();
-
-        // foreach ($auxi as $value) {
-
-        //     //dump($v3);
-            
-        //     $v3=IngresoSalida::join('detalle_operacions','detalle_operacions.id_operacion','ingreso_salidas.id')->where('proceso','Salida')->where('detalle_operacions.product_id', $value->id)->get();
-           
-        //     $ent= IngresoSalida::join('detalle_operacions','detalle_operacions.id_operacion','ingreso_salidas.id')->where('detalle_operacions.product_id', $value->id)->get();
-
-        //     $fechainicial= Carbon::parse('2015-01-01')->format('Y-m-d') . ' 00:00:00';
-        //     $fecha_final=0;
-
-        //     // foreach ($v3 as $valu) {
-
-        //     //     if () {
-                    
-        //     //     }  
-                
-        //     // }
-
-        //     if (count($v3)>0) {
-        //         dd($ent);
         DB::beginTransaction();
 
         try {
@@ -374,18 +334,103 @@ class MercanciaController extends Component
     }
 
     public function BuscarProducto(){
-        $v3=IngresoSalida::join('detalle_operacions','detalle_operacions.id_operacion','ingreso_salidas.id')
-        ->where('proceso','Entrada')->groupBy('detalle_operacions.product_id')->selectRaw('sum(cantidad) as sum, detalle_operacions.product_id')->take(5)->get();
-  foreach ($v3 as $data) {
-        $auxi= SaleDetail::where('product_id',$data->product_id)->take(1)->get();
-        if (count($auxi)>0) {
-            $v3->pull($data);
-        }
-  }
+        //obtengo la cantidad total de todos los productos que se ingresaron despues del ajuste a cada sucursal
 
-  $desired_object = $food->filter(function($item) {
-    return $item->id == 24;
-})->first();
+        $v3=IngresoSalida::join('detalle_operacions','detalle_operacions.id_operacion','ingreso_salidas.id')->join('products', 'products.id','detalle_operacions.product_id')
+        ->where('proceso','Entrada')->groupBy('detalle_operacions.product_id')->selectRaw('sum(cantidad) as sum, detalle_operacions.product_id,products.costo')->get();
+     
+
+        $object = $v3->filter(function($item) {
+            
+            $auxi= SaleDetail::where('product_id',$item->product_id)->first();
+          if ($auxi and $auxi->product_id == $item->product_id ) 
+          {}
+          else{
+            return $item;  
+          }
+          
+               })->values();
+
+               foreach ($object as $data3) {
+                DB::beginTransaction();
+                try {
+                        $lot= Lote::create([
+                            'existencia'=>$data3->sum,
+                            'costo'=>$data3->costo,
+                            'status'=>'Activo',
+                            'product_id'=>$data3->product_id
+                        ]);
+                DB::commit();
+                }
+                 catch (Exception $e)
+                {
+                DB::rollback();
+                dd($e->getMessage());
+                }
+               }
+       // dd($object);
+    }
+
+    public function borrarLotes(){
+
+        $lotb=Lote::all();
+
+        foreach ($lotb as $data5) {
+            if ($data5->existencia==350) {
+                $data5->delete();
+            }
+        }
+
+
+    }
+
+    public function ajustarLotes(){
+        $ss=ProductosDestino::groupBy('productos_destinos.product_id')->selectRaw('sum(stock) as sum, productos_destinos.product_id')->get();
+     
+
+        foreach ($ss as $val8) {
+            $fg= Lote::where('product_id',$val8->product_id)->get();
+
+            foreach ($fg as $daf) {
+                $daf->update([
+                    'existencia'=>$val8->sum
+                ]);
+                $daf->save();
+            }
+          
+        }
+
+        // $object = $v3->filter(function($item) {
+            
+        // })->values;
+
+    }
+
+    public function productosajustados(){
+
+        $v9=IngresoSalida::join('detalle_operacions','detalle_operacions.id_operacion','ingreso_salidas.id')
+        ->where('concepto','AJUSTE')
+        ->groupBy('detalle_operacions.product_id')
+        ->selectRaw('sum(cantidad) as sum, detalle_operacions.product_id')
+        ->take(5)
+        ->get();
+        $mm= ProductosDestino::all();
+        
+        foreach ($mm as $dam) {
+            
+            $finded= $v9->where('product_id',$dam->product_id);
+            //dd($finded);
+            if ($finded != null) {
+                //dd("null");
+                $dam->update([
+                'stock'=>0
+                ]);
+            }
+        }
+
+
+
+
     }
     
 

@@ -47,7 +47,6 @@ use App\Http\Livewire\ComprasController;
 use App\Http\Livewire\DetalleComprasController;
 use App\Http\Livewire\EditarCompraDetalleController;
 use App\Http\Livewire\MercanciaController;
-
 use App\Http\Livewire\CuentasController;
 use App\Http\Livewire\EmailsController;
 use App\Http\Livewire\InicioController;
