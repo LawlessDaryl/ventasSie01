@@ -550,7 +550,7 @@ class ReportEntregadoServController extends Component
                             if ($mm->movs->status == 'ACTIVO') {
                                 $serv->utilidad = $mm->movs->import - $serv->costo;
                                 foreach($mm->movs->cartmov as $carmv){
-                                    
+                                 
                                     if($carmv->cartera->tipo == 'CajaFisica'){
                                         
                                         $this->sumaUtilidad += $serv->utilidad;

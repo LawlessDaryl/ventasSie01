@@ -3278,7 +3278,7 @@ class OrderServiceController extends Component
                         'import' => $this->edit_precioservicio,
                         'on_account' => $this->edit_acuenta,
                         'saldo' => $this->edit_precioservicio - $this->edit_acuenta,
-                        'user_id' => $movimiento->user_id,
+                        'user_id' => Auth()->user()->id,
                     ]);
 
 

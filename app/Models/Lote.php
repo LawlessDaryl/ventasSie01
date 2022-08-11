@@ -9,5 +9,5 @@ class Lote extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['existencia','costo','status','product_id'];
+    protected $fillable = ['existencia','costo','status','product_id','created_at','updated_at'];
 }

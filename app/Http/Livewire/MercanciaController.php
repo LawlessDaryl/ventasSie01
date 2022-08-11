@@ -301,7 +301,10 @@ class MercanciaController extends Component
 
         //     if (count($v3)>0) {
         //         dd($ent);
-                
+        DB::beginTransaction();
+
+        try {
+
                 $v4=SaleDetail::all();
 
                 foreach ($v4 as $data3) {
@@ -317,13 +320,15 @@ class MercanciaController extends Component
                             
                             if ($qq > $val->existencia) {
 
-                                SaleLote::create([
+                                $ss=SaleLote::create([
                                     'sale_detail_id'=>$data3->id,
                                     'lote_id'=>$val->id,
                                     'cantidad'=>$val->existencia
                                     
                                 ]);
-    
+                                $ss->update(['created_at'=>$data3->created_at,'updated_at'=>$data3->updated_at]);
+                                $ss->save();
+  
                                 $val->update([
                                     
                                     'existencia'=>0,
@@ -334,17 +339,20 @@ class MercanciaController extends Component
                                 $qq=$qq-$val->existencia;
                             }
                             else{
-                                SaleLote::create([
-                                    'sale_id'=>$data3->id,
+                                $dd=SaleLote::create([
+                                    'sale_detail_id'=>$data3->id,
                                     'lote_id'=>$val->id,
                                     'cantidad'=>$qq
                                 ]);
+                                $dd->update(['created_at'=>$data3->created_at,'updated_at'=>$data3->updated_at]);
+                                $dd->save();
+   
     
                                 $val->update([ 
                                     'existencia'=>$val->existencia-$qq
                                 ]);
                                 $val->save();
-                                break;
+                              
                             }
 
                          
@@ -354,10 +362,32 @@ class MercanciaController extends Component
                   
                 }
      
-        
+                DB::commit();
+            }
+             catch (Exception $e)
+            {
+            DB::rollback();
+            dd($e->getMessage());
+            }
 
 
     }
+
+    public function BuscarProducto(){
+        $v3=IngresoSalida::join('detalle_operacions','detalle_operacions.id_operacion','ingreso_salidas.id')
+        ->where('proceso','Entrada')->groupBy('detalle_operacions.product_id')->selectRaw('sum(cantidad) as sum, detalle_operacions.product_id')->take(5)->get();
+  foreach ($v3 as $data) {
+        $auxi= SaleDetail::where('product_id',$data->product_id)->take(1)->get();
+        if (count($auxi)>0) {
+            $v3->pull($data);
+        }
+  }
+
+  $desired_object = $food->filter(function($item) {
+    return $item->id == 24;
+})->first();
+    }
+    
 
     
 }
