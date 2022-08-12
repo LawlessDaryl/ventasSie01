@@ -26,9 +26,6 @@ class TypeworkSeeder extends Seeder
             'name' => 'Reparación',
             'status' => 'Active',
         ]);
-        TypeWork::create([
-            'name' => 'Revisión',
-            'status' => 'Active',
-        ]);
+       
     }
 }

@@ -8,7 +8,7 @@
 	@yield('css')
 </head>
 <body>
-	<div class="wrapper sidebar_minimize">
+	<div class="wrapper">
 		
     @include('layouts.theme.header2')
 
@@ -90,9 +90,9 @@
 					</div>
 				</div>
 			</div>
-			<div class="custom-toggle">
+			{{-- <div class="custom-toggle">
 				<i class="flaticon-settings"></i>
-			</div>
+			</div> --}}
 		</div>
 		<!-- End Custom template -->
 	</div>

@@ -11,13 +11,13 @@
 								<span>
 									{{ auth()->user()->name }}
 									<span class="user-level">{{ auth()->user()->profile }}</span>
-									<span class="caret"></span>
+									{{-- <span class="caret"></span> --}}
 								</span>
 							</a>
 							<div class="clearfix"></div>
 
 							<div class="collapse in" id="collapseExample">
-								<ul class="nav">
+								{{-- <ul class="nav">
 									<li>
 										<a href="#profile">
 											<span class="link-collapse">Mi Perfil</span>
@@ -33,7 +33,7 @@
 											<span class="link-collapse">Ajustes</span>
 										</a>
 									</li>
-								</ul>
+								</ul> --}}
 							</div>
 						</div>
 					</div>
@@ -51,7 +51,7 @@
 											<span class="sub-item">Servicios</span>
 										</a>
 									</li>
-									<li>
+									{{-- <li>
 										<a href="{{ url('reportStreaming') }}">
 											<span class="sub-item">Streaming</span>
 										</a>
@@ -60,14 +60,14 @@
 										<a href="{{ url('salemovimientodiario') }}">
 											<span class="sub-item">Ventas</span>
 										</a>
-									</li>
-									@can('Reporte_Movimientos_General')
+									</li> --}}
+									{{-- @can('Reporte_Movimientos_General')
 									<li>
 										<a href="{{ url('movimientos') }}">
 											<i class="fa fas fa-minus"></i>
 											Reportes Movimientos</a>
 									</li>
-									@endcan
+									@endcan --}}
 									@can('Reporte_Movimientos_General')
 									<li>
 										<a href="{{ url('resumenmovimientos') }}">
@@ -91,7 +91,7 @@
 							</span>
 							<h4 class="text-section">Menús y SubMenus</h4>
 						</li>
-						<li class="nav-item">
+						{{-- <li class="nav-item">
 							<a data-toggle="collapse" href="#base">
 								<img src="assets/img/tigomoney.png" width="29" height="30" alt="navbar brand" class="navbar-brand">
 								<p>Tigo Money</p>
@@ -105,11 +105,7 @@
 											<p> No tiene una caja abierta </p>
 											<p> para hacer transacciones </p>
 										</strong>
-										{{-- <strong style="-webkit-text-stroke: 0.7px black;
-										color: white; ">
-											<p> No tiene una caja abierta </p>
-											<p> para hacer transacciones </p>
-										</strong> --}}
+										
 									</li>
 									@can('Origen_Index')
 										<li>
@@ -249,8 +245,8 @@
 								</ul>
 								@endif
 							</div>
-						</li>
-						<li class="nav-item">
+						</li> --}}
+						{{-- <li class="nav-item">
 							<a data-toggle="collapse" href="#sidebarLayouts">
 								<img src="assets/img/disney.png" width="30" height="40" alt="navbar brand" class="navbar-brand">
 								<p>Streaming</p>
@@ -352,18 +348,7 @@
 												Correos </a>
 										</li>
 									@endcan
-									{{-- @can('Arqueos_Streaming_Index')
-										<li>
-											<a href="{{ url('arqueosStreaming') }}">
-												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-													fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-													stroke-linejoin="round" class="feather feather-dollar-sign">
-													<line x1="12" y1="1" x2="12" y2="23"></line>
-													<path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-												</svg>
-												Arqueos Streaming </a>
-										</li>
-									@endcan --}}
+								
 									@can('Reportes_Streaming_Index')
 										<li>
 											<a href="{{ url('reportStreaming') }}">
@@ -379,7 +364,7 @@
 								</ul>
 								@endif
 							</div>
-						</li>
+						</li> --}}
 						<li class="nav-item">
 							<a data-toggle="collapse" href="#forms">
 								<img src="assets/img/serviciotecnico.png" width="30" height="40" alt="navbar brand" class="navbar-brand">
@@ -527,7 +512,7 @@
 						
 						
 
-						<li class="nav-item">
+						{{-- <li class="nav-item">
 							<a data-toggle="collapse" href="#charts">
 								<img src="assets/img/inventarios.png" width="25" height="35" alt="navbar brand" class="navbar-brand">
 								<p>Inventarios</p>
@@ -609,7 +594,7 @@
 									</li>
 								</ul>
 							</div>
-						</li>
+						</li> --}}
 
 
 
@@ -627,7 +612,7 @@
 
 
 
-						<li class="nav-item">
+						{{-- <li class="nav-item">
 							<a data-toggle="collapse" href="#submenu">
 								<img src="assets/img/ventas.png" width="25" height="35" alt="navbar brand" class="navbar-brand">
 								<p>Ventas</p>
@@ -716,7 +701,7 @@
 									</li>
 								</ul>
 							</div>
-						</li>
+						</li> --}}
 						<li class="mx-4 mt-2">
 								<a style="background-color: #ee761c!important;" class="btn btn-primary btn-block" href="{{ route('logout') }}"
 									onclick="event.preventDefault(); document.getElementById('logout-form').submit()">

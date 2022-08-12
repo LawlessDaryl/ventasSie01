@@ -15,28 +15,13 @@ class SucursalSeeder extends Seeder
     public function run()
     {
         Sucursal::create([
-            'name' => 'Central',
-            'adress' => 'Av. America casi G.Rene Moreno',
-            'telefono' => '4408080',
-            'celular' => '6908080',
-            'nit_id' => '765645',
+            'name' => 'Principal',
+            'adress' => 'Av.XXXXXX',
+            'telefono' => '44444444',
+            'celular' => '77777777',
+            'nit_id' => '0',
             'company_id' => '1'
         ]);
-        Sucursal::create([
-            'name' => 'Sucursal Ferrufino',
-            'adress' => 'Av. America y Andres Ferrufino',
-            'telefono' => '470080',
-            'celular' => '7108080',
-            'nit_id' => '908877',
-            'company_id' => '1'
-        ]);
-        Sucursal::create([
-            'name' => 'Sucursal Perú',
-            'adress' => 'Av. Perú casi Plazuela Vicuna',
-            'telefono' => '470080',
-            'celular' => '7108080',
-            'nit_id' => '908877',
-            'company_id' => '1'
-        ]);
+   
     }
 }

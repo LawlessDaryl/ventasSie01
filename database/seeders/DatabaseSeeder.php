@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
 
        // $this->call(UserSeeder::class);
 
-        $this->call(CompanySeeder::class);
+       // $this->call(CompanySeeder::class);
         $this->call(SucursalSeeder::class);
         $this->call(SucursalUserSeeder::class);
         $this->call(CajaSeeder::class);
@@ -42,27 +42,27 @@ class DatabaseSeeder extends Seeder
         $this->call(CatProdServiceSeeder::class);
         $this->call(SubCatProdServicesSeeder::class);
         /* TIGO MONEY */
-       $this->call(OrigenSeeder::class);
-        $this->call(MotivoSeeder::class);
-        $this->call(ComisionSeeder::class);
-        $this->call(OrigenMotivoSeeder::class);
-        $this->call(OrigenMotivoComisionSeeder::class);
+      //  $this->call(OrigenSeeder::class);
+      //   $this->call(MotivoSeeder::class);
+      //   $this->call(ComisionSeeder::class);
+      //   $this->call(OrigenMotivoSeeder::class);
+      //   $this->call(OrigenMotivoComisionSeeder::class);
         /* STREAMING */
-        $this->call(ProveedorSeeder::class);
-        $this->call(PlatformSeeder::class);
-        $this->call(EmailSeeder::class);
-        $this->call(AccountSeeder::class);
-        $this->call(CuentaInversionSeeder::class);
-        $this->call(ProfileSeeder::class);
-        $this->call(AccountProfileSeeder::class);
-        $this->call(UnidadSeeder::class);
-        $this->call(CategorySeeder::class);
-        $this->call(ClientSeeder::class);
-        $this->call(ProductSeeder::class);
-        $this->call(ProductoDestinoSeeder::class);
-        $this->call(LocationSeeder::class);
+        // $this->call(ProveedorSeeder::class);
+        // $this->call(PlatformSeeder::class);
+        // $this->call(EmailSeeder::class);
+        // $this->call(AccountSeeder::class);
+        // $this->call(CuentaInversionSeeder::class);
+        // $this->call(ProfileSeeder::class);
+        // $this->call(AccountProfileSeeder::class);
+        // $this->call(UnidadSeeder::class);
+        // $this->call(CategorySeeder::class);
+        // $this->call(ClientSeeder::class);
+        // $this->call(ProductSeeder::class);
+        // $this->call(ProductoDestinoSeeder::class);
+        // $this->call(LocationSeeder::class);
         
-        $this->call(ProviderSeeder::class);
+        // $this->call(ProviderSeeder::class);
        
        
         // $this->call(CompraSeeder::class);
