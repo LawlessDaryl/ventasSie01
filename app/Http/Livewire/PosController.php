@@ -17,8 +17,10 @@ use Livewire\Component;
 //Modulo para buscar clientes en las ventas
 use App\Models\Cliente;
 use App\Models\Destino;
+use App\Models\Lote;
 use App\Models\Notification;
 use App\Models\NotificationUser;
+use App\Models\SaleLote;
 use App\Models\Sucursal;
 use App\Models\User;
 use Barryvdh\DomPDF\PDF;
@@ -968,12 +970,61 @@ class PosController extends Component
                 $items = Cart::getContent();
                 foreach ($items as $item) {
 
-                    SaleDetail::create([
+                    $sd=SaleDetail::create([
                         'price' => $item->price,
                         'quantity' => $item->quantity,
                         'product_id' => $item->id,
                         'sale_id' => $sale->id,
                     ]);
+
+
+                    $lot=Lote::where('product_id',$item->id)->where('status','Activo')->get();
+
+                    //obtener la cantidad del detalle de la venta 
+                   $qq=$item->quantity;//q=8
+                   foreach ($lot as $val) { //lote1= 3 Lote2=3 Lote3=3
+                      
+                       if($qq>0){            //true//5//2
+                           
+                           if ($qq > $val->existencia) {
+        
+                               $ss=SaleLote::create([
+                                   'sale_detail_id'=>$sd->id,
+                                   'lote_id'=>$val->id,
+                                   'cantidad'=>$val->existencia
+                                   
+                               ]);
+                              
+        
+                               $val->update([
+                                   
+                                   'existencia'=>0,
+                                   'status'=>'Inactivo'
+        
+                               ]);
+                               $val->save();
+                               $qq=$qq-$val->existencia;
+                           }
+                           else{
+                               $dd=SaleLote::create([
+                                   'sale_detail_id'=>$sd->id,
+                                   'lote_id'=>$val->id,
+                                   'cantidad'=>$qq
+                               ]);
+                              
+        
+        
+                               $val->update([ 
+                                   'existencia'=>$val->existencia-$qq
+                               ]);
+                               $val->save();
+                             
+                           }
+        
+                        
+                       }
+                   }
+
 
                     //Decrementando el stock en tienda
                     $tiendaproducto = ProductosDestino::join("products as p", "p.id", "productos_destinos.product_id")
@@ -1487,12 +1538,65 @@ class PosController extends Component
         $items = Cart::getContent();
         //Volvemos a llenar los detalles de la venta con el id de la Venta
         foreach ($items as $item) {
-            SaleDetail::create([
+            $sd=SaleDetail::create([
                 'price' => $item->price,
                 'quantity' => $item->quantity,
                 'product_id' => $item->id,
                 'sale_id' => session('sesionidventa'),
             ]);
+
+//trabajamos con lotes
+
+            $lot=Lote::where('product_id',$item->id)->where('status','Activo')->get();
+
+            //obtener la cantidad del detalle de la venta 
+           $qq=$item->quantity;//q=8
+           foreach ($lot as $val) { //lote1= 3 Lote2=3 Lote3=3
+              
+               if($qq>0){            //true//5//2
+                   
+                   if ($qq > $val->existencia) {
+
+                       $ss=SaleLote::create([
+                           'sale_detail_id'=>$sd->id,
+                           'lote_id'=>$val->id,
+                           'cantidad'=>$val->existencia
+                           
+                       ]);
+                      
+
+                       $val->update([
+                           
+                           'existencia'=>0,
+                           'status'=>'Inactivo'
+
+                       ]);
+                       $val->save();
+                       $qq=$qq-$val->existencia;
+                   }
+                   else{
+                       $dd=SaleLote::create([
+                           'sale_detail_id'=>$sd->id,
+                           'lote_id'=>$val->id,
+                           'cantidad'=>$qq
+                       ]);
+                      
+
+
+                       $val->update([ 
+                           'existencia'=>$val->existencia-$qq
+                       ]);
+                       $val->save();
+                     
+                   }
+
+                
+               }
+           }
+
+
+
+
 
             //Decrementando el stock en tienda
             $tiendaproducto = ProductosDestino::join("products as p", "p.id", "productos_destinos.product_id")

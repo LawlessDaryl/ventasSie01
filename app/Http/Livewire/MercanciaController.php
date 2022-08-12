@@ -31,8 +31,9 @@ class MercanciaController extends Component
         $this->col=collect([]);
         $this->tipo_proceso= "Entrada";
        // $this->borrarLotes();
-     //$this->ajustarLotes();
-     $this->productosajustados();
+       //$this->ajustarLotes();
+       //$this->productosajustados();
+       //$this->limpiarstock();
 
     }
     public function render()
@@ -224,7 +225,7 @@ class MercanciaController extends Component
         }
     }
 
-    //Primero se creo los lotes iniciales de la primera insercion de productos de 200 unidades
+    
 
     
     public function CrearLotes()
@@ -235,14 +236,41 @@ class MercanciaController extends Component
 
         try {
 
-            foreach ($auxi as $data) {
+            $v3=SaleDetail::join('products','products.id','sale_details.product_id')
+            ->groupBy('sale_details.product_id')
+            ->selectRaw('sum(quantity) as sum, sale_details.product_id,products.costo')->get();    
 
-                $lot= Lote::create([
-                    'existencia'=>350,
-                    'costo'=>$data->costo,
-                    'status'=>'Activo',
-                    'product_id'=>$data->id
-                ]);
+            foreach ($v3 as $data) {
+
+                $rt= CompraDetalle::where('product_id',$data->product_id)->select('compra_detalles.precio')->take(1)->value('compra_detalles.precio');
+                $rt2= CompraDetalle::where('product_id',$data->product_id)->sum('cantidad');
+             
+                if ($rt>0) {
+              //dd($rt);
+                    $lot= Lote::create([
+                        'existencia'=>$data->sum-$rt2,
+                        'costo'=>$data->costo,
+                        'status'=>'Activo',
+                        'product_id'=>$data->product_id
+                    ]);
+                    $lot3= Lote::create([
+                        'existencia'=>$rt2,
+                        'costo'=>$rt,
+                        'status'=>'Activo',
+                        'product_id'=>$data->product_id
+                    ]);
+                }
+
+                else{
+                    $lot= Lote::create([
+                        'existencia'=>$data->sum,
+                        'costo'=>$data->costo,
+                        'status'=>'Activo',
+                        'product_id'=>$data->product_id
+                    ]);
+                }
+
+            
                
             }
         
@@ -371,18 +399,18 @@ class MercanciaController extends Component
        // dd($object);
     }
 
-    public function borrarLotes(){
+    // public function borrarLotes(){
 
-        $lotb=Lote::all();
+    //     $lotb=Lote::all();
 
-        foreach ($lotb as $data5) {
-            if ($data5->existencia==350) {
-                $data5->delete();
-            }
-        }
+    //     foreach ($lotb as $data5) {
+    //         if ($data5->existencia==350) {
+    //             $data5->delete();
+    //         }
+    //     }
 
 
-    }
+    // }
 
     public function ajustarLotes(){
         $ss=ProductosDestino::groupBy('productos_destinos.product_id')->selectRaw('sum(stock) as sum, productos_destinos.product_id')->get();
@@ -406,31 +434,45 @@ class MercanciaController extends Component
 
     }
 
-    public function productosajustados(){
+    // public function productosajustados(){
 
-        $v9=IngresoSalida::join('detalle_operacions','detalle_operacions.id_operacion','ingreso_salidas.id')
-        ->where('concepto','AJUSTE')
-        ->groupBy('detalle_operacions.product_id')
-        ->selectRaw('sum(cantidad) as sum, detalle_operacions.product_id')
-        ->take(5)
-        ->get();
-        $mm= ProductosDestino::all();
+    //     $v9=IngresoSalida::join('detalle_operacions','detalle_operacions.id_operacion','ingreso_salidas.id')
+    //     ->where('concepto','AJUSTE')
+    //     ->groupBy('detalle_operacions.product_id')
+    //     ->selectRaw('sum(cantidad) as sum, detalle_operacions.product_id')
+    //     ->take(5)
+    //     ->get();
+    //     $mm= ProductosDestino::all();
         
-        foreach ($mm as $dam) {
+    //     foreach ($mm as $dam) {
             
-            $finded= $v9->where('product_id',$dam->product_id);
-            //dd($finded);
-            if ($finded != null) {
-                //dd("null");
-                $dam->update([
-                'stock'=>0
-                ]);
-            }
+    //         $finded= $v9->where('product_id',$dam->product_id);
+    //         //dd($finded);
+    //         if ($finded != null) {
+    //             //dd("null");
+    //             $dam->update([
+    //             'stock'=>0
+    //             ]);
+    //         }
+    //     }
+
+
+
+
+    // }
+
+    public function limpiarstock(){
+
+        $fut= ProductosDestino::all();
+
+        foreach ($fut as $vals) {
+            
+
+           //dump(count($gj));
+           if ($vals->created_at == $vals->updated_at) {
+                $vals->update(['stock'=>0]);
+           }
         }
-
-
-
-
     }
     
 
