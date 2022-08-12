@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\Sale;
 use App\Models\SaleDetail;
 use App\Models\User;
+use App\Models\Sucursal;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\DB;
 use Darryldecode\Cart\Facades\CartFacade as Cart;
@@ -29,10 +30,38 @@ class SaleListController extends Component
     use WithFileUploads;
     use WithPagination;
 
-    public $componentName, $idventa, $usuarioseleccionado, $mostrarcliente;
+    //Guardar el id de una Venta
+    public $idventa;
 
     //Cambiar Usuario Vendedor
     public $nombreusuariovendedor, $idventaeditar;
+
+    //Buscador de Ventas por Código o Cliente
+    public $search;
+
+    //Id de Sucursal seleccionada
+    public $sucursal_id;
+    //Id del Usuario Seleccionado
+    public $user_id;
+
+    //Tipo de Fecha (Todas las Fechas, Hoy y Rango de Fechas)
+    public $tipofecha;
+
+    //Mostrar u Ocultar mas Filtros
+    public $masfiltros;
+
+
+    //Mostrar/Ocultar una Columna en la tabla principal con datos del Cliente
+    public $mostrarcliente;
+
+    //VARIABLES PARA GUARDAR VARIABLES PARA EDITAR INFORMACION
+
+    //Editar una Venta
+    public $venta_id;
+
+
+
+
     public function paginationView()
     {
         return 'vendor.livewire.bootstrap';
@@ -40,11 +69,10 @@ class SaleListController extends Component
     public function mount()
     {
         $this->listadetalles = [];
-        $this->componentName = 'Lista de Ventas';
         $this->mostrarcliente = 'No';
         $this->listardetalleventas();
         $this->idventa = 1;
-        $this->usuarioseleccionado = Auth()->user()->id;
+        $this->user_id = Auth()->user()->id;
 
     }
 
@@ -52,7 +80,7 @@ class SaleListController extends Component
     public function render()
     {
 
-        if($this->usuarioseleccionado > 0)
+        if($this->user_id > 0)
         {
             $data = Sale::join('users as u', 'u.id', 'sales.user_id')
             ->join("movimientos as m", "m.id", "sales.movimiento_id")
@@ -62,7 +90,7 @@ class SaleListController extends Component
             ->select('sales.id as id','sales.cash as totalbs', 'sales.total as totalbsventa', 'sales.created_at as fecha','sales.observacion as obs',
             'sales.tipopago as tipopago','sales.change as cambio','sales.factura as factura','sales.status as status','carts.nombre as cartera',
             'u.name as user','c.razon_social as rz','c.cedula as ci','c.celular as celular')
-            ->where('u.id', $this->usuarioseleccionado)
+            ->where('u.id', $this->user_id)
             ->orderBy('sales.id', 'desc')
             ->paginate(50);
         }
@@ -87,11 +115,31 @@ class SaleListController extends Component
     
         return view('livewire.sales.salelist', [
             'data' => $data,
+            'listasucursales' => Sucursal::all(),
+            'listausuarios' => $this->listarusuarios(),
             'listausuarios' => $listausuarios
         ])
         ->extends('layouts.theme.app')
         ->section('content');
     }
+
+
+    //Listar los Usuarios para ser asignados a un servicio Pendiente en una Ventana Modal
+    public function listarusuarios()
+    {
+        $listausuarios = User::join('model_has_roles as mhr', 'mhr.model_id', 'users.id')
+        ->join('roles as r', 'r.id', 'mhr.role_id')
+        ->join('role_has_permissions as rhp', 'rhp.role_id', 'r.id')
+        ->join('permissions as p', 'p.id', 'rhp.permission_id')
+        ->select("users.id as idusuario","users.name as nombreusuario")
+        ->where('p.name', 'Aparecer_Lista_Servicios')
+        ->distinct()
+        ->get();
+
+        return $listausuarios;
+    }
+
+
     //Listar todas las ventas de un usuario
     public function listarventas()
     {
@@ -349,13 +397,13 @@ class SaleListController extends Component
 
     public function cambiarusuario(Sale $venta)
     {
-        $this->idventaeditar = $venta->id;
+        $this->venta_id = $venta->id;
         $this->nombreusuariovendedor = User::find($venta->user_id)->name;
         $this->emit('show-cam-user');
     }
     public function seleccionarusuario($usuario)
     {
-        $venta = Sale::find($this->idventaeditar);
+        $venta = Sale::find($this->venta_id);
 
 
         $venta->update([

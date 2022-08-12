@@ -138,7 +138,23 @@
                                             @endif
                                             {{-- IMPORTE --}}
                                             <td class="text-center">
+                                                @if($d->movservices[0]->movs->status == 'ACTIVO')
                                                 <h6 style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0">{{ number_format($d->movservices[0]->movs->import, 2) }}</h6>
+                                                @else
+                                                    @if($d->movservices[1]->movs->status == 'ACTIVO')
+                                                    <h6 style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0">{{ number_format($d->movservices[1]->movs->import, 2) }}</h6>
+                                                    @else
+                                                        @if($d->movservices[2]->movs->status == 'ACTIVO')
+                                                        <h6 style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0">{{ number_format($d->movservices[2]->movs->import, 2) }}</h6>
+                                                        @else
+                                                            @if($d->movservices[3]->movs->status == 'ACTIVO')
+                                                            <h6 style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0">{{ number_format($d->movservices[3]->movs->import, 2) }}</h6>
+                                                            @else
+                                                            <h6 style="font-size: 90%; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0">{{ number_format($d->movservices[3]->movs->import, 2) }}</h6>
+                                                            @endif
+                                                        @endif
+                                                    @endif
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach
