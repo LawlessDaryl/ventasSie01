@@ -33,7 +33,7 @@ class MercanciaController extends Component
        // $this->borrarLotes();
        //$this->ajustarLotes();
        //$this->productosajustados();
-       //$this->limpiarstock();
+       $this->limpiarstock();
 
     }
     public function render()
@@ -247,18 +247,35 @@ class MercanciaController extends Component
              
                 if ($rt>0) {
               //dd($rt);
-                    $lot= Lote::create([
-                        'existencia'=>$data->sum-$rt2,
-                        'costo'=>$data->costo,
-                        'status'=>'Activo',
-                        'product_id'=>$data->product_id
-                    ]);
-                    $lot3= Lote::create([
-                        'existencia'=>$rt2,
-                        'costo'=>$rt,
-                        'status'=>'Activo',
-                        'product_id'=>$data->product_id
-                    ]);
+              if ($rt2<$data->sum) {
+                $lot= Lote::create([
+                    'existencia'=>$data->sum-$rt2,
+                    'costo'=>$data->costo,
+                    'status'=>'Activo',
+                    'product_id'=>$data->product_id
+                ]);
+                $lot3= Lote::create([
+                    'existencia'=>$rt2,
+                    'costo'=>$rt,
+                    'status'=>'Activo',
+                    'product_id'=>$data->product_id
+                ]);
+              }
+              else{
+                $lot= Lote::create([
+                    'existencia'=>$rt2-$data->sum,
+                    'costo'=>$data->costo,
+                    'status'=>'Activo',
+                    'product_id'=>$data->product_id
+                ]);
+                $lot3= Lote::create([
+                    'existencia'=>$rt2,
+                    'costo'=>$rt,
+                    'status'=>'Activo',
+                    'product_id'=>$data->product_id
+                ]);
+              }
+                  
                 }
 
                 else{
@@ -374,7 +391,7 @@ class MercanciaController extends Component
           if ($auxi and $auxi->product_id == $item->product_id ) 
           {}
           else{
-            return $item;  
+            return $item;
           }
           
                })->values();
