@@ -33,7 +33,8 @@ class MercanciaController extends Component
        // $this->borrarLotes();
        //$this->ajustarLotes();
        //$this->productosajustados();
-       $this->limpiarstock();
+      // $this->limpiarstock();
+      $this->inactivarlotes();
 
     }
     public function render()
@@ -300,8 +301,6 @@ class MercanciaController extends Component
         DB::rollback();
         dd($e->getMessage());
         }
-
-       
     }
 
     public function Ventas(){
@@ -309,7 +308,6 @@ class MercanciaController extends Component
         DB::beginTransaction();
 
         try {
-
                 $v4=SaleDetail::all();
 
                 foreach ($v4 as $data3) {
@@ -358,13 +356,9 @@ class MercanciaController extends Component
                                 ]);
                                 $val->save();
                               
-                            }
-
-                         
+                            }    
                         }
                     }
-
-                  
                 }
      
                 DB::commit();
@@ -374,16 +368,14 @@ class MercanciaController extends Component
             DB::rollback();
             dd($e->getMessage());
             }
-
-
     }
 
-    public function BuscarProducto(){
-        //obtengo la cantidad total de todos los productos que se ingresaron despues del ajuste a cada sucursal
-
+    public function BuscarProducto()
+    {
+//obtengo la cantidad total de todos los productos que se ingresaron despues del ajuste a cada sucursal
         $v3=IngresoSalida::join('detalle_operacions','detalle_operacions.id_operacion','ingreso_salidas.id')->join('products', 'products.id','detalle_operacions.product_id')
         ->where('proceso','Entrada')->groupBy('detalle_operacions.product_id')->selectRaw('sum(cantidad) as sum, detalle_operacions.product_id,products.costo')->get();
-     
+    
 
         $object = $v3->filter(function($item) {
             
@@ -393,9 +385,7 @@ class MercanciaController extends Component
           else{
             return $item;
           }
-          
-               })->values();
-
+        })->values();
                foreach ($object as $data3) {
                 DB::beginTransaction();
                 try {
@@ -412,29 +402,14 @@ class MercanciaController extends Component
                 DB::rollback();
                 dd($e->getMessage());
                 }
-               }
-       // dd($object);
+               }// dd($object);
     }
-
-    // public function borrarLotes(){
-
-    //     $lotb=Lote::all();
-
-    //     foreach ($lotb as $data5) {
-    //         if ($data5->existencia==350) {
-    //             $data5->delete();
-    //         }
-    //     }
-
-
-    // }
-
-    public function ajustarLotes(){
+    public function ajustarLotes()
+    {
         $ss=ProductosDestino::groupBy('productos_destinos.product_id')->selectRaw('sum(stock) as sum, productos_destinos.product_id')->get();
-     
-
-        foreach ($ss as $val8) {
-            $fg= Lote::where('product_id',$val8->product_id)->get();
+        foreach ($ss as $val8) 
+        {
+            $fg= Lote::where('product_id',$val8->product_id)->where('existencia')->get();
 
             foreach ($fg as $daf) {
                 $daf->update([
@@ -442,15 +417,8 @@ class MercanciaController extends Component
                 ]);
                 $daf->save();
             }
-          
         }
-
-        // $object = $v3->filter(function($item) {
-            
-        // })->values;
-
     }
-
     // public function productosajustados(){
 
     //     $v9=IngresoSalida::join('detalle_operacions','detalle_operacions.id_operacion','ingreso_salidas.id')
@@ -483,12 +451,20 @@ class MercanciaController extends Component
         $fut= ProductosDestino::all();
 
         foreach ($fut as $vals) {
-            
-
            //dump(count($gj));
            if ($vals->created_at == $vals->updated_at) {
                 $vals->update(['stock'=>0]);
            }
+        }
+    }
+
+    public function inactivarlotes()
+    {
+        $up= Lote::where('existencia',0)->get();
+        foreach ($up as $data2) {
+            $data2->update([
+                'status'=>'Inactivo'
+            ]);
         }
     }
     
