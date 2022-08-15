@@ -33,8 +33,8 @@ class MercanciaController extends Component
        // $this->borrarLotes();
        //$this->ajustarLotes();
        //$this->productosajustados();
-      // $this->limpiarstock();
-      $this->inactivarlotes();
+      //$this->limpiarstock();
+      //$this->inactivarlotes();
 
     }
     public function render()
@@ -253,7 +253,7 @@ class MercanciaController extends Component
                     'existencia'=>$data->sum-$rt2,
                     'costo'=>$data->costo,
                     'status'=>'Activo',
-                    'product_id'=>$data->product_id
+                    'product_id'=>$data->product_id                             
                 ]);
                 $lot3= Lote::create([
                     'existencia'=>$rt2,
@@ -440,10 +440,6 @@ class MercanciaController extends Component
     //             ]);
     //         }
     //     }
-
-
-
-
     // }
 
     public function limpiarstock(){
