@@ -130,6 +130,61 @@
                     </div>
                 </div>
 
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="widget-content">
+                            <div class="table-responsive">
+                                <table class="table table-unbordered table-hover mt-2">
+                                    <thead class="text-white" style="background: #3B3F5C">
+                                        <tr>
+                                            <th class="table-th text-withe text-center">#</th>                                
+                                            <th class="table-th text-withe text-center">Fechad</th>                                
+                                                               
+                                            <th class="table-th text-withe text-center">Ubicacion</th>                                
+                                            <th class="table-th text-withe text-center">Tipo Operacion</th>
+                                            <th class="table-th text-withe text-center">Observacion</th>
+                                            <th class="table-th text-withe text-center">Usuario</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                       @foreach ($ingprod as $data2)
+                                           <tr>
+                                                <td>
+                                                    {{$loop->iteration}}
+                                                </td>
+                                                <td>
+                                                    {{\Carbon\Carbon::parse($data2->created_at)->format('d-m-Y')}}
+                                                    <br>
+                                                    {{\Carbon\Carbon::parse($data2->created_at)->format('h:i:s a')}}
+                                                </td>
+                                             
+                                                <td>
+                                                   Sucursal {{$data2->destinos->sucursals->name}}
+                                                    {{$data2->destinos->nombre}}
+                                                  
+                                                </td>
+                                                <td>
+                                                    {{$data2->concepto}}
+                                                </td>
+                                                <td>
+                                                    {{$data2->observacion}}
+                                                </td>
+                                                <td>
+                                                    {{$data2->usuarios->name}}
+                                                </td>
+
+                                           </tr>
+
+                                       @endforeach
+                                    </tbody>
+                                </table>
+                           
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 @include('livewire.entradas_salidas.operacion')
 @include('livewire.entradas_salidas.buscarproducto')

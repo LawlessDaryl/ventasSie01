@@ -23,6 +23,13 @@ class Destino extends Model
     {
         return true;
     }
+
+
+    public function ingresoproducto()
+    {
+        return $this->hasMany(IngresoProductos::class,'destino');
+    }
+    
     
 
 }

@@ -65,7 +65,7 @@ class EditarCompraDetalleController extends Component
         $this->selected_id = 0;
         $this->tipo_transaccion= $this->aux->transaccion;
         $this->pago_parcial = $this->aux->saldo>0? $this->aux->importe_total-$this->aux->saldo:0;
-        $this->destino = $this->aux->destino_id;
+         $this->destino= $this->aux->destino_id;
         $this->destino2 =$this->aux->destino_id;
         $this->tipo_transaccion = $this->aux->transaccion;
         $this->tipo_documento = $this->aux->tipo_doc;
@@ -493,20 +493,7 @@ class EditarCompraDetalleController extends Component
         DB::beginTransaction();
 
         try {
-          /*  $Movimiento= Movimiento::create([
-                
-                'type'=>"COMPRAS",
-                'status'=>"ACTIVO",
-                'saldo'=>$this->saldo_por_pagar,
-                'on_account'=>$this->pago_parcial,
-                'import'=>$this->pago_parcial,
-                'user_id' => Auth()->user()->id
-            ]);
-
-            $ss = MovimientoCompra::create([
-                'compra_id'=>$Compra_encabezado->id,
-                'movimiento_id' => $Movimiento->id
-            ]);*/
+        
 
             if ($this->ide)
             {
@@ -514,8 +501,9 @@ class EditarCompraDetalleController extends Component
 
                 foreach ($bn as $b) {
                     $q=ProductosDestino::where('product_id',$b->product_id)
-                    ->where('destino_id',$this->destino)->value('stock');
-                    ProductosDestino::updateOrCreate(['product_id' => $b->product_id, 'destino_id'=>$this->destino],['stock'=>$q-$b->cantidad]);
+                    ->where('destino_id',$this->destino2)->value('stock');
+
+                    ProductosDestino::updateOrCreate(['product_id' => $b->product_id, 'destino_id'=>$this->destino2],['stock'=>$q-$b->cantidad]);
 
                 }
 
@@ -529,7 +517,7 @@ class EditarCompraDetalleController extends Component
                         'cantidad' => $item->quantity,
                         'product_id' => $item->id,
                         'compra_id' => $this->ide,
-                        'destino_id'=>$this->destino
+                        
                         
                     ]);
                     
