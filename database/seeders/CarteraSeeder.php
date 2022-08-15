@@ -15,13 +15,13 @@ class CarteraSeeder extends Seeder
     public function run()
     {
         /* CAJA GENERAL */
-        Cartera::create([
-            'nombre' => 'Efectivo',
-            'descripcion' => 'Dinero en Efectivo/Físico',
-            'tipo' => 'CajaFisica',
-            'telefonoNum' => null,
-            'caja_id' => '1',
-        ]);
+        // Cartera::create([
+        //     'nombre' => 'BANCO STREAMING',
+        //     'descripcion' => 'CUENTA BANCARIA STREAMING',
+        //     'tipo' => 'Banco',
+        //     'telefonoNum' => null,
+        //     'caja_id' => '1',
+        // ]);
         // Cartera::create([
         //     'nombre' => 'TIGO MY STRM D.ROSA',
         //     'descripcion' => 'TIGO MONEY STREAMING',
@@ -38,13 +38,20 @@ class CarteraSeeder extends Seeder
         //     'telefonoNum' => 75006327,
         //     'caja_id' => '2',
         // ]);
-        // Cartera::create([
-        //     'nombre' => 'Caja fisica',
-        //     'descripcion' => 'Caja fisica de caja Principal',
-        //     'tipo' => 'CajaFisica',
-        //     'telefonoNum' => null,
-        //     'caja_id' => '2',
-        // ]);
+        Cartera::create([
+            'nombre' => 'Banco',
+            'descripcion' => 'Cuenta Bancaria',
+            'tipo' => 'CajaFisica',
+            'telefonoNum' => null,
+            'caja_id' => '1',
+        ]);
+        Cartera::create([
+            'nombre' => 'Dinero Físico',
+            'descripcion' => 'Dinero en Efectivo',
+            'tipo' => 'CajaFisica',
+            'telefonoNum' => null,
+            'caja_id' => '2',
+        ]);
         // Cartera::create([
         //     'nombre' => 'Telefono 75997054',
         //     'descripcion' => 'Telefono tigo money',
@@ -53,7 +60,7 @@ class CarteraSeeder extends Seeder
         //     'caja_id' => '2',
         // ]);
 
-        // /* CAJA SECUNDARIA */
+        /* CAJA SECUNDARIA */
         // Cartera::create([
         //     'nombre' => 'Caja fisica',
         //     'descripcion' => 'Caja fisica de caja Secundaria',
@@ -76,7 +83,7 @@ class CarteraSeeder extends Seeder
         //     'caja_id' => '3',
         // ]);
 
-        // /* CAJA FERRUFINO */
+        /* CAJA FERRUFINO */
         // Cartera::create([
         //     'nombre' => 'Caja fisica',
         //     'descripcion' => 'Caja fisica de caja Ferrufino',

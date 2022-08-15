@@ -60,6 +60,10 @@ class SaleListController extends Component
     public $venta_id;
 
 
+    //Numero de Paginacion
+    public $paginacion;
+
+
 
 
     public function paginationView()
@@ -73,7 +77,7 @@ class SaleListController extends Component
         $this->listardetalleventas();
         $this->idventa = 1;
         $this->user_id = Auth()->user()->id;
-
+        $this->paginacion = 10;
     }
 
 
@@ -82,7 +86,7 @@ class SaleListController extends Component
 
         if($this->user_id > 0)
         {
-            $data = Sale::join('users as u', 'u.id', 'sales.user_id')
+            $listaventas = Sale::join('users as u', 'u.id', 'sales.user_id')
             ->join("movimientos as m", "m.id", "sales.movimiento_id")
             ->join("cliente_movs as cm", "cm.movimiento_id", "m.id")
             ->join("clientes as c", "c.id", "cm.cliente_id")
@@ -92,11 +96,11 @@ class SaleListController extends Component
             'u.name as user','c.razon_social as rz','c.cedula as ci','c.celular as celular')
             ->where('u.id', $this->user_id)
             ->orderBy('sales.id', 'desc')
-            ->paginate(50);
+            ->paginate($this->paginacion);
         }
         else
         {
-            $data = Sale::join('users as u', 'u.id', 'sales.user_id')
+            $listaventas = Sale::join('users as u', 'u.id', 'sales.user_id')
             ->join("movimientos as m", "m.id", "sales.movimiento_id")
             ->join("cliente_movs as cm", "cm.movimiento_id", "m.id")
             ->join("clientes as c", "c.id", "cm.cliente_id")
@@ -105,19 +109,14 @@ class SaleListController extends Component
             'sales.tipopago as tipopago','sales.change as cambio','sales.factura as factura','sales.status as status','carts.nombre as cartera',
             'u.name as user','c.razon_social as rz','c.cedula as ci','c.celular as celular')
             ->orderBy('sales.id', 'desc')
-            ->paginate(50);
+            ->paginate($this->paginacion);
         }
-
-        //Listando Todos los Usuarios
-        $listausuarios = User::select("users.id as id","users.name as nombreusuario","users.profile as rol")
-        ->get();
 
     
         return view('livewire.sales.salelist', [
-            'data' => $data,
+            'listaventas' => $listaventas,
             'listasucursales' => Sucursal::all(),
             'listausuarios' => $this->listarusuarios(),
-            'listausuarios' => $listausuarios
         ])
         ->extends('layouts.theme.app')
         ->section('content');
@@ -143,7 +142,7 @@ class SaleListController extends Component
     //Listar todas las ventas de un usuario
     public function listarventas()
     {
-        $this->data = Sale::join('users as u', 'u.id', 'sales.user_id')
+        $this->listaventas = Sale::join('users as u', 'u.id', 'sales.user_id')
         ->join("movimientos as m", "m.id", "sales.movimiento_id")
         ->join("cliente_movs as cm", "cm.movimiento_id", "m.id")
         ->join("clientes as c", "c.id", "cm.cliente_id")
