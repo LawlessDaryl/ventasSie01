@@ -243,50 +243,24 @@ class MercanciaController extends Component
 
             foreach ($v3 as $data) {
 
-                $rt= CompraDetalle::where('product_id',$data->product_id)->select('compra_detalles.precio')->take(1)->value('compra_detalles.precio');
-                $rt2= CompraDetalle::where('product_id',$data->product_id)->sum('cantidad');
-             
-                if ($rt>0) {
-              //dd($rt);
-              if ($rt2<$data->sum) {
-                $lot= Lote::create([
-                    'existencia'=>$data->sum-$rt2,
-                    'costo'=>$data->costo,
-                    'status'=>'Activo',
-                    'product_id'=>$data->product_id                             
-                ]);
-                $lot3= Lote::create([
-                    'existencia'=>$rt2,
-                    'costo'=>$rt,
-                    'status'=>'Activo',
-                    'product_id'=>$data->product_id
-                ]);
-              }
-              else{
-                $lot= Lote::create([
-                    'existencia'=>$rt2-$data->sum,
-                    'costo'=>$data->costo,
-                    'status'=>'Activo',
-                    'product_id'=>$data->product_id
-                ]);
-                $lot3= Lote::create([
-                    'existencia'=>$rt2,
-                    'costo'=>$rt,
-                    'status'=>'Activo',
-                    'product_id'=>$data->product_id
-                ]);
-              }
-                  
-                }
+                $stockActual=ProductosDestino::join('products','products.id','productos_destinos.product_id')
+                ->groupBy('productos_destinos.product_id')
+                ->selectRaw('sum(stock) as sum, productos_destinos.product_id,products.costo')->get();  
+                
+                
+                   IngresoProductos::create([
+                    ''=>
+                   ]);
 
-                else{
+
+
                     $lot= Lote::create([
-                        'existencia'=>$data->sum,
+                        'existencia'=>$data->sum+$stockActual->sum,
                         'costo'=>$data->costo,
                         'status'=>'Activo',
-                        'product_id'=>$data->product_id
+                        'product_id'=>$stockActual->product_id
                     ]);
-                }
+                
 
             
                
