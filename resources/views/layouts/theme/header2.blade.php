@@ -2,10 +2,9 @@
   <!-- Logo Header -->
   {{-- <div class="logo-header" data-background-color="blue"> --}}
   <div class="logo-header" data-background-color="" style="background-color: #ee761c">
-    
-      <a href="{{url('inicio')}}" class="logo text-white">
-      <img src="assets/img/fav08.png" width="50" height="50" alt="navbar brand" class="navbar-brand"> SIE - Emanuel
-    </a>
+    <livewire:name-controller>
+
+      </livewire:name-controller>
     <button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon">
         <i class="icon-menu"></i>

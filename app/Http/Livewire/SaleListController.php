@@ -109,7 +109,7 @@ class SaleListController extends Component
         }
 
         //Listando Todos los Usuarios
-        $listausuarios = User::select("users.id as id","users.name as nombreusuario","userS.profile as rol")
+        $listausuarios = User::select("users.id as id","users.name as nombreusuario","users.profile as rol")
         ->get();
 
     
@@ -213,13 +213,29 @@ class SaleListController extends Component
     public function totabs()
     {
         $venta = Sale::find($this->idventa);
-        return $venta->total;
+        if($this->idventa != null)
+        {
+            return 0;
+        }
+        else
+        {
+            return $venta->total;
+        }
     }
     //Obtener el total Bs de una venta
     public function observacion()
     {
         $venta = Sale::find($this->idventa);
-        return $venta->observacion;
+
+        if($this->idventa != null)
+        {
+            return 0;
+        }
+        else
+        {
+            return $venta->observacion;
+        }
+
     }
     //Metodo para Anular una Venta
     public function mostraranularmodal($idventa)

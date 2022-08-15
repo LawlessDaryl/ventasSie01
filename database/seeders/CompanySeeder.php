@@ -15,10 +15,11 @@ class CompanySeeder extends Seeder
     public function run()
     {
         Company::create([
-            'name' => 'Soluciones informaticas Emanuel',
+            'name' => 'SIE - Emanuel',
             'adress' => 'Av. America casi G.Rene Moreno',
             'phone' => '4408080',
-            'nit_id' => '765645'
+            'nit_id' => '765645',
+            'image' => 'logo.png'
         ]);
     }
 }
