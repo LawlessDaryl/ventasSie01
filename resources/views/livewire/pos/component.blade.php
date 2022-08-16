@@ -598,8 +598,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
         });
 
-
-
+        //Mostrar Mensaje No puede Editar ni Terminar este Servicio porque no es el Técnico Responsable de este Servicio
+        window.livewire.on('seleccionarcartera', event => {
+        swal("¡No selecciono ninguna cartera!", "Por favor seleccione un tipo de pago para esta operación", {
+						icon : "info",
+						buttons: {        			
+							confirm: {
+								className : 'btn btn-info'
+							}
+						},
+					});
+            });
     })
 
 

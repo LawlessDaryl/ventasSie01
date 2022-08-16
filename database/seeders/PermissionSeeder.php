@@ -21,6 +21,18 @@ class PermissionSeeder extends Seeder
             'descripcion' => 'Reporte de movimientos por sucursales',
             'guard_name' => 'web'
         ]);
+        Permission::create([
+            'name' => 'Admin_Views',
+            'area' => 'Administracion',
+            'descripcion' => '',
+            'guard_name' => 'web'
+        ]);
+        Permission::create([
+            'name' => 'Administracion_Sidebar',
+            'area' => 'Administracion',
+            'descripcion' => 'Ver Administracion en el Sidebar',
+            'guard_name' => 'web'
+        ]);
         Permission::create([    /* INGRESAR A ROLES */
             'name' => 'Roles_Index',
             'area' => 'Administracion',
@@ -159,60 +171,60 @@ class PermissionSeeder extends Seeder
 
 
         /* STREAMING */
-        Permission::create([    /* INGRESAR A PLATAFORMA CRUD */
-            'name' => 'Plataforma_Index',
-            'area' => 'Streaming',
-            'descripcion' => 'Ingresar a Plataforma CRUD',
-            'guard_name' => 'web'
-        ]);
-        Permission::create([    /* INGRESAR A PROVEEDOR CRUD */
-            'name' => 'Proveedor_Index',
-            'area' => 'Streaming',
-            'descripcion' => 'Ingresar a Proveedor CRUD',
-            'guard_name' => 'web'
-        ]);
-        Permission::create([    /* INGRESAR A CORREOS CRUD */
-            'name' => 'Correos_Index',
-            'area' => 'Streaming',
-            'descripcion' => 'Ingresar a Correos CRUD',
-            'guard_name' => 'web'
-        ]);
-        Permission::create([    /* INGRESAR A CUENTAS  */
-            'name' => 'Cuentas_Index',
-            'area' => 'Streaming',
-            'descripcion' => 'Ingresar a Cuentas',
-            'guard_name' => 'web'
-        ]);
-        Permission::create([    /* INGRESAR A PERFILES  */
-            'name' => 'Perfiles_Index',
-            'area' => 'Streaming',
-            'descripcion' => 'Ingresar a Perfiles',
-            'guard_name' => 'web'
-        ]);
-        Permission::create([    /* INGRESAR A PLANES  */
-            'name' => 'Planes_Index',
-            'area' => 'Streaming',
-            'descripcion' => 'Ingresar a Planes',
-            'guard_name' => 'web'
-        ]);
-        Permission::create([    /* INGRESAR A ARQUEOS  */
-            'name' => 'Arqueos_Streaming_Index',
-            'area' => 'Streaming',
-            'descripcion' => 'Ingresar a Arqueos',
-            'guard_name' => 'web'
-        ]);
-        Permission::create([    /* INGRESAR A REPORTES  */
-            'name' => 'Reportes_Streaming_Index',
-            'area' => 'Streaming',
-            'descripcion' => 'Ingresar a Reportes',
-            'guard_name' => 'web'
-        ]);
-        Permission::create([    /* PERMITIR SACAR PDF REPORTE DE STREAMING  */
-            'name' => 'Reportes_Streaming_Export',
-            'area' => 'Streaming',
-            'descripcion' => 'Permitir sacar Pdf Reporte',
-            'guard_name' => 'web'
-        ]);
+        // Permission::create([    /* INGRESAR A PLATAFORMA CRUD */
+        //     'name' => 'Plataforma_Index',
+        //     'area' => 'Streaming',
+        //     'descripcion' => 'Ingresar a Plataforma CRUD',
+        //     'guard_name' => 'web'
+        // ]);
+        // Permission::create([    /* INGRESAR A PROVEEDOR CRUD */
+        //     'name' => 'Proveedor_Index',
+        //     'area' => 'Streaming',
+        //     'descripcion' => 'Ingresar a Proveedor CRUD',
+        //     'guard_name' => 'web'
+        // ]);
+        // Permission::create([    /* INGRESAR A CORREOS CRUD */
+        //     'name' => 'Correos_Index',
+        //     'area' => 'Streaming',
+        //     'descripcion' => 'Ingresar a Correos CRUD',
+        //     'guard_name' => 'web'
+        // ]);
+        // Permission::create([    /* INGRESAR A CUENTAS  */
+        //     'name' => 'Cuentas_Index',
+        //     'area' => 'Streaming',
+        //     'descripcion' => 'Ingresar a Cuentas',
+        //     'guard_name' => 'web'
+        // ]);
+        // Permission::create([    /* INGRESAR A PERFILES  */
+        //     'name' => 'Perfiles_Index',
+        //     'area' => 'Streaming',
+        //     'descripcion' => 'Ingresar a Perfiles',
+        //     'guard_name' => 'web'
+        // ]);
+        // Permission::create([    /* INGRESAR A PLANES  */
+        //     'name' => 'Planes_Index',
+        //     'area' => 'Streaming',
+        //     'descripcion' => 'Ingresar a Planes',
+        //     'guard_name' => 'web'
+        // ]);
+        // Permission::create([    /* INGRESAR A ARQUEOS  */
+        //     'name' => 'Arqueos_Streaming_Index',
+        //     'area' => 'Streaming',
+        //     'descripcion' => 'Ingresar a Arqueos',
+        //     'guard_name' => 'web'
+        // ]);
+        // Permission::create([    /* INGRESAR A REPORTES  */
+        //     'name' => 'Reportes_Streaming_Index',
+        //     'area' => 'Streaming',
+        //     'descripcion' => 'Ingresar a Reportes',
+        //     'guard_name' => 'web'
+        // ]);
+        // Permission::create([    /* PERMITIR SACAR PDF REPORTE DE STREAMING  */
+        //     'name' => 'Reportes_Streaming_Export',
+        //     'area' => 'Streaming',
+        //     'descripcion' => 'Permitir sacar Pdf Reporte',
+        //     'guard_name' => 'web'
+        // ]);
 
 
         /* SERVICIOS */
@@ -430,12 +442,12 @@ class PermissionSeeder extends Seeder
             'descripcion' => '',
             'guard_name' => 'web'
         ]);
-        Permission::create([    /* PERMITIR VER STREAMING EN EL SIDEBAR */
-            'name' => 'Ver_Streaming_SideBar',
-            'area' => 'Tigo Money',
-            'descripcion' => 'Permitir Ver Tigo Money en el Sidebar',
-            'guard_name' => 'web'
-        ]);
+        // Permission::create([    /* PERMITIR VER STREAMING EN EL SIDEBAR */
+        //     'name' => 'Ver_Streaming_SideBar',
+        //     'area' => 'Streaming',
+        //     'descripcion' => 'Permitir Ver Tigo Money en el Sidebar',
+        //     'guard_name' => 'web'
+        // ]);
         Permission::create([    /* PERMITIR VER SERVICIOS EN EL SIDEBAR */
             'name' => 'Ver_Servicios_SideBar',
             'area' => 'Servicios Tecnico',

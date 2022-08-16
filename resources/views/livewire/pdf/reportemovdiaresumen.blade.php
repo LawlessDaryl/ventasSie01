@@ -67,18 +67,18 @@
         <tbody>
             <tr class="filarowx">
                 <td rowspan="2">
-                    <img src={{asset('storage/icons/fav05.png')}} width="50" height="50">
+                    <img src="{{ asset('storage/icons/' . $logoempresa) }}" width="50" height="50">
                 </td>
                 <td class="text-center">
                     <h4><b>REPORTE DE MOVIMIENTO DIARIO</b></h4>
                 </td>
                 <td rowspan="2">
-                    <img src={{asset('storage/icons/fav05.png')}} width="50" height="50">
+                    <img src="{{ asset('storage/icons/' . $logoempresa) }}" width="50" height="50">
                 </td>
             </tr>
             <tr>
                 <td class="text-center">
-                    Soluciones Informáticas Emanuel
+                    {{$nombreempresa}}
                 </td>
             </tr>
         </tbody>

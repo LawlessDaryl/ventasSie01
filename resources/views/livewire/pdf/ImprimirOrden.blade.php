@@ -197,9 +197,7 @@
                                     <td width="50%">
                                         <div class="col-sm-6 col-md-6">
                                             <div style=" font-size: 10px; text-align: center;">
-                                                <span class="text-bold"><u>SOLUCIONES INFORMÁTICAS EMANUEL (
-                                                        S.I.E.
-                                                        )</u></span><br>
+                                                <span class="text-bold"><u> {{$nombreempresa}} </u></span><br>
                                                 <span style="font-size: 8px">
                                                     Sucursal: {{ $sucursal->name }}<br>
                                                     {{ $sucursal->adress }}<br>
@@ -400,7 +398,7 @@
                                 @php
                                     $today = date('d-m-Y H:i', time());
                                 @endphp
-                                CCA: SIS.INF.SOLUCIONES INFORMÁTICAS EMANUEL ( S.I.E. ) | {{ $today }}
+                                CCA: SIS.INF. {{$nombreempresa}} | {{ $today }}
                             </div>
                         </div>
                     </td>
@@ -629,9 +627,7 @@
                                     <td width="50%">
                                         <div class="col-sm-6 col-md-6">
                                             <div style=" font-size: 10px; text-align: center;">
-                                                <span class="text-bold"><u>SOLUCIONES INFORMÁTICAS EMANUEL (
-                                                        S.I.E.
-                                                        )</u></span><br>
+                                                <span class="text-bold"><u> {{$nombreempresa}} </u></span><br>
                                                 <span style="font-size: 8px">
                                                     Sucursal: {{ $sucursal->name }}<br>
                                                     {{ $sucursal->adress }}<br>
@@ -826,7 +822,7 @@
                                 @php
                                     $today = date('d-m-Y H:i', time());
                                 @endphp
-                                CCA: SIS.INF.SOLUCIONES INFORMÁTICAS EMANUEL ( S.I.E. ) | {{ $today }}
+                                CCA: SIS.INF. {{$nombreempresa}} | {{ $today }}
                             </div>
                         </div>
                     </td>

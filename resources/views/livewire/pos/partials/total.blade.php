@@ -10,13 +10,18 @@
                             <div class="col-12 col-md-3 col-lg-2">
                                 <div class="col-lg-12">
                                     <div class="form-group">
-                                        <strong>Cliente Anònimo</strong>
-                                            <br>
-                                            <label class="colorinput">
-                                                <input type="checkbox" wire:click="clienteanonimo()" checked wire:model="clienteanonimo" class="colorinput-input">
-                                                <span class="colorinput-color bg-warning"></span>
-                                            </label>
-                                    
+                                        @if(session('sesionidventa') > 0)
+                                        <div>
+                                            
+                                        </div>
+                                        @else
+                                        <strong>Cliente Anónimo</strong>
+                                        <br>
+                                        <label class="colorinput">
+                                            <input type="checkbox" wire:click="clienteanonimo()" checked wire:model="clienteanonimo" class="colorinput-input">
+                                            <span class="colorinput-color bg-warning"></span>
+                                        </label>
+                                        @endif
                                     </div>
                                 </div>
                             </div>

@@ -19,6 +19,7 @@
                         <thead class="text-white" style="background: #ee761c">
                             <tr>
                                 <th class="table-th text-withe text-center">NOMBRE DE LA EMPRESA</th>
+                                <th class="table-th text-withe text-center">NOMBRE CORTO</th>
                                 <th class="table-th text-withe text-center">DIRECCIÓN</th>
                                 <th class="table-th text-withe text-center">TELÉFONO</th>
                                 <th class="table-th text-withe text-center">NÚMERO NIT</th>
@@ -31,6 +32,9 @@
                                 <tr>
                                     <td>
                                         <h6 class="text-center">{{ $item->name }}</h6>
+                                    </td>
+                                    <td>
+                                        <h6 class="text-center">{{ $item->shortname }}</h6>
                                     </td>
                                     <td>
                                         <h6 class="text-center">{{ $item->adress }}</h6>

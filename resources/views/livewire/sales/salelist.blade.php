@@ -41,161 +41,46 @@
 
 <div class="row layout-top-spacing" id="cancel-row">
 
-    <div class="col-xl-12 col-lg-12 col-sm-12 layout-spacing">
+    <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
         <div class="widget-content widget-content-area br-6">
             
             
-            <div class="form-group">
-                <div class="row">
-
-                    <div class="col-12 col-sm-12 col-md-4 text-center">
-
-                    </div>
-
-                    <div class="col-12 col-sm-12 col-md-4 text-center">
-                        <h2><b>Lista de Ventas</b></h2>
-                        Ordenados por Fecha de Venta
-                    </div>
-
-                    <div class="col-12 col-sm-12 col-md-4">
-                        <ul class="tabs tab-pills text-right">
-                            <a href="javascript:void(0)" wire:click="irservicio()" class="btn btn-outline-primary">Nueva Venta</a>
-
-                            <div class="custom-control custom-switch" style="padding-top: 5px;">
-                                <input type="checkbox" class="custom-control-input" id="customSwitches"
-                                wire:change="mostrarocultarmasfiltros()" {{ $masfiltros ? 'checked' : '' }}>
-                                <label class="custom-control-label" for="customSwitches">+Filtros</label>
-                            </div>
+            <div class="row text-center">
                             
-                        </ul>
-                    </div>
-
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                   <h2>Lista de Ventas</h2>
                 </div>
-            </div>
 
 
-
-
-
-
-
-
-
-
-
-            <div class="form-group">
-                <div class="row">
-                    <div class="col-12 col-sm-6 col-md-3 text-center">
-                        <b wire:click="limpiarsearch()" style="cursor: pointer;">Buscar...</b>
-                        <div class="form-group">
-                            <div class="input-group mb-4">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text input-gp">
-                                        <i class="fas fa-search"></i>
-                                    </span>
-                                </div>
-                                <input type="text" wire:model="search" placeholder="Busqueda General..." class="form-control">
-                            </div>
-                        </div>
+                @if($this->verificarpermiso())
+                <div class="col-sm-6 col-md-1">
+                    <div>
+                        <h6>Mostrar Cliente</h6>
                     </div>
-                    <div class="col-12 col-sm-6 col-md-3 text-center">
-                        <b>Seleccionar Sucursal</b>
-                        <div class="form-group">
-                            <select wire:model="sucursal_id" class="form-control">
-                                @foreach($listasucursales as $sucursal)
-                                <option value="{{$sucursal->id}}">{{$sucursal->name}}</option>
-                                @endforeach
-                                <option value="Todos">Todas las Sucursales</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-6 col-md-3 text-center">
-                        <b>Seleccionar Caja</b>
-                        <div class="form-group">
-                            <select wire:model.lazy="user_id" class="form-control">
-                                <option value="Todos" selected>Todos</option>
-                                @foreach ($listausuarios as $u)
-                                    <option value="{{ $u->idusuario }}">{{ ucwords(strtolower($u->nombreusuario)) }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-sm-6 col-md-3 text-center">
-                        <b>Seleccione Cartera</b>
-                        <div class="form-group">
-                            <select wire:model="caja_id" class="form-control">
-                                <option value="PENDIENTE">Pendientes</option>
-                                <option value="PROCESO">Proceso</option>
-                                <option value="TERMINADO">Terminados</option>
-                                <option value="ENTREGADO">Entregados</option>
-                                <option value="ABANDONADO">Abandonados</option>
-                                <option value="ANULADO">Anulados</option>
-                                <option value="Todos">Todos</option>
-                            </select>
-                        </div>
-                    </div>
-
+                    <select wire:model="mostrarcliente" class="form-control">
+                        <option value="No">No</option>
+                        <option value="Si">Si</option>
+                    </select>
                 </div>
-            </div>
-
-
-            <div class="form-group">
-                <div class="row">
-                    <div class="col-12 col-sm-6 col-md-3 text-center">
-                        <b>Seleccionar Usuario</b>
-                        <div class="form-group">
-                            <select wire:model="sucursal_id" class="form-control">
-                                @foreach($listasucursales as $sucursal)
-                                <option value="{{$sucursal->id}}">{{$sucursal->name}}</option>
-                                @endforeach
-                                <option value="Todos">Todas las Sucursales</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-6 col-md-3 text-center">
-                        <b>Tipo de Fecha</b>
-                        <div class="form-group">
-                            <select wire:model.lazy="user_id" class="form-control">
-                                <option value="Todos" selected>Todos</option>
-                                @foreach ($listausuarios as $u)
-                                    <option value="{{ $u->idusuario }}">{{ ucwords(strtolower($u->nombreusuario)) }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-sm-6 col-md-3 text-center">
-                        <b>Fecha Inicio</b>
-                        <div class="form-group">
-                            <input @if ($tipofecha != 'Rango') disabled @endif type="date" wire:model="dateFrom" class="form-control flatpickr" >
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-sm-6 col-md-3 text-center">
-                        <b>Fecha Fin</b>
-                        <div class="form-group">
-                            <input @if ($tipofecha != 'Rango') disabled @endif type="date" wire:model="dateTo" class="form-control flatpickr" >
-                        </div>
-                    </div>
-
+                <div class="col-sm-6 col-md-5">
+                    
                 </div>
+                <div class="col-sm-6 col-md-3">
+                    
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <div>
+                        <h6>Seleccionar Usuario</h6>
+                    </div>
+                    <select wire:model="usuarioseleccionado" class="form-control">
+                        <option value="Todos" selected><b>Todos los Usuarios</b></option>
+                        @foreach ($listausuarios as $u)
+                        <option value="{{$u->id}}">{{$u->nombreusuario}}</option>
+                        @endforeach
+                    </select>
+                </div>
+                @endif
             </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -218,7 +103,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                            @foreach ($listaventas as $d)
+                            @foreach ($data as $d)
                             <tr>
                                 <td class="table-th text-withe text-center">
                                     <span class="stamp stamp" style="background-color: #ee761c">
@@ -307,7 +192,7 @@
                             @endforeach
                     </tbody>
                 </table>
-                {{ $listaventas->links() }}
+                {{ $data->links() }}
             </div>
         </div>
 

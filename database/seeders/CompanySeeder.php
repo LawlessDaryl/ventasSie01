@@ -15,8 +15,9 @@ class CompanySeeder extends Seeder
     public function run()
     {
         Company::create([
-            'name' => 'SIE - Emanuel',
-            'adress' => 'Av. America casi G.Rene Moreno',
+            'name' => 'Soluciones Informáticas Emanuel',
+            'shortname' => 'SIE - Emanuel',
+            'adress' => 'Av. America Casi G.Rene Moreno',
             'phone' => '4408080',
             'nit_id' => '765645',
             'image' => 'logo.png'

@@ -90,48 +90,48 @@ class ProductoDestinoSeeder extends Seeder
             'destino_id' => 1,
             'stock' => '50',
         ]);
-        ProductosDestino::create([
-            'product_id'=> 7,
-            'destino_id' => 2,
-            'stock' => '10',
-        ]);
+        // ProductosDestino::create([
+        //     'product_id'=> 7,
+        //     'destino_id' => 2,
+        //     'stock' => '10',
+        // ]);
 
 
-        ProductosDestino::create([
-            'product_id'=> 8,
-            'destino_id' => 1,
-            'stock' => '100',
-        ]);
-        ProductosDestino::create([
-            'product_id'=> 8,
-            'destino_id' => 2,
-            'stock' => '2',
-        ]);
+        // ProductosDestino::create([
+        //     'product_id'=> 8,
+        //     'destino_id' => 1,
+        //     'stock' => '100',
+        // ]);
+        // ProductosDestino::create([
+        //     'product_id'=> 8,
+        //     'destino_id' => 2,
+        //     'stock' => '2',
+        // ]);
 
 
-        ProductosDestino::create([
-            'product_id'=> 9,
-            'destino_id' => 1,
-            'stock' => '5',
-        ]);
-        ProductosDestino::create([
-            'product_id'=> 9,
-            'destino_id' => 4,
-            'stock' => '1',
-        ]);
+        // ProductosDestino::create([
+        //     'product_id'=> 9,
+        //     'destino_id' => 1,
+        //     'stock' => '5',
+        // ]);
+        // ProductosDestino::create([
+        //     'product_id'=> 9,
+        //     'destino_id' => 4,
+        //     'stock' => '1',
+        // ]);
 
-        //Agregando Productos a la Segunda Sucursal
+        // //Agregando Productos a la Segunda Sucursal
       
-        ProductosDestino::create([
-            'product_id'=> 4,
-            'destino_id' => 4,
-            'stock' => '13',
-        ]);
-        ProductosDestino::create([
-            'product_id'=> 4,
-            'destino_id' => 5,
-            'stock' => '50',
-        ]);
+        // ProductosDestino::create([
+        //     'product_id'=> 4,
+        //     'destino_id' => 4,
+        //     'stock' => '13',
+        // ]);
+        // ProductosDestino::create([
+        //     'product_id'=> 4,
+        //     'destino_id' => 5,
+        //     'stock' => '50',
+        // ]);
 
     }
 }

@@ -44,11 +44,11 @@
         <table cellpadding="0" cellspacing="0" width="100%">
             <tr>
                 <td style="vertical-align: top; padding-top:10px; position:relative;">
-                    <img src="{{ asset('assets/img/sie2022.jpg') }}" alt="" class="invoice-logo" height="70px">
+                    <img src="{{ asset('storage/icons/' . $logoempresa) }}" alt="" class="invoice-logo" height="70px">
                 </td>
                 <td class="text-center" colspan="2">
                     <span style="font-size: 20px; font-weight:bold;">Comprobante de Venta</span>
-                    <p style="font-size: 20px; font-weight:bold;">Soluciones Informáticas Emanuel</p>
+                    <p style="font-size: 20px; font-weight:bold;">{{$nombreempresa}}</p>
                 </td>
                 <td class="text-right">
                     <p style="font-size: 9px; color: black">{{$datossucursal->nombresucursal}} <br>{{$datossucursal->direccionsucursal}}</p>
