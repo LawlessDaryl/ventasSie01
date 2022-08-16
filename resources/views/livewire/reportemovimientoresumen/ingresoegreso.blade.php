@@ -10,8 +10,6 @@
                         <a wire:click.prevent="viewDetails()" class="btn btn-warning">
                             Generar Ingreso/Egreso en Cartera
                         </a>
-                       
-                 
                     @endcan
                 </ul>
                 {{-- <ul class="tabs tab-pills">

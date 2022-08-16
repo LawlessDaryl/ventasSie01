@@ -376,7 +376,12 @@ class ReporteMovimientoResumenController extends Component
             if ($this->sucursal != 'TODAS')
             {
                 //Totales Ingresos Ventas
-            $this->totalesIngresosV = Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')
+
+            $this->operacionEnCajaGeneral($this->sucursal);
+            $this->totalesIngresosV = new \Illuminate\Database\Eloquent\Collection;
+
+           // dd($this->ventas);
+            $totalesIngresosVentas = Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')
             ->join('carteras as c', 'c.id', 'crms.cartera_id')
             ->join('cajas as ca', 'ca.id', 'c.caja_id')
             ->join('users as u', 'u.id', 'movimientos.user_id')
@@ -395,9 +400,35 @@ class ReporteMovimientoResumenController extends Component
             ->where('crms.comentario','<>', 'RECAUDO DEL DIA')
             ->where('crms.tipoDeMovimiento', 'VENTA')
             ->where('ca.sucursal_id',$this->sucursal)
+            ->where('ca.id','<>',1)
+
             ->whereBetween('movimientos.updated_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
             ->orderBy('movimientos.updated_at', 'asc')
             ->get();
+
+
+            $this->totalesIngresosVGeneral = Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')
+            ->join('carteras as c', 'c.id', 'crms.cartera_id')
+            ->join('cajas as ca', 'ca.id', 'c.caja_id')
+            ->join('users as u', 'u.id', 'movimientos.user_id')
+            ->join('sales as s','s.movimiento_id','movimientos.id')
+            ->select('s.id as idventa',
+            'movimientos.import as importe',
+            'crms.type as carteramovtype',
+            'crms.tipoDeMovimiento',
+            'c.nombre as nombrecartera',
+            'c.descripcion',
+            'u.id as idusuario',
+            'c.tipo as ctipo',
+            'movimientos.updated_at as movcreacion',
+            'movimientos.id as idmov',DB::raw('0 as detalle'),DB::raw('0 as utilidadventa'))
+            ->whereIn('movimientos.id',$this->ventas)
+            ->whereBetween('movimientos.updated_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
+            ->orderBy('movimientos.updated_at', 'asc')
+            ->get();
+
+            $this->totalesIngresosV= $this->totalesIngresosV->concat($totalesIngresosVentas)->concat($this->totalesIngresosVGeneral);
+
 
             foreach ($this->totalesIngresosV as $val)
             {
@@ -1362,14 +1393,29 @@ class ReporteMovimientoResumenController extends Component
         $this->emit('opentap');
     }
 
-    public function operacionEnCajaGeneral(){
+    public function operacionEnCajaGeneral($id = 0){
         $this->Banco=[];
 
         //dump($this->Banco);
         $this->ventas=[];
         $this->servicios=[];
         $this->ingresoEgreso=[];
-        $consulta= Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')
+
+        if ($id != 0) {
+            $consulta= Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')
+            ->join('carteras as c', 'c.id', 'crms.cartera_id')
+            ->join('cajas as ca', 'ca.id', 'c.caja_id')
+            ->join('users as u', 'u.id', 'movimientos.user_id')
+            ->where('ca.sucursal_id',$id)
+            ->where('movimientos.type','APERTURA')
+            ->where('c.tipo','CajaFisica')
+            //->whereBetween('movimientos.updated_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
+            ->select('movimientos.*','ca.nombre','c.tipo')
+            ->orderBy('movimientos.created_at','desc')
+            ->get();
+        }
+        else{
+            $consulta= Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')
             ->join('carteras as c', 'c.id', 'crms.cartera_id')
             ->join('cajas as ca', 'ca.id', 'c.caja_id')
             ->join('users as u', 'u.id', 'movimientos.user_id')
@@ -1380,6 +1426,10 @@ class ReporteMovimientoResumenController extends Component
             ->select('movimientos.*','ca.nombre','c.tipo')
             ->orderBy('movimientos.created_at','desc')
             ->get();
+        }
+
+
+      
 
       
             foreach ($consulta as $data) {

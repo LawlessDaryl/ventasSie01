@@ -35,6 +35,15 @@ class IngresoEgresoController extends Component
     public function render()
     {
 
+    //     $inUsa = collect($hosts)
+    // ->where('location', 'USA')
+    // ->when(request('retired'), function($collection) {
+    //     return $collection->reject(function($employee){
+    //         return $employee['is_active'];
+    //     });
+    // });
+
+
         if ($this->search != null) 
         {
             $SucursalUsuario = User::join('sucursal_users as su', 'su.user_id', 'users.id')
