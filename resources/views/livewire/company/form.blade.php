@@ -38,6 +38,13 @@
             @enderror
         </div>
     </div>
+    <div class="col-sm-12 col-md-12">
+        <div class="form-group custom-file">
+            <input type="file" class="custom-file-input form-control" wire:model="image"
+                accept="image/x-png,image/gif,image/jpeg">
+            <label class="custom-file-label">Logo Empresa {{ $image }}</label>
+        </div>
+    </div>
 
 
 </div>

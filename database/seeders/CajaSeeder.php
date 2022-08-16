@@ -16,7 +16,7 @@ class CajaSeeder extends Seeder
     {
         Caja::create([
             'nombre' => 'Caja General',
-            'estado' => 'Abierto',
+            'estado' => 'Cerrado',
             'sucursal_id' => '1',
         ]);
         Caja::create([
@@ -24,15 +24,15 @@ class CajaSeeder extends Seeder
             'estado' => 'Cerrado',
             'sucursal_id' => '1',
         ]);
-        Caja::create([
-            'nombre' => 'Caja Secundaria',
-            'estado' => 'Cerrado',
-            'sucursal_id' => '1',
-        ]);
-        Caja::create([
-            'nombre' => 'Caja Ferrufino',
-            'estado' => 'Cerrado',
-            'sucursal_id' => '2',
-        ]);
+        // Caja::create([
+        //     'nombre' => 'Caja Secundaria',
+        //     'estado' => 'Cerrado',
+        //     'sucursal_id' => '1',
+        // ]);
+        // Caja::create([
+        //     'nombre' => 'Caja Ferrufino',
+        //     'estado' => 'Cerrado',
+        //     'sucursal_id' => '2',
+        // ]);
     }
 }

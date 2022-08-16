@@ -22,6 +22,7 @@
                                 <th class="table-th text-withe text-center">DIRECCIÓN</th>
                                 <th class="table-th text-withe text-center">TELÉFONO</th>
                                 <th class="table-th text-withe text-center">NÚMERO NIT</th>
+                                <th class="table-th text-withe text-center">LOGO</th>
                                 <th class="table-th text-withe text-center">ACCIONES</th>
                             </tr>
                         </thead>
@@ -39,6 +40,11 @@
                                     </td>
                                     <td>
                                         <h6 class="text-center">{{ $item->nit_id }}</h6>
+                                    </td>
+                                    <td class="text-center">
+                                        <span>
+                                            <img src="{{ asset('storage/icons/' . $item->image) }}" alt="imagen" width="70px" height="70px">
+                                        </span>
                                     </td>
                                     <td class="text-center">
                                         <a href="javascript:void(0)" wire:click="Edit({{ $item->id }})"

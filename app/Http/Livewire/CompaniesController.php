@@ -12,7 +12,7 @@ class CompaniesController extends Component
     use WithPagination;
     use WithFileUploads;
     public  $search, $name, $adress, $phone, $nit_id, $selected_id;
-    public  $pageTitle, $componentName;
+    public  $pageTitle, $componentName, $image, $imagenempresa;
     private $pagination = 5;
 
     public function paginationView()
@@ -27,6 +27,8 @@ class CompaniesController extends Component
     }
     public function render()
     {
+
+
         if (strlen($this->search) > 0)
             $company = Company::where('name', 'like', '%' . $this->search . '%')->paginate($this->pagination);
         else
@@ -95,7 +97,26 @@ class CompaniesController extends Component
             'phone' => $this->phone,
             'nit_id' => $this->nit_id
         ]);
+
         $comp->save();
+        
+
+        if ($this->image) {
+            $customFileName = uniqid() . '_.' . $this->image->extension();
+            $this->image->storeAs('public/icons', $customFileName);
+            $imageTemp = $comp->image;
+
+            $comp->image = $customFileName;
+            $comp->save();
+
+            if ($imageTemp != null) {
+                if (file_exists('storage/categorias/' . $imageTemp)) {
+                    unlink('storage/categorias/' . $imageTemp);
+                }
+            }
+        }
+
+
 
         $this->resetUI();
         $this->emit('item-updated', 'Empresa Actualizada');

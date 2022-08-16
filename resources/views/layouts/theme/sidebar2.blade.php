@@ -11,13 +11,13 @@
 								<span>
 									{{ auth()->user()->name }}
 									<span class="user-level">{{ auth()->user()->profile }}</span>
-									<span class="caret"></span>
+									{{-- <span class="caret"></span> --}}
 								</span>
 							</a>
 							<div class="clearfix"></div>
 
 							<div class="collapse in" id="collapseExample">
-								<ul class="nav">
+								{{-- <ul class="nav">
 									<li>
 										<a href="#profile">
 											<span class="link-collapse">Mi Perfil</span>
@@ -33,7 +33,7 @@
 											<span class="link-collapse">Ajustes</span>
 										</a>
 									</li>
-								</ul>
+								</ul> --}}
 							</div>
 						</div>
 					</div>
@@ -674,7 +674,7 @@
 
 
 
-									<li>
+									{{-- <li>
 										<a data-toggle="collapse" href="#subnav1">
 											<span class="sub-item">Level 1</span>
 											<span class="caret"></span>
@@ -713,7 +713,7 @@
 										<a href="#">
 											<span class="sub-item">Level 1</span>
 										</a>
-									</li>
+									</li> --}}
 								</ul>
 							</div>
 						</li>

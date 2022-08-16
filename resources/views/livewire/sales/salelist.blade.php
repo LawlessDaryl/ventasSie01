@@ -218,7 +218,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                            @foreach ($data as $d)
+                            @foreach ($listaventas as $d)
                             <tr>
                                 <td class="table-th text-withe text-center">
                                     <span class="stamp stamp" style="background-color: #ee761c">
@@ -307,7 +307,7 @@
                             @endforeach
                     </tbody>
                 </table>
-                {{ $data->links() }}
+                {{ $listaventas->links() }}
             </div>
         </div>
 

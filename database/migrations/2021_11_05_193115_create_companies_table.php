@@ -19,6 +19,7 @@ class CreateCompaniesTable extends Migration
             $table->string("adress", 500)->nullable();
             $table->string("phone", 10)->nullable();
             $table->string("nit_id", 20);
+            $table->string('image',50)->nullable();
             $table->timestamps();
         });
     }

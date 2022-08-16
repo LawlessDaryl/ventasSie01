@@ -3192,6 +3192,27 @@ class OrderServiceController extends Component
     //Muestra una Ventana Modal para entregar un Servicio
     public function modalentregarservicio($type, $idservicio, $idordendeservicio)
     {
+         //Verificando si el usuario tiene una caja abierta
+         if($this->listarcarteras() == null)
+         {
+             $this->estadocaja = "cerrado";
+         }
+         else
+         {
+             $this->estadocaja = "abierto";
+             //Listando todas las carteras disponibles para la caja abierta
+             $listac = $this->listarcarteras();
+             //Poniendo por defecto la primera cartera de tipo Cajafisica
+             foreach($listac as $list)
+                 {
+                     if($list->tipo == 'CajaFisica')
+                     {
+                         $this->tipopago = $list->idcartera;
+                         break;
+                     }
+                     
+                 }
+         }
         //Actualizando variable $id_orden_de_servicio para mostrar el codigo de la orden del servicio en el titulo de la ventana modal
         $this->id_orden_de_servicio = $idordendeservicio;
 
