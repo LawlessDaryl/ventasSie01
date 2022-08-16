@@ -17,7 +17,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
-class ReportEntregadoServController extends Component
+class otroreporteentregado extends Component
 {
     public $componentName, $data, $details, $sumDetails, $countDetails, $reportType,
         $userId, $dateFrom, $dateTo, $transaccionId, $estado, $fechas, $sumaEfectivo,

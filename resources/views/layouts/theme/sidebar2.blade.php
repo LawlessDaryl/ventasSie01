@@ -651,11 +651,11 @@
 											<i class="fa fas fa-minus"></i>
 											Denominaciones </a>
 									</li>
-									<li>
+									{{-- <li>
 										<a href="{{ url('estadisticas') }}">
 											<i class="fa fas fa-minus"></i>
 											Estadísticas </a>
-									</li>
+									</li> --}}
 									<li>
 										<a href="{{ url('devolucionventa') }}">
 											<i class="fa fas fa-minus"></i>

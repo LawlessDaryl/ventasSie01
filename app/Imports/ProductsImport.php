@@ -68,7 +68,6 @@ class ProductsImport implements ToModel,WithHeadingRow,WithBatchInserts,WithChun
                 'numeric','required'
             ]
             
-
         ];
     }
 
