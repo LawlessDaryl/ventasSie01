@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade as PDF;
 use Carbon\Carbon;
 use App\Models\Sale;
+use App\Models\Company;
 use App\Models\User;
 use App\Models\Sucursal;
 use Illuminate\Support\Facades\Auth;
@@ -59,6 +60,10 @@ class ExportMovDiaResController extends Controller
             $caja = Caja::find($caja)->nombre;
         }
 
+
+        $nombreempresa = Company::find(1)->name;
+        $logoempresa = Company::find(1)->image;
+
         $pdf = PDF::loadView('livewire.pdf.reportemovdiaresumen',
         compact('totalesIngresosV','totalesIngresosS','totalesIngresosIE','totalesEgresosV','totalesEgresosIE',
                 'ingresosTotalesCF',
@@ -77,6 +82,8 @@ class ExportMovDiaResController extends Controller
                 'caja',
                 'fromDate',
                 'toDate',
+                'nombreempresa',
+                'logoempresa',
             
             ));
 

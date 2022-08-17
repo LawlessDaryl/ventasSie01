@@ -91,6 +91,7 @@
 							</span>
 							<h4 class="text-section">Menús y SubMenus</h4>
 						</li>
+						@can('Ver_TigoMoney_SideBar')
 						<li class="nav-item">
 							<a data-toggle="collapse" href="#base">
 								<img src="assets/img/tigomoney.png" width="29" height="30" alt="navbar brand" class="navbar-brand">
@@ -105,11 +106,6 @@
 											<p> No tiene una caja abierta </p>
 											<p> para hacer transacciones </p>
 										</strong>
-										{{-- <strong style="-webkit-text-stroke: 0.7px black;
-										color: white; ">
-											<p> No tiene una caja abierta </p>
-											<p> para hacer transacciones </p>
-										</strong> --}}
 									</li>
 									@can('Origen_Index')
 										<li>
@@ -250,6 +246,7 @@
 								@endif
 							</div>
 						</li>
+						@endcan
 						<li class="nav-item">
 							<a data-toggle="collapse" href="#sidebarLayouts">
 								<img src="assets/img/disney.png" width="30" height="40" alt="navbar brand" class="navbar-brand">
@@ -380,6 +377,7 @@
 								@endif
 							</div>
 						</li>
+						@can('Service_Index')
 						<li class="nav-item">
 							<a data-toggle="collapse" href="#forms">
 								<img src="assets/img/serviciotecnico.png" width="30" height="40" alt="navbar brand" class="navbar-brand">
@@ -433,6 +431,8 @@
 								</ul>
 							</div>
 						</li>
+						@endcan
+						@can('Administracion_Sidebar')
 						<li class="nav-item">
 							<a data-toggle="collapse" href="#tables">
 								<img src="assets/img/administracion.png" width="25" height="35" alt="navbar brand" class="navbar-brand">
@@ -487,7 +487,7 @@
 										<li>
 											<a href="{{ url('companies') }}">
 												<i class="fa fas fa-minus"></i>
-												Empresas </a>
+												Empresa </a>
 										</li>
 									@endcan
 									@can('Sucursal_Index')
@@ -521,7 +521,7 @@
 								</ul>
 							</div>
 						</li>
-
+						@endcan
 
 						
 						

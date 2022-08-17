@@ -10,7 +10,7 @@ class NameController extends Component
     public $nombreempresa;
     public function render()
     {
-        $this->nombreempresa = Company::find(1)->name;
+        $this->nombreempresa = Company::find(1)->shortname;
         $this->logoempresa = Company::find(1)->image;
         return view('livewire.nombreempresa');
     }

@@ -47,36 +47,36 @@ class DestinoSeeder extends Seeder
             'name' => $pg->nombre.'_'.$pg->id,
             'guard_name' => 'web'
         ]);
-        $mm= Destino::create([
-            'nombre'=>'Tienda',
-            'observacion'=>'ninguna',
-            'sucursal_id'=>'2'           
-        ]);
-        Permission::create([
-            'name' => $mm->nombre.'_'.$mm->id,
-            'guard_name' => 'web'
-        ]);
+        // $mm= Destino::create([
+        //     'nombre'=>'Tienda',
+        //     'observacion'=>'ninguna',
+        //     'sucursal_id'=>'2'           
+        // ]);
+        // Permission::create([
+        //     'name' => $mm->nombre.'_'.$mm->id,
+        //     'guard_name' => 'web'
+        // ]);
 
-        $nn=Destino::create([
-            'nombre'=>'Almacen',
-            'observacion'=>'ninguna',
-            'sucursal_id'=>'2'
-        ]);
-        Permission::create([
-            'name' => $nn->nombre.'_'.$nn->id,
-            'guard_name' => 'web'
-        ]);
+        // $nn=Destino::create([
+        //     'nombre'=>'Almacen',
+        //     'observacion'=>'ninguna',
+        //     'sucursal_id'=>'2'
+        // ]);
+        // Permission::create([
+        //     'name' => $nn->nombre.'_'.$nn->id,
+        //     'guard_name' => 'web'
+        // ]);
 
-        $ff= Destino::create([
-            'nombre'=>'Almacen Devoluciones',
-            'observacion'=>'ninguna',
-            'sucursal_id'=>'2'           
-        ]);
+        // $ff= Destino::create([
+        //     'nombre'=>'Almacen Devoluciones',
+        //     'observacion'=>'ninguna',
+        //     'sucursal_id'=>'2'           
+        // ]);
 
-        Permission::create([
-            'name' => $ff->nombre.'_'.$ff->id,
-            'guard_name' => 'web'
-        ]);
+        // Permission::create([
+        //     'name' => $ff->nombre.'_'.$ff->id,
+        //     'guard_name' => 'web'
+        // ]);
 
     }
 }

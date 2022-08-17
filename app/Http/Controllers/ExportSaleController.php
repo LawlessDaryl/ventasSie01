@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use App\Models\Sale;
 use App\Models\User;
 use App\Models\Cliente;
+use App\Models\Company;
 use App\Models\Sucursal;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -53,9 +54,10 @@ class ExportSaleController extends Controller
         $total = $row_venta->total;
 
         $fecha = Carbon::parse(Carbon::now());
+        $nombreempresa = Company::find(1)->name;
+        $logoempresa = Company::find(1)->image;
 
-
-        $pdf = PDF::loadView('livewire.pdf.reciboventa', compact('datoscliente','venta','nombreusuario','fecha','total','totalitems','datossucursal'));
+        $pdf = PDF::loadView('livewire.pdf.reciboventa', compact('datoscliente','venta','nombreusuario','fecha','total','totalitems','datossucursal','nombreempresa','logoempresa'));
 
         return $pdf->stream('comprobante.pdf');  //visualizar
         /* return $pdf->download('salesReport.pdf');  //descargar  */

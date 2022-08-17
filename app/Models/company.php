@@ -9,7 +9,7 @@ class Company extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name','adress','phone','nit_id'];
+    protected $fillable = ['name','shortname','adress','phone','nit_id','image'];
 
     public function relacionados()
     {

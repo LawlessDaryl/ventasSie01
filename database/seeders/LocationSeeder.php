@@ -67,19 +67,19 @@ class LocationSeeder extends Seeder
 
 
 
-        //Sucursal Tienda Sucursal 2
-        Location::create([
-            'codigo' => '0003',
-            'descripcion' => 'Lugar de Ventas Sucursal: Av. Pando',
-            'tipo' => 'ESTANTE',
-            'destino_id' => '4'
-        ]);
-        //Almacen Devoluciones Sucursal 2
-        Location::create([
-            'codigo' => '0002',
-            'descripcion' => 'Lugar de Devolución Ventas Sucursal: Av. Pando',
-            'tipo' => 'VITRINA',
-            'destino_id' => '5'
-        ]);
+        // //Sucursal Tienda Sucursal 2
+        // Location::create([
+        //     'codigo' => '0003',
+        //     'descripcion' => 'Lugar de Ventas Sucursal: Av. Pando',
+        //     'tipo' => 'ESTANTE',
+        //     'destino_id' => '4'
+        // ]);
+        // //Almacen Devoluciones Sucursal 2
+        // Location::create([
+        //     'codigo' => '0002',
+        //     'descripcion' => 'Lugar de Devolución Ventas Sucursal: Av. Pando',
+        //     'tipo' => 'VITRINA',
+        //     'destino_id' => '5'
+        // ]);
     }
 }

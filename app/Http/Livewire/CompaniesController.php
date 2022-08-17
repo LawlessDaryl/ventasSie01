@@ -11,7 +11,7 @@ class CompaniesController extends Component
 {
     use WithPagination;
     use WithFileUploads;
-    public  $search, $name, $adress, $phone, $nit_id, $selected_id;
+    public  $search, $name, $shortname, $adress, $phone, $nit_id, $selected_id;
     public  $pageTitle, $componentName, $image, $imagenempresa;
     private $pagination = 5;
 
@@ -72,6 +72,7 @@ class CompaniesController extends Component
     {
         $this->selected_id = $company->id;
         $this->name = $company->name;
+        $this->shortname = $company->shortname;
         $this->adress = $company->adress;
         $this->phone = $company->phone;
         $this->nit_id = $company->nit_id;
@@ -93,11 +94,11 @@ class CompaniesController extends Component
         $comp = Company::find($this->selected_id);
         $comp->update([
             'name' => $this->name,
+            'shortname' => $this->shortname,
             'adress' => $this->adress,
             'phone' => $this->phone,
             'nit_id' => $this->nit_id
         ]);
-
         $comp->save();
         
 
@@ -108,12 +109,6 @@ class CompaniesController extends Component
 
             $comp->image = $customFileName;
             $comp->save();
-
-            if ($imageTemp != null) {
-                if (file_exists('storage/categorias/' . $imageTemp)) {
-                    unlink('storage/categorias/' . $imageTemp);
-                }
-            }
         }
 
 
@@ -133,6 +128,7 @@ class CompaniesController extends Component
     public function resetUI()
     {
         $this->name = '';
+        $this->shortname = '';
         $this->adress = '';
         $this->phone = '';
         $this->nit_id = '';

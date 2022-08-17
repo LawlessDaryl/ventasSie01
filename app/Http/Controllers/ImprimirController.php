@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\OrderService;
 use Barryvdh\DomPDF\Facade as PDF;
 use App\Models\Service;
+use App\Models\Company;
 use App\Models\User;
 
 class ImprimirController extends Controller
@@ -46,8 +47,12 @@ class ImprimirController extends Controller
                 $sucursal=$su->sucursal;
             }
         }
+
+        $nombreempresa = Company::find(1)->name;
+
+
         
-        $pdf = PDF::loadView('livewire.pdf.ImprimirOrden', compact('data', 'datos', 'usuario','sucursal'));
+        $pdf = PDF::loadView('livewire.pdf.ImprimirOrden', compact('data', 'datos', 'usuario','sucursal','nombreempresa'));
         /* $pdf->setPaper("A4", "landscape"); //orientacion y tamaño */
 
         return $pdf->stream('OrdenTrServicio.pdf');  //visualizar

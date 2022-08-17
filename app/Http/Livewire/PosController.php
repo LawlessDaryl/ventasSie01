@@ -1257,8 +1257,18 @@ class PosController extends Component
         //Poner Cambio en 0
         //$this->calcularCambio($this->total);
         $this->efectivo = 0;
-        //Llamar al Modal
-        $this->emit('finalizarventa');
+
+        if($this->tipopago == 'Elegir')
+        {
+            $this->emit('seleccionarcartera');
+        }
+        else
+        {
+            //Llamar al Modal
+            $this->emit('finalizarventa');
+        }
+
+
     }
     //Obtener el Id de la Sucursal Donde esta el Usuario
     public function idsucursal()
