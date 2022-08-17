@@ -226,6 +226,8 @@ class ProductsController extends Component
         ]);
         if ($this->image) {
             $customFileName = uniqid() . '_.' . $this->image->extension();
+
+            
             $this->image->storeAs('public/images/productos/', $customFileName);
             $product->image = $customFileName;
             $product->save();
@@ -307,7 +309,7 @@ class ProductsController extends Component
         if ($this->image) {
             //dd($this->image);
             $customFileName = uniqid() . '_.' . $this->image->extension();
-            $this->image->storeAs('productos', $customFileName);
+            $this->image->storeAs('public/products', $customFileName);
            // dd("sd");
             $imageTemp = $product->image;
             $product->image = $customFileName;
