@@ -112,9 +112,16 @@
                                     
                                     <td class="text-center">
                                         <span>
-                                            <img src="{{('storage/productos/'.$products->imagen) }}"
+                                            <img src="{{ asset('storage/productos/' . $products->imagen) }}"
                                                 alt="imagen de ejemplo" height="40" width="50" class="rounded">
                                         </span>
+
+
+                                        {{-- <span>
+                                            <img src="{{ asset('storage/usuarios/' . $r->imagen) }}" alt="imagen"
+                                                class=" rounded" width="70px" height="70px">
+                                        </span> --}}
+
                                     </td>
                                     <td class="text-center">
                                         <a href="javascript:void(0)" wire:click="Edit({{ $products->id }})"

@@ -22,12 +22,13 @@
                     </div>
                     @endif
 
-                    <form action="{{route('importar')}}" method="POST" enctype="multipart/form-data">
+                    <form wire:submit.prevent="import('{{$archivo}}')" method="POST" enctype="multipart/form-data">
                         @csrf
 
-                        <input type="file" name="import_file" />
+                        {{$archivo}}
+                        <input type="file" name="import_file" wire:model="archivo" />
 
-                        <button class="btn btn-primary" type="submit">Importar</button>
+                        <button class="btn btn-primary" type="submit" >Importar</button>
                     </form>
                 </div>
             </div>

@@ -59,7 +59,7 @@ class ProductsImport implements ToModel,WithHeadingRow,WithBatchInserts,WithChun
     {
         return [             // Above is alias for as it always validates in batches
             '*.nombre' =>[
-                'distinct','required'
+                'distinct','required','unique:products'
             ],
             '*.costo' =>[
                 'numeric','required'
@@ -70,5 +70,12 @@ class ProductsImport implements ToModel,WithHeadingRow,WithBatchInserts,WithChun
             
         ];
     }
+
+    public function customValidationMessages()
+{
+    return [
+        'nombre.unique' => 'productos existentes, revise su archivo por favor.',
+    ];
+}
 
 }

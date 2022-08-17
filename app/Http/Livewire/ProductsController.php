@@ -22,7 +22,7 @@ class ProductsController extends Component
     public $nombre, $costo, $precio_venta,$cantidad_minima,$name,$descripcion,
     $codigo,$lote,$unidad,$industria,$caracteristicas,$status,$categoryid=null, $search,$estado,
      $image, $selected_id, $pageTitle, $componentName,$cate,$marca,$garantia,$stock,$stock_v
-     ,$selected_categoria,$selected_sub,$nro=1,$sub,$change=[],$estados,$searchData=[],$data2;
+     ,$selected_categoria,$selected_sub,$nro=1,$sub,$change=[],$estados,$searchData=[],$data2,$archivo;
 
     private $pagination = 100;
     public $selected_id2;
@@ -305,8 +305,10 @@ class ProductsController extends Component
             'status'=>$this->estado
         ]);
         if ($this->image) {
+            //dd($this->image);
             $customFileName = uniqid() . '_.' . $this->image->extension();
-            $this->image->storeAs('public/productos', $customFileName);
+            $this->image->storeAs('productos', $customFileName);
+           // dd("sd");
             $imageTemp = $product->image;
             $product->image = $customFileName;
             $product->save();
@@ -414,13 +416,16 @@ class ProductsController extends Component
     }
 
 
-    public function import(Request $request){
+    public function import($archivo){
         
-        $file = $request->file('import_file');
+        //$file = $request->file('import_file');
+       // dd($this->archivo);
 
-        Excel::import(new ProductsImport,$file);
-       
-        return redirect()->route('productos');
+        Excel::import(new ProductsImport,$this->archivo);
+
+     
+       //dd($errors->all());
+       return redirect()->route('productos');
     }
 
 }

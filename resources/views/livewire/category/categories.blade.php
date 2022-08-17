@@ -7,14 +7,14 @@
                 </h4>
                 <ul class="row justify-content-end">
                    
-                    <a href="javascript:void(0)" class="btn btn-warning m-1" wire:click="$set('selected_id','0')" data-toggle="modal"
-                        data-target="#theModal">Agregar Categoria</a>
-                    <a href="javascript:void(0)" class="btn btn-warning m-1" wire:click="$set('selected_id','0')" data-toggle="modal"
-                        data-target="#theModal_s">Agregar Subcategoria</a>
-                    <a href="javascript:void(0)" class="btn btn-dark m-1" data-toggle="modal"
+                    <a href="javascript:void(0)" class="btn btn-warning m-1 p-2" wire:click="$set('selected_id','0')" data-toggle="modal"
+                        data-target="#theModal"> <b>Crear Categoria</b> </a>
+                    <a href="javascript:void(0)" class="btn btn-dark m-1 p-2" wire:click="$set('selected_id','0')" data-toggle="modal"
+                        data-target="#theModal_s"> <b>Crear Subcategoria</b> </a>
+                    {{-- <a href="javascript:void(0)" class="btn btn-dark m-1" data-toggle="modal"
                         data-target="#modalimportcat">Importar Categorias</a>
                     <a href="javascript:void(0)" class="btn btn-dark m-1" data-toggle="modal"
-                        data-target="#modalimportsubcat">Importar SubCategorias</a>
+                        data-target="#modalimportsubcat">Importar SubCategorias</a> --}}
                     
                 </ul>
             </div>
@@ -48,28 +48,28 @@
                                     </td>
                                    
                                     <td>
-                                        <h6>{{ $category->descripcion }}</h6>
+                                        <center><h6>{{ $category->descripcion }}</h6></center>
                                    
                                     </td>
                                     <td>
-                                        <h6>{{ $category->subcategories()}}</h6>
+                                        <center><h6>{{ $category->subcategories()}}</h6></center>
                                    
                                     </td>
                                    
                                     <td class="text-center">
                                         <a href="javascript:void(0)" wire:click="Edit({{ $category->id }})"
-                                            class="btn btn-warning mtmobile" title="Edit">
+                                            class="btn btn-dark p-1" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
+                                        <a href="javascript:void(0)" wire:click="Ver({{$category->id}})"
+                                            class="btn btn-warning p-1" title="Ver subcategorias">
+                                            <i class="fas fa-eye"></i>
+                                            
+                                        </a>
                                         <a href="javascript:void(0)" onclick="Confirm('{{ $category->id }}','{{ $category->name }}','{{$category->products->count()}}','{{$category->subcategories()}}')"
-                                           class="btn btn-dark"
+                                           class="btn btn-danger p-1"
                                             title="Delete">
                                             <i class="fas fa-trash"></i>
-                                        </a>
-                                        <a href="javascript:void(0)" wire:click="Ver({{$category->id}})"
-                                            class="btn btn-warning mtmobile" title="Ver subcategorias">
-                                            <i class="fas fa-eye"></i>
-                                           
                                         </a>
                                         
                                     </td>

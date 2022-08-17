@@ -44,13 +44,13 @@ class Product extends Model
     {
         if ($this->image == null)
         {
-           return 'noimage.jpg';
+           return 'noimage.png';
         }
         if (file_exists('storage/productos/'. $this->image))
             return $this->image;
         else 
         {
-            return 'noimage.jpg';
+            return 'noimage.png';
         }
     }
 
