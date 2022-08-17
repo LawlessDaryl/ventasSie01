@@ -15,6 +15,14 @@ class ComisionSeeder extends Seeder
     public function run()
     {
         Comision::create([
+            'nombre' => 'de 1 a 9 bs',
+            'tipo' => 'Cliente',
+            'monto_inicial' => '1',
+            'monto_final' => '9',
+            'comision' => '4',
+            'porcentaje' => 'Activo'
+        ]);
+        Comision::create([
             'nombre' => 'de 10 a 100 bs',
             'tipo' => 'Cliente',
             'monto_inicial' => '10',
