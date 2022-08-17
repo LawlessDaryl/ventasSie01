@@ -33,8 +33,8 @@ class MercanciaController extends Component
        // $this->borrarLotes();
        //$this->ajustarLotes();
        //$this->productosajustados();
-      //$this->limpiarstock();
-     // $this->inactivarlotes();
+      $this->limpiarstock();
+     $this->inactivarlotes();
 
     }
     public function render()

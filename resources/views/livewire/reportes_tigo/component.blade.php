@@ -93,7 +93,7 @@
                                         @endcan
                                         <th class="table-th text-withe text-center">FECHA</th>
                                         <th class="table-th text-withe text-center" width="50px"></th>
-                                        <th class="table-th text-withe text-center">Editar</th>
+                                        {{-- <th class="table-th text-withe text-center">Editar</th> --}}
                                     </tr>
                                 </thead>
                                 <tbody>
