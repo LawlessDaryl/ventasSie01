@@ -432,7 +432,7 @@
 							</div>
 						</li>
 						@endcan
-						@can('Administracion_Sidebar')
+					
 						<li class="nav-item">
 							<a data-toggle="collapse" href="#tables">
 								<img src="assets/img/administracion.png" width="25" height="35" alt="navbar brand" class="navbar-brand">
@@ -521,7 +521,7 @@
 								</ul>
 							</div>
 						</li>
-						@endcan
+						
 
 						
 						

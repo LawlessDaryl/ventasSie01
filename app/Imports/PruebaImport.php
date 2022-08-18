@@ -94,6 +94,7 @@ class PruebaImport implements ToCollection,WithHeadingRow,WithBatchInserts,WithC
                     $detail->industria= $row['industria'];
                     $detail->caracteristicas= $row['caracteristica'];
                     $detail->precio_venta= $row['precioventa'];
+                    
                     if ($row['subcategoria'] != 'No definido') {
                         $detail->category_id =$this->categories[$row['subcategoria']];
                     }

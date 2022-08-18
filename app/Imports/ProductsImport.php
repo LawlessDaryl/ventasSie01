@@ -74,7 +74,7 @@ class ProductsImport implements ToModel,WithHeadingRow,WithBatchInserts,WithChun
     public function customValidationMessages()
 {
     return [
-        'nombre.unique' => 'productos existentes, revise su archivo por favor.',
+        'nombre.unique' => 'El nombre del producto ya existe, revise su archivo por favor  :attribute',
     ];
 }
 

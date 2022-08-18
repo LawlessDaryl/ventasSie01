@@ -22,7 +22,7 @@ class ProductsController extends Component
     public $nombre, $costo, $precio_venta,$cantidad_minima,$name,$descripcion,
     $codigo,$lote,$unidad,$industria,$caracteristicas,$status,$categoryid=null, $search,$estado,
      $image, $selected_id, $pageTitle, $componentName,$cate,$marca,$garantia,$stock,$stock_v
-     ,$selected_categoria,$selected_sub,$nro=1,$sub,$change=[],$estados,$searchData=[],$data2,$archivo;
+     ,$selected_categoria,$selected_sub,$nro=1,$sub,$change=[],$estados,$searchData=[],$data2,$archivo,$failures;
 
     private $pagination = 100;
     public $selected_id2;
@@ -309,7 +309,7 @@ class ProductsController extends Component
         if ($this->image) {
             //dd($this->image);
             $customFileName = uniqid() . '_.' . $this->image->extension();
-            $this->image->storeAs('public/products', $customFileName);
+            $this->image->storeAs('public/productos/', $customFileName);
            // dd("sd");
             $imageTemp = $product->image;
             $product->image = $customFileName;
@@ -423,11 +423,24 @@ class ProductsController extends Component
         //$file = $request->file('import_file');
        // dd($this->archivo);
 
+       try {
+        //$import->import('import-users.xlsx');
         Excel::import(new ProductsImport,$this->archivo);
+        return redirect()->route('productos');
+    } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+         $this->failures = $e->failures();
+        // dd($this->failures);
+        //  foreach ($failures as $failure) {
+        //      dd($failure->attribute()); // row that went wrong
+        //      $failure->attribute(); // either heading key (if using heading row concern) or column index
+        //      $failure->errors(); // Actual error messages from Laravel validator
+        //      $failure->values(); // The values of the row that has failed.
+        //  }
+    }
+
 
      
        //dd($errors->all());
-       return redirect()->route('productos');
     }
 
 }

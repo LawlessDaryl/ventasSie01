@@ -14,11 +14,13 @@
                 <div class="card-header">Importar productos</div>
 
                 <div class="card-body">
-                    @if (isset($errors) && $errors->any())
+                    @if ($failures)
                     <div class="alert alert-danger" role="alert">
-                        @foreach ($errors->all() as $error)
-                        {{$error}}
+                        @foreach ($failures as $failure)
+                        @foreach ($failure->errors() as $error)
+                            <li>{{ $error }}</li>
                         @endforeach
+                     @endforeach
                     </div>
                     @endif
 
