@@ -525,17 +525,11 @@ class MercanciaController extends Component
                     if ($this->dataconcepto == "INICIAL" and $this->registro == 'Documento') {
                         try {
                             //$import->import('import-users.xlsx');
-                            Excel::import(new StockImport,$this->archivo);
+                            Excel::import(new StockImport($this->destinosucursal,$this->dataconcepto,$this->observacion),$this->archivo);
                             return redirect()->route('productos');
                         } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
                              $this->failures = $e->failures();
-                            // dd($this->failures);
-                            //  foreach ($failures as $failure) {
-                            //      dd($failure->attribute()); // row that went wrong
-                            //      $failure->attribute(); // either heading key (if using heading row concern) or column index
-                            //      $failure->errors(); // Actual error messages from Laravel validator
-                            //      $failure->values(); // The values of the row that has failed.
-                            //  }
+                           
                         }
                     }
                     else {
