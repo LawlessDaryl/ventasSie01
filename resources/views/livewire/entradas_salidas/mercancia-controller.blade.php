@@ -72,7 +72,7 @@
 
     {{--tabla que muestra todas las compras--}}
 
-                <div class="row">
+                {{-- <div class="row">
                     <div class="col-lg-12">
                         <div class="widget-content">
                             <div class="table-responsive">
@@ -125,7 +125,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
 
                 <div class="row">

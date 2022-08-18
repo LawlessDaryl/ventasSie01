@@ -45,14 +45,7 @@ class MercanciaController extends Component
     }
     public function render()
     {
-        $op_inv = IngresoSalida::join('detalle_operacions','detalle_operacions.id_operacion','ingreso_salidas.id')
-        ->join('destinos','destinos.id','ingreso_salidas.destino')
-        ->join('sucursals','sucursals.id','destinos.sucursal_id')
-        ->join('users','users.id','ingreso_salidas.user_id')
-        ->select('ingreso_salidas.*','detalle_operacions.*','destinos.nombre as destino_nombre','sucursals.name as suc_name','users.name as userop')->take(5)->get();
-
-       
-
+        
         $ingprod= IngresoProductos::with(['detalleingreso'])->take(5)->get();
         //dd($ingprod);
         $salprod=SalidaProductos::with(['detallesalida']);
@@ -80,7 +73,7 @@ class MercanciaController extends Component
        ->select ('suc.name as sucursal','destinos.nombre as destino','destinos.id as destino_id')
        ->get();
 
-        return view('livewire.entradas_salidas.mercancia-controller',['operaciones'=>$op_inv,'destinosp'=>$destinosuc,'ingprod'=>$ingprod])
+        return view('livewire.entradas_salidas.mercancia-controller',['destinosp'=>$destinosuc,'ingprod'=>$ingprod])
         ->extends('layouts.theme.app')
         ->section('content');
     }
@@ -643,19 +636,13 @@ class MercanciaController extends Component
                     }
 
 
-                    $this->emit('product-added');
+                   
 
-
-
-
-
-
-
-
-
-                    
+   
                 }
             }
+
+            $this->emit('product-added');
            
     }
 

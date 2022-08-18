@@ -48,7 +48,6 @@
     
             @endif
      </td>
-  
              </tr>
             </tbody>
             </table>
@@ -58,7 +57,9 @@
   <div class="m-2">
     <nav>
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
+
           <a class="nav-link active show" wire:click="$set('toogle', '1')" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab">Ajuste de Inventarios</a>
+
           <a class="nav-link" wire:click="$set('toogle', '2')" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab">Entradas y Salida de Productos</a>
           <a class="nav-link" wire:click="$set('toogle', '3')" id="nav-mobiliario-tab" data-toggle="tab" href="#nav-mobiliario" role="tab">Asignar Mobiliario</a>
         </div>
@@ -162,7 +163,7 @@
        
       </div>
 </div>
-  {{-- ------------------------------ --}}
+  {{----------------------------------}}
            
                 
 

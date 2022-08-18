@@ -156,13 +156,9 @@
 											Arqueos Tigo</a>
 										</li>
 									@endcan
-									@can('Reportes_Tigo_Index')
-										<li>
-											<a href="{{ url('reportestigo') }}">
-												<i class="fa fas fa-minus"></i>
-											Reportes Tigo</a>
-										</li>
-									@endcan
+									
+								
+
 									<li>
 										<a href="{{ url('movimientos') }}">
 											<i class="fa fas fa-minus"></i>
@@ -545,11 +541,11 @@
 											<i class="fa fas fa-minus"></i>
 											Productos </a>
 									</li>
-									<li>
+									{{-- <li>
 										<a href="{{url('transacciones')}}">
 											<i class="fa fas fa-minus"></i>
 											Devolucion en Compras </a>
-									</li>
+									</li> --}}
 									<li>
 										<a href="{{url('proveedores')}}">
 											<i class="fa fas fa-minus"></i>
