@@ -10,11 +10,8 @@
                     <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
                     data-target="#operacion">Registrar Operacion</a>
 
-                    <a href="javascript:void(0)" class="btn btn-dark" wire:click="Traspaso()">Config Inv</a>
-                    <a href="javascript:void(0)" class="btn btn-dark" wire:click="TraspasoSalida()">Config salida</a>
-                    <a href="javascript:void(0)" class="btn btn-dark" wire:click="CrearLotes()">Crear Lotes</a>
-                    <a href="javascript:void(0)" class="btn btn-dark" wire:click="Ventas()">Ventas</a>
-                    <a href="javascript:void(0)" class="btn btn-dark" wire:click="BuscarProducto()">Buscar Producto ingresado</a>
+                
+                 
                     {{-- <a href="javascript:void(0)"
                      wire:click="Incrementar()"
                         class="btn btn-warning"

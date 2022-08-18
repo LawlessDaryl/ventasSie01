@@ -52,27 +52,37 @@
                             <select wire:model='destinosucursal' class="form-control">
                                 <option value="Elegir">Elegir</option>
                                 @foreach ($destinosp as $item)
-                                <option value="{{$item->id}}">{{$item->sucursal}}-{{$item->destino}}</option>
+                                <option value="{{$item->destino_id}}">{{$item->sucursal}}-{{$item->destino}}</option>
                                 @endforeach
                             </select>
-                            @error('destino')
+                            @error('destinosucursal')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror                                          
                         </div>
                         <div class="form-group">
                             <strong style="color: rgb(74, 74, 74)">Seleccione el concepto:</strong>
-                            <select wire:model='concepto' class="form-control">
-                                <option value="obsequio" selected>Ingreso/Salida de productos</option>
-                                <option value="ajuste" selected>Ingreso/Salida por ajuste de inventarios</option>
-                                <option value="Inventario Inicial">Inventario Inicial</option>
+                            <select wire:model='dataconcepto' class="form-control">
+                                @if ($tipo_proceso == 'Entrada')
+                                <option wire:key="foo" value='INGRESO'>Ingreso/Salida de productos</option>
+                                <option wire:key="bar" value="AJUSTE">Ingreso/Salida por ajuste de inventarios</option>
+                                @else
+                                <option wire:key="gj" value="SALIDA">Ingreso/Salida de productos</option>
+                                <option wire:key="kl" value="AJUSTE">Ingreso/Salida por ajuste de inventarios</option>
+                                @endif
+
+                               
+                                @if ($tipo_proceso== 'Entrada')
+                                    
+                                <option value="INICIAL">Inventario Inicial</option>
+                                @endif
                               
                                 
                             </select>
-                            @error('concepto')
+                            @error('concept')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror                                        
                         </div>
-                        <div class="form-group">
+                        <div class="form-group col-lg-6">
                             <strong style="color: rgb(74, 74, 74)">Agregue una observacion:</strong>
                             <input type="text" class="form-control" wire:model='observacion'>
                            
@@ -80,10 +90,19 @@
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror                                        
                         </div>
+                        <div class="form-group col-lg-6">
+                            <strong style="color: rgb(74, 74, 74)">Tipo de registro</strong>
+                            <select wire:model='registro' class="form-control">
+                                <option value="Manual" selected>Registrar Manualmente</option>
+                                <option value="Documento">Subir Archivo</option>
+                            </select>
+                        </div>
                     </div>
                    
                 </div>
 
+                @if ($registro == 'Manual')
+                    
                 <div class="row">
 
                     <div class="col-sm-12 col-md-6">
@@ -184,6 +203,16 @@
                         
                     </div>
                 </div>
+                @else
+                <form wire:submit.prevent="import('{{$archivo}}')" method="POST" enctype="multipart/form-data">
+                    @csrf
+
+                    {{$archivo}}
+                    <input type="file" name="import_file" wire:model="archivo" />
+
+                    <button class="btn btn-primary" type="submit" >Importar</button>
+                </form>
+                @endif
 
                 <div class="row">
                     <div class="col-lg-12">
@@ -230,6 +259,13 @@
                             
                        
                         @endif
+
+                        <div class="col-sm-12 col-md-3 col-lg-12 mt-3">
+                            <div class="row d-flex justify-content-center">
+        
+                                <a href="javascript:void(0)" class="btn btn-warning" wire:click.prevent="GuardarOperacion()"> <i class="fas fa-check"></i> Guardar</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

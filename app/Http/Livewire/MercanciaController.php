@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Imports\StockImport;
 use App\Models\CompraDetalle;
 use App\Models\Destino;
 use App\Models\DetalleEntradaProductos;
@@ -14,6 +15,7 @@ use App\Models\Product;
 use App\Models\ProductosDestino;
 use App\Models\SaleDetail;
 use App\Models\SaleLote;
+use App\Models\SalidaLote;
 use App\Models\SalidaProductos;
 use Livewire\Component;
 use Carbon\Carbon;
@@ -21,20 +23,24 @@ use Illuminate\Support\Facades\DB;
 use Exception;
 use Illuminate\Database\Console\Migrations\StatusCommand;
 use Illuminate\Session\ExistenceAwareInterface;
+use Maatwebsite\Excel\Facades\Excel;
 
 class MercanciaController extends Component
 {
 
-    public  $fecha,$buscarproducto=0,$selected,$searchproduct,$costo,$sm,$concepto,$destino,$tipo_proceso,$col,$destinosucursal,$observacion,$cantidad,$result;
+    public  $fecha,$buscarproducto=0,$selected,$registro
+    ,$archivo,$searchproduct,$costo,$sm,$dataconcepto,$destino,$tipo_proceso,$col,$destinosucursal,$observacion,$cantidad,$result,$arr;
 
     public function mount(){
         $this->col=collect([]);
         $this->tipo_proceso= "Entrada";
+        $this->registro='Manual';
+        $this->dataconcepto='INGRESO';
        // $this->borrarLotes();
        //$this->ajustarLotes();
        //$this->productosajustados();
-      $this->limpiarstock();
-     $this->inactivarlotes();
+      //$this->limpiarstock();
+     //$this->inactivarlotes();
 
     }
     public function render()
@@ -54,10 +60,15 @@ class MercanciaController extends Component
        if (strlen($this->searchproduct) > 0) 
        {
 
-         $this->sm = Product::select('products.*')
+         $st = Product::select('products.*')
           ->where('products.nombre','like', '%' . $this->searchproduct . '%')
           ->orWhere('products.codigo', 'like', '%' . $this->searchproduct . '%')
           ->get()->take(3);
+
+          $arr= $this->col->pluck('product-name');
+          $this->sm=$st->whereNotIn('nombre',$arr);
+          //dd($this->sm);
+
           $this->buscarproducto=1;
           
        }
@@ -366,7 +377,7 @@ class MercanciaController extends Component
 
     public function BuscarProducto()
     {
-//obtengo la cantidad total de todos los productos que se ingresaron despues del ajuste a cada sucursal
+        //obtengo la cantidad total de todos los productos que se ingresaron despues del ajuste a cada sucursal
         $v3=IngresoSalida::join('detalle_operacions','detalle_operacions.id_operacion','ingreso_salidas.id')->join('products', 'products.id','detalle_operacions.product_id')
         ->where('proceso','Entrada')->groupBy('detalle_operacions.product_id')->selectRaw('sum(cantidad) as sum, detalle_operacions.product_id,products.costo')->get();
     
@@ -480,6 +491,179 @@ class MercanciaController extends Component
         }
     }
     
+    public function import($archivo){
+        
+        //$file = $request->file('import_file');
+       // dd($this->archivo);
+
+       try {
+        //$import->import('import-users.xlsx');
+       // Excel::import(new StockImport,$this->archivo);
+        return redirect()->route('productos');
+    } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+         $this->failures = $e->failures();
+        // dd($this->failures);
+        //  foreach ($failures as $failure) {
+        //      dd($failure->attribute()); // row that went wrong
+        //      $failure->attribute(); // either heading key (if using heading row concern) or column index
+        //      $failure->errors(); // Actual error messages from Laravel validator
+        //      $failure->values(); // The values of the row that has failed.
+        //  }
+    }
+
+
+     
+       //dd($errors->all());
+    }
+
+    public function GuardarOperacion(){
+            //dd($this->col);
+
+            foreach ($this->col as $datas) {
+                if ($this->tipo_proceso == 'Entrada') {
+
+                    if ($this->dataconcepto == "INICIAL" and $this->registro == 'Documento') {
+                        try {
+                            //$import->import('import-users.xlsx');
+                            Excel::import(new StockImport,$this->archivo);
+                            return redirect()->route('productos');
+                        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+                             $this->failures = $e->failures();
+                            // dd($this->failures);
+                            //  foreach ($failures as $failure) {
+                            //      dd($failure->attribute()); // row that went wrong
+                            //      $failure->attribute(); // either heading key (if using heading row concern) or column index
+                            //      $failure->errors(); // Actual error messages from Laravel validator
+                            //      $failure->values(); // The values of the row that has failed.
+                            //  }
+                        }
+                    }
+                    else {
+                        DB::beginTransaction();
+                        try {
+                            $rs=IngresoProductos::create([
+                                'destino'=>$this->destinosucursal,
+                                'user_id'=>Auth()->user()->id,
+                                'concepto'=>$this->dataconcepto,
+                                'observacion'=>$this->observacion
+                               ]);
+            
+                               $lot= Lote::create([
+                                'existencia'=>$datas['cantidad'],
+                                'costo'=>$datas['costo'],
+                                'status'=>'Activo',
+                                'product_id'=>$datas['product_id']
+                            ]);
+            
+                               DetalleEntradaProductos::create([
+                                    'product_id'=>$datas['product_id'],
+                                    'cantidad'=>$datas['cantidad'],
+                                    'costo'=>$datas['costo'],
+                                    'id_entrada'=>$rs->id,
+                                    'lote_id'=>$lot->id
+                               ]);
+            
+        
+        
+        
+                              
+                        DB::commit();
+                        }
+                         catch (Exception $e)
+                        {
+                        DB::rollback();
+                        dd($e->getMessage());
+                        }
+                    }
+
+                   
+    
+                    
+                }
+                else{
+                      
+
+                    try {
+
+                       $auxi= SalidaProductos::create([
+                            'destino'=>$this->destinosucursal,
+                            'user_id'=>Auth()->user()->id,
+                            'concepto'=>$this->dataconcepto,
+                            'observacion'=>$this->observacion
+                        ]);
+                   
+        
+                            $lot=Lote::where('product_id',$datas['product_id'])->where('status','Activo')->get();
+        
+                             //obtener la cantidad del detalle de la venta 
+                            $qq=$datas['cantidad'];//q=8
+        
+                            foreach ($lot as $val) { //lote1= 3 Lote2=3 Lote3=3
+                               
+                                if($qq>0){            //true//5//2
+                                    
+                                    if ($qq > $val->existencia) {
+        
+                                        $ss=SalidaLote::create([
+                                            'salida_detalle_id'=>$auxi->id,
+                                            'lote_id'=>$val->id,
+                                            'cantidad'=>$val->existencia
+                                            
+                                        ]);
+                              
+          
+                                        $val->update([
+                                            
+                                            'existencia'=>0,
+                                            'status'=>'Inactivo'
+            
+                                        ]);
+                                        $val->save();
+                                        $qq=$qq-$val->existencia;
+                                    }
+                                    else{
+                                        $dd=SaleLote::create([
+                                            'sale_detail_id'=>$auxi->id,
+                                            'lote_id'=>$val->id,
+                                            'cantidad'=>$qq
+                                        ]);
+                                      
+           
+            
+                                        $val->update([ 
+                                            'existencia'=>$val->existencia-$qq
+                                        ]);
+                                        $val->save();
+                                      
+                                    }    
+                                }
+                            }
+                        
+             
+                        DB::commit();
+                    }
+                     catch (Exception $e)
+                    {
+                    DB::rollback();
+                    dd($e->getMessage());
+                    }
+
+
+                    $this->emit('product-added');
+
+
+
+
+
+
+
+
+
+                    
+                }
+            }
+           
+    }
 
     
 }

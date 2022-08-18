@@ -27,21 +27,33 @@ class ProductsImport implements ToModel,WithHeadingRow,WithBatchInserts,WithChun
     */
     public function model(array $row)
     {
-        return new Product([
-            'nombre'=>preg_replace('/\s+/', ' ',trim($row['nombre'])),
-            'costo'=>preg_replace('/\s+/', ' ',trim($row['costo'])),
-            'caracteristicas'=>preg_replace('/\s+/', ' ',trim($row['caracteristicas'])),
-            'codigo'=>preg_replace('/\s+/', ' ',trim($row['codigo'])),
-            'lote'=>preg_replace('/\s+/', ' ',trim($row['lote'])),
-            'unidad'=>preg_replace('/\s+/', ' ',trim($row['unidad'])),
-            'marca'=>preg_replace('/\s+/', ' ',trim($row['marca'])),
-            'garantia'=>preg_replace('/\s+/', ' ',trim($row['garantia'])),
-            'cantidad_minima'=>preg_replace('/\s+/', ' ',trim($row['cantidad_minima'])),
-            'industria'=>preg_replace('/\s+/', ' ',trim($row['industria'])),
-            'precio_venta'=>preg_replace('/\s+/', ' ',trim($row['precio_venta'])),
-            'status'=>preg_replace('/\s+/', ' ',trim($row['status'])),
-            'category_id'=>$this->categories[$row['categoria']]
-        ]);
+      
+        $product = new Product();
+        $product->nombre = preg_replace('/\s+/', ' ',trim($row['nombre']));
+        $product->costo = preg_replace('/\s+/', ' ',trim($row['costo']));
+        $product->caracteristicas = preg_replace('/\s+/', ' ',trim($row['caracteristicas']));
+        $product->codigo = preg_replace('/\s+/', ' ',trim($row['codigo']));
+        $product->lote = preg_replace('/\s+/', ' ',trim($row['lote']));
+        $product->unidad = preg_replace('/\s+/', ' ',trim($row['unidad']));
+        $product->marca = preg_replace('/\s+/', ' ',trim($row['marca']));
+        $product->garantia = preg_replace('/\s+/', ' ',trim($row['garantia']));
+        $product->cantidad_minima = preg_replace('/\s+/', ' ',trim($row['cantidad_minima']));
+        $product->industria = preg_replace('/\s+/', ' ',trim($row['industria']));
+        $product->precio_venta = preg_replace('/\s+/', ' ',trim($row['precio_venta']));
+        $product->status = preg_replace('/\s+/', ' ',trim($row['status']));
+        if ($row['categoria'] == null) 
+        {
+            $product->category_id =$this->categories['No definido'];
+        }
+        else
+        {
+            $product->category_id = $this->categories[$row['categoria']];
+        }
+        $product->save();
+
+      
+
+
 
 
     }

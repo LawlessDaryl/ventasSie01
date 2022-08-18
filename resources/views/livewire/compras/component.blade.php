@@ -8,8 +8,8 @@
                 </h4>
                 <ul class="row justify-content-end">
                         <a href="detalle_compras" class="btn btn-dark m-1" >Registrar Compra</a>
-                        <a href="{{ url('reporteCompras/pdf' . '/' . $filtro . '/' . $fecha .'/'
-                        . $from. '/' . $to . '/' .$search)}}" class="btn btn-warning m-1" >Imprimir</a>
+                        {{-- <a href="{{ url('reporteCompras/pdf' . '/' . $filtro . '/' . $fecha .'/'
+                        . $from. '/' . $to . '/' .$search)}}" class="btn btn-warning m-1" >Imprimir</a> --}}
                 </ul>
                
             </div>

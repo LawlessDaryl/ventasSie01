@@ -8,6 +8,7 @@ use App\Models\Destino;
 use App\Http\Livewire\ProvidersController as Prov;
 use App\Http\Livewire\ProductsController as Products;
 use App\Models\Category;
+use App\Models\Lote;
 use App\Models\Marca;
 use App\Models\Movimiento;
 use App\Models\MovimientoCompra;
@@ -192,7 +193,6 @@ class DetalleComprasController extends Component
 
 
     public function Store(){
-        
         $prod = new Products;
         $prod->selected_id2=$this->selected_id2;
         $prod->nombre= $this->nombre;
@@ -436,14 +436,14 @@ class DetalleComprasController extends Component
         $rules = [
             'provider'=>'required|exists:providers,nombre_prov',
             'destino'=>'required|not_in:Elegir',
-            'lote_compra'=>'required'
+          
         ];
         $messages = [
             'provider.required' => 'El nombre del proveedor es requerido.',
             'provider.exists' => 'El proveedor es inexistente.',
             'destino.required'=>'Elige un destino',
             'destino.not_in'=>'Elija un destino del producto',
-            'lote_compra.required'=>'El lote de compra es requerido'
+           
         ];
 
         $this->validate($rules, $messages);
@@ -534,6 +534,16 @@ if ($this->validateCarrito()) {
             }
             else{
                 foreach ($items as $item) {
+
+
+                    $lot= Lote::create([
+                        'existencia'=>$item->quantity,
+                        'costo'=>$item->price,
+                        'status'=>'Activo',
+                        'product_id'=>$item->id
+                    ]);
+
+
                     CompraDetalle::create([
                         'precio' => $item->price,
                         'cantidad' => $item->quantity,

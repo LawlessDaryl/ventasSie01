@@ -215,7 +215,7 @@ class DestinoProductoController extends Component
 
         $this->productoajuste=$prod->nombre;
         $this->productid=$prod->id;
-        $this->productstock=ProductosDestino::where('productos_destinos.product_id',$prod->id)->where('productos_destinos.destino_id',$this->selected_id)->value('stock');
+       $this->productstock=ProductosDestino::where('productos_destinos.product_id',$prod->id)->where('productos_destinos.destino_id',$this->selected_id)->value('stock');
 
         $this->mop_prod = LocationProducto::where('location_productos.product',$this->productid)->get();
 

@@ -150,7 +150,7 @@
    
 
     <div class="col-sm-12 col-md-8">
-        <div class="form-group custom-file">
+        <div class="form-group custom-file mt-4 p-1">
             <input type="file" class="custom-file-input form-control" wire:model="image"
                 accept="image/x-png,image/gif,image/jpeg">
             <label class="custom-file-label">Imagen{{ $image }}</label>
