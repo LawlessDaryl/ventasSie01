@@ -30,14 +30,14 @@ class CarteraSeeder extends Seeder
         //     'caja_id' => '1',
         // ]);
 
-        // /* CAJA PRINCIPAL */
-        // Cartera::create([
-        //     'nombre' => 'Sistema 75006327',
-        //     'descripcion' => 'Sistema tigo Money',
-        //     'tipo' => 'Sistema',
-        //     'telefonoNum' => 75006327,
-        //     'caja_id' => '2',
-        // ]);
+        /* CAJA PRINCIPAL */
+        Cartera::create([
+            'nombre' => 'Sistema 75006327',
+            'descripcion' => 'Sistema Tigo Money',
+            'tipo' => 'Sistema',
+            'telefonoNum' => 75006327,
+            'caja_id' => '2',
+        ]);
         Cartera::create([
             'nombre' => 'Banco',
             'descripcion' => 'Cuenta Bancaria',
@@ -46,19 +46,19 @@ class CarteraSeeder extends Seeder
             'caja_id' => '1',
         ]);
         Cartera::create([
-            'nombre' => 'Dinero Físico',
+            'nombre' => 'Caja Física',
             'descripcion' => 'Dinero en Efectivo',
             'tipo' => 'CajaFisica',
             'telefonoNum' => null,
             'caja_id' => '2',
         ]);
-        // Cartera::create([
-        //     'nombre' => 'Telefono 75997054',
-        //     'descripcion' => 'Telefono tigo money',
-        //     'tipo' => 'Telefono',
-        //     'telefonoNum' => 75997054,
-        //     'caja_id' => '2',
-        // ]);
+        Cartera::create([
+            'nombre' => 'Telefono 75997054',
+            'descripcion' => 'Telefono Tigo money',
+            'tipo' => 'Telefono',
+            'telefonoNum' => 75997054,
+            'caja_id' => '2',
+        ]);
 
         /* CAJA SECUNDARIA */
         // Cartera::create([

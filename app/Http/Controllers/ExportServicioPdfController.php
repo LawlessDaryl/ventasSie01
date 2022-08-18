@@ -8,6 +8,7 @@ use Barryvdh\DomPDF\Facade as PDF;
 use Carbon\Carbon;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use App\Models\Company;
 
 class ExportServicioPdfController extends Controller
 {
@@ -651,10 +652,11 @@ class ExportServicioPdfController extends Controller
                 }
             }
         } */
-
+        $nombreempresa = Company::find(1)->name;
+        $logoempresa = Company::find(1)->image;
 
         $user = $userId == 0 ? 'Todos' : User::find($userId)->name;
-        $pdf = PDF::loadView('livewire.pdf.reporteServicios', compact('data', 'reportType', 'user','estado', 'dateFrom', 'dateTo', 'sumaUtilidad','costoEntregado','userId'));
+        $pdf = PDF::loadView('livewire.pdf.reporteServicios', compact('data', 'reportType', 'user','estado', 'dateFrom', 'dateTo', 'sumaUtilidad','costoEntregado','userId','nombreempresa','logoempresa'));
 
         return $pdf->setPaper('letter', 'landscape')->stream('ServiciosReport.pdf');  //visualizar
         /* return $pdf->download('salesReport.pdf');  //descargar  */

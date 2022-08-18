@@ -15,12 +15,12 @@
         <table cellpadding="0" cellspacing="0" width="100%">
             <tr>
                 <td class="text-center" colspan="2">
-                    <span style="font-size: 25px; font-weight:bold;">Sistema SIE</span>
+                    <span style="font-size: 25px; font-weight:bold;">{{$nombreempresa}}</span>
                 </td>
             </tr>
             <tr>
                 <td width="30%" class="text-center" style="vertical-align: top; padding-top:10px; position:relative;">
-                    <img src="{{ asset('assets/img/sie.png') }}" alt="" class="invoice-logo">
+                    <img src="{{ asset('storage/icons/' . $logoempresa) }}" alt="" class="invoice-logo">
                 </td>
 
                 <td width="70%" class="text-left text-company" style="vertical-align: top; padding-top:10px;">

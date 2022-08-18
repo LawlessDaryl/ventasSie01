@@ -12,6 +12,7 @@ use App\Models\SaleDetail;
 use App\Models\Transaccion;
 use App\Models\User;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Models\Company;
 
 
 class ExportTigoPdfController extends Controller
@@ -228,9 +229,10 @@ class ExportTigoPdfController extends Controller
         }
 
         $user = $userId == 0 ? 'Todos' : User::find($userId)->name;
+        $nombreempresa = Company::find(1)->name;
+        $logoempresa = Company::find(1)->image;
 
-
-        $pdf = PDF::loadView('livewire.pdf.reporteTigo', compact('data', 'reportType', 'origenfiltro', 'tipotr', 'user', 'dateFrom', 'dateTo', 'total'));
+        $pdf = PDF::loadView('livewire.pdf.reporteTigo', compact('data', 'reportType', 'origenfiltro', 'tipotr', 'user', 'dateFrom', 'dateTo', 'total','nombreempresa','logoempresa'));
 
         return $pdf->stream('TigoMoneyReport.pdf');  //visualizar
         /* return $pdf->download('salesReport.pdf');  //descargar  */
