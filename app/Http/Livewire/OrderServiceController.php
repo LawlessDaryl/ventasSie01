@@ -68,7 +68,7 @@ class OrderServiceController extends Component
     public $tipopago, $estadocaja;
 
     //Variables para editar un servicio terminado
-    public $edit_precioservicioterminado, $edit_acuentaservicioterminado, $edit_saldoterminado;
+    public $edit_precioservicioterminado, $edit_acuentaservicioterminado, $edit_saldoterminado, $edit_costoservicioterminado, $edit_motivoservicioterminado;
 
     //Variables para cambiar técnico responsable
     public $id_usuario, $tipo;
@@ -3741,6 +3741,9 @@ class OrderServiceController extends Component
         } 
 
 
+        $this->edit_costoservicioterminado = $detallesservicio->costo;
+        $this->edit_motivoservicioterminado = $detallesservicio->detallecosto;
+        
         $this->edit_precioservicioterminado = $detallesservicio->precioservicio;
         $this->edit_acuentaservicioterminado = $detallesservicio->acuenta;
         $this->edit_saldoterminado = $this->edit_precioservicioterminado - $this->edit_acuentaservicioterminado;
@@ -3813,6 +3816,15 @@ class OrderServiceController extends Component
             'on_account' => $this->edit_acuentaservicioterminado,
             'saldo' => $this->edit_saldoterminado,
         ]);
+
+
+        $idservicio = Service::find($this->id_servicio);
+        $idservicio->update([
+            'costo' => $this->edit_costoservicioterminado,
+            'detalle_costo' => $this->edit_motivoservicioterminado,
+        ]);
+
+
 
         $this->emit('show-editarservicioterminadoocultar', 'show modal!');
     }

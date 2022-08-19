@@ -69,6 +69,27 @@
                             </div>
                         </div>
                     </div>
+
+
+                    <br>
+                    
+
+                    <div class="form-row">
+                        <div class="form-row" style="width: 30%; margin-right: 7px;">
+                            <div class="col-md-12">
+                                <label for="validationTooltip01">Costo del Servicio Bs</label>
+                                <input type="number" wire:model.lazy="edit_costoservicioterminado" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-row" style="width: 67%; margin-right: 7px;">
+                            <div class="col-md-12">
+                                <label for="validationTooltip01">Motivo del Costo</label>
+                                <input type="text" wire:model.lazy="edit_motivoservicioterminado" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+
                   </form>
 
 
