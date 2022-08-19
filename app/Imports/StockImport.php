@@ -17,7 +17,7 @@ use Maatwebsite\Excel\Concerns\WithValidation;
 
 class StockImport implements ToModel,WithHeadingRow,WithBatchInserts,WithChunkReading,WithValidation
 {
-    private $products,$ingreso;
+    private $products,$ingreso,$destino,$concepto,$observacion;
     public function __construct($destino,$concepto,$observacion)
     {
         $this->products = Product::pluck('id', 'nombre');
@@ -27,6 +27,10 @@ class StockImport implements ToModel,WithHeadingRow,WithBatchInserts,WithChunkRe
             'concepto'=>$concepto,
             'observacion'=>$observacion
            ]);
+        $this->destino=$destino;
+        $this->concepto=$concepto;
+        $this->observacion=$observacion;
+
        
     }
     /**
@@ -72,11 +76,15 @@ class StockImport implements ToModel,WithHeadingRow,WithBatchInserts,WithChunkRe
     {
         return [             // Above is alias for as it always validates in batches
             '*.nombre' =>[
-                'distinct','required'
+                'required'
             ],
-            '*.descripcion' =>[
+            '*.stock' =>[
+                'required'
+            ],
+            '*.costo' =>[
                 'required'
             ]
+
             
 
         ];

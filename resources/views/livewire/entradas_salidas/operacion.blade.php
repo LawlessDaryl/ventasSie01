@@ -94,7 +94,9 @@
                             <strong style="color: rgb(74, 74, 74)">Tipo de registro</strong>
                             <select wire:model='registro' class="form-control">
                                 <option value="Manual" selected>Registrar Manualmente</option>
+                                @if ($dataconcepto == 'INICIAL')    
                                 <option value="Documento">Subir Archivo</option>
+                                @endif
                             </select>
                         </div>
                     </div>
@@ -263,7 +265,8 @@
                         <div class="col-sm-12 col-md-3 col-lg-12 mt-3">
                             <div class="row d-flex justify-content-center">
         
-                                <a href="javascript:void(0)" class="btn btn-warning" wire:click.prevent="GuardarOperacion()"> <i class="fas fa-check"></i> Guardar</a>
+                                <a href="javascript:void(0)" class="btn btn-warning mr-1" wire:click.prevent="GuardarOperacion()"> <i class="fas fa-check"></i> Guardar</a>
+                                <a class="btn btn-dark ml-1 text-white" wire:click="Exit()"> <i class="fa-solid fa-xmark"></i> <b class="p-1">  X  </b>  Cancelar</a>
                             </div>
                         </div>
                     </div>

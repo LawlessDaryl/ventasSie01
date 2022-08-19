@@ -23,11 +23,15 @@ use Illuminate\Support\Facades\DB;
 use Exception;
 use Illuminate\Database\Console\Migrations\StatusCommand;
 use Illuminate\Session\ExistenceAwareInterface;
+use Livewire\WithFileUploads;
+use Livewire\WithPagination;
 use Maatwebsite\Excel\Facades\Excel;
 
 class MercanciaController extends Component
 {
 
+    use WithPagination;
+    use WithFileUploads;
     public  $fecha,$buscarproducto=0,$selected,$registro
     ,$archivo,$searchproduct,$costo,$sm,$dataconcepto,$destino,$tipo_proceso,$col,$destinosucursal,$observacion,$cantidad,$result,$arr;
 
@@ -35,7 +39,7 @@ class MercanciaController extends Component
         $this->col=collect([]);
         $this->tipo_proceso= "Entrada";
         $this->registro='Manual';
-        $this->dataconcepto='INGRESO';
+        $this->dataconcepto="INGRESO";
        // $this->borrarLotes();
        //$this->ajustarLotes();
        //$this->productosajustados();
@@ -46,7 +50,7 @@ class MercanciaController extends Component
     public function render()
     {
         
-        $ingprod= IngresoProductos::with(['detalleingreso'])->take(5)->get();
+        $ingprod= IngresoProductos::with(['detalleingreso'])->orderBy('ingreso_productos.created_at','desc')->get();
         //dd($ingprod);
         $salprod=SalidaProductos::with(['detallesalida']);
 
@@ -109,6 +113,20 @@ class MercanciaController extends Component
     public function addProduct(Product $id){
         
         $this->col->push(['product_id'=> $id->id,'product-name'=>$id->nombre,'costo'=>$this->costo,'cantidad'=>$this->cantidad]);
+
+        $rules = [
+            'costo' => 'required',
+            'cantidad' => 'required',
+        ];
+
+        $messages = [
+            'costo.required' => 'El costo es requerido',
+            'cantidad.required' => 'La cantidad es requerida'
+        ];
+
+        $this->validate($rules, $messages);
+
+
         $this->result=null;
         $this->cantidad=null;
         $this->costo=null;
@@ -511,21 +529,36 @@ class MercanciaController extends Component
 
     public function GuardarOperacion(){
             //dd($this->col);
+            if ($this->dataconcepto === "INICIAL" && $this->registro === "Documento") {
+             
+                try {
+                    //$import->import('import-users.xlsx');
+                    Excel::import(new StockImport($this->destinosucursal,$this->dataconcepto,$this->observacion),$this->archivo);
+                    return redirect()->route('productos');
+                } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
 
+                     $this->failures = $e->failures();
+                     dump($this->failures);
+                   
+                }
+            }
             foreach ($this->col as $datas) {
                 if ($this->tipo_proceso == 'Entrada') {
 
-                    if ($this->dataconcepto == "INICIAL" and $this->registro == 'Documento') {
-                        try {
-                            //$import->import('import-users.xlsx');
-                            Excel::import(new StockImport($this->destinosucursal,$this->dataconcepto,$this->observacion),$this->archivo);
-                            return redirect()->route('productos');
-                        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
-                             $this->failures = $e->failures();
-                           
-                        }
-                    }
-                    else {
+                    $rules = [
+                        'observacion' => 'required',
+                        'destinosucursal' => 'not_in:Elegir',
+                    ];
+            
+                    $messages = [
+                        'observacion.required' => 'Agregue una observacion',
+                        'destinosucursal.not_in' => 'Elija el destino de la mercaderia'
+                    ];
+            
+                    $this->validate($rules, $messages);
+
+                    
+                 
                         DB::beginTransaction();
                         try {
                             $rs=IngresoProductos::create([
@@ -566,7 +599,7 @@ class MercanciaController extends Component
                         DB::rollback();
                         dd($e->getMessage());
                         }
-                    }
+                    
 
                    
     
@@ -641,29 +674,38 @@ class MercanciaController extends Component
                     }
 
 
-<<<<<<< HEAD
-
-
-
-
-
-
-
-
-=======
-                   
->>>>>>> 8ed1edeeafe2e47e1849125b9ec0171b200eec4f
-
    
                 }
             }
 
-<<<<<<< HEAD
-            
-=======
->>>>>>> 8ed1edeeafe2e47e1849125b9ec0171b200eec4f
+
             $this->emit('product-added');
-           
+            $this->resetui();
+    }
+
+    public function resetui(){
+        $this->tipo_proceso='Entrada';
+        $this->reset([
+        'archivo',
+        'costo',
+        'dataconcepto'
+        ,'destino'
+        ,'destinosucursal'
+        ,'observacion'
+        ,'cantidad']);
+
+
+        foreach ($this->col as $key => $value)
+        {
+            $this->col->pull($key);
+        }
+
+    }
+
+    public function Exit(){
+       // dd("S");
+        $this->resetui();
+        $this->emit('product-added');
     }
 
     

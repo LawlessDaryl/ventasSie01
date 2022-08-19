@@ -35,30 +35,21 @@ class IngresoEgresoController extends Component
     public function render()
     {
 
-    //     $inUsa = collect($hosts)
-    // ->where('location', 'USA')
-    // ->when(request('retired'), function($collection) {
-    //     return $collection->reject(function($employee){
-    //         return $employee['is_active'];
-    //     });
-    // });
-
+        $SucursalUsuario = User::join('sucursal_users as su', 'su.user_id', 'users.id')
+        ->join('sucursals as s', 's.id', 'su.sucursal_id')
+        ->where('users.id', Auth()->user()->id)
+        ->where('su.estado', 'ACTIVO')
+        ->select('s.*')
+        ->get()->first();
+    /* MOSTRAR CARTERAS DE LA CAJA EN LA QUE SE ENCUENTRA */
+        $carterasSucursal = Cartera::join('cajas as c', 'carteras.caja_id', 'c.id')
+        ->join('sucursals as s', 's.id', 'c.sucursal_id')
+        ->where('s.id', $SucursalUsuario->id)
+        ->select('carteras.id', 'carteras.nombre as carteraNombre', 'c.nombre as cajaNombre', 'carteras.tipo as tipo')->get();
 
         if ($this->search != null) 
         {
-            $SucursalUsuario = User::join('sucursal_users as su', 'su.user_id', 'users.id')
-            ->join('sucursals as s', 's.id', 'su.sucursal_id')
-            ->where('users.id', Auth()->user()->id)
-            ->where('su.estado', 'ACTIVO')
-            ->select('s.*')
-            ->get()->first();
-        /* MOSTRAR CARTERAS DE LA CAJA EN LA QUE SE ENCUENTRA */
-            $carterasSucursal = Cartera::join('cajas as c', 'carteras.caja_id', 'c.id')
-            ->join('sucursals as s', 's.id', 'c.sucursal_id')
-            ->where('s.id', $SucursalUsuario->id)
-            ->select('carteras.id', 'carteras.nombre as carteraNombre', 'c.nombre as cajaNombre', 'carteras.tipo as tipo')->get();
-    
-    
+           
             $this->data = Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')
             ->join('carteras as c', 'c.id', 'crms.cartera_id')
             ->join('cajas as ca', 'ca.id', 'c.caja_id')
@@ -81,24 +72,15 @@ class IngresoEgresoController extends Component
             ->whereBetween('movimientos.created_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
             ->where(function($querys){
                 $querys->where( 'crms.tipoDeMovimiento', 'like', '%' . $this->search . '%')
-                ->orWhere('u.name', 'like', '%' . $this->search .'%');
+                ->orWhere('u.name', 'like', '%' . $this->search .'%')
+                ->orWhere('crms.comentario','like','%' . $this->search . '%');
             })
             ->orderBy('movimientos.id', 'desc')
             ->get();
         
         }
         else{
-            $SucursalUsuario = User::join('sucursal_users as su', 'su.user_id', 'users.id')
-            ->join('sucursals as s', 's.id', 'su.sucursal_id')
-            ->where('users.id', Auth()->user()->id)
-            ->where('su.estado', 'ACTIVO')
-            ->select('s.*')
-            ->get()->first();
-        /* MOSTRAR CARTERAS DE LA CAJA EN LA QUE SE ENCUENTRA */
-            $carterasSucursal = Cartera::join('cajas as c', 'carteras.caja_id', 'c.id')
-            ->join('sucursals as s', 's.id', 'c.sucursal_id')
-            ->where('s.id', $SucursalUsuario->id)
-            ->select('carteras.id', 'carteras.nombre as carteraNombre', 'c.nombre as cajaNombre', 'carteras.tipo as tipo')->get();
+
     
     
             $this->data = Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')

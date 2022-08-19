@@ -34,7 +34,7 @@ use Spatie\Permission\Models\Role;
 class PosController extends Component
 {
     public $total, $itemsQuantity, $efectivo, $change, 
-    $nit, $clienteanonimo="true", $tipopago ,$anonimo, $factura,$lotecantidad, $observacion, $facturasino, $nombreproducto, $clienteseleccionado;
+    $nit, $clienteanonimo="true", $tipopago ,$anonimo, $factura,$qq,$lotecantidad, $observacion, $facturasino, $nombreproducto, $clienteseleccionado;
     public $razonsocial, $celular="",$tipodestino;
 
     //Variables para mover inventario a la tienda
@@ -981,12 +981,14 @@ class PosController extends Component
                     $lot=Lote::where('product_id',$item->id)->where('status','Activo')->get();
 
                     //obtener la cantidad del detalle de la venta 
-                    $qq=$item->quantity;//q=8
+                    $this->qq=$item->quantity;//q=8
                     foreach ($lot as $val) { //lote1= 3 Lote2=3 Lote3=3
-                      $this->lotecantidad=$val->existencia;
-                       if($qq>0){            //true//5//2
+                      $this->lotecantidad = $val->existencia;
+                      //dd($this->lotecantidad);
+                       if($this->qq>0){
+                        //true//5//2
                            //dd($val);
-                           if ($qq > $val->existencia) {
+                           if ($this->qq > $this->lotecantidad) {
         
                                $ss=SaleLote::create([
                                    'sale_detail_id'=>$sd->id,
@@ -1003,25 +1005,25 @@ class PosController extends Component
                                    
                                 ]);
                                 $val->save();
-                                $qq=$qq-$this->lotecantidad;
-                                dump($qq);
+                                $this->qq=$this->qq-$this->lotecantidad;
+                                //dump("dam",$this->qq);
                            }
                            else{
+                            //dd($this->lotecantidad);
                                $dd=SaleLote::create([
                                    'sale_detail_id'=>$sd->id,
                                    'lote_id'=>$val->id,
-                                   'cantidad'=>$qq
+                                   'cantidad'=>$this->qq
                                ]);
                              
         
                                $val->update([ 
-                                   'existencia'=>$val->existencia-$qq
+                                   'existencia'=>$this->lotecantidad-$this->qq
                                ]);
                                $val->save();
-                             
+                               $this->qq=0;
+                               //dd("yumi",$this->qq);
                            }
-        
-                        
                        }
                    }
 
