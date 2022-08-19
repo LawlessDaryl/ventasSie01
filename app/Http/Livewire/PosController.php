@@ -34,7 +34,7 @@ use Spatie\Permission\Models\Role;
 class PosController extends Component
 {
     public $total, $itemsQuantity, $efectivo, $change, 
-    $nit, $clienteanonimo="true", $tipopago ,$anonimo, $factura, $observacion, $facturasino, $nombreproducto, $clienteseleccionado;
+    $nit, $clienteanonimo="true", $tipopago ,$anonimo, $factura,$lotecantidad, $observacion, $facturasino, $nombreproducto, $clienteseleccionado;
     public $razonsocial, $celular="",$tipodestino;
 
     //Variables para mover inventario a la tienda
@@ -981,11 +981,11 @@ class PosController extends Component
                     $lot=Lote::where('product_id',$item->id)->where('status','Activo')->get();
 
                     //obtener la cantidad del detalle de la venta 
-                   $qq=$item->quantity;//q=8
-                   foreach ($lot as $val) { //lote1= 3 Lote2=3 Lote3=3
-                      
+                    $qq=$item->quantity;//q=8
+                    foreach ($lot as $val) { //lote1= 3 Lote2=3 Lote3=3
+                      $this->lotecantidad=$val->existencia;
                        if($qq>0){            //true//5//2
-                           
+                           //dd($val);
                            if ($qq > $val->existencia) {
         
                                $ss=SaleLote::create([
@@ -1000,10 +1000,11 @@ class PosController extends Component
                                    
                                    'existencia'=>0,
                                    'status'=>'Inactivo'
-        
-                               ]);
-                               $val->save();
-                               $qq=$qq-$val->existencia;
+                                   
+                                ]);
+                                $val->save();
+                                $qq=$qq-$this->lotecantidad;
+                                dump($qq);
                            }
                            else{
                                $dd=SaleLote::create([
@@ -1011,8 +1012,7 @@ class PosController extends Component
                                    'lote_id'=>$val->id,
                                    'cantidad'=>$qq
                                ]);
-                              
-        
+                             
         
                                $val->update([ 
                                    'existencia'=>$val->existencia-$qq

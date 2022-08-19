@@ -556,6 +556,11 @@ class MercanciaController extends Component
                                     'id_entrada'=>$rs->id,
                                     'lote_id'=>$lot->id
                                ]);
+
+                               $q=ProductosDestino::where('product_id',$datas['product_id'])
+                    ->where('destino_id',$this->destinosucursal)->value('stock');
+
+                    ProductosDestino::updateOrCreate(['product_id' => $datas['product_id'], 'destino_id'=>$this->destinosucursal],['stock'=>$q+$datas['cantidad']]);
             
         
         
@@ -643,7 +648,6 @@ class MercanciaController extends Component
                     }
 
 
-                    $this->emit('product-added');
 
 
 
@@ -656,6 +660,9 @@ class MercanciaController extends Component
                     
                 }
             }
+
+            
+            $this->emit('product-added');
            
     }
 
