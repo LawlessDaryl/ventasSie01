@@ -85,8 +85,6 @@ class StockImport implements ToModel,WithHeadingRow,WithBatchInserts,WithChunkRe
                 'required'
             ]
 
-            
-
         ];
     }
 

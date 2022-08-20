@@ -112,20 +112,20 @@ class MercanciaController extends Component
     
     public function addProduct(Product $id){
         
-        $this->col->push(['product_id'=> $id->id,'product-name'=>$id->nombre,'costo'=>$this->costo,'cantidad'=>$this->cantidad]);
-
+        
         $rules = [
             'costo' => 'required',
             'cantidad' => 'required',
         ];
-
+        
         $messages = [
             'costo.required' => 'El costo es requerido',
             'cantidad.required' => 'La cantidad es requerida'
         ];
-
+        
         $this->validate($rules, $messages);
-
+        
+        $this->col->push(['product_id'=> $id->id,'product-name'=>$id->nombre,'costo'=>$this->costo,'cantidad'=>$this->cantidad]);
 
         $this->result=null;
         $this->cantidad=null;
@@ -542,21 +542,22 @@ class MercanciaController extends Component
                    
                 }
             }
+            $rules = [
+                'observacion' => 'required',
+                'destinosucursal' => 'not_in:Elegir',
+            ];
+    
+            $messages = [
+                'observacion.required' => 'Agregue una observacion',
+                'destinosucursal.not_in' => 'Elija el destino de la mercaderia'
+            ];
+    
+            $this->validate($rules, $messages);
+
             foreach ($this->col as $datas) {
                 if ($this->tipo_proceso == 'Entrada') {
 
-                    $rules = [
-                        'observacion' => 'required',
-                        'destinosucursal' => 'not_in:Elegir',
-                    ];
-            
-                    $messages = [
-                        'observacion.required' => 'Agregue una observacion',
-                        'destinosucursal.not_in' => 'Elija el destino de la mercaderia'
-                    ];
-            
-                    $this->validate($rules, $messages);
-
+                   
                     
                  
                         DB::beginTransaction();

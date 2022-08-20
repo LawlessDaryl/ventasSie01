@@ -178,7 +178,9 @@
                                 <h6>Cantidad</h6>
                             </label>
                             <input wire:model="cantidad" class="form-control">
-                            
+                            @error('cantidad')
+                            <span class="text-danger er">{{ $message }}</span>
+                        @enderror   
                         </div>
                     </div>
                     @if ($tipo_proceso == 'Entrada')
@@ -189,7 +191,9 @@
                                 <h6>Costo/Valor</h6>
                             </label>
                             <input wire:model="costo" class="form-control">
-                            
+                            @error('costo')
+                            <span class="text-danger er">{{ $message }}</span>
+                        @enderror     
                         </div>
                     </div>
                     @endif
