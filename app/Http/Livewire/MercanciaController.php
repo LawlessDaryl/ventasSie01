@@ -33,7 +33,7 @@ class MercanciaController extends Component
     use WithPagination;
     use WithFileUploads;
     public  $fecha,$buscarproducto=0,$selected,$registro
-    ,$archivo,$searchproduct,$costo,$sm,$dataconcepto,$destino,$tipo_proceso,$col,$destinosucursal,$observacion,$cantidad,$result,$arr;
+    ,$archivo,$searchproduct,$costo,$sm,$dataconcepto,$destino,$detalle,$tipo_proceso,$col,$destinosucursal,$observacion,$cantidad,$result,$arr;
 
     public function mount(){
         $this->col=collect([]);
@@ -610,59 +610,74 @@ class MercanciaController extends Component
 
                     try {
 
-                       $auxi= SalidaProductos::create([
+
+                        $operacion= SalidaProductos::create([
+            
                             'destino'=>$this->destinosucursal,
-                            'user_id'=>Auth()->user()->id,
+                            'user_id'=> Auth()->user()->id,
                             'concepto'=>$this->dataconcepto,
-                            'observacion'=>$this->observacion
+                            'observacion'=>$this->observacion]);
+                            // dd($auxi2->pluck('stock')[0]);
+                            $auxi=DetalleSalidaProductos::create([
+                            'product_id'=>$datas['product_id'],
+                            'cantidad'=> $datas['cantidad'],
+                            'id_salida'=>$operacion->id
                         ]);
-                   
+
+
+                        $lot=Lote::where('product_id',$datas['product_id'])->where('status','Activo')->get();
+
+                        //obtener la cantidad del detalle de la venta 
+                        $this->qq=$datas['cantidad'];//q=8
+                        foreach ($lot as $val) { //lote1= 3 Lote2=3 Lote3=3
+                          $this->lotecantidad = $val->existencia;
+                          //dd($this->lotecantidad);
+                           if($this->qq>0){
+                            //true//5//2
+                               //dd($val);
+                               if ($this->qq > $this->lotecantidad) {
+                                   $ss=SalidaLote::create([
+                                       'salida_detalle_id'=>$auxi->id,
+                                       'lote_id'=>$val->id,
+                                       'cantidad'=>$val->existencia
+                                       
+                                   ]);
+                                  
+               
+                                   $val->update([
+                                       
+                                       'existencia'=>0,
+                                       'status'=>'Inactivo'
+                                       
+                                    ]);
+                                    $val->save();
+                                    $this->qq=$this->qq-$this->lotecantidad;
+                                    //dump("dam",$this->qq);
+                               }
+                               else{
+                                //dd($this->lotecantidad);
+                                $ss=SalidaLote::create([
+                                   'salida_detalle_id'=>$auxi->id,
+                                   'lote_id'=>$val->id,
+                                   'cantidad'=>$val->existencia
+                                   
+                               ]);
+                                 
+               
+                                   $val->update([ 
+                                       'existencia'=>$this->lotecantidad-$this->qq
+                                   ]);
+                                   $val->save();
+                                   $this->qq=0;
+                                   //dd("yumi",$this->qq);
+                               }
+                           }
+               
+               
+                    
+                       }
         
-                            $lot=Lote::where('product_id',$datas['product_id'])->where('status','Activo')->get();
-        
-                             //obtener la cantidad del detalle de la venta 
-                            $qq=$datas['cantidad'];//q=8
-        
-                            foreach ($lot as $val) { //lote1= 3 Lote2=3 Lote3=3
-                               
-                                if($qq>0){            //true//5//2
-                                    
-                                    if ($qq > $val->existencia) {
-        
-                                        $ss=SalidaLote::create([
-                                            'salida_detalle_id'=>$auxi->id,
-                                            'lote_id'=>$val->id,
-                                            'cantidad'=>$val->existencia
-                                            
-                                        ]);
-                              
-          
-                                        $val->update([
-                                            
-                                            'existencia'=>0,
-                                            'status'=>'Inactivo'
-            
-                                        ]);
-                                        $val->save();
-                                        $qq=$qq-$val->existencia;
-                                    }
-                                    else{
-                                        $dd=SaleLote::create([
-                                            'sale_detail_id'=>$auxi->id,
-                                            'lote_id'=>$val->id,
-                                            'cantidad'=>$qq
-                                        ]);
-                                      
-           
-            
-                                        $val->update([ 
-                                            'existencia'=>$val->existencia-$qq
-                                        ]);
-                                        $val->save();
-                                      
-                                    }    
-                                }
-                            }
+                          
                         
              
                         DB::commit();
@@ -707,6 +722,11 @@ class MercanciaController extends Component
         $this->resetui();
         $this->emit('product-added');
     }
+public function ver($id){
 
+    $this->detalle= DetalleEntradaProductos::where('id_entrada',$id)->get();
+    $this->emit('show-detail');
+
+}
     
 }

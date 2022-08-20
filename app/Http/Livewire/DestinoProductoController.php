@@ -3,12 +3,18 @@
 namespace App\Http\Livewire;
 use App\Models\Category;
 use App\Models\Destino;
+use App\Models\DetalleEntradaProductos;
 use App\Models\DetalleOperacion;
+use App\Models\DetalleSalidaProductos;
+use App\Models\IngresoProductos;
 use App\Models\IngresoSalida;
 use App\Models\Location;
 use App\Models\LocationProducto;
+use App\Models\Lote;
 use App\Models\Product;
 use App\Models\ProductosDestino;
+use App\Models\SalidaLote;
+use App\Models\SalidaProductos;
 use Illuminate\Collection;
 use Illuminate\Support\Collection as SupportCollection;
 use Livewire\Component;
@@ -23,7 +29,7 @@ class DestinoProductoController extends Component
     use WithFileUploads;
     use WithPagination;
 
-    public $selected_id,$search,$selected_ubicacion,$componentName,$title,$sql,$prod,$grouped,$stocks,$productoajuste,$cant_operacion,$opcion_operacion,$obs_operacion,$cantidad,$productid,$productstock,$mobiliario,$mobs,$mop_prod, $active,$toogle;
+    public $selected_id,$search,$selected_ubicacion,$filtro_stock,$componentName,$title,$sql,$prod,$grouped,$stocks,$productoajuste,$cant_operacion,$opcion_operacion,$obs_operacion,$cantidad,$productid,$productstock,$mobiliario,$mobs,$mop_prod, $active,$toogle;
     private $pagination = 50;
    
     public function paginationView()
@@ -68,6 +74,8 @@ class DestinoProductoController extends Component
         if($this->selected_id !== null){
 
             if($this->selected_id === 'General')
+
+            
 
             if (strlen($this->search) > 0) {
                 $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
@@ -141,32 +149,36 @@ class DestinoProductoController extends Component
             
             ProductosDestino::where('productos_destinos.destino_id',$this->selected_id)->where('productos_destinos.product_id',$this->productid)
             ->update(['stock' => $stockactual + $this->cant_operacion ]);
+            $entrada = IngresoProductos::create([
+                'destino' => $this->selected_id,
+                'user_id' => Auth()->user()->id,
+                'concepto'=>'INGRESO',
+                'observacion'=>$this->obs_operacion
+            ]);
+
+            $lot= Lote::create([
+                'existencia'=>$this->cant_operacion,
+                'status'=>'Activo'
+            ]);
+
+            DetalleEntradaProductos::create([
+
+                'product_id'=>$this->productid,
+                'cantidad'=>$this->cant_operacion,
+                'id_entrada'=>$entrada->id,
+                'lote_id'=>$lot->id
+
+            ]);
         }
         if ($this->opcion_operacion == 'Salida') {
             ProductosDestino::where('productos_destinos.destino_id',$this->selected_id)->where('productos_destinos.product_id',$this->productid)
             ->update(['stock' => $stockactual - $this->cant_operacion ]);
+
+
         }
        
 
-        $auxi2=ProductosDestino::where('productos_destinos.destino_id',$this->selected_id)->where('productos_destinos.product_id',$this->productid)->get();
-        // dd($auxi2->values('stock'));
-             if ( $auxi2->pluck('stock')[0]>0)
-              {
-              $operacion= IngresoSalida::create([
-             'proceso'=>$this->opcion_operacion,
-             'destino'=>$this->selected_id,
-             'user_id'=> Auth()->user()->id,
-             'concepto'=>'INGRESOEGRESO',
-             'observacion'=>$this->obs_operacion
-                  ]);
-     
-             // dd($auxi2->pluck('stock')[0]);
-             DetalleOperacion::create([
-             'product_id'=>$this->productid,
-             'cantidad'=> $this->cant_operacion,
-             'id_operacion'=>$operacion->id
-         ]);
-        }
+        
         $this->cant_operacion=0;
         $this->obs_operacion=null;
         $aux= Product::find($this->productid);
@@ -238,19 +250,24 @@ class DestinoProductoController extends Component
         $auxi2=ProductosDestino::where('productos_destinos.destino_id',$this->selected_id)->where('productos_destinos.product_id',$this->productid)->get();
         // dd($auxi2->values('stock'));
              if ( $auxi2->pluck('stock')[0]>0) {
-              $operacion= IngresoSalida::create([
-             'proceso'=>'Entrada',
+              $operacion= IngresoProductos::create([
+         
              'destino'=>$this->selected_id,
              'user_id'=> Auth()->user()->id,
              'concepto'=>'AJUSTE',
              'observacion'=>'Ajuste de inventarios por producto'
                   ]);
+                  $lot= Lote::create([
+                    'existencia'=>$this->cantidad,
+                    'status'=>'Activo'
+                ]);
      
              // dd($auxi2->pluck('stock')[0]);
-             DetalleOperacion::create([
+             DetalleEntradaProductos::create([
              'product_id'=>$this->productid,
              'cantidad'=> $this->cantidad,
-             'id_operacion'=>$operacion->id
+             'id_entrada'=>$operacion->id,
+             'lote_id'=>$lot->id
          ]);
         }
         $this->cantidad=0;
@@ -269,21 +286,71 @@ class DestinoProductoController extends Component
 
         $auxi2=ProductosDestino::where('productos_destinos.destino_id',$this->selected_id)->where('productos_destinos.product_id',$this->productid)->get();
         // dd($auxi2->values('stock'));
-             if ( $auxi2->pluck('stock')[0]>0) {
-              $operacion= IngresoSalida::create([
-             'proceso'=>'Salida',
+           
+             $operacion= SalidaProductos::create([
+            
              'destino'=>$this->selected_id,
              'user_id'=> Auth()->user()->id,
              'concepto'=>'AJUSTE',
-             'observacion'=>'Ajuste de inventarios por producto'
-                  ]);
-     
+             'observacion'=>'Ajuste de inventarios por producto']);
              // dd($auxi2->pluck('stock')[0]);
-             DetalleOperacion::create([
+             $auxi=DetalleSalidaProductos::create([
              'product_id'=>$this->productid,
              'cantidad'=> $this->cantidad,
-             'id_operacion'=>$operacion->id
+             'id_salida'=>$operacion->id
          ]);
+
+
+         $lot=Lote::where('product_id',$this->productid)->where('status','Activo')->get();
+
+         //obtener la cantidad del detalle de la venta 
+         $this->qq=$this->cantidad;//q=8
+         foreach ($lot as $val) { //lote1= 3 Lote2=3 Lote3=3
+           $this->lotecantidad = $val->existencia;
+           //dd($this->lotecantidad);
+            if($this->qq>0){
+             //true//5//2
+                //dd($val);
+                if ($this->qq > $this->lotecantidad) {
+                    $ss=SalidaLote::create([
+                        'salida_detalle_id'=>$auxi->id,
+                        'lote_id'=>$val->id,
+                        'cantidad'=>$val->existencia
+                        
+                    ]);
+                   
+
+                    $val->update([
+                        
+                        'existencia'=>0,
+                        'status'=>'Inactivo'
+                        
+                     ]);
+                     $val->save();
+                     $this->qq=$this->qq-$this->lotecantidad;
+                     //dump("dam",$this->qq);
+                }
+                else{
+                 //dd($this->lotecantidad);
+                 $ss=SalidaLote::create([
+                    'salida_detalle_id'=>$auxi->id,
+                    'lote_id'=>$val->id,
+                    'cantidad'=>$val->existencia
+                    
+                ]);
+                  
+
+                    $val->update([ 
+                        'existencia'=>$this->lotecantidad-$this->qq
+                    ]);
+                    $val->save();
+                    $this->qq=0;
+                    //dd("yumi",$this->qq);
+                }
+            }
+
+
+     
         }
         $this->cantidad=0;
         $aux= Product::find($this->productid);

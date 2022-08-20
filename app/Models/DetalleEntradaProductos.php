@@ -14,4 +14,8 @@ class DetalleEntradaProductos extends Model
     {
         return $this->belongsTo(IngresoProductos::class,'id_entrada','id');
     }
+
+    public function productos(){
+        return $this->belongsTo(Product::class,'product_id','id');
+    }
 }

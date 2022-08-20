@@ -57,12 +57,12 @@
                         </div>
     
                             <div class="form-group">
-                                <select wire:model='selected_id' class="form-control">
+                                <select wire:model='filtro_stock' class="form-control">
                                     <option value="TODOS">Todos</option>
-                                    <option value="BAJO STOCK">Listar productos con bajo stock</option>
-                                    <option value="ALTA ROTACION">Listar productos con alta rotacion</option>
-                                    <option value="BAJA ROTACION">Listar productos con baja rotacion</option>
-                                    <option value="ALTA DEMANDA">Listar productos de alta demanda</option>
+                                    <option value="BAJO_STOCK">Productos con bajo stock</option>
+                                    <option value="AGOTADOS">Productos agotados</option>
+                                    {{-- <option value="BAJA ROTACION">Listar productos con baja rotacion</option>
+                                    <option value="ALTA DEMANDA">Listar productos de alta demanda</option> --}}
                                 </select>
                             </div>
                             @if ($selected_id != 'General')
@@ -88,11 +88,13 @@
                                     <th class="table-th text-withe text-center">IMAGEN</th>                              
                                     <th class="table-th text-withe text-center">PRODUCTO</th>                              
                                     <th class="table-th text-withe text-center">STOCK</th>
-                                    @if ($selected_id == 'General' || $selected_id == null)
                                     <th class="table-th text-withe text-center">CANT.MIN</th>                                       
-                                   
-                                    @endif                           
+                                    @if ($selected_id == 'General' || $selected_id == null)
                                     <th class="table-th text-withe text-center">ACCIONES</th>
+                                    @endif        
+                                    @can('Operacion_Almacen')
+                                    <th class="table-th text-withe text-center">ACCIONES</th>
+	                                @endcan                   
                                 </tr>
                             </thead>
                             <tbody>
@@ -117,13 +119,13 @@
                                             {{ $destino->caracteristicas }}
                                          
                                         </td>
+                                        <td>
+                                            <h6 class="text-center">{{ $destino->stock }}</h6>
+                                          </td>
                                         @if ($selected_id == 'General' || $selected_id == null)
                                         <td>
                                       <center>{{ $destino->stock_s }}</center> 
                                         </td>
-                                        <td>
-                                        <center>{{ $destino->cantidad_minima }}</center> 
-                                      </td>
                                       <td>
                                         <button wire:click="ver({{ $destino->id }})" type="button" class="btn btn-secondary p-1" style="background-color: rgb(12, 100, 194)">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
@@ -131,14 +133,18 @@
                                        
                                       </td>
                                         @else
+                                      
+
                                         <td>
-                                          <h6 class="text-center">{{ $destino->stock }}</h6>
-                                        </td>
-                                          <td>
-                                          <button  wire:click="ajuste({{ $destino->id }})" class="btn btn-success p-1" title="Ajuste de inventarios" style="background-color: rgb(13, 175, 220); color:white">
-                                            <i class="fas fa-pen"></i>
-                                        </button>
-                                      </td>
+                                            <center>{{ $destino->cantidad_minima }}</center> 
+                                          </td>
+                                        @can('Operacion_Almacen')
+                                        <td>
+                                        <button  wire:click="ajuste({{ $destino->id }})" class="btn btn-success p-1" title="Ajuste de inventarios" style="background-color: rgb(13, 175, 220); color:white">
+                                          <i class="fas fa-pen"></i>
+                                      </button>
+                                    </td>
+                                        @endcan   
                                         @endif
     
                                     </tr>

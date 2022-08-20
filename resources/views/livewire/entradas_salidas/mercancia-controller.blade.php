@@ -142,6 +142,7 @@
                                             <th class="table-th text-withe text-center">Tipo Operacion</th>
                                             <th class="table-th text-withe text-center">Observacion</th>
                                             <th class="table-th text-withe text-center">Usuario</th>
+                                            <th class="table-th text-withe text-center">Acciones</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -170,6 +171,13 @@
                                                 <td>
                                                     {{$data2->usuarios->name}}
                                                 </td>
+                                                <td>
+                                                    <center>
+                                                    <button wire:click="ver({{ $data2->id }})" type="button" class="btn btn-secondary p-1" style="background-color: rgb(12, 100, 194)">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                                                    </button>
+                                                </center>
+                                                  </td>
 
                                            </tr>
 
@@ -194,6 +202,10 @@
 
         window.livewire.on('product-added', msg => {
             $('#operacion').modal('hide')
+            
+        });
+        window.livewire.on('show-detail', msg => {
+            $('#buscarproducto').modal('show')
             
         });
        

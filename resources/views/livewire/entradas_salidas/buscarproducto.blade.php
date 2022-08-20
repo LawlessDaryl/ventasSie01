@@ -3,17 +3,8 @@
         <div class="modal-content">
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-sm-12 col-md-6">
-                        <div class="form-group">
-                            <label class="d-flex row ml-2">
-                                <h6>PRODUCTO</h6>
-                            </label>
-                            <input wire:model="searchproduct" class="form-control">
-                            
-                        </div>
-                       
-                    </div>
-@if ($buscarproducto != 0)
+                   
+@if ($detalle)
 <div class="col-sm-12 col-md-12">
     <div class="vertical-scrollable">
         <div class="row layout-spacing">
@@ -26,24 +17,25 @@
                                 <thead class="text-white" style="background: #3B3F5C">
                                     <tr>
                                         <th class="table-th text-withe text-center">Producto</th>
-                                        <th class="table-th text-withe">Accion</th>
+                                        <th class="table-th text-withe">Cantidad</th>
+                                        <th class="table-th text-withe">Costo</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($sm as $d)
+                                    @foreach ($detalle as $d)
                                         <tr>
                                       
                                             <td class="text-center">
-                                                <h6 class="text-center">{{ $d->nombre }}
+                                                <h6 class="text-center">{{ $d->productos->nombre}}
                                                 </h6>
                                             </td>
                                             <td class="text-center">
-                                                <a href="javascript:void(0)"
-                                                    wire:click="Seleccionar('{{ $d->id }}')"
-                                                    class="btn btn-warning mtmobile"
-                                                    title="Seleccionar">
-                                                    <i class="fas fa-check"></i>
-                                                </a>
+                                             
+                                                {{$d->cantidad}}
+                                            </td>
+                                            <td class="text-center">
+                                             
+                                                {{$d->costo}}
                                             </td>
                                         </tr>
                                     @endforeach
