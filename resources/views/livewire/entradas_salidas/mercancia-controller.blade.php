@@ -9,9 +9,6 @@
                 <ul class="row justify-content-end">
                     <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
                     data-target="#operacion">Registrar Operacion</a>
-
-                
-                 
                     {{-- <a href="javascript:void(0)"
                      wire:click="Incrementar()"
                         class="btn btn-warning"
@@ -149,7 +146,9 @@
                                        @foreach ($ingprod as $data2)
                                            <tr>
                                                 <td>
-                                                    {{$loop->iteration}}
+                                                    
+                                                        <h6>{{ ($ingprod->currentpage()-1) * $ingprod->perpage() + $loop->index + 1 }}</h6>
+                                                    
                                                 </td>
                                                 <td>
                                                     {{\Carbon\Carbon::parse($data2->created_at)->format('d-m-Y')}}
@@ -184,7 +183,7 @@
                                        @endforeach
                                     </tbody>
                                 </table>
-                           
+                                {{ $ingprod->links() }}
                             </div>
                         </div>
                     </div>

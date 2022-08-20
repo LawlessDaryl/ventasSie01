@@ -121,15 +121,21 @@
                                         </td>
                                         <td>
                                             <h6 class="text-center">{{ $destino->stock }}</h6>
-                                          </td>
+                                        </td>
                                         @if ($selected_id == 'General' || $selected_id == null)
                                         <td>
                                       <center>{{ $destino->stock_s }}</center> 
                                         </td>
                                       <td>
-                                        <button wire:click="ver({{ $destino->id }})" type="button" class="btn btn-secondary p-1" style="background-color: rgb(12, 100, 194)">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-                                        </button>
+                                        <center>
+
+                                            <button wire:click="ver({{ $destino->id }})" type="button" class="btn btn-secondary p-1" style="background-color: rgb(16, 80, 150)">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                                            </button>
+                                            <button wire:click="lotes({{ $destino->id }})" type="button" class="btn btn-dark p-1" style="background-color: rgb(12, 100, 194)">
+                                                    <i class="fas fa-box-open" ></i>
+                                            </button>
+                                        </center>
                                        
                                       </td>
                                         @else
@@ -164,6 +170,7 @@
       
     @include('livewire.destinoproducto.detallemobiliario')
     @include('livewire.destinoproducto.ajusteinventario')
+    @include('livewire.destinoproducto.lotesproductos')
     </div>
 @section('javascript')
 <script>
@@ -176,6 +183,9 @@
         });
         window.livewire.on('show-modal-ajuste', msg => {
             $('#ajustesinv').modal('show')
+        });  
+        window.livewire.on('show-modal-lotes', msg => {
+            $('#lotes').modal('show')
         });  
         window.livewire.on('hide-modal-ajuste', msg => {
             $('#ajustesinv').modal('hide')

@@ -10,4 +10,9 @@ class Lote extends Model
     use HasFactory;
 
     protected $fillable = ['existencia','costo','status','product_id'];
+
+    public function productos(){
+        
+        return $this->belongsTo(Product::class,'product_id','id');
+    }
 }

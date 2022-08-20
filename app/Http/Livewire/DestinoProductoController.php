@@ -29,7 +29,7 @@ class DestinoProductoController extends Component
     use WithFileUploads;
     use WithPagination;
 
-    public $selected_id,$search,$selected_ubicacion,$filtro_stock,$componentName,$title,$sql,$prod,$grouped,$stocks,$productoajuste,$cant_operacion,$opcion_operacion,$obs_operacion,$cantidad,$productid,$productstock,$mobiliario,$mobs,$mop_prod, $active,$toogle;
+    public $selected_id,$search,$selected_ubicacion,$loteproducto,$filtro_stock,$componentName,$title,$sql,$prod,$grouped,$stocks,$productoajuste,$cant_operacion,$opcion_operacion,$obs_operacion,$cantidad,$productid,$productstock,$mobiliario,$mobs,$mop_prod, $active,$toogle;
     private $pagination = 50;
    
     public function paginationView()
@@ -408,7 +408,6 @@ class DestinoProductoController extends Component
         'observacion'=>'Ajuste de inventarios por producto'
              ]);
 
-        // dd($auxi2->pluck('stock')[0]);
         DetalleOperacion::create([
         'product_id'=>$this->productid,
         'cantidad'=> $auxi2->pluck('stock')[0],
@@ -440,6 +439,14 @@ class DestinoProductoController extends Component
         $aux= Product::find($this->productid);
         $this->ajuste($aux);
         $this->emit('show-modal-ajuste');
+    }
+
+    public function lotes($id){
+
+        //dd($id);
+        $this->loteproducto= Lote::where('product_id',$id)->get();
+        //dd($this->loteproducto);
+        $this->emit('show-modal-lotes');
     }
 
 }

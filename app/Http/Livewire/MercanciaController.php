@@ -34,23 +34,33 @@ class MercanciaController extends Component
     use WithFileUploads;
     public  $fecha,$buscarproducto=0,$selected,$registro
     ,$archivo,$searchproduct,$costo,$sm,$dataconcepto,$destino,$detalle,$tipo_proceso,$col,$destinosucursal,$observacion,$cantidad,$result,$arr;
+    private $pagination = 50;
+
+    public function paginationView()
+    {
+        return 'vendor.livewire.bootstrap';
+    }
 
     public function mount(){
         $this->col=collect([]);
         $this->tipo_proceso= "Entrada";
         $this->registro='Manual';
         $this->dataconcepto="INGRESO";
+    //$this->CrearLotes();
+       //$this->Ventas();
+       $this->buscarl();
+      // $this->buscarproducto();
        // $this->borrarLotes();
-       //$this->ajustarLotes();
+      //paso ultimo $this->ajustarLotes();
        //$this->productosajustados();
-      //$this->limpiarstock();
-     //$this->inactivarlotes();
+    //$this->limpiarstock();
+    //$this->inactivarlotes();
 
     }
     public function render()
     {
         
-        $ingprod= IngresoProductos::with(['detalleingreso'])->orderBy('ingreso_productos.created_at','desc')->get();
+        $ingprod= IngresoProductos::with(['detalleingreso'])->orderBy('ingreso_productos.created_at','desc')->paginate($this->pagination);
         //dd($ingprod);
         $salprod=SalidaProductos::with(['detallesalida']);
 
@@ -330,51 +340,49 @@ class MercanciaController extends Component
 
                     $lot=Lote::where('product_id',$data3->product_id)->where('status','Activo')->get();
 
-                     //obtener la cantidad del detalle de la venta 
-                    $qq=$data3->quantity;//q=8
-
+                    //obtener la cantidad del detalle de la venta
+                    $this->qq=$data3->quantity;//q=8
                     foreach ($lot as $val) { //lote1= 3 Lote2=3 Lote3=3
-                       
-                        if($qq>0){            //true//5//2
-                            
-                            if ($qq > $val->existencia) {
-
-                                $ss=SaleLote::create([
-                                    'sale_detail_id'=>$data3->id,
-                                    'lote_id'=>$val->id,
-                                    'cantidad'=>$val->existencia
-                                    
-                                ]);
-                                $ss->update(['created_at'=>$data3->created_at,'updated_at'=>$data3->updated_at]);
-                                $ss->save();
-  
-                                $val->update([
-                                    
-                                    'existencia'=>0,
-                                    'status'=>'Inactivo'
-    
+                      $this->lotecantidad = $val->existencia;
+                      //dd($this->lotecantidad);
+                       if($this->qq>0){
+                        //true//5//2
+                           //dd($val);
+                           if ($this->qq > $this->lotecantidad) {
+        
+                               $ss=SaleLote::create([
+                                   'sale_detail_id'=>$data3->id,
+                                   'lote_id'=>$val->id,
+                                   'cantidad'=>$val->existencia
+                               ]);
+                               $val->update([
+                                   
+                                   'existencia'=>0,
+                                   'status'=>'Inactivo'
+                                   
                                 ]);
                                 $val->save();
-                                $qq=$qq-$val->existencia;
-                            }
-                            else{
-                                $dd=SaleLote::create([
-                                    'sale_detail_id'=>$data3->id,
-                                    'lote_id'=>$val->id,
-                                    'cantidad'=>$qq
-                                ]);
-                                $dd->update(['created_at'=>$data3->created_at,'updated_at'=>$data3->updated_at]);
-                                $dd->save();
-   
-    
-                                $val->update([ 
-                                    'existencia'=>$val->existencia-$qq
-                                ]);
-                                $val->save();
-                              
-                            }    
-                        }
-                    }
+                                $this->qq=$this->qq-$this->lotecantidad;
+                                //dump("dam",$this->qq);
+                           }
+                           else{
+                            //dd($this->lotecantidad);
+                               $dd=SaleLote::create([
+                                   'sale_detail_id'=>$data3->id,
+                                   'lote_id'=>$val->id,
+                                   'cantidad'=>$this->qq
+                               ]);
+                             
+        
+                               $val->update([ 
+                                   'existencia'=>$this->lotecantidad-$this->qq
+                               ]);
+                               $val->save();
+                               $this->qq=0;
+                               //dd("yumi",$this->qq);
+                           }
+                       }
+                   }
                 }
      
                 DB::commit();
@@ -389,6 +397,7 @@ class MercanciaController extends Component
     public function BuscarProducto()
     {
         //obtengo la cantidad total de todos los productos que se ingresaron despues del ajuste a cada sucursal
+
         $v3=IngresoSalida::join('detalle_operacions','detalle_operacions.id_operacion','ingreso_salidas.id')->join('products', 'products.id','detalle_operacions.product_id')
         ->where('proceso','Entrada')->groupBy('detalle_operacions.product_id')->selectRaw('sum(cantidad) as sum, detalle_operacions.product_id,products.costo')->get();
     
@@ -397,11 +406,15 @@ class MercanciaController extends Component
             
             $auxi= SaleDetail::where('product_id',$item->product_id)->first();
           if ($auxi and $auxi->product_id == $item->product_id ) 
-          {}
+          {
+
+          }
           else{
             return $item;
           }
         })->values();
+
+        //dd($object);
                foreach ($object as $data3) {
                 DB::beginTransaction();
                 try {
@@ -447,11 +460,14 @@ class MercanciaController extends Component
         $ss=ProductosDestino::groupBy('productos_destinos.product_id')->selectRaw('sum(stock) as sum, productos_destinos.product_id')->get();
         foreach ($ss as $val8) 
         {
-            $fg= Lote::where('product_id',$val8->product_id)->where('existencia')->get();
+            $fg= Lote::where('product_id',$val8->product_id)->where('status','Activo')->get();
 
-            foreach ($fg as $daf) {
+            foreach ($fg as $daf) 
+            {
+                
+              
                 $daf->update([
-                    'existencia'=>$val8->sum
+                    'existencia'=> $val8->sum
                 ]);
                 $daf->save();
             }
@@ -728,6 +744,27 @@ public function ver($id){
     $this->detalle= DetalleEntradaProductos::where('id_entrada',$id)->get();
     $this->emit('show-detail');
 
+}
+
+public function buscarl(){
+
+    $v3=ProductosDestino::all();
+
+
+    $object = $v3->filter(function($item) {
+        
+       $flot=Lote::where('product_id',$item->product_id)->get()->count();
+//dump($flot);
+      if ($flot==0) 
+      {
+
+
+          return $item;
+      }
+    
+    })->values();
+
+    dd($object);
 }
     
 }

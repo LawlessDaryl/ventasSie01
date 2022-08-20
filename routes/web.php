@@ -93,6 +93,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/home', InicioController::class);
     Route::group(['middleware' => ['role:ADMIN']], function () {
     });
+
     /* ADMINISTRACION */
     Route::get('roles', RolesController::class)->name('roles')->middleware('permission:Roles_Index');
     Route::get('permisos', PermisosController::class)->name('permisos')->middleware('permission:Permission_Index');
