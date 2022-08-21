@@ -28,7 +28,7 @@ class ProductSeeder extends Seeder
             'industria'=>'China',
             'precio_venta' => 60,
             'image' => 'Cable_Usb_C_Huawei_0.5_Metros.png',
-            'category_id' => 7,
+            'category_id' => 1,
         ]);
         //ID=2
         Product::create([
@@ -44,7 +44,7 @@ class ProductSeeder extends Seeder
             'industria'=>'China',
             'precio_venta' => 320,
             'image' => 'Cargador_Lapto.png',
-            'category_id' => 5,
+            'category_id' => 1,
         ]);
         //ID=3
         Product::create([
@@ -60,7 +60,7 @@ class ProductSeeder extends Seeder
             'industria'=>'China',
             'precio_venta' => 500,
             'image' => 'Iphone_11.png',
-            'category_id' => 8,
+            'category_id' => 1,
         ]);
         //ID=4
         Product::create([
@@ -76,7 +76,7 @@ class ProductSeeder extends Seeder
             'industria'=>'China',
             'precio_venta' => 200,
             'image' => 'PC_Gammer.png',
-            'category_id' => 3,
+            'category_id' => 1,
         ]);
         //ID=5
         Product::create([
@@ -92,7 +92,7 @@ class ProductSeeder extends Seeder
             'industria'=>'China',
             'precio_venta' =>800,
             'image' => 'Vidrio_Templado_j5_Prime.png',
-            'category_id' => 6,
+            'category_id' => 1,
         ]);
         //ID=6
         Product::create([
@@ -108,7 +108,7 @@ class ProductSeeder extends Seeder
             'industria'=>'China',
             'precio_venta' =>60,
             'image' => 'Mouse_Gammer.png',
-            'category_id' => 5,
+            'category_id' => 1,
         ]);
         //ID=7
         Product::create([
@@ -124,7 +124,7 @@ class ProductSeeder extends Seeder
             'industria'=>'China',
             'precio_venta' =>240,
             'image' => 'Teclado_Pc.png',
-            'category_id' => 5,
+            'category_id' => 1,
         ]);
         //ID=8
         Product::create([
@@ -140,7 +140,7 @@ class ProductSeeder extends Seeder
             'industria'=>'China',
             'precio_venta' => 368,
             'image' => 'SSD_Kingston_240GB.png',
-            'category_id' => 5
+            'category_id' => 1
         ]);
         //ID=9
         Product::create([
@@ -156,7 +156,7 @@ class ProductSeeder extends Seeder
             'industria'=>'China',
             'precio_venta' => 180,
             'image' => 'Monitor_LG_15_Pulgadas.png',
-            'category_id' => 5,
+            'category_id' => 1,
         ]);
     }
 }
