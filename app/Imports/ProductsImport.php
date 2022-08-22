@@ -42,20 +42,66 @@ class ProductsImport implements ToModel,WithHeadingRow,WithBatchInserts,WithChun
         $product->industria = preg_replace('/\s+/', ' ',trim($row['industria']));
         $product->precio_venta = preg_replace('/\s+/', ' ',trim($row['precio_venta']));
         $product->status = preg_replace('/\s+/', ' ',trim($row['status']));
+
+        
+
         if ($row['categoria'] == null) 
         {
             $product->category_id =$this->categories['No definido'];
         }
         else
         {
-            $product->category_id = $this->categories[$row['categoria']];
+            $auxi= $this->categories->where('name',strtoupper($row['categoria']));
+            if (count($auxi) == 0) {
+               // dd("no esta nulo");
+                $fg=Category::create([
+                    'name' => strtoupper($row['categoria']),
+                    'descripcion'=>'ninguna'
+                ]);
+                
+                $product->category_id = $fg->id;
+            }
+            else{
+                
+                //dd($auxi);
+                $product->category_id = $this->categories[strtoupper($row['categoria'])];
+            }
         }
+
+        if ($row['subcategoria'] == null) 
+        {
+            
+        }
+        else
+        {
+            $auxi= $this->categories->where('name',strtoupper($row['subcategoria']));
+            if (count($auxi) == 0) {
+               // dd("no esta nulo");
+                $fg=Category::create([
+                    'name' => strtoupper($row['categoria']),
+                    'descripcion'=>'ninguna',
+                    'cat_padre'=>
+                ]);
+                
+                $product->category_id = $fg->id;
+            }
+            else{
+                
+                //dd($auxi);
+                $product->category_id = $this->categories[strtoupper($row['categoria'])];
+            }
+        }
+
+
+
+
+
+        'categoria_padre'=>$this->subcategories[$row['categoria_p']],
+
+
+
+
         $product->save();
-
-      
-
-
-
 
     }
     public function batchSize(): int

@@ -50,18 +50,19 @@
                         <div class="form-group">
                             <strong style="color: rgb(74, 74, 74)">Seleccione la ubicacion:</strong>
                             <select wire:model='destino' class="form-control">
-                                <option value='Elegir'>Elegir</option>
+                                <option value='Elegir' disabled>Elegir</option>
                                 @foreach ($destinosp as $item)
                                 <option value="{{$item->destino_id}}">{{$item->sucursal}}-{{$item->destino}}</option>
                                 @endforeach
                             </select>
-                            @error('destinosucursal')
+                            @error('destino')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror                                          
                         </div>
                         <div class="form-group">
                             <strong style="color: rgb(74, 74, 74)">Seleccione el concepto:</strong>
-                            <select wire:model='dataconcepto' class="form-control">
+                            <select wire:model='concepto' class="form-control">
+                                <option value="Elegir" disabled selected>Elegir</option>
                                 @if ($tipo_proceso == 'Entrada')
                                 <option wire:key="foo" value='INGRESO'>Ingreso/Salida de productos</option>
                                 <option wire:key="bar" value="AJUSTE">Ingreso/Salida por ajuste de inventarios</option>
@@ -78,7 +79,7 @@
                               
                                 
                             </select>
-                            @error('concept')
+                            @error('concepto')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror                                        
                         </div>
@@ -94,7 +95,7 @@
                             <strong style="color: rgb(74, 74, 74)">Tipo de registro</strong>
                             <select wire:model='registro' class="form-control">
                                 <option value="Manual" selected>Registrar Manualmente</option>
-                                @if ($dataconcepto == 'INICIAL')    
+                                @if ($concepto == 'INICIAL')    
                                 <option value="Documento">Subir Archivo</option>
                                 @endif
                             </select>
@@ -120,9 +121,15 @@
                                     </a>
                                 </div>
                                 <input type="text" wire:model="result" placeholder="Buscar" class="form-control">
+                                @error('result')
+                                <span class="text-danger er">{{ $message }}</span>
+                                @enderror   
                             </div>
                             @else
                             <input wire:model="searchproduct" class="form-control">
+                            @error('result')
+                            <span class="text-danger er">{{ $message }}</span>
+                            @enderror  
                             @endif
                             
                         </div>

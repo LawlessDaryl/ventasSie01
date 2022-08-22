@@ -29,8 +29,7 @@ class SubCategoryImport implements ToModel,WithHeadingRow,WithBatchInserts,WithC
         return new Category([
             'name'=>$row['nombre'],
             'descripcion'=>$row['descripcion'],
-            'categoria_padre'=>$this->subcategories[$row['categoria_p']],
-            
+            'categoria_padre'=>$this->subcategories[$row['categoria_p']]
         ]);
     }
     public function batchSize(): int

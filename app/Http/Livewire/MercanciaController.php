@@ -33,7 +33,7 @@ class MercanciaController extends Component
     use WithPagination;
     use WithFileUploads;
     public  $fecha,$buscarproducto=0,$selected,$registro
-    ,$archivo,$searchproduct,$costo,$sm,$dataconcepto,$destino,$detalle,$tipo_proceso,$col,$destinosucursal,$observacion,$cantidad,$result,$arr;
+    ,$archivo,$searchproduct,$costo,$sm,$concepto,$destino,$detalle,$tipo_proceso,$col,$destinosucursal,$observacion,$cantidad,$result,$arr;
     private $pagination = 50;
 
     public function paginationView()
@@ -43,9 +43,11 @@ class MercanciaController extends Component
 
     public function mount(){
         $this->col=collect([]);
-        $this->tipo_proceso= "Entrada";
+        $this->tipo_proceso= "Elegir";
         $this->registro='Manual';
-        $this->dataconcepto="INGRESO";
+    
+        $this->destino = 'Elegir';
+        $this->concepto ="Elegir";
     //$this->CrearLotes();
        //$this->Ventas();
       // $this->buscarl();
@@ -124,12 +126,14 @@ class MercanciaController extends Component
         
         
         $rules = [
+            'result' => 'required',
             'costo' => 'required',
             'cantidad' => 'required',
         ];
         
         $messages = [
             'costo.required' => 'El costo es requerido',
+            'result.required'=>'El producto es requerido',
             'cantidad.required' => 'La cantidad es requerida'
         ];
         
@@ -545,11 +549,11 @@ class MercanciaController extends Component
 
     public function GuardarOperacion(){
             //dd($this->col);
-            if ($this->dataconcepto === "INICIAL" && $this->registro === "Documento") {
+            if ($this->concepto === "INICIAL" && $this->registro === "Documento") {
              
                 try {
                     //$import->import('import-users.xlsx');
-                    Excel::import(new StockImport($this->destino,$this->dataconcepto,$this->observacion),$this->archivo);
+                    Excel::import(new StockImport($this->destino,$this->concepto,$this->observacion),$this->archivo);
                     return redirect()->route('productos');
                 } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
 
@@ -559,12 +563,16 @@ class MercanciaController extends Component
                 }
             }
             $rules = [
-                'destino' => 'not_in: Elegir',
+                'destino' => 'required|not_in:Elegir',
                 'observacion' => 'required',
+                'concepto' => 'required|not_in:Elegir'
             ];
     
             $messages = [
+                'destino.required'=> 'El destino del producto es requerido',
+                'concepto.required'=> 'El concepto es un dato requerido',
                 'destino.not_in' => 'Elija una ubicacion del producto.',
+                'concepto.not_in' => 'Elija un concepto diferente.',
                 'observacion.required' => 'Agregue una observacion',
             ];
     
@@ -581,7 +589,7 @@ class MercanciaController extends Component
                             $rs=IngresoProductos::create([
                                 'destino'=>$this->destino,
                                 'user_id'=>Auth()->user()->id,
-                                'concepto'=>$this->dataconcepto,
+                                'concepto'=>$this->concepto,
                                 'observacion'=>$this->observacion
                                ]);
             
@@ -632,7 +640,7 @@ class MercanciaController extends Component
             
                             'destino'=>$this->destino,
                             'user_id'=> Auth()->user()->id,
-                            'concepto'=>$this->dataconcepto,
+                            'concepto'=>$this->concepto,
                             'observacion'=>$this->observacion]);
                             // dd($auxi2->pluck('stock')[0]);
                             $auxi=DetalleSalidaProductos::create([
@@ -713,13 +721,13 @@ class MercanciaController extends Component
     }
 
     public function resetui(){
-        $this->tipo_proceso='Entrada';
+        $this->tipo_proceso='Elegir';
         $this->archivo=null;
+        $this->concepto= 'Elegir';
         $this->registro= "Manual";
+        $this->destino= 'Elegir';
         $this->reset([
-        'costo',
-        'dataconcepto'
-        ,'destino'
+        'costo'
         ,'destinosucursal'
         ,'observacion'
         ,'cantidad']);

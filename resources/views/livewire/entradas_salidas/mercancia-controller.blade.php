@@ -7,7 +7,7 @@
                     <b>Control Entrada y Salida de Productos</b>
                 </h4>
                 <ul class="row justify-content-end">
-                    <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
+                    <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal" wire:click= 'resetui()'
                     data-target="#operacion">Registrar Operacion</a>
                     {{-- <a href="javascript:void(0)"
                      wire:click="Incrementar()"
