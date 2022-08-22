@@ -84,6 +84,7 @@ use App\Http\Livewire\SaleDailyMovementController;
 use App\Http\Livewire\SaleDevolutionController;
 use App\Http\Livewire\SaleStatisticController;
 use App\Http\Livewire\SaleReporteCantidadController;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 
 Auth::routes();
@@ -231,6 +232,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('salemovimientodiario', SaleDailyMovementController::class)->name('salemovimientodiario')->middleware('permission:VentasMovDia_Index');
     Route::get('notificaciones', NotificationController::class)->name('notificaciones');
     Route::get('notificaciones/{idnotificacion}', [NotificacionController::class,'mostrarnotificacion']);
+
+
+    //Vaciar la cache
+    Route::get('/clear-cache', function() {
+        Artisan::call('cache:clear');
+        return "Cache is cleared";
+    });
 
 });
 

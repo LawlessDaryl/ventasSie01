@@ -48,9 +48,9 @@
                             @enderror                                          
                         </div>
                         <div class="form-group">
-                            <strong style="color: rgb(74, 74, 74)">Seleccione la locacions:</strong>
-                            <select wire:model='destinosucursal' class="form-control">
-                                <option value="Elegir">Elegir</option>
+                            <strong style="color: rgb(74, 74, 74)">Seleccione la ubicacion:</strong>
+                            <select wire:model='destino' class="form-control">
+                                <option value='Elegir'>Elegir</option>
                                 @foreach ($destinosp as $item)
                                 <option value="{{$item->destino_id}}">{{$item->sucursal}}-{{$item->destino}}</option>
                                 @endforeach
@@ -212,14 +212,24 @@
                 @else
                 <form wire:submit.prevent="import('{{$archivo}}')" method="POST" enctype="multipart/form-data">
                     @csrf
-
-                    {{$archivo}}
+                    
+                    <div>
+                        
+                        {{$archivo}}
+                        <center><div wire:loading wire:target="archivo">
+                            <div class="d-flex align-items-center">
+                                <strong>Cargando Archivo, Espere por favor...</strong>
+                                <div class="spinner-border ms-auto"></div>
+                              </div>
+                        </div></center>
+        
+                    </div>
                     <input type="file" name="import_file" wire:model="archivo" />
-
-                    <button class="btn btn-primary" type="submit" >Importar</button>
+                    
+                    
                 </form>
                 @endif
-
+               
                 <div class="row">
                     <div class="col-lg-12">
 

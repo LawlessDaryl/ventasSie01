@@ -48,7 +48,7 @@ class MercanciaController extends Component
         $this->dataconcepto="INGRESO";
     //$this->CrearLotes();
        //$this->Ventas();
-       $this->buscarl();
+      // $this->buscarl();
       // $this->buscarproducto();
        // $this->borrarLotes();
       //paso ultimo $this->ajustarLotes();
@@ -549,7 +549,7 @@ class MercanciaController extends Component
              
                 try {
                     //$import->import('import-users.xlsx');
-                    Excel::import(new StockImport($this->destinosucursal,$this->dataconcepto,$this->observacion),$this->archivo);
+                    Excel::import(new StockImport($this->destino,$this->dataconcepto,$this->observacion),$this->archivo);
                     return redirect()->route('productos');
                 } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
 
@@ -559,13 +559,13 @@ class MercanciaController extends Component
                 }
             }
             $rules = [
+                'destino' => 'not_in: Elegir',
                 'observacion' => 'required',
-                'destinosucursal' => 'not_in:Elegir',
             ];
     
             $messages = [
+                'destino.not_in' => 'Elija una ubicacion del producto.',
                 'observacion.required' => 'Agregue una observacion',
-                'destinosucursal.not_in' => 'Elija el destino de la mercaderia'
             ];
     
             $this->validate($rules, $messages);
@@ -579,7 +579,7 @@ class MercanciaController extends Component
                         DB::beginTransaction();
                         try {
                             $rs=IngresoProductos::create([
-                                'destino'=>$this->destinosucursal,
+                                'destino'=>$this->destino,
                                 'user_id'=>Auth()->user()->id,
                                 'concepto'=>$this->dataconcepto,
                                 'observacion'=>$this->observacion
@@ -601,9 +601,9 @@ class MercanciaController extends Component
                                ]);
 
                                $q=ProductosDestino::where('product_id',$datas['product_id'])
-                    ->where('destino_id',$this->destinosucursal)->value('stock');
+                    ->where('destino_id',$this->destino)->value('stock');
 
-                    ProductosDestino::updateOrCreate(['product_id' => $datas['product_id'], 'destino_id'=>$this->destinosucursal],['stock'=>$q+$datas['cantidad']]);
+                    ProductosDestino::updateOrCreate(['product_id' => $datas['product_id'], 'destino_id'=>$this->destino],['stock'=>$q+$datas['cantidad']]);
             
         
         
@@ -630,7 +630,7 @@ class MercanciaController extends Component
 
                         $operacion= SalidaProductos::create([
             
-                            'destino'=>$this->destinosucursal,
+                            'destino'=>$this->destino,
                             'user_id'=> Auth()->user()->id,
                             'concepto'=>$this->dataconcepto,
                             'observacion'=>$this->observacion]);
@@ -693,10 +693,7 @@ class MercanciaController extends Component
                
                     
                        }
-        
-                          
-                        
-             
+      
                         DB::commit();
                     }
                      catch (Exception $e)
@@ -717,8 +714,9 @@ class MercanciaController extends Component
 
     public function resetui(){
         $this->tipo_proceso='Entrada';
+        $this->archivo=null;
+        $this->registro= "Manual";
         $this->reset([
-        'archivo',
         'costo',
         'dataconcepto'
         ,'destino'
