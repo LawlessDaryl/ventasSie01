@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use App\Models\Sale;
 use App\Models\User;
 use App\Models\Cliente;
+use App\Models\Company;
 use App\Models\DetalleTransferencia;
 use App\Models\EstadoTransferencia;
 use App\Models\Sucursal;
@@ -40,8 +41,10 @@ class ExportTransferenciaController extends Controller
         ->where('estado_transferencias.op','Activo')
         ->get();
        
+        $nombreempresa = Company::find(1)->name;
+        $logoempresa = Company::find(1)->image;
       
-        $pdf = PDF::loadView('livewire.pdf.ImprimirTransferencia', compact('ide','origen','destino','userrecepcion','fecha','datalist_destino'));
+        $pdf = PDF::loadView('livewire.pdf.ImprimirTransferencia', compact('ide','origen','destino','userrecepcion','fecha','datalist_destino','nombreempresa','logoempresa'));
 
         return $pdf->stream('transferencia.pdf');  
     }
