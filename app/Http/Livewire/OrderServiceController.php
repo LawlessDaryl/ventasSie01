@@ -2557,6 +2557,7 @@ class OrderServiceController extends Component
                                 ->where('mov.status', 'ACTIVO')
                                 ->where('c.nombre', 'like', '%' . $this->search . '%')
                                 ->orWhere('order_services.id', 'like', '%' . $this->search . '%')
+                                ->orWhere('s.detalle', 'like', '%' . $this->search . '%')
                                 ->groupBy("order_services.id")
                                 ->orderBy("order_services.id","desc")
                                 ->paginate($this->paginacion);
