@@ -126,8 +126,14 @@
                             @foreach ($datos->services as $item)
                                 @if ($item->id == $item2->id)
                                     @foreach ($item->movservices as $mm)
-                                        @if ($mm->movs->status == 'ACTIVO')
+                                        @if ($mm->movs->status == 'INACTIVO' && $mm->movs->type == 'TERMINADO')
                                             {{ $mm->movs->usermov->name }} {{ $n }}
+                                            @break
+                                        @else
+                                            @if ($mm->movs->status == 'ACTIVO')
+                                                {{ $mm->movs->usermov->name }} {{ $n }}
+                                                @break
+                                            @endif
                                         @endif
                                     @endforeach
                                 @endif
@@ -337,12 +343,24 @@
                                         @foreach ($datos->services as $item)
                                             @if ($item->id == $item2->id)
                                                 @foreach ($item->movservices as $mm)
-                                                    @if ($mm->movs->status == 'ACTIVO')
-                                                        {{ $mm->movs->usermov->name }} {{ $n }}
+                                                    @if ($mm->movs->status == 'INACTIVO' && $mm->movs->type == 'TERMINADO')
+                                                    {{ $mm->movs->usermov->name }} {{ $n }}
+                                                    @break
+                                                    @else
+                                                        @if ($mm->movs->status == 'ACTIVO')
+                                                            {{ $mm->movs->usermov->name }} {{ $n }}
+                                                            @break
+                                                        @endif
                                                     @endif
                                                 @endforeach
                                             @endif
                                         @endforeach
+
+
+
+
+
+                                        
                                         <!-- {{ $usuario->name }} --><br>
                                         <b>ESTADO: </b>
                                         @foreach ($datos->services as $item)
@@ -371,9 +389,15 @@
                                             @foreach ($datos->services as $item)
                                                 @if ($item->id == $item2->id)
                                                     @foreach ($item->movservices as $mm)
+                                                    @if ($mm->movs->status == 'INACTIVO' && $mm->movs->type == 'TERMINADO')
+                                                    {{ $mm->movs->usermov->name }} {{ $n }}
+                                                    @break
+                                                    @else
                                                         @if ($mm->movs->status == 'ACTIVO')
                                                             {{ $mm->movs->usermov->name }} {{ $n }}
+                                                            @break
                                                         @endif
+                                                    @endif
                                                     @endforeach
                                                 @endif
                                             @endforeach
@@ -556,8 +580,14 @@
                             @foreach ($datos->services as $item)
                                 @if ($item->id == $item2->id)
                                     @foreach ($item->movservices as $mm)
-                                        @if ($mm->movs->status == 'ACTIVO')
-                                            {{ $mm->movs->usermov->name }} {{ $n }}
+                                        @if ($mm->movs->status == 'INACTIVO' && $mm->movs->type == 'TERMINADO')
+                                        {{ $mm->movs->usermov->name }} {{ $n }}
+                                        @break
+                                        @else
+                                            @if ($mm->movs->status == 'ACTIVO')
+                                                {{ $mm->movs->usermov->name }} {{ $n }}
+                                                @break
+                                            @endif
                                         @endif
                                     @endforeach
                                 @endif
@@ -761,9 +791,15 @@
                                         @foreach ($datos->services as $item)
                                             @if ($item->id == $item2->id)
                                                 @foreach ($item->movservices as $mm)
+                                                @if ($mm->movs->status == 'INACTIVO' && $mm->movs->type == 'TERMINADO')
+                                                {{ $mm->movs->usermov->name }} {{ $n }}
+                                                @break
+                                                @else
                                                     @if ($mm->movs->status == 'ACTIVO')
                                                         {{ $mm->movs->usermov->name }} {{ $n }}
+                                                        @break
                                                     @endif
+                                                @endif
                                                 @endforeach
                                             @endif
                                         @endforeach
@@ -795,9 +831,15 @@
                                             @foreach ($datos->services as $item)
                                                 @if ($item->id == $item2->id)
                                                     @foreach ($item->movservices as $mm)
+                                                    @if ($mm->movs->status == 'INACTIVO' && $mm->movs->type == 'TERMINADO')
+                                                    {{ $mm->movs->usermov->name }} {{ $n }}
+                                                    @break
+                                                    @else
                                                         @if ($mm->movs->status == 'ACTIVO')
                                                             {{ $mm->movs->usermov->name }} {{ $n }}
+                                                            @break
                                                         @endif
+                                                    @endif
                                                     @endforeach
                                                 @endif
                                             @endforeach
