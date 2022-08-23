@@ -40,6 +40,7 @@ class FreeSaleController extends Component
             'phone'=>$this->phone,
             'idaccount'=>$this->idgame,
             'alias'=> $this->alias,
+            'observation'=> "Ninguna",
             'free_plan_id'=> $this->freeplan_id,
             'sucursals_id'=> $this->idsucursal(),
             'user_id'=> Auth()->user()->id,
