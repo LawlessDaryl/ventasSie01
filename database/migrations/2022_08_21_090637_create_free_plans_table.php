@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFreePlanesTable extends Migration
+class CreateFreePlansTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateFreePlanesTable extends Migration
      */
     public function up()
     {
-        Schema::create('free_planes', function (Blueprint $table) {
+        Schema::create('free_plans', function (Blueprint $table) {
             $table->id();
             $table->string('nameplan',100);
             $table->string('nameoffer',100);
