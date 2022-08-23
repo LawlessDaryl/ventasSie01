@@ -49,7 +49,7 @@
                 <td>{{$item->alias}}</td>
                 <td>{{$item->free_plan_id}}</td>
                 <td>{{$item->created_at}}</td>
-                <td>000 Bs</td>
+                <td>? Bs</td>
                 <td>5</td>
                 <td>{{$item->observation}}</td>
             </tr>
