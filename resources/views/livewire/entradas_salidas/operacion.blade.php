@@ -38,7 +38,8 @@
                         <div class="form-group">
                             <strong style="color: rgb(74, 74, 74)">Seleccione un tipo de proceso:</strong>
                             <select wire:model='tipo_proceso' class="form-control">
-                                <option value="Entrada" selected>Entrada</option>
+                                <option value="null" selected disabled>Elegir</option>
+                                <option value="Entrada">Entrada</option>
                                 <option value="Salida">Salida</option>
                               
                                 

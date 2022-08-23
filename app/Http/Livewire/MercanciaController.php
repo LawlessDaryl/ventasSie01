@@ -577,22 +577,17 @@ class MercanciaController extends Component
             ];
     
             $this->validate($rules, $messages);
-
+            DB::beginTransaction();
+            try {
+            $rs=IngresoProductos::create([
+                'destino'=>$this->destino,
+                'user_id'=>Auth()->user()->id,
+                'concepto'=>$this->concepto,
+                'observacion'=>$this->observacion
+               ]);
             foreach ($this->col as $datas) {
                 if ($this->tipo_proceso == 'Entrada') {
 
-                   
-                    
-                 
-                        DB::beginTransaction();
-                        try {
-                            $rs=IngresoProductos::create([
-                                'destino'=>$this->destino,
-                                'user_id'=>Auth()->user()->id,
-                                'concepto'=>$this->concepto,
-                                'observacion'=>$this->observacion
-                               ]);
-            
                                $lot= Lote::create([
                                 'existencia'=>$datas['cantidad'],
                                 'costo'=>$datas['costo'],
@@ -611,24 +606,7 @@ class MercanciaController extends Component
                                $q=ProductosDestino::where('product_id',$datas['product_id'])
                     ->where('destino_id',$this->destino)->value('stock');
 
-                    ProductosDestino::updateOrCreate(['product_id' => $datas['product_id'], 'destino_id'=>$this->destino],['stock'=>$q+$datas['cantidad']]);
-            
-        
-        
-        
-                              
-                        DB::commit();
-                        }
-                         catch (Exception $e)
-                        {
-                        DB::rollback();
-                        dd($e->getMessage());
-                        }
-                    
-
-                   
-    
-                    
+                    ProductosDestino::updateOrCreate(['product_id' => $datas['product_id'], 'destino_id'=>$this->destino],['stock'=>$q+$datas['cantidad']]); 
                 }
                 else{
                       
@@ -714,6 +692,14 @@ class MercanciaController extends Component
    
                 }
             }
+                   
+            DB::commit();
+        }
+         catch (Exception $e)
+        {
+        DB::rollback();
+        dd($e->getMessage());
+        }
 
 
             $this->emit('product-added');
@@ -721,7 +707,7 @@ class MercanciaController extends Component
     }
 
     public function resetui(){
-        $this->tipo_proceso='Elegir';
+        $this->tipo_proceso=null;
         $this->archivo=null;
         $this->concepto= 'Elegir';
         $this->registro= "Manual";
@@ -743,6 +729,7 @@ class MercanciaController extends Component
     public function Exit(){
        // dd("S");
         $this->resetui();
+        $this->resetErrorBag();
         $this->emit('product-added');
     }
 public function ver($id){
@@ -772,5 +759,45 @@ public function buscarl(){
 
     dd($object);
 }
+protected $listeners = ['eliminar_registro' => 'eliminar_registro'];
+
+public function verifySale(IngresoProductos $id)
+{
+   
+    //$id->delete();
+
+    $auxi1=IngresoProductos::join('detalle_entrada_productos','detalle_entrada_productos.id_entrada','ingreso_productos.id')
+    ->join('lotes','detalle_entrada_productos.lote_id','lotes.id')
+    ->where('ingreso_productos.id',$id->id)
+    ->select('lotes.id as lote_id','detalle_entrada_productos.id as detalle_ent_id','ingreso_productos.id as ing_prod')
+    ->get();
+    $def=0;
+
+    //dd($auxi);
+
+
+    if (count($auxi1)>0) {
+        foreach ($auxi1 as $data) {
+
+            $rt=SaleLote::where('lote_id',$data->lote_id)->get();
+            if (count($rt)>0) {
+                $this->emit('venta');
+            }
+            else{
+                $this->emit('confirmar');
+            }
+
+
+        }
+    }
+}
+
+public function eliminar_registro($val)
+{
+        dd($val);
+}
+
+
+
     
 }

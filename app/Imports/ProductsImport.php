@@ -11,6 +11,7 @@ use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Concerns\WithCalculatedFormulas;
+use Maatwebsite\Excel\Validators\Failure;
 
 class ProductsImport implements ToModel,WithHeadingRow,WithBatchInserts,WithChunkReading,WithValidation,WithCalculatedFormulas
 {
@@ -51,7 +52,7 @@ class ProductsImport implements ToModel,WithHeadingRow,WithBatchInserts,WithChun
         }
         else
         {
-            $auxi= $this->categories->where('name',strtoupper($row['categoria']));
+            $auxi= Category::where('name',strtoupper($row['categoria']))->get();
             if (count($auxi) == 0) {
                // dd("no esta nulo");
                 $fg=Category::create([
@@ -60,6 +61,9 @@ class ProductsImport implements ToModel,WithHeadingRow,WithBatchInserts,WithChun
                 ]);
                 
                 $product->category_id = $fg->id;
+                $fg->save();
+                $this->categories= Category::pluck('id','name');
+
             }
             else{
                 
@@ -74,32 +78,34 @@ class ProductsImport implements ToModel,WithHeadingRow,WithBatchInserts,WithChun
         }
         else
         {
-            $auxi= $this->categories->where('name',strtoupper($row['subcategoria']));
+            $auxi= Category::where('name',strtoupper($row['subcategoria']))->get();
+
             if (count($auxi) == 0) {
                // dd("no esta nulo");
                 $fg=Category::create([
-                    'name' => strtoupper($row['categoria']),
+                    'name' => strtoupper($row['subcategoria']),
                     'descripcion'=>'ninguna',
-                    'cat_padre'=>
+                    'categoria_padre'=>$this->categories[strtoupper($row['categoria'])]
                 ]);
                 
                 $product->category_id = $fg->id;
             }
             else{
-                
                 //dd($auxi);
-                $product->category_id = $this->categories[strtoupper($row['categoria'])];
+                $this->categories = Category::pluck('id','name');
+                $cat= $this->categories[strtoupper($row['categoria'])];
+                $subcat = Category::where('name',strtoupper($row['subcategoria']))->select('categories.categoria_padre')->value('categoria_padre');
+
+                if ($subcat !== $cat) {
+                    $error = ['Error en la columna subcategoria, una subcategoria no pertenece a la categoria del producto que se quiere registrar, revise su archivo por favor'];
+                    $failures[]= new Failure(13,'subcategoria',$error,$row);
+                    throw new \Maatwebsite\Excel\Validators\ValidationException(\Illuminate\Validation\ValidationException::withMessages($error),$failures);
+                }
+
+
+                $product->category_id = $this->categories[strtoupper($row['subcategoria'])];
             }
         }
-
-
-
-
-
-        'categoria_padre'=>$this->subcategories[$row['categoria_p']],
-
-
-
 
         $product->save();
 
