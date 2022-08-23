@@ -33,7 +33,7 @@ class MercanciaController extends Component
     use WithPagination;
     use WithFileUploads;
     public  $fecha,$buscarproducto=0,$selected,$registro
-    ,$archivo,$searchproduct,$costo,$sm,$concepto,$destino,$detalle,$tipo_proceso,$col,$destinosucursal,$observacion,$cantidad,$result,$arr;
+    ,$archivo,$searchproduct,$costo,$sm,$concepto,$destino,$detalle,$tipo_proceso,$col,$destinosucursal,$observacion,$cantidad,$result,$arr,$ing_prod_id,$destino_delete;
     private $pagination = 50;
 
     public function paginationView()
@@ -780,23 +780,54 @@ public function verifySale(IngresoProductos $id)
         foreach ($auxi1 as $data) {
 
             $rt=SaleLote::where('lote_id',$data->lote_id)->get();
+          
             if (count($rt)>0) {
-                $this->emit('venta');
+             
+               $def++;
             }
-            else{
-                $this->emit('confirmar');
-            }
+        }
 
-
+        if ($def>0) {
+            $this->emit('venta');
+        }
+        else{
+       
+            $this->emit('confirmar');
+            $this->ing_prod_id= $id->id;
+            $this->destino_delete=$id->destino;
+            
         }
     }
 }
 
-public function eliminar_registro($val)
+public function eliminar_registro()
 {
-        dd($val);
+   
+    $rel=DetalleEntradaProductos::where('id_entrada',$this->ing_prod_id)->get();
+    foreach ($rel as $data) {
+        
+      
+        $data->delete();
+        $lot=Lote::find($data->lote_id);
+        $lot->delete();
+
+        $q=ProductosDestino::where('product_id',$data->product_id)
+        ->where('destino_id',$this->destino_delete)->value('stock');
+
+        
+        $gh=ProductosDestino::updateOrCreate(['product_id'=>$data->product_id,'destino_id'=>$this->destino_delete],['stock'=>$q-$data->cantidad]);
+        
+
+
+
+    }
+    $del=IngresoProductos::find($this->ing_prod_id);
+    $del->delete();
+   
+
 }
 
+   
 
 
     

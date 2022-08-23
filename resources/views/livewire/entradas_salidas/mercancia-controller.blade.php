@@ -129,7 +129,7 @@
             }).then((result) => {
             if (result.value) {
             
-                window.livewire.emit('eliminar_registro',ef);
+                window.livewire.emit('eliminar_registro');
                 Swal.fire(
                 'Eliminado!',
                  'El registro fue eliminado con exito',
