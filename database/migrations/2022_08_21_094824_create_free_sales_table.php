@@ -20,10 +20,10 @@ class CreateFreeSalesTable extends Migration
             $table->string('idaccount',50);
             $table->string('alias', 50);
             $table->string('observation',500)->default('Ninguna');
-            $table->foreignId('free_planes_id')->constrained();
-            $table->foreignId('sucursals_id')->constrained();
-
-
+            $table->unsignedBigInteger('free_plan_id');
+            $table->foreign('free_plan_id')->references('id')->on('free_plans');
+            $table->unsignedBigInteger('sucursals_id');
+            $table->foreign('sucursals_id')->references('id')->on('sucursals');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->unsignedBigInteger('movimiento_id');
