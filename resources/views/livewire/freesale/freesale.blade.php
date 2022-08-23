@@ -30,11 +30,13 @@
             <th scope="col">#</th>
             <th scope="col">Nombre</th>
             <th scope="col">Telefono/Celular</th>
+            <th scope="col">ID</th>
             <th scope="col">Alias</th>
             <th scope="col">Plan</th>
             <th scope="col">Fecha Venta</th>
             <th scope="col">Precio Real Bs</th>
             <th scope="col">Criptomonedas</th>
+            <th scope="col">Obervación</th>
             </tr>
         </thead>
         <tbody>
@@ -45,8 +47,11 @@
                 <td>{{$item->phone}}</td>
                 <td>{{$item->idaccount}}</td>
                 <td>{{$item->alias}}</td>
+                <td>{{$item->free_plan_id}}</td>
+                <td>{{$item->created_at}}</td>
+                <td>000 Bs</td>
+                <td>5</td>
                 <td>{{$item->observation}}</td>
-                <td>{{$item->free_plans_id}}</td>
             </tr>
             @endforeach
             <tr>
