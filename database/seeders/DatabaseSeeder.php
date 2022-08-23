@@ -60,7 +60,7 @@ class DatabaseSeeder extends Seeder
         $this->call(LocationSeeder::class);
         
         $this->call(ProviderSeeder::class);
-        $this->call(FreePlanesSeeder::class);
+        $this->call(FreePlansSeeder::class);
        
        
         // $this->call(CompraSeeder::class);
