@@ -49,7 +49,7 @@
     .slider.round:before {
     border-radius: 40%;
     }
-    /* Estilos para la Tabla - Ventana Modal Asignar Técnico  Responsable*/
+    /* Estilos para las tablas */
     .table-wrapper {
     width: 100%;/* Anchura de ejemplo */
     height: 350px; /* Altura de ejemplo */
@@ -82,7 +82,7 @@
     }
     .table-wrapper table td {
         border-top: 0.3px solid #ee761c;
-        
+        padding-left: 10px;
         border-right: 0.3px solid #ee761c;
     }
 </style>
@@ -94,7 +94,12 @@
                 <h3><b>Cliente Anónimo</b></h3>
                 <div class="form-group">
                     <label class="switch">
-                    <input type="checkbox" checked>
+                    {{-- <input type="checkbox" checked> --}}
+
+
+                    <input type="checkbox" wire:change="clienteanonimo()" {{ $clienteanonimo ? 'checked' : '' }}>
+
+
                     <span class="slider round"></span>
                     </label>
                 </div>
@@ -112,10 +117,14 @@
             <div class="col-12 col-sm-6 col-md-2 text-center">
                 <h3><b>Tipo de Pago</b></h3>
                 <div class="form-group">
-                    <select wire:model="tipofecha" class="form-control">
-                        <option value="Todos" selected>Todas las Fechas</option>
-                        <option value="Dia">Hoy</option>
-                        <option value="Rango">Rango de Fechas</option>
+                    <select wire:model="cartera_id" class="form-control">
+                        <option value="Elegir">Elegir</option>
+                        @foreach($carteras as $c)
+                        <option value="{{$c->idcartera}}">{{$c->nombrecartera}} - {{$c->dc}}</option>
+                        @endforeach
+                        @foreach($carterasg as $g)
+                        <option value="{{$g->idcartera}}">{{$g->nombrecartera}} - {{$g->dc}}</option>
+                        @endforeach
                     </select>
                 </div>
             </div>
@@ -221,11 +230,30 @@
                         
                     </div>
                 </div>
-                <div class="input-group mb-12">
-                    <div class="form-control">
-                        |
+                @if($this->clienteanonimo)
+                <div style="height: 44.2px;">
+
+                </div>
+                @else
+                <div class="row">
+                    <div class="col-3 text-center">
+                        
+                    </div>
+                    <div class="col-3 text-center">
+                        <button wire:click.prevent="modalbuscarcliente()" class="form-control btn btn-button" style="">
+                            Buscar Cliente
+                        </button>
+                    </div>
+                    <div class="col-3 text-center">
+                        <button class="form-control">
+                            Crear Cliente
+                        </button>
+                    </div>
+                    <div class="col-3 text-center">
+                        
                     </div>
                 </div>
+                @endif
                 <br>
                 @if ($this->total_bs > 0)
                 <div class="table-wrapper">
@@ -302,12 +330,12 @@
                     </div>
                     <div class="col-4 text-right">
                     </div>
-                    <div class="col-4 text-center">
+                    <div class="col-4 text-right">
                         <div class="btn-group" role="group" aria-label="Basic example">
                             @if($this->total_items > 0)
                             <button onclick="ConfirmarLimpiar()" class="btn btn-button" style="background-color: chocolate; color: white;">Vaciar Todo</button>
                             @endif
-                            <button class="btn btn-button" style="background-color: rgb(12, 143, 0); color: white;">Lista de Ventas</button>
+                            <a href="{{ url('salelist') }}" class="btn btn-button" style="background-color: rgb(12, 143, 0); color: white;">Lista de Ventas</a>
                             <button wire:click.prevent="modalfinalizarventa()" class="btn btn-button" style="background-color: rgb(0, 114, 180); color: white;">Finalizar Venta</button>
                         </div>
                     </div>
@@ -318,6 +346,7 @@
 
 
     @include('livewire.pos.modal.modalfinalizarventa')
+    @include('livewire.pos.modal.modalbuscarcliente')
 
 </div>
 
@@ -330,9 +359,82 @@
         window.livewire.on('show-finalizarventa', Msg => {
             $("#modalfinalizarventa").modal("show");
         });
+        // Mètodo JavaScript para llamar al modal para buscar un cliente
+        window.livewire.on('show-buscarcliente', Msg => {
+            $("#modalbuscarcliente").modal("show");
+        });
+        //Mostrar Toast cuando un producto se incrementa en el shopping cart
+        window.livewire.on('increase-ok', msg => {
+            const toast = swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 4000,
+            padding: '2em'
+            });
+            toast({
+                type: 'success',
+                title: @this.mensaje_toast,
+                padding: '2em',
+            })
+        });
+        //Mostrar Toast cuando un producto no se encuentra para ponerlo en el shopping cart
+        window.livewire.on('increase-notfound', msg => {
+            const toast = swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 4000,
+            padding: '2em'
+            });
+            toast({
+                type: 'warning',
+                title: @this.mensaje_toast,
+                padding: '2em',
+            })
+        });
+        //Mostrar Toast cuando se use un cliente anónimo
+        window.livewire.on('clienteanonimo-true', msg => {
+            const toast = swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 4000,
+            padding: '2em'
+            });
+            toast({
+                type: 'info',
+                title: @this.mensaje_toast,
+                padding: '2em',
+            })
+        });
+        //Mostrar Toast cuando no se use un cliente anónimo
+        window.livewire.on('clienteanonimo-false', msg => {
+            const toast = swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 5000,
+            padding: '2em'
+            });
+            toast({
+                type: 'info',
+                title: @this.mensaje_toast,
+                padding: '2em',
+            })
+        });
+        //Mostrar Mensaje Shopping Cart Vaciado exitosamente
+        window.livewire.on('cart-clear', event => {
+                swal(
+                    '¡El Shopping Cart fue vaciado exitosamente!',
+                    'Se eliminaron todos los productos correctamente',
+                    'success'
+                    )
+            });
 
-        //Cerrar Ventana Modal y Mostrar Toast Servicio Actualizado Correctamente
-        window.livewire.on('scan-ok', msg => {
+        //Cerrar ventana modal finalizar venta y mostrar mensaje toast de venta realizada con éxito
+        window.livewire.on('sale-ok', msg => {
+            $("#modalfinalizarventa").modal("hide");
             const toast = swal.mixin({
             toast: true,
             position: 'top-end',
@@ -347,12 +449,14 @@
             })
         });
 
-        //Mostrar Mensaje Eliminado con Éxito
-        window.livewire.on('cart-clear', event => {
+
+
+        //Mostrar Mensaje a ocurrido un error en la venta
+        window.livewire.on('sale-error', event => {
                 swal(
-                    '¡El Shopping Cart fue vaciado exitosamente!',
-                    'Se eliminaron todos los productos correctamente',
-                    'success'
+                    'A ocurrido un error al realizar la venta',
+                    'Detalle del error'+ @this.mensaje_toast,
+                    'error'
                     )
             });
 

@@ -85,7 +85,7 @@
                 </div>
                 <div class="col-4 text-center">
                     @if ($dinero_recibido >= $total_bs && $total_bs>0)
-                    <button type="button" class="btn btn-primary">VENDER</button>
+                    <button wire:click.prevent="savesale()" type="button" class="btn btn-primary">VENDER</button>
                     @endif
                 </div>
             </div>

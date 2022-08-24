@@ -2,30 +2,49 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Caja;
+use App\Models\Cartera;
+use App\Models\CarteraMov;
 use App\Models\Denomination;
 use App\Models\Product;
 use Livewire\Component;
 use App\Models\Cliente;
+use App\Models\ClienteMov;
 use App\Models\Company;
 use App\Models\Destino;
+use App\Models\Lote;
+use App\Models\Movimiento;
+use App\Models\Sale;
+use App\Models\SaleDetail;
+use App\Models\SaleLote;
 use App\Models\User;
 use Darryldecode\Cart\Facades\CartFacade as Cart;
+use Exception;
+use Illuminate\Support\Facades\DB;
 use Livewire\WithPagination;
 
 class PosController extends Component
 {
     //VARIABLES PARA LOS ELEMENTOS QUE ESTAN EN LA PARTE SUPERIOR DE LA VISTA DE UNA VENTA
+
+    //Variable para guardar true o false para tenor o no un cliente anónimo
+    public $clienteanonimo;
     //Total Bs en una Venta
     public $total_bs;
     //Cantidad Total de Productos en una Venta
     public $total_items;
+    //id de la cartera seleccionada
+    public $cartera_id;
+    //Variables para saber si la venta es o no con factura
+    public $factura, $invoice;
 
 
-
-
-
-    //Variable para Buscar por el Nombre o Código de uno o mas Productos
+    //Variable para poner la cantidad de filas en las tablas
+    public $paginacion;
+    //Variable para Buscar por el Nombre o Código los Productos
     public $buscarproducto;
+    //Variable para Buscar por el Nombre o Código a los Clientes
+    public $buscarcliente;
     //Variable para mostrar en un Mensaje Toast (Mensaje Emergente Arriba a la derecha en la Pantalla)
     public $mensaje_toast;
     //Variable para guardar la cantidad de dinero y cambio que se debe dar al cliente en una venta
@@ -38,8 +57,21 @@ class PosController extends Component
     }
     public function mount()
     {
+        $this->paginacion = 10;
         $this->total_bs = Cart::getTotal();
         $this->total_items = Cart::getTotalQuantity();
+        $this->factura = false;
+        $this->clienteanonimo = true;
+        $this->cartera_id = 'Elegir';
+        foreach($this->listarcarteras() as $list)
+        {
+            if($list->tipo == 'CajaFisica')
+            {
+                $this->cartera_id = $list->idcartera;
+                break;
+            }
+            
+        }
     }
     public function render()
     {
@@ -56,14 +88,9 @@ class PosController extends Component
             ->where('products.nombre', 'like', '%' . $this->buscarproducto . '%')
             ->orWhere('products.codigo', 'like', '%' . $this->buscarproducto . '%')
             ->groupBy('products.id')
-            ->paginate(10);
+            ->paginate($this->paginacion);
         }
-
-
-
-
-
-
+        //---------------------------------------------------------------------------------------------------------
         //Modulo para Calcular el Cambio
         if($this->dinero_recibido < 0 || $this->dinero_recibido == "-")
         {
@@ -74,11 +101,37 @@ class PosController extends Component
             $this->cambio = $this->dinero_recibido - $this->total_bs;
         }
         //---------------------------------------------------------------
+        //Modulo para cambiar a si o no la variable $invoice (Factura)
+        if($this->factura)
+        {
+            $this->invoice = "Si";
+        }
+        else
+        {
+            $this->invoice = "No";
+        }
+        //---------------------------------------------------------------
+
+
+        $listaclientes = [];
+        if(strlen($this->buscarcliente) > 0)
+        {
+            $listaclientes = Cliente::select("clientes.*")
+            ->where('clientes.nombre', 'like', '%' . $this->buscarcliente . '%')
+            ->orderBy("clientes.created_at","desc")
+            ->get();
+        }
+
+
+
+
         return view('livewire.pos.component', [
             'denominations' => Denomination::orderBy('id', 'asc')->get(),
             'listaproductos' => $listaproductos,
             'cart' => Cart::getContent(),
-            'logoempresa' => Company::find(1)->image
+            'carteras' => $this->listarcarteras(),
+            'carterasg' => $this->listarcarterasg(),
+            'listaclientes' => $listaclientes
 
         ])
             ->extends('layouts.theme.app')
@@ -94,6 +147,22 @@ class PosController extends Component
         ->get()
         ->first();
         return $idsucursal->id;
+    }
+    //Poner la variable $clienteanonimo en true o false dependiendo el caso
+    public function clienteanonimo()
+    {
+        if($this->clienteanonimo)
+        {
+            $this->clienteanonimo = false;
+            $this->mensaje_toast = "Por favor cree o seleccione a un cliente, si no lo hace, se usará a un cliente anónimo";
+            $this->emit('clienteanonimo-false');
+        }
+        else
+        {
+            $this->clienteanonimo = true;
+            $this->mensaje_toast = "Se usará a un Cliente Anónimo para esta venta";
+            $this->emit('clienteanonimo-true');
+        }
     }
      //Incrementar Items en el Carrito
     public function increase(Product $producto)
@@ -113,13 +182,13 @@ class PosController extends Component
         {
             Cart::add($producto->id, $producto->nombre, $producto->precio_venta, 1 , '56');
             $this->mensaje_toast = "¡'" . $producto->nombre . "' agregado correctamente!";
-            $this->emit('scan-ok');
+            $this->emit('increase-ok');
         }
         else
         {
             Cart::add($producto->id, $producto->nombre, $producto->precio_venta, 1 , $producto->image);
             $this->mensaje_toast = "¡'" . $producto->nombre . "' agregado correctamente!";
-            $this->emit('scan-ok');
+            $this->emit('increase-ok');
         }
         $this->actualizarvalores();
     }
@@ -133,6 +202,7 @@ class PosController extends Component
         'clear-Cart' => 'clearcart',
         'saveSale' => 'saveSale'
     ];
+    //Recibe el codigo del producto para ponerlo en el Shopping Cart (Carrito de Compras)
     public function ScanCode($barcode, $cant = 1)
     {
         //Buscando Stock del Producto en Tienda
@@ -148,7 +218,8 @@ class PosController extends Component
         
         if ($product == null || empty($product))
         {
-            $this->emit('scan-notfound', 'El producto no esta registrado o no existe en esta Sucursal');
+            $this->mensaje_toast = "El producto con el código '". $barcode ."' no existe o no esta registrado";
+            $this->emit('increase-notfound');
         }
         else
         {
@@ -162,7 +233,7 @@ class PosController extends Component
         );
         $this->actualizarvalores();
         $this->mensaje_toast = "¡Producto: '" . $product->name . "' escaneado correctamente!";
-        $this->emit('scan-ok');
+        $this->emit('increase-ok');
             
         }
     }
@@ -194,5 +265,163 @@ class PosController extends Component
             }
             $this->dinero_recibido = $this->dinero_recibido + $value;
         }
+    }
+    //Guardar una venta
+    public function savesale()
+    {
+        
+        DB::beginTransaction();
+        try
+        {
+            //Creando Movimiento
+        $Movimiento = Movimiento::create([
+            'type' => "VENTAS",
+            'import' => $this->total_bs,
+            'user_id' => Auth()->user()->id,
+        ]);
+        //Creando Cliente Movimiento
+        ClienteMov::create([
+            'movimiento_id' => $Movimiento->id,
+            'cliente_id' => 1,
+        ]);
+        //Para saber toda la informacionde del id de la cartera seleccionada
+        $cartera = Cartera::find($this->cartera_id);
+        //Creando la venta
+        $sale = Sale::create([
+            'total' => $this->total_bs,
+            'items' => $this->total_items,
+            'cash' => $this->dinero_recibido,
+            'change' => $this->cambio,
+            'tipopago' => $cartera->nombre,
+            'factura' => $this->invoice,
+            'cartera_id' => $cartera->id,
+            'movimiento_id' => $Movimiento->id,
+            'user_id' => Auth()->user()->id
+        ]);
+
+
+
+        //Obteniendo todos los productos del Shopping Cart (Carrito de Compras)
+        $productos = Cart::getContent();
+
+        foreach($productos as $p)
+        {
+            $sd = SaleDetail::create([
+                'price' => $p->price,
+                'quantity' => $p->quantity,
+                'product_id' => $p->id,
+                'sale_id' => $sale->id,
+            ]);
+
+            // $lote = Lote::where('product_id', $p->id)->where('status','Activo')->get();
+
+            // //Para obtener la cantidad del producto
+            // $cantidad_producto = $p->quantity;
+
+            // foreach($lote as $val)
+            // {
+            //     $lotecantidad = $val->existencia;
+            //     if($cantidad_producto > $lotecantidad)
+            //     {
+            //         $sl = SaleLote::create([
+            //             'sale_detail_id' => $sd->id,
+            //             'lote_id' => $val->id,
+            //             'cantidad' => $val->existencia
+            //         ]);
+
+            //         $val->update([
+            //             'existencia' => 0,
+            //             'status' => 'Inactivo'
+            //          ]);
+            //          $val->save();
+            //     }
+            //     else
+            //     {
+            //         $dd = SaleLote::create([
+            //             'sale_detail_id' => $sd->id,
+            //             'lote_id' => $val->id,
+            //             'cantidad' => $this->qq
+            //         ]);
+                  
+
+            //         $val->update([ 
+            //             'existencia'=>$this->lotecantidad-$this->qq
+            //         ]);
+            //         $val->save();
+            //         $cantidad_producto = 0;
+            //     }
+            // }
+        }
+
+        //Creando Cartera Movimiento
+        CarteraMov::create([
+            'type' => "INGRESO",
+            'tipoDeMovimiento' => "VENTA",
+            'comentario' => "Venta",
+            'cartera_id' => $cartera->id,
+            'movimiento_id' => $Movimiento->id,
+        ]);
+
+
+        $this->resetUI();
+        $this->clearcart();
+        $this->mensaje_toast = "¡Venta realizada exitosamente!";
+        $this->emit('sale-ok');
+
+        DB::commit();
+        }
+        catch (Exception $e)
+        {
+            DB::rollback();
+            $this->mensaje_toast = ": ".$e->getMessage();
+            $this->emit('sale-error');
+        }
+    }
+    //Listar las Carteras disponibles en su corte de caja
+    public function listarcarteras()
+    {
+        $carteras = Caja::join('carteras as car', 'cajas.id', 'car.caja_id')
+        ->join('cartera_movs as cartmovs', 'car.id', 'cartmovs.cartera_id')
+        ->join('movimientos as mov', 'mov.id', 'cartmovs.movimiento_id')
+        ->where('cajas.estado', 'Abierto')
+        ->where('mov.user_id', Auth()->user()->id)
+        ->where('mov.status', 'ACTIVO')
+        ->where('mov.type', 'APERTURA')
+        ->where('cajas.sucursal_id', $this->idsucursal())
+        ->select('car.id as idcartera', 'car.nombre as nombrecartera', 'car.descripcion as dc','car.tipo as tipo')
+        ->get();
+        return $carteras;
+    }
+    //Listar las carteras generales
+    public function listarcarterasg()
+    {
+        $carteras = Caja::join('carteras as car', 'cajas.id', 'car.caja_id')
+        ->where('cajas.id', 1)
+        ->select('car.id as idcartera', 'car.nombre as nombrecartera', 'car.descripcion as dc','car.tipo as tipo')
+        ->get();
+        return $carteras;
+    }
+    //Volver a los valores por defecto
+    public function resetUI()
+    {
+        $this->total_bs = Cart::getTotal();
+        $this->total_items = Cart::getTotalQuantity();
+        $this->factura = false;
+        $this->buscarproducto = "";
+        $this->cartera_id = 'Elegir';
+        foreach($this->listarcarteras() as $list)
+        {
+            if($list->tipo == 'CajaFisica')
+            {
+                $this->cartera_id = $list->idcartera;
+                break;
+            }
+            
+        }
+    }
+    //llama al modal buscarcliente
+    public function modalbuscarcliente()
+    {
+        $this->emit('show-buscarcliente');
     }
 }
