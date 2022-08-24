@@ -573,6 +573,13 @@ class EditarCompraDetalleController extends Component
         }
     }
 
+    public function verificarLotes($id){
+        
+
+
+
+    }
+
   
 
 

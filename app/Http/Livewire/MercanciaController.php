@@ -267,9 +267,6 @@ class MercanciaController extends Component
         }
     }
 
-    
-
-    
     public function CrearLotes()
     {
         $auxi= Product::all();
@@ -314,12 +311,6 @@ class MercanciaController extends Component
                    ]);
 
 
-
-                   
-                
-
-            
-               
             }
         
 
