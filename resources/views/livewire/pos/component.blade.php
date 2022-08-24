@@ -304,7 +304,9 @@
                     </div>
                     <div class="col-4 text-center">
                         <div class="btn-group" role="group" aria-label="Basic example">
+                            @if($this->total_items > 0)
                             <button onclick="ConfirmarLimpiar()" class="btn btn-button" style="background-color: chocolate; color: white;">Vaciar Todo</button>
+                            @endif
                             <button class="btn btn-button" style="background-color: rgb(12, 143, 0); color: white;">Lista de Ventas</button>
                             <button wire:click.prevent="modalfinalizarventa()" class="btn btn-button" style="background-color: rgb(0, 114, 180); color: white;">Finalizar Venta</button>
                         </div>
@@ -321,7 +323,6 @@
 
 
 @section('javascript')
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
@@ -346,45 +347,24 @@
             })
         });
 
-
-
-         
-        
-    
-        // Mètodo JavaScript para llamar al modal de Espera
-        window.livewire.on('modalespera', Msg => {
-            
-            swal({
-                    title: 'Venta Realizada con Exito',
-                    text: 'Recargando...',
-                    timer: 2000,
-                    padding: '2em',
-                    onOpen: function () {
-                    swal.showLoading()
-                    }
-                }).then(function (result) {
-                    if (
-                    // Read more about handling dismissals
-                    result.dismiss === swal.DismissReason.timer
-                    ) {
-                    console.log('I was closed by the timer')
-                    }
-                })
-                
-                
+        //Mostrar Mensaje Eliminado con Éxito
+        window.livewire.on('cart-clear', event => {
+                swal(
+                    '¡El Shopping Cart fue vaciado exitosamente!',
+                    'Se eliminaron todos los productos correctamente',
+                    'success'
+                    )
             });
 
-
-
             
-    })
+    });
 
 
-       // Código para lanzar la Alerta de Anulación de Servicio
-       function ConfirmarLimpiar() {
+    // Código para lanzar la Alerta de Hacerse Técnico Responsable de un Servicio
+    function ConfirmarLimpiar() {
         swal({
-            title: '¿Vaciar todos los Productos del Shopping Cart"?',
-            text: "Se limpiaran todos los productos el total venta y el total artículos",
+            title: '¿Vaciar todo el contenido del Shopping Cart?',
+            text: "Los valores de total articulos y total venta pasarán a ser 0",
             type: 'warning',
             showCancelButton: true,
             cancelButtonText: 'Cancelar',
@@ -392,10 +372,16 @@
             padding: '2em'
             }).then(function(result) {
             if (result.value) {
-                window.livewire.emit('clearcart')
+                window.livewire.emit('clear-Cart')
                 }
             })
-        }
+    }
+    
+
+
+
+
+
 </script>
 
 

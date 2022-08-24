@@ -130,7 +130,7 @@ class PosController extends Component
     }
     protected $listeners = [
         'scan-code' => 'ScanCode',
-        'clearCart' => 'clearCart',
+        'clear-Cart' => 'clearcart',
         'saveSale' => 'saveSale'
     ];
     public function ScanCode($barcode, $cant = 1)
@@ -170,11 +170,8 @@ class PosController extends Component
     public function clearcart()
     {
         Cart::clear();
-        // $this->efectivo = 0;
-        // $this->change = 0;
-
         $this->actualizarvalores();
-        //$this->emit('scan-ok', 'Carrito vacio');
+        $this->emit('cart-clear');
     }
     //Actualizar los valores de Total Bs y Total Artículos en una Venta
     public function actualizarvalores()
