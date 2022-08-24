@@ -14,6 +14,8 @@ use App\Models\MovimientoCompra;
 use App\Models\Product;
 use App\Models\ProductosDestino;
 use App\Models\Provider;
+use App\Models\SaleLote;
+use App\Models\SalidaLote;
 use App\Models\Sucursal;
 use App\Models\Unidad;
 use App\Models\User;
@@ -46,8 +48,6 @@ class EditarCompraDetalleController extends Component
     public $nombre,$costo, $precio_venta,$barcode,$codigo,$caracteristicas,$lote,$unidad, $marca, $garantia,$industria,
     $categoryid,$component,$selected_categoria,$image,$selected_id2;
 
-   
-   
     public function mount()
     {
       
@@ -79,11 +79,7 @@ class EditarCompraDetalleController extends Component
         $this->porcentaje=$this->aux->descuento > 0 ? ($this->aux->descuento/$this->aux->importe_total) : 0;
 
         $this->verPermisos();
-
-
-                  
-                        
-                    
+                
  }
     public function render()
     {
@@ -465,6 +461,7 @@ class EditarCompraDetalleController extends Component
 
     public function guardarCompra()
     {
+        $this->verificarLotes();
 
         $rules = [
             'provider'=>'required',
@@ -573,8 +570,24 @@ class EditarCompraDetalleController extends Component
         }
     }
 
-    public function verificarLotes($id){
-        
+    public function verificarLotes(){
+   
+        $auxi= CompraDetalle::where('compra_detalles.compra_id',$this->ide)->get();
+        dump($this->ide);
+     dump("nada",$auxi);
+        foreach ($auxi as $data) {
+            dump($data->lote_compra);
+            $ft=SaleLote::where('lote_id',$data->lote_compra)->get();
+            $sl=SalidaLote::where('lote_id',$data->lote_compra)->get();
+            dump($ft,$sl);
+            if (count($ft)>0 or count($sl)>0) {
+                $auxi=EditarCompra::get($data->product_id);
+            }
+            else{
+               // dd("todo marcha bien");
+            }
+        }
+
 
 
 

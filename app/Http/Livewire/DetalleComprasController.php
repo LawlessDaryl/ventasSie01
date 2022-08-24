@@ -513,11 +513,19 @@ if ($this->validateCarrito()) {
             $items = Compras::getContent();
             if ($this->tipo_documento == 'FACTURA') {
                 foreach ($items as $item) {
+                    $lot= Lote::create([
+                        'existencia'=>$item->quantity,
+                        'costo'=>$item->price,
+                        'status'=>'Activo',
+                        'product_id'=>$item->id
+                    ]);
+
                     CompraDetalle::create([
                         'precio' => $item->price*0.87,
                         'cantidad' => $item->quantity,
                         'product_id' => $item->id,
                         'compra_id' => $Compra_encabezado->id,
+                        'lote_compra'=>$lot->id
                         
                         
                     ]);
@@ -544,11 +552,13 @@ if ($this->validateCarrito()) {
                     ]);
 
 
+                    dd($lot);
                     CompraDetalle::create([
                         'precio' => $item->price,
                         'cantidad' => $item->quantity,
                         'product_id' => $item->id,
-                        'compra_id' => $Compra_encabezado->id
+                        'compra_id' => $Compra_encabezado->id,
+                        'lote_compra'=>$lot->id
                     ]);
                     
                     /*DB::table('productos_destinos')

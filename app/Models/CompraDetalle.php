@@ -10,7 +10,7 @@ class CompraDetalle extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    protected $fillable = ['precio','cantidad','product_id','compra_id'];
+    protected $fillable = ['precio','cantidad','product_id','compra_id','lote_compra'];
 
     public function compra()
     {

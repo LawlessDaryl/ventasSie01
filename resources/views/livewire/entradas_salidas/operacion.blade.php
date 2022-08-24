@@ -248,8 +248,11 @@
                                 <thead>
                                     <tr>
                                         <th class="table-th text-withe text-center">#</th>
-                                        <th class="table-th text-withe text-center">PRODUCTO</th>                              
+                                        <th class="table-th text-withe text-center">PRODUCTO</th>
+                                        @if ($tipo_proceso != 'Salida')
+                                            
                                         <th class="table-th text-withe text-center">COSTO</th>                              
+                                        @endif                            
                                         <th class="table-th text-withe text-center">CANTIDAD</th>
                                         <th class="table-th text-withe text-center">Acc.</th>
                                       
@@ -264,9 +267,14 @@
                                         <td>
                                             <h6>{{$value['product-name']}}</h6>
                                         </td>
+
+                                        @if ($tipo_proceso != 'Salida')
+                                            
                                         <td>
                                             <h6>{{$value['costo']}}</h6>
                                         </td>
+                                        @endif
+
                                         <td>
                                             <h6>{{$value['cantidad']}}</h6>
                                         </td>
@@ -298,3 +306,34 @@
         </div>
     </div>
 </div>
+
+@section('javascript')
+
+<script>
+ document.addEventListener('DOMContentLoaded', function() {
+
+  
+
+     window.livewire.on('stock-insuficiente', event => {
+        
+        const toast = swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 2500,
+            padding: '2em'
+            });
+            toast({
+                type: 'error',
+                title: 'Stock insuficiente para la salida del producto en esta ubicacion.',
+                padding: '2em',
+            })
+     });
+
+  
+
+ })
+ </script>
+     <script src="{{ asset('plugins/sweetalerts/sweetalert2.min.js') }}"></script>
+     <script src="{{ asset('plugins/sweetalerts/custom-sweetalert.js') }}"></script>
+ @endsection

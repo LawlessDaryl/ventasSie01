@@ -125,26 +125,68 @@ class MercanciaController extends Component
     public function addProduct(Product $id){
         
         
-        $rules = [
-            'result' => 'required',
-            'costo' => 'required',
-            'cantidad' => 'required',
-        ];
-        
-        $messages = [
-            'costo.required' => 'El costo es requerido',
-            'result.required'=>'El producto es requerido',
-            'cantidad.required' => 'La cantidad es requerida'
-        ];
-        
-        $this->validate($rules, $messages);
-        
-        $this->col->push(['product_id'=> $id->id,'product-name'=>$id->nombre,'costo'=>$this->costo,'cantidad'=>$this->cantidad]);
+        if ($this->tipo_proceso != 'Salida') {
+            
+            $rules = [
+                'result' => 'required',
+                'costo' => 'required',
+                'cantidad' => 'required',
+                'destino'=>'required'
+            ];
+            
+            $messages = [
+                'costo.required' => 'El costo es requerido',
+                'result.required'=>'El producto es requerido',
+                'cantidad.required' => 'La cantidad es requerida',
+                'destino.required'=>'Elija una ubicacion de la salida del producto.'
+            ];
+            
+            $this->validate($rules, $messages);
+            
+            $this->col->push(['product_id'=> $id->id,'product-name'=>$id->nombre,'costo'=>$this->costo,'cantidad'=>$this->cantidad]);
+    
+            $this->result=null;
+            $this->cantidad=null;
+            $this->costo=null;
+            //dump($this->col);
 
-        $this->result=null;
-        $this->cantidad=null;
-        $this->costo=null;
-        //dump($this->col);
+        }
+        else{
+
+            $pd=ProductosDestino::where('product_id',$id->id)->where('destino_id',$this->destino)->select('stock')->value('stock');
+
+          if ($pd>0 and $this->cantidad < $pd) {
+        
+            $rules = [
+                'result' => 'required',
+                'cantidad' => 'required'
+            ];
+            
+            $messages = [
+              
+                'result.required'=>'El producto es requerido',
+                'cantidad.required' => 'La cantidad es requerida'
+            ];
+            
+            $this->validate($rules, $messages);
+            
+            $this->col->push(['product_id'=> $id->id,'product-name'=>$id->nombre,'cantidad'=>$this->cantidad]);
+    
+            $this->result=null;
+            $this->cantidad=null;
+            $this->costo=null;
+          }
+          else{
+            $this->emit('stock-insuficiente');
+          }
+
+
+
+
+            //dump($this->col);
+        }
+
+     
     }
 
     public function eliminaritem($id){
@@ -568,43 +610,60 @@ class MercanciaController extends Component
             ];
     
             $this->validate($rules, $messages);
-            DB::beginTransaction();
-            try {
-            $rs=IngresoProductos::create([
-                'destino'=>$this->destino,
-                'user_id'=>Auth()->user()->id,
-                'concepto'=>$this->concepto,
-                'observacion'=>$this->observacion
-               ]);
-            foreach ($this->col as $datas) {
-                if ($this->tipo_proceso == 'Entrada') {
-
-                               $lot= Lote::create([
-                                'existencia'=>$datas['cantidad'],
-                                'costo'=>$datas['costo'],
-                                'status'=>'Activo',
-                                'product_id'=>$datas['product_id']
-                            ]);
             
-                               DetalleEntradaProductos::create([
-                                    'product_id'=>$datas['product_id'],
-                                    'cantidad'=>$datas['cantidad'],
-                                    'costo'=>$datas['costo'],
-                                    'id_entrada'=>$rs->id,
-                                    'lote_id'=>$lot->id
-                               ]);
+            if ($this->tipo_proceso == 'Entrada') {
+                    DB::beginTransaction();
+                    try {
+                    
+                    $rs=IngresoProductos::create([
+                        'destino'=>$this->destino,
+                        'user_id'=>Auth()->user()->id,
+                        'concepto'=>$this->concepto,
+                        'observacion'=>$this->observacion
+                       ]);
+                    foreach ($this->col as $datas) {
+                       
+        
+                                       $lot= Lote::create([
+                                        'existencia'=>$datas['cantidad'],
+                                        'costo'=>$datas['costo'],
+                                        'status'=>'Activo',
+                                        'product_id'=>$datas['product_id']
+                                    ]);
+                    
+                                       DetalleEntradaProductos::create([
+                                            'product_id'=>$datas['product_id'],
+                                            'cantidad'=>$datas['cantidad'],
+                                            'costo'=>$datas['costo'],
+                                            'id_entrada'=>$rs->id,
+                                            'lote_id'=>$lot->id
+                                       ]);
+        
+                                       $q=ProductosDestino::where('product_id',$datas['product_id'])
+                            ->where('destino_id',$this->destino)->value('stock');
+        
+                            ProductosDestino::updateOrCreate(['product_id' => $datas['product_id'], 'destino_id'=>$this->destino],['stock'=>$q+$datas['cantidad']]); 
+                        
+                    
+                    }
 
-                               $q=ProductosDestino::where('product_id',$datas['product_id'])
-                    ->where('destino_id',$this->destino)->value('stock');
+                    DB::commit();
+                }
+                 catch (Exception $e)
+                {
+                DB::rollback();
+                dd($e->getMessage());
 
-                    ProductosDestino::updateOrCreate(['product_id' => $datas['product_id'], 'destino_id'=>$this->destino],['stock'=>$q+$datas['cantidad']]); 
+                }
+                    
+
+
                 }
                 else{
-                      
-
+                    
                     try {
-
-
+        
+        
                         $operacion= SalidaProductos::create([
             
                             'destino'=>$this->destino,
@@ -612,85 +671,87 @@ class MercanciaController extends Component
                             'concepto'=>$this->concepto,
                             'observacion'=>$this->observacion]);
                             // dd($auxi2->pluck('stock')[0]);
-                            $auxi=DetalleSalidaProductos::create([
-                            'product_id'=>$datas['product_id'],
-                            'cantidad'=> $datas['cantidad'],
-                            'id_salida'=>$operacion->id
-                        ]);
+
+                    foreach ($this->col as $datas) {
+
+                        $auxi=DetalleSalidaProductos::create([
+                        'product_id'=>$datas['product_id'],
+                        'cantidad'=> $datas['cantidad'],
+                        'id_salida'=>$operacion->id
+                    ]);
 
 
-                        $lot=Lote::where('product_id',$datas['product_id'])->where('status','Activo')->get();
+                    $lot=Lote::where('product_id',$datas['product_id'])->where('status','Activo')->get();
 
-                        //obtener la cantidad del detalle de la venta 
-                        $this->qq=$datas['cantidad'];//q=8
-                        foreach ($lot as $val) { //lote1= 3 Lote2=3 Lote3=3
-                          $this->lotecantidad = $val->existencia;
-                          //dd($this->lotecantidad);
-                           if($this->qq>0){
-                            //true//5//2
-                               //dd($val);
-                               if ($this->qq > $this->lotecantidad) {
-                                   $ss=SalidaLote::create([
-                                       'salida_detalle_id'=>$auxi->id,
-                                       'lote_id'=>$val->id,
-                                       'cantidad'=>$val->existencia
-                                       
-                                   ]);
-                                  
-               
-                                   $val->update([
-                                       
-                                       'existencia'=>0,
-                                       'status'=>'Inactivo'
-                                       
-                                    ]);
-                                    $val->save();
-                                    $this->qq=$this->qq-$this->lotecantidad;
-                                    //dump("dam",$this->qq);
-                               }
-                               else{
-                                //dd($this->lotecantidad);
-                                $ss=SalidaLote::create([
+                    //obtener la cantidad del detalle de la venta 
+                    $this->qq=$datas['cantidad'];//q=8
+                    foreach ($lot as $val) { //lote1= 3 Lote2=3 Lote3=3
+                      $this->lotecantidad = $val->existencia;
+                      //dd($this->lotecantidad);
+                       if($this->qq>0){
+                        //true//5//2
+                           //dd($val);
+                           if ($this->qq > $this->lotecantidad) {
+                               $ss=SalidaLote::create([
                                    'salida_detalle_id'=>$auxi->id,
                                    'lote_id'=>$val->id,
                                    'cantidad'=>$val->existencia
                                    
                                ]);
-                                 
-               
-                                   $val->update([ 
-                                       'existencia'=>$this->lotecantidad-$this->qq
-                                   ]);
-                                   $val->save();
-                                   $this->qq=0;
-                                   //dd("yumi",$this->qq);
-                               }
+                              
+           
+                               $val->update([
+                                   
+                                   'existencia'=>0,
+                                   'status'=>'Inactivo'
+                                   
+                                ]);
+                                $val->save();
+                                $this->qq=$this->qq-$this->lotecantidad;
+                                //dump("dam",$this->qq);
                            }
-               
-               
-                    
+                           else{
+                            //dd($this->lotecantidad);
+                            $ss=SalidaLote::create([
+                               'salida_detalle_id'=>$auxi->id,
+                               'lote_id'=>$val->id,
+                               'cantidad'=>$val->existencia
+                               
+                           ]);
+                             
+           
+                               $val->update([ 
+                                   'existencia'=>$this->lotecantidad-$this->qq
+                               ]);
+                               $val->save();
+                               $this->qq=0;
+                               //dd("yumi",$this->qq);
+                           }
                        }
+           
+           
+                
+                         }
+
+                         
+                         $q=ProductosDestino::where('product_id',$datas['product_id'])
+                         ->where('destino_id',$this->destino)->value('stock');
+     
+                         ProductosDestino::updateOrCreate(['product_id' => $datas['product_id'], 'destino_id'=>$this->destino],['stock'=>$q-$datas['cantidad']]); 
+                    }
       
                         DB::commit();
-                    }
+             }
                      catch (Exception $e)
                     {
                     DB::rollback();
                     dd($e->getMessage());
                     }
-
-
-   
                 }
-            }
+                
+      
                    
-            DB::commit();
-        }
-         catch (Exception $e)
-        {
-        DB::rollback();
-        dd($e->getMessage());
-        }
+       
 
 
             $this->emit('product-added');

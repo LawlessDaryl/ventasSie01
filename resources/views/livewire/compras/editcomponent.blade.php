@@ -169,15 +169,7 @@
                              </div>
                              <div class="col-12 col-md-4 col-lg-4" style="border: thick #b4b4b1;" >
 
-                                <div class="col-lg-12">
-                                    <div class="form-group">
-                                           <strong style="color: rgb(74, 74, 74)">Lote de Compra: </strong>
-                                           <input type="text" wire:model.lazy="lote_compra" class="form-control">
-                                        @error('lote_compra')
-                                        <span class="text-danger er">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
+                             
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                            <strong style="color: rgb(74, 74, 74)">Observacion: </strong>
