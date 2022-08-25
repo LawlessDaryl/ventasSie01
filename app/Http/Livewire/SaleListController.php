@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Models\Caja;
 use App\Models\Cartera;
 use App\Models\CarteraMov;
+use App\Models\Lote;
 use App\Models\Movimiento;
 use App\Models\ProductosDestino;
 use App\Models\RoleHasPermissions;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Sale;
 use App\Models\SaleDetail;
+use App\Models\SaleLote;
 use App\Models\User;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\DB;
@@ -276,6 +278,16 @@ class SaleListController extends Component
             $tiendaproducto->update([
                 'stock' => $tiendaproducto->stock + $item->cantidad
             ]);
+        }
+
+        foreach($items as $i)
+        {
+            $lotes = Sale::join("sale_details as sd", "sd.sale_id", "sales.id")
+            ->join('sale_lotes as sl', 'sl.sale_detail_id', 'sd.id')
+            ->join('lotes as l', 'l.product_id', 'sl.lote_id')
+            ->select("sl.*")
+            ->where("sd.product_id", $i->idproducto)
+            ->get()->first();
         }
 
 
