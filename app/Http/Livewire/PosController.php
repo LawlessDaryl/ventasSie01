@@ -14,6 +14,7 @@ use App\Models\Company;
 use App\Models\Destino;
 use App\Models\Lote;
 use App\Models\Movimiento;
+use App\Models\ProcedenciaCliente;
 use App\Models\Sale;
 use App\Models\SaleDetail;
 use App\Models\SaleLote;
@@ -29,6 +30,8 @@ class PosController extends Component
 
     //Variable para guardar true o false para tenor o no un cliente anónimo
     public $clienteanonimo;
+    //Variable para guardar el id del cliente
+    public $cliente_id;
     //Total Bs en una Venta
     public $total_bs;
     //Cantidad Total de Productos en una Venta
@@ -72,6 +75,7 @@ class PosController extends Component
             }
             
         }
+        $this->cliente_id = $this->clienteanonimo_id();
     }
     public function render()
     {
@@ -111,8 +115,7 @@ class PosController extends Component
             $this->invoice = "No";
         }
         //---------------------------------------------------------------
-
-
+        //Lista a todos los clientes que tengan el nombre de la variable $this->buscarcliente
         $listaclientes = [];
         if(strlen($this->buscarcliente) > 0)
         {
@@ -123,15 +126,15 @@ class PosController extends Component
         }
 
 
-
-
         return view('livewire.pos.component', [
             'denominations' => Denomination::orderBy('id', 'asc')->get(),
             'listaproductos' => $listaproductos,
             'cart' => Cart::getContent(),
             'carteras' => $this->listarcarteras(),
             'carterasg' => $this->listarcarterasg(),
-            'listaclientes' => $listaclientes
+            'listaclientes' => $listaclientes,
+            'nombrecliente' => Cliente::find($this->cliente_id)->nombre,
+            'nombrecartera' => $this->nombrecartera()
 
         ])
             ->extends('layouts.theme.app')
@@ -160,11 +163,57 @@ class PosController extends Component
         else
         {
             $this->clienteanonimo = true;
+            $this->cliente_id = $this->clienteanonimo_id();
             $this->mensaje_toast = "Se usará a un Cliente Anónimo para esta venta";
             $this->emit('clienteanonimo-true');
         }
     }
-     //Incrementar Items en el Carrito
+    //Obtener el id de un cliente anónimo, si no existe creará uno
+    public function clienteanonimo_id()
+    {
+        $client = Cliente::select('clientes.nombre as nombrecliente','clientes.id as idcliente')
+        ->where('clientes.nombre','Cliente Anónimo')
+        ->get();
+        
+        if($client->count() > 0)
+        {
+            return $client->first()->idcliente;
+        }
+        else
+        {
+            $procedencia = ProcedenciaCliente::select('procedencia_clientes.procedencia as procedencia')
+            ->where('procedencia_clientes.procedencia','VENTA DE PRODUCTOS')
+            ->get();
+            if($procedencia->count() > 0)
+            {
+                $cliente_anonimo = Cliente::create([
+                    'nombre' => "Cliente Anónimo",
+                    'procedencia_cliente_id' => $procedencia->first()->id
+                ]);
+                return $cliente_anonimo->id;
+            }
+            else
+            {
+                $procedencia = ProcedenciaCliente::create([
+                    'procedencia' => "Venta de Productos"
+                ]);
+                $cliente_anonimo = Cliente::create([
+                    'nombre' => "Cliente Anónimo",
+                    'procedencia_cliente_id' => $procedencia->id
+                ]);
+                return $cliente_anonimo->id;
+            }
+        }
+    }
+    //Cierra la ventana modal Buscar Cliente y Cambiar el id de la variable $cliente_id
+    public function seleccionarcliente($idcliente)
+    {
+        $this->cliente_id = $idcliente;
+        $nombrecliente = Cliente::find($idcliente)->nombre;
+        $this->mensaje_toast = "Se seleccionó al cliente: '" . ucwords(strtolower($nombrecliente)) . "' para esta venta";
+        $this->emit('hide-buscarcliente');
+    }
+    //Incrementar Items en el Carrito
     public function increase(Product $producto)
     {
         //Para saber si el Producto ya esta en el carrrito para cambiar el Mensaje Toast de Producto Agregado a Cantidad Actualizada
@@ -276,7 +325,6 @@ class PosController extends Component
     //Guardar una venta
     public function savesale()
     {
-        
         DB::beginTransaction();
         try
         {
@@ -289,7 +337,7 @@ class PosController extends Component
         //Creando Cliente Movimiento
         ClienteMov::create([
             'movimiento_id' => $Movimiento->id,
-            'cliente_id' => 1,
+            'cliente_id' => $this->cliente_id,
         ]);
         //Para saber toda la informacionde del id de la cartera seleccionada
         $cartera = Cartera::find($this->cartera_id);
@@ -372,7 +420,7 @@ class PosController extends Component
 
         $this->resetUI();
         $this->clearcart();
-        $this->mensaje_toast = "¡Venta realizada exitosamente!";
+        $this->mensaje_toast = "¡Venta con el código: '" . $sale->id . "' realizada exitosamente!";
         $this->emit('sale-ok');
 
         DB::commit();
@@ -430,5 +478,14 @@ class PosController extends Component
     public function modalbuscarcliente()
     {
         $this->emit('show-buscarcliente');
+    }
+    //Devuelve el nombre de la cartera seleccionada y su tipo
+    public function nombrecartera()
+    {
+        $nombrecartera = Cartera::select('carteras.*')
+        ->where('carteras.id' , $this->cartera_id)
+        ->get()
+        ->first();
+        return $nombrecartera->nombre . " - " . $nombrecartera->tipo;
     }
 }

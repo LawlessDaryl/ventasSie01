@@ -326,11 +326,10 @@
                 <br>
                 
                 <div class="row">
-                    <div class="col-4 text-right">
+                    <div class="col-1 text-right">
                     </div>
-                    <div class="col-4 text-right">
-                    </div>
-                    <div class="col-4 text-right">
+                    <div class="col-10 text-center">
+                        <h5>Nombre Cliente: <b>{{ucwords(strtolower($nombrecliente))}}</b></h5>
                         <div class="btn-group" role="group" aria-label="Basic example">
                             @if($this->total_items > 0)
                             <button onclick="ConfirmarLimpiar()" class="btn btn-button" style="background-color: chocolate; color: white;">Vaciar Todo</button>
@@ -338,6 +337,8 @@
                             <a href="{{ url('salelist') }}" class="btn btn-button" style="background-color: rgb(12, 143, 0); color: white;">Lista de Ventas</a>
                             <button wire:click.prevent="modalfinalizarventa()" class="btn btn-button" style="background-color: rgb(0, 114, 180); color: white;">Finalizar Venta</button>
                         </div>
+                    </div>
+                    <div class="col-1 text-right">
                     </div>
                 </div>
             </div>
@@ -419,6 +420,22 @@
             });
             toast({
                 type: 'info',
+                title: @this.mensaje_toast,
+                padding: '2em',
+            })
+        });
+        //Cierra la ventana Modla Buscar Cliente y muestra mensaje Toast cuando se selecciona un Cliente
+        window.livewire.on('hide-buscarcliente', msg => {
+            $("#modalbuscarcliente").modal("hide");
+            const toast = swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 5000,
+            padding: '2em'
+            });
+            toast({
+                type: 'success',
                 title: @this.mensaje_toast,
                 padding: '2em',
             })

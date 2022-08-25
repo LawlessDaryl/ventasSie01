@@ -37,7 +37,7 @@
                                         {{ ucwords(strtolower($lc->nombre)) }}
                                     </td>
                                     <td class="text-center">
-                                        <button title="Seleccionar Cliente" wire:click.prevent="increaseQty({{ $lc->id }})" class="btn btn-sm" style="background-color: rgb(10, 137, 235); color:white">
+                                        <button title="Seleccionar Cliente" wire:click.prevent="seleccionarcliente({{ $lc->id }})" class="btn btn-sm" style="background-color: rgb(10, 137, 235); color:white">
                                             <i class="fas fa-check"></i>
                                         </button>
                                     </td>
