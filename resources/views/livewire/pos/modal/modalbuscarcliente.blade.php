@@ -22,7 +22,7 @@
                         <input type="text" wire:model="buscarcliente" placeholder="Buscar por Nombre del Cliente..." class="form-control">
                     </div>
                     <br>
-                    <disv class="table-wrapper">
+                    <div class="table-wrapper">
                         <table>
                             <thead>
                                 <tr>

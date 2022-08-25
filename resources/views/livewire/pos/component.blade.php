@@ -460,6 +460,15 @@
                     )
             });
 
+        //Mostrar Mensaje debe elegir una cartera
+        window.livewire.on('show-elegircartera', event => {
+            swal(
+                '¡Seleccione Tipo de Pago!',
+                'Por favor seleccione un tipo de pago distinto a elegir',
+                'warning'
+                )
+        });
+
             
     });
 

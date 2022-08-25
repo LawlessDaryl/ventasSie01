@@ -195,7 +195,14 @@ class PosController extends Component
     //Llama al modal para calcular cambio y finalizar una venta
     public function modalfinalizarventa()
     {
-        $this->emit('show-finalizarventa');
+        if($this->cartera_id != "Elegir")
+        {
+            $this->emit('show-finalizarventa');
+        }
+        else
+        {
+            $this->emit('show-elegircartera');
+        }
     }
     protected $listeners = [
         'scan-code' => 'ScanCode',
