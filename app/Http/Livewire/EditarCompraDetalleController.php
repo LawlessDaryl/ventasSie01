@@ -8,6 +8,7 @@ use App\Models\Destino;
 use App\Http\Livewire\ProvidersController as Prov;
 use App\Http\Livewire\ProductsController as Products;
 use App\Models\Category;
+use App\Models\Lote;
 use App\Models\Marca;
 use App\Models\Movimiento;
 use App\Models\MovimientoCompra;
@@ -28,6 +29,7 @@ use Illuminate\Support\Facades\DB;
 
 
 use Darryldecode\Cart\Facades\EditarFacade as EditarCompra;
+use Error;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 
@@ -39,7 +41,7 @@ class EditarCompraDetalleController extends Component
     use WithFileUploads;
     public  $nro_compra,$search,$provider,$fecha_compra,$vs=[],$auxi,
     $usuario,$metodo_pago,$pago_parcial=0,$tipo_documento,$nro_documento,$observacion
-    ,$selected_id,$descuento=0,$saldo=0,$subtotal,$cantidad_minima,
+    ,$selected_id,$descuento=0,$saldo=0,$subtotal,$cantidad_minima,$passed,
     $estado_compra,$total_compra,$itemsQuantity,$price,$status,$tipo_transaccion,$destino,$porcentaje,$importe,$dscto=0,$aplicar=false, $lote_compra,$destino1;
 
     public $nombre_prov, $apellido_prov, $direccion_prov, $correo_prov,
@@ -463,129 +465,163 @@ class EditarCompraDetalleController extends Component
     {
         $this->verificarLotes();
 
-        $rules = [
-            'provider'=>'required',
-            'destino'=>'required|not_in:Elegir'
-        ];
-        $messages = [
-            'provider.required' => 'El nombre del proveedor es requerido.',
-            'destino.required'=>'Elige un destino',
-            'destino.not_in'=>'Elija un destino del producto'
-        ];
+        if($this->passed == true){
 
-        $this->validate($rules, $messages);
-        $this->validateCarrito();
-
-        if ($this->subtotal<= 0)
-        {
-            $this->emit('sale-error', 'Agrega productos a la compra');
-            return;
-        }
-       
-         $this->compraCredito();
+            $rules = [
+                'provider'=>'required',
+                'destino'=>'required|not_in:Elegir'
+            ];
+            $messages = [
+                'provider.required' => 'El nombre del proveedor es requerido.',
+                'destino.required'=>'Elige un destino',
+                'destino.not_in'=>'Elija un destino del producto'
+            ];
     
-        
-
-               
-        DB::beginTransaction();
-
-        try {
-        
-
-            if ($this->ide)
+            $this->validate($rules, $messages);
+            $this->validateCarrito();
+    
+            if ($this->subtotal<= 0)
             {
-                $bn = CompraDetalle::where('compra_id',$this->ide)->get();
-
-                foreach ($bn as $b) {
-                    $q=ProductosDestino::where('product_id',$b->product_id)
-                    ->where('destino_id',$this->destino2)->value('stock');
-
-                    ProductosDestino::updateOrCreate(['product_id' => $b->product_id, 'destino_id'=>$this->destino2],['stock'=>$q-$b->cantidad]);
-
-                }
-
-                $bn = CompraDetalle::where('compra_id',$this->ide);
-                $bn->forceDelete();
-              
-                $items = EditarCompra::getContent();
-                foreach ($items as $item) {
-                    CompraDetalle::create([
-                        'precio' => $this->tipo_documento== 'FACTURA'?$item->price*0.87:$item->price,
-                        'cantidad' => $item->quantity,
-                        'product_id' => $item->id,
-                        'compra_id' => $this->ide,
-                        
-                        
-                    ]);
-                    
-                    /*DB::table('productos_destinos')
-                    ->updateOrInsert(['stock'],$item->quantity, ['product_id' => $item->id, 'destino_id'=>$this->destino]);*/
-                    
-                    $q=ProductosDestino::where('product_id',$item->id)
-                    ->where('destino_id',$this->destino)->value('stock');
-
-                    ProductosDestino::updateOrCreate(['product_id' => $item->id, 'destino_id'=>$this->destino],['stock'=>$q+$item->quantity]);
-
-                }
+                $this->emit('sale-error', 'Agrega productos a la compra');
+                return;
             }
-
-            $auxi2=Compra::find($this->ide);
-            $auxi2->importe_total=$this->total_compra;
-            $auxi2->descuento=$this->descuento;
-            $auxi2->transaccion=$this->tipo_transaccion;
-            $auxi2->tipo_doc=$this->tipo_documento;
-            $auxi2->nro_documento=$this->nro_documento;
-            $auxi2->lote_compra=$this->lote_compra;
-            $auxi2->observacion=$this->observacion;
-            $auxi2->proveedor_id=Provider::where('nombre_prov',$this->provider)->value('id');
-            $auxi2->destino_id=$this->destino;
-            $auxi2->user_id=Auth()->user()->id;
-            $auxi2->save();
-
-            DB::commit();
-
-            EditarCompra::clear();
-            $this->total_compra = 0;
-            $this->subtotal = 0;
-            $this->provider="";
-            $this-> destino ="";
-            $this-> descuento =0;
-            $this-> porcentaje =0;
-            $this->  tipo_transaccion ="Contado";
-            $this->  pago_parcial ="";
-            $this-> tipo_documento = "Factura" ;
-            $this-> nro_documento = "" ;
-            $this-> observacion = "" ;
-
-            $this->total = EditarCompra::getTotal();
-            $this->itemsQuantity = EditarCompra::getTotalQuantity();
            
-
-            redirect('/compras');
+             $this->compraCredito();
+        
             
-        } catch (Exception $e) {
-            DB::rollback();
-            dd($e->getMessage());
+    
+                   
+            DB::beginTransaction();
+    
+            try {
             
+    
+                if ($this->ide)
+                {
+                    $bn = CompraDetalle::where('compra_id',$this->ide)->get();
+    
+                    foreach ($bn as $b) {
+                        $q=ProductosDestino::where('product_id',$b->product_id)
+                        ->where('destino_id',$this->destino2)->value('stock');
+    
+                        ProductosDestino::updateOrCreate(['product_id' => $b->product_id, 'destino_id'=>$this->destino2],['stock'=>$q-$b->cantidad]);
+    
+                    }
+    
+                    $bn = CompraDetalle::where('compra_id',$this->ide);
+                    $bn->forceDelete();
+                  
+                    $items = EditarCompra::getContent();
+                    foreach ($items as $item) {
+                        CompraDetalle::create([
+                            'precio' => $this->tipo_documento== 'FACTURA'?$item->price*0.87:$item->price,
+                            'cantidad' => $item->quantity,
+                            'product_id' => $item->id,
+                            'compra_id' => $this->ide,
+                            
+                            
+                        ]);
+                        
+                        /*DB::table('productos_destinos')
+                        ->updateOrInsert(['stock'],$item->quantity, ['product_id' => $item->id, 'destino_id'=>$this->destino]);*/
+                      
+                        $q=ProductosDestino::where('product_id',$item->id)
+                        ->where('destino_id',$this->destino)->value('stock');
+    
+                        ProductosDestino::updateOrCreate(['product_id' => $item->id, 'destino_id'=>$this->destino],['stock'=>$q+$item->quantity]);
+    
+                    }
+                }
+    
+                $auxi2=Compra::find($this->ide);
+                $auxi2->importe_total=$this->total_compra;
+                $auxi2->descuento=$this->descuento;
+                $auxi2->transaccion=$this->tipo_transaccion;
+                $auxi2->tipo_doc=$this->tipo_documento;
+                $auxi2->nro_documento=$this->nro_documento;
+                $auxi2->lote_compra=$this->lote_compra;
+                $auxi2->observacion=$this->observacion;
+                $auxi2->proveedor_id=Provider::where('nombre_prov',$this->provider)->value('id');
+                $auxi2->destino_id=$this->destino;
+                $auxi2->user_id=Auth()->user()->id;
+                $auxi2->save();
+    
+                DB::commit();
+    
+                EditarCompra::clear();
+                $this->total_compra = 0;
+                $this->subtotal = 0;
+                $this->provider="";
+                $this-> destino ="";
+                $this-> descuento =0;
+                $this-> porcentaje =0;
+                $this->  tipo_transaccion ="Contado";
+                $this->  pago_parcial ="";
+                $this-> tipo_documento = "Factura" ;
+                $this-> nro_documento = "" ;
+                $this-> observacion = "" ;
+    
+                $this->total = EditarCompra::getTotal();
+                $this->itemsQuantity = EditarCompra::getTotalQuantity();
+               
+    
+                redirect('/compras');
+                
+            } catch (Exception $e) {
+                DB::rollback();
+                dd($e->getMessage());
+                
+            }
         }
     }
 
     public function verificarLotes(){
    
         $auxi= CompraDetalle::where('compra_detalles.compra_id',$this->ide)->get();
-        dump($this->ide);
-     dump("nada",$auxi);
+     
         foreach ($auxi as $data) {
-            dump($data->lote_compra);
-            $ft=SaleLote::where('lote_id',$data->lote_compra)->get();
-            $sl=SalidaLote::where('lote_id',$data->lote_compra)->get();
-            dump($ft,$sl);
-            if (count($ft)>0 or count($sl)>0) {
-                $auxi=EditarCompra::get($data->product_id);
+           
+           $lotetotal=SaleLote::where('lote_id',$data->lote_compra)->select('cantidad')->value('cantidad')
+            +$sl=SalidaLote::where('lote_id',$data->lote_compra)->select('cantidad')->value('cantidad');
+          
+            if ($lotetotal>0) 
+            {
+                //dd($ft+$sl);
+                $auxiedit=EditarCompra::get($data->product_id);
+               if ($auxiedit != null)
+               {
+
+                    if ($auxiedit->quantity<$lotetotal) 
+                    {
+                        //La nueva cantidad asignada al item es menor a lo que ya se distribuyo, error
+                        $this->passed=false;
+                        
+                    }
+                    elseif ($auxiedit->quantity>$lotetotal) {
+                        $lot=Lote::where('id',$data->lote_compra)->where('status','Activo');
+                        if ($lot != null) {
+                            $this->passed=true;
+                        }
+                        else{
+                            //mensaje que el lote ya ha sido distribuido y no esta activo, cree un nuevo lote por favor
+                            $this->passed=false;
+                        }
+                    }
+                    else{
+                        $this->passed=true;
+                    }
+               }
+               else
+               {
+//se ha eliminado el item pero este item ya fue distribuido, error
+                $this->passed=false;
+               }
+                //dd("hasta aqui llego");
             }
             else{
-               // dd("todo marcha bien");
+                $this->passed=true;
             }
+           
         }
 
 

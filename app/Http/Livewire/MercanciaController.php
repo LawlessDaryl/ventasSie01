@@ -715,7 +715,7 @@ class MercanciaController extends Component
                             $ss=SalidaLote::create([
                                'salida_detalle_id'=>$auxi->id,
                                'lote_id'=>$val->id,
-                               'cantidad'=>$val->existencia
+                               'cantidad'=>$this->qq
                                
                            ]);
                              
