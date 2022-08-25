@@ -306,34 +306,3 @@
         </div>
     </div>
 </div>
-
-@section('javascript')
-
-<script>
- document.addEventListener('DOMContentLoaded', function() {
-
-  
-
-     window.livewire.on('stock-insuficiente', event => {
-        
-        const toast = swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 2500,
-            padding: '2em'
-            });
-            toast({
-                type: 'error',
-                title: 'Stock insuficiente para la salida del producto en esta ubicacion.',
-                padding: '2em',
-            })
-     });
-
-  
-
- })
- </script>
-     <script src="{{ asset('plugins/sweetalerts/sweetalert2.min.js') }}"></script>
-     <script src="{{ asset('plugins/sweetalerts/custom-sweetalert.js') }}"></script>
- @endsection

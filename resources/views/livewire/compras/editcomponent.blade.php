@@ -375,12 +375,15 @@
     @include('livewire.compras.provider_info')
     @include('livewire.products.form')
     @include('livewire.compras.descuento')
-    @include('livewire.compras.pago')
+    @include('livewire.compras.errores')
  </div>
  <script>
      document.addEventListener('DOMContentLoaded', function() {
          window.livewire.on('show-modal', msg => {
              $('#modal_prov').modal('show')
+         });
+         window.livewire.on('errores', msg => {
+             $('#errores').modal('show')
          });
          window.livewire.on('prov_added', msg => {
              $('#modal_prov').modal('hide')

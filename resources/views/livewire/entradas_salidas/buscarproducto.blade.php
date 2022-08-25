@@ -11,8 +11,7 @@
             <div class="col-md-12 ">
                 <div class="statbox widget box box-shadow">
                     <div class="widget-content widget-content-area row">
-                        <div
-                            class="table-responsive table-wrapper-scroll-y my-custom-scrollbar">
+                        <div class="table-responsive table-wrapper-scroll-y my-custom-scrollbar">
                             <table class="table table-hover table-sm" style="width:100%">
                                 <thead class="text-white" style="background: #3B3F5C">
                                     <tr>
@@ -49,7 +48,6 @@
     </div>
 </div>
 @endif
-
 </div>
 </div>
 </div>

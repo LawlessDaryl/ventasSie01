@@ -32,8 +32,8 @@ class MercanciaController extends Component
 
     use WithPagination;
     use WithFileUploads;
-    public  $fecha,$buscarproducto=0,$selected,$registro
-    ,$archivo,$searchproduct,$costo,$sm,$concepto,$destino,$detalle,$tipo_proceso,$col,$destinosucursal,$observacion,$cantidad,$result,$arr,$ing_prod_id,$destino_delete;
+    public  $fecha,$buscarproducto=0,$selected,$registro,$tipo_de_operacion,
+    $archivo,$searchproduct,$costo,$sm,$concepto,$destino,$detalle,$tipo_proceso,$col,$destinosucursal,$observacion,$cantidad,$result,$arr,$ing_prod_id,$destino_delete;
     private $pagination = 50;
 
     public function paginationView()

@@ -39,7 +39,7 @@ class EditarCompraDetalleController extends Component
     
     use WithPagination;
     use WithFileUploads;
-    public  $nro_compra,$search,$provider,$fecha_compra,$vs=[],$auxi,
+    public  $nro_compra,$search,$provider,$fecha_compra,$vs=[],$auxi,$erroresedicion=[],
     $usuario,$metodo_pago,$pago_parcial=0,$tipo_documento,$nro_documento,$observacion
     ,$selected_id,$descuento=0,$saldo=0,$subtotal,$cantidad_minima,$passed,
     $estado_compra,$total_compra,$itemsQuantity,$price,$status,$tipo_transaccion,$destino,$porcentaje,$importe,$dscto=0,$aplicar=false, $lote_compra,$destino1;
@@ -464,8 +464,10 @@ class EditarCompraDetalleController extends Component
     public function guardarCompra()
     {
         $this->verificarLotes();
+//dd($this->passed);
 
         if($this->passed == true){
+            dd("si pasa");
 
             $rules = [
                 'provider'=>'required',
@@ -509,6 +511,9 @@ class EditarCompraDetalleController extends Component
                     }
     
                     $bn = CompraDetalle::where('compra_id',$this->ide);
+
+                    
+
                     $bn->forceDelete();
                   
                     $items = EditarCompra::getContent();
@@ -521,6 +526,8 @@ class EditarCompraDetalleController extends Component
                             
                             
                         ]);
+
+                        Lote::where();
                         
                         /*DB::table('productos_destinos')
                         ->updateOrInsert(['stock'],$item->quantity, ['product_id' => $item->id, 'destino_id'=>$this->destino]);*/
@@ -573,20 +580,27 @@ class EditarCompraDetalleController extends Component
                 
             }
         }
+
+        else{
+
+            $this->emit('errores');
+          
+        }
     }
 
     public function verificarLotes(){
-   
-        $auxi= CompraDetalle::where('compra_detalles.compra_id',$this->ide)->get();
+
+   $auxi= CompraDetalle::where('compra_detalles.compra_id',$this->ide)->get();
+  //
      
         foreach ($auxi as $data) {
            
            $lotetotal=SaleLote::where('lote_id',$data->lote_compra)->select('cantidad')->value('cantidad')
             +$sl=SalidaLote::where('lote_id',$data->lote_compra)->select('cantidad')->value('cantidad');
           
+           // dd($lotetotal);
             if ($lotetotal>0) 
             {
-                //dd($ft+$sl);
                 $auxiedit=EditarCompra::get($data->product_id);
                if ($auxiedit != null)
                {
@@ -594,7 +608,11 @@ class EditarCompraDetalleController extends Component
                     if ($auxiedit->quantity<$lotetotal) 
                     {
                         //La nueva cantidad asignada al item es menor a lo que ya se distribuyo, error
+                       //dd("si ingreso");
                         $this->passed=false;
+                        //dd($auxiedit);
+                        $this->erroresedicion[$auxiedit->id]= "La cantidad editada del item no puede ser menor a la cantidad de la distribucion.";
+                       // dd($this->passed);
                         
                     }
                     elseif ($auxiedit->quantity>$lotetotal) {
@@ -605,6 +623,7 @@ class EditarCompraDetalleController extends Component
                         else{
                             //mensaje que el lote ya ha sido distribuido y no esta activo, cree un nuevo lote por favor
                             $this->passed=false;
+                            $this->erroresedicion[$auxiedit]= "El lote de esta compra esta inactivo y no puede ser editado.";
                         }
                     }
                     else{
@@ -615,6 +634,7 @@ class EditarCompraDetalleController extends Component
                {
 //se ha eliminado el item pero este item ya fue distribuido, error
                 $this->passed=false;
+                $this->erroresedicion[$auxiedit]="No puede retirar esta";
                }
                 //dd("hasta aqui llego");
             }

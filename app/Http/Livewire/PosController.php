@@ -320,44 +320,44 @@ class PosController extends Component
                 'sale_id' => $sale->id,
             ]);
 
-            // $lote = Lote::where('product_id', $p->id)->where('status','Activo')->get();
+            $lote = Lote::where('product_id', $p->id)->where('status','Activo')->get();
 
-            // //Para obtener la cantidad del producto
-            // $cantidad_producto = $p->quantity;
+            //Para obtener la cantidad del producto
+            $cantidad_producto = $p->quantity;
 
-            // foreach($lote as $val)
-            // {
-            //     $lotecantidad = $val->existencia;
-            //     if($cantidad_producto > $lotecantidad)
-            //     {
-            //         $sl = SaleLote::create([
-            //             'sale_detail_id' => $sd->id,
-            //             'lote_id' => $val->id,
-            //             'cantidad' => $val->existencia
-            //         ]);
+            foreach($lote as $val)
+            {
+                $lotecantidad = $val->existencia;
+                if($cantidad_producto > $lotecantidad)
+                {
+                    $sl = SaleLote::create([
+                        'sale_detail_id' => $sd->id,
+                        'lote_id' => $val->id,
+                        'cantidad' => $val->existencia
+                    ]);
 
-            //         $val->update([
-            //             'existencia' => 0,
-            //             'status' => 'Inactivo'
-            //          ]);
-            //          $val->save();
-            //     }
-            //     else
-            //     {
-            //         $dd = SaleLote::create([
-            //             'sale_detail_id' => $sd->id,
-            //             'lote_id' => $val->id,
-            //             'cantidad' => $this->qq
-            //         ]);
+                    $val->update([
+                        'existencia' => 0,
+                        'status' => 'Inactivo'
+                     ]);
+                     $val->save();
+                }
+                else
+                {
+                    $dd = SaleLote::create([
+                        'sale_detail_id' => $sd->id,
+                        'lote_id' => $val->id,
+                        'cantidad' => $cantidad_producto
+                    ]);
                   
 
-            //         $val->update([ 
-            //             'existencia'=>$this->lotecantidad-$this->qq
-            //         ]);
-            //         $val->save();
-            //         $cantidad_producto = 0;
-            //     }
-            // }
+                    $val->update([ 
+                        'existencia'=>$this->lotecantidad-$cantidad_producto
+                    ]);
+                    $val->save();
+                    $cantidad_producto = 0;
+                }
+            }
         }
 
         //Creando Cartera Movimiento

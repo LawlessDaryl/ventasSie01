@@ -16,7 +16,10 @@
             </div>
 
             <div class="widget-body">
-
+                <select wire:model="tipo_de_operacion" class="form-control">
+                    <option value="Entrada">Entrada</option>
+                    <option value="Salida">Salida</option>
+                </select>
               
 
                 <div class="row">
@@ -139,6 +142,21 @@
             })
 				
             });
+            window.livewire.on('stock-insuficiente', event => {
+        
+        const toast = swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 2500,
+            padding: '2em'
+            });
+            toast({
+                type: 'error',
+                title: 'Stock insuficiente para la salida del producto en esta ubicacion.',
+                padding: '2em',
+            })
+     });
   
     })
     </script>
