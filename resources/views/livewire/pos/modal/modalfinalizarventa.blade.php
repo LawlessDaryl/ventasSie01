@@ -57,12 +57,14 @@
                                     @endif
                                 </div>
                                 <div class="row">
-                                    <div class="col-4 text-center">
+                                    <div class="col-1 text-center">
                                     </div>
-                                    <div class="col-4 text-center">
-                                        <b>Cliente Anónimo</b>
+                                    <div class="col-10 text-center">
+                                        <b>{{ucwords(strtolower($nombrecliente))}}</b>
+                                        <br>
+                                        <h3><b>{{ucwords(strtolower($nombrecartera))}}</b></h3>
                                     </div>
-                                    <div class="col-4">
+                                    <div class="col-1">
                                     </div>
                                 </div>
                             </div>
