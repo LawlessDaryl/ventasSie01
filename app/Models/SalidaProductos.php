@@ -14,4 +14,14 @@ class SalidaProductos extends Model
     {
         return $this->hasMany(DetalleSalidaProductos::class,'id_salida');
     }
+
+    public function destinos()
+    {
+        return $this->belongsTo(Destino::class,'destino','id');
+    }
+
+    public function usuarios()
+    {
+        return $this->belongsTo(User::class,'user_id','id');
+    }
 }

@@ -16,10 +16,13 @@
             </div>
 
             <div class="widget-body">
-                <select wire:model="tipo_de_operacion" class="form-control">
-                    <option value="Entrada">Entrada</option>
-                    <option value="Salida">Salida</option>
-                </select>
+                <div class="col-lg-3">
+
+                    <select wire:model="tipo_de_operacion" class="form-control">
+                        <option value="Entrada">Entrada</option>
+                        <option value="Salida">Salida</option>
+                    </select>
+                </div>
               
 
                 <div class="row">
@@ -43,7 +46,7 @@
                                            <tr>
                                                 <td>
                                                     
-                                                        <h6>{{ ($ingprod->currentpage()-1) * $ingprod->perpage() + $loop->index + 1 }}</h6>
+                                                    <h6>{{ ($ingprod->currentpage()-1) * $ingprod->perpage() + $loop->index + 1 }}</h6>
                                                     
                                                 </td>
                                                 <td>

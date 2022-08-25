@@ -48,6 +48,7 @@ class MercanciaController extends Component
     
         $this->destino = 'Elegir';
         $this->concepto ="Elegir";
+        $this->tipo_de_operacion="Entrada";
     //$this->CrearLotes();
        //$this->Ventas();
       // $this->buscarl();
@@ -62,9 +63,16 @@ class MercanciaController extends Component
     public function render()
     {
         
-        $ingprod= IngresoProductos::with(['detalleingreso'])->orderBy('ingreso_productos.created_at','desc')->paginate($this->pagination);
+        if ($this->tipo_de_operacion == "Entrada") {
+            
+            $ingprod= IngresoProductos::with(['detalleingreso'])->orderBy('ingreso_productos.created_at','desc')->paginate($this->pagination);
+        }
+        else{
+
+            $ingprod=SalidaProductos::with(['detallesalida'])->orderBy('salida_productos.created_at','desc')->paginate($this->pagination);
+        }
+
         //dd($ingprod);
-        $salprod=SalidaProductos::with(['detallesalida']);
 
        if (strlen($this->searchproduct) > 0) 
        {
