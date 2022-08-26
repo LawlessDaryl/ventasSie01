@@ -279,6 +279,7 @@ class SaleListController extends Component
                 'stock' => $tiendaproducto->stock + $item->cantidad
             ]);
         }
+        //hao
 
         foreach($items as $i)
         {
