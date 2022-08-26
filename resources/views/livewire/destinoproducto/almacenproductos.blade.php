@@ -10,11 +10,11 @@
         min-width: 1100px;
     }
     .tablaservicios thead {
-        background-color: #e8155b;
+        background-color: #352bc7;
         color: white;
     }
     .tablaservicios th, td {
-        border: 0.5px solid #e8155b;
+        border: 0.5px solid #352bc7;
         padding: 4px;
     }
     .tablaservicios tr:hover {
@@ -56,15 +56,15 @@
                             </select>
                         </div>
     
-                            <div class="form-group">
+                            {{-- <div class="form-group">
                                 <select wire:model='filtro_stock' class="form-control">
                                     <option value="TODOS">Todos</option>
-                                    <option value="BAJO_STOCK">Productos con bajo stock</option>
-                                    <option value="AGOTADOS">Productos agotados</option>
+                                    <option value="BAJO_STOCK">Productos con bajo stock</option> --}}
+                                    {{-- <option value="AGOTADOS">Productos agotados</option> --}}
                                     {{-- <option value="BAJA ROTACION">Listar productos con baja rotacion</option>
                                     <option value="ALTA DEMANDA">Listar productos de alta demanda</option> --}}
-                                </select>
-                            </div>
+                                {{-- </select> --}}
+                            {{-- </div> --}}
                             @if ($selected_id != 'General')
                             <div class="form-group">
                             <button type="button" class="btn btn-danger" onclick="Confirmarvaciado()">Vaciar Almacen</button>
@@ -119,12 +119,13 @@
                                             {{ $destino->caracteristicas }}
                                          
                                         </td>
-                                        <td>
-                                            <h6 class="text-center">{{ $destino->stock }}</h6>
-                                        </td>
+                                      
                                         @if ($selected_id == 'General' || $selected_id == null)
                                         <td>
-                                      <center>{{ $destino->stock_s }}</center> 
+                                            <center>{{ $destino->stock_s }}</center> 
+                                        </td>
+                                        <td>
+                                            <center>{{ $destino->cantidad_minima }}</center> 
                                         </td>
                                       <td>
                                         <center>
@@ -139,11 +140,12 @@
                                        
                                       </td>
                                         @else
-                                      
-
+                                        <td>
+                                            <h6 class="text-center">{{ $destino->stock }}</h6>
+                                        </td>
                                         <td>
                                             <center>{{ $destino->cantidad_minima }}</center> 
-                                          </td>
+                                        </td>
                                         @can('Operacion_Almacen')
                                         <td>
                                         <button  wire:click="ajuste({{ $destino->id }})" class="btn btn-success p-1" title="Ajuste de inventarios" style="background-color: rgb(13, 175, 220); color:white">
