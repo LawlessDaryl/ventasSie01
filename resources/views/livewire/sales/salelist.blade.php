@@ -175,9 +175,9 @@
                                             <button wire:click="mostraranularmodal({{$d->id}})" class="btn btn-sm" title="Anular Venta" style="background-color: red; color:white">
                                                 <i class="fas fa-trash-alt"></i>
                                             </button>
-                                            <button wire:click="editsale({{$d->id}})" class="btn btn-sm" title="Editar Venta" style="background-color: rgb(13, 175, 220); color:white">
+                                            {{-- <button wire:click="editsale({{$d->id}})" class="btn btn-sm" title="Editar Venta" style="background-color: rgb(13, 175, 220); color:white">
                                                 <i class="fas fa-edit"></i>
-                                            </button>
+                                            </button> --}}
                                             <button wire:click="cambiarusuario({{$d->id}})" class="btn btn-sm" title="Cambiar Usuario Vendedor" style="background: #ee761c; color:white">
                                                 <i class="fas fa-user-edit"></i>
                                             </button>

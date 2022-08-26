@@ -65,12 +65,12 @@
                                     <option value="ALTA DEMANDA">Listar productos de alta demanda</option> --}}
                                 {{-- </select> --}}
                             {{-- </div> --}}
-                            @if ($selected_id != 'General')
+                            {{-- @if ($selected_id != 'General')
                             <div class="form-group">
                             <button type="button" class="btn btn-danger" onclick="Confirmarvaciado()">Vaciar Almacen</button>
                             </div>
                        
-                            @endif
+                            @endif --}}
                     </div>
                 </div>
 
@@ -89,12 +89,7 @@
                                     <th class="table-th text-withe text-center">PRODUCTO</th>                              
                                     <th class="table-th text-withe text-center">STOCK</th>
                                     <th class="table-th text-withe text-center">CANT.MIN</th>                                       
-                                    @if ($selected_id == 'General' || $selected_id == null)
-                                    <th class="table-th text-withe text-center">ACCIONES</th>
-                                    @endif        
-                                    @can('Operacion_Almacen')
-                                    <th class="table-th text-withe text-center">ACCIONES</th>
-	                                @endcan                   
+                                    <th class="table-th text-withe text-center">ACCIONES</th>                  
                                 </tr>
                             </thead>
                             <tbody>

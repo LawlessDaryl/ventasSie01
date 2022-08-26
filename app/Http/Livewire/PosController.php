@@ -134,6 +134,7 @@ class PosController extends Component
             ->select("products.id as id","products.nombre as nombre", "products.image as image", "products.precio_venta as precio_venta",
             "pd.stock as stock", "products.codigo as barcode")
             ->where("des.nombre", 'TIENDA')
+            ->where("products.status", 'ACTIVO')
             ->where("des.sucursal_id", $this->idsucursal())
             ->where(function($query){
                 $query->where('products.nombre', 'like', '%' . $this->nombreproducto . '%')
