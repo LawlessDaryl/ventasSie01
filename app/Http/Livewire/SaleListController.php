@@ -291,15 +291,21 @@ class SaleListController extends Component
             ->get()->first();
             
 
-            $mn=SaleLote::where('sale_detail_id',$lotes->sale_detail_id)->first();
+            $mn=SaleLote::where('sale_detail_id',$lotes->sale_detail_id)->get();
 
 
-            $lot=Lote::where('lotes.id',$mn->lote_id)->first();
-            $lot->update([
-                'existencia' => $lot->existencia + $i->cantidad
-            ]);
+            foreach($mn as $j)
+            {
+                $lot=Lote::where('lotes.id',$j->lote_id)->first();
+                $lot->update([
+                    'existencia' => $lot->existencia + $j->cantidad
+                ]);
+                
+                $j->delete();
+            }
+
+
             
-            $mn->delete();
 
 
 
