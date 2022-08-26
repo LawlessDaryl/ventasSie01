@@ -288,12 +288,21 @@ class SaleListController extends Component
             ->select("sl.*")
             ->where("sd.product_id", $i->idproducto)
             ->get()->first();
+            
+
+            $mn=SaleLote::where('sale_detail_id',$lotes->sale_detail_id)->first();
+
+
+            $lot=Lote::where('lotes.id',$mn->lote_id)->first();
+            $lot->update([
+                'existencia' => $lot->existencia + $i->cantidad
+            ]);
+            
+            $mn->delete();
+
+
+
         }
-
-
-
-
-
 
         $anular = Sale::find($this->idventa);
         $anular->update([
