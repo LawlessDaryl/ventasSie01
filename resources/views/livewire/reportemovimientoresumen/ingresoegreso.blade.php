@@ -77,6 +77,20 @@
                                            
                     </div>
                 </div>
+
+
+                {{-- <div class="col-sm-12 col-md-12">
+                    <h6 class="card-title">
+                        <b>CARTERAS EN TU SUCURSAL:</b>
+                    </h6>
+                    @foreach ($carterasSucursal as $item)
+                        <b>{{ $item->cajaNombre }},</b>
+                        <b>{{ $item->carteraNombre }}: </b>
+                        <b>${{ $item->monto }}.</b>
+                        <br>
+                    @endforeach
+                </div> --}}
+
             
             </div>
                 <div class="widget-content">
