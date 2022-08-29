@@ -90,7 +90,9 @@ class MercanciaController extends Component
           
        }
        else{
+
         $this->buscarproducto=0;
+
        }
 
        $destinosuc= Destino::join('sucursals as suc','suc.id','destinos.sucursal_id')
@@ -819,42 +821,60 @@ public function buscarl(){
 
     dd($object);
 }
-protected $listeners = ['eliminar_registro' => 'eliminar_registro'];
+protected $listeners = ['eliminar_registro' => 'eliminar_registro', 'eliminar_registro_total'=>'eliminar_registro_total'];
 
 public function verifySale(IngresoProductos $id)
 {
-   
     //$id->delete();
-
+    $auxi=0;
     $auxi1=IngresoProductos::join('detalle_entrada_productos','detalle_entrada_productos.id_entrada','ingreso_productos.id')
     ->join('lotes','detalle_entrada_productos.lote_id','lotes.id')
     ->where('ingreso_productos.id',$id->id)
-    ->select('lotes.id as lote_id','detalle_entrada_productos.id as detalle_ent_id','ingreso_productos.id as ing_prod')
+    ->select('lotes.id as lote_id','detalle_entrada_productos.id as detalle_ent_id','ingreso_productos.id as ing_prod','lotes.product_id as product_id')
     ->get();
     $def=0;
 
     //dd($auxi);
-
-
     if (count($auxi1)>0) {
         foreach ($auxi1 as $data) {
 
             $rt=SaleLote::where('lote_id',$data->lote_id)->get();
           
-            if (count($rt)>0) {
+            if (count($rt)>0) 
+            {
              
                $def++;
             }
+
+
+            $product= Product::find($data->product_id);
+            //$product->destinos->count()>0 ? $auxi++ : '' ;
+            $product->detalleCompra->count()>0 ? $auxi++ :'';
+            $product->detalleSalida->count()>0 ? $auxi++ :'';
+            $product->detalleTransferencia->count()>0 ? $auxi++ :'';
+            $product->detalleVenta->count()>0 ? $auxi++ : '' ;
+
         }
 
-        if ($def>0) {
+        if ($def>0 or $auxi>0) {
             $this->emit('venta');
         }
         else{
        
-            $this->emit('confirmar');
-            $this->ing_prod_id= $id->id;
-            $this->destino_delete=$id->destino;
+            if ($auxi == 0) 
+            {
+
+                $this->emit('confirmarAll');
+                $this->ing_prod_id= $id->id;
+                $this->destino_delete=$id->destino;
+
+            }
+            else{
+
+                $this->emit('confirmar');
+                $this->ing_prod_id= $id->id;
+                $this->destino_delete=$id->destino;
+            }
             
         }
     }
@@ -866,7 +886,7 @@ public function eliminar_registro()
     $rel=DetalleEntradaProductos::where('id_entrada',$this->ing_prod_id)->get();
     foreach ($rel as $data) {
         
-      
+        
         $data->delete();
         $lot=Lote::find($data->lote_id);
         $lot->delete();
@@ -879,6 +899,30 @@ public function eliminar_registro()
         
 
 
+
+    }
+    $del=IngresoProductos::find($this->ing_prod_id);
+    $del->delete();
+   
+
+}
+
+
+public function eliminar_registro_total()
+{
+   
+    $rel=DetalleEntradaProductos::where('id_entrada',$this->ing_prod_id)->get();
+    foreach ($rel as $data) {
+        
+        
+        $lot=Lote::find($data->lote_id);
+        $data->delete();
+        $lot->delete();
+
+        $q=ProductosDestino::where('product_id',$data->product_id)
+        ->where('destino_id',$this->destino_delete);
+     
+        $q->delete();
 
     }
     $del=IngresoProductos::find($this->ing_prod_id);

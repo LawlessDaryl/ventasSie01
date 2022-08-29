@@ -116,7 +116,7 @@
         window.livewire.on('venta', event => {
             swal(
                 '¡No se puede eliminar el registro!',
-                'Uno o varios de los productos de este registro ya fueron distribuidos.',
+                'Uno o varios de los productos de este registro ya fueron distribuidos y/o tiene relacion con varios registros del sistema.',
                 'error'
                 )
         });
@@ -136,6 +136,30 @@
             if (result.value) {
             
                 window.livewire.emit('eliminar_registro');
+                Swal.fire(
+                'Eliminado!',
+                 'El registro fue eliminado con exito',
+                'success'
+                 )
+             }
+            })
+				
+            });
+        window.livewire.on('confirmarAll', event => {
+         
+            Swal.fire({
+                title: 'Estas seguro de eliminar este registro?',
+                text: "Esta accion es irreversible",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: 'Cancelar',
+                confirmButtonText: 'Aceptar'
+            }).then((result) => {
+            if (result.value) {
+            
+                window.livewire.emit('eliminar_registro_total');
                 Swal.fire(
                 'Eliminado!',
                  'El registro fue eliminado con exito',

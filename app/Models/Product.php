@@ -49,6 +49,11 @@ class Product extends Model
         return $this->hasMany(DetalleTransferencia::class,'product_id','id');
     }
     
+    public function detalleVenta()
+    {
+        return $this->hasMany(SaleDetail::class,'product_id','id');
+    }
+    
 
 
 

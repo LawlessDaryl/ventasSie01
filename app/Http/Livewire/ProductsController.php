@@ -22,7 +22,7 @@ class ProductsController extends Component
     public $nombre, $costo, $precio_venta,$cantidad_minima,$name,$descripcion,
     $codigo,$lote,$unidad,$industria,$caracteristicas,$status,$categoryid=null, $search,$estado,
      $image, $selected_id, $pageTitle, $componentName,$cate,$marca,$garantia,$stock,$stock_v
-     ,$selected_categoria,$selected_sub,$nro=1,$sub,$change=[],$estados,$searchData=[],$data2,$archivo,$failures;
+     ,$selected_categoria,$selected_sub,$nro=1,$sub,$change=[],$estados,$searchData=[],$data2,$archivo,$failures,$productError;
 public $checkAll= false;
 public $errormessage;
 public $selectedProduct=[];
@@ -194,8 +194,8 @@ public $selectedProduct=[];
         }
         $rules = [
             'nombre' => 'required|unique:products|min:5',
+            'codigo'=>'required|unique:products|min:4',
             'costo' => 'required',
-            'codigo'=>'required|unique:products',
             'precio_venta' => 'required|gt:costo',
             'selected_id2' => 'required|not_in:Elegir'
         ];
@@ -206,6 +206,8 @@ public $selectedProduct=[];
             'nombre.min' => 'El nombre debe  contener al menos 5 caracteres',
             'costo.required' =>'El costo es requerido',
             'codigo.required' =>'El codigo es requerido',
+            'codigo.unique' =>'El codigo debe ser unico',
+            'codigo.min' =>'El codigo debe ser mayor a 3',
             'precio_venta.required'=> 'El precio es requerido',
             'precio_venta.gt'=> 'El precio debe ser mayor o igual al costo',
             'selected_id2.required' => 'La categoria es requerida',
@@ -279,7 +281,7 @@ public $selectedProduct=[];
         }
         $rules = [
             'nombre' => "required|min:3|unique:products,nombre,{$this->selected_id}",
-            'codigo'=>"required|min:6|unique:products,codigo,{$this->selected_id}",
+            'codigo'=>"required|min:3|unique:products,codigo,{$this->selected_id}",
             'costo' => 'required',
             'precio_venta' => 'required',
             'categoryid' => 'required|not_in:Elegir'
@@ -467,17 +469,21 @@ public $selectedProduct=[];
             $product->detalleCompra->count()>0 ? $auxi++ : '' ;
             $product->detalleSalida->count()>0 ? $auxi++ :  '' ;
             $product->detalleTransferencia->count()>0 ? $auxi++ :  ''  ;
+            $this->productError=$product->nombre;
 
             
         }
 
         if ($auxi!=0) {
-            dd("este producto tiene relacion con otros");
+           $this->emit('restriccionProducto');
+        }
+        else{
+
+            Product::whereIn('id',$this->selectedProduct)->delete();
+            $this->selectedProduct=[];
+            $this->checkAll=false;
         }
 
-        // Product::whereIn('id',$this->selectedProduct)->delete();
-        // $this->selectedProduct=[];
-        // $this->checkAll=false;
    
    
     }

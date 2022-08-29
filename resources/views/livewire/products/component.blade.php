@@ -145,7 +145,7 @@
                                 </tr>
                             @endforeach
 
-                            {{var_export ($selectedProduct)}}
+                            {{-- {{var_export ($selectedProduct)}} --}}
                         </tbody>
                     </table>
                     {{ $data->links() }}
@@ -156,7 +156,7 @@
     @include('livewire.products.form')
     @include('livewire.products.importarproductos')
 </div>
-
+@section('javascript')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
@@ -183,7 +183,7 @@
         window.livewire.on('restriccionProducto', event => {
             swal(
                 '¡No se puede eliminar el producto!',
-                'Este producto ya tiene relacion con otros registros del sistema.',
+                'El producto ' +@this.productError +' tiene relacion con otros registros del sistema.',
                 'error'
                 )
         });
@@ -232,3 +232,7 @@
     }
   
 </script>
+
+<script src="{{ asset('plugins/sweetalerts/sweetalert2.min.js') }}"></script>
+<script src="{{ asset('plugins/sweetalerts/custom-sweetalert.js') }}"></script>
+@endsection

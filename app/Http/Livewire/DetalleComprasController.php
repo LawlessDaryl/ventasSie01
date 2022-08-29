@@ -552,7 +552,7 @@ if ($this->validateCarrito()) {
                     ]);
 
 
-                    dd($lot);
+                   // dd($lot);
                     CompraDetalle::create([
                         'precio' => $item->price,
                         'cantidad' => $item->quantity,
