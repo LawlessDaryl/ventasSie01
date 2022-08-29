@@ -781,9 +781,11 @@ class ReporteMovimientoResumenController extends Component
      }
      public function utilidadventa($idventa)
      {
-         $utilidadventa = Sale::join('sale_details as sd', 'sd.sale_id', 'sales.id')
-         ->join('products as p', 'p.id', 'sd.product_id')
-         ->select('sd.quantity as cantidad','sd.price as precio','p.costo as costoproducto')
+
+        $utilidadventa = Sale::join('sale_details as sd', 'sd.sale_id', 'sales.id')
+        ->join('sale_lotes as sl', 'sl.sale_detail_id', 'sd.id')
+        ->join('lotes as l', 'l.id', 'sl.lote_id')
+         ->select('sd.quantity as cantidad','sd.price as precio','l.costo as costoproducto')
          ->where('sales.id', $idventa)
          ->get();
 
