@@ -180,6 +180,13 @@
         window.livewire.on('hidden.bs.modal', function(e) {
             $('.er').css('display', 'none')
         });
+        window.livewire.on('restriccionProducto', event => {
+            swal(
+                '¡No se puede eliminar el producto!',
+                'Este producto ya tiene relacion con otros registros del sistema.',
+                'error'
+                )
+        });
     });
 
         function Confirm(id, name, products) {

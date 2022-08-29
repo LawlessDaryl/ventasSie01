@@ -146,7 +146,7 @@
                                         <button  wire:click="ajuste({{ $destino->id }})" class="btn btn-success p-1" title="Ajuste de inventarios" style="background-color: rgb(13, 175, 220); color:white">
                                           <i class="fas fa-pen"></i>
                                       </button>
-                                    </td>
+                                         </td>
                                         @endcan   
                                         @endif
     

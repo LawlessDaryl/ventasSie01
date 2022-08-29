@@ -35,6 +35,19 @@ class Product extends Model
     {
         return $this->hasMany(CompraDetalle::class,'product_id','id');
     }
+    public function detalleSalida()
+    {
+        return $this->hasMany(DetalleSalidaProductos::class,'product_id','id');
+    }
+    public function detalleEntrada()
+    {
+        return $this->hasMany(DetalleEntradaProductos::class,'product_id','id');
+    }
+    
+    public function detalleTransferencia()
+    {
+        return $this->hasMany(DetalleTransferencia::class,'product_id','id');
+    }
     
 
 

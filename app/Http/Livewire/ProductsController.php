@@ -24,6 +24,7 @@ class ProductsController extends Component
      $image, $selected_id, $pageTitle, $componentName,$cate,$marca,$garantia,$stock,$stock_v
      ,$selected_categoria,$selected_sub,$nro=1,$sub,$change=[],$estados,$searchData=[],$data2,$archivo,$failures;
 public $checkAll= false;
+public $errormessage;
 public $selectedProduct=[];
     private $pagination = 100;
     public $selected_id2;
@@ -35,10 +36,11 @@ public $selectedProduct=[];
     {
         $this->pageTitle = 'Listado';
         $this->componentName ='Productos';
-       
+        
         $this->estados ='Activo';
-   
+        
         $this->cate='Elegir';
+        $this->selectedProduct= collect();
         
     }
 
@@ -79,6 +81,7 @@ public $selectedProduct=[];
      /**sssssssss */
      
   
+
        if ($this->selected_categoria !== null ) {
           
         if ($this->selected_sub == null) {
@@ -454,9 +457,30 @@ public $selectedProduct=[];
     }
 
     public function deleteProducts(){
-        Product::whereIn('id',$this->selectedProduct)->delete();
-        $this->selectedProduct=[];
-        $this->checkAll=false;
+
+        $auxi=0;
+        foreach ($this->selectedProduct as $data)
+        {
+            
+            $product= Product::find($data);
+            $product->destinos->count()>0 ? $auxi++ : '' ;
+            $product->detalleCompra->count()>0 ? $auxi++ : '' ;
+            $product->detalleSalida->count()>0 ? $auxi++ :  '' ;
+            $product->detalleTransferencia->count()>0 ? $auxi++ :  ''  ;
+
+            
+        }
+
+        if ($auxi!=0) {
+            dd("este producto tiene relacion con otros");
+        }
+
+        // Product::whereIn('id',$this->selectedProduct)->delete();
+        // $this->selectedProduct=[];
+        // $this->checkAll=false;
+   
+   
     }
+
 
 }
