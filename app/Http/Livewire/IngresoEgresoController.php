@@ -6,15 +6,17 @@ use App\Models\Caja;
 use App\Models\Cartera;
 use App\Models\CarteraMov;
 use App\Models\Movimiento;
+use App\Models\Sucursal;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class IngresoEgresoController extends Component
 {
 
-    public $fromDate,$toDate,$caja,$data,$search;
+    public $fromDate,$toDate,$caja,$data,$search,$sucursal;
 
     public function mount()
     {
@@ -28,12 +30,49 @@ class IngresoEgresoController extends Component
         $this->comentario = '';
         $this->fromDate= Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->toDate=  Carbon::parse(Carbon::now())->format('Y-m-d');
-        $this->caja=0;
+        $this->caja=1;
+
 
     }
 
     public function render()
     {
+
+
+
+        if (Auth::user()->hasPermissionTo('Admin_Views'))
+        {
+            $sucursals= Sucursal::all();
+            if ($this->sucursal == 'TODAS')
+            {
+                $cajab=Caja::where('cajas.nombre','!=','Caja General')->get();
+            }
+            else
+            {
+                $cajab=Caja::where('cajas.sucursal_id',$this->sucursal)->where('cajas.nombre','!=','Caja General')->get();
+
+            }
+        }
+        else
+        {
+            $sucursals=User::join('sucursal_users as su', 'su.user_id', 'users.id')
+                        ->join('sucursals as s', 's.id', 'su.sucursal_id')
+                        ->where('users.id', Auth()->user()->id)
+                        ->where('su.estado', 'ACTIVO')
+                        ->select('s.*')
+                        ->get();
+            //dd($sucursales);
+
+            $cajab=Caja::where('cajas.sucursal_id',$this->sucursal)->where('cajas.nombre','!=','Caja General')->get();
+        }
+
+
+
+        // $carterasSucursal = Cartera::join('cajas as c', 'carteras.caja_id', 'c.id')
+        // ->join('sucursals as s', 's.id', 'c.sucursal_id')
+        // ->where('s.id', $this->sucursalid)
+        // ->select('carteras.id', 'carteras.nombre as carteraNombre', 'c.nombre as cajaNombre', 'carteras.tipo as tipo', DB::raw('0 as monto'))->get();
+ 
 
         $SucursalUsuario = User::join('sucursal_users as su', 'su.user_id', 'users.id')
         ->join('sucursals as s', 's.id', 'su.sucursal_id')
@@ -46,6 +85,25 @@ class IngresoEgresoController extends Component
         ->join('sucursals as s', 's.id', 'c.sucursal_id')
         ->where('s.id', $SucursalUsuario->id)
         ->select('carteras.id', 'carteras.nombre as carteraNombre', 'c.nombre as cajaNombre', 'carteras.tipo as tipo')->get();
+
+        foreach ($carterasSucursal as $c) {
+            /* SUMAR TODO LOS INGRESOS DE LA CARTERA */
+            $INGRESOS = Cartera::join('cartera_movs as cm', 'carteras.id', 'cm.cartera_id')
+                ->join('movimientos as m', 'm.id', 'cm.movimiento_id')
+                ->where('cm.type','INGRESO')
+                ->where('m.status', 'ACTIVO')
+                ->whereBetween('m.created_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
+                ->where('carteras.id', $c->id)->sum('m.import');
+            /* SUMAR TODO LOS EGRESOS DE LA CARTERA */
+            $EGRESOS = Cartera::join('cartera_movs as cm', 'carteras.id', 'cm.cartera_id')
+                ->join('movimientos as m', 'm.id', 'cm.movimiento_id')
+                ->where('cm.type', 'EGRESO')
+                ->where('m.status','ACTIVO')
+                ->whereBetween('m.created_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
+                ->where('carteras.id', $c->id)->sum('m.import');
+            /* REALIZAR CALCULO DE INGRESOS - EGRESOS */
+            $c->monto = $INGRESOS - $EGRESOS;
+        }
 
         if ($this->search != null) 
         {

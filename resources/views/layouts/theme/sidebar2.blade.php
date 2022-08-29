@@ -51,11 +51,11 @@
 											<span class="sub-item">Servicios</span>
 										</a>
 									</li>
-									<li>
+									{{-- <li>
 										<a href="{{ url('reportStreaming') }}">
 											<span class="sub-item">Streaming</span>
 										</a>
-									</li>
+									</li> --}}
 									<li>
 										<a href="{{ url('salemovimientodiario') }}">
 											<span class="sub-item">Ventas</span>
@@ -243,7 +243,7 @@
 							</div>
 						</li>
 						@endcan
-						<li class="nav-item">
+						{{-- <li class="nav-item">
 							<a data-toggle="collapse" href="#sidebarLayouts">
 								<img src="assets/img/disney.png" width="30" height="40" alt="navbar brand" class="navbar-brand">
 								<p>Streaming</p>
@@ -345,7 +345,7 @@
 												Correos </a>
 										</li>
 									@endcan
-									{{-- @can('Arqueos_Streaming_Index')
+									@can('Arqueos_Streaming_Index')
 										<li>
 											<a href="{{ url('arqueosStreaming') }}">
 												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -356,7 +356,7 @@
 												</svg>
 												Arqueos Streaming </a>
 										</li>
-									@endcan --}}
+									@endcan
 									@can('Reportes_Streaming_Index')
 										<li>
 											<a href="{{ url('reportStreaming') }}">
@@ -372,7 +372,7 @@
 								</ul>
 								@endif
 							</div>
-						</li>
+						</li> --}}
 						@can('Service_Index')
 						<li class="nav-item">
 							<a data-toggle="collapse" href="#forms">
@@ -713,7 +713,7 @@
 								</ul>
 							</div>
 						</li>
-						<li class="nav-item">
+						{{-- <li class="nav-item">
 							<a data-toggle="collapse" href="#submenu1">
 								<!-- <img src="assets/img/ventas.png" width="25" height="35" alt="navbar brand" class="navbar-brand"> -->
 								<p>Modulo</p>
@@ -754,7 +754,7 @@
 									</li> -->
 								</ul>
 							</div>
-						</li>
+						</li> --}}
 						<li class="mx-4 mt-2">
 								<a style="background-color: #ee761c!important;" class="btn btn-primary btn-block" href="{{ route('logout') }}"
 									onclick="event.preventDefault(); document.getElementById('logout-form').submit()">
