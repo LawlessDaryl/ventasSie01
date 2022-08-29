@@ -126,6 +126,9 @@ class ProductsImport implements ToModel,WithHeadingRow,WithBatchInserts,WithChun
             '*.nombre' =>[
                 'distinct','required','unique:products'
             ],
+            '*.codigo' =>[
+                'distinct','numeric','required','unique:products'
+            ],
             '*.costo' =>[
                 'numeric','required'
             ],
@@ -140,6 +143,8 @@ class ProductsImport implements ToModel,WithHeadingRow,WithBatchInserts,WithChun
 {
     return [
         'nombre.unique' => 'El nombre del producto ya existe, revise su archivo por favor  :attribute',
+        'codigo.unique' =>'El codigo ya existe',
+        'codigo.distinct' =>'Tiene codigos duplicados, revise su archivo',
     ];
 }
 

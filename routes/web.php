@@ -93,8 +93,8 @@ Auth::routes();
 Route::middleware(['auth'])->group(function () {
     Route::get('/', InicioController::class)->name('home');
     Route::get('/home', InicioController::class);
-    Route::group(['middleware' => ['role:ADMIN']], function () {
-    });
+    // Route::group(['middleware' => ['role:ADMIN']], function () {
+    // });
 
     /* ADMINISTRACION */
     Route::get('roles', RolesController::class)->name('roles')->middleware('permission:Roles_Index');
@@ -137,8 +137,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('reporteTigo/pdf/{user}/{type}/{origen}/{motivo}', [ExportTigoPdfController::class, 'reporteTigoPDF']);
     });
     Route::group(['middleware' => ['permission:Report_Ganancia_Tigo_Export']], function () {
-        Route::get('reporteGananciaTigoM/pdf/{user}/{type}/{f1}/{f2}', [TigoGananciaPdfController::class, 'reporte']);
-        Route::get('reporteGananciaTigoM/pdf/{user}/{type}', [TigoGananciaPdfController::class, 'reporte']);
+        // Route::get('reporteGananciaTigoM/pdf/{user}/{type}/{f1}/{f2}', [TigoGananciaPdfController::class, 'reporte']);
+        // Route::get('reporteGananciaTigoM/pdf/{user}/{type}', [TigoGananciaPdfController::class, 'reporte']);
     });
     Route::get('ReporteJornalTM', ReporteJornadaTMController::class)->name('reportejornadatm');
 
@@ -182,11 +182,13 @@ Route::middleware(['auth'])->group(function () {
     });
    // Route::get('transacciones', TransaccionesController::class)->name('transactions')->middleware('permission:Coins_Index');
         Route::get('destino_prod', DestinoProductoController::class)->name('destination')->middleware('permission:Almacen_Index');
+      
         Route::group(['middleware' => ['permission:Transferencia_Index']], function () {   
         Route::get('transferencia', TransferirProductoController::class)->name('operacionTransferencia');
         Route::get('destino', DestinoController::class)->name('dest');
         Route::get('all_transferencias', TransferenciasController::class);
-        Route::get('trans', EditTransferenceController::class)->name('editdest');});
+        Route::get('trans', EditTransferenceController::class)->name('editdest');
+    });
         Route::group(['middleware' => ['permission:Reportes_Inventarios_Export']], function () {
         Route::get('Compras/pdf/{id}', [ExportComprasController::class, 'PrintCompraPdf']);
         Route::get('Transferencia/pdf', [ExportTransferenciaController::class, 'printPdf'])->name('transferencia.pdf');
@@ -209,7 +211,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     /*FREEFIRE*/
-   Route::get('freeventas', FreeSaleController::class)->name('freeventas');
+   //Route::get('freeventas', FreeSaleController::class)->name('freeventas');
 
     /* SERVICIOS */
     Route::get('catprodservice', CatProdServiceController::class)->name('cps')->middleware('permission:Cat_Prod_Service_Index');
@@ -234,15 +236,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('estadisticas', SaleStatisticController::class)->name('estadisticas');
     Route::get('devolucionventa', SaleDevolutionController::class)->name('devolucionventa');
     Route::get('salemovimientodiario', SaleDailyMovementController::class)->name('salemovimientodiario')->middleware('permission:VentasMovDia_Index');
-    Route::get('notificaciones', NotificationController::class)->name('notificaciones');
-    Route::get('notificaciones/{idnotificacion}', [NotificacionController::class,'mostrarnotificacion']);
+    // Route::get('notificaciones', NotificationController::class)->name('notificaciones');
+    // Route::get('notificaciones/{idnotificacion}', [NotificacionController::class,'mostrarnotificacion']);
 
 
     //Vaciar la cache
-    Route::get('/clear-cache', function() {
-        Artisan::call('optimize:clear');
-        return "Cache is cleared";
-    });
+    // Route::get('/clear-cache', function() {
+    //     Artisan::call('route:clear');
+    //     return "Cache is cleared";
+    // });
 
 });
 

@@ -23,7 +23,8 @@ class ProductsController extends Component
     $codigo,$lote,$unidad,$industria,$caracteristicas,$status,$categoryid=null, $search,$estado,
      $image, $selected_id, $pageTitle, $componentName,$cate,$marca,$garantia,$stock,$stock_v
      ,$selected_categoria,$selected_sub,$nro=1,$sub,$change=[],$estados,$searchData=[],$data2,$archivo,$failures;
-
+public $checkAll= false;
+public $selectedProduct=[];
     private $pagination = 100;
     public $selected_id2;
     public function paginationView()
@@ -441,6 +442,21 @@ class ProductsController extends Component
 
      
        //dd($errors->all());
+    }
+
+    public function updatedCheckAll($value){
+        if ($value) {
+            $this->selectedProduct= Product::pluck('id');
+        }
+        else{
+            $this->selectedProduct=[];
+        }
+    }
+
+    public function deleteProducts(){
+        Product::whereIn('id',$this->selectedProduct)->delete();
+        $this->selectedProduct=[];
+        $this->checkAll=false;
     }
 
 }

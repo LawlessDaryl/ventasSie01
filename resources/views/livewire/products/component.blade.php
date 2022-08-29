@@ -55,11 +55,13 @@
                 </div>
             </div>
             <div class="widget-content">
+                <a href="javascript:void(0)" class="btn btn-dark btn-sm" wire:click= 'deleteProducts()'>Eliminar Productos seleccionados</a>
                 <div class="table-responsive">
                     <table class="table table-unbordered table-hover mt-4">
                         <thead class="text-white" style="background: #3B3F5C">
                             <tr>
                                 <th class="table-th text-withe"> <b>#</b> </th>
+                                <th class="table-th text-withe"> <b> <input type="checkbox" class="form-control" wire:model="checkAll"> </b> </th>
                                 <th class="table-th text-withe" style="width: 20%"> <b>NOMBRE</b> </th>
                                 <th class="table-th text-withe text-center"> <b>CATEGORIA</b> </th>
                                 <th class="table-th text-withe text-center"> <b>CODIGO/<br>CODIGO BARRA</b></th>
@@ -74,6 +76,10 @@
                                 <tr>
                                     <td>
                                         <h6>{{ ($data->currentpage()-1) * $data->perpage() + $loop->index + 1 }}</h6>
+                                    </td>
+                                    <td>
+                                        <input  type="checkbox" class="form-control" wire:model="selectedProduct" value="{{$products->id}}" >
+                                     
                                     </td>
                                     <td>
                                         <h5> <strong>{{$products->nombre}}</strong> </h5>
@@ -138,6 +144,8 @@
                                     </td>
                                 </tr>
                             @endforeach
+
+                            {{var_export ($selectedProduct)}}
                         </tbody>
                     </table>
                     {{ $data->links() }}
