@@ -276,6 +276,7 @@ class SaleListController extends Component
         }
         //hao
 
+      
         foreach($items as $i)
         {
             $lotes = Sale::join("sale_details as sd", "sd.sale_id", "sales.id")
@@ -285,24 +286,23 @@ class SaleListController extends Component
             ->where("sd.product_id", $i->idproducto)
             ->get();
             
+            
 
-            $mn=SaleLote::where('sale_detail_id',$lotes->sale_detail_id)->get();
+           // $mn=SaleLote::where('sale_detail_id',$lotes->sale_detail_id)->get();
 
 
-            foreach($mn as $j)
+            foreach($lotes as $j)
             {
+
                 $lot=Lote::where('lotes.id',$j->lote_id)->first();
                 $lot->update([
                     'existencia' => $lot->existencia + $j->cantidad
                 ]);
                 
-                $j->delete();
+               
             }
-
-
-            
-
-
+            $mn=SaleLote::where('sale_detail_id',$j->sale_detail_id)->delete();
+        
 
         }
 
