@@ -14,6 +14,9 @@
                         <a wire:click.prevent="viewDetails()" class="btn btn-warning">
                             Generar Ingreso/Egreso en Cartera
                         </a>
+                        <a wire:click.prevent="generarpdf()" class="btn btn-warning">
+                            Generar PDF
+                        </a>
                     @endcan
                 </ul>
               
@@ -75,29 +78,34 @@
                 <div class="col-sm-12 col-md-2">
                    <div class="form-group">
                                     <label>Sucursal</label>
-                                    <select wire:model="sss" class="form-control">
-                                        @foreach ($cajas2 as $item)
-                                        <option value="{{$item->id}}">{{$item->nombre}}</option>
+                                    <select wire:model="sucursal" class="form-control">
+                                        @foreach ($sucursals as $item)
+                                        <option value="{{$item->id}}">{{$item->name}}</option>
                                         @endforeach
-                                        <option value="TODAS">TODAS</option>
-                                       
                                     </select>
                                            
                     </div>
                 </div>
 
+ {{var_export ($sucursal)}}
+                
 
-                {{-- <div class="col-sm-12 col-md-12">
-                    <h6 class="card-title">
-                        <b>CARTERAS EN TU SUCURSAL:</b>
-                    </h6>
-                    @foreach ($carterasSucursal as $item)
-                        <b>{{ $item->cajaNombre }},</b>
-                        <b>{{ $item->carteraNombre }}: </b>
-                        <b>${{ $item->monto }}.</b>
-                        <br>
+
+                <div class="col-sm-12 col-md-12 d-flex">
+                    @foreach ($grouped as $key=>$item)
+                    <div class="card m-2 p-2" style="width: 18rem;">
+                    
+                        <h6 class="card-title">
+                            <b>Caja: {{ $key }},</b>
+                            
+                        </h6>
+                        @foreach ($item as $dum)
+                            
+                       <div>{{$dum->carteraNombre}}:{{$dum->monto}}</div> 
+                        @endforeach
+                    </div>
                     @endforeach
-                </div> --}}
+                </div>
 
             
             </div>
@@ -159,6 +167,17 @@
                                     </tr>
                                 @endforeach
                             </tbody>
+                            <tfoot>
+                                
+                                <td colspan="5">
+                                    <h6 class="text-center" colspan="5" style="font-size: 100%">
+                                     <b>TOTAL</b></h6>
+                                </td>
+                                <td colspan="1">
+                                    <h6 class="text-center" colspan="5" style="font-size: 100%">
+                                      {{$sumaTotal}} </h6>
+                                </td>
+                            </tfoot>
                         </table>
                     </div>
                 </div>
@@ -178,6 +197,13 @@
             $('#modal-details').modal('hide')
             noty(Msg)
         })
+
+        window.livewire.on('openothertap', Msg => {
+                var win = window.open('report/pdfingresos');
+                // Cambiar el foco al nuevo tab (punto opcional)
+                //win.focus();
+
+            });
        
     });
 </script>

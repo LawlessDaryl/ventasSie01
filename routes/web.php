@@ -9,6 +9,7 @@ use App\Http\Controllers\ExportTigoPdfController;
 use App\Http\Controllers\ExportMovimientoController;
 use App\Http\Controllers\ImprimirController;
 use App\Http\Controllers\ExportComprasController;
+use App\Http\Controllers\ExportIngresosController;
 use App\Http\Controllers\ExportSaleMovDiaController;
 use App\Http\Controllers\ExportTransferenciaController;
 use App\Http\Controllers\ExportMovDiaGenController;
@@ -117,6 +118,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('report/pdfmovdiageneral', [ExportMovDiaGenController::class, 'reportPDFMovDiaGeneral']);
     
         Route::get('report/pdfmovdiaresumen', [ExportMovDiaResController::class, 'reportPDFMovDiaResumen']);
+        Route::get('report/pdfingresos', [ExportIngresosController::class, 'reportPDFIngresos']);
     });
 
    

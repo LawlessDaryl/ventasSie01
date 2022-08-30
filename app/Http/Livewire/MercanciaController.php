@@ -326,9 +326,6 @@ class MercanciaController extends Component
         DB::beginTransaction();
 
         try {
-
-         
-
             $v3=SaleDetail::join('products','products.id','sale_details.product_id')
             ->groupBy('sale_details.product_id')
             ->selectRaw('sum(quantity) as sum, sale_details.product_id,products.costo')->get();    
@@ -510,10 +507,8 @@ class MercanciaController extends Component
             $fg= Lote::where('product_id',$val8->product_id)->where('status','Activo')->get();
 
             foreach ($fg as $daf) 
-            {
-                
-              
-                $daf->update([
+            {             
+                    $daf->update([
                     'existencia'=> $val8->sum
                 ]);
                 $daf->save();
