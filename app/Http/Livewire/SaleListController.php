@@ -63,7 +63,7 @@ class SaleListController extends Component
             ->join("carteras as carts", "carts.id", "sales.cartera_id")
             ->select('sales.id as id','sales.cash as totalbs', 'sales.total as totalbsventa', 'sales.created_at as fecha','sales.observacion as obs',
             'sales.tipopago as tipopago','sales.change as cambio','sales.factura as factura','sales.status as status','carts.nombre as cartera',
-            'u.name as user','c.razon_social as rz','c.cedula as ci','c.celular as celular')
+            'u.name as user','c.nombre as rz','c.cedula as ci','c.celular as celular')
             ->where('u.id', $this->usuarioseleccionado)
             ->orderBy('sales.id', 'desc')
             ->paginate(50);
@@ -77,7 +77,7 @@ class SaleListController extends Component
             ->join("carteras as carts", "carts.id", "sales.cartera_id")
             ->select('sales.id as id','sales.cash as totalbs', 'sales.total as totalbsventa', 'sales.created_at as fecha','sales.observacion as obs',
             'sales.tipopago as tipopago','sales.change as cambio','sales.factura as factura','sales.status as status','carts.nombre as cartera',
-            'u.name as user','c.razon_social as rz','c.cedula as ci','c.celular as celular')
+            'u.name as user','c.nombre as rz','c.cedula as ci','c.celular as celular')
             ->orderBy('sales.id', 'desc')
             ->paginate(50);
         }
@@ -125,6 +125,7 @@ class SaleListController extends Component
     {
         $this->idventa = $id;
         $this->listardetalleventas();
+        $this->observacion();
         $this->emit('show-modal', 'show modal!');
     }
     //Obtener el total descuento de una venta
@@ -181,7 +182,7 @@ class SaleListController extends Component
     {
         $venta = Sale::find($this->idventa);
 
-        if($this->idventa != null)
+        if($this->idventa == null)
         {
             return 0;
         }

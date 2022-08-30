@@ -781,19 +781,31 @@ class ReporteMovimientoResumenController extends Component
      }
      public function utilidadventa($idventa)
      {
+        // $utilidadventa = Sale::join('sale_details as sd', 'sd.sale_id', 'sales.id')
+        // ->join('sale_lotes as sl', 'sl.sale_detail_id', 'sd.id')
+        // ->join('lotes as l', 'l.id', 'sl.lote_id')
+        // ->select('sd.quantity as cantidad','sd.price as precio','l.costo as costoproducto')
+        // ->where('sales.id', $idventa)
+        // ->groupBy('l.id')
+        // ->get();
 
-        $utilidadventa = Sale::join('sale_details as sd', 'sd.sale_id', 'sales.id')
-        ->join('sale_lotes as sl', 'sl.sale_detail_id', 'sd.id')
+
+
+
+        $utilidadventa = SaleDetail::join('sale_lotes as sl', 'sl.sale_detail_id', 'sale_details.id')
         ->join('lotes as l', 'l.id', 'sl.lote_id')
-         ->select('sd.quantity as cantidad','sd.price as precio','l.costo as costoproducto')
-         ->where('sales.id', $idventa)
-         ->get();
+        ->select('sale_details.quantity as cantidad','sale_details.price as precioventa','l.costo as costoproducto')
+        ->where('sale_details.sale_id', $idventa)
+        ->groupBy('l.id')
+        ->get();
+
+
 
          $utilidad = 0;
 
          foreach ($utilidadventa as $item)
          {
-             $utilidad = $utilidad + ($item->cantidad * $item->precio) - ($item->cantidad * $item->costoproducto);
+             $utilidad = $utilidad + ($item->cantidad * $item->precioventa) - ($item->cantidad * $item->costoproducto);
          }
 
 
