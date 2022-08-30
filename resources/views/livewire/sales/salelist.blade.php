@@ -233,6 +233,16 @@
         window.livewire.on('hide-cam-user', msg => {
             $('#cambiarusuario').modal('hide')
         });
+
+
+        //Mostrar Mensaje a ocurrido un error en la venta
+        window.livewire.on('sale-error', event => {
+        swal(
+            'A ocurrido un error al anular la venta',
+            'Detalle del error'+ @this.mensaje_toast,
+            'error'
+            )
+        });
         
     });
 
@@ -240,6 +250,11 @@
 
 
 </script>
+
+<!-- Scripts para el mensaje de confirmacion arriba a la derecha 'Mensaje Toast' de Éxito y Alerta de Eliminacion -->
+<script src="{{ asset('plugins/sweetalerts/sweetalert2.min.js') }}"></script>
+<script src="{{ asset('plugins/sweetalerts/custom-sweetalert.js') }}"></script>
+<!-- Fin Scripts -->
 
 @endsection
 

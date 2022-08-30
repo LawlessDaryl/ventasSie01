@@ -31,7 +31,7 @@ class SaleListController extends Component
     use WithFileUploads;
     use WithPagination;
 
-    public $componentName, $idventa, $usuarioseleccionado, $mostrarcliente;
+    public $componentName, $idventa, $usuarioseleccionado, $mostrarcliente, $mensaje_toast;
 
     //Cambiar Usuario Vendedor
     public $nombreusuariovendedor, $idventaeditar;
@@ -63,7 +63,7 @@ class SaleListController extends Component
             ->join("carteras as carts", "carts.id", "sales.cartera_id")
             ->select('sales.id as id','sales.cash as totalbs', 'sales.total as totalbsventa', 'sales.created_at as fecha','sales.observacion as obs',
             'sales.tipopago as tipopago','sales.change as cambio','sales.factura as factura','sales.status as status','carts.nombre as cartera',
-            'u.name as user','c.nombre as rz','c.cedula as ci','c.celular as celular')
+            'u.name as user','c.razon_social as rz','c.cedula as ci','c.celular as celular')
             ->where('u.id', $this->usuarioseleccionado)
             ->orderBy('sales.id', 'desc')
             ->paginate(50);
@@ -77,7 +77,7 @@ class SaleListController extends Component
             ->join("carteras as carts", "carts.id", "sales.cartera_id")
             ->select('sales.id as id','sales.cash as totalbs', 'sales.total as totalbsventa', 'sales.created_at as fecha','sales.observacion as obs',
             'sales.tipopago as tipopago','sales.change as cambio','sales.factura as factura','sales.status as status','carts.nombre as cartera',
-            'u.name as user','c.nombre as rz','c.cedula as ci','c.celular as celular')
+            'u.name as user','c.razon_social as rz','c.cedula as ci','c.celular as celular')
             ->orderBy('sales.id', 'desc')
             ->paginate(50);
         }
@@ -125,7 +125,6 @@ class SaleListController extends Component
     {
         $this->idventa = $id;
         $this->listardetalleventas();
-        $this->observacion();
         $this->emit('show-modal', 'show modal!');
     }
     //Obtener el total descuento de una venta
@@ -182,7 +181,7 @@ class SaleListController extends Component
     {
         $venta = Sale::find($this->idventa);
 
-        if($this->idventa == null)
+        if($this->idventa != null)
         {
             return 0;
         }
@@ -229,15 +228,10 @@ class SaleListController extends Component
     //Anular una Venta
     public function anularventa()
     {
-        //dd($this->idventa);
-        // Creando Movimiento
-        // $Movimiento = Movimiento::create([
-        //     'type' => "ANULARVENTA",
-        //     'import' => $this->totabs(),
-        //     'user_id' => Auth()->user()->id,
-        // ]);
-
-        //Obteniendo Información de la Venta
+        DB::beginTransaction();
+        try
+        {
+            //Obteniendo Información de la Venta
         $venta = Sale::find($this->idventa);
 
         $movimiento = Movimiento::find($venta->movimiento_id);
@@ -289,7 +283,7 @@ class SaleListController extends Component
             ->join('lotes as l', 'l.product_id', 'sl.lote_id')
             ->select("sl.*")
             ->where("sd.product_id", $i->idproducto)
-            ->get()->first();
+            ->get();
             
 
             $mn=SaleLote::where('sale_detail_id',$lotes->sale_detail_id)->get();
@@ -319,6 +313,15 @@ class SaleListController extends Component
         $anular->save();
         //dd('asd');
         $this->emit('show-anularcerrar', 'show modal!');
+        }
+        catch (Exception $e)
+        {
+            DB::rollback();
+            $this->mensaje_toast = ": ".$e->getMessage();
+            $this->emit('sale-error');
+        }
+
+        
     }
     //Obtener el Id de la Sucursal Donde esta el Usuario
     public function idsucursal()
