@@ -5,6 +5,10 @@
                 <h4 class="card-title">
                     <b>INGRESOS Y EGRESOS</b>
                 </h4>
+
+                <ul class="row justify-content-end">
+                    visualizar saldo carteras
+                </ul>
                 <ul class="row justify-content-end">
                     @can('Ver_Generar_Ingreso_Egreso_Boton')
                         <a wire:click.prevent="viewDetails()" class="btn btn-warning">
@@ -12,16 +16,7 @@
                         </a>
                     @endcan
                 </ul>
-                {{-- <ul class="tabs tab-pills">
-                    <a wire:click.prevent="EliminarTigoMoney()" class="btn btn-dark">
-                        Eliminar tigo money
-                    </a>
-                </ul> --}}
-                {{-- <ul class="tabs tab-pills">
-                    <a wire:click.prevent="EliminarStreaming()" class="btn btn-dark">
-                        Eliminar streaming
-                    </a>
-                </ul> --}}
+              
             </div>
             <div class="row">
                 <div class="col-lg-3 col-md-4 col-sm-12">
@@ -68,6 +63,19 @@
                    <div class="form-group">
                                     <label>Cajas</label>
                                     <select wire:model="caja" class="form-control">
+                                        @foreach ($cajas2 as $item)
+                                        <option value="{{$item->id}}">{{$item->nombre}}</option>
+                                        @endforeach
+                                        <option value="TODAS">TODAS</option>
+                                       
+                                    </select>
+                                           
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-2">
+                   <div class="form-group">
+                                    <label>Sucursal</label>
+                                    <select wire:model="sss" class="form-control">
                                         @foreach ($cajas2 as $item)
                                         <option value="{{$item->id}}">{{$item->nombre}}</option>
                                         @endforeach

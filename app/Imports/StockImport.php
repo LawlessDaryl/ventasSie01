@@ -44,21 +44,21 @@ class StockImport implements ToModel,WithHeadingRow,WithBatchInserts,WithChunkRe
             'existencia'=>$row['stock'],
             'costo'=>$row['costo'],
             'status'=>'Activo',
-            'product_id'=>$this->products[$row['nombre']]
+            'product_id'=>$this->products[preg_replace('/\s+/', ' ',trim($row['nombre']))]
         ]);
 
            DetalleEntradaProductos::create([
-                'product_id'=>$this->products[$row['nombre']],
+                'product_id'=>$this->products[preg_replace('/\s+/', ' ',trim($row['nombre']))],
                 'cantidad'=>$row['stock'],
                 'costo'=>$row['costo'],
                 'id_entrada'=>$this->ingreso->id,
                 'lote_id'=>$lot->id
            ]);
 
-         $q=ProductosDestino::where('product_id',$this->products[$row['nombre']])
+         $q=ProductosDestino::where('product_id',$this->products[preg_replace('/\s+/', ' ',trim($row['nombre']))])
            ->where('destino_id',$this->destino)->value('stock');
 
-           ProductosDestino::updateOrCreate(['product_id' => $this->products[$row['nombre']], 'destino_id'=>$this->destino],['stock'=>$q+$row['stock']]);
+           ProductosDestino::updateOrCreate(['product_id' => $this->products[preg_replace('/\s+/', ' ',trim($row['nombre']))], 'destino_id'=>$this->destino],['stock'=>$q+$row['stock']]);
 
       
     }

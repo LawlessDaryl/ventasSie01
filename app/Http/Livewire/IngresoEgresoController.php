@@ -16,7 +16,7 @@ use Livewire\Component;
 class IngresoEgresoController extends Component
 {
 
-    public $fromDate,$toDate,$caja,$data,$search,$sucursal;
+    public $fromDate,$toDate,$caja,$data,$search,$sss;
 
     public function mount()
     {

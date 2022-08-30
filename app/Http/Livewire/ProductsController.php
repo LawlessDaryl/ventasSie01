@@ -194,7 +194,7 @@ public $selectedProduct=[];
         }
         $rules = [
             'nombre' => 'required|unique:products|min:5',
-            'codigo'=>'required|unique:products|min:4',
+            'codigo'=>'required|unique:products|min:3',
             'costo' => 'required',
             'precio_venta' => 'required|gt:costo',
             'selected_id2' => 'required|not_in:Elegir'
