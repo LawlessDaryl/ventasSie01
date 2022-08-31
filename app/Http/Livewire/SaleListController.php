@@ -114,7 +114,7 @@ class SaleListController extends Component
         $this->listadetalles = SaleDetail::join('sales as s', 's.id', 'sale_details.sale_id')
         ->join("products as p", "p.id", "sale_details.product_id")
         ->select('p.id as idproducto','p.image as image','p.nombre as nombre','p.precio_venta as po',
-        'sale_details.price as pv','sale_details.quantity as cantidad')
+        'sale_details.price as pv','sale_details.quantity as cantidad','sale_details.id as sid')
         ->where('sale_details.sale_id', $this->idventa)
         ->orderBy('sale_details.id', 'asc')
         ->get();
@@ -279,29 +279,27 @@ class SaleListController extends Component
       
         foreach($items as $i)
         {
-            $lotes = Sale::join("sale_details as sd", "sd.sale_id", "sales.id")
-            ->join('sale_lotes as sl', 'sl.sale_detail_id', 'sd.id')
-            ->join('lotes as l', 'l.product_id', 'sl.lote_id')
-            ->select("sl.*")
-            ->where("sd.product_id", $i->idproducto)
+            //dd($i->sid);
+            $lotes = SaleLote::where('sale_detail_id', $i->sid)
             ->get();
             
-            
-
-           // $mn=SaleLote::where('sale_detail_id',$lotes->sale_detail_id)->get();
+            //dd($lotes);
 
 
             foreach($lotes as $j)
             {
 
                 $lot=Lote::where('lotes.id',$j->lote_id)->first();
+
+                //dump($lot);
                 $lot->update([
                     'existencia' => $lot->existencia + $j->cantidad
                 ]);
                 
-               
+                $lotes = SaleLote::where('sale_detail_id', $i->sid)
+            ->delete();
             }
-            $mn=SaleLote::where('sale_detail_id',$j->sale_detail_id)->delete();
+          
         
 
         }
@@ -311,14 +309,15 @@ class SaleListController extends Component
             'status' => 'CANCELED',
         ]);
         $anular->save();
+                        
+        DB::commit();
         //dd('asd');
         $this->emit('show-anularcerrar', 'show modal!');
         }
         catch (Exception $e)
         {
             DB::rollback();
-            $this->mensaje_toast = ": ".$e->getMessage();
-            $this->emit('sale-error');
+            dd($e->getMessage());
         }
 
         
