@@ -293,7 +293,8 @@ class SaleListController extends Component
 
                 //dump($lot);
                 $lot->update([
-                    'existencia' => $lot->existencia + $j->cantidad
+                    'existencia' => $lot->existencia + $j->cantidad,
+                    'status'=>'Activo'
                 ]);
                 
                 $lotes = SaleLote::where('sale_detail_id', $i->sid)->delete();

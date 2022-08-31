@@ -116,7 +116,7 @@
                             {{ \Carbon\Carbon::parse($row['movimientoCreacion'])->format('d/m/Y H:i') }}
                         </td>
                         <td>
-                            {{$row['carteramovtype']}}  
+                            {{$row}}
                         </td>
                         <td>
                             {{ $row['nombre'] }}
@@ -124,10 +124,10 @@
                         <td>
                             {{ $row['import'] }}
                         </td>
-                        <td class="text-right">
+                        <td>
                             {{ $row['comentario'] }}
                         </td>
-                        <td class="text-right">
+                        <td>
                             {{ $row['usuarioNombre'] }}
                         </td>
                       
