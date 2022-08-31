@@ -213,7 +213,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     /*FREEFIRE*/
-   //Route::get('freeventas', FreeSaleController::class)->name('freeventas');
+   Route::get('freeventas', FreeSaleController::class)->name('freeventas');
 
     /* SERVICIOS */
     Route::get('catprodservice', CatProdServiceController::class)->name('cps')->middleware('permission:Cat_Prod_Service_Index');

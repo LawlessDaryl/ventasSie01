@@ -12,7 +12,8 @@
                 <div class="form-row">
                   <div class="col">
                     <h5><b>Nombre</b></h5>
-                    <input wire:model="nameclient" type="text" class="form-control" placeholder="Nombre Cliente">
+                    <h3>{{$nombrecliente}}</h3>
+                    {{-- <input wire:model="nameclient" type="text" class="form-control" placeholder="Nombre Cliente"> --}}
                   </div>
                   <div class="col">
                     <h5><b>Telefono</b></h5>
@@ -49,7 +50,15 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar todo</button>
-          <button wire:click.prevent="savesale()" type="button" class="btn btn-primary">Guardar Venta</button>
+          @if($cliente_id)
+            <button wire:click.prevent="savesale()" type="button" class="btn btn-primary">Guardar Venta</button>
+
+          @else
+          <div style="border: 5px;">
+            Debe seleccionar o crear un Cliente
+          </div>
+
+          @endif
         </div>
       </div>
     </div>
