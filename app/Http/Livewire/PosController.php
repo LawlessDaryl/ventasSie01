@@ -1000,11 +1000,18 @@ class PosController extends Component
                               
         
                                $val->update([
+<<<<<<< HEAD
                                    'existencia'=>0,
                                    'status'=>'Inactivo'
                                    
                                    
 
+=======
+                                   
+                                   'existencia'=>0,
+                                   'status'=>'Inactivo'
+                                   
+>>>>>>> 62ecc9ee363d76152635151b9acb1ff68ed5bc84
                                 ]);
                                 $val->save();
                                 $this->qq=$this->qq-$this->lotecantidad;
