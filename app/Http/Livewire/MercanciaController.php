@@ -703,8 +703,6 @@ class MercanciaController extends Component
                                    'cantidad'=>$val->existencia
                                    
                                ]);
-                              
-           
                                $val->update([
                                    
                                    'existencia'=>0,
