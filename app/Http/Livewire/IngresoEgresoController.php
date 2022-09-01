@@ -40,7 +40,7 @@ class IngresoEgresoController extends Component
     public function render()
     {
 
-        if (Auth::user()->hasPermissionTo('Admin_Views'))
+        if (Auth::user()->hasPermissionTo('Admin_Views') or Auth::user()->hasPermissionTo('Caja_Index'))
         {
             $this->sucursals= Sucursal::all();
             if ($this->sucursal == 'TODAS')
@@ -133,7 +133,7 @@ class IngresoEgresoController extends Component
                     'c.telefonoNum',
                     'ca.nombre as cajaNombre',
                     'u.name as usuarioNombre',
-                    'movimientos.created_at as movimientoCreacions',
+                    'movimientos.created_at as movimientoCreacion',
                 )
                 ->where('ca.sucursal_id', $this->sucursal)
                 ->where('crms.tipoDeMovimiento','<>', 'CORTE')
@@ -168,7 +168,7 @@ class IngresoEgresoController extends Component
                         'c.telefonoNum',
                         'ca.nombre as cajaNombre',
                         'u.name as usuarioNombre',
-                        'movimientos.created_at as movimientoCreacions',
+                        'movimientos.created_at as movimientoCreacion',
                     )
                     ->where('ca.id', $this->caja)
                     ->where('crms.tipoDeMovimiento','<>', 'CORTE')
@@ -210,7 +210,7 @@ class IngresoEgresoController extends Component
                     'c.telefonoNum',
                     'ca.nombre as cajaNombre',
                     'u.name as usuarioNombre',
-                    'movimientos.created_at as movimientoCreacions',
+                    'movimientos.created_at as movimientoCreacion',
                 )
                 ->where('ca.sucursal_id', $this->sucursal)
                 ->where('crms.tipoDeMovimiento','<>', 'CORTE')
@@ -239,7 +239,7 @@ class IngresoEgresoController extends Component
                     'c.telefonoNum',
                     'ca.nombre as cajaNombre',
                     'u.name as usuarioNombre',
-                    'movimientos.created_at as movimientoCreacions',
+                    'movimientos.created_at as movimientoCreacion',
                 )
                 ->where('ca.id', $this->caja)
                 ->where('crms.tipoDeMovimiento','<>', 'CORTE')
@@ -330,9 +330,9 @@ class IngresoEgresoController extends Component
     }
 
 
-    public function generarpdf()
+    public function generarpdf($data)
     {
-        session(['Ingresos' => $this->data]);
+        session(['ingresos' => $data]);
  
         session(['ingresossumatotal' => $this->sumaTotal]);//
       

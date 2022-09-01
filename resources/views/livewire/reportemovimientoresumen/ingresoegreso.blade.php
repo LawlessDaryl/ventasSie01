@@ -7,14 +7,14 @@
                 </h4>
 
                 <ul class="row justify-content-end">
-                    visualizar saldo carteras
+              
                 </ul>
                 <ul class="row justify-content-end">
                     @can('Ver_Generar_Ingreso_Egreso_Boton')
                         <a wire:click.prevent="viewDetails()" class="btn btn-warning">
                             Generar Ingreso/Egreso en Cartera
                         </a>
-                        <a wire:click.prevent="generarpdf()" class="btn btn-warning">
+                        <a wire:click.prevent="generarpdf({{$data}})" class="btn btn-warning">
                             Generar PDF
                         </a>
                     @endcan
@@ -87,7 +87,7 @@
                     </div>
                 </div>
 
- {{var_export ($sucursal)}}
+
                 
 
 

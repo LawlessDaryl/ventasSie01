@@ -110,13 +110,13 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($Ingresos as $row)
+                @foreach ($ingresos as $row)
                     <tr style="background-color: rgb(235, 235, 235)">
                         <td>
                             {{ \Carbon\Carbon::parse($row['movimientoCreacion'])->format('d/m/Y H:i') }}
                         </td>
                         <td>
-                            {{$row}}
+                            {{$row['carteramovtype']}}
                         </td>
                         <td>
                             {{ $row['nombre'] }}
