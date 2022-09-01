@@ -17,27 +17,39 @@
                   </div>
                   <div class="col">
                     <h5><b>Telefono</b></h5>
-                    <input wire:model="phone" type="number" class="form-control" placeholder="Teléfono o Celular">
+                    <h3>{{$celularcliente}}</h3>
                   </div>
                 </div>
                 <br>
                 <div class="form-row">
                   <div class="col">
                     <h5><b>ID</b></h5>
+                    @error('idgame')
+                        <span class="text-danger er">{{ $message }}</span>
+                    @enderror
                     <input wire:model="idgame" type="text" class="form-control" placeholder="Id">
                   </div>
+                  
                   <div class="col">
                     <h5><b>Alias</b></h5>
+                    @error('alias')
+                    <span class="text-danger er">{{ $message }}</span>
+                    @enderror
                     <input wire:model="alias" type="text" class="form-control" placeholder="Alias">
                   </div>
+                  
                 </div>
                 <br>
                 <div class="form-row">
                   <div class="col">
                     <h5><b>Plan</b></h5>
+                    @error('freeplan_id')
+                    <span class="text-danger er">{{ $message }}</span>
+                    @enderror
                     <select wire:model="freeplan_id" class="form-control">
+                      <option value="elegir">Elegir Plan</option>
                         @foreach($listplans as $a)
-                        <option value="{{$a->id}}">{{$a->nameplan}} - {{$a->cost}} Bs</option>
+                        <option value="{{$a->id}}">{{$a->nameplan}} - {{$a->cryptocurrencies}} - {{$a->cost}} Bs</option>
                         @endforeach
                     </select>
                   </div>

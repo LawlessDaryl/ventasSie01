@@ -34,7 +34,7 @@
                                 @foreach ($listaclientes as $lc)
                                 <tr>
                                     <td class="text-left">
-                                        {{ ucwords(strtolower($lc->nombre)) }}
+                                        {{ ucwords(strtolower($lc->nombre)) }} - {{$lc->celular}}
                                     </td>
                                     <td class="text-center">
                                         <button title="Seleccionar Cliente" wire:click.prevent="seleccionarcliente({{ $lc->id }})" class="btn btn-sm" style="background-color: rgb(10, 137, 235); color:white">

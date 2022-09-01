@@ -13,11 +13,13 @@ use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class FreeSaleController extends Component
 {
+    public $paginacion;
     //Datos para guardar una venta FreeFire
-    public $nameclient, $phone, $idgame, $alias, $freeplan_id, $cryptocurrencies;
+    public $nameclient, $idgame, $alias, $freeplan_id, $cryptocurrencies;
 
     //Total Bs de una Venta
     public $total_bs;
@@ -35,15 +37,21 @@ class FreeSaleController extends Component
     //Variables para crear un cliente
     public $cliente_nombre, $cliente_ci, $cliente_celular;
 
-    public $nombrecliente;
+    //Guarda el nombre y numero del cliente seleccionado
+    public $nombrecliente, $celularcliente;
 
 
     public function mount()
     {
         $this->cliente_id = 0;
+        $this->paginacion = 50;
     }
 
-
+    use WithPagination;
+    public function paginationView()
+    {
+        return 'vendor.livewire.bootstrap';
+    }
     public function render()
     {
 
@@ -54,6 +62,7 @@ class FreeSaleController extends Component
         {
             $listaclientes = Cliente::select("clientes.*")
             ->where('clientes.nombre', 'like', '%' . $this->buscarcliente . '%')
+            ->where('clientes.celular', '>', 0)
             ->orderBy("clientes.created_at","desc")
             ->get();
         }
@@ -62,19 +71,26 @@ class FreeSaleController extends Component
         if($this->cliente_id > 0)
         {
             $this->nombrecliente = Cliente::find($this->cliente_id)->nombre;
+            $this->celularcliente = Cliente::find($this->cliente_id)->celular;
         }
         else
         {
             $this->nombrecliente = "Seleccione Cliente";
+            $this->celularcliente = "Seleccione Cliente";
         }
 
 
 
+        $listsales = FreeSale::join("free_plans as fp", "fp.id", "free_sales.free_plan_id")
+        ->select("free_sales.nameclient as nameclient","free_sales.phone as phone","free_sales.idaccount as idaccount", "free_sales.alias as alias",
+        "fp.nameplan as nameplan", "fp.cryptocurrencies as cryptocurrencies", "free_sales.created_at as created_at", "fp.cost as cost")
+        ->orderBy("free_sales.created_at","desc")
+        ->paginate($this->paginacion);
 
 
         return view('livewire.freesale.freesale', [
             'listplans' => FreePlans::all(),
-            'listsales' => FreeSale::all(),
+            'listsales' => $listsales,
             'carteras' => Cartera::all(),
             'listaclientes' => $listaclientes
         ])
@@ -83,10 +99,34 @@ class FreeSaleController extends Component
     }
     public function showmodalnewsale()
     {
-        $this->emit('show-modal-sale');
+        if($this->cartera_id > 0)
+        {
+            $this->emit('show-modal-sale');
+        }
+        else
+        {
+            $this->emit('show-elegircartera');
+        }
     }
     public function savesale()
     {
+
+        //Reglas de Validación
+        $rules = [
+            'idgame' => 'required',
+            'alias' => 'required',
+            'freeplan_id' => 'required|not_in:elegir',
+        ];
+        $messages = [
+            'idgame.required' => 'Requerido',
+            'alias.required' => 'Requerido',
+            'freeplan_id.required' => 'Seleccione por favor',
+        ];
+
+        $this->validate($rules, $messages);
+
+
+
         $totalbs = FreePlans::find($this->freeplan_id);
 
 
@@ -110,10 +150,9 @@ class FreeSaleController extends Component
             //Creando la venta
             $sale = FreeSale::create([
                 'nameclient' => $this->nombrecliente,
-                'phone'=>$this->phone,
+                'phone'=>$this->celularcliente,
                 'idaccount'=>$this->idgame,
                 'alias'=> $this->alias,
-                'observation'=> "Ninguna",
                 'free_plan_id'=> $this->freeplan_id,
                 'sucursals_id'=> $this->idsucursal(),
                 'user_id'=> Auth()->user()->id,
@@ -178,37 +217,21 @@ class FreeSaleController extends Component
         //Reglas de Validación
         $rules = [
             'cliente_nombre' => 'required',
+            'cliente_celular' => 'required',
         ];
         $messages = [
             'cliente_nombre.required' => 'Información Requerida',
+            'cliente_celular.required' => 'Información Requerida',
         ];
+
         $this->validate($rules, $messages);
-        if($this->cliente_celular == null)
-        {
-            $newclient = Cliente::create([
-                'nombre' => $this->cliente_nombre,
-                'cedula' => $this->cliente_ci,
-                'celular' => 0,
-                // 'telefono' => $this->telefono,
-                // 'email' => $this->email,
-                // 'nit' => $this->nit,
-                // 'razon_social' => $this->razon_social,
-                'procedencia_cliente_id' => 1,
-            ]);
-        }
-        else
-        {
-            $newclient = Cliente::create([
-                'nombre' => $this->cliente_nombre,
-                'cedula' => $this->cliente_ci,
-                'celular' => $this->cliente_celular,
-                // 'telefono' => $this->telefono,
-                // 'email' => $this->email,
-                // 'nit' => $this->nit,
-                // 'razon_social' => $this->razon_social,
-                'procedencia_cliente_id' => 1,
+
+        $newclient = Cliente::create([
+            'nombre' => $this->cliente_nombre,
+            'cedula' => $this->cliente_ci,
+            'celular' => $this->cliente_celular,
+            'procedencia_cliente_id' => 1,
         ]);
-        }
         $this->cliente_id = $newclient->id;
         $this->mensaje_toast = "Se selecciono al cliente creado: '" . $newclient->nombre . "'";
         //Ocultando ventana modal
@@ -220,6 +243,7 @@ class FreeSaleController extends Component
     {
         $this->cliente_id = $idcliente;
         $nombrecliente = Cliente::find($idcliente)->nombre;
+        $celularcliente = Cliente::find($idcliente)->celular;
         $this->mensaje_toast = "Se seleccionó al cliente: '" . ucwords(strtolower($nombrecliente)) . "' para esta venta";
         $this->emit('hide-buscarcliente');
     }

@@ -4,7 +4,7 @@
     /* Estilos para las tablas */
     .table-wrapper {
     width: 100%;/* Anchura de ejemplo */
-    height: 400px; /* Altura de ejemplo */
+    height: 500px; /* Altura de ejemplo */
     overflow: auto;
     }
 
@@ -30,7 +30,7 @@
         border-top: 0.3px solid rgb(0, 0, 0);
     } */
     .table-wrapper table tbody tr:hover {
-        background-color: #f07bffcc;
+        background-color: #f07bff52;
     }
     .table-wrapper table td {
         border-top: 0.3px solid #b300ca;
@@ -82,19 +82,6 @@
         <div class="form-group">
             <div class="row">
                 <div class="col-12 col-sm-6 col-md-3 text-center">
-                    <b wire:click="limpiarsearch()" style="cursor: pointer;">Buscar por Cliente...</b>
-                    <div class="form-group">
-                        <div class="input-group mb-4">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text input-gp">
-                                    <i class="fas fa-search"></i>
-                                </span>
-                            </div>
-                            <input type="text" wire:model="search" placeholder="Ingrese Nombre Cliente..." class="form-control">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-sm-6 col-md-3 text-center">
                     <b>Tipo de Pago</b>
                     <div class="form-group">
                         <select wire:model="cartera_id" class="form-control">
@@ -108,7 +95,7 @@
                         @enderror
                     </div>
                 </div>
-                <div class="col-12 col-sm-6 col-md-2 text-center">
+                <div class="col-12 col-sm-6 col-md-3 text-center">
                     <b>Buscar Cliente</b>
                     <div class="form-group">
                         <button wire:click.prevent="modalbuscarcliente()" type="button" class="btn btn-outline-dark">
@@ -116,7 +103,7 @@
                         </button>
                     </div>
                 </div>
-                <div class="col-12 col-sm-6 col-md-2 text-center">
+                <div class="col-12 col-sm-6 col-md-3 text-center">
                     <b>Crear Cliente</b>
                     <div class="form-group">
                         <button wire:click.prevent="modalcrearcliente()" type="button" class="btn btn-outline-dark">
@@ -124,8 +111,8 @@
                         </button>
                     </div>
                 </div>
-                <div class="col-12 col-sm-6 col-md-2 text-center">
-                    <b>|</b>
+                <div class="col-12 col-sm-6 col-md-3 text-center">
+                    <b style="color: white;">|</b>
                     <div class="form-group">
                         <button wire:click="showmodalnewsale()" type="button" class="btn btn-button" style="background-color: #d301c1; color: white;">Nueva Venta</button>
                     </div>
@@ -150,56 +137,73 @@
     </div>
     
     <br>
+
+    <div class="row">
+        <div class="col-12 col-sm-6 col-md-3 text-center">
+            
+        </div>
+        <div class="col-12 col-sm-6 col-md-6 text-center">
+            {{-- @if($this->nombrecliente != 'Seleccione Cliente')
+                <h4>Cliente Seleccionado: <b>{{ucwords(strtolower($this->nombrecliente))}}</b></h4>
+            @endif --}}
+        </div>
+        <div class="col-12 col-sm-6 col-md-3 text-center">
+            <h2><b>TOTAL: 0000</b></h2>
+            <h2><b>SALDO: 0000</b></h2>
+        </div>
+    </div>
+
+
+
+
     
     <div class="table-wrapper">
         <table>
             <thead>
                 <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Nombre</th>
-                    <th scope="col">Telefono/Celular</th>
-                    <th scope="col">ID</th>
-                    <th scope="col">Alias</th>
-                    <th scope="col">Plan</th>
-                    <th scope="col">Fecha Venta</th>
-                    <th scope="col">Precio Real Bs</th>
-                    <th scope="col">Criptomonedas</th>
-                    <th scope="col">Obervación</th>
+                    <th class="text-center">#</th>
+                    <th class="text-center">Nombre Cliente</th>
+                    <th class="text-center">Telefono/Celular</th>
+                    <th class="text-center">ID</th>
+                    <th class="text-center">Alias</th>
+                    <th class="text-center">Plan</th>
+                    <th class="text-center">Fecha Venta</th>
+                    <th class="text-center">Precio Real Bs</th>
+                    <th class="text-center">Criptomonedas</th>
+                    {{-- <th class="text-center">Obervación</th> --}}
+                    <th class="text-center">Editar</th>
+                    <th class="text-center">Eliminar</th>
                 </tr>
             </thead>
         <tbody>
             @foreach($listsales as $item)
             <tr>
-                <th scope="row">1</th>
+                <td class="text-center">{{ ($listsales->currentpage()-1) * $listsales->perpage() + $loop->index + 1 }}</td>
                 <td>{{$item->nameclient}}</td>
-                <td>{{$item->phone}}</td>
-                <td>{{$item->idaccount}}</td>
-                <td>{{$item->alias}}</td>
-                <td>{{$item->free_plan_id}}</td>
-                <td>{{$item->created_at}}</td>
-                <td>? Bs</td>
-                <td>5</td>
-                <td>{{$item->observation}}</td>
+                <td class="text-center">{{$item->phone}}</td>
+                <td class="text-center">{{$item->idaccount}}</td>
+                <td class="text-center">{{$item->alias}}</td>
+                <td class="text-center">{{$item->nameplan}}</td>
+                <td class="text-center">{{$item->created_at}}</td>
+                <td class="text-center">{{$item->cost}}</td>
+                <td class="text-center">{{$item->cryptocurrencies}}</td>
+                {{-- <td class="text-center">{{$item->observation}}</td> --}}
+                <td class="text-center">
+                    <button type="button" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                </td>
+                <td class="text-center">
+                    <button type="button" class="btn btn-outline-danger btn-sm">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </td>
             </tr>
             @endforeach
-            <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>Thornton</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-            </tr>
-            <tr>
-                <th scope="row">3</th>
-                <td colspan="2">Larry the Bird</td>
-                <td colspan="2">Larry the Bird</td>
-                <td colspan="2">Larry the Bird</td>
-                <td>@twitter</td>
-            </tr>
         </tbody>
         </table>
     </div>
+    {{ $listsales->links() }}
     @include('livewire.freesale.modalnewsale')
     @include('livewire.freesale.modalbuscarcliente')
     @include('livewire.freesale.modalcrearcliente')
@@ -221,7 +225,14 @@
             $("#modalcrearcliente").modal("show");
         });
 
-
+        //Mostrar Mensaje debe elegir una cartera
+        window.livewire.on('show-elegircartera', event => {
+            swal(
+                '¡Seleccione Tipo de Pago!',
+                'Por favor seleccione un tipo de pago distinto a elegir cartera',
+                'warning'
+                )
+        });
         //Cerrar Ventana Modal y Mostrar Toast Servicio Entregado Exitosamente
         window.livewire.on('modal-hide-sale', msg => {
         $('#newsale').modal('hide')

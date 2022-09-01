@@ -10,35 +10,31 @@
         </div>
         <div class="modal-body">
             
-            <div class="form-row">
-                <div class="form-row" style="width: 99%; margin-right: 7px;">
-                    <div class="col-md-12">
-                        <label for="validationTooltip01"><b>Nombre Cliente</b></label>
-                        <input wire:model.lazy="cliente_nombre" class="form-control" type="text" placeholder="Obligatorio">
-                        @error('cliente_nombre')
-                            <span class="text-danger er">{{ $message }}</span>
-                        @enderror
-                    </div>
-                </div>
-                <br>
-                <div class="form-row" style="width: 48%; margin-right: 7px;">
-                    <div class="col-md-12">
-                        <label for="validationTooltip01"><b>Cédula</b></label>
-                        <input wire:model.lazy="cliente_ci" class="form-control" type="text" placeholder="Opcional...">
-                        {{-- @error('edit_categoriatrabajo')
+            <div class="row">
+                <div class="col-12">
+                    <label for="validationTooltip01"><b>Nombre Cliente</b></label>
+                    <input wire:model.lazy="cliente_nombre" class="form-control" type="text" placeholder="Dato Obligatorio">
+                    @error('cliente_nombre')
                         <span class="text-danger er">{{ $message }}</span>
-                        @enderror --}}
-                    </div>
+                    @enderror
+                    <br>
                 </div>
-                <div class="form-row" style="width: 48%">
-                    <div class="col-md-12">
-                        <label for="validationTooltipUsername"><b>Celular</b></label>
-                        <input wire:model.lazy="cliente_celular" class="form-control" type="number" placeholder="Opcional...">
-                        {{-- @error('edit_marca')
-                            <span class="text-danger er">{{ $message }}</span>
-                        @enderror --}}
-                    </div>
+
+                <div class="col-12">
+                    <label for="validationTooltipUsername"><b>Celular</b></label>
+                    <input wire:model.lazy="cliente_celular" class="form-control" type="number" placeholder="Dato Obligatorio">
+                    @error('cliente_celular')
+                        <span class="text-danger er">{{ $message }}</span>
+                    @enderror
                 </div>
+                
+                {{-- <div class="col-12">
+                    <label for="validationTooltip01"><b>Cédula</b></label>
+                    <input wire:model.lazy="cliente_ci" class="form-control" type="text" placeholder="Opcional...">
+                </div> --}}
+
+
+
             </div>
             
         </div>
