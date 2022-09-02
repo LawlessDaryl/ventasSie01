@@ -16,7 +16,10 @@ use Livewire\Component;
 class IngresoEgresoController extends Component
 {
 
-    public $fromDate,$toDate,$caja,$data,$search,$sucursal,$sucursals,$sumaTotal;
+    public $fromDate,$toDate,$caja,$data,$search,$sucursal,$sucursals,$sumaTotal,$cantidad,$mov_selected,$cantidad_edit,$comentario_edit;
+    public $cot_dolar = 6.96;
+    public $cartera_id_edit,$type_edit;
+  
 
     public function mount()
     {
@@ -32,6 +35,7 @@ class IngresoEgresoController extends Component
         $this->toDate=  Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->caja='TODAS';
         $this->sucursal= $this->usuarioSucursal();
+
 
        //$this->sucursal=collect();
 
@@ -100,14 +104,14 @@ class IngresoEgresoController extends Component
                 ->join('movimientos as m', 'm.id', 'cm.movimiento_id')
                 ->where('cm.type','INGRESO')
                 ->where('m.status', 'ACTIVO')
-                ->whereBetween('m.created_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
+                //->whereBetween('m.created_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
                 ->where('carteras.id', $c->id)->sum('m.import');
             /* SUMAR TODO LOS EGRESOS DE LA CARTERA */
             $EGRESOS = Cartera::join('cartera_movs as cm', 'carteras.id', 'cm.cartera_id')
                 ->join('movimientos as m', 'm.id', 'cm.movimiento_id')
                 ->where('cm.type', 'EGRESO')
                 ->where('m.status','ACTIVO')
-                ->whereBetween('m.created_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
+                //->whereBetween('m.created_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
                 ->where('carteras.id', $c->id)->sum('m.import');
             /* REALIZAR CALCULO DE INGRESOS - EGRESOS */
             $c->monto = $INGRESOS - $EGRESOS;
@@ -134,10 +138,11 @@ class IngresoEgresoController extends Component
                     'ca.nombre as cajaNombre',
                     'u.name as usuarioNombre',
                     'movimientos.created_at as movimientoCreacion',
+                    'movimientos.id as movid',
+                    'movimientos.status as movstatus'
                 )
                 ->where('ca.sucursal_id', $this->sucursal)
-                ->where('crms.tipoDeMovimiento','<>', 'CORTE')
-                ->where('crms.tipoDeMovimiento','<>', 'TIGOMONEY')
+                ->where('crms.tipoDeMovimiento','=', 'EGRESO/INGRESO')
                 ->whereBetween('movimientos.created_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
                 ->where(function($querys){
                     $querys->where( 'crms.tipoDeMovimiento', 'like', '%' . $this->search . '%')
@@ -147,7 +152,8 @@ class IngresoEgresoController extends Component
                 })
                 ->orderBy('movimientos.id', 'desc')
                 ->get();
-                $this->sumaTotal= $this->data->sum('import');
+                $this->sumaTotal=$this->data->sum('import');
+
             }
             
             else{
@@ -169,10 +175,11 @@ class IngresoEgresoController extends Component
                         'ca.nombre as cajaNombre',
                         'u.name as usuarioNombre',
                         'movimientos.created_at as movimientoCreacion',
+                        'movimientos.id as movid',
+                        'movimientos.status as movstatus'
                     )
                     ->where('ca.id', $this->caja)
-                    ->where('crms.tipoDeMovimiento','<>', 'CORTE')
-                    ->where('crms.tipoDeMovimiento','<>', 'TIGOMONEY')
+                    ->where('crms.tipoDeMovimiento','=', 'EGRESO/INGRESO')
                     ->whereBetween('movimientos.created_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
                     ->where(function($querys){
                         $querys->where( 'crms.tipoDeMovimiento', 'like', '%' . $this->search . '%')
@@ -183,7 +190,7 @@ class IngresoEgresoController extends Component
                     ->orderBy('movimientos.id', 'desc')
                     ->get();
           
-                    $this->sumaTotal= $this->data->sum('import');
+                    $this->sumaTotal=$this->data->sum('import');
               
 
             }
@@ -211,14 +218,16 @@ class IngresoEgresoController extends Component
                     'ca.nombre as cajaNombre',
                     'u.name as usuarioNombre',
                     'movimientos.created_at as movimientoCreacion',
+                    'movimientos.id as movid',
+                    'movimientos.status as movstatus'
                 )
                 ->where('ca.sucursal_id', $this->sucursal)
-                ->where('crms.tipoDeMovimiento','<>', 'CORTE')
-                ->where('crms.tipoDeMovimiento','<>', 'TIGOMONEY')
+                ->where('crms.tipoDeMovimiento','=', 'EGRESO/INGRESO')
                 ->whereBetween('movimientos.created_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
                 ->orderBy('movimientos.id', 'desc')
                 ->get();   
-                $this->sumaTotal= $this->data->sum('import');
+              
+                $this->sumaTotal=$this->data->sum('import');
             }
 
             else{
@@ -240,14 +249,15 @@ class IngresoEgresoController extends Component
                     'ca.nombre as cajaNombre',
                     'u.name as usuarioNombre',
                     'movimientos.created_at as movimientoCreacion',
+                    'movimientos.id as movid',
+                    'movimientos.status as movstatus'
                 )
                 ->where('ca.id', $this->caja)
-                ->where('crms.tipoDeMovimiento','<>', 'CORTE')
-                ->where('crms.tipoDeMovimiento','<>', 'TIGOMONEY')
+                ->where('crms.tipoDeMovimiento','=', 'EGRESO/INGRESO')
                 ->whereBetween('movimientos.created_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
                 ->orderBy('movimientos.id', 'desc')
                 ->get();
-                $this->sumaTotal= $this->data->sum('import');
+                $this->sumaTotal=$this->data->sum('import');
             }
         }
 
@@ -316,7 +326,9 @@ class IngresoEgresoController extends Component
         $this->type = 'Elegir';
         $this->cantidad = '';
         $this->comentario = '';
+        $this->emit('hide-modal');
     }
+
 
     public function usuarioSucursal(){
         $SucursalUsuario = User::join('sucursal_users as su', 'su.user_id', 'users.id')
@@ -346,6 +358,58 @@ class IngresoEgresoController extends Component
 
         $this->emit('openothertap');
     }
+
+        public function anularOperacion(Movimiento $mov){
+
+            
+            $mov->update([
+                'status' => 'INACTIVO'
+                ]);
+            $mov->save();
+ 
+            }
+            
+        public function editarOperacion(Movimiento $mov)
+        {
+
+       
+            $this->cantidad_edit=$mov->import;
+        
+            $this->cartera_id_edit=$mov->cartmov[0]->cartera_id;
+            $this->type_edit=$mov->cartmov[0]->type;
+            $this->comentario_edit=$mov->cartmov[0]->comentario;
+            $this->mov_selected=$mov;
+            $this->emit('editar-movimiento');
+        }
+
+        public function guardarEdicion(){
+
+            $mov=Movimiento::find($this->mov_selected->id);
+            
+            $mov->update([
+                'import' => $this->cantidad_edit
+                ]);
+            $mov->save();
+
+
+           CarteraMov::find($mov->cartmov[0]->id)->update([
+                'comentario'=>$this->comentario_edit
+            ]);
+
+            $this->resetUIedit();
+ 
+        }
+
+        public function resetUIedit()
+        {
+            $this->cartera_id_edit = 'Elegir';
+            $this->type_edit = 'Elegir';
+            $this->cantidad_edit = '';
+            $this->comentario_edit = '';
+            $this->emit('hide_editar');
+        }
+
+     
 
 }
 

@@ -1,4 +1,4 @@
-<div wire:ignore.self id="modal-details" class="modal fade" tabindex="1" role="dialog">
+<div wire:ignore.self id="modal-mov" class="modal fade" tabindex="1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header bg-dark">
@@ -16,7 +16,7 @@
                     <div class="col-sm-12 col-md-6">
                         <div class="form-group">
                             <h6>Cartera</h6>
-                            <select wire:model='cartera_id' class="form-control">
+                            <select wire:model='cartera_id_edit' disabled class="form-control">
                                 <option value="Elegir" selected disabled>Elegir</option>
                                 @foreach ($carterasSucursal as $item)
                                     <option value="{{ $item->id }}">{{ $item->cajaNombre }},
@@ -32,7 +32,7 @@
                     <div class="col-sm-12 col-md-3">
                         <div class="form-group">
                             <h6>Ingreso / Egreso</h6>
-                            <select wire:model='type' class="form-control">
+                            <select wire:model='type_edit' class="form-control" disabled>
                                 <option value="Elegir" selected disabled>Elegir</option>
                                 <option value="EGRESO">EGRESO</option>
                                 <option value="INGRESO">INGRESO</option>
@@ -46,8 +46,8 @@
                     <div class="col-sm-12 col-md-3">
                         <div class="form-group">
                             <h6>Cantidad</h6>
-                            <input type="number" wire:model.lazy="cantidad" class="form-control">
-                            @error('cantidad')
+                            <input type="number" wire:model.lazy="cantidad_edit" class="form-control">
+                            @error('cantidad_edit')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror
                         </div>
@@ -56,8 +56,8 @@
                     <div class="col-sm-12 col-md-12">
                         <div class="form-group">
                             <h6>Comentario (Obligatorio)</h6>
-                            <textarea wire:model.lazy="comentario" class="form-control" name="" rows="2"></textarea>
-                            @error('comentario')
+                            <textarea wire:model.lazy="comentario_edit" class="form-control" name="" rows="2"></textarea>
+                            @error('comentario_edit')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror
                         </div>
@@ -65,9 +65,10 @@
 
                 </div>
                 <div>
-                    <a href="javascript:void(0)" class="btn btn-dark" wire:click.prevent="Generar()">Generar</a>
-                    <a href="javascript:void(0)" class="btn btn-warning" wire:click.prevent="resetUI()">Cancelar</a>
+                    <a href="javascript:void(0)" class="btn btn-dark" wire:click.prevent="guardarEdicion()">Actualizar</a>
+                    <a href="javascript:void(0)" class="btn btn-warning" wire:click.prevent="resetUIedit()">Cancelar</a>
                 </div>
+             
 
             </div>
 

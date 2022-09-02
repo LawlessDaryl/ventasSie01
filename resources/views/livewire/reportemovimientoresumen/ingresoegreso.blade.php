@@ -22,9 +22,24 @@
               
             </div>
             <div class="row">
-                <div class="col-lg-3 col-md-4 col-sm-12">
 
-                    <div class="form-group">
+                <div class="col-sm-12 col-md-12 d-flex">
+                    @foreach ($grouped as $key=>$item)
+                    <div class="card m-2 p-2" style="width: 18rem;">
+                    
+                        <h6 class="card-title">
+                            <b>Caja: {{ $key }},</b>
+                            
+                        </h6>
+                        @foreach ($item as $dum)
+                            
+                       <div>{{$dum->carteraNombre}}:{{$dum->monto}}</div> 
+                        @endforeach
+                    </div>
+                    @endforeach
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-12">
+                    <div class="form-group" >
                         <label>Buscar</label>
                         <div class="input-group mb-4">
                             <div class="input-group-prepend">
@@ -36,15 +51,10 @@
                         </div>
                     </div>
 
-                    
-
-
                 </div>
 
                 <div class="col-sm-12 col-md-2">
                     <div class="form-group">
-                                            
-
                                     <label>Fecha inicial</label>
                                     <input type="date" wire:model="fromDate" class="form-control">
                                     @error('fromDate')
@@ -86,26 +96,13 @@
                                            
                     </div>
                 </div>
+             
 
 
                 
 
 
-                <div class="col-sm-12 col-md-12 d-flex">
-                    @foreach ($grouped as $key=>$item)
-                    <div class="card m-2 p-2" style="width: 18rem;">
-                    
-                        <h6 class="card-title">
-                            <b>Caja: {{ $key }},</b>
-                            
-                        </h6>
-                        @foreach ($item as $dum)
-                            
-                       <div>{{$dum->carteraNombre}}:{{$dum->monto}}</div> 
-                        @endforeach
-                    </div>
-                    @endforeach
-                </div>
+               
 
             
             </div>
@@ -122,6 +119,8 @@
                                     <th class="table-th text-withe text-center" style="font-size: 100%">IMPORTE</th>
                                     <th class="table-th text-withe text-center" style="font-size: 100%">MOTIVO</th>
                                     <th class="table-th text-withe text-center" style="font-size: 100%">USUARIO</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 100%">ESTADO</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 100%">ACC.</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -163,20 +162,69 @@
                                             <h6 class="text-center" style="font-size: 100%">
                                                 {{ $p->usuarioNombre }}</h6>
                                         </td>
+
+                                        @if( $p->movstatus == 'ACTIVO')
+                                        <td>
+                                            <h6 class="text-center card text-white bg-primary">{{ $p->movstatus }}</h6>
+                                        </td>
+                                        @else
+                                        <td>
+                                            <h6 class="text-center card text-white bg-danger">{{ $p->movstatus }}</h6>
+                                        </td>
+                                        @endif
+
+                                        @if ($p->movstatus == 'INACTIVO')
+
+                                        <td>
+                                            <div class="btn-group" role="group" aria-label="Basic example">
+                                                <button disabled  wire:click="anularOperacion({{$p->movid}})" class="btn btn-sm" title="Anular Ingreso/Egreso" style="background-color: rgb(10, 137, 235); color:white">
+                                                    <i class="la flaticon-cross"></i>
+                                                </button>
+                                            
+                                            </div>
+                                        </td>
+                                        @else
+                                            
+                                        <td>
+                                            <div class="btn-group" role="group" aria-label="Basic example">
+                                                <button  wire:click="anularOperacion({{$p->movid}})" class="btn btn-sm" title="Anular Ingreso/Egreso" style="background-color: rgb(10, 137, 235); color:white">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                             
+                                                <button  wire:click="editarOperacion({{$p->movid}})" class="btn btn-sm" title="Editar Ingreso/egreso" style="background-color: rgb(0, 104, 21); color:white">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                            </div>
+                                        </td>
                                        
+                                        @endif
+
                                     </tr>
                                 @endforeach
                             </tbody>
                             <tfoot>
-                                
-                                <td colspan="5">
-                                    <h6 class="text-center" colspan="5" style="font-size: 100%">
-                                     <b>TOTAL</b></h6>
-                                </td>
-                                <td colspan="1">
-                                    <h6 class="text-center" colspan="5" style="font-size: 100%">
-                                      {{$sumaTotal}} </h6>
-                                </td>
+                                <tr>
+
+                                    <td colspan="5">
+                                        <h6 class="text-right p-l-1" colspan="5" style="font-size: 100%">
+                                         <b>TOTAL Bs.</b></h6>
+                                    </td>
+                                    <td colspan="1">
+                                        <h6 class="text-center" colspan="5" style="font-size: 100%">
+                                          {{ number_format($sumaTotal,2) }} </h6>
+                                    </td>
+                                </tr>
+                                <tr>
+
+                                    <td colspan="5">
+                                        <h6 class="text-right p-l-1" colspan="5" style="font-size: 100%">
+                                         <b>TOTAL $us.</b></h6>
+                                    </td>
+                                    <td colspan="1">
+                                        <h6 class="text-center" colspan="5" style="font-size: 100%">
+                                            {{ number_format($sumaTotal/$cot_dolar,2) }} </h6>
+                                    </td>
+                                </tr>
                             </tfoot>
                         </table>
                     </div>
@@ -185,6 +233,7 @@
         </div>
     </div>
     @include('livewire.reportemovimientoresumen.modalDetails')
+    @include('livewire.reportemovimientoresumen.modaleditar')
   
 </div>
 
@@ -192,6 +241,12 @@
     document.addEventListener('DOMContentLoaded', function() {
         window.livewire.on('show-modal', Msg => {
             $('#modal-details').modal('show')
+        })
+        window.livewire.on('editar-movimiento', Msg => {
+            $('#modal-mov').modal('show')
+        })
+        window.livewire.on('hide_editar', Msg => {
+            $('#modal-mov').modal('hide')
         })
         window.livewire.on('hide-modal', Msg => {
             $('#modal-details').modal('hide')
