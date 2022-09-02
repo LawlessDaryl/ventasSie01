@@ -2,7 +2,7 @@
 <div wire:ignore.self class="modal fade" id="modalbuscarcliente" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-        <div class="modal-header" style="background-color: rgb(252, 130, 42); color: white;">
+        <div class="modal-header" style="background-color: #d301c1; color: white;">
             <h5 class="modal-title" id="exampleModalLongTitle">Buscar Cliente</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -34,7 +34,7 @@
                                 @foreach ($listaclientes as $lc)
                                 <tr>
                                     <td class="text-left">
-                                        {{ ucwords(strtolower($lc->nombre)) }}
+                                        {{ ucwords(strtolower($lc->nombre)) }} - {{$lc->celular}}
                                     </td>
                                     <td class="text-center">
                                         <button title="Seleccionar Cliente" wire:click.prevent="seleccionarcliente({{ $lc->id }})" class="btn btn-sm" style="background-color: rgb(10, 137, 235); color:white">

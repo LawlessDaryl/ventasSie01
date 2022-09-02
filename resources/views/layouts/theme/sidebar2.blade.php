@@ -713,10 +713,10 @@
 								</ul>
 							</div>
 						</li>
-						{{-- <li class="nav-item">
+						<li class="nav-item">
 							<a data-toggle="collapse" href="#submenu1">
-								<!-- <img src="assets/img/ventas.png" width="25" height="35" alt="navbar brand" class="navbar-brand"> -->
-								<p>Modulo</p>
+								<img src="assets/img/freefire.png" width="25" height="35" alt="navbar brand" class="navbar-brand">
+								<p>FreeFire</p>
 								<span class="caret"></span>
 							</a>
 							<div class="collapse" id="submenu1">
@@ -725,7 +725,7 @@
 									<li>
 										<a href="{{ url('freeventas') }}">
 											<i class="fa fas fa-minus"></i>
-											Nueva Transacción </a>
+											Modulo Ventas </a>
 									</li>
 									<!-- <li>
 										<a href="{{ url('salelist') }}">
@@ -754,7 +754,7 @@
 									</li> -->
 								</ul>
 							</div>
-						</li> --}}
+						</li>
 						<li class="mx-4 mt-2">
 								<a style="background-color: #ee761c!important;" class="btn btn-primary btn-block" href="{{ route('logout') }}"
 									onclick="event.preventDefault(); document.getElementById('logout-form').submit()">

@@ -40,9 +40,7 @@ class IngresoEgresoController extends Component
     public function render()
     {
 
-
-
-        if (Auth::user()->hasPermissionTo('Admin_Views'))
+        if (Auth::user()->hasPermissionTo('Admin_Views') or Auth::user()->hasPermissionTo('Caja_Index'))
         {
             $this->sucursals= Sucursal::all();
             if ($this->sucursal == 'TODAS')
@@ -138,6 +136,8 @@ class IngresoEgresoController extends Component
                     'movimientos.created_at as movimientoCreacion',
                 )
                 ->where('ca.sucursal_id', $this->sucursal)
+                ->where('crms.tipoDeMovimiento','<>', 'CORTE')
+                ->where('crms.tipoDeMovimiento','<>', 'TIGOMONEY')
                 ->whereBetween('movimientos.created_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
                 ->where(function($querys){
                     $querys->where( 'crms.tipoDeMovimiento', 'like', '%' . $this->search . '%')
@@ -152,9 +152,6 @@ class IngresoEgresoController extends Component
             
             else{
 
-
-            
-                    
                     $this->data = Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')
                     ->join('carteras as c', 'c.id', 'crms.cartera_id')
                     ->join('cajas as ca', 'ca.id', 'c.caja_id')
@@ -174,6 +171,8 @@ class IngresoEgresoController extends Component
                         'movimientos.created_at as movimientoCreacion',
                     )
                     ->where('ca.id', $this->caja)
+                    ->where('crms.tipoDeMovimiento','<>', 'CORTE')
+                    ->where('crms.tipoDeMovimiento','<>', 'TIGOMONEY')
                     ->whereBetween('movimientos.created_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
                     ->where(function($querys){
                         $querys->where( 'crms.tipoDeMovimiento', 'like', '%' . $this->search . '%')
@@ -214,6 +213,8 @@ class IngresoEgresoController extends Component
                     'movimientos.created_at as movimientoCreacion',
                 )
                 ->where('ca.sucursal_id', $this->sucursal)
+                ->where('crms.tipoDeMovimiento','<>', 'CORTE')
+                ->where('crms.tipoDeMovimiento','<>', 'TIGOMONEY')
                 ->whereBetween('movimientos.created_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
                 ->orderBy('movimientos.id', 'desc')
                 ->get();   
@@ -241,6 +242,8 @@ class IngresoEgresoController extends Component
                     'movimientos.created_at as movimientoCreacion',
                 )
                 ->where('ca.id', $this->caja)
+                ->where('crms.tipoDeMovimiento','<>', 'CORTE')
+                ->where('crms.tipoDeMovimiento','<>', 'TIGOMONEY')
                 ->whereBetween('movimientos.created_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
                 ->orderBy('movimientos.id', 'desc')
                 ->get();
@@ -327,9 +330,9 @@ class IngresoEgresoController extends Component
     }
 
 
-    public function generarpdf()
+    public function generarpdf($data)
     {
-        session(['Ingresos' => $this->data]);
+        session(['ingresos' => $data]);
  
         session(['ingresossumatotal' => $this->sumaTotal]);//
       

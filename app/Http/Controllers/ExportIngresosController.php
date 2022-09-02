@@ -20,7 +20,7 @@ class ExportIngresosController extends Controller
     public function reportPDFIngresos()
     {
         //Variables para la tbody
-        $Ingresos = session('Ingresos');
+        $ingresos = session('ingresos');
         
         
 
@@ -28,10 +28,9 @@ class ExportIngresosController extends Controller
         //Variables para la tfoot
         $ingresossumatotal = session('ingresossumatotal');//
     
-
         $caracteristicas = session('caracteristicas');
 
-        $sucursal = $caracteristicas[0];
+        $sucursal = Sucursal::where('id',$caracteristicas[0])->value('name');
         $caja = $caracteristicas[1];
         $fromDate = $caracteristicas[2];
         $toDate = $caracteristicas[3];
@@ -48,7 +47,7 @@ class ExportIngresosController extends Controller
         $logoempresa = Company::find(1)->image;
 
         $pdf = PDF::loadView('livewire.pdf.reporteingresos',
-        compact('Ingresos','ingresossumatotal',
+        compact('ingresos','ingresossumatotal',
                 'sucursal',
                 'caja',
                 'fromDate',

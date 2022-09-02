@@ -19,7 +19,7 @@ class CreateFreeSalesTable extends Migration
             $table->string('phone',12);
             $table->string('idaccount',50);
             $table->string('alias', 50);
-            $table->string('observation',500)->default('Ninguna');
+            $table->enum('status',['ACTIVO','INACTIVO'])->default('ACTIVO');
             $table->unsignedBigInteger('free_plan_id');
             $table->foreign('free_plan_id')->references('id')->on('free_plans');
             $table->unsignedBigInteger('sucursals_id');

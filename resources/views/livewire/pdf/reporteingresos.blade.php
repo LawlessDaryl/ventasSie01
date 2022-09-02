@@ -110,13 +110,13 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($Ingresos as $row)
+                @foreach ($ingresos as $row)
                     <tr style="background-color: rgb(235, 235, 235)">
                         <td>
                             {{ \Carbon\Carbon::parse($row['movimientoCreacion'])->format('d/m/Y H:i') }}
                         </td>
                         <td>
-                            {{$row['carteramovtype']}}  
+                            {{$row['carteramovtype']}}
                         </td>
                         <td>
                             {{ $row['nombre'] }}
@@ -124,10 +124,10 @@
                         <td>
                             {{ $row['import'] }}
                         </td>
-                        <td class="text-right">
+                        <td>
                             {{ $row['comentario'] }}
                         </td>
-                        <td class="text-right">
+                        <td>
                             {{ $row['usuarioNombre'] }}
                         </td>
                       
