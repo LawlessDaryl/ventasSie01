@@ -89,7 +89,7 @@ class CarteraController extends Component
             'nombre' => 'required|unique:carteras',
             'caja_id' => 'required|not_in:Elegir',
             'tipo' => 'required|not_in:Elegir',
-            'telefonoNum' => 'required_if:variable,==,1',
+            // 'telefonoNum' => 'required_if:variable,==,1',
         ];
         $messages = [
             'nombre.required' => 'Nombre de la cartera requerido.',
@@ -98,7 +98,7 @@ class CarteraController extends Component
             'caja_id.not_in' => 'La caja debe ser distinto de Elegir.',
             'tipo.required' => 'El tipo es requerido.',
             'tipo.not_in' => 'El tipo debe ser distinto de Elegir.',
-            'telefonoNum.required_if' => 'El teléfono es requerido.',
+            // 'telefonoNum.required_if' => 'El teléfono es requerido.',
         ];
         $this->validate($rules, $messages);
 

@@ -31,30 +31,30 @@
                                 {{ $dv->nombre }}
                             </td>
                             <td class="table-th text-withe text-right">
-                                {{ number_format($dv->po, 2) }}
+                                {{ $dv->po }}
                             </td>
 
 
 
                             @if($dv->pv-$dv->po == 0)
                             <td class="table-th text-withe text-right">
-                                {{ number_format($dv->pv-$dv->po, 2) }}
+                                {{ $dv->pv-$dv->po }}
                             </td>
                             @else
                             <td class="table-th text-withe text-right" style="background-color: rgb(248, 231, 197, 0.5)">
-                                {{ number_format($dv->pv-$dv->po, 2) }}
+                                {{ $dv->pv-$dv->po }}
                             </td>
                             @endif
 
 
                             <td class="table-th text-withe text-right">
-                                {{ number_format($dv->pv, 2) }}
+                                {{ $dv->pv }}
                             </td>
                             <td class="table-th text-withe text-center">
                                 {{ $dv->cantidad }}
                             </td>
                             <td class="table-th text-withe text-right">
-                                {{ number_format($dv->pv*$dv->cantidad, 2) }}
+                                {{ $dv->pv*$dv->cantidad }}
                             </td>
                         </tr>
                         @endforeach
