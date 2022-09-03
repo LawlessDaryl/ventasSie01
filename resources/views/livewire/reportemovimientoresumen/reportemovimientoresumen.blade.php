@@ -182,7 +182,7 @@
                             </td>
                             <td class="text-right">
                                 @if(@Auth::user()->hasPermissionTo('VentasMovDiaSucursalUtilidad'))
-                                {{ number_format($p->utilidadventa,2) }}
+                                {{ number_format($p->utilidadventa,3) }}
                                 @endif
                             </td>
 

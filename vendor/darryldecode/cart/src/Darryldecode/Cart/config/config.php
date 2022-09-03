@@ -8,9 +8,9 @@ return [
      *
      * the formatting of shopping cart values
      */
-    'format_numbers' => env('SHOPPING_FORMAT_VALUES', false),
+    'format_numbers' => env('SHOPPING_FORMAT_VALUES', true),
 
-    'decimals' => env('SHOPPING_DECIMALS', 0),
+    'decimals' => env('SHOPPING_DECIMALS', 5),
 
     'dec_point' => env('SHOPPING_DEC_POINT', '.'),
 

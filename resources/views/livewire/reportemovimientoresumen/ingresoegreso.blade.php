@@ -11,11 +11,11 @@
                 </ul>
                 <ul class="row justify-content-end">
                     @can('Ver_Generar_Ingreso_Egreso_Boton')
-                        <a wire:click.prevent="viewDetails()" class="btn btn-warning">
-                            Generar Ingreso/Egreso en Cartera
+                        <a wire:click.prevent="viewDetails()" class="btn btn-dark text-white">
+                            <i class="fas fa-arrow-alt-circle-down" ></i>  <i class="fas fa-arrow-alt-circle-up" ></i> Generar Ingreso/Egreso
                         </a>
                         <a wire:click.prevent="generarpdf({{$data}})" class="btn btn-warning">
-                            Generar PDF
+                          <i class="fas fa-print" ></i>  Generar PDF
                         </a>
                     @endcan
                 </ul>
@@ -150,7 +150,7 @@
                                             </h6>
                                         </td>
                                         <td>
-                                            <h6 class="text-center" style="font-size: 100%">{{ $p->import }}
+                                            <h6 class="text-center" style="font-size: 100%">  {{ number_format($p->import,2) }}
                                             </h6>
                                         </td>
                                         <td>
@@ -165,19 +165,19 @@
 
                                         @if( $p->movstatus == 'ACTIVO')
                                         <td>
-                                            <h6 class="text-center card text-white bg-primary">{{ $p->movstatus }}</h6>
+                                            <h6 class="text-center text-white bg-primary">{{ $p->movstatus }}</h6>
                                         </td>
                                         @else
                                         <td>
-                                            <h6 class="text-center card text-white bg-danger">{{ $p->movstatus }}</h6>
+                                            <h6 class="text-center text-white bg-danger">ANULADO</h6>
                                         </td>
                                         @endif
 
                                         @if ($p->movstatus == 'INACTIVO')
 
                                         <td>
-                                            <div class="btn-group" role="group" aria-label="Basic example">
-                                                <button disabled  wire:click="anularOperacion({{$p->movid}})" class="btn btn-sm" title="Anular Ingreso/Egreso" style="background-color: rgb(10, 137, 235); color:white">
+                                            <div class="btn-group m-1" role="group" aria-label="Basic example">
+                                                <button disabled  wire:click="anularOperacion({{$p->movid}})" class="btn btn-sm" title="sin accion" style="background-color: rgb(10, 137, 235); color:white">
                                                     <i class="la flaticon-cross"></i>
                                                 </button>
                                             
@@ -186,8 +186,8 @@
                                         @else
                                             
                                         <td>
-                                            <div class="btn-group" role="group" aria-label="Basic example">
-                                                <button  wire:click="anularOperacion({{$p->movid}})" class="btn btn-sm" title="Anular Ingreso/Egreso" style="background-color: rgb(10, 137, 235); color:white">
+                                            <div class="btn-group m-1" role="group" aria-label="Basic example">
+                                                <button href="javascript:void(0)" onclick="Confirm('{{ $p->movid }}')" class="btn btn-sm" title="Anular Ingreso/Egreso" style="background-color: rgb(10, 137, 235); color:white">
                                                     <i class="fas fa-trash-alt"></i>
                                                 </button>
                                              
@@ -237,28 +237,65 @@
   
 </div>
 
+@section('javascript')
+
 <script>
+
     document.addEventListener('DOMContentLoaded', function() {
         window.livewire.on('show-modal', Msg => {
             $('#modal-details').modal('show')
-        })
+        });
         window.livewire.on('editar-movimiento', Msg => {
             $('#modal-mov').modal('show')
-        })
-        window.livewire.on('hide_editar', Msg => {
-            $('#modal-mov').modal('hide')
-        })
-        window.livewire.on('hide-modal', Msg => {
-            $('#modal-details').modal('hide')
-            noty(Msg)
-        })
-
-        window.livewire.on('openothertap', Msg => {
+            });
+            window.livewire.on('hide_editar', Msg => {
+                $('#modal-mov').modal('hide')
+            });
+            window.livewire.on('hide-modal', Msg => {
+                $('#modal-details').modal('hide')
+                noty(Msg)
+            });
+            
+            window.livewire.on('openothertap', Msg => {
                 var win = window.open('report/pdfingresos');
                 // Cambiar el foco al nuevo tab (punto opcional)
                 //win.focus();
-
+                
             });
-       
-    });
-</script>
+        });
+        
+
+  
+    function Confirm(id){
+        
+        Swal.fire({
+            title: 'Esta seguro de anular esta operacion?',
+            text: "Esta accion es irreversible",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            cancelButtonText: 'Cancelar',
+            confirmButtonText: 'Aceptar'
+        }).then((result) => {
+            if (result.value) {
+                
+                window.livewire.emit('eliminar_operacion',id);
+                
+                Swal.fire(
+                    'Anulado!',
+                    'El registro fue anulado con exito',
+                    'success'
+                    )
+                }
+            })
+            
+        }
+        
+        
+        </script>
+        
+        <script src="{{ asset('plugins/sweetalerts/sweetalert2.min.js') }}"></script>
+    <script src="{{ asset('plugins/sweetalerts/custom-sweetalert.js') }}"></script>
+    
+@endsection
