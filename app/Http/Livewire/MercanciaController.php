@@ -826,30 +826,34 @@ public function verifySale(IngresoProductos $id)
     ->select('lotes.id as lote_id','detalle_entrada_productos.id as detalle_ent_id','ingreso_productos.id as ing_prod','lotes.product_id as product_id')
     ->get();
     $def=0;
+    $rt=0;
+    $er=[];
 
     //dd($auxi);
     if (count($auxi1)>0) {
         foreach ($auxi1 as $data) {
 
-            $rt=SaleLote::where('lote_id',$data->lote_id)->get();
+            SaleLote::where('lote_id',$data->lote_id)->get()->count()>0 ? $er="m" : $er='';
+            SalidaLote::where('lote_id',$data->lote_id)->get()->count()>0 ? $er="n" : $er='';
+
+            //dd($rt);
           
-            if (count($rt)>0) 
-            {
-             
-               $def++;
-            }
+            // if ($rt>0) 
+            // {
+            //    $def++;
+            // }
 
 
-            $product= Product::find($data->product_id);
-            //$product->destinos->count()>0 ? $auxi++ : '' ;
-            $product->detalleCompra->count()>0 ? $auxi++ :'';
-            $product->detalleSalida->count()>0 ? $auxi++ :'';
-            $product->detalleTransferencia->count()>0 ? $auxi++ :'';
-            $product->detalleVenta->count()>0 ? $auxi++ : '' ;
+        //     $product= Product::find($data->product_id);
+        //     //$product->destinos->count()>0 ? $auxi++ : '' ;
+        //    //$product->detalleCompra->count()>0 ? $auxi++ :'';
+        //     $product->detalleSalida->count()>0 ? $auxi++ :'';
+        //     $product->detalleTransferencia->count()>0 ? $auxi++ :'';
+        //     $product->detalleVenta->count()>0 ? $auxi++ : '' ;
 
         }
 
-        if ($def>0 or $auxi>0) {
+        if (count($er)>0) {
             $this->emit('venta');
         }
         else{
