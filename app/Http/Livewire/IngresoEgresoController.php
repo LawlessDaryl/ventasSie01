@@ -359,7 +359,11 @@ class IngresoEgresoController extends Component
         $this->emit('openothertap');
     }
 
-        public function anularOperacion(Movimiento $mov){
+
+    protected $listeners= ['eliminar_operacion'=>'anularOperacion'];
+
+        public function anularOperacion(Movimiento $mov)
+        {
 
             
             $mov->update([
@@ -367,7 +371,7 @@ class IngresoEgresoController extends Component
                 ]);
             $mov->save();
  
-            }
+        }
             
         public function editarOperacion(Movimiento $mov)
         {

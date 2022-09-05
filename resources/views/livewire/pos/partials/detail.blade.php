@@ -54,16 +54,37 @@
                                     <span class="input-group-text">Uds.</span>
                                 </div>
                             </div>
-
-
-                            {{-- <input type="number" maxlength="{{$item->stock}}" max="{{$item->stock}}"
-                            id="r{{$item->id}}" style="min-width: 50px; max-width: 60px;"
-                            wire:change="UpdateQty({{$item->id}}, $('#r' + {{$item->id}}).val() )"
-                            value="{{$item->quantity}}"> --}}
                         </td>
                         {{-- Importe --}}
                         <td class="text-center" style="max-width: 40px;">
-                            <h6>{{ $item->price * $item->quantity, 2 }}</h6>
+                            {{-- <input type="text" class="form-control" value="{{ $item->price * $item->quantity, 2 }}"> --}}
+                            
+                            
+
+                            <div class="input-group"  style="min-width: 120px; max-width: 130px; align-items: center;">
+                                <input type="number" style="max-height: 30px;" id="c{{$item->id}}" 
+                                wire:change="cambiarimporte({{$item->id}}, $('#c' + {{$item->id}}).val())"
+                                value="{{ $item->price * $item->quantity, 2 }}"
+                                class="form-control" placeholder="Importe..." aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                {{-- <div class="input-group-append">
+                                    <button title="Ajustar Importe" wire:click="cambiarimporte()" class="btn btn-sm" style="background-color: rgb(0, 180, 235); color:white">
+                                        <i class="fas fa-money-bill"></i>
+                                    </button>
+                                </div> --}}
+                            </div>
+
+
+
+
+
+                            
+
+
+
+
+
+
+                            {{-- <h6>{{ $item->price * $item->quantity, 2 }}</h6> --}}
                         </td>
 
 

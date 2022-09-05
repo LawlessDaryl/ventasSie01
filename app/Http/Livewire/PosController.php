@@ -1556,7 +1556,7 @@ class PosController extends Component
                 'sale_id' => session('sesionidventa'),
             ]);
 
-//trabajamos con lotes
+        //trabajamos con lotes
 
             $lot=Lote::where('product_id',$item->id)->where('status','Activo')->get();
 
@@ -1696,5 +1696,31 @@ class PosController extends Component
 
         $this->resetValidation();
     }
+
+
+    //Cambiar el valor del importe de un producto en el Carrito de Ventas
+    public function cambiarimporte($id, $importe)
+    {
+        //Obtenemos detalles del producto en el Carrito de Ventas
+        $product_cart = Cart::get($id);
+        //Eliminamos el producto en el Carrito de Ventas
+        Cart::remove($id);
+        //Obtenemos el nuevo precio del producto de acuerdo al importe (Importe = Precio * Cantidad) recibido
+        $new_price = $importe / $product_cart->quantity;
+
+        Cart::add($product_cart->id, $product_cart->name, $new_price, $product_cart->quantity, $product_cart->image);
+
+        
+        $this->actualizardescuento();
+        $this->total = Cart::getTotal();
+        $this->itemsQuantity = Cart::getTotalQuantity();
+
+
+
+    }
+
+
+
+
 
 }

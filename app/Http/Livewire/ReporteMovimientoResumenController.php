@@ -5,9 +5,11 @@ namespace App\Http\Livewire;
 use App\Models\Caja;
 use App\Models\Cartera;
 use App\Models\CarteraMov;
+use App\Models\Lote;
 use App\Models\Movimiento;
 use App\Models\Sale;
 use App\Models\SaleDetail;
+use App\Models\SaleLote;
 use App\Models\Service;
 use App\Models\Sucursal;
 use App\Models\Transaccion;
@@ -781,6 +783,8 @@ class ReporteMovimientoResumenController extends Component
      }
      public function utilidadventa($idventa)
      {
+        $auxi=0;
+        $utilidad=0;
         // $utilidadventa = Sale::join('sale_details as sd', 'sd.sale_id', 'sales.id')
         // ->join('sale_lotes as sl', 'sl.sale_detail_id', 'sd.id')
         // ->join('lotes as l', 'l.id', 'sl.lote_id')
@@ -792,24 +796,46 @@ class ReporteMovimientoResumenController extends Component
 
 
 
-        $utilidadventa = SaleDetail::join('sale_lotes as sl', 'sl.sale_detail_id', 'sale_details.id')
-        ->join('lotes as l', 'l.id', 'sl.lote_id')
-        ->select('sale_details.quantity as cantidad','sale_details.price as precioventa','l.costo as costoproducto')
-        ->where('sale_details.sale_id', $idventa)
-        ->groupBy('l.id')
-        ->get();
+        // $utilidadventa = SaleDetail::join('sale_lotes as sl', 'sl.sale_detail_id', 'sale_details.id')
+        // ->join('lotes as l', 'l.id', 'sl.lote_id')
+        // ->select('sale_details.quantity as cantidad','sale_details.price as precioventa','l.costo as costoproducto')
+        // ->where('sale_details.sale_id', $idventa)
+        // ->groupBy('l.id')
+        // ->get();
 
 
 
-         $utilidad = 0;
+        //  $utilidad = 0;
 
-         foreach ($utilidadventa as $item)
-         {
-             $utilidad = $utilidad + ($item->cantidad * $item->precioventa) - ($item->cantidad * $item->costoproducto);
-         }
+        //  foreach ($utilidadventa as $item)
+        //  {
+        //      $utilidad = $utilidad + ($item->cantidad * $item->precioventa) - ($item->cantidad * $item->costoproducto);
+        //  }
 
 
-         return $utilidad;
+        //  return $utilidad;
+
+        $salelist= SaleDetail::where('sale_id',$idventa)->get();
+
+        foreach ($salelist as $data) {
+            
+            $sl= SaleLote::where('sale_detail_id',$data->id)->get();
+
+            foreach ($sl as $data2) {
+                
+                $lot= Lote::where('id',$data2->lote_id)->value('costo');
+                
+                $auxi= $data->price*$data2->cantidad- $lot*$data2->cantidad;
+
+                $utilidad= $utilidad+$auxi;
+                //dd($lot);
+
+
+            }
+
+        }
+
+        return $utilidad;
      }
      public function utilidadservicio($idmovimiento)
      {
