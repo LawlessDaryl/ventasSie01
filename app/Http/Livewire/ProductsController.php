@@ -474,7 +474,8 @@ public $selectedProduct=[];
             
         }
 
-        if ($auxi!=0) {
+        if ($auxi!=0)
+         {
            $this->emit('restriccionProducto');
         }
         else{
