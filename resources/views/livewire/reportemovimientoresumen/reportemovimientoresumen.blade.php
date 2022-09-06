@@ -136,7 +136,7 @@
                     Generar Recaudo
                 </a>
                
-                <a wire:click="generarpdf({{$totalesIngresosV}}, {{$totalesIngresosS}}, {{$totalesIngresosIE}}, {{$totalesEgresosV}}, {{$totalesEgresosIE}})" class="btn btn-warning">
+                <a wire:click="generarpdf({{$totalesIngresosV}}, {{$totalesIngresosS}}, {{$totalesIngresosIE}}, {{$totalesEgresosV}}, {{$totalesEgresosIE}}, {{$op_sob_falt}})" class="btn btn-warning">
                     Generar PDF
                 </a>
          

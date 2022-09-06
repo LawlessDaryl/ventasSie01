@@ -783,57 +783,19 @@ class ReporteMovimientoResumenController extends Component
      }
      public function utilidadventa($idventa)
      {
-        $auxi=0;
-        $utilidad=0;
-        // $utilidadventa = Sale::join('sale_details as sd', 'sd.sale_id', 'sales.id')
-        // ->join('sale_lotes as sl', 'sl.sale_detail_id', 'sd.id')
-        // ->join('lotes as l', 'l.id', 'sl.lote_id')
-        // ->select('sd.quantity as cantidad','sd.price as precio','l.costo as costoproducto')
-        // ->where('sales.id', $idventa)
-        // ->groupBy('l.id')
-        // ->get();
+        $utilidadventa = Sale::join('sale_details as sd', 'sd.sale_id', 'sales.id')
+        ->join('products as p', 'p.id', 'sd.product_id')
+        ->select('sd.quantity as cantidad','sd.price as precio','p.costo as costoproducto')
+        ->where('sales.id', $idventa)
+        ->get();
 
+        $utilidad = 0;
 
-
-
-        // $utilidadventa = SaleDetail::join('sale_lotes as sl', 'sl.sale_detail_id', 'sale_details.id')
-        // ->join('lotes as l', 'l.id', 'sl.lote_id')
-        // ->select('sale_details.quantity as cantidad','sale_details.price as precioventa','l.costo as costoproducto')
-        // ->where('sale_details.sale_id', $idventa)
-        // ->groupBy('l.id')
-        // ->get();
-
-
-
-        //  $utilidad = 0;
-
-        //  foreach ($utilidadventa as $item)
-        //  {
-        //      $utilidad = $utilidad + ($item->cantidad * $item->precioventa) - ($item->cantidad * $item->costoproducto);
-        //  }
-
-
-        //  return $utilidad;
-
-        $salelist= SaleDetail::where('sale_id',$idventa)->get();
-
-        foreach ($salelist as $data) {
-            
-            $sl= SaleLote::where('sale_detail_id',$data->id)->get();
-
-            foreach ($sl as $data2) {
-                
-                $lot= Lote::where('id',$data2->lote_id)->value('costo');
-                
-                $auxi= $data->price*$data2->cantidad- $lot*$data2->cantidad;
-
-                $utilidad= $utilidad+$auxi;
-                //dd($lot);
-
-
-            }
-
+        foreach ($utilidadventa as $item)
+        {
+            $utilidad = $utilidad + ($item->cantidad * $item->precio) - ($item->cantidad * $item->costoproducto);
         }
+
 
         return $utilidad;
      }
@@ -1427,7 +1389,7 @@ class ReporteMovimientoResumenController extends Component
 
     }
 
-    public function generarpdf($totalesIngresosV, $totalesIngresosS, $totalesIngresosIE, $totalesEgresosV, $totalesEgresosIE)
+    public function generarpdf($totalesIngresosV, $totalesIngresosS, $totalesIngresosIE, $totalesEgresosV, $totalesEgresosIE, $op_sob_falt)
     {
         session(['totalIngresosV' => $totalesIngresosV]);
         session(['totalIngresosS' => $totalesIngresosS]);
@@ -1450,6 +1412,15 @@ class ReporteMovimientoResumenController extends Component
         session(['EgresosTotales' => $this->EgresosTotales]);
         session(['totalutilidadSV' => $this->totalutilidadSV]);
         session(['EgresosTotalesCF' => $this->EgresosTotalesCF]);
+
+
+
+
+        //Sobrante o Faltante
+        session(['op_sob_falt' => $op_sob_falt]);
+
+        //$this->operacionesZ
+        session(['operacionesZ' => $this->operacionesZ]);
 
         //Sucursal, Caja, Fecha de Inicio y Fecha de Fin
         $caracteristicas = array($this->sucursal, $this->caja, $this->fromDate, $this->toDate);

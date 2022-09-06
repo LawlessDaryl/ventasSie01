@@ -40,6 +40,10 @@ class ExportMovDiaResController extends Controller
         $EgresosTotales = session('EgresosTotales');
         $totalutilidadSV = session('totalutilidadSV');
         $EgresosTotalesCF = session('EgresosTotalesCF');
+        //dd(session('op_sob_falt'));
+        $op_sob_falt = session('op_sob_falt');
+
+        $operacionesZ = session('operacionesZ');
 
         $caracteristicas = session('caracteristicas');
 
@@ -71,6 +75,8 @@ class ExportMovDiaResController extends Controller
                 'subtotalesIngresos',
                 'EgresosTotales',
                 'EgresosTotalesCF',
+                'op_sob_falt',
+                'operacionesZ',
                 'totalutilidadSV',
                 'op_recaudo',
                 'total',
