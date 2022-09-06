@@ -26,6 +26,7 @@ class ProductsController extends Component
 public $checkAll= false;
 public $errormessage;
 public $selectedProduct=[];
+public $newunidad,$newmarca,$subcategory;
     private $pagination = 100;
     public $selected_id2;
     public function paginationView()
@@ -41,6 +42,8 @@ public $selectedProduct=[];
         
         $this->cate='Elegir';
         $this->selectedProduct= collect();
+        $this->marca=null;
+        $this->unidad=null;
         
     }
 
@@ -53,6 +56,17 @@ public $selectedProduct=[];
             $this->selected_sub=null;
            
         }
+    }
+
+    public function resetCategorias(){
+        $this->selected_sub= null;
+        $this->selected_categoria=null;
+        $this->search=null;
+        $this->searchData=[];
+    }
+    public function resetSubcategorias(){
+        $this->selected_sub= null;
+       
     }
 
 
@@ -188,6 +202,7 @@ public $selectedProduct=[];
     }
     public function Store()
     {
+    
         if ($this->categoryid === null) 
         {
             $this->categoryid = $this->selected_id2;
@@ -271,6 +286,8 @@ public $selectedProduct=[];
         $this->codigo=$product->codigo;
         $this->estado=$product->status;
         $this->image = null;
+        $this->marca= $product->marca;
+        $this->unidad=$product->unidad;
         $this->emit('modal-show');
     }
     public function Update()
@@ -381,15 +398,24 @@ public $selectedProduct=[];
         $this->cantidad_minima = '';
         $this->categoryid =null;
         $this->image = null;
+        $this->marca=null;
+        $this->unidad= null;
 
         $this->resetValidation();//clear the error bag
     }
 
     public function overrideFilter(){
         array_push($this->searchData,$this->search);
+
+        //dd($this->searchData);
     }
 
+    public function outSearchData($value){
+     
+        $this->searchData = array_diff($this->searchData, array($value));
  
+
+    }
 
     public function GenerateCode(){
         
@@ -416,6 +442,63 @@ public $selectedProduct=[];
         $category->save();
         $this->resetCategory();
         $this->emit('cat-added', 'Categoría Registrada');
+    }
+
+    public function StoreMarca()
+    {
+        $rules = ['newmarca' => 'required|unique:marcas,nombre|min:3'];
+        $messages = [
+            'newmarca.required' => 'El nombre de la marca es requerido',
+            'newmarca.unique' => 'Ya existe el nombre de la marca',
+            'newmarca.min' => 'El nombre de la marca debe tener al menos 3 caracteres'
+        ];
+        $this->validate($rules, $messages);
+            $marca = Marca::create([
+                'nombre' =>  strtoupper($this->newmarca)
+            ]);
+        
+        $marca->save();
+        $this->reset('newmarca');
+        $this->emit('marca-added');
+    }
+
+    public function StoreUnidad()
+    {
+        $rules = ['newunidad' => 'required|unique:unidads,nombre|min:3'];
+        $messages = [
+            'newunidad.required' => 'El nombre de la unidad es requerido',
+            'newunidad.unique' => 'Ya existe el nombre de la unidad',
+            'newunidad.min' => 'El nombre de la unidad debe tener al menos 3 caracteres'
+        ];
+        $this->validate($rules, $messages);
+            $unidad = Unidad::create([
+                'nombre' =>  strtoupper($this->newunidad)
+            ]);
+        
+             $unidad->save();
+        $this->reset('newunidad');
+        $this->emit('unidad-added');
+    }
+
+    public function StoreSubcategory(){
+        
+        $rules = ['subcategory' => 'required|unique:categories,name|min:3'];
+        $messages = [
+            'subcategory.required' => 'El nombre de la subcategoría es requerido',
+            'subcategory.unique' => 'Ya existe el nombre de la subcategoría',
+            'subcategory.min' => 'El nombre de la subcategoría debe tener al menos 3 caracteres'
+        ];
+        $this->validate($rules, $messages);
+
+        $category = Category::create([
+            'name' => $this->name,
+            'descripcion'=>$this->descripcion,
+            'categoria_padre'=>$this->selected_id2
+        ]);
+
+        $category->save();
+        $this->resetUI();
+        $this->emit('item-added', 'Categoría Registrada');
     }
 
     public function resetCategory(){

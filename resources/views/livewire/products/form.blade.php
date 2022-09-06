@@ -1,3 +1,4 @@
+<div>
 @include('common.modalHead')
 <div class="row">
     <div class="col-sm-12 col-lg-7 col-md-8">
@@ -46,31 +47,41 @@
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
             <label>Unidad</label>
-            <input type="text" list="un" name="un" wire:model.lazy="unidad" class="form-control" placeholder="ej: unidad de medida">
-            <datalist id="un">
-                @foreach($unidades as $unidad)
-                <option value="{{ $unidad->nombre }}" selected>{{ $unidad->nombre }}</option>
-                @endforeach
-            </datalist>
+            <div class="input-group-prepend mb-3">
+                <select wire:model='unidad' class="form-control">
+                    <option value=null selected disabled>Elegir</option>
+                    @foreach($unidades as $unidad)
+                    <option value="{{ $unidad->nombre }}" selected>{{ $unidad->nombre }}</option>
+                    @endforeach
+                </select>
+                
+                    <a href="javascript:void(0)" class="btn btn-dark pl-2 pr-2" data-toggle="modal"
+                        data-target="#modalUnidad"> <i class="fas fa-plus text-white"></i> </a>
+            </div>
             @error('unidad') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>
     </div>
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
             <label>Marca</label>
-            <input type="text" list="marc" name="marca" wire:model.lazy="marca" class="form-control" placeholder="ej: marca">
-            <datalist id="marc">
-                @foreach($marcas as $unidad)
-                <option value="{{ $unidad->nombre }}" selected>{{ $unidad->nombre }}</option>
-                @endforeach
-            </datalist>
+            <div class="input-group-prepend mb-3">
+                <select wire:model='marca' class="form-control">
+                    <option value=null selected disabled>Elegir</option>
+                    @foreach($marcas as $unidad)
+                    <option value="{{ $unidad->nombre }}" selected>{{ $unidad->nombre }}</option>
+                    @endforeach
+                </select>
+                
+                    <a href="javascript:void(0)" class="btn btn-dark pl-2 pr-2" data-toggle="modal"
+                        data-target="#modalMarca"> <i class="fas fa-plus text-white"></i> </a>
+            </div>
             @error('marca') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>
     </div>
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
-            <label>Pais de Procedencia</label>
-            <input type="text" wire:model.lazy="industria" class="form-control" placeholder="ej: 012020222">
+            <label>Industria</label>
+            <input type="text" wire:model.lazy="industria" class="form-control" placeholder="ej: China">
             @error('industria') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>
     </div>
@@ -85,7 +96,7 @@
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
             <label>Precio de venta</label>
-            <input type="text" wire:model.lazy="precio_venta" class="form-control" placeholder="ej: 012020222">
+            <input type="text" wire:model.lazy="precio_venta" class="form-control" placeholder="ej: 24">
             @error('precio_venta') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>
     </div>
@@ -100,12 +111,9 @@
                         <option value="{{ $category->id }}">{{ $category->name }}</option>
                     @endforeach
                 </select>
-                <span class="input-group-text input-gp">
-                    <a href="javascript:void(0)" data-toggle="modal"
-                        data-target="#modalCategory" class="fas fa-plus text-white"></a>
-                </span>
-
-
+                
+                    <a href="javascript:void(0)" class="btn btn-dark pl-2 pr-2" data-toggle="modal"
+                        data-target="#modalCategory"> <i class="fas fa-plus text-white"></i> </a>
             </div>
             @error('selected_id2') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>       
@@ -114,19 +122,27 @@
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
             <label>Subcategoría</label>
-            <select wire:model='categoryid' class="form-control">
-                <option value= null selected disabled>Elegir</option>
-                @foreach ($subcat as $Key => $cat)
-                    <option value="{{ $cat->id }}">{{ $cat->name }}</option>
-                @endforeach
-            </select>
+            <div class="input-group-prepend mb-3">
+
+                <select wire:model='categoryid' class="form-control">
+                    <option value= null selected disabled>Elegir</option>
+                    @foreach ($subcat as $Key => $cat)
+                        <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                    @endforeach
+                </select>
+                @if ($selected_id2 != null)
+                    
+                <a href="javascript:void(0)" class="btn btn-dark pl-2 pr-2" data-toggle="modal"
+                data-target="#modalSubcategory"> <i class="fas fa-plus text-white"></i> </a>
+                @endif
+            </div>
             @error('categoryid') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>
     </div>
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
             <label>Cantidad Minima</label>
-                <input type="text" wire:model.lazy="cantidad_minima" class="form-control" placeholder="ej:123">
+                <input type="text" wire:model.lazy="cantidad_minima" class="form-control" placeholder="ej: 5">
             @error('cantidad_minima') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>
     </div>
@@ -162,12 +178,27 @@
 </div>
     @include('common.modalFooter')
     @include('livewire.products.modalcategory')
-
+    @include('livewire.products.modalunidad')
+    @include('livewire.products.modalmarca')
+    @include('livewire.products.modalSubcategory')
+</div>
     <script>
 
         document.addEventListener('DOMContentLoaded', function() {
             window.livewire.on('cat-added', msg => {
                 $('#modalCategory').modal('hide'),
+                noty(msg)
+            });
+            window.livewire.on('marca-added', msg => {
+                $('#modalMarca').modal('hide'),
+                noty(msg)
+            });
+            window.livewire.on('unidad-added', msg => {
+                $('#modalUnidad').modal('hide'),
+                noty(msg)
+            });
+            window.livewire.on('unidad-added', msg => {
+                $('#modalSubcategory').modal('hide'),
                 noty(msg)
             });
             
