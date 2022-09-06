@@ -15,7 +15,7 @@
                 </div>
             <div class="row">
                 <div class="col-12 col-lg-4 col-md-6">
-                    <div class="input-group mb-4">
+                    <div class="input-group mb-2 col-lg-12">
                         <div class="input-group-prepend">
                             <span class="input-group-text input-gp">
                                 <i class="fas fa-search"></i>
@@ -23,26 +23,49 @@
                         </div>
                         <input type="text" wire:model="search" placeholder="Buscar" class="form-control"  wire:keydown.enter="overrideFilter()">
                     </div>
+                    <div class="col-lg-12 mb-2">
+
+                        @forelse ($searchData as $key=>$value)    
+                        <span class="badge badge-primary pl-2 pr-2 pt-1 pb-1 m-1">{{$value}} <button class="btn btn-sm btn-info fas fa-times pl-1 pr-1 pt-0 pb-0 m-0" wire:click="outSearchData('{{$value}}')"></button></span>
+             
+                        @empty
+                            <p></p>
+                        @endforelse
+                    </div>
                 </div>
                 <div class="col-12 col-lg-3 col-md-3">
-                    <div class="form-group">
+
+
+                    <div class="input-group-prepend mb-3">
                         <select wire:model='selected_categoria' class="form-control">
-                          <option value="null" disabled>Elegir Categoria</option>
-                          @foreach ($categories as $key => $category)
-                          <option value="{{ $category->id }}">{{ $category->name}}</option>
-                          @endforeach
-                        </select>
-                      </div>
+                            <option value="null" disabled>Elegir Categoria</option>
+                            @foreach ($categories as $key => $category)
+                            <option value="{{ $category->id }}">{{ $category->name}}</option>
+                            @endforeach
+                   
+                          </select>
+                        <span class="btn btn-dark pl-2 pr-2">
+                            <a href="javascript:void(0)" class="fas fa-redo-alt text-white" wire:click= "resetCategorias()"></a>
+                        </span>
+        
+        
+                    </div>
+
+
                 </div>
                 <div class="col-12 col-lg-3 col-md-3">
-                    <div class="form-group">
+                    <div class="input-group-prepend mb-3">
                         <select wire:model='selected_sub' class="form-control">
                           <option value="null" disabled>Elegir Subcategoria</option>
                           @foreach ($sub as $subcategoria)
                           <option value="{{ $subcategoria->id }}">{{ $subcategoria->name}}</option>
                           @endforeach
+                      
                         </select>
-                      </div>
+                        <span class="btn btn-dark pl-2 pr-2">
+                            <a href="javascript:void(0)" class="fas fa-redo-alt text-white"  wire:click= "resetSubcategorias()"></a>
+                        </span>
+                    </div>
                 </div>
                 <div class="col-12 col-lg-2 col-md-3">
                     <div class="form-group">
@@ -55,7 +78,7 @@
                 </div>
             </div>
             <div class="widget-content">
-                <a href="javascript:void(0)" class="btn btn-dark btn-sm" wire:click= 'deleteProducts()'>Eliminar Productos seleccionados</a>
+                <a href="javascript:void(0)" class="btn btn-danger btn-sm" wire:click= 'deleteProducts()'>Eliminar Productos seleccionados</a>
                 <div class="table-responsive">
                     <table class="table table-unbordered table-hover mt-4">
                         <thead class="text-white" style="background: #3B3F5C">
