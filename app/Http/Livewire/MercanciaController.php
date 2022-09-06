@@ -834,7 +834,7 @@ public function verifySale(IngresoProductos $id)
         foreach ($auxi1 as $data) {
 
             SaleLote::where('lote_id',$data->lote_id)->get()->count()>0 ? $er="m" : $er='';
-            SalidaLote::where('lote_id',$data->lote_id)->get()->count()>0 ? $er="n" : $er='';
+            SalidaLote::where('lote_id',$data->lote_id)->get()->count()>0 ? $er="" : $er='';
 
             //dd($rt);
           
@@ -853,7 +853,8 @@ public function verifySale(IngresoProductos $id)
 
         }
 
-        if (count($er)>0) {
+        if ($er) {
+            dd($er);
             $this->emit('venta');
         }
         else{
