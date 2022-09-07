@@ -986,6 +986,16 @@
 					});
             });
 
+        //Crear pdf de Informe técnico de un servicio
+        window.livewire.on('informe-tecnico', Msg => {
+        var idservicio = @this.id_servicio;
+
+        var win = window.open('informetecnico/pdf/' + idservicio);
+        // Cambiar el foco al nuevo tab (punto opcional)
+        // win.focus();
+
+        });
+
     });
 
 
