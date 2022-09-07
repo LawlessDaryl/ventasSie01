@@ -478,12 +478,23 @@
                         {{ number_format($op_recaudo,2) }}
                     </td>
                 </tr>
+
+                @foreach ($op_sob_falt as $values)
+                <tr>
+                    <td class="text-right">
+                        {{ucwords(strtolower($values['tipo_sob_fal']))}}
+                    </td>
+                    <td class="text-right">
+                        {{ number_format($values['import'],2) }}
+                    </td>
+                </tr>
+                @endforeach
                 <tr>
                     <td class="text-right">
                         Nuevo Saldo Caja Fisica
                     </td>
                     <td class="text-right">
-                        {{ number_format($operacionesW-$op_recaudo,2) }}
+                        {{ number_format($operacionesZ,2) }}
                     </td>
                 </tr>
                 @endif

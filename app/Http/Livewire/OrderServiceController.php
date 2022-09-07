@@ -68,7 +68,7 @@ class OrderServiceController extends Component
     public $tipopago, $estadocaja;
 
     //Variables para editar un servicio terminado
-    public $edit_precioservicioterminado, $edit_acuentaservicioterminado, $edit_saldoterminado, $edit_costoservicioterminado, $edit_motivoservicioterminado;
+    public $edit_precioservicioterminado, $edit_acuentaservicioterminado, $edit_saldoterminado, $edit_costoservicioterminado, $edit_motivoservicioterminado, $edit_carteraservicioterminado;
 
     //Variables para cambiar técnico responsable
     public $id_usuario, $tipo;
@@ -3691,7 +3691,6 @@ class OrderServiceController extends Component
     //Llama a la ventana Modal Editar Servicio Terminado
     public function modaleditarservicioterminado($type, $idservicio, $idordendeservicio)
     {
-        
         //Actualizando variable $id_orden_de_servicio para mostrar el codigo de la orden del servicio en el titulo de la ventana modal
         $this->id_orden_de_servicio = $idordendeservicio;
 
@@ -3730,7 +3729,7 @@ class OrderServiceController extends Component
         ->first();
 
 
-        //Buscando el movimiento de tipo Terminado para poner es usuario en el select de la Ventana Modal
+        //Buscando el movimiento de tipo Terminado para poner el usuario en el select de la Ventana Modal
         $servicio = Service::find($this->id_servicio);
         foreach ($servicio->movservices as $servmov)
         {
@@ -3748,6 +3747,26 @@ class OrderServiceController extends Component
         $this->edit_precioservicioterminado = $detallesservicio->precioservicio;
         $this->edit_acuentaservicioterminado = $detallesservicio->acuenta;
         $this->edit_saldoterminado = $this->edit_precioservicioterminado - $this->edit_acuentaservicioterminado;
+
+
+
+
+        //Buscando tipo de pago (id de la cartera)
+
+        //Buscando el movimiento de tipo Entregado para obtener la cartera_id a travez de la tabla cartera_movs
+        $servicio = Service::find($this->id_servicio);
+        foreach ($servicio->movservices as $servmov)
+        {
+            if($servmov->movs->type == 'ENTREGADO' && $servmov->movs->status == 'ACTIVO')
+            {
+                //Ponemos el id de la cartera en la variable $this->edit_carteraservicioterminado
+                $this->edit_carteraservicioterminado = CarteraMov::where("cartera_movs.movimiento_id",$servmov->movs->id)->get()->first()->cartera_id;
+                break;
+            }
+        } 
+
+
+
         
         $this->emit('show-editarservicioterminado', 'show modal!');
     }
@@ -3806,7 +3825,15 @@ class OrderServiceController extends Component
                     'on_account' => $this->edit_acuentaservicioterminado,
                     'saldo' => $this->edit_saldoterminado,
                 ]);
+                //Actuluazamos la cartera_id
                 
+                $carteramovs = CarteraMov::find(CarteraMov::where("cartera_movs.movimiento_id",$servmov->movs->id)->get()->first()->id);
+                
+                $carteramovs->update([
+                    'cartera_id' => $this->edit_carteraservicioterminado
+                ]);
+                $carteramovs->save();
+
                 break;
             }
         }

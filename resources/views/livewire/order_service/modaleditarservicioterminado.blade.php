@@ -14,12 +14,9 @@
                     @if (Auth::user()->hasPermissionTo('Cambiar_Tecnico_Responsable'))
 
                         <div class="form-row">
-                            <div class="form-row" style="width: 25%; margin-right: 7px;">
-                                {{-- <div class="col-md-12">
-                                    <label for="validationTooltip01">Cambiar Técnico</label>
-                                    <input type="number" wire:model.lazy="edit_precioservicioterminado" class="form-control">
-                                </div> --}}
-                            </div>
+                            {{-- <div class="form-row" style="width: 25%; margin-right: 7px;">
+                                
+                            </div> --}}
                             <div class="form-row" style="width: 50%; margin-right: 7px;">
                                 <div class="col-md-12 text-center">
                                     <label for="validationTooltip01">Cambiar Técnico Responsable</label>
@@ -31,14 +28,22 @@
 
                                 </div>
                             </div>
-                            <div class="form-row text-center" style="width: 25%">
-                                {{-- <div class="col-md-12">
-                                    <label>Saldo Bs</label>
-                                    <div class="text-center">
-                                        <label for="validationTooltipUsername"> <h2>{{number_format($this->edit_saldoterminado,2)}}</h2> </label>
-                                    </div>
-                                </div> --}}
+                            @if($this->estadocaja == "abierto")
+                            <div class="form-row text-center" style="width: 50%">
+                                <div class="col-md-12 text-center">
+                                    <label for="validationTooltip01">Cambiar Tipo de Pago</label>
+                                    <select wire:model="edit_carteraservicioterminado" class="form-control">
+                                        @foreach ($listacarteras as $cartera)
+                                        <option value="{{$cartera->idcartera}}">{{ucwords(strtolower($cartera->nombrecartera)) .' - ' .ucwords(strtolower($cartera->dc))}}</option>
+                                        @endforeach
+                                        @foreach ($listacarterasg as $carteras)
+                                        <option value="{{$carteras->idcartera}}">{{ucwords(strtolower($carteras->nombrecartera)) .' - ' .ucwords(strtolower($carteras->dc))}}</option>
+                                        @endforeach
+                                    </select>
+
+                                </div>
                             </div>
+                            @endif
                         </div>
 
                     <br>
