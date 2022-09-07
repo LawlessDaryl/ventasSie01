@@ -9,8 +9,8 @@
                    
                     <a href="javascript:void(0)" class="btn btn-warning m-1 p-2" wire:click="$set('selected_id','0')" data-toggle="modal"
                         data-target="#theModal"> <b>Crear Categoria</b> </a>
-                    <a href="javascript:void(0)" class="btn btn-dark m-1 p-2" wire:click="$set('selected_id','0')" data-toggle="modal"
-                        data-target="#theModal_s"> <b>Crear Subcategoria</b> </a>
+                    {{-- <a href="javascript:void(0)" class="btn btn-dark m-1 p-2" wire:click="$set('selected_id','0')" data-toggle="modal"
+                        data-target="#theModal_s"> <b>Crear Subcategoria</b> </a> --}}
                     {{-- <a href="javascript:void(0)" class="btn btn-dark m-1" data-toggle="modal"
                         data-target="#modalimportcat">Importar Categorias</a>
                     <a href="javascript:void(0)" class="btn btn-dark m-1" data-toggle="modal"
@@ -28,7 +28,7 @@
                             <tr>
                                 <th class="table-th text-withe">#</th>
                                 <th class="table-th text-withe">NOMBRE</th>
-                                <th class="table-th text-withe text-center">DESCRIPCION</th>
+                                {{-- <th class="table-th text-withe text-center">DESCRIPCION</th> --}}
                                 <th class="table-th text-withe text-center">SUBCATEGORIAS</th>
                                 <th class="table-th text-withe text-center">ACCIONES</th>
                              
@@ -44,15 +44,19 @@
                                     </td>
                                     <td>
                                         
-                                        <h6>{{ $category->name }}</h6>
+                                        <h6> <b>{{ $category->name }}</b> </h6>
+                                        <label for=""> Descripcion : {{$category->descripcion}}</label>
                                     </td>
                                    
+                                
                                     <td>
-                                        <center><h6>{{ $category->descripcion }}</h6></center>
-                                   
-                                    </td>
-                                    <td>
-                                        <center><h6>{{ $category->subcategories()}}</h6></center>
+                                       
+                                        <center>
+                                            <a href="javascript:void(0)" wire:click="Ver({{$category->id}})"
+                                            class="btn btn-info m-1 text-dark p-1" title="Ver subcategorias"> <b class="pl-1">{{ $category->subcategories()}}</b> 
+                                            <i class="fas fa-eye"></i>
+                                            </a>
+                                        </center>
                                    
                                     </td>
                                    
@@ -61,11 +65,14 @@
                                             class="btn btn-dark p-1" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <a href="javascript:void(0)" wire:click="Ver({{$category->id}})"
-                                            class="btn btn-warning p-1" title="Ver subcategorias">
-                                            <i class="fas fa-eye"></i>
-                                            
-                                        </a>
+                                        {{-- <a href="javascript:void(0)" wire:click="Edit({{ $category->id }})"
+                                            class="btn btn-dark p-1" title="Edit">
+                                            <i class="fas fa-plus"></i>
+                                        </a> --}}
+
+                                        <a href="javascript:void(0)" class="btn btn-primary p-1" wire:click="$set('categoria_padre',{{$category->id}})" data-toggle="modal" title="Agregar subcategorias"
+                                        data-target="#theModal_s"> <b> <i class="fas fa-plus"></i></b> </a>
+                                 
                                         <a href="javascript:void(0)" onclick="Confirm('{{ $category->id }}','{{ $category->name }}','{{$category->products->count()}}','{{$category->subcategories()}}')"
                                            class="btn btn-danger p-1"
                                             title="Delete">
@@ -100,6 +107,10 @@
         });
         window.livewire.on('item-added', Msg => {
             $('#theModal').modal('hide')
+            noty(Msg)
+        });
+        window.livewire.on('sub-added', Msg => {
+            $('#theModal_s').modal('hide')
             noty(Msg)
         });
         window.livewire.on('item-updated', Msg => {

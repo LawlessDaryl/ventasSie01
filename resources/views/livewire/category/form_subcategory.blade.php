@@ -25,20 +25,6 @@
 <div class="row">
 
   
-
-
-<div class="col-lg-12">
-    <div class="form-group">
-        <label>Categoría</label>
-        <select wire:model='categoria_padre' class="form-control">
-            <option value=null>Elegir</option>
-            @foreach ($categories as $category)
-                <option value="{{ $category->id }}">{{ $category->name }}</option>
-            @endforeach
-        </select>
-        @error('categoryid') <span class="text-danger er">{{ $message }}</span>@enderror
-    </div>
-</div>
 <div class="col-lg-12">
     <div class="form-group">
       
@@ -46,7 +32,7 @@
                 <label>Descripcion</label>
             
         
-        <input type="text" wire:model.lazy="descripcion" class="form-control" placeholder="ej: breve descripcion de la categoria">
+        <input type="text" wire:model.lazy="descripcion" class="form-control" placeholder="ej: breve descripcion de la subcategoria">
     </div>
     @error('descripcion')<span class="text-danger er">{{ $message }}</span> @enderror
 </div>

@@ -532,6 +532,11 @@
 							<div class="collapse" id="charts">
 								<ul class="nav nav-collapse">
 									<li>
+										<a href="{{url('proveedores')}}">
+											<i class="fa fas fa-minus"></i>
+											Proveedores </a>
+									</li>
+									<li>
 										<a href="{{ url('categories') }}">
 											<i class="fa fas fa-minus"></i>
 											Categorias </a>
@@ -546,11 +551,6 @@
 											<i class="fa fas fa-minus"></i>
 											Devolucion en Compras </a>
 									</li> --}}
-									<li>
-										<a href="{{url('proveedores')}}">
-											<i class="fa fas fa-minus"></i>
-											Proveedores </a>
-									</li>
 									<li>
 										<a href="{{url('compras')}}">
 											<i class="fa fas fa-minus"></i>
@@ -584,9 +584,9 @@
 							<div class="collapse" id="charts2">
 								<ul class="nav nav-collapse">
 									<li>
-										<a href="{{ url('unidades') }}">
+										<a href="{{url('destino')}}">
 											<i class="fa fas fa-minus"></i>
-											Unidades </a>
+											Locacion/Estancia </a>
 									</li>
 									<li>
 										<a href="{{url('locations')}}">
@@ -594,14 +594,14 @@
 											Mobiliario </a>
 									</li>
 									<li>
+										<a href="{{ url('unidades') }}">
+											<i class="fa fas fa-minus"></i>
+											Unidades </a>
+									</li>
+									<li>
 										<a href="{{ url('marcas') }}">
 											<i class="fa fas fa-minus"></i>
 											Marcas </a>
-									</li>
-									<li>
-										<a href="{{url('destino')}}">
-											<i class="fa fas fa-minus"></i>
-											Locacion/Estancia </a>
 									</li>
 								</ul>
 							</div>
