@@ -27,6 +27,7 @@ public $checkAll= false;
 public $errormessage;
 public $selectedProduct=[];
 public $newunidad,$newmarca,$subcategory;
+public $des_subcategory;
     private $pagination = 100;
     public $selected_id2;
     public function paginationView()
@@ -400,6 +401,7 @@ public $newunidad,$newmarca,$subcategory;
         $this->image = null;
         $this->marca=null;
         $this->unidad= null;
+      
 
         $this->resetValidation();//clear the error bag
     }
@@ -434,7 +436,7 @@ public $newunidad,$newmarca,$subcategory;
         ];
         $this->validate($rules, $messages);
             $category = Category::create([
-                'name' => $this->name,
+                'name' =>  strtoupper($this->name),
                 'descripcion'=>$this->descripcion,
                 'categoria_padre'=>0
             ]);
@@ -442,6 +444,7 @@ public $newunidad,$newmarca,$subcategory;
         $category->save();
         $this->resetCategory();
         $this->emit('cat-added', 'Categoría Registrada');
+        $this->selected_id2=$category->id;
     }
 
     public function StoreMarca()
@@ -491,14 +494,17 @@ public $newunidad,$newmarca,$subcategory;
         $this->validate($rules, $messages);
 
         $category = Category::create([
-            'name' => $this->name,
+            'name' =>  strtoupper($this->subcategory),
             'descripcion'=>$this->descripcion,
             'categoria_padre'=>$this->selected_id2
         ]);
 
         $category->save();
-        $this->resetUI();
-        $this->emit('item-added', 'Categoría Registrada');
+        $this->reset('des_subcategory');
+        $this->reset('subcategory');
+        
+        $this->emit('subcat-added');
+        $this->categoryid=$category->id;
     }
 
     public function resetCategory(){

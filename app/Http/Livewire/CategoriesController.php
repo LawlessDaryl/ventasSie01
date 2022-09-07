@@ -18,7 +18,7 @@ class CategoriesController extends Component
     use WithPagination;
 
     public $name,$descripcion, $search,$categoryid, $selected_id, $pageTitle, $componentName,$categoria_padre,$data2;
-    private $pagination = 15;
+    private $pagination = 30;
     public $category_s = 0;
     public $subcat_s=false;
 
@@ -112,7 +112,8 @@ class CategoriesController extends Component
 
     public function Store_Subcategoria()
     {
-        
+        $this->selected_id=0;
+   
         $rules = ['name' => 'required|unique:categories|min:3'];
         $messages = [
             'name.required' => 'El nombre de la categoría es requerido',
@@ -129,7 +130,8 @@ class CategoriesController extends Component
 
         $category->save();
         $this->resetUI();
-        $this->emit('item-added', 'Categoría Registrada');
+        $this->selected_id=0;
+        $this->emit('sub-added');
     }
 
     public function Update()

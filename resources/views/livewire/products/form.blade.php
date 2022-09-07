@@ -10,14 +10,14 @@
     </div>
   
     <div class="col-sm-12 col-lg-5 col-md-4">
-        <div class="form-group">
-            <label>Codigo</label>
-            <div class="input-group-prepend mb-3">
-                <input type="text" wire:model.lazy="codigo" class="form-control col-lg-7" placeholder="ej: 012020222">
-                <a href="javascript:void(0)" wire:click="GenerateCode()" class="btn btn-dark p-0 m-1 col-lg-4" title="Generar Codigo">
-                    <i> Generar Codigo</i>
+        <div class="form-group row">
+            <label class="col-lg-12">Codigo</label>
+           
+                <input type="text" wire:model.lazy="codigo" class="form-control col-lg-6" placeholder="ej: 20202225">
+                <a href="javascript:void(0)" wire:click="GenerateCode()" class="btn btn-info m-0 p-l-0 p-r-0 col-lg-6" title="Generar Codigo">
+                   <i class="fas fa-barcode"></i> Generar Codigo
                 </a>
-            </div>
+        
             @error('codigo') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>
     </div>
@@ -46,16 +46,16 @@
     </div>
     <div class="col-sm-12 col-md-4">
         <div class="form-group">
-            <label>Unidad</label>
+            <label>Unidad de Medida</label>
             <div class="input-group-prepend mb-3">
-                <select wire:model='unidad' class="form-control">
+                <select wire:model.lazy='unidad' class="form-control">
                     <option value=null selected disabled>Elegir</option>
                     @foreach($unidades as $unidad)
                     <option value="{{ $unidad->nombre }}" selected>{{ $unidad->nombre }}</option>
                     @endforeach
                 </select>
                 
-                    <a href="javascript:void(0)" class="btn btn-dark pl-2 pr-2" data-toggle="modal"
+                    <a href="javascript:void(0)" class="btn btn-dark pl-2 pr-2" data-toggle="modal" title="Agregar Unidad"
                         data-target="#modalUnidad"> <i class="fas fa-plus text-white"></i> </a>
             </div>
             @error('unidad') <span class="text-danger er">{{ $message }}</span>@enderror
@@ -65,14 +65,14 @@
         <div class="form-group">
             <label>Marca</label>
             <div class="input-group-prepend mb-3">
-                <select wire:model='marca' class="form-control">
+                <select wire:model.lazy='marca' class="form-control">
                     <option value=null selected disabled>Elegir</option>
                     @foreach($marcas as $unidad)
                     <option value="{{ $unidad->nombre }}" selected>{{ $unidad->nombre }}</option>
                     @endforeach
                 </select>
                 
-                    <a href="javascript:void(0)" class="btn btn-dark pl-2 pr-2" data-toggle="modal"
+                    <a href="javascript:void(0)" class="btn btn-dark pl-2 pr-2" data-toggle="modal" title="Agregar Marca"
                         data-target="#modalMarca"> <i class="fas fa-plus text-white"></i> </a>
             </div>
             @error('marca') <span class="text-danger er">{{ $message }}</span>@enderror
@@ -112,7 +112,7 @@
                     @endforeach
                 </select>
                 
-                    <a href="javascript:void(0)" class="btn btn-dark pl-2 pr-2" data-toggle="modal"
+                    <a href="javascript:void(0)" class="btn btn-dark pl-2 pr-2" data-toggle="modal" title="Agregar categoria"
                         data-target="#modalCategory"> <i class="fas fa-plus text-white"></i> </a>
             </div>
             @error('selected_id2') <span class="text-danger er">{{ $message }}</span>@enderror
@@ -132,7 +132,7 @@
                 </select>
                 @if ($selected_id2 != null)
                     
-                <a href="javascript:void(0)" class="btn btn-dark pl-2 pr-2" data-toggle="modal"
+                <a href="javascript:void(0)" class="btn btn-dark pl-2 pr-2" data-toggle="modal" title="Agregar subcategoria"
                 data-target="#modalSubcategory"> <i class="fas fa-plus text-white"></i> </a>
                 @endif
             </div>
@@ -166,6 +166,7 @@
    
 
     <div class="col-sm-12 col-md-8">
+        <label> <b> Subir Imagen</b></label>
         <div class="form-group custom-file mt-4 p-1">
             <input type="file" class="custom-file-input form-control" wire:model="image"
                 accept="image/x-png,image/gif,image/jpeg">
@@ -180,7 +181,7 @@
     @include('livewire.products.modalcategory')
     @include('livewire.products.modalunidad')
     @include('livewire.products.modalmarca')
-    @include('livewire.products.modalSubcategory')
+    @include('livewire.products.modalsubcategory')
 </div>
     <script>
 
@@ -197,7 +198,7 @@
                 $('#modalUnidad').modal('hide'),
                 noty(msg)
             });
-            window.livewire.on('unidad-added', msg => {
+            window.livewire.on('subcat-added', msg => {
                 $('#modalSubcategory').modal('hide'),
                 noty(msg)
             });
