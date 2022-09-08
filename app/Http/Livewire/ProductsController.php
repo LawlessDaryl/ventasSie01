@@ -23,7 +23,7 @@ class ProductsController extends Component
     $codigo,$lote,$unidad,$industria,$caracteristicas,$status,$categoryid=null, $search,$estado,
      $image, $selected_id, $pageTitle, $componentName,$cate,$marca,$garantia,$stock,$stock_v
      ,$selected_categoria,$selected_sub,$nro=1,$sub,$change=[],$estados,$searchData=[],$data2,$archivo,$failures,$productError;
-public $checkAll= false;
+    public $checkAll= false;
 public $errormessage;
 public $selectedProduct=[];
 public $newunidad,$newmarca,$subcategory;

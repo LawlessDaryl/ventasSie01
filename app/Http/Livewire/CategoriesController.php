@@ -61,18 +61,27 @@ class CategoriesController extends Component
 
     public function Edit($id)
     {
+        $this->emit('hide_modal_sub');
         $record = Category::find($id, ['id', 'name', 'descripcion']);
         $this->selected_id = $record->id;
         $this->name = $record->name;
         $this->descripcion = $record->descripcion;
-        $this->emit('show-modal', 'show modal!');
+        $this->emit('show-modal');
 
     }
     public function Ver(Category $category)
     {
         $this->selected_id = $category->id;
         //dd($this->data2);
-        $this->emit('show-modal_s', 'show modal!');
+        $this->emit('modal_sub', 'show modal!');
+        
+    }
+
+    public function asignarCategoria($cat){
+        
+        $this->selected_id=0;
+        $this->categoria_padre= $cat;
+        $this->emit('sub-show');
         
     }
 

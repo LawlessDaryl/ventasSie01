@@ -19,6 +19,12 @@
             maxlenght="25">
             @error('direccion') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>
+        <div class=" col-sm-12 col-md-6 col-lg-6 form-group">
+            <label>NIT</label>
+            <input type="text" wire:model.lazy="nit" class="form-control" placeholder="nit proveedor"
+            maxlenght="25">
+            @error('nit') <span class="text-danger er">{{ $message }}</span>@enderror
+        </div>
         <div class="col-sm-12 col-md-6 col-lg-6 form-group">
             <label>Correo</label>
             <input type="text" wire:model.lazy="correo" class="form-control" placeholder="correo proveedor"

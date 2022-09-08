@@ -12,7 +12,7 @@ class ProvidersController extends Component
 {
     use WithPagination;
     use WithFileUploads;
-    public  $search, $nombre_prov,$apellido,$direccion,$telefono,$correo, $selected_id;
+    public  $search, $nombre_prov,$apellido,$direccion,$telefono,$correo, $selected_id,$nit;
     public  $pageTitle, $componentName;
     private $pagination = 5;
     
@@ -65,6 +65,7 @@ class ProvidersController extends Component
 
             'nombre_prov' => $this->nombre_prov,
             'apellido'=>$this->apellido,
+            'nit'=>$this->nit,
             'direccion' => $this->direccion,
             'telefono'=>$this->telefono,
             'correo'=>$this->correo
@@ -82,6 +83,7 @@ class ProvidersController extends Component
         $this->direccion = $sup->direccion;
         $this->telefono = $sup->telefono;
         $this->correo = $sup->correo;
+        $this->nit=$sup->nit;
 
         $this->emit('show-modal', 'show modal!');
     }

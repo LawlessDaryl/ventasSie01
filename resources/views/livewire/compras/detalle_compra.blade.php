@@ -38,9 +38,9 @@
                     <div class="row mb-3" >
                         <div class="col-lg-11" >
                             <h5 class="mb-2 mt-2">DETALLE DE COMPRA</h5>
-                            <b style="color: rgb(74, 74, 74)" >Fecha: </b>
+                            <b style="color: rgb(74, 74, 74)">Fecha: </b>
                             {{$fecha_compra}}<br/>  
-                            <b style="color: rgb(74, 74, 74)"  >Registrado por: </b> 
+                            <b style="color: rgb(74, 74, 74)">Registrado por: </b> 
                             {{$usuario}}<br/>
                             
                         </div>
@@ -66,10 +66,10 @@
                                                         <option value="{{$datas->nombre_prov}}">{{$datas->nombre_prov}}</option>
                                                     @endforeach
                                                  </datalist>
-                                                     <span class="input-group-text input-gp">
-                                                         <a href="javascript:void(0)" data-toggle="modal"
-                                                             data-target="#modal_prov" class="fas fa-plus text-white"></a>
-                                                     </span>
+                                                   
+                                                         <a href="javascript:void(0)" data-toggle="modal" class="btn btn-dark pl-2 pr-2"
+                                                             data-target="#modal_prov" > <i class="fas fa-plus text-white"></i> </a>
+                                                  
                                               </div>
                                              @error('provider')
                                                  <span class="text-danger er">{{ $message }}</span>
@@ -220,13 +220,13 @@
                                         <input type="text" wire:model="search" placeholder="Buscar" class="form-control">
                                     </div>
                                 
-                                <div class="col-lg-12 col-12 col-md-4 col-sm-12">
-                                    <h6 class="rounded">
-                                        <b>Elementos encontrados:</b>
-                                    </h6>
-                                </div>
-                         
-                                   @if(strlen($search) > 0)
+                                    
+                                    @if(strlen($search) > 0)
+                                    <div class="col-lg-12 col-12 col-md-4 col-sm-12">
+                                        <h6 class="rounded">
+                                            <b>Elementos encontrados:</b> {{$data_prod->count()}}
+                                        </h6>
+                                    </div>
                                    <div class="contenedortabla">
                                     <table class="estilostable" style="color: rgb(6, 5, 5)">
                                         <thead class="tableheadprod">
