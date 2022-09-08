@@ -1,4 +1,37 @@
-<div class="row sales layout-top-spacing">
+@section('css')
+<style>
+    .tablainventarios {
+        width: 100%;
+    
+        min-height: 140px;
+    }
+    .tablainventarios thead {
+        background-color: #1572e8;
+        color: white;
+    }
+    .tablainventarios th, td {
+        border: 0.5px solid #1571e894;
+        padding: 4px;
+    }
+    tr:hover {
+        background-color: rgba(99, 216, 252, 0.336);
+    }
+        
+
+</style>
+@endsection
+    
+
+
+
+
+
+
+
+
+
+
+<div class="row">
     <div class="col-sm-12">
         <div class="widget widget-chart-one">
             <div>
@@ -7,8 +40,8 @@
                 </h4>
                 <ul class="row justify-content-end">
                    
-                    <a href="javascript:void(0)" class="btn btn-warning m-1 p-2" wire:click="$set('selected_id','0')" data-toggle="modal"
-                        data-target="#theModal"> <b>Crear Categoria</b> </a>
+                    <a href="javascript:void(0)" class="btn btn-outline-primary" wire:click="$set('selected_id','0')" data-toggle="modal"
+                        data-target="#theModal"> <b> <i class="fas fa-plus-circle"></i> Crear Categoria</b> </a>
                     {{-- <a href="javascript:void(0)" class="btn btn-dark m-1 p-2" wire:click="$set('selected_id','0')" data-toggle="modal"
                         data-target="#theModal_s"> <b>Crear Subcategoria</b> </a> --}}
                     {{-- <a href="javascript:void(0)" class="btn btn-dark m-1" data-toggle="modal"
@@ -23,14 +56,14 @@
             @include('common.searchbox')
             <div class="widget-content">
                 <div class="table-responsive">
-                    <table class="table table-unbordered table-hover mt-2">
-                        <thead class="text-white" style="background: #3B3F5C">
+                    <table class="tablainventarios">
+                        <thead>
                             <tr>
-                                <th class="table-th text-withe">#</th>
-                                <th class="table-th text-withe">NOMBRE</th>
+                                <th style="width: 20px;">#</th>
+                                <th> <center>NOMBRE</center> </th>
                                 {{-- <th class="table-th text-withe text-center">DESCRIPCION</th> --}}
-                                <th class="table-th text-withe text-center">SUBCATEGORIAS</th>
-                                <th class="table-th text-withe text-center">ACCIONES</th>
+                                <th style="width: 60px;"> <center> SUBCATEGORIAS</center></th>
+                                <th style="width: 150px;"> <center>ACCIONES</center> </th>
                              
                             </tr>
                         </thead>
@@ -40,7 +73,7 @@
                                 <tr>
                                     <td>
                                         
-                                        <h6>{{ $loop->iteration }}</h6>
+                                        <h6>{{ ($categories->currentpage()-1) * $categories->perpage() + $loop->index + 1 }}</h6>
                                     </td>
                                     <td>
                                         
@@ -70,8 +103,8 @@
                                             <i class="fas fa-plus"></i>
                                         </a> --}}
 
-                                        <a href="javascript:void(0)" class="btn btn-primary p-1" wire:click="$set('categoria_padre',{{$category->id}})" data-toggle="modal" title="Agregar subcategorias"
-                                        data-target="#theModal_s"> <b> <i class="fas fa-plus"></i></b> </a>
+                                        <a href="javascript:void(0)" class="btn btn-primary p-1" wire:click="asignarCategoria('{{$category->id}}')" title="Agregar subcategorias"
+                                         <b> <i class="fas fa-plus"></i></b> </a>
                                  
                                         <a href="javascript:void(0)" onclick="Confirm('{{ $category->id }}','{{ $category->name }}','{{$category->products->count()}}','{{$category->subcategories()}}')"
                                            class="btn btn-danger p-1"
@@ -102,12 +135,19 @@
         window.livewire.on('show-modal', Msg => {
             $('#theModal').modal('show')
         });
-        window.livewire.on('show-modal_s', Msg => {
+        window.livewire.on('hide_modal_sub', Msg => {
+            $('#theModal_subcategory').modal('hide')
+        });
+        window.livewire.on('modal_sub', Msg => {
             $('#theModal_subcategory').modal('show')
         });
         window.livewire.on('item-added', Msg => {
             $('#theModal').modal('hide')
             noty(Msg)
+        });
+        window.livewire.on('sub-show', Msg => {
+            $('#theModal_s').modal('show')
+          
         });
         window.livewire.on('sub-added', Msg => {
             $('#theModal_s').modal('hide')

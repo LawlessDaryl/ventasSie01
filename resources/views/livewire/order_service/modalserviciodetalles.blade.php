@@ -216,10 +216,10 @@
         </div>
 
 
-        {{-- <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
-        </div> --}}
+        <div class="modal-footer">
+          {{-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> --}}
+          <button wire:click="informetecnico()" type="button" class="btn btn-primary">CREAR INFORME TÉCNICO</button>
+        </div>
       </div>
     </div>
 </div>

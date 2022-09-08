@@ -1,3 +1,41 @@
+@section('css')
+<style>
+    .tablainventarios {
+        width: 100%;
+    
+        min-height: 140px;
+    }
+    .tablainventarios thead {
+        background-color: #1572e8;
+        color: white;
+    }
+    .tablainventarios th, td {
+        border: 0.5px solid #1571e894;
+        padding: 4px;
+       
+    }
+    .tablainventarios th {
+        text-align: center;
+    }
+    tr:hover {
+        background-color: rgba(99, 216, 252, 0.336);
+    }
+
+   .tablainventarios .tablainventarios .unidad label {
+        text-align: center;
+        color: aliceblue;
+        border: #101216;
+        border-radius: 5px;
+        border-color: #1572e8;
+    }
+        
+
+</style>
+@endsection
+    
+
+
+
 <div class="row sales layout-top-spacing">
     <div class="col-sm-12">
         <div class="widget widget-chart-one">
@@ -6,10 +44,10 @@
                     <b>{{ $componentName }} | {{ $pageTitle }}</b>
                 </h4>
                 <ul class="row justify-content-end">
-                    <a href="javascript:void(0)" class="btn btn-dark m-1" data-toggle="modal"
-                        data-target="#theModal">Agregar Productos</a>
-                    <a href="javascript:void(0)" class="btn btn-warning m-1" data-toggle="modal"
-                        data-target="#modalimport">Subir Productos</a>
+                    <a href="javascript:void(0)" class="btn btn-outline-primary" data-toggle="modal"
+                        data-target="#theModal"> <i class="fas fa-plus-circle"></i>Agregar Productos</a>
+                    <a href="javascript:void(0)" class="btn btn-outline-primary" data-toggle="modal"
+                        data-target="#modalimport"> <i class="fas fa-arrow-alt-circle-up"></i> Subir Productos</a>
                        
                     </ul>
                 </div>
@@ -78,20 +116,20 @@
                 </div>
             </div>
             <div class="widget-content">
-                <a href="javascript:void(0)" class="btn btn-danger btn-sm" wire:click= 'deleteProducts()'>Eliminar Productos seleccionados</a>
+                <a href="javascript:void(0)" class="btn btn-danger btn-sm mb-2" wire:click= 'deleteProducts()'>Eliminar Productos seleccionados</a>
                 <div class="table-responsive">
-                    <table class="table table-unbordered table-hover mt-4">
-                        <thead class="text-white" style="background: #3B3F5C">
+                    <table class="tablainventarios">
+                        <thead>
                             <tr>
-                                <th class="table-th text-withe"> <b>#</b> </th>
-                                <th class="table-th text-withe"> <b> <input type="checkbox" class="form-control" wire:model="checkAll"> </b> </th>
-                                <th class="table-th text-withe" style="width: 20%"> <b>NOMBRE</b> </th>
-                                <th class="table-th text-withe text-center"> <b>CATEGORIA</b> </th>
-                                <th class="table-th text-withe text-center"> <b>CODIGO/<br>CODIGO BARRA</b></th>
-                                <th class="table-th text-withe text-center"> <b>PRECIO</b> </th>
-                                <th class="table-th text-withe text-center"> <b>STATUS</b> </th>
-                                <th class="table-th text-withe text-center"> <b>IMAGEN</b> </th>
-                                <th class="table-th text-withe text-center"> <b>ACCIONES</b> </th>
+                                <th> <b>#</b> </th>
+                                <th> Todos <b> <input type="checkbox" class="form-control" wire:model="checkAll"> </b> </th>
+                                <th style="width: 30%"> <b>NOMBRE</b> </th>
+                                <th> <b>CATEGORIA</b> </th>
+                                <th> <b>CODIGO/<br>CODIGO BARRA</b></th>
+                                <th> <b>PRECIO</b> </th>
+                                <th> <b>STATUS</b> </th>
+                                <th> <b>IMAGEN</b> </th>
+                                <th> <b>ACCIONES</b> </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -106,7 +144,7 @@
                                     </td>
                                     <td>
                                         <h5> <strong>{{$products->nombre}}</strong> </h5>
-                                        <label>{{ $products->unidad}}</label>|<label>{{ $products->marca}}</label>|<label>{{ $products->industria }}</label>
+                                        <label class="badge badge-info text-white"> <b>{{ $products->unidad}}</b> </label><label class="badge badge-dark text-white"> <b>{{ $products->marca}}</b> </label><label class="badge badge-warning text-white"> <b>{{ $products->industria }}</b> </label>
                                         <h6>{{ $products->caracteristicas }}</h6>
 
                                     </td>
@@ -160,7 +198,7 @@
 
                                         <a href="javascript:void(0)"
                                             onclick="Confirm('{{ $products->id }}','{{ $products->nombre }}',{{$products->destinos->count()}})"
-                                            class="btn btn-dark mtmobile p-1 m-0" title="Delete">
+                                            class="btn btn-danger p-1 m-0" title="Delete">
                                             <i class="fas fa-trash"></i>
                                         </a>
                                     

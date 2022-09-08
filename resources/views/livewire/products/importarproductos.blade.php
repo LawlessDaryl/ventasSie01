@@ -2,18 +2,18 @@
     <div class="modal-dialog modal-lg" role="document">
         
       <div class="modal-content">
-        <div class="modal-header" style="background: #414141">
+        <div class="modal-header bg-primary" style="background: #414141">
             <h5 class="modal-title text-white">
                 <b>Importar Productos</b>
             </h5>
         </div>
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">Importar productos</div>
 
-                <div class="card-body">
+    <div class="row">
+        <div class="col-lg-12 mb-2">
+           
+         
+
+                <div class="form-group" >
                     @if ($failures)
                     <div class="alert alert-danger" role="alert">
                         @foreach ($failures as $failure)
@@ -29,14 +29,19 @@
 
                         {{$archivo}}
                         <input type="file" name="import_file" wire:model="archivo" />
-
-                        <button class="btn btn-primary" type="submit" >Importar</button>
                     </form>
+                    </div>
+                    <div class="col-lg-12 m-2">
+                        <button class="btn btn-primary" type="submit" >Importar</button>
+                        <button type="button" wire:click.prevent="resetUI()" class="btn btn-warning"
+                        data-dismiss="modal" style="background: #3b3f5c">CANCELAR</button>
+                    </div>
+                 
                 </div>
-            </div>
-        </div>
+            
+       
     </div>
 </div>
 </div>
-</div>
+
 </div>

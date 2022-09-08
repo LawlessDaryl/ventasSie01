@@ -7,8 +7,8 @@
                 </h4>
                 <ul class="row justify-content-end">
                     
-                        <a href="javascript:void(0)" class="btn btn-dark m-1" data-toggle="modal"
-                        data-target="#theModal">Agregar Proveedor</a>
+                        <a href="javascript:void(0)" class="btn btn-outline-primary" data-toggle="modal"
+                        data-target="#theModal"> <i class="fas fa-plus-circle"></i> Agregar Proveedor</a>
                     
                 </ul>
             </div>
@@ -32,11 +32,11 @@
                                           <p class="card-text"> <strong>Correo:</strong> {{$data->correo ? $data->correo : "No definido" }}</p>
                                           <p class="card-text"> <strong>Status:</strong> {{$data->status}}</p>
                                           <a href="javascript:void(0)" wire:click="Edit({{ $data->id }})"
-                                            class="btn btn-dark mtmobile" title="Edit">
+                                            class="btn btn-dark m-1 p-1" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         <a href="javascript:void(0)" onclick="Confirm('{{ $data->id }}','{{ $data->nombre }}')" 
-                                            class="btn btn-warning" title="Delete">
+                                            class="btn btn-danger m-1 p-1" title="Delete">
                                             <i class="fas fa-trash"></i>
                                         </a>
 

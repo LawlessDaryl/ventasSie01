@@ -14,6 +14,7 @@ use App\Http\Controllers\ExportSaleMovDiaController;
 use App\Http\Controllers\ExportTransferenciaController;
 use App\Http\Controllers\ExportMovDiaGenController;
 use App\Http\Controllers\ExportMovDiaResController;
+use App\Http\Controllers\ServicioInformeTecnicoController;
 use App\Http\Livewire\ArqueosStreamingController;
 use App\Http\Livewire\ArqueosTigoController;
 use App\Http\Livewire\AsignarController;
@@ -225,6 +226,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('idorderservice/{id}', [OrderServiceController::class, 'buscarid'])->name('buscarid')->middleware('permission:Orden_Servicio_Index');
     Route::get('abrirnuevo/{id}', [OrderServiceController::class, 'abrirventana'])->name('abrirventana')->middleware('permission:Orden_Servicio_Index');
     Route::get('reporte/pdf/{id}', [ImprimirController::class, 'print'])->middleware('permission:Imprimir_Orden_Servicio_Index');
+    Route::get('informetecnico/pdf/{id}', [ServicioInformeTecnicoController::class, 'print']);
     Route::get('reporteservices', ReporteServiceController::class)->name('tw2')->middleware('permission:Reporte_Servicios_Index');
     Route::group(['middleware' => ['permission:Reporte_Servicios_Export']], function () {
         Route::get('reporteServicio/pdf/{user}/{estado}/{sucursal}/{type}/{f1}/{f2}', [ExportServicioPdfController::class, 'reporteServPDF']);

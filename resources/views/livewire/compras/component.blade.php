@@ -1,3 +1,40 @@
+@section('css')
+<style>
+    .tablainventarios {
+        width: 100%;
+    
+        min-height: 140px;
+    }
+    .tablainventarios thead {
+        background-color: #1572e8;
+        color: white;
+    }
+    .tablainventarios th, td  {
+        border: 0.5px solid #1571e894;
+        padding: 4px;
+       
+    }
+    .tablainventarios th {
+        text-align: center;
+    }
+    tr:hover {
+        background-color: rgba(99, 216, 252, 0.336);
+    }
+
+   .tablainventarios .tablainventarios .unidad label {
+        text-align: center;
+        color: aliceblue;
+        border: #101216;
+        border-radius: 5px;
+        border-color: #1572e8;
+    }
+        
+
+</style>
+@endsection
+    
+
+
 
 <div class="row sales layout-top-spacing">
     <div class="col-sm-12">
@@ -7,7 +44,7 @@
                     <b>Compras</b>
                 </h4>
                 <ul class="row justify-content-end">
-                        <a href="detalle_compras" class="btn btn-dark m-1" >Registrar Compra</a>
+                        <a href="detalle_compras" class="btn btn-outline-primary" >Registrar Compra</a>
                         {{-- <a href="{{ url('reporteCompras/pdf' . '/' . $filtro . '/' . $fecha .'/'
                         . $from. '/' . $to . '/' .$search)}}" class="btn btn-warning m-1" >Imprimir</a> --}}
                 </ul>
@@ -83,34 +120,42 @@
                     <div class="col-lg-12">
                         <div class="widget-content">
                             <div class="table-responsive">
-                                <table class="table table-unbordered table-hover mt-2">
-                                    <thead class="text-white" style="background: #3B3F5C">
+                                <table class="tablainventarios" >
+                                    <thead>
                                         <tr>
                                            
-                                            <th class="table-th text-withe text-center">#</th>                                
-                                            <th class="table-th text-withe text-center">Proveedor</th>                                
-                                            <th class="table-th text-withe text-center">Documento</th>                                
-                                            <th class="table-th text-withe text-center">Tipo<br>Compra</br> </th>                                
-                                            <th class="table-th text-withe text-center">Total<br>Compra</br></th>                                
-                                            <th class="table-th text-withe text-center">Saldo</th>                                
+                                            <th>#</th>                                
+                                            <th>Fecha</th>                                
+                                            <th>Proveedor</th>                                
+                                            <th>Documento</th>                                
+                                            <th>Tipo<br>Compra</br></th>                                
+                                            <th>Total<br>Compra</br></th>                                
+                                            <th>Saldo</th>                                
   
-                                            <th class="table-th text-withe text-center">Estado</th>
-                                            <th class="table-th text-withe text-center">Usuario</th>
-                                            <th class="table-th text-withe text-center">Acciones</th>
+                                            <th>Estado</th>
+                                            <th>Usuario</th>
+                                            <th>Acciones</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($data_compras as $data)
                                             <tr>
                                                 <td>
-                                                    <h6 class="text-center">{{ $loop->iteration}}</h6>
+                                                    <h6>{{ $loop->index+1}}</h6>
+                                                </td>
+                                                <td>
+                                                   
+                                                    <center> {{\Carbon\Carbon::parse($data->created_at)->format('d-m-Y')}}
+                                                        <br>
+                                                        {{\Carbon\Carbon::parse($data->created_at)->format('h:i:s a')}}</center>
                                                 </td>
                                                 <td>
                                                     <h6 class="text-center" wire:key="{{ $loop->index }}">{{ $data->nombre_prov}}</h6>
                                                 </td>
                                                 <td>
-                                                    <h6 class="text-left">{{$data->tipo_doc}}</h6>
-                                                    <h6 class="text-center">{{ $data->nro_documento }}</h6>
+                                                    <center><h6>{{$data->tipo_doc}}</h6>
+                                                        <h6 class="text-center">{{ $data->nro_documento }}</h6></center>
+                                                    
                                                 </td>
                                                 <td>
                                                     <h6 class="text-center">{{ $data->transaccion }}</h6>
@@ -138,20 +183,21 @@
                                                 
                                                 <td class="text-center">
                                                     <a href="javascript:void(0)" wire:click= "editarCompra('{{$data->id}}')"
-                                                        class="btn btn-dark mtmobile" title="Edit">
+                                                        class="btn btn-dark p-1" title="Editar compra">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
-                                                    <a href="javascript:void(0)" wire:click="Destroy('{{ $data->id }}')" 
-                                                        class="btn btn-dark" title="Delete">
-                                                        <i class="fas fa-trash"></i>
-                                                    </a>
                                                     <a href="{{ url('Compras/pdf' . '/' . $data->compra_id)}}"  
-                                                        class="btn btn-dark" title="Print">
+                                                        class="btn btn-success p-1" title="Imprimir detalle compra">
                                                         <i class="fas fa-print"></i>
+                                                    </a>
+                                                    <a href="javascript:void(0)" wire:click="Destroy('{{ $data->id }}')" 
+                                                        class="btn btn-danger p-1" title="Borrar compra">
+                                                        <i class="fas fa-trash"></i>
                                                     </a>
                                                 </td>
                                             </tr>
                                         @endforeach
+                                    </tbody>
                                         <tfoot class="text-white text-right" style="background: #fffefd"  >
                                             <tr>
                                                 <td colspan="4">
@@ -165,8 +211,8 @@
                                             </tr>
                                             
                                     </tfoot>
-                                    </tbody>
                                 </table>
+                          
                            
                             </div>
                         </div>

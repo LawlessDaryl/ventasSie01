@@ -1,7 +1,7 @@
 <div wire:ignore.self class="modal fade" id="theModal_s" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
-        <div class="modal-header bg-dark">
+        <div class="modal-header bg-primary">
           <h5 class="modal-title text-white">
          
               <b>{{$componentSub}}</b> | {{$selected_id > 0 ? 'EDITAR':'CREAR'}}

@@ -2811,6 +2811,12 @@ class OrderServiceController extends Component
         $this->id_orden_de_servicio = $idordendeservicio;
         $this->tiposervicio = OrderService::find($idordendeservicio)->type_service;
         $this->detallesservicios($type, $idservicio);
+
+
+        //Poniendo el id del servicio en la variable $this->id_servicio para crear pdf de informe técnico
+        $this->id_servicio = $idservicio;
+
+
         $this->emit('show-sd', 'show modal!');
     }
     //Llenar las variables globales con los detalles de un servicio
@@ -2876,6 +2882,11 @@ class OrderServiceController extends Component
         $this->detallecosto = $detallesservicio->detallecosto;
         $this->diagnostico = $detallesservicio->diagnostico;
         $this->solucion = $detallesservicio->solucion;
+    }
+    //Crear pdf Informe Técnico de un servicio
+    public function informetecnico()
+    {
+        $this->emit('informe-tecnico');
     }
     //Mostrar una lista de usuarios tecnicos para asignar un servicio en una Ventana Modal
     public function modalasignartecnico($idservicio, $idordendeservicio)
