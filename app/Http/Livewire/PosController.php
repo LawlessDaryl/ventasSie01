@@ -539,55 +539,55 @@ class PosController extends Component
                     'sale_id' => $sale->id,
                 ]);
 
-                // //Para obtener la cantidad del producto que se va a vender
-                // $cantidad_producto_venta = $p->quantity;
+                //Para obtener la cantidad del producto que se va a vender
+                $cantidad_producto_venta = $p->quantity;
 
-                // //Buscamos todos los lotes que tengan ese producto
-                // $lotes = Lote::where('product_id', $p->id)->where('status','Activo')->get();
+                //Buscamos todos los lotes que tengan ese producto
+                $lotes = Lote::where('product_id', $p->id)->where('status','Activo')->get();
 
-                // //Recorremos todos los lotes que tengan ese producto
-                // foreach($lotes as $l)
-                // {
-                //     //Obtenemos la cantidad de existencia que tenga ese lote de ese producto
-                //     $cantidad_producto_lote = $l->existencia;
+                //Recorremos todos los lotes que tengan ese producto
+                foreach($lotes as $l)
+                {
+                    //Obtenemos la cantidad de existencia que tenga ese lote de ese producto
+                    $cantidad_producto_lote = $l->existencia;
 
-                //     //Si la cantidad del producto para la venta supera la existencia en el lote
-                //     //Vaciamos toda la existencia de ese lote y lo inactivamos
-                //     if($cantidad_producto_venta > $cantidad_producto_lote)
-                //     {
-                //         //Creamos un registro en la tabla SaleLote con la cantidad total del producto en el lote
-                //         $sale_lote = SaleLote::create([
-                //             'sale_detail_id' => $sd->id,
-                //             'lote_id' => $l->id,
-                //             'cantidad' => $cantidad_producto_lote
-                //         ]);
-                //         //Dismunuimos la cantidad del producto para la venta por el total cantidad del producto en el lote
-                //         $cantidad_producto_venta = $cantidad_producto_venta - $cantidad_producto_lote;
+                    //Si la cantidad del producto para la venta supera la existencia en el lote
+                    //Vaciamos toda la existencia de ese lote y lo inactivamos
+                    if($cantidad_producto_venta > $cantidad_producto_lote)
+                    {
+                        //Creamos un registro en la tabla SaleLote con la cantidad total del producto en el lote
+                        $sale_lote = SaleLote::create([
+                            'sale_detail_id' => $sd->id,
+                            'lote_id' => $l->id,
+                            'cantidad' => $cantidad_producto_lote
+                        ]);
+                        //Dismunuimos la cantidad del producto para la venta por el total cantidad del producto en el lote
+                        $cantidad_producto_venta = $cantidad_producto_venta - $cantidad_producto_lote;
 
 
-                //         //Actualizamos el lote
-                //         $l->update([
-                //             'existencia' => 0,
-                //             'status' => 'Inactivo'
-                //             ]);
-                //         $l->save();
-                //     }
-                //     else
-                //     {
-                //         //Si la cantidad del producto para la venta no supera la existencia en el lote
-                //         //Reducimos la existencia de ese lote por la cantidad del producto para la venta
-                //         SaleLote::create([
-                //             'sale_detail_id' => $sd->id,
-                //             'lote_id' => $l->id,
-                //             'cantidad' => $cantidad_producto_venta
-                //         ]);
+                        //Actualizamos el lote
+                        $l->update([
+                            'existencia' => 0,
+                            'status' => 'Inactivo'
+                            ]);
+                        $l->save();
+                    }
+                    else
+                    {
+                        //Si la cantidad del producto para la venta no supera la existencia en el lote
+                        //Reducimos la existencia de ese lote por la cantidad del producto para la venta
+                        SaleLote::create([
+                            'sale_detail_id' => $sd->id,
+                            'lote_id' => $l->id,
+                            'cantidad' => $cantidad_producto_venta
+                        ]);
 
-                //         $l->update([ 
-                //             'existencia'=> $cantidad_producto_lote - $cantidad_producto_venta
-                //         ]);
-                //         $l->save();
-                //     }
-                // }
+                        $l->update([ 
+                            'existencia'=> $cantidad_producto_lote - $cantidad_producto_venta
+                        ]);
+                        $l->save();
+                    }
+                }
 
 
 
