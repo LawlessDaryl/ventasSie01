@@ -42,8 +42,8 @@ class SaleDailyMovementController extends Component
     public function mount()
     {
         $this->reportType = 0;
-        $this->dateFrom = Carbon::parse(Carbon::now())->format('Y-m-d');
-        $this->dateTo = Carbon::parse(Carbon::now())->format('Y-m-d');
+        $this->dateFrom = Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00';
+        $this->dateTo = Carbon::parse(Carbon::now())->format('Y-m-d')   . ' 23:59';
 
 
         if($this->verificarpermiso())
@@ -71,8 +71,8 @@ class SaleDailyMovementController extends Component
         }
         else
         {
-            $from = Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00';
-            $to = Carbon::parse($this->dateTo)->format('Y-m-d')     . ' 23:59:59';
+            $from = Carbon::parse($this->dateFrom)->format('Y-m-d H:i') . ':00';
+            $to = Carbon::parse($this->dateTo)->format('Y-m-d H:i')     . ':59';
         }
         if ($this->reportType == 1 && ($this->dateFrom == '' || $this->dateTo == ''))
         {
@@ -169,6 +169,7 @@ class SaleDailyMovementController extends Component
                     ->where('m.status','<>','INACTIVO')
                     ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta'])
                     ->whereDate('cartera_movs.created_at', date('Y/m/d'))
+                    ->orderBy('cartera_movs.created_at', 'asc')
                     ->get();
                 }
                 else
@@ -191,6 +192,7 @@ class SaleDailyMovementController extends Component
                     ->where('m.status','<>','INACTIVO')
                     ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta'])
                     ->whereDate('cartera_movs.created_at', date('Y/m/d'))
+                    ->orderBy('cartera_movs.created_at', 'asc')
                     ->get();
                 }
             }
@@ -215,6 +217,7 @@ class SaleDailyMovementController extends Component
                     ->where('m.status','<>','INACTIVO')
                     ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta'])
                     ->whereDate('cartera_movs.created_at', date('Y/m/d'))
+                    ->orderBy('cartera_movs.created_at', 'asc')
                     ->get();
                 }
             }
@@ -241,13 +244,7 @@ class SaleDailyMovementController extends Component
                     ->where('m.status','<>','INACTIVO')
                     ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta'])
                     
-                    ->whereYear('cartera_movs.created_at','>=' , date("Y", strtotime($this->dateFrom)))
-                    ->whereMonth('cartera_movs.created_at','>=' , date("m", strtotime($this->dateFrom)))
-                    ->whereDay('cartera_movs.created_at','>=', date("d", strtotime($this->dateFrom)))
-                    
-                    ->whereYear('cartera_movs.created_at','<=' , date("Y", strtotime($this->dateTo)))
-                    ->whereMonth('cartera_movs.created_at','<=' , date("m", strtotime($this->dateTo)))
-                    ->whereDay('cartera_movs.created_at','<=', date("d", strtotime($this->dateTo)))
+                    ->whereBetween('cartera_movs.created_at', [$from, $to])
 
 
                     ->orderBy('cartera_movs.created_at', 'asc')
@@ -270,13 +267,7 @@ class SaleDailyMovementController extends Component
                     ->where('m.status','<>','INACTIVO')
                     ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta'])
                     
-                    ->whereYear('cartera_movs.created_at','>=' , date("Y", strtotime($this->dateFrom)))
-                    ->whereMonth('cartera_movs.created_at','>=' , date("m", strtotime($this->dateFrom)))
-                    ->whereDay('cartera_movs.created_at','>=', date("d", strtotime($this->dateFrom)))
-                    
-                    ->whereYear('cartera_movs.created_at','<=' , date("Y", strtotime($this->dateTo)))
-                    ->whereMonth('cartera_movs.created_at','<=' , date("m", strtotime($this->dateTo)))
-                    ->whereDay('cartera_movs.created_at','<=', date("d", strtotime($this->dateTo)))
+                    ->whereBetween('cartera_movs.created_at', [$from, $to])
 
 
                     
@@ -305,14 +296,8 @@ class SaleDailyMovementController extends Component
                     ->where('m.status','<>','INACTIVO')
                     ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta'])
                     
-                    ->whereYear('cartera_movs.created_at','>=' , date("Y", strtotime($this->dateFrom)))
-                    ->whereMonth('cartera_movs.created_at','>=' , date("m", strtotime($this->dateFrom)))
-                    ->whereDay('cartera_movs.created_at','>=', date("d", strtotime($this->dateFrom)))
-                    
-                    ->whereYear('cartera_movs.created_at','<=' , date("Y", strtotime($this->dateTo)))
-                    ->whereMonth('cartera_movs.created_at','<=' , date("m", strtotime($this->dateTo)))
-                    ->whereDay('cartera_movs.created_at','<=', date("d", strtotime($this->dateTo)))
-
+                    ->whereBetween('cartera_movs.created_at', [$from, $to])
+                    ->orderBy('cartera_movs.created_at', 'asc')
 
                     
                     ->get();
@@ -337,15 +322,9 @@ class SaleDailyMovementController extends Component
                     ->where('m.status','<>','INACTIVO')
                     ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta'])
                     
-                    ->whereYear('cartera_movs.created_at','>=' , date("Y", strtotime($this->dateFrom)))
-                    ->whereMonth('cartera_movs.created_at','>=' , date("m", strtotime($this->dateFrom)))
-                    ->whereDay('cartera_movs.created_at','>=', date("d", strtotime($this->dateFrom)))
-                    
-                    ->whereYear('cartera_movs.created_at','<=' , date("Y", strtotime($this->dateTo)))
-                    ->whereMonth('cartera_movs.created_at','<=' , date("m", strtotime($this->dateTo)))
-                    ->whereDay('cartera_movs.created_at','<=', date("d", strtotime($this->dateTo)))
+                    ->whereBetween('cartera_movs.created_at', [$from, $to])
 
-
+                    ->orderBy('cartera_movs.created_at', 'asc')
                     
                     ->get();
                 }
@@ -371,14 +350,8 @@ class SaleDailyMovementController extends Component
                     ->where('m.status','<>','INACTIVO')
                     ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta'])
                     
-                    ->whereYear('cartera_movs.created_at','>=' , date("Y", strtotime($this->dateFrom)))
-                    ->whereMonth('cartera_movs.created_at','>=' , date("m", strtotime($this->dateFrom)))
-                    ->whereDay('cartera_movs.created_at','>=', date("d", strtotime($this->dateFrom)))
-                    
-                    ->whereYear('cartera_movs.created_at','<=' , date("Y", strtotime($this->dateTo)))
-                    ->whereMonth('cartera_movs.created_at','<=' , date("m", strtotime($this->dateTo)))
-                    ->whereDay('cartera_movs.created_at','<=', date("d", strtotime($this->dateTo)))
-
+                    ->whereBetween('cartera_movs.created_at', [$from, $to])
+                    ->orderBy('cartera_movs.created_at', 'asc')
 
                     
                     ->get();
