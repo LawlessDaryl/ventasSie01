@@ -12,7 +12,6 @@ use Livewire\WithPagination;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 
@@ -21,7 +20,7 @@ class SaleDailyMovementController extends Component
     //Variables para fecha inicio = $dateFrom
     //Variables para fecha fin = $dateTo
     //Variable para poder activar o desactivar las fechas de inicio y fin dependiendo del valor de $reportType
-    public $dateFrom, $dateTo, $reportType;
+    public $dateFrom, $dateTo, $timeFrom, $timeTo, $reportType;
 
     //Variable donde se almacenara la sucursal de donde se sacaran los reportes
     public $sucursal;
@@ -42,8 +41,11 @@ class SaleDailyMovementController extends Component
     public function mount()
     {
         $this->reportType = 0;
-        $this->dateFrom = Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00';
-        $this->dateTo = Carbon::parse(Carbon::now())->format('Y-m-d')   . ' 23:59';
+        $this->dateFrom = Carbon::parse(Carbon::now())->format('Y-m-d');
+        $this->dateTo = Carbon::parse(Carbon::now())->format('Y-m-d');
+
+        $this->timeFrom = '00:00';
+        $this->timeTo = '23:59';
 
 
         if($this->verificarpermiso())
@@ -71,8 +73,8 @@ class SaleDailyMovementController extends Component
         }
         else
         {
-            $from = Carbon::parse($this->dateFrom)->format('Y-m-d H:i') . ':00';
-            $to = Carbon::parse($this->dateTo)->format('Y-m-d H:i')     . ':59';
+            $from = Carbon::parse($this->dateFrom)->format('Y-m-d') . ' 00:00:00';
+            $to = Carbon::parse($this->dateTo)->format('Y-m-d')     . ' 23:59:59';
         }
         if ($this->reportType == 1 && ($this->dateFrom == '' || $this->dateTo == ''))
         {
@@ -169,7 +171,6 @@ class SaleDailyMovementController extends Component
                     ->where('m.status','<>','INACTIVO')
                     ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta'])
                     ->whereDate('cartera_movs.created_at', date('Y/m/d'))
-                    ->orderBy('cartera_movs.created_at', 'asc')
                     ->get();
                 }
                 else
@@ -192,7 +193,6 @@ class SaleDailyMovementController extends Component
                     ->where('m.status','<>','INACTIVO')
                     ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta'])
                     ->whereDate('cartera_movs.created_at', date('Y/m/d'))
-                    ->orderBy('cartera_movs.created_at', 'asc')
                     ->get();
                 }
             }
@@ -217,7 +217,6 @@ class SaleDailyMovementController extends Component
                     ->where('m.status','<>','INACTIVO')
                     ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta'])
                     ->whereDate('cartera_movs.created_at', date('Y/m/d'))
-                    ->orderBy('cartera_movs.created_at', 'asc')
                     ->get();
                 }
             }
@@ -229,7 +228,6 @@ class SaleDailyMovementController extends Component
             {
                 if($this->sucursal=='Todos' && $this->caja=='Todos')
                 {
-                    
                     //Consulta para listar todas las cajas
                     $cajas = Caja::select('cajas.id as idcaja','cajas.nombre as nombrecaja')->get();
                     //Consulta para el reporte de movimiento diario con todas las sucursales
@@ -245,10 +243,17 @@ class SaleDailyMovementController extends Component
                     ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta'])
                     
                     ->whereBetween('cartera_movs.created_at', [$from, $to])
-
+                    ->whereTime('cartera_movs.created_at', '>=', $this->timeFrom)
+                    ->whereTime('cartera_movs.created_at', '<=', $this->timeTo.':59')
 
                     ->orderBy('cartera_movs.created_at', 'asc')
                     ->get();
+
+
+
+
+
+
                 }
                 else
                 {
@@ -268,6 +273,8 @@ class SaleDailyMovementController extends Component
                     ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta'])
                     
                     ->whereBetween('cartera_movs.created_at', [$from, $to])
+                    ->whereTime('cartera_movs.created_at', '>=', $this->timeFrom)
+                    ->whereTime('cartera_movs.created_at', '<=', $this->timeTo.':59')
 
 
                     
@@ -297,7 +304,9 @@ class SaleDailyMovementController extends Component
                     ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta'])
                     
                     ->whereBetween('cartera_movs.created_at', [$from, $to])
-                    ->orderBy('cartera_movs.created_at', 'asc')
+                    ->whereTime('cartera_movs.created_at', '>=', $this->timeFrom)
+                    ->whereTime('cartera_movs.created_at', '<=', $this->timeTo.':59')
+
 
                     
                     ->get();
@@ -323,8 +332,10 @@ class SaleDailyMovementController extends Component
                     ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta'])
                     
                     ->whereBetween('cartera_movs.created_at', [$from, $to])
+                    ->whereTime('cartera_movs.created_at', '>=', $this->timeFrom)
+                    ->whereTime('cartera_movs.created_at', '<=', $this->timeTo.':59')
 
-                    ->orderBy('cartera_movs.created_at', 'asc')
+
                     
                     ->get();
                 }
@@ -351,7 +362,9 @@ class SaleDailyMovementController extends Component
                     ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta'])
                     
                     ->whereBetween('cartera_movs.created_at', [$from, $to])
-                    ->orderBy('cartera_movs.created_at', 'asc')
+                    ->whereTime('cartera_movs.created_at', '>=', $this->timeFrom)
+                    ->whereTime('cartera_movs.created_at', '<=', $this->timeTo.':59')
+
 
                     
                     ->get();
@@ -379,7 +392,7 @@ class SaleDailyMovementController extends Component
 
         
 
-        //Actualizando la variable listareportes para crear el PDF
+        //Actualizando la vaiable listareportes para crear el PDF
         $this->listareportes = $data;
         
         $ingreso = $this->totalingresos();
@@ -516,15 +529,7 @@ class SaleDailyMovementController extends Component
 
         foreach ($tabla as $item)
         {
-            try
-            {
-                $totalutilidad = $this->buscarutilidad($this->buscarventa($item->idmovimiento)->first()->idventa) + $totalutilidad;
-            }
-            catch(Exception $e)
-            {
-
-            }
-
+            $totalutilidad = $this->buscarutilidad($this->buscarventa($item->idmovimiento)->first()->idventa) + $totalutilidad;
         }
         return $totalutilidad;
     }

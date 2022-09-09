@@ -979,52 +979,52 @@ class PosController extends Component
                     ]);
 
 
-                    $lot=Lote::where('product_id',$item->id)->where('status','Activo')->get();
+                //     $lot=Lote::where('product_id',$item->id)->where('status','Activo')->get();
 
-                    //obtener la cantidad del detalle de la venta 
-                    $this->qq=$item->quantity;//q=8
-                    foreach ($lot as $val) { //lote1= 3 Lote2=3 Lote3=3
-                      $this->lotecantidad = $val->existencia;
-                      //dd($this->lotecantidad);
-                       if($this->qq>0){
-                        //true//5//2
-                           //dd($val);
-                           if ($this->qq > $this->lotecantidad) {
+                //     //obtener la cantidad del detalle de la venta 
+                //     $this->qq=$item->quantity;//q=8
+                //     foreach ($lot as $val) { //lote1= 3 Lote2=3 Lote3=3
+                //       $this->lotecantidad = $val->existencia;
+                //       //dd($this->lotecantidad);
+                //        if($this->qq>0){
+                //         //true//5//2
+                //            //dd($val);
+                //            if ($this->qq > $this->lotecantidad) {
         
-                               $ss=SaleLote::create([
-                                   'sale_detail_id'=>$sd->id,
-                                   'lote_id'=>$val->id,
-                                   'cantidad'=>$val->existencia
+                //                $ss=SaleLote::create([
+                //                    'sale_detail_id'=>$sd->id,
+                //                    'lote_id'=>$val->id,
+                //                    'cantidad'=>$val->existencia
                                    
-                               ]);
+                //                ]);
                               
         
-                               $val->update([
-                                   'existencia'=>0,
-                                   'status'=>'Inactivo'
-                                ]);
-                                $val->save();
-                                $this->qq=$this->qq-$this->lotecantidad;
-                                //dump("dam",$this->qq);
-                           }
-                           else{
-                            //dd($this->lotecantidad);
-                               $dd=SaleLote::create([
-                                   'sale_detail_id'=>$sd->id,
-                                   'lote_id'=>$val->id,
-                                   'cantidad'=>$this->qq
-                               ]);
+                //                $val->update([
+                //                    'existencia'=>0,
+                //                    'status'=>'Inactivo'
+                //                 ]);
+                //                 $val->save();
+                //                 $this->qq=$this->qq-$this->lotecantidad;
+                //                 //dump("dam",$this->qq);
+                //            }
+                //            else{
+                //             //dd($this->lotecantidad);
+                //                $dd=SaleLote::create([
+                //                    'sale_detail_id'=>$sd->id,
+                //                    'lote_id'=>$val->id,
+                //                    'cantidad'=>$this->qq
+                //                ]);
                              
         
-                               $val->update([ 
-                                   'existencia'=>$this->lotecantidad-$this->qq
-                               ]);
-                               $val->save();
-                               $this->qq=0;
-                               //dd("yumi",$this->qq);
-                           }
-                       }
-                   }
+                //                $val->update([ 
+                //                    'existencia'=>$this->lotecantidad-$this->qq
+                //                ]);
+                //                $val->save();
+                //                $this->qq=0;
+                //                //dd("yumi",$this->qq);
+                //            }
+                //        }
+                //    }
 
 
                     //Decrementando el stock en tienda

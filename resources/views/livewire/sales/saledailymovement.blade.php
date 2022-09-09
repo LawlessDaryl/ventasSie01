@@ -56,14 +56,22 @@
                         <div class="col-sm-2 ">
                             <h6>Fecha Desde</h6>
                             <div class="form-group">
-                                <input @if ($reportType == 0) disabled @endif type="datetime-local" wire:model="dateFrom"
+                                <input @if ($reportType == 0) disabled @endif type="date" wire:model="dateFrom"
+                                    class="form-control" placeholder="Click para elegir">
+                            </div>
+                            <div class="form-group">
+                                <input @if ($reportType == 0) disabled @endif type="time" wire:model="timeFrom"
                                     class="form-control" placeholder="Click para elegir">
                             </div>
                         </div>
                         <div class="col-sm-2 ">
                             <h6>Fecha Hasta</h6>
                             <div class="form-group">
-                                <input @if ($reportType == 0) disabled @endif type="datetime-local" wire:model="dateTo"
+                                <input @if ($reportType == 0) disabled @endif type="date" wire:model="dateTo"
+                                    class="form-control" placeholder="Click para elegir">
+                            </div>
+                            <div class="form-group">
+                                <input @if ($reportType == 0) disabled @endif type="time" wire:model="timeTo"
                                     class="form-control" placeholder="Click para elegir">
                             </div>
                         </div>
