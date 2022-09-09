@@ -53,6 +53,10 @@ class Product extends Model
     {
         return $this->hasMany(SaleDetail::class,'product_id','id');
     }
+    public function location()
+    {
+        return $this->belongsToMany(Location::class);
+    }
     
 
 

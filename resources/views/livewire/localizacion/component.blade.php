@@ -1,3 +1,34 @@
+@section('css')
+<style>
+    .tablainventarios {
+        width: 100%;
+    
+        min-height: 140px;
+    }
+    .tablainventarios thead {
+        background-color: #1572e8;
+        color: white;
+    }
+    .tablainventarios th, td {
+        border: 0.5px solid #1571e894;
+        padding: 4px;
+    }
+
+    .tablainventarios th{
+        text-align: center;
+    }
+    tr:hover {
+        background-color: rgba(99, 216, 252, 0.336);
+    }
+        
+
+</style>
+@endsection
+    
+
+
+
+
 <div class="row sales layout-top-spacing">
     <div class="col-sm-12">
         <div class="widget widget-chart-one">
@@ -19,18 +50,18 @@
 
             <div class="widget-content">
                 <div class="table-responsive">
-                    <table class="table table-unbordered table-hover mt-2">
-                        <thead class="text-white" style="background: #3B3F5C">
+                    <table class="tablainventarios">
+                        <thead>
                             <tr>
                                 
-                                <th class="table-th text-withe text-center">#</th>
-                                <th class="table-th text-withe text-center">TIPO</th>
-                                <th class="table-th text-withe text-center">CODIGO</th>
-                                <th class="table-th text-withe text-center">DESCRIPCION</th>
-                                <th class="table-th text-withe text-center">UBICACION</th>
-                                <th class="table-th text-withe text-center">SUCURSAL</th>
+                                <th>#</th>
+                                <th>TIPO</th>
+                                <th>CODIGO</th>
+                                <th>DESCRIPCION</th>
+                                <th>UBICACION</th>
+                                <th>PRODUCTOS</th>
                                 
-                                <th class="table-th text-withe text-center">ACCIONES</th>
+                                <th>ACCIONES</th>
                                
                             </tr>
                         </thead>
@@ -41,19 +72,26 @@
                                         <h6>{{ ($data_locations->currentpage()-1) * $data_locations->perpage() + $loop->index + 1 }}</h6>
                                     </td>
                                     <td>
-                                        <h6 class=" text-center">{{ $location->tipo }}</h6>
+                                        <h6>{{ $location->tipo }}</h6>
                                     </td>
                                     <td>
-                                        <h6 class="text-center">{{ $location->codigo }}</h6>
+                                        <h6>{{ $location->codigo }}</h6>
                                     </td>
                                     <td>
-                                        <h6 class="text-center">{{ $location->descripcion }}</h6>
+                                        <h6>{{ $location->descripcion }}</h6>
                                     </td>
                                     <td>
-                                        <h6 class="text-center">{{ $location->destino }}</h6>
+                                        <h6>{{ $location->destino }}
+                                        <br>
+                                        {{ $location->sucursal}}</h6>
                                     </td>
                                     <td>
-                                        <h6 class="text-center">{{ $location->sucursal}}</h6>
+                                        <center>
+                                            <a href="javascript:void(0)" wire:click="ver({{$location->id}})"
+                                            class="btn btn-info m-1 text-dark p-1" title="Ver subcategorias"> <b class="pl-1">{{ $location->pivot}}</b> 
+                                            <i class="fas fa-eye"></i>
+                                            </a>
+                                        </center>
                                     </td>
                                     
             

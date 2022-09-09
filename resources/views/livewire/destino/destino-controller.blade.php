@@ -1,3 +1,28 @@
+@section('css')
+<style>
+    .tablainventarios {
+        width: 100%;
+    
+        min-height: 140px;
+    }
+    .tablainventarios thead {
+        background-color: #1572e8;
+        color: white;
+    }
+    .tablainventarios th, td {
+        border: 0.5px solid #1571e894;
+        padding: 4px;
+    }
+    tr:hover {
+        background-color: rgba(99, 216, 252, 0.336);
+    }
+        
+
+</style>
+@endsection
+    
+
+
 <div class="row sales layout-top-spacing">
     <div class="col-sm-12">
         <div class="widget widget-chart-one">
@@ -7,8 +32,8 @@
                 </h4>
                 <ul class="row justify-content-end">
                     
-                        <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal"
-                        data-target="#theModal">Agregar Estancia</a>
+                        <a href="javascript:void(0)" class="btn btn-outline-primary" data-toggle="modal"
+                        data-target="#theModal"> <i class="fas fa-plus-circle"></i> Agregar Estancia</a>
                     
                 </ul>
             </div>
@@ -16,8 +41,8 @@
 
             <div class="widget-content">
                 <div class="table-responsive">
-                    <table class="table table-unbordered table-hover mt-2">
-                        <thead class="text-white" style="background: #3B3F5C">
+                    <table class="tablainventarios">
+                        <thead>
                             <tr>
                                 <th class="table-th text-withe text-center">ITEM</th>
                                 <th class="table-th text-withe text-center">NOMBRE</th>                                
@@ -30,7 +55,7 @@
                             @foreach ($datas as $data)
                                 <tr>
                                     <td>
-                                        <h6 class="text-center">{{ $data->id }}</h6>
+                                        <center><h6>{{$loop->index+1}}</h6></center>
                                     </td>
                                     <td>
                                         <h6 class="text-center">{{ $data->nombre }}</h6>
@@ -44,11 +69,11 @@
                                     
                                     <td class="text-center">
                                         <a href="javascript:void(0)" wire:click="Edit({{ $data->id }})"
-                                            class="btn btn-dark mtmobile" title="Edit">
+                                            class="btn btn-dark p-1" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         <a href="javascript:void(0)" onclick="Confirm('{{ $data->id }}','{{ $data->nombre }}')" 
-                                            class="btn btn-dark" title="Delete">
+                                            class="btn btn-danger p-1" title="Delete">
                                             <i class="fas fa-trash"></i>
                                         </a>
                                     </td>
