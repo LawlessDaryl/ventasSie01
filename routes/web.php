@@ -85,7 +85,6 @@ use App\Http\Livewire\DestinoController;
 use App\Http\Livewire\SaleDailyMovementController;
 use App\Http\Livewire\SaleDevolutionController;
 use App\Http\Livewire\SaleStatisticController;
-use App\Http\Livewire\FreeSaleController;
 use App\Http\Livewire\SaleReporteCantidadController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
@@ -213,8 +212,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('report/pdfmovdia', [ExportSaleMovDiaController::class, 'reportPDFMovDiaVenta']);
     });
 
-    /*FREEFIRE*/
-   Route::get('freeventas', FreeSaleController::class)->name('freeventas');
+
 
     /* SERVICIOS */
     Route::get('catprodservice', CatProdServiceController::class)->name('cps')->middleware('permission:Cat_Prod_Service_Index');
