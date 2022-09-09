@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\CompraDetalle;
-use App\Models\FreeCrypto;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -61,8 +60,6 @@ class DatabaseSeeder extends Seeder
         $this->call(LocationSeeder::class);
         
         $this->call(ProviderSeeder::class);
-        $this->call(FreePlansSeeder::class);
-        // $this->call(FreeCrypto::class);
        
        
         // $this->call(CompraSeeder::class);
