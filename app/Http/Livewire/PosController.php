@@ -837,14 +837,14 @@ class PosController extends Component
     //Actualizar la variable descuento_recargo
     public function actualizar_desc_recar()
     {
-        $bs_total_original = 0;
-        $items = Cart::getContent();
-        foreach ($items as $item)
-        {
-            $bs_total_original = ($this->buscarprecio($item->id) * $item->quantity) + $bs_total_original;
-        }
+    //     $bs_total_original = 0;
+    //     $items = Cart::getContent();
+    //     foreach ($items as $item)
+    //     {
+    //         $bs_total_original = ($this->buscarprecio($item->id) * $item->quantity) + $bs_total_original;
+    //     }
         
-        $this->descuento_recargo = $bs_total_original - $this->total_bs;
+    //     $this->descuento_recargo = $bs_total_original - $this->total_bs;
     }
     //Buscar el Precio Original de un Producto
     public function buscarprecio($id)

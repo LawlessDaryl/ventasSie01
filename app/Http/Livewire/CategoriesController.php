@@ -140,7 +140,7 @@ class CategoriesController extends Component
         $category->save();
         $this->resetUI();
         $this->selected_id=0;
-        $this->emit('sub-added');
+        $this->emit('sub_added');
     }
 
     public function Update()
