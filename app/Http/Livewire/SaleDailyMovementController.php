@@ -171,6 +171,7 @@ class SaleDailyMovementController extends Component
                     ->where('m.status','<>','INACTIVO')
                     ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta'])
                     ->whereDate('cartera_movs.created_at', date('Y/m/d'))
+                    ->orderBy('cartera_movs.created_at', 'asc')
                     ->get();
                 }
                 else
@@ -193,6 +194,7 @@ class SaleDailyMovementController extends Component
                     ->where('m.status','<>','INACTIVO')
                     ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta'])
                     ->whereDate('cartera_movs.created_at', date('Y/m/d'))
+                    ->orderBy('cartera_movs.created_at', 'asc')
                     ->get();
                 }
             }
@@ -217,6 +219,7 @@ class SaleDailyMovementController extends Component
                     ->where('m.status','<>','INACTIVO')
                     ->whereIn('cartera_movs.comentario', ['Venta', 'Devolución Venta'])
                     ->whereDate('cartera_movs.created_at', date('Y/m/d'))
+                    ->orderBy('cartera_movs.created_at', 'asc')
                     ->get();
                 }
             }
@@ -306,7 +309,7 @@ class SaleDailyMovementController extends Component
                     ->whereBetween('cartera_movs.created_at', [$from, $to])
                     ->whereTime('cartera_movs.created_at', '>=', $this->timeFrom)
                     ->whereTime('cartera_movs.created_at', '<=', $this->timeTo.':59')
-
+                    ->orderBy('cartera_movs.created_at', 'asc')
 
                     
                     ->get();
@@ -334,7 +337,7 @@ class SaleDailyMovementController extends Component
                     ->whereBetween('cartera_movs.created_at', [$from, $to])
                     ->whereTime('cartera_movs.created_at', '>=', $this->timeFrom)
                     ->whereTime('cartera_movs.created_at', '<=', $this->timeTo.':59')
-
+                    ->orderBy('cartera_movs.created_at', 'asc')
 
                     
                     ->get();
@@ -364,7 +367,7 @@ class SaleDailyMovementController extends Component
                     ->whereBetween('cartera_movs.created_at', [$from, $to])
                     ->whereTime('cartera_movs.created_at', '>=', $this->timeFrom)
                     ->whereTime('cartera_movs.created_at', '<=', $this->timeTo.':59')
-
+                    ->orderBy('cartera_movs.created_at', 'asc')
 
                     
                     ->get();
