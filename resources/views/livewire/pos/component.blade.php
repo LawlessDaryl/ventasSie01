@@ -209,7 +209,7 @@
                 <div class="col-12 col-sm-6 col-md-2 text-center">
                     <h3><b>Total Venta</b></h3>
                     <div class="form-group">
-                        <h4>{{$this->total_bs}} Bs</h4>
+                        <h4>{{number_format($this->total_bs,2)}} Bs</h4>
                     </div>
                 </div>
         

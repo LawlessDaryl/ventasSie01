@@ -88,7 +88,8 @@ class PosController extends Component
     {
         $this->paginacion = 10;
         $this->descuento_recargo = 0;
-        $this->total_bs = Cart::getTotal();
+        // $this->total_bs = Cart::getTotal();
+        $this->total_bs = $this->gettotalcart();
         $this->total_items = Cart::getTotalQuantity();
         $this->factura = false;
         $this->clienteanonimo = true;
@@ -328,7 +329,8 @@ class PosController extends Component
         if ($cant > 0)
         {
             Cart::add($product_cart->id, $product_cart->name, $product_cart->price, $cant, $product_cart->image);
-            $this->total = Cart::getTotal();
+            // $this->total = Cart::getTotal();
+            $this->total = $this->gettotalcart();
             $this->itemsQuantity = Cart::getTotalQuantity();
             $this->emit('scan-ok', 'Cantidad actualizada');
         }
@@ -471,7 +473,8 @@ class PosController extends Component
     //Actualizar los valores de Total Bs y Total Artículos en una Venta
     public function actualizarvalores()
     {
-        $this->total_bs = Cart::getTotal();
+        // $this->total_bs = Cart::getTotal();
+        $this->total_bs = $this->gettotalcart();
         $this->total_items = Cart::getTotalQuantity();
         $this->actualizar_desc_recar();
     }
@@ -676,7 +679,7 @@ class PosController extends Component
     //Volver a los valores por defecto
     public function resetUI()
     {
-        $this->total_bs = Cart::getTotal();
+        $this->total_bs = $this->gettotalcart();
         $this->total_items = Cart::getTotalQuantity();
         $this->factura = false;
         $this->buscarproducto = "";
@@ -843,8 +846,18 @@ class PosController extends Component
         {
             $bs_total_original = ($this->buscarprecio($item->id) * $item->quantity) + $bs_total_original;
         }
-        
-        $this->descuento_recargo = $bs_total_original - $this->total_bs;
+        $this->descuento_recargo = $bs_total_original - $this->gettotalcart();
+    }
+    //Devuelve el precio total Bs del Carrito de Ventas
+    public function gettotalcart()
+    {
+        $bs_total_cart = 0;
+        $items = Cart::getContent();
+        foreach ($items as $item)
+        {
+            $bs_total_cart = ($item->price * $item->quantity) + $bs_total_cart;
+        }
+        return  $bs_total_cart;
     }
     //Buscar el Precio Original de un Producto
     public function buscarprecio($id)
