@@ -843,8 +843,11 @@ class PosController extends Component
         {
             $bs_total_original = ($this->buscarprecio($item->id) * $item->quantity) + $bs_total_original;
         }
-        
+
+
+       
         $this->descuento_recargo = $bs_total_original - $this->total_bs;
+
     }
     //Buscar el Precio Original de un Producto
     public function buscarprecio($id)
