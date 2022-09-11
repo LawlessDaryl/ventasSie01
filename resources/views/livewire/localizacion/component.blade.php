@@ -40,8 +40,6 @@
                     <a href="javascript:void(0)" class="btn btn-warning m-1" data-toggle="modal" wire:click="$set('selected_id', 0)"
                         data-target="#theModal">Agregar</a>
            
-                    <a href="javascript:void(0)" class="btn btn-dark m-1" data-toggle="modal"
-                        data-target="#asignar_mobiliario">Asignar Mobiliario</a>
                 </ul>
 
 
@@ -88,28 +86,26 @@
                                     <td>
                                         <center>
                                             <a href="javascript:void(0)" wire:click="ver({{$location->id}})"
-                                            class="btn btn-info m-1 text-dark p-1" title="Ver subcategorias"> <b class="pl-1">{{ $location->pivot}}</b> 
+                                            class="btn btn-info m-1 text-dark p-1" title="Ver subcategorias"> <b class="pl-1">{{ $location->product->count()}}</b> 
                                             <i class="fas fa-eye"></i>
                                             </a>
                                         </center>
                                     </td>
-                                    
-            
-
-                                
                                     <td class="text-center">
                                         <a href="javascript:void(0)" wire:click="Edit({{ $location->id }})"
                                             class="btn btn-dark p-1 m-0" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
+                                        
+                                        <a href="javascript:void(0)" data-toggle="modal"
+                                        data-target="#asignar_mobiliario" wire:click="asignarMobilirio({{$location->id}})" 
+                                            class="btn btn-warning p-1 m-0" title="Agregar Productos a este mobiliario">
+                                            <i class="fas fa-plus"></i>
+                                        </a>
                                         <a href="javascript:void(0)"
                                             onclick="Confirm('{{ $location->id }}','{{ $location->descripcion }}')"
-                                            class="btn btn-dark p-1 m-0" title="Delete">
+                                            class="btn btn-danger p-1 m-0" title="Agregar Mobiliario">
                                             <i class="fas fa-trash"></i>
-                                        </a>
-                                        <a href="javascript:void(0)" wire:click="ver({{$location->id}})" 
-                                            class="btn btn-dark p-1 m-0" title="Ver">
-                                            <i class="fas fa-list"></i>
                                         </a>
                                     </td>
                                 </tr>

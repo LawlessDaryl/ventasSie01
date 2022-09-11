@@ -55,7 +55,7 @@ class Product extends Model
     }
     public function location()
     {
-        return $this->belongsToMany(Location::class);
+        return $this->belongsToMany(Location::class,'location_productos','product','id');
     }
     
 

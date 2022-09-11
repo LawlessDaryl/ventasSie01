@@ -22,6 +22,7 @@ class LocalizacionController extends Component
     public $sucursal, $codigo, $descripcion,$ubicacion, $tipo,$product,$product_name,
     $selected_id, $categoria,$subcategoria,$location, $pageTitle, $componentName,$search,$search2,$destino,$listaproductos,$auxi=[];
     private $pagination = 20;
+    public $col;
     public function paginationView()
     {
         return 'vendor.livewire.bootstrap';
@@ -33,6 +34,7 @@ class LocalizacionController extends Component
         $this->tipo = 'Elegir';
         $this->ubicacion = 'Elegir';
         $this->sucursal_id = 'Elegir';
+        $this->col=collect();
      
     }
     public function render()
@@ -66,7 +68,7 @@ class LocalizacionController extends Component
         $data_prod_mob = Product::select('products.*')
         ->where('nombre', 'like', '%' . $this->search2 . '%')
         ->orWhere('codigo','like','%'.$this->search2.'%')
-        ->take(3)
+        ->take(2)
         ->get();
         else
         $data_prod_mob=false;
@@ -242,17 +244,22 @@ class LocalizacionController extends Component
     public function delete($id)
     {
         LocationProducto::where('location_productos.id',$id)->delete();
-
-        
     }
 
-    public function addProd( Product $id){
+    public function addProd( Product $id){  
 
-      
-      $this->product=$id->id;
-    $this->product_name=$id->nombre;
-    
+    $this->col->push(['product_id'=> $id->id,'product_name'=>$id->nombre,'product_codigo'=>$id->codigo]);
+    //dd($this->col);
 
+    }
+
+    public function asignarMobilirio(){
+
+        
+
+    }
+    public function quitarProducto($id){
+        dd($id);
     }
 
 

@@ -149,9 +149,9 @@
             $('#theModal_s').modal('show')
           
         });
-        window.livewire.on('sub-added', Msg => {
+        window.livewire.on('sub_added', Msg => {
             $('#theModal_s').modal('hide')
-            noty(Msg)
+            
         });
         window.livewire.on('item-updated', Msg => {
             $('#theModal').modal('hide')
