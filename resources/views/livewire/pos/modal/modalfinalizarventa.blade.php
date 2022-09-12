@@ -33,7 +33,7 @@
                             <div class="card simple-title-task ui-sortable-handle">
                                 <div class="card-body">
                                     <h4 class="text-center">TOTAL VENTA</h4>
-                                    <h4 class="text-center"><b>{{number_format($this->total_bs, 2)}} Bs</b></h4>
+                                    <h4 class="text-center"><b>{{$this->total_bs}} Bs</b></h4>
                                     <div class="input-group input-group-md mb-3">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text input-gp hideonsm" 
