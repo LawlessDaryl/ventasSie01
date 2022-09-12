@@ -68,6 +68,8 @@
                             </div> 
                             @endif
 
+                            @if ($col->count() != 0)
+                                
                             <div class="col-sm-12 col-md-12 col-lg-12 mt-4">
                                 <table class="table table-hover table-sm" style="width:100%">
                                             <thead>
@@ -76,10 +78,7 @@
                                             <th>Acc.</th>  
                                             </thead>                        
                                     <tbody>
-                                        
-                                        @forelse ($col as $datacol)
-                                       
-                                            
+                                        @forelse ($col as $datacol)  
                                         <tr>
                                             
                                             <td class="text-center">
@@ -89,7 +88,7 @@
                                                 <h6>{{$datacol['product_name']}}</h6>
                                             </td>
                                             <td class="text-center">
-                                                <a href="javascript:void(0)" wire:click="quitarProducto({{ $datacol->['product_codigo']}})"
+                                                <a href="javascript:void(0)" wire:click="quitarProducto({{ $datacol['product_codigo']}})"
                                                     class="btn btn-danger text-white">
                                                     <i class="fas fa-times"></i>
                                                 </a>
@@ -100,20 +99,21 @@
                                        
                                       
                                                 @empty 
-                                                <p>No existe productos con ese criterio de busqueda</p>
+                                                <p></p>
                                             @endforelse
                                         </tbody>
                                     </table>
                                 
+                                    @endif
                             </div>
                         </div>
                     <div class="tabs tab-pills text-right m-2">
                         
-                            <button type="button" wire:click.prevent="resetUI()" class="btn btn-dark close-btn text-info"
+                            <button type="button" wire:click.prevent="resetUI()" class="btn btn-warning"
                             data-dismiss="modal">CANCELAR</button>
                         
                             <button type="button" wire:click.prevent="asignarMobiliario()"
-                                class="btn btn-dark">GUARDAR</button>
+                                class="btn btn-warning">GUARDAR</button>
                   
                     </div>
                </div>

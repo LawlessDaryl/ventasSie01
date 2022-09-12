@@ -1,13 +1,53 @@
+@section('css')
+<style>
+    .tablainventarios {
+        width: 100%;
+    
+        min-height: 140px;
+    }
+    .tablainventarios thead {
+        background-color: #1572e8;
+        color: white;
+    }
+    .tablainventarios th, td {
+        border: 0.5px solid #1571e894;
+        padding: 4px;
+       
+    }
+    .tablainventarios th {
+        text-align: center;
+    }
+    tr:hover {
+        background-color: rgba(99, 216, 252, 0.336);
+    }
+.tablaservicios {
+        width: 90%;
+       
+    }
+    .tablaservicios thead {
+        background-color: #0d4da0;
+        color: white;
+    }
+    .tablaservicios th, td {
+        border: 0.5px solid #1571e894;
+        padding: 4px;
+    }
+    .tablaservicios tr:hover {
+        background-color: rgba(175, 180, 250, 0.336);
+    }
+</style>
+
+@endsection
 
 <div class="row sales layout-top-spacing">
     <div class="col-sm-12">
         <div class="widget widget-chart-one">
             <div class="widget-heading">
                 <h4 class="card-title">
-                    <b>Control Entrada y Salida de Productos</b>
+                  <center> <b>Control Entrada y Salida de Productos</b></center> 
                 </h4>
                 <ul class="row justify-content-end">
-                    <a href="javascript:void(0)" class="btn btn-dark" data-toggle="modal" wire:click= 'resetui()'
+                    <a href="javascript:void(0)" class="btn btn-outline-primary" data-toggle="modal" wire:click= 'resetui()'
                     data-target="#operacion">Registrar Operacion</a>
       
                      
@@ -16,7 +56,7 @@
             </div>
 
             <div class="widget-body">
-                <div class="col-lg-3">
+                <div class="col-lg-3 mb-2">
 
                     <select wire:model="tipo_de_operacion" class="form-control">
                         <option value="Entrada">Entrada</option>
@@ -25,11 +65,11 @@
                 </div>
               
 
-                <div class="row">
+                <div class="row pl-2">
                     <div class="col-lg-12">
                         <div class="widget-content">
                             <div class="table-responsive">
-                                <table class="table table-unbordered table-hover mt-2">
+                                <table class="tablainventarios">
                                     <thead class="thead-light">
                                         <tr>
                                             <th>#</th>                                
@@ -49,10 +89,12 @@
                                                     <h6>{{ ($ingprod->currentpage()-1) * $ingprod->perpage() + $loop->index + 1 }}</h6>
                                                     
                                                 </td>
-                                                <td>
+                                                <td> <center>
+
                                                     {{\Carbon\Carbon::parse($data2->created_at)->format('d-m-Y')}}
                                                     <br>
                                                     {{\Carbon\Carbon::parse($data2->created_at)->format('h:i:s a')}}
+                                                </center>
                                                 </td>
                                              
                                                 <td>
@@ -92,10 +134,10 @@
                 </div>
 
             </div>
-@include('livewire.entradas_salidas.operacion')
-@include('livewire.entradas_salidas.buscarproducto')
         </div>
     </div>
+    @include('livewire.entradas_salidas.operacion')
+
    </div>
 
 

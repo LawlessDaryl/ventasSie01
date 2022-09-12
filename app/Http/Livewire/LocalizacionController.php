@@ -22,7 +22,7 @@ class LocalizacionController extends Component
     public $sucursal, $codigo, $descripcion,$ubicacion, $tipo,$product,$product_name,
     $selected_id, $categoria,$subcategoria,$location, $pageTitle, $componentName,$search,$search2,$destino,$listaproductos,$auxi=[];
     private $pagination = 20;
-    public $col;
+    public $col,$selectedmob;
     public function paginationView()
     {
         return 'vendor.livewire.bootstrap';
@@ -35,6 +35,7 @@ class LocalizacionController extends Component
         $this->ubicacion = 'Elegir';
         $this->sucursal_id = 'Elegir';
         $this->col=collect();
+        //dd($this->col);
      
     }
     public function render()
@@ -204,6 +205,14 @@ class LocalizacionController extends Component
             'location.required' => 'El nombre de tipo aparador es requerido'
         ];
 
+        foreach ($this->col as $key => $value) {
+            
+            
+
+
+
+        }
+
         $this->validate($rules, $messages);
 
         LocationProducto::create([
@@ -253,13 +262,25 @@ class LocalizacionController extends Component
 
     }
 
-    public function asignarMobilirio(){
+    public function asignaridmob($id){
 
+        $this->selectedmob=$id;
         
 
     }
     public function quitarProducto($id){
-        dd($id);
+        $item=0;
+        foreach ($this->col as $key => $value) {
+   
+            if ($value['product_codigo'] == $id) {
+               $item=$key;
+               break;
+                }
+               }
+           
+             $this->col->pull($item);
+
+
     }
 
 

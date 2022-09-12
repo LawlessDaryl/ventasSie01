@@ -143,10 +143,16 @@
                                     <span class="text-danger er">{{ $message }}</span>
                             @enderror
                         </div>
-                        <div class="form-row" style="width: 74%; margin-right: 7px;">
+                        <div class="form-row" style="width: 50%; margin-right: 7px;">
                             <div class="col-md-12">
                                 <label for="validationTooltip01">Motivo Costo Servicio Bs</label>
                                 <input type="text" wire:model="edit_motivocostoservicio" class="form-control" placeholder="Se Compró Pantalla Nueva, Se Compró Nuevo Sócalo, Se Compró SSD, etc...">
+                            </div>
+                        </div>
+                        <div class="form-row pt-3 mt-1" style="width: 25%;">
+                            <div class="col-md-12">
+                                <a href="javascript:void(0)" class="btn btn-info" data-toggle="modal"
+                                data-target="#salidarepuestos">Registrar Repuestos</a>
                             </div>
                         </div>
                     </div>

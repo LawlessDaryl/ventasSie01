@@ -12,6 +12,8 @@ use App\Models\Movimiento;
 use App\Models\MovService;
 use App\Models\Service;
 use App\Models\OrderService;
+use App\Models\Product;
+use App\Models\ProductosDestino;
 use App\Models\SubCatProdService;
 use App\Models\Sucursal;
 use App\Models\TypeWork;
@@ -44,6 +46,9 @@ class OrderServiceController extends Component
     public $usuario;
     //Variable para buscar por Código o Nombre del Cliente
     public $search;
+
+    //variable para modal de busqueda de repuestos 
+    public $searchproduct,$buscarproducto,$result,$col,$selected,$cantidad,$destino;
 
 
     //Variables para la (Ventana Modal) Detalles Servicio
@@ -95,6 +100,8 @@ class OrderServiceController extends Component
         $this->dateTo = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->lista_de_usuarios = $this->listarusuarios();
         $this->mostrarterminar = "No";
+        $this->col= collect();
+        $this->destino=4;
 
         //Variable que guarda el id de la cartera
         $this->tipopago = 'Elegir';
@@ -2570,6 +2577,28 @@ class OrderServiceController extends Component
         }
 
 
+        if (strlen($this->searchproduct) > 0) 
+       {
+
+         $st = Product::select('products.*')
+          ->where('products.nombre','like', '%' . $this->searchproduct . '%')
+          ->orWhere('products.codigo', 'like', '%' . $this->searchproduct . '%')
+          ->get()->take(3);
+
+          $arr= $this->col->pluck('product-name');
+          $this->sm=$st->whereNotIn('nombre',$arr);
+          //dd($this->sm);
+
+          $this->buscarproducto=1;
+          
+       }
+       else{
+
+        $this->buscarproducto=0;
+
+       }
+
+
         return view('livewire.order_service.component', [
             'orden_de_servicio' => $orden_de_servicio,
             'listasucursales' => Sucursal::all(),
@@ -3897,4 +3926,77 @@ class OrderServiceController extends Component
     {
         $this->search = "";
     }
+
+   
+    public function exitModalRepuestos(){
+
+    }
+
+    public function Seleccionar(Product $id){
+       
+        $this->result= $id->nombre;
+        $this->selected=$id->id;
+        $this->searchproduct=null;
+        // $this->emit('product-added');
+    }
+
+    public function addProduct(Product $id){
+        
+        
+    
+
+            $pd=ProductosDestino::where('product_id',$id->id)->where('destino_id',$this->destino)->select('stock')->value('stock');
+
+          if ($pd>0 and $this->cantidad < $pd) {
+        
+            $rules = [
+                'result' => 'required',
+                'cantidad' => 'required'
+            ];
+            
+            $messages = [
+              
+                'result.required'=>'El producto es requerido',
+                'cantidad.required' => 'La cantidad es requerida'
+            ];
+            
+            $this->validate($rules, $messages);
+            
+            $this->col->push(['product_id'=> $id->id,'product-name'=>$id->nombre,'cantidad'=>$this->cantidad]);
+    
+            $this->result=null;
+            $this->cantidad=null;
+            $this->costo=null;
+          }
+          else{
+            $this->emit('stock-insuficiente');
+          }
+
+
+
+
+            //dump($this->col);
+        
+
+     
+    }
+
+    public function eliminaritem($id){
+ 
+    $item=null;
+    foreach ($this->col as $key => $value) {
+   
+     if ($value['product_id'] == $id) {
+        $item=$key;
+        break;
+         }
+        }
+    
+      $this->col->pull($item);
+     
+
+    }
+
+
+
 }

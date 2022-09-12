@@ -20,15 +20,6 @@
 }
 
 
-
-
-
-
-
-
-
-
-
 .tablaservicios {
         width: 100%;
         /* min-width: 1100px; */

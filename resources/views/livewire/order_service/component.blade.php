@@ -802,6 +802,7 @@
     @include('livewire.order_service.modaleditarservicio')
     @include('livewire.order_service.modaleditarservicioterminado')
     @include('livewire.order_service.modalentregarservicio')
+    @include('livewire.order_service.salidarepuestos')
 </div>
     
 @section('javascript')

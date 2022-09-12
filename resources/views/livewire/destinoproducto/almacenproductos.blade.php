@@ -1,25 +1,35 @@
 @section('css')
-
-
-{{-- Estilos para la tabla Movimiento Diario --}}
 <style>
-
-
-.tablaservicios {
+    .tablainventarios {
         width: 100%;
-        min-width: 1100px;
+    
+        min-height: 140px;
     }
-    .tablaservicios thead {
-        background-color: #352bc7;
+    .tablainventarios thead {
+        background-color: #1572e8;
         color: white;
     }
-    .tablaservicios th, td {
-        border: 0.5px solid #352bc7;
+    .tablainventarios th, td {
+        border: 0.5px solid #1571e894;
         padding: 4px;
+       
     }
-    .tablaservicios tr:hover {
-        background-color: rgba(230, 227, 89, 0.336);
+    .tablainventarios th {
+        text-align: center;
     }
+    tr:hover {
+        background-color: rgba(99, 216, 252, 0.336);
+    }
+
+   .tablainventarios .tablainventarios .unidad label {
+        text-align: center;
+        color: aliceblue;
+        border: #101216;
+        border-radius: 5px;
+        border-color: #1572e8;
+    }
+        
+
 </style>
 @endsection
 <div class="row sales layout-top-spacing">
@@ -81,15 +91,15 @@
              
                 <div class="widget-content">
                     <div class="table-responsive">
-                        <table  class="tablaservicios">
+                        <table  class="tablainventarios">
                             <thead>
                                 <tr>
-                                    <th class="table-th text-withe text-center">#</th>
-                                    <th class="table-th text-withe text-center">IMAGEN</th>                              
-                                    <th class="table-th text-withe text-center">PRODUCTO</th>                              
-                                    <th class="table-th text-withe text-center">STOCK</th>
-                                    <th class="table-th text-withe text-center">CANT.MIN</th>                                       
-                                    <th class="table-th text-withe text-center">ACCIONES</th>                  
+                                    <th>#</th>
+                                    <th>IMAGEN</th>                              
+                                    <th>PRODUCTO</th>                              
+                                    <th>STOCK</th>
+                                    <th>CANT.MIN</th>                                       
+                                    <th>ACCIONES</th>                  
                                 </tr>
                             </thead>
                             <tbody>

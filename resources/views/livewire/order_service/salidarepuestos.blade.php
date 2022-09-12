@@ -1,87 +1,16 @@
 
-<div wire:ignore.self class="modal fade" id="operacion" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+<div wire:ignore.self class="modal fade" id="salidarepuestos" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalCenterTitle">Entrada/Salida de Productos</h5>
+                <h5 class="modal-title" id="exampleModalCenterTitle">Registrar Salida de Repuestos</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                 </button>
             </div>
             <div class="modal-body">
-                <div class="row">
-                    <div class="col-lg-12 col-8">
-                        <div class="form-group">
-                            <strong style="color: rgb(74, 74, 74)">Seleccione un tipo de proceso:</strong>
-                            <select wire:model='tipo_proceso' class="form-control">
-                                <option value="null" selected disabled>Elegir</option>
-                                <option value="Entrada">Entrada</option>
-                                <option value="Salida">Salida</option>
-                              
-                                
-                            </select>
-                            @error('tipo_proceso')
-                                <span class="text-danger er">{{ $message }}</span>
-                            @enderror                                          
-                        </div>
-                        <div class="form-group">
-                            <strong style="color: rgb(74, 74, 74)">Seleccione la ubicacion:</strong>
-                            <select wire:model='destino' class="form-control">
-                                <option value='Elegir' disabled>Elegir</option>
-                                @foreach ($destinosp as $item)
-                                <option value="{{$item->destino_id}}">{{$item->sucursal}}-{{$item->destino}}</option>
-                                @endforeach
-                            </select>
-                            @error('destino')
-                                <span class="text-danger er">{{ $message }}</span>
-                            @enderror                                          
-                        </div>
-                        <div class="form-group">
-                            <strong style="color: rgb(74, 74, 74)">Seleccione el concepto:</strong>
-                            <select wire:model='concepto' class="form-control">
-                                <option value="Elegir" disabled selected>Elegir</option>
-                                @if ($tipo_proceso == 'Entrada')
-                                <option wire:key="foo" value='INGRESO'>Ingreso/Salida de productos</option>
-                                <option wire:key="bar" value="AJUSTE">Ingreso/Salida por ajuste de inventarios</option>
-                                @else
-                                <option wire:key="gj" value="SALIDA">Ingreso/Salida de productos</option>
-                                <option wire:key="kl" value="AJUSTE">Ingreso/Salida por ajuste de inventarios</option>
-                                @endif
-
-                               
-                                @if ($tipo_proceso== 'Entrada')
-                                    
-                                <option value="INICIAL">Inventario Inicial</option>
-                                @endif
-                              
-                                
-                            </select>
-                            @error('concepto')
-                                <span class="text-danger er">{{ $message }}</span>
-                            @enderror                                        
-                        </div>
-                        <div class="form-group col-lg-6">
-                            <strong style="color: rgb(74, 74, 74)">Agregue una observacion:</strong>
-                            <input type="text" class="form-control" wire:model='observacion'>
-                           
-                            @error('observacion')
-                                <span class="text-danger er">{{ $message }}</span>
-                            @enderror                                        
-                        </div>
-                        <div class="form-group col-lg-6">
-                            <strong style="color: rgb(74, 74, 74)">Tipo de registro</strong>
-                            <select wire:model='registro' class="form-control">
-                                <option value="Manual" selected>Registrar Manualmente</option>
-                                @if ($concepto == 'INICIAL')    
-                                <option value="Documento">Subir Archivo</option>
-                                @endif
-                            </select>
-                        </div>
-                    </div>
-                   
-                </div>
-
-                @if ($registro == 'Manual')
+                
+            
                     
                 <div class="row">
 
@@ -120,12 +49,7 @@
                                                 <div
                                                     class="table-responsive table-wrapper-scroll-y my-custom-scrollbar">
                                                     <table class="table table-hover table-sm" style="width:100%">
-                                                        <thead class="text-white" style="background: #3B3F5C">
-                                                            <tr>
-                                                                <th class="table-th text-withe text-center">Producto</th>
-                                                                <th class="table-th text-withe">Acc.</th>
-                                                            </tr>
-                                                        </thead>
+                                                        
                                                         <tbody>
                                                             @foreach ($sm as $d)
                                                                 <tr>
@@ -166,20 +90,7 @@
                         @enderror   
                         </div>
                     </div>
-                    @if ($tipo_proceso == 'Entrada')
-                        
-                    <div class="col-lg-2 ml-1 p-0">
-                        <div class="form-group">
-                            <label>
-                                <h6>Costo/Valor</h6>
-                            </label>
-                            <input wire:model="costo" class="form-control">
-                            @error('costo')
-                            <span class="text-danger er">{{ $message }}</span>
-                        @enderror     
-                        </div>
-                    </div>
-                    @endif
+               
                     <div class="col-lg-1 ml-1 p-0">
                         <div class="form-group">
                             <label>
@@ -192,26 +103,7 @@
                         
                     </div>
                 </div>
-                @else
-                <form wire:submit.prevent="import('{{$archivo}}')" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    
-                    <div>
-                        
-                        {{$archivo}}
-                        <center><div wire:loading wire:target="archivo">
-                            <div class="d-flex align-items-center">
-                                <strong>Cargando Archivo, Espere por favor...</strong>
-                                <div class="spinner-border ms-auto"></div>
-                              </div>
-                        </div></center>
-        
-                    </div>
-                    <input type="file" name="import_file" wire:model="archivo" />
-                    
-                    
-                </form>
-                @endif
+              
                
                 <div class="row">
                     <div class="col-lg-12">
@@ -224,10 +116,7 @@
                                         <tr>
                                             <th class="table-th text-withe text-center">#</th>
                                             <th class="table-th text-withe text-center">PRODUCTO</th>
-                                            @if ($tipo_proceso != 'Salida')
-                                                
-                                            <th class="table-th text-withe text-center">COSTO</th>                              
-                                            @endif                            
+                                                                      
                                             <th class="table-th text-withe text-center">CANTIDAD</th>
                                             <th class="table-th text-withe text-center">Acc.</th>
                                           
@@ -243,12 +132,6 @@
                                                 <h6>{{$value['product-name']}}</h6>
                                             </td>
     
-                                            @if ($tipo_proceso != 'Salida')
-                                                
-                                            <td>
-                                                <h6>{{$value['costo']}}</h6>
-                                            </td>
-                                            @endif
     
                                             <td>
                                                 <h6>{{$value['cantidad']}}</h6>
@@ -276,7 +159,7 @@
                     <div class="row d-flex justify-content-end">
 
                         <a href="javascript:void(0)" class="btn btn-warning mr-1" wire:click="GuardarOperacion()">Guardar</a>
-                        <a class="btn btn-warning ml-1 text-white" wire:click="Exit()">Cancelar</a>
+                        <a class="btn btn-warning ml-1 text-white" wire:click="exitModalRepuestos()">Cancelar</a>
                     </div>
                 </div>
             </div>
