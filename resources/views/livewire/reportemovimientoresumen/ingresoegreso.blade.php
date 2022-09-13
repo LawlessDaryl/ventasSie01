@@ -96,15 +96,7 @@
                                            
                     </div>
                 </div>
-             
 
-
-                
-
-
-               
-
-            
             </div>
                 <div class="widget-content">
                     <div class="table-responsive">
