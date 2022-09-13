@@ -23,8 +23,26 @@
         /* border-top: 4px; */
         padding: 5px;
     }
+
+    .salidarepuestos{
+ 
+        margin: 0.5rem;
+     
+    }
+    .salidarepuestos th, td {
+        border: 0.5px solid #5e656f94;
+        padding: 4px;
+    }
+    .salidarepuestos:hover {
+        background-color: rgba(55, 79, 86, 0.336);
+    }
+
+    .salidarepuestos thead {
+        background-color: #4d5765;
+        color: white;
+    }
     .asignar :hover {
-        background-color: rgba(129, 251, 255, 0.486);
+        background-color: rgba(5, 214, 221, 0.486);
     }
     .imprimir :hover {
         background-color: rgba(18, 107, 240, 0.486);
@@ -827,6 +845,9 @@
         });
         window.livewire.on('show-entregarservicio', Msg => {
             $('#entregarservicio').modal('show')
+        });
+        window.livewire.on('salidaregistrada', Msg => {
+            $('#salidarepuestos').modal('hide')
         });
 
         //Cerrar Ventana Modal y Mostrar Toast Técnico Responsable Asignado Exitosamente

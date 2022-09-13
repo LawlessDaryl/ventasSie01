@@ -12,8 +12,10 @@ class Destino extends Model
 
     public function productos()
     {
-        return $this->belongsToMany(Product::class,'productos_destinos','product_id','destino_id');
+        return $this->belongsToMany(Product::class,'productos_destinos','destino_id','id');
     }
+
+ 
     
     public function sucursals()
     {

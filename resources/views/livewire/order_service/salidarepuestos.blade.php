@@ -47,7 +47,7 @@
                                                     <table class="table table-hover table-sm" style="width:100%">
                                                         
                                                         <tbody>
-                                                            @foreach ($sm as $d)
+                                                            @forelse ($sm as $d)
                                                                 <tr>
                                                                     <td class="text-center">
                                                                         <h6 class="text-center">{{ $d->nombre }}
@@ -62,7 +62,10 @@
                                                                         </a>
                                                                     </td>
                                                                 </tr>
-                                                            @endforeach
+                                                            @empty
+                                                                
+                                                            <p>No existen productos con el criterio de busqueda</p>
+                                                            @endforelse
                                                         </tbody>
                                                     </table>
                                                 </div>
@@ -105,16 +108,15 @@
                     <div class="col-lg-12">
 
                         @if (count($col)>0)
-                            <center>
+                        <label> <strong>Lista de repuestos del servicio</strong> </label>
 
-                                <table class="tablaservicios">
+                                <table class="salidarepuestos">
                                     <thead>
                                         <tr>
-                                            <th class="table-th text-withe text-center">#</th>
-                                            <th class="table-th text-withe text-center">PRODUCTO</th>
-                                                                      
-                                            <th class="table-th text-withe text-center">CANTIDAD</th>
-                                            <th class="table-th text-withe text-center">Acc.</th>
+                                            <th>#</th>
+                                            <th>PRODUCTO</th>         
+                                            <th>CANTIDAD</th>
+                                            <th>Acc.</th>
                                           
                                         </tr>
                                     </thead>
@@ -146,14 +148,23 @@
                                        @endforeach
                                     </tbody>
                                  </table>
-                            </center>
+                     
                         @endif
 
                     </div>
                 </div>
                 <div class="col-sm-12 col-md-3 col-lg-12 mt-3">
+                    <div class="form-group col-lg-6">
+                        <strong style="color: rgb(74, 74, 74)">Agregue una observacion:</strong>
+                        <input type="text" class="form-control" wire:model='observacion'>
+                       
+                        @error('observacion')
+                            <span class="text-danger er">{{ $message }}</span>
+                        @enderror                                        
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-3 col-lg-12 mt-3">
                     <div class="row d-flex justify-content-end">
-
                         <a href="javascript:void(0)" class="btn btn-warning mr-1" wire:click="GuardarOperacion()">Guardar</a>
                         <a class="btn btn-warning ml-1 text-white" wire:click="exitModalRepuestos()">Cancelar</a>
                     </div>

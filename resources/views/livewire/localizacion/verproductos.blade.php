@@ -53,9 +53,7 @@
                         
                 <button type="button" class="btn btn-warning"
                 data-dismiss="modal">CERRAR</button>
-            
-              
-      
+
         </div>
         </div>
     </div>

@@ -8,12 +8,16 @@ use App\Models\CarteraMov;
 use App\Models\CatProdService;
 use App\Models\ClienteMov;
 use App\Models\Cliente;
+use App\Models\DetalleSalidaProductos;
+use App\Models\Lote;
 use App\Models\Movimiento;
 use App\Models\MovService;
 use App\Models\Service;
 use App\Models\OrderService;
 use App\Models\Product;
 use App\Models\ProductosDestino;
+use App\Models\SalidaLote;
+use App\Models\SalidaProductos;
 use App\Models\SubCatProdService;
 use App\Models\Sucursal;
 use App\Models\TypeWork;
@@ -57,7 +61,7 @@ class OrderServiceController extends Component
     $saldo, $estado, $categoriaservicio, $costo, $detallecosto, $tiposervicio;
 
     //Variable para almacenar todos los usuarios Técnico de servicios (Ventana Modal)
-    public $lista_de_usuarios;
+    public $lista_de_usuarios,$observacion;
 
     //Id Servicio, Id Orden de Servicio
     public $id_servicio, $id_orden_de_servicio;
@@ -76,7 +80,7 @@ class OrderServiceController extends Component
     public $edit_precioservicioterminado, $edit_acuentaservicioterminado, $edit_saldoterminado, $edit_costoservicioterminado, $edit_motivoservicioterminado, $edit_carteraservicioterminado;
 
     //Variables para cambiar técnico responsable
-    public $id_usuario, $tipo;
+    public $id_usuario, $tipo, $almacenrepuestos;
 
     //Variables para mostrar tecnico responsable en los sweet alerts (Alertas JavaScript)
     public $alert_responsabletecnico;
@@ -102,6 +106,7 @@ class OrderServiceController extends Component
         $this->mostrarterminar = "No";
         $this->col= collect();
         $this->destino=4;
+        $this->almacenrepuestos=5;
 
         //Variable que guarda el id de la cartera
         $this->tipopago = 'Elegir';
@@ -2580,10 +2585,14 @@ class OrderServiceController extends Component
         if (strlen($this->searchproduct) > 0) 
        {
 
-         $st = Product::select('products.*')
-          ->where('products.nombre','like', '%' . $this->searchproduct . '%')
-          ->orWhere('products.codigo', 'like', '%' . $this->searchproduct . '%')
-          ->get()->take(3);
+         $st = Product::join('productos_destinos','productos_destinos.product_id','products.id')->join('destinos','destinos.id','productos_destinos.destino_id')->select('products.*')
+         ->where('destinos.id',$this->almacenrepuestos)
+         ->where('productos_destinos.stock','>',0)
+         ->where(function($querys){
+            $querys->where('products.nombre', 'like', '%' . $this->search . '%')
+            ->orWhere('products.codigo', 'like', '%' . $this->search . '%');
+        })
+          ->get()->take(5);
 
           $arr= $this->col->pluck('product-name');
           $this->sm=$st->whereNotIn('nombre',$arr);
@@ -2592,7 +2601,8 @@ class OrderServiceController extends Component
           $this->buscarproducto=1;
           
        }
-       else{
+       else
+       {
 
         $this->buscarproducto=0;
 
@@ -3930,6 +3940,8 @@ class OrderServiceController extends Component
    
     public function exitModalRepuestos(){
 
+        
+
     }
 
     public function Seleccionar(Product $id){
@@ -3945,7 +3957,7 @@ class OrderServiceController extends Component
         
     
 
-            $pd=ProductosDestino::where('product_id',$id->id)->where('destino_id',$this->destino)->select('stock')->value('stock');
+            $pd=ProductosDestino::where('product_id',$id->id)->where('destino_id',$this->almacenrepuestos)->select('stock')->value('stock');
 
           if ($pd>0 and $this->cantidad < $pd) {
         
@@ -3996,6 +4008,133 @@ class OrderServiceController extends Component
      
 
     }
+
+    public function GuardarOperacion(){
+        //dd($this->col);
+       
+        $rules = [
+         
+            'observacion' => 'required',
+        
+           
+        ];
+
+        $messages = [
+         
+            'observacion.required' => 'Agregue una observacion',
+           
+        ];
+
+        $this->validate($rules, $messages);
+                    
+                try {
+                    $operacion= SalidaProductos::create([
+        
+                        'destino'=>$this->almacenrepuestos,
+                        'user_id'=> Auth()->user()->id,
+                        'concepto'=>'SALIDA',
+                        'observacion'=>$this->observacion]);
+                        // dd($auxi2->pluck('stock')[0]);
+
+                foreach ($this->col as $datas) {
+
+                    $auxi=DetalleSalidaProductos::create([
+                    'product_id'=>$datas['product_id'],
+                    'cantidad'=> $datas['cantidad'],
+                    'id_salida'=>$operacion->id
+                ]);
+
+
+                $lot=Lote::where('product_id',$datas['product_id'])->where('status','Activo')->get();
+
+                //obtener la cantidad del detalle de la venta 
+                $this->qq=$datas['cantidad'];//q=8
+                foreach ($lot as $val) { //lote1= 3 Lote2=3 Lote3=3
+                  $this->lotecantidad = $val->existencia;
+                  //dd($this->lotecantidad);
+                   if($this->qq>0){
+                    //true//5//2
+                       //dd($val);
+                       if ($this->qq > $this->lotecantidad) {
+                           $ss=SalidaLote::create([
+                               'salida_detalle_id'=>$auxi->id,
+                               'lote_id'=>$val->id,
+                               'cantidad'=>$val->existencia
+                               
+                           ]);
+                           $val->update([
+                               
+                               'existencia'=>0,
+                               'status'=>'Inactivo'
+                               
+                            ]);
+                            $val->save();
+                            $this->qq=$this->qq-$this->lotecantidad;
+                            //dump("dam",$this->qq);
+                       }
+                       else{
+                        //dd($this->lotecantidad);
+                        $ss=SalidaLote::create([
+                           'salida_detalle_id'=>$auxi->id,
+                           'lote_id'=>$val->id,
+                           'cantidad'=>$this->qq
+                           
+                       ]);
+                         
+       
+                           $val->update([ 
+                               'existencia'=>$this->lotecantidad-$this->qq
+                           ]);
+                           $val->save();
+                           $this->qq=0;
+                           //dd("yumi",$this->qq);
+                       }
+                   }
+       
+       
+            
+                     }
+
+                     
+                     $q=ProductosDestino::where('product_id',$datas['product_id'])
+                     ->where('destino_id',$this->destino)->value('stock');
+ 
+                     ProductosDestino::updateOrCreate(['product_id' => $datas['product_id'], 'destino_id'=>$this->destino],['stock'=>$q-$datas['cantidad']]); 
+                }
+  
+                    DB::commit();
+         }
+                 catch (Exception $e)
+                {
+                DB::rollback();
+                dd($e->getMessage());
+                }
+            
+            
+  
+               
+   
+
+
+                $this->resetui();
+                $this->emit('salidaregistrada');
+}
+
+public function resetui(){
+
+    $this->reset([
+   
+    'observacion'
+    ,'cantidad']);
+
+
+    foreach ($this->col as $key => $value)
+    {
+        $this->col->pull($key);
+    }
+
+}
+
 
 
 
