@@ -20,6 +20,7 @@ use App\Http\Livewire\ArqueosTigoController;
 use App\Http\Livewire\AsignarController;
 use App\Http\Livewire\CajasController;
 use App\Http\Livewire\CarteraController;
+use App\Http\Livewire\CarteraMovCategoriaController;
 use App\Http\Livewire\CashoutController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Livewire\CategoriesController;
@@ -114,6 +115,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('movimientos', ReporteMovimientoController::class)->name('movimiento');
         Route::get('resumenmovimientos', ReporteMovimientoResumenController::class)->name('r_movimiento');
         Route::get('ingresoegreso', IngresoEgresoController::class)->name('ingreso_egreso');
+        Route::get('carteramovcategoria', CarteraMovCategoriaController::class)->name('carteramovcategoria');
         //aaaaa
         Route::get('report/pdfmovdiageneral', [ExportMovDiaGenController::class, 'reportPDFMovDiaGeneral']);
     

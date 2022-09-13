@@ -77,28 +77,31 @@ class IngresoEgresoController extends Component
  
 
      
-    /* MOSTRAR CARTERAS DE LA CAJA EN LA QUE SE ENCUENTRA */
-  //dd($this->sucursal);
+        /* MOSTRAR CARTERAS DE LA CAJA EN LA QUE SE ENCUENTRA */
+        //dd($this->sucursal);
 
-  if ($this->caja== 'TODAS') {
+        if ($this->caja== 'TODAS')
+        {
 
-    $carterasSucursal = Cartera::join('cajas as c', 'carteras.caja_id', 'c.id')
-    ->join('sucursals as s', 's.id', 'c.sucursal_id')
-    ->where('s.id', $this->sucursal)
-    ->select('carteras.id', 'carteras.nombre as carteraNombre', 'c.nombre as cajaNombre', 'carteras.tipo as tipo')->get();
-  }
+            $carterasSucursal = Cartera::join('cajas as c', 'carteras.caja_id', 'c.id')
+            ->join('sucursals as s', 's.id', 'c.sucursal_id')
+            ->where('s.id', $this->sucursal)
+            ->select('carteras.id', 'carteras.nombre as carteraNombre', 'c.nombre as cajaNombre', 'carteras.tipo as tipo')->get();
+        }
 
-  else{
+        else
+        {
 
-    $carterasSucursal = Cartera::join('cajas as c', 'carteras.caja_id', 'c.id')
-    ->join('sucursals as s', 's.id', 'c.sucursal_id')
-    ->where('c.id', $this->caja)
-    ->select('carteras.id', 'carteras.nombre as carteraNombre', 'c.nombre as cajaNombre', 'carteras.tipo as tipo')->get();
+            $carterasSucursal = Cartera::join('cajas as c', 'carteras.caja_id', 'c.id')
+            ->join('sucursals as s', 's.id', 'c.sucursal_id')
+            ->where('c.id', $this->caja)
+            ->select('carteras.id', 'carteras.nombre as carteraNombre', 'c.nombre as cajaNombre', 'carteras.tipo as tipo')->get();
 
-  }
+        }
         
 
-        foreach ($carterasSucursal as $c) {
+        foreach ($carterasSucursal as $c)
+        {
             /* SUMAR TODO LOS INGRESOS DE LA CARTERA */
             $INGRESOS = Cartera::join('cartera_movs as cm', 'carteras.id', 'cm.cartera_id')
                 ->join('movimientos as m', 'm.id', 'cm.movimiento_id')
@@ -197,7 +200,8 @@ class IngresoEgresoController extends Component
 
         
         }
-        else{
+        else
+        {
 
     
             if ($this->caja == 'TODAS') {
@@ -329,7 +333,6 @@ class IngresoEgresoController extends Component
         $this->emit('hide-modal');
     }
 
-
     public function usuarioSucursal(){
         $SucursalUsuario = User::join('sucursal_users as su', 'su.user_id', 'users.id')
         ->join('sucursals as s', 's.id', 'su.sucursal_id')
@@ -359,59 +362,59 @@ class IngresoEgresoController extends Component
         $this->emit('openothertap');
     }
 
-
     protected $listeners= ['eliminar_operacion'=>'anularOperacion'];
 
-        public function anularOperacion(Movimiento $mov)
-        {
+    public function anularOperacion(Movimiento $mov)
+    {
 
-            
-            $mov->update([
-                'status' => 'INACTIVO'
-                ]);
-            $mov->save();
- 
-        }
-            
-        public function editarOperacion(Movimiento $mov)
-        {
-
-       
-            $this->cantidad_edit=$mov->import;
         
-            $this->cartera_id_edit=$mov->cartmov[0]->cartera_id;
-            $this->type_edit=$mov->cartmov[0]->type;
-            $this->comentario_edit=$mov->cartmov[0]->comentario;
-            $this->mov_selected=$mov;
-            $this->emit('editar-movimiento');
-        }
-
-        public function guardarEdicion(){
-
-            $mov=Movimiento::find($this->mov_selected->id);
-            
-            $mov->update([
-                'import' => $this->cantidad_edit
-                ]);
-            $mov->save();
-
-
-           CarteraMov::find($mov->cartmov[0]->id)->update([
-                'comentario'=>$this->comentario_edit
+        $mov->update([
+            'status' => 'INACTIVO'
             ]);
+        $mov->save();
 
-            $this->resetUIedit();
- 
-        }
+    }
+        
+    public function editarOperacion(Movimiento $mov)
+    {
 
-        public function resetUIedit()
-        {
-            $this->cartera_id_edit = 'Elegir';
-            $this->type_edit = 'Elegir';
-            $this->cantidad_edit = '';
-            $this->comentario_edit = '';
-            $this->emit('hide_editar');
-        }
+    
+        $this->cantidad_edit=$mov->import;
+    
+        $this->cartera_id_edit=$mov->cartmov[0]->cartera_id;
+        $this->type_edit=$mov->cartmov[0]->type;
+        $this->comentario_edit=$mov->cartmov[0]->comentario;
+        $this->mov_selected=$mov;
+        $this->emit('editar-movimiento');
+    }
+
+    public function guardarEdicion()
+    {
+
+        $mov=Movimiento::find($this->mov_selected->id);
+        
+        $mov->update([
+            'import' => $this->cantidad_edit
+            ]);
+        $mov->save();
+
+
+        CarteraMov::find($mov->cartmov[0]->id)->update([
+            'comentario'=>$this->comentario_edit
+        ]);
+
+        $this->resetUIedit();
+
+    }
+
+    public function resetUIedit()
+    {
+        $this->cartera_id_edit = 'Elegir';
+        $this->type_edit = 'Elegir';
+        $this->cantidad_edit = '';
+        $this->comentario_edit = '';
+        $this->emit('hide_editar');
+    }
 
      
 
