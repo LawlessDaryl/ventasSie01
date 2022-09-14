@@ -29,7 +29,7 @@ class Product extends Model
 
     public function destinos()
     {
-        return $this->belongsToMany(Destino::class,'productos_destinos','product_id','id');
+        return $this->belongsToMany(Destino::class,'productos_destinos','product_id','destino_id');
     }
     public function detalleCompra()
     {

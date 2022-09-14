@@ -12,7 +12,7 @@ class Destino extends Model
 
     public function productos()
     {
-        return $this->belongsToMany(Product::class,'productos_destinos','destino_id','id');
+        return $this->belongsToMany(Product::class,'productos_destinos','destino_id','product_id');
     }
 
  
