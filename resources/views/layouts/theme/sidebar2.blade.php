@@ -506,6 +506,12 @@
 												<i class="fa fas fa-minus"></i>
 												Cartera </a>
 										</li>
+										<li>
+											<a href="{{ url('carteramovcategoria') }}">
+												<i class="fa fas fa-minus"></i>
+												Cartera Mov Categoria </a>
+										</li>
+
 									@endcan
 									@can('Corte_Caja_Index')
 										<li>
