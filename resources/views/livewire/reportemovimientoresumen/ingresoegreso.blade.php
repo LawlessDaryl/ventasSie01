@@ -85,12 +85,24 @@
                                            
                     </div>
                 </div>
-                <div class="col-sm-12 col-md-2">
+                <div class="col-sm-12 col-md-1">
                    <div class="form-group">
                                     <label>Sucursal</label>
                                     <select wire:model="sucursal" class="form-control">
                                         @foreach ($sucursals as $item)
                                         <option value="{{$item->id}}">{{$item->name}}</option>
+                                        @endforeach
+                                    </select>
+                                           
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-1">
+                   <div class="form-group">
+                                    <label>Categoria</label>
+                                    <select wire:model='categoriatodo_id' class="form-control">
+                                        <option value="Todos" selected disabled>Todas las Categorias</option>
+                                        @foreach ($categoriastodo as $c)
+                                            <option value="{{ $c->id }}">{{ $c->nombre }} - {{ $c->tipo }}</option>
                                         @endforeach
                                     </select>
                                            
@@ -106,6 +118,7 @@
                                     <th class="table-th text-withe text-center" style="font-size: 100%">#</th>
                                     <th class="table-th text-withe text-center" style="font-size: 100%">FECHA</th>
                                     <th class="table-th text-withe text-center" style="font-size: 100%">TIPO DE MOVIMIENTO</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 100%">CATEGORIA</th>
                                     <th class="table-th text-withe text-center" style="font-size: 100%">CAJA</th>
                                     <th class="table-th text-withe text-center" style="font-size: 100%">NOMBRE CARTERA</th>
                                     <th class="table-th text-withe text-center" style="font-size: 100%">IMPORTE</th>
@@ -132,6 +145,11 @@
                                                 {{ $p->carteramovtype }}</h6>
                                         </td>
                                      
+                                        <td>
+                                            <h6 class="text-center" style="font-size: 100%">
+                                                {{ $p->nombrecategoria }}
+                                            </h6>
+                                        </td>
                                         <td>
                                             <h6 class="text-center" style="font-size: 100%">
                                                 {{ $p->cajaNombre }}

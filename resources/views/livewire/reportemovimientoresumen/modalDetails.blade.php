@@ -13,7 +13,7 @@
             <div class="modal-body">
                 <div class="row">
 
-                    <div class="col-sm-12 col-md-6">
+                    <div class="col-sm-12 col-md-3">
                         <div class="form-group">
                             <h6>Cartera</h6>
                             <select wire:model='cartera_id' class="form-control">
@@ -29,6 +29,7 @@
                         </div>
                     </div>
 
+
                     <div class="col-sm-12 col-md-3">
                         <div class="form-group">
                             <h6>Ingreso / Egreso</h6>
@@ -42,7 +43,26 @@
                             @enderror
                         </div>
                     </div>
+                    <div class="col-sm-12 col-md-3">
+                        <div class="form-group">
+                            @if($this->type != "Elegir")
+                            <h6>Categoria</h6>
+                            <select wire:model='categoria_id' class="form-control">
+                                <option value="Elegir" selected disabled>Elegir</option>
+                                @foreach ($categorias as $c)
+                                    <option value="{{ $c->id }}">{{ $c->nombre }}</option>
+                                @endforeach
+                            </select>
+                            @error('categoria_id')
+                                <span class="text-danger er">{{ $message }}</span>
+                            @enderror
 
+                            @else
+                            <h6>Categoria</h6>
+                            <p class="form-control">---</p>
+                            @endif
+                        </div>
+                    </div>
                     <div class="col-sm-12 col-md-3">
                         <div class="form-group">
                             <h6>Cantidad</h6>
