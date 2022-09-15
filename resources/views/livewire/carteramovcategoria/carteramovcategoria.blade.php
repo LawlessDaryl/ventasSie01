@@ -60,8 +60,9 @@
                     <th class="text-center">No</th>
                     <th class="text-center">Nombre Categoria</th>
                     <th class="text-center">Detalles</th>
+                    <th class="text-center">Tipo</th>
+                    <th class="text-center">Estado</th>
                     <th class="text-center">Fecha Creación</th>
-                    <th class="text-center">Fecha Actualización</th>
                     <th class="text-center">Acciones</th>
                 </tr>
             </thead>
@@ -78,20 +79,37 @@
                         {{ $p->detalle }}
                     </td>
                     <td class="text-center">
+                        {{ $p->tipo }}
+                    </td>
+                    <td class="text-center">
+                        @if($p->status == "ACTIVO")
+                        <div style="color: rgb(0, 20, 204);">
+                            {{ $p->status }}
+                        </div>
+                        @else
+                        <div style="color: rgb(243, 0, 0);">
+                            {{ $p->status }}
+                        </div>
+                        @endif
+                    </td>
+                    <td class="text-center">
                         {{ \Carbon\Carbon::parse($p->created_at)->format('d/m/Y H:i') }}
                     </td>
                     <td class="text-center">
-                        {{ \Carbon\Carbon::parse($p->updated_at)->format('d/m/Y H:i') }}
-                    </td>
-                    <td class="text-center">
                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                            <button type="button" class="btn btn-outline-primary">
+                            @if($p->status == "ACTIVO")
+                            <button wire:click.prevent="modaleditar({{$p->id}})" title="Editar Categoria" type="button" class="btn btn-outline-primary">
                                 <i class="fas fa-edit"></i>
                             </button>
-                            <button onclick="ConfirmarAnular({{ $p->id }},'{{ $p->nombre }}')" type="button" class="btn btn-outline-danger">
+                            <button onclick="ConfirmarAnular({{ $p->id }},'{{ $p->nombre }}')" title="Anular Categoria" type="button" class="btn btn-outline-danger">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
-                          </div>
+                            @else
+                            <button wire:click.prevent="reacctivar({{$p->id}})" type="button" title="Reactivar Categoria" class="btn btn-outline-info">
+                                <i class="fab fa-phabricator"></i>
+                            </button>
+                            @endif
+                        </div>
                     </td>
                 </tr>
                 @endforeach
@@ -119,7 +137,7 @@
             toast: true,
             position: 'top-end',
             showConfirmButton: false,
-            timer: 5000,
+            timer: 3000,
             padding: '2em'
             });
             toast({
@@ -128,6 +146,35 @@
                 padding: '2em',
             })
         });
+
+
+        //Mostrar Mensaje Toast de Éxito
+        window.livewire.on('accion-ok', event => {
+        swal(
+            '¡Anulado!',
+            'La Categoria: "'+ @this.mensaje_toast +'" fue anulado con éxito.',
+            'success'
+            )
+        });
+
+
+        window.livewire.on('accion-toast-ok', event => {
+            const toast = swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            padding: '2em'
+            });
+            toast({
+                type: 'success',
+                title: @this.mensaje_toast,
+                padding: '2em',
+            })
+        });
+
+
+
 
     });
 
@@ -138,16 +185,16 @@
     // Código para lanzar la Alerta de Anulación de Servicio
     function ConfirmarAnular(id, nombrecategoria) {
         swal({
-        title: 'Eliminar la Categoria "' + nombrecategoria + '"?',
-        text: "Cliente: " + nombrecategoria,
+        title: '¿Anular la Categoria "' + nombrecategoria + '"?',
+        text: "Nombre Categoria: " + nombrecategoria,
         type: 'warning',
         showCancelButton: true,
         cancelButtonText: 'Cancelar',
-        confirmButtonText: 'Anular Servicio',
+        confirmButtonText: 'Anular Categoria',
         padding: '2em'
         }).then(function(result) {
         if (result.value) {
-            window.livewire.emit('anularservicio', codigo)
+            window.livewire.emit('anularcategoria', id)
             }
         })
     }
