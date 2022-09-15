@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header text-white" style="background-color: rgb(60, 53, 53)">
-                <h5 class="modal-title" id="exampleModalCenterTitle">Registrar Salida de Repuestos</h5>
+                <h5 class="modal-title" id="exampleModalCenterTitle">Repuestos</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                 </button>
@@ -13,7 +13,7 @@
                     <div class="col-sm-12 col-md-6">
                         <div class="form-group">
                             <label class="d-flex row ml-2">
-                                <h6>Producto</h6>
+                                <h6>Buscar Repuesto(Nombre o codigo del repuesto):</h6>
                             </label>
                             @if ($result)
                             <div class="input-group mb-4">
@@ -88,6 +88,19 @@
                             <span class="text-danger er">{{ $message }}</span>
                         @enderror   
                         </div>
+                   
+                    </div>
+                    <div class="col-lg-2 ml-1 p-0">
+                        <div class="form-group">
+                            <label>
+                                <h6>Precio de Venta</h6>
+                            </label>
+                            <input wire:model="precio_venta" class="form-control">
+                            @error('precio_venta')
+                            <span class="text-danger er">{{ $message }}</span>
+                        @enderror   
+                        </div>
+                   
                     </div>
                
                     <div class="col-lg-1 ml-1 p-0">
@@ -116,6 +129,7 @@
                                             <th>#</th>
                                             <th>PRODUCTO</th>         
                                             <th>CANTIDAD</th>
+                                            <th>P/V</th>
                                             <th>Acc.</th>
                                           
                                         </tr>
@@ -135,10 +149,13 @@
                                                 <h6>{{$value['cantidad']}}</h6>
                                             </td>
                                             <td>
+                                                <h6>{{$value['precio_venta']}}</h6>
+                                            </td>
+                                            <td>
                                                
 
                                                 <a href="javascript:void(0)" wire:key="{{ $loop->index }}" wire:click="eliminaritem({{$value['product_id']}} )"
-                                                    class="btn btn-danger p-1" title="Quitar producto de la lista">
+                                                    class="btn btn-danger p-0" title="Quitar producto de la lista">
                                                     <i class=" btn btn-sm fas fa-trash"></i>
                                                 </a>
                                             </td>
@@ -173,4 +190,6 @@
   
         </div>
     </div>
+    {{-- <div class="modal-overlay" id="modal-overlay">
+    </div> --}}
 </div>

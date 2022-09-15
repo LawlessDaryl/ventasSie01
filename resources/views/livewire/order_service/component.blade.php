@@ -1,5 +1,41 @@
 @section('css')
 <style>
+    
+    
+    /* .mod {
+
+
+
+    z-index: 1010;
+
+    }
+    .mod-overlay {
+
+   
+    z-index: 1000;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    }
+    
+    
+     */
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     .tablaservicios {
         width: 100%;
         min-width: 1100px;
