@@ -14,10 +14,7 @@
                         <h5><b>{{strtoupper($this->nombrecliente)}}</b> - {{$this->celularcliente}}</h5>
                     </label>
                 </div>
-
-
                 <form class="needs-validation">
-
                     <div class="form-row">
                         <div class="form-row" style="width: 33.33%; margin-right: 7px;">
                             <div class="col-md-12">
@@ -151,10 +148,19 @@
                         </div>
                         <div class="form-row pt-3 mt-1" style="width: 25%;">
                             <div class="col-md-12">
-                                <a href="javascript:void(0)" class="btn btn-info" data-toggle="modal"
-                                data-target="#salidarepuestos">Registrar Repuestos</a>
+                                <button  type="button" class="btn btn-info" data-toggle="modal"
+                                data-target="#salidarepuestos">Registrar Repuestos</button>
                             </div>
                         </div>
+                    </div>
+
+                    <br>
+                    <div class="form-row">
+                        {{-- @forelse ($repuestos as $item)
+                          <div>{{$item}}</div>
+                        @empty
+                        <p></p>
+                        @endforelse --}}
                     </div>
 
                     <br>

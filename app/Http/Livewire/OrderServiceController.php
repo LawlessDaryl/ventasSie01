@@ -18,6 +18,7 @@ use App\Models\Product;
 use App\Models\ProductosDestino;
 use App\Models\SalidaLote;
 use App\Models\SalidaProductos;
+use App\Models\SalidaServicio;
 use App\Models\SubCatProdService;
 use App\Models\Sucursal;
 use App\Models\TypeWork;
@@ -80,7 +81,7 @@ class OrderServiceController extends Component
     public $edit_precioservicioterminado, $edit_acuentaservicioterminado, $edit_saldoterminado, $edit_costoservicioterminado, $edit_motivoservicioterminado, $edit_carteraservicioterminado;
 
     //Variables para cambiar técnico responsable
-    public $id_usuario, $tipo, $almacenrepuestos;
+    public $id_usuario, $tipo, $almacenrepuestos,$precio_venta,$repuestos;
 
     //Variables para mostrar tecnico responsable en los sweet alerts (Alertas JavaScript)
     public $alert_responsabletecnico;
@@ -2907,6 +2908,7 @@ class OrderServiceController extends Component
 
 
         $this->estado = $type;
+      
         $this->nombrecliente = $detallesservicio->nombrecliente;
         $this->celularcliente = $detallesservicio->celularcliente;
         $this->fechaestimadaentrega = $detallesservicio->fecha_estimada_entrega;
@@ -3219,8 +3221,9 @@ class OrderServiceController extends Component
         ->where('services.id', $idservicio)
         ->get()
         ->first();
-
-
+         
+        $this->repuestos= SalidaProductos::join('salida_servicios','salida_servicios.salida_id','salida_productos.id')->where('salida_servicios.service_id',$this->id_servicio)->get();
+        dd($this->repuestos);
 
         $this->detallesservicios($type, $idservicio);
         $this->edit_tipodetrabajo = $detallesservicio->idtipotrabajo;
@@ -3270,8 +3273,6 @@ class OrderServiceController extends Component
         //Actualizando el id_servicio para terminar el servicio si así lo requiere el método terminarservicio()
         $this->id_servicio = $idservicio;
 
-
-
         $detallesservicio =  Service::join('order_services as os', 'os.id', 'services.order_service_id')
         ->join('mov_services as ms', 'services.id', 'ms.service_id')
         ->join('movimientos as mov', 'mov.id', 'ms.movimiento_id')
@@ -3318,15 +3319,6 @@ class OrderServiceController extends Component
         $this->edit_saldo = $this->edit_precioservicio - $this->edit_acuenta;
         $this->edit_costoservicio = $detallesservicio->costo;
         $this->edit_motivocostoservicio = $detallesservicio->detallecosto;
-
-
-
-
-
-
-
-
-
         $this->emit('show-entregarservicio', 'show modal!');
     }
     //Entrega el Servicio Correspondiente, Marca como TERMINADO
@@ -3947,15 +3939,13 @@ class OrderServiceController extends Component
     public function Seleccionar(Product $id){
        
         $this->result= $id->nombre;
+        $this->precio_venta=$id->precio_venta;
         $this->selected=$id->id;
         $this->searchproduct=null;
         // $this->emit('product-added');
     }
 
     public function addProduct(Product $id){
-        
-        
-    
 
             $pd=ProductosDestino::where('product_id',$id->id)->where('destino_id',$this->almacenrepuestos)->select('stock')->value('stock');
 
@@ -3963,34 +3953,30 @@ class OrderServiceController extends Component
         
             $rules = [
                 'result' => 'required',
-                'cantidad' => 'required'
+                'cantidad' => 'required',
+                'precio_venta'=>'required'
             ];
             
             $messages = [
               
                 'result.required'=>'El producto es requerido',
-                'cantidad.required' => 'La cantidad es requerida'
+                'cantidad.required' => 'La cantidad es requerida',
+                'precio_venta.required'=>'Defina un precio de venta'
             ];
             
             $this->validate($rules, $messages);
             
-            $this->col->push(['product_id'=> $id->id,'product-name'=>$id->nombre,'cantidad'=>$this->cantidad]);
+            $this->col->push(['product_id'=> $id->id,'product-name'=>$id->nombre,'cantidad'=>$this->cantidad,'precio_venta'=>$this->precio_venta]);
     
             $this->result=null;
             $this->cantidad=null;
             $this->costo=null;
+            $this->precio_venta=null;
           }
           else{
             $this->emit('stock-insuficiente');
           }
-
-
-
-
             //dump($this->col);
-        
-
-     
     }
 
     public function eliminaritem($id){
@@ -4006,23 +3992,18 @@ class OrderServiceController extends Component
     
       $this->col->pull($item);
      
-
     }
 
     public function GuardarOperacion(){
-        //dd($this->col);
+        
+        /* Se registra la salida de productos de almacen de repuestos*/ 
        
         $rules = [
-         
-            'observacion' => 'required',
-        
-           
+            'observacion' => 'required'
         ];
 
         $messages = [
-         
-            'observacion.required' => 'Agregue una observacion',
-           
+            'observacion.required' => 'Agregue una observacion'
         ];
 
         $this->validate($rules, $messages);
@@ -4044,6 +4025,7 @@ class OrderServiceController extends Component
                     'id_salida'=>$operacion->id
                 ]);
 
+           /* Se registra la disminucion del lote de repuestos de almacen*/ 
 
                 $lot=Lote::where('product_id',$datas['product_id'])->where('status','Activo')->get();
 
@@ -4054,7 +4036,7 @@ class OrderServiceController extends Component
                   //dd($this->lotecantidad);
                    if($this->qq>0){
                     //true//5//2
-                       //dd($val);
+                    //dd($val);
                        if ($this->qq > $this->lotecantidad) {
                            $ss=SalidaLote::create([
                                'salida_detalle_id'=>$auxi->id,
@@ -4095,11 +4077,18 @@ class OrderServiceController extends Component
             
                      }
 
-                     
+                     /*Se disminuye la cantidad de stock de productos destinos*/
                      $q=ProductosDestino::where('product_id',$datas['product_id'])
                      ->where('destino_id',$this->destino)->value('stock');
  
                      ProductosDestino::updateOrCreate(['product_id' => $datas['product_id'], 'destino_id'=>$this->destino],['stock'=>$q-$datas['cantidad']]); 
+
+                     SalidaServicio::create([
+                        'salida_id'=>$operacion->id,
+                        'service_id'=>$this->id_servicio,
+                        'estado'=>'Activo'
+                     ]);
+
                 }
   
                     DB::commit();
@@ -4109,30 +4098,153 @@ class OrderServiceController extends Component
                 DB::rollback();
                 dd($e->getMessage());
                 }
-            
-            
-  
-               
-   
-
-
+ 
                 $this->resetui();
                 $this->emit('salidaregistrada');
 }
 
 public function resetui(){
-
+/*Restablecer variables del modal de registro de salida de repuestos*/
     $this->reset([
-   
     'observacion'
     ,'cantidad']);
-
 
     foreach ($this->col as $key => $value)
     {
         $this->col->pull($key);
     }
 
+}
+
+public function guardarVentaRepuestos(){
+
+    $Movimiento = Movimiento::create([
+        'type' => "VENTAS",
+        'import' => $this->total_bs,
+        'user_id' => Auth()->user()->id,
+    ]);
+
+    //Creando Cliente Movimiento
+    ClienteMov::create([
+        'movimiento_id' => $Movimiento->id,
+        'cliente_id' => $this->cliente_id,
+    ]);
+    //Para saber toda la informacionde del id de la cartera seleccionada
+    $cartera = Cartera::find($this->cartera_id);
+    //Creando la venta
+    $sale = Sale::create([
+        'total' => $this->total_bs,
+        'items' => $this->total_items,
+        'cash' => $this->dinero_recibido,
+        'change' => $this->cambio,
+        'tipopago' => $cartera->nombre,
+        'factura' => $this->invoice,
+        'cartera_id' => $cartera->id,
+        'observacion' => $this->observacion,
+        'movimiento_id' => $Movimiento->id,
+        'user_id' => Auth()->user()->id
+    ]);
+    //Actualizando la variable $this->venta_id para poder crear un comprobante de venta
+    $this->venta_id = $sale->id;
+
+
+    //Obteniendo todos los productos del Carrito de Ventas (Carrito de Ventas)
+    $productos = Cart::getContent();
+
+    foreach($productos as $p)
+    {
+        $sd = SaleDetail::create([
+            'price' => $p->price,
+            'quantity' => $p->quantity,
+            'product_id' => $p->id,
+            'sale_id' => $sale->id,
+        ]);
+
+        //Para obtener la cantidad del producto que se va a vender
+        $cantidad_producto_venta = $p->quantity;
+
+        //Buscamos todos los lotes que tengan ese producto
+        $lotes = Lote::where('product_id', $p->id)->where('status','Activo')->get();
+
+        //Recorremos todos los lotes que tengan ese producto
+        foreach($lotes as $l)
+        {
+            //Obtenemos la cantidad de existencia que tenga ese lote de ese producto
+            $cantidad_producto_lote = $l->existencia;
+
+            //Si la cantidad del producto para la venta supera la existencia en el lote
+            //Vaciamos toda la existencia de ese lote y lo inactivamos
+            if($cantidad_producto_venta > $cantidad_producto_lote)
+            {
+                //Creamos un registro en la tabla SaleLote con la cantidad total del producto en el lote
+                $sale_lote = SaleLote::create([
+                    'sale_detail_id' => $sd->id,
+                    'lote_id' => $l->id,
+                    'cantidad' => $cantidad_producto_lote
+                ]);
+                //Dismunuimos la cantidad del producto para la venta por el total cantidad del producto en el lote
+                $cantidad_producto_venta = $cantidad_producto_venta - $cantidad_producto_lote;
+
+
+                //Actualizamos el lote
+                $l->update([
+                    'existencia' => 0,
+                    'status' => 'Inactivo'
+                    ]);
+                $l->save();
+            }
+            else
+            {
+                //Si la cantidad del producto para la venta no supera la existencia en el lote
+                //Reducimos la existencia de ese lote por la cantidad del producto para la venta
+                SaleLote::create([
+                    'sale_detail_id' => $sd->id,
+                    'lote_id' => $l->id,
+                    'cantidad' => $cantidad_producto_venta
+                ]);
+
+                $l->update([ 
+                    'existencia'=> $cantidad_producto_lote - $cantidad_producto_venta
+                ]);
+                $l->save();
+            }
+        }
+
+
+
+
+
+
+        //Decrementando el stock en tienda
+        $tiendaproducto = ProductosDestino::join("products as p", "p.id", "productos_destinos.product_id")
+        ->join('destinos as des', 'des.id', 'productos_destinos.destino_id')
+        ->select("productos_destinos.id as id","p.nombre as name",
+        "productos_destinos.stock as stock")
+        ->where("p.id", $p->id)
+        ->where("des.nombre", 'TIENDA')
+        ->where("des.sucursal_id", $this->idsucursal())
+        ->get()->first();
+
+
+        $tiendaproducto->update([
+            'stock' => $tiendaproducto->stock - $p->quantity
+        ]);
+
+
+
+
+
+
+    }
+
+    //Creando Cartera Movimiento
+    CarteraMov::create([
+        'type' => "INGRESO",
+        'tipoDeMovimiento' => "VENTA",
+        'comentario' => "Venta",
+        'cartera_id' => $cartera->id,
+        'movimiento_id' => $Movimiento->id,
+    ]);
 }
 
 

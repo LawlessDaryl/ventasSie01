@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Models\Caja;
 use App\Models\Cartera;
 use App\Models\CarteraMov;
+use App\Models\CarteraMovCategoria;
 use App\Models\Movimiento;
 use App\Models\Sucursal;
 use App\Models\User;
@@ -19,6 +20,9 @@ class IngresoEgresoController extends Component
     public $fromDate,$toDate,$caja,$data,$search,$sucursal,$sucursals,$sumaTotal,$cantidad,$mov_selected,$cantidad_edit,$comentario_edit;
     public $cot_dolar = 6.96;
     public $cartera_id_edit,$type_edit;
+
+    //Para guardar el id de la categoria cartera movimiento
+    public $categoria_id, $categoriatodo_id;
   
 
     public function mount()
@@ -36,7 +40,8 @@ class IngresoEgresoController extends Component
         $this->caja='TODAS';
         $this->sucursal= $this->usuarioSucursal();
 
-
+        $this->categoria_id = 'Elegir';
+        $this->categoriatodo_id = 'Todos';
        //$this->sucursal=collect();
 
     }
@@ -128,12 +133,14 @@ class IngresoEgresoController extends Component
                 ->join('carteras as c', 'c.id', 'crms.cartera_id')
                 ->join('cajas as ca', 'ca.id', 'c.caja_id')
                 ->join('users as u', 'u.id', 'movimientos.user_id')
+                ->leftjoin('cartera_mov_categorias as cc', 'cc.id', 'crms.cartera_mov_categoria_id')
                 ->select(
                     'movimientos.type as movimientotype',
                     'movimientos.import as import',
                     'crms.type as carteramovtype',
                     'crms.tipoDeMovimiento',
                     'crms.comentario',
+                    'cc.nombre as nombrecategoria',
                     'c.nombre as nombre',
                     'c.descripcion',
                     'c.tipo',
@@ -165,12 +172,14 @@ class IngresoEgresoController extends Component
                     ->join('carteras as c', 'c.id', 'crms.cartera_id')
                     ->join('cajas as ca', 'ca.id', 'c.caja_id')
                     ->join('users as u', 'u.id', 'movimientos.user_id')
+                    ->leftjoin('cartera_mov_categorias as cc', 'cc.id', 'crms.cartera_mov_categoria_id')
                     ->select(
                         'movimientos.type as movimientotype',
                         'movimientos.import as import',
                         'crms.type as carteramovtype',
                         'crms.tipoDeMovimiento',
                         'crms.comentario',
+                        'cc.nombre as nombrecategoria',
                         'c.nombre as nombre',
                         'c.descripcion',
                         'c.tipo',
@@ -202,19 +211,20 @@ class IngresoEgresoController extends Component
         }
         else
         {
-
     
             if ($this->caja == 'TODAS') {
                 $this->data = Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')
                 ->join('carteras as c', 'c.id', 'crms.cartera_id')
                 ->join('cajas as ca', 'ca.id', 'c.caja_id')
                 ->join('users as u', 'u.id', 'movimientos.user_id')
+                ->leftjoin('cartera_mov_categorias as cc', 'cc.id', 'crms.cartera_mov_categoria_id')
                 ->select(
                     'movimientos.type as movimientotype',
                     'movimientos.import as import',
                     'crms.type as carteramovtype',
                     'crms.tipoDeMovimiento',
                     'crms.comentario',
+                    'cc.nombre as nombrecategoria',
                     'c.nombre as nombre',
                     'c.descripcion',
                     'c.tipo',
@@ -240,12 +250,14 @@ class IngresoEgresoController extends Component
                 ->join('carteras as c', 'c.id', 'crms.cartera_id')
                 ->join('cajas as ca', 'ca.id', 'c.caja_id')
                 ->join('users as u', 'u.id', 'movimientos.user_id')
+                ->leftjoin('cartera_mov_categorias as cc', 'cc.id', 'crms.cartera_mov_categoria_id')
                 ->select(
                     'movimientos.type as movimientotype',
                     'movimientos.import as import',
                     'crms.type as carteramovtype',
                     'crms.tipoDeMovimiento',
                     'crms.comentario',
+                    'cc.nombre as nombrecategoria',
                     'c.nombre as nombre',
                     'c.descripcion',
                     'c.tipo',
@@ -270,11 +282,29 @@ class IngresoEgresoController extends Component
      
 
 
+        if($this->type != "Elegir")
+        {
+            $categorias = CarteraMovCategoria::select("cartera_mov_categorias.*")
+            ->where("cartera_mov_categorias.status", "ACTIVO")
+            ->where("cartera_mov_categorias.tipo", $this->type)
+            ->get();
+        }
+        else
+        {
+            $categorias = [];
+        }
+
+
+
+
         return view('livewire.reportemovimientoresumen.ingresoegreso',[
             'carterasSucursal'=>$carterasSucursal,
             'grouped'=>$grouped,
             'cajas2'=> $cajab,
-            'data'=>$this->data
+            'data'=>$this->data,
+            'categorias'=>$categorias,
+            'categoriastodo'=>CarteraMovCategoria::all(),
+
         ])
         ->extends('layouts.theme.app')
         ->section('content');
@@ -317,7 +347,8 @@ class IngresoEgresoController extends Component
             'tipoDeMovimiento' => 'EGRESO/INGRESO',
             'comentario' => $this->comentario,
             'cartera_id' => $this->cartera_id,
-            'movimiento_id' => $mvt->id
+            'movimiento_id' => $mvt->id,
+            'cartera_mov_categoria_id' => $this->categoria_id
         ]);
 
         $this->emit('hide-modal', 'Se generó el ingreso/egreso');
