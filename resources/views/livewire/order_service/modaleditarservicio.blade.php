@@ -156,11 +156,23 @@
 
                     <br>
                     <div class="form-row">
-                        {{-- @forelse ($repuestos as $item)
-                          <div>{{$item}}</div>
-                        @empty
-                        <p></p>
-                        @endforelse --}}
+                        @if ($repuestos != null)
+                            <table>
+
+                                @forelse ($repuestos as $item)
+                                
+                                <tr>
+                                    <td>{{$item->prod_name}}</td>
+                                    <td>{{$item->cant}} un. x {{$item->pv}} Bs.</td>
+                                <td> 
+                                   <button class="btn btn-sm btn-danger fas fa-times pl-1 pr-1 pt-0 pb-0 m-0"></button>
+                                </td>
+                                </tr>
+                                @empty
+                                <p></p>
+                                @endforelse
+                            </table>
+                                @endif
                     </div>
 
                     <br>

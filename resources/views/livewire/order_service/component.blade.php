@@ -1058,11 +1058,6 @@
 
 
 
-
-
-
-
-
     // Código para lanzar la Alerta de Hacerse Técnico Responsable de un Servicio
     function ConfirmarTecnicoResponsable(codigo, nombrecliente, idservicio) {
         swal({
@@ -1080,23 +1075,6 @@
             })
     }
     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     // Código para lanzar la Alerta de Anulación de Servicio

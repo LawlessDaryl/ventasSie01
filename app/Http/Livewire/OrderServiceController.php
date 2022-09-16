@@ -105,9 +105,10 @@ class OrderServiceController extends Component
         $this->dateTo = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->lista_de_usuarios = $this->listarusuarios();
         $this->mostrarterminar = "No";
+        $this->repuestos=null;
         $this->col= collect();
-        $this->destino=4;
-        $this->almacenrepuestos=5;
+        //$this->destino=4;
+        $this->almacenrepuestos=4;
 
         //Variable que guarda el id de la cartera
         $this->tipopago = 'Elegir';
@@ -3222,8 +3223,13 @@ class OrderServiceController extends Component
         ->get()
         ->first();
          
-        $this->repuestos= SalidaProductos::join('salida_servicios','salida_servicios.salida_id','salida_productos.id')->where('salida_servicios.service_id',$this->id_servicio)->get();
-        dd($this->repuestos);
+        $this->repuestos= SalidaProductos::join('salida_servicios','salida_servicios.salida_id','salida_productos.id')
+        ->join('detalle_salida_productos','detalle_salida_productos.id_salida','salida_productos.id')
+        ->join('products','products.id','detalle_salida_productos.product_id')
+        ->where('salida_servicios.service_id',$this->id_servicio)
+        ->select('products.nombre as prod_name','salida_servicios.precio_venta as pv','detalle_salida_productos.cantidad as cant')
+        ->get();
+        //dd($this->repuestos);
 
         $this->detallesservicios($type, $idservicio);
         $this->edit_tipodetrabajo = $detallesservicio->idtipotrabajo;
@@ -4079,14 +4085,15 @@ class OrderServiceController extends Component
 
                      /*Se disminuye la cantidad de stock de productos destinos*/
                      $q=ProductosDestino::where('product_id',$datas['product_id'])
-                     ->where('destino_id',$this->destino)->value('stock');
+                     ->where('destino_id',$this->almacenrepuestos)->value('stock');
  
-                     ProductosDestino::updateOrCreate(['product_id' => $datas['product_id'], 'destino_id'=>$this->destino],['stock'=>$q-$datas['cantidad']]); 
+                     ProductosDestino::updateOrCreate(['product_id' => $datas['product_id'], 'destino_id'=>$this->almacenrepuestos],['stock'=>$q-$datas['cantidad']]); 
 
                      SalidaServicio::create([
                         'salida_id'=>$operacion->id,
                         'service_id'=>$this->id_servicio,
-                        'estado'=>'Activo'
+                        'estado'=>'Activo',
+                        'precio_venta'=>$datas['precio_venta']
                      ]);
 
                 }
@@ -4229,11 +4236,6 @@ public function guardarVentaRepuestos(){
         $tiendaproducto->update([
             'stock' => $tiendaproducto->stock - $p->quantity
         ]);
-
-
-
-
-
 
     }
 
