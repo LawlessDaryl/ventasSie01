@@ -25,12 +25,14 @@
                             @endforeach
                         </select>
                     </div>
-                    @if($permisosseleccionado != "Todos")
+                    {{-- @if($permisosseleccionado != "Todos")
                     <button wire:click.prevent="SyncAll2()" type="button" class="btn btn-warning">Sincronizar Todos Area</button>
                     @else
                     <button wire:click.prevent="SyncAll()" type="button" class="btn btn-warning">Sincronizar Todos</button>
                     <button onclick="Revocar()" type="button" class="btn btn-warning">Revocar Todos</button>
-                    @endif
+                    @endif --}}
+                    <button wire:click.prevent="SyncAll()" type="button" class="btn btn-warning">Sincronizar Todos los Permisos</button>
+                    <button onclick="Revocar()" type="button" class="btn btn-warning">Revocar Todos</button>
                 </div>
                 <br>
                 <div class="text-right">
