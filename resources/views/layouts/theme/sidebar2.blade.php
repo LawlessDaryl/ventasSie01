@@ -38,6 +38,7 @@
 						</div>
 					</div>
 					<ul class="nav nav-primary">
+						@can('Admin_Views')
 						<li class="nav-item active">
 							<a data-toggle="collapse" href="#dashboard" class="collapsed" aria-expanded="false" style="background-color: #ee761c!important;">
 								<i class="fas icon-chart"></i>
@@ -85,6 +86,7 @@
 								</ul>
 							</div>
 						</li>
+						@endcan
 						<li class="nav-section">
 							<span class="sidebar-mini-icon">
 								<i class="fa fa-ellipsis-h"></i>
@@ -428,7 +430,7 @@
 							</div>
 						</li>
 						@endcan
-					
+						@can('Admin_Views')
 						<li class="nav-item">
 							<a data-toggle="collapse" href="#tables">
 								<img src="assets/img/administracion.png" width="25" height="35" alt="navbar brand" class="navbar-brand">
@@ -523,12 +525,12 @@
 								</ul>
 							</div>
 						</li>
-						
+						@endcan
 
 						
 						
 						
-
+						@can('Almacen_Index')
 						<li class="nav-item">
 							<a data-toggle="collapse" href="#charts">
 								<img src="assets/img/inventarios.png" width="25" height="35" alt="navbar brand" class="navbar-brand">
@@ -612,7 +614,7 @@
 								</ul>
 							</div>
 						</li>
-
+						@endcan
 
 
 
@@ -648,16 +650,17 @@
 											<i class="fa fas fa-minus"></i>
 											Lista de Ventas </a>
 									</li>
-									<li>
-										<a href="{{ url('coins') }}">
-											<i class="fa fas fa-minus"></i>
-											Denominaciones </a>
-									</li>
 									{{-- <li>
 										<a href="{{ url('estadisticas') }}">
 											<i class="fa fas fa-minus"></i>
 											Estadísticas </a>
 									</li> --}}
+									@can('VentasMovDia_Index')
+									<li>
+										<a href="{{ url('coins') }}">
+											<i class="fa fas fa-minus"></i>
+											Denominaciones </a>
+									</li>
 									<li>
 										<a href="{{ url('devolucionventa') }}">
 											<i class="fa fas fa-minus"></i>
@@ -673,7 +676,7 @@
 											<i class="fa fas fa-minus"></i>
 											Reporte Ventas Usuarios</a>
 									</li>
-
+									@endcan
 
 
 									{{-- <li>
