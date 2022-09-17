@@ -49,14 +49,15 @@ class MercanciaController extends Component
         $this->destino = 'Elegir';
         $this->concepto ="Elegir";
         $this->tipo_de_operacion="Entrada";
-    //$this->CrearLotes();
+        //$this->CrearLotes();
        //$this->Ventas();
-      // $this->buscarl();
-      // $this->buscarproducto();
+        //$this->buscarl();
+        //$this->buscarproducto();
        // $this->borrarLotes();
-      //paso ultimo $this->ajustarLotes();
+       //$this->ajustarLotes();
        //$this->productosajustados();
-    //$this->limpiarstock();
+   //$this->limpiarstock();
+  // $this->buscarproducto();
     //$this->inactivarlotes();
 
     }
@@ -189,10 +190,6 @@ class MercanciaController extends Component
           else{
             $this->emit('stock-insuficiente');
           }
-
-
-
-
             //dump($this->col);
         }
 
@@ -215,109 +212,109 @@ class MercanciaController extends Component
 
     }
 
-    public function Traspaso(){
+    // public function Traspaso(){
 
-        $auxi= IngresoSalida::where('proceso','Entrada')->get();
+    //     $auxi= IngresoSalida::where('proceso','Entrada')->get();
 
-        DB::beginTransaction();
+    //     DB::beginTransaction();
 
-        try {
+    //     try {
             
-        foreach ($auxi as $data) {
-            $entrada = IngresoProductos::create([
-                'destino' => $data->destino,
-                'user_id' => $data->user_id,
-                'concepto'=>'ENTRADA',
-                'observacion'=>$data->observacion
-            ]);
+    //     foreach ($auxi as $data) {
+    //         $entrada = IngresoProductos::create([
+    //             'destino' => $data->destino,
+    //             'user_id' => $data->user_id,
+    //             'concepto'=>'ENTRADA',
+    //             'observacion'=>$data->observacion
+    //         ]);
 
-            $newdata=DetalleOperacion::join('ingreso_salidas','ingreso_salidas.id','detalle_operacions.id')->where("ingreso_salidas.id",$data->id)->get();
+    //         $newdata=DetalleOperacion::join('ingreso_salidas','ingreso_salidas.id','detalle_operacions.id')->where("ingreso_salidas.id",$data->id)->get();
 
-            foreach ($newdata as $dat) {
+    //         foreach ($newdata as $dat) {
 
-                $auxi2= CompraDetalle::where('product_id',$dat->product_id);
+    //             $auxi2= CompraDetalle::where('product_id',$dat->product_id);
 
-                foreach ($auxi2 as $data3) {
-                    if ($data3->created_at>$dat->created_at) {
-                        $lot= Lote::create([
-                            'existencia'=>$auxi2->cantidad,
-                            'status'=>'Activo'
-                        ]);
-                        $data3->update([
-                            'lote_compra'=>$lot->id
-                        ]);
-                        $data3->save();
-                    }
-                }
+    //             foreach ($auxi2 as $data3) {
+    //                 if ($data3->created_at>$dat->created_at) {
+    //                     $lot= Lote::create([
+    //                         'existencia'=>$auxi2->cantidad,
+    //                         'status'=>'Activo'
+    //                     ]);
+    //                     $data3->update([
+    //                         'lote_compra'=>$lot->id
+    //                     ]);
+    //                     $data3->save();
+    //                 }
+    //             }
 
               
-               $lot= Lote::create([
-                    'existencia'=>$dat->cantidad,
-                    'status'=>'Activo'
-                ]);
+    //            $lot= Lote::create([
+    //                 'existencia'=>$dat->cantidad,
+    //                 'status'=>'Activo'
+    //             ]);
 
-                DetalleEntradaProductos::create([
+    //             DetalleEntradaProductos::create([
 
-                    'product_id'=>$dat->product_id,
-                    'cantidad'=>$dat->cantidad,
-                    'id_entrada'=>$entrada->id,
-                    'lote_id'=>$lot->id
+    //                 'product_id'=>$dat->product_id,
+    //                 'cantidad'=>$dat->cantidad,
+    //                 'id_entrada'=>$entrada->id,
+    //                 'lote_id'=>$lot->id
     
-                ]);
-            }
+    //             ]);
+    //         }
 
-        }
+    //     }
 
-        DB::commit();
-            } catch (Exception $e) {
-        DB::rollback();
-        dd($e->getMessage());
+    //     DB::commit();
+    //         } catch (Exception $e) {
+    //     DB::rollback();
+    //     dd($e->getMessage());
         
-    }
+    // }
 
-        //dd($auxi);
-    }
-        public function TraspasoSalida(){
+    //     dd($auxi);
+    // }
+    //     public function TraspasoSalida(){
 
-        $auxi= IngresoSalida::where('proceso','Salida')->get();
+    //     $auxi= IngresoSalida::where('proceso','Salida')->get();
 
-        foreach ($auxi as $data) {
+    //     foreach ($auxi as $data) {
 
-            $salida = SalidaProductos::create([
-                'destino' => $data->destino,
-                'user_id' => $data->user_id,
-                'concepto'=>$data->concepto,
-                'observacion'=>$data->observacion
-            ]);
+    //         $salida = SalidaProductos::create([
+    //             'destino' => $data->destino,
+    //             'user_id' => $data->user_id,
+    //             'concepto'=>$data->concepto,
+    //             'observacion'=>$data->observacion
+    //         ]);
 
-            $newdata=DetalleOperacion::join('ingreso_salidas','ingreso_salidas.id',$data->id)->get();
+    //         $newdata=DetalleOperacion::join('ingreso_salidas','ingreso_salidas.id',$data->id)->get();
 
-            foreach ($newdata as $dat) {
-                DetalleSalidaProductos::create([
-                    'product_id'=>$dat->product_id,
-                    'cantidad'=>$dat->cantidad,
-                    'id_salida'=>$salida->id_operacion
+    //         foreach ($newdata as $dat) {
+    //             DetalleSalidaProductos::create([
+    //                 'product_id'=>$dat->product_id,
+    //                 'cantidad'=>$dat->cantidad,
+    //                 'id_salida'=>$salida->id_operacion
                 
-                ]);
+    //             ]);
     
-            }
+    //         }
         
-        }
-        //dd($auxi);
-    }
+    //     }
+    //     //dd($auxi);
+    // }
 
-    public function Verificar()
-    {
-        $v1= CompraDetalle::all();
+    // public function Verificar()
+    // {
+    //     $v1= CompraDetalle::all();
 
-        foreach ($v1 as $data) {
-            $v2 = DetalleOperacion::join('ingreso_salidas','ingresos_salidas.id','detalle_operacions.id_operacion')
-            ->where('proceso','Entrada')->where('product_id',$data->product_id);
-            if ($v2 != null and $data->created_at> $v1->created_at) {
+    //     foreach ($v1 as $data) {
+    //         $v2 = DetalleOperacion::join('ingreso_salidas','ingresos_salidas.id','detalle_operacions.id_operacion')
+    //         ->where('proceso','Entrada')->where('product_id',$data->product_id);
+    //         if ($v2 != null and $data->created_at> $v1->created_at) {
                 
-            }
-        }
-    }
+    //         }
+    //     }
+    // }
 
     public function CrearLotes()
     {
@@ -334,9 +331,7 @@ class MercanciaController extends Component
 
                 $stockActual=ProductosDestino::join('products','products.id','productos_destinos.product_id')
                 ->where('productos_destinos.product_id',$data->product_id)->sum('stock');  
-                
-          
-                
+ 
                    $rs=IngresoProductos::create([
                     'destino'=>1,
                     'user_id'=>1,
@@ -362,8 +357,6 @@ class MercanciaController extends Component
 
             }
         
-
-
         DB::commit();
         }
          catch (Exception $e)
@@ -438,28 +431,49 @@ class MercanciaController extends Component
             }
     }
 
-    public function BuscarProducto()
+    public function buscarProducto()
     {
+
+
+        $ini= ProductosDestino::groupBy('productos_destinos.product_id')
+        ->selectRaw('sum(stock) as sum,productos_destinos.product_id')->get();
+        
+        //dd($ini);
+
+
         //obtengo la cantidad total de todos los productos que se ingresaron despues del ajuste a cada sucursal
 
         $v3=IngresoSalida::join('detalle_operacions','detalle_operacions.id_operacion','ingreso_salidas.id')->join('products', 'products.id','detalle_operacions.product_id')
         ->where('proceso','Entrada')->groupBy('detalle_operacions.product_id')->selectRaw('sum(cantidad) as sum, detalle_operacions.product_id,products.costo')->get();
     
+/*
+EXISTEN PRODUCTOS QUE HAN INGRESADO POR AJUSTE DE INVENTARIOS O INVENTARIO INICIAL O POR COMPRAS QUE NO HAN TENIDO NI UNA VENTA
+1. Un producto puede haber no tenido ni una venta en ningun destino, solo ingreso de inventarios
+2. Un producto puede haberse vendido en algun destino o en todos los destinos 
 
-        $object = $v3->filter(function($item) {
-            
-            $auxi= SaleDetail::where('product_id',$item->product_id)->first();
-          if ($auxi and $auxi->product_id == $item->product_id ) 
-          {
+*/
+        
 
-          }
-          else{
-            return $item;
-          }
-        })->values();
+        // $object = $ini->filter(function($item)
+        // {
+        //     $auxi= SaleDetail::where('product_id',$item->product_id)->first();
+        //   if ($auxi and $auxi->product_id == $item->product_id ) 
+        //   { }
+        //   else{
+        //     return $item;
+        //   }
+        // })->values();
+
+
+
 
         //dd($object);
-               foreach ($object as $data3) {
+               foreach ($ini as $data3) {
+
+                $compracosto= CompraDetalle::where('product_id',$data3->product_id)->latest('created_at')->value('precio');
+                //dd($compracosto);
+                $costoproducto=Product::where('id',$data3->product_id)->value('costo');
+
                 DB::beginTransaction();
                 try {
 
@@ -473,7 +487,7 @@ class MercanciaController extends Component
     
                        $lot= Lote::create([
                         'existencia'=>$data3->sum,
-                        'costo'=>$data3->costo,
+                        'costo'=> $compracosto != null ? $compracosto : $costoproducto,
                         'status'=>'Activo',
                         'product_id'=>$data3->product_id
                     ]);
@@ -481,7 +495,7 @@ class MercanciaController extends Component
                        DetalleEntradaProductos::create([
                             'product_id'=>$data3->product_id,
                             'cantidad'=>$data3->sum,
-                            'costo'=>$data3->costo,
+                            'costo'=>$compracosto != null ? $compracosto : $costoproducto,
                             'id_entrada'=>$rs->id,
                             'lote_id'=>$lot->id
                        ]);

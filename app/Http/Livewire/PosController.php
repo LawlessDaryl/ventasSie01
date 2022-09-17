@@ -589,6 +589,7 @@ class PosController extends Component
                             'existencia'=> $cantidad_producto_lote - $cantidad_producto_venta
                         ]);
                         $l->save();
+                        $cantidad_producto_venta=0;
                     }
                 }
 

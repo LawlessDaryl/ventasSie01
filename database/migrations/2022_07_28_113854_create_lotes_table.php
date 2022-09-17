@@ -17,6 +17,7 @@ class CreateLotesTable extends Migration
             $table->id();
             $table->decimal('existencia',10,2);
             $table->decimal('costo',10,2);
+            $table->decimal('pv_lote',10,2);
             $table->enum('status',['Activo','Inactivo']);
             $table->foreignId('product_id')->constrained();
             $table->timestamps();
