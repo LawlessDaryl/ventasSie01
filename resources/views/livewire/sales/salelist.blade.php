@@ -347,8 +347,8 @@
 
             <br>
 
-            <div class="table-wrapper">
-                <table>
+            <div class="table-wrapper table-responsive">
+                <table style="min-width: 900px;">
                     <thead>
                         <tr>
                             <th class="text-center">#</th>
