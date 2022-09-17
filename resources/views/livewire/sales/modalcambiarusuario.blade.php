@@ -1,4 +1,4 @@
-<div wire:ignore.self class="modal fade" id="cambiarusuario" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div wire:ignore.self class="modal fade" id="modalcambiarusuario" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             
@@ -31,19 +31,17 @@
                       </tr>
                     </thead>
                     <tbody>
-                      @foreach ($listausuarios as $dv)
-                        @if($dv->rol == "CAJERO" || $dv->rol == "CAJA_ADMIN")
-                        <tr>
-                            <td class="text-left">
-                                {{ $dv->nombreusuario }}
-                            </td>
-                            <td class="text-center">
-                                <button wire:click="seleccionarusuario({{$dv->id}})" title="Seleccionar Usuario" style="background: #ee761c; color:white; border-color: white; cursor: pointer;">
-                                    <i class="fas fa-check"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        @endif
+                      @foreach ($usuarios as $dv)
+                      <tr>
+                        <td class="text-left">
+                            {{ ucwords(strtolower($dv->name)) }}
+                        </td>
+                        <td class="text-center">
+                            <button wire:click="seleccionarusuario({{$dv->id}})" title="Seleccionar Usuario" style="background: #ee761c; color:white; border-color: white; cursor: pointer;">
+                                <i class="fas fa-check"></i>
+                            </button>
+                        </td>
+                    </tr>
                         @endforeach
                     </tbody>
                   </table>

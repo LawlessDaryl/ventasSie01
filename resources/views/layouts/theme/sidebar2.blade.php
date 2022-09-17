@@ -419,7 +419,7 @@
 											Reporte de Servicios </a>
 									</li>
 								@endcan
-								@can('Boton_Entregar_Servicio')
+								@can('Reporte_Servicios_Index')
 									<li>
 										<a href="{{ url('reportentregservices') }}">
 											<i class="fa fas fa-minus"></i>
@@ -630,7 +630,7 @@
 
 
 
-
+						@can('Sales_Index')
 						<li class="nav-item">
 							<a data-toggle="collapse" href="#submenu">
 								<img src="assets/img/ventas.png" width="25" height="35" alt="navbar brand" class="navbar-brand">
@@ -722,6 +722,7 @@
 								</ul>
 							</div>
 						</li>
+						@endcan
 						<li class="mx-4 mt-2">
 								<a style="background-color: #ee761c!important;" class="btn btn-primary btn-block" href="{{ route('logout') }}"
 									onclick="event.preventDefault(); document.getElementById('logout-form').submit()">
