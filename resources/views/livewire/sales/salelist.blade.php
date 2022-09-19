@@ -359,6 +359,7 @@
                             <th class="text-center">CARTERA</th>
                             <th class="text-center">SUCURSAL</th>
                             <th class="text-center">CLIENTE</th>
+                            <th class="text-center">ESTADO</th>
                             <th class="text-center">ACCIONES</th>
                         </tr>
                     </thead>
@@ -423,6 +424,13 @@
                                             {{$c->celularcliente}}
                                         @endif
                                     @endforeach
+                                </td>
+                                <td class="text-center">
+                                    @if($lv->estado == "PAID")
+                                        <p style="color: #002df3;"><b>Normal</b></p>
+                                    @else
+                                        <p style="color: #f30000;"><b>Anulado</b></p>
+                                    @endif
                                 </td>
                                 <td class="text-center">
                                     <div class="btn-group" role="group" aria-label="Basic example">

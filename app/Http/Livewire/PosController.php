@@ -78,6 +78,13 @@ class PosController extends Component
     public $corte_caja;
     //Guardar el id de un producto
     public $producto_id;
+    //Guarda todos los lotes activos de un producto
+    public $lotes_producto;
+    //Guarda el promedio de precio de un producto
+    public $precio_promedio;
+    //Guarda la candidad de un producto para la venta
+    public $cantidad_venta;
+
 
     use WithPagination;
     public function paginationView()
@@ -95,6 +102,8 @@ class PosController extends Component
         $this->clienteanonimo = true;
         $this->cartera_id = 'Elegir';
         $this->observacion = "";
+        $this->lotes_producto = [];
+        $this->precio_promedio = 0;
         foreach($this->listarcarteras() as $list)
         {
             if($list->tipo == 'CajaFisica')
@@ -308,6 +317,9 @@ class PosController extends Component
                     $this->emit('increase-ok');
                 }
             }
+
+
+
             //Actualizar los valores de Total Bs y Total Artículos en una Venta
             $this->actualizarvalores();
         }
@@ -364,6 +376,9 @@ class PosController extends Component
                 $stock_cart = Cart::get($idproducto)->quantity;
             }
             //Restamos el stock de la tienda con el stock del Carrito de Ventas
+
+            //dd($producto->first()->stock);
+
             $stock = $producto->first()->stock - $stock_cart;
             if($stock > 0)
             {
@@ -378,8 +393,6 @@ class PosController extends Component
         {
             return false;
         }
-
-
         
     }
     //Llama al modal para calcular cambio y finalizar una venta
@@ -788,6 +801,10 @@ class PosController extends Component
     //Cambiar la cantidad de un producto del Carrito de Ventas
     public function cambiarcantidad($idproducto, $cantidad_nueva)
     {
+        //Actualizando la variable $this->cantidad_venta para mostrar cantidad en lotes en la ventana modal lotes productos
+        $this->cantidad_venta = $cantidad_nueva;
+
+
         //Guardamos los datos del producto del Carrito de Ventas
         $product_cart = Cart::get($idproducto);
         if($this->stocktienda($idproducto, $cantidad_nueva))
@@ -944,5 +961,66 @@ class PosController extends Component
 
         //Mostrando la ventana modal
         $this->emit('show-stockinsuficiente');
+    }
+    //Muestra una ventana modal con los detalles de precio y costo de un producto
+    public function modal_lotes($idproducto, $cantidad)
+    {
+        
+        $this->cantidad_venta = Cart::get($idproducto)->quantity;
+
+
+
+        //Devuelve un array con todos los costos y precios en los lotes de un producto
+        $this->lotes_producto = Lote::select("lotes.*")
+        ->where("lotes.status", "Activo")
+        ->where("lotes.product_id", $idproducto)
+        ->orderBy("lotes.created_at","asc")
+        ->get();
+
+        $lotes = [];
+
+        $cant = $this->cantidad_venta;
+
+        foreach($this->lotes_producto as $lp)
+        {
+            if($lp->existencia >= $cant)
+            {
+                array_push($lotes, $lp->id);
+                break;
+            }
+            else
+            {
+                $cant = $cant - $lp->existencia;
+                array_push($lotes, $lp->id);
+            }
+        }
+
+
+        //Devuelve un array con todos los costos y precios en los lotes de un producto
+        $this->lotes_producto = Lote::select("lotes.*")
+        ->where("lotes.status", "Activo")
+        ->where("lotes.product_id", $idproducto)
+        ->whereIn('lotes.id', $lotes)
+        ->orderBy("lotes.created_at","desc")
+        ->get();
+
+
+
+
+
+        //Devuelve un promedio de precios en los lotes de un producto
+        $this->precio_promedio = Lote::select("lotes.pv_lote as pv_lote")
+        ->where("lotes.status", "Activo")
+        ->where("lotes.product_id", $idproducto)
+        ->avg('lotes.pv_lote');
+
+
+
+        //Guardando el nombre del producto
+        $this->nombreproducto = Product::find($idproducto)->nombre;
+        //Guardando la cantidad a vender del producto
+
+        //Mostrando la ventana modal
+        $this->emit('show-modallotesproducto');
     }
 }

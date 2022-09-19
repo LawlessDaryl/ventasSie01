@@ -349,7 +349,7 @@
                                     </td>
                                     <td>
                                         <div class="input-group"  style="min-width: 120px; max-width: 130px; align-items: center;">
-                                            <input type="number" style="max-height: 30px;" id="p{{$item->id}}" 
+                                            <input type="number" style="max-height: 30px;" id="p{{$item->id}}"
                                             wire:change="cambiarprecio({{$item->id}}, $('#p' + {{$item->id}}).val())"
                                             value="{{ $item->price }}"
                                             class="form-control" placeholder="Bs.." aria-label="Recipient's username" aria-describedby="basic-addon2">
@@ -374,6 +374,9 @@
                                     </td>
                                     <td>
                                         <div class="btn-group" role="group" aria-label="Basic example">
+                                            <button title="Ver Precio y Costos por Lotes" wire:click.prevent="modal_lotes({{ $item->id }}, {{$item->quantity}})" class="btn btn-sm" style="background-color: rgb(13, 156, 0); color:white">
+                                                <i class="fas fa-list-ul"></i>
+                                            </button>
                                             <a title="Eliminar Producto" href="#" onclick="ConfirmarEliminar('{{ $item->id }}', '{{$item->name}}')" class="btn btn-sm" style="background-color: red; color:white">
                                                 <i class="fas fa-trash-alt"></i>
                                             </a>
@@ -438,6 +441,7 @@
         @include('livewire.pos.modal.modalbuscarcliente')
         @include('livewire.pos.modal.modalcrearcliente')
         @include('livewire.pos.modal.modal_stock_insuficiente')
+        @include('livewire.pos.modal.modallotesproducto')
 
 
         @if($descuento_recargo >= 0)
@@ -512,6 +516,10 @@
         // Mètodo JavaScript para llamar al modal para mostrar mensaje de stock insuficiente
         window.livewire.on('show-stockinsuficiente', Msg => {
             $("#stockinsuficiente").modal("show");
+        });
+        //Mètodo JavaScript para llamar al modal para mostrar lotes con precio y costos
+        window.livewire.on('show-modallotesproducto', Msg => {
+            $("#modallotesproducto").modal("show");
         });
         //Mostrar Toast cuando un producto se incrementa en el Carrito de Ventas
         window.livewire.on('increase-ok', msg => {
