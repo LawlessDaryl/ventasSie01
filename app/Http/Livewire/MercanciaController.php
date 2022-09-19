@@ -49,9 +49,8 @@ class MercanciaController extends Component
         $this->destino = 'Elegir';
         $this->concepto ="Elegir";
         $this->tipo_de_operacion="Entrada";
-        //$this->CrearLotes();
-       //$this->Ventas();
-        //$this->buscarl();
+      
+       //$this->limpiarstock();
         //$this->buscarproducto();
        // $this->borrarLotes();
        //$this->ajustarLotes();
