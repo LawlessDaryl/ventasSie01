@@ -87,7 +87,7 @@ class DetalleComprasController extends Component
        ->get();
 
 //--------------------Select proveedor---------------------------//
-       $data_provider= Provider::select('providers.*')->get();
+       $data_provider= Provider::where('status','ACTIVO')->select('providers.*')->get();
         return view('livewire.compras.detalle_compra',['data_prod' => $prod,
         'cart' => Compras::getContent()->sortBy('name'),
         'data_suc'=>$data_destino,
@@ -124,11 +124,16 @@ class DetalleComprasController extends Component
         $product = Product::select('products.*')
         ->where('products.id',$productId)->first();
        
+
+        $precio_compra= Lote::where('product_id',$productId)->latest('created_at')->value('costo');
+        //dd($precio_compra);
+
         $exist = Compras::get($product->id);
         $attributos=[
             'precio'=>$product->precio_venta,
             'codigo'=>$product->codigo,
-            'fecha_compra'=>$this->fecha_compra
+            'fecha_compra'=>$this->fecha_compra,
+            
         ];
 
         $products = array(
@@ -309,7 +314,7 @@ class DetalleComprasController extends Component
       
         $product = Product::select('products.*')
         ->where('products.id',$productId)->first();
-       
+       // $precio_compra= Lote::where('product_id',$productId)->latest('created_at')->value('costo');
         $exist = Compras::get($productId);
         $quantitys=$exist->quantity;
         $precio_compra=$exist->price;
@@ -345,7 +350,7 @@ class DetalleComprasController extends Component
 
             $this->subtotal = Compras::getTotal();
             $this->itemsQuantity = Compras::getTotalQuantity();
-            $this->emit('scan-ok', $title);
+      
             $this->subtotal = Compras::getTotal();
             $this->total_compra= $this->subtotal-$this->dscto;
     }
@@ -511,13 +516,15 @@ if ($this->validateCarrito()) {
         {
          
             $items = Compras::getContent();
+            //dd($items);
             if ($this->tipo_documento == 'FACTURA') {
                 foreach ($items as $item) {
                     $lot= Lote::create([
                         'existencia'=>$item->quantity,
                         'costo'=>$item->price,
                         'status'=>'Activo',
-                        'product_id'=>$item->id
+                        'product_id'=>$item->id,
+                        'pv_lote'=>$item->attributes->precio
                     ]);
 
                     CompraDetalle::create([
@@ -548,11 +555,12 @@ if ($this->validateCarrito()) {
                         'existencia'=>$item->quantity,
                         'costo'=>$item->price,
                         'status'=>'Activo',
-                        'product_id'=>$item->id
+                        'product_id'=>$item->id,
+                        'pv_lote'=>$item->attributes->precio
                     ]);
 
 
-                   // dd($lot);
+                   //dump($lot);
                     CompraDetalle::create([
                         'precio' => $item->price,
                         'cantidad' => $item->quantity,

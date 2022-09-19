@@ -6,11 +6,11 @@
         min-height: 140px;
     }
     .tablainventarios thead {
-        background-color: #1572e8;
+        background-color: #0148a5;
         color: white;
     }
     .tablainventarios th, td {
-        border: 0.5px solid #1571e894;
+        border: 0.5px solid #064eac94;
         padding: 4px;
        
     }
@@ -107,7 +107,7 @@
                 </div>
                 <div class="col-12 col-lg-2 col-md-3">
                     <div class="form-group">
-                        <select wire:model='estados' class="form-control">
+                        <select wire:model='estados' class="form-control mt--2">
                           <option value="null" disabled>Estado</option>
                           <option value="ACTIVO">ACTIVO</option>
                           <option value="INACTIVO">INACTIVO</option>
@@ -116,7 +116,7 @@
                 </div>
             </div>
             <div class="widget-content">
-                <a href="javascript:void(0)" class="btn btn-danger btn-sm mb-2" wire:click= 'deleteProducts()'>Eliminar Productos seleccionados</a>
+                <a href="javascript:void(0)" class="btn btn-dark btn-sm mb-2" wire:click= 'deleteProducts()'>Eliminar Productos seleccionados</a>
                 <div class="table-responsive">
                     <table class="tablainventarios">
                         <thead>
@@ -144,7 +144,7 @@
                                     </td>
                                     <td>
                                         <h5> <strong>{{$products->nombre}}</strong> </h5>
-                                        <label class="badge badge-info text-white"> <b>{{ $products->unidad}}</b> </label><label class="badge badge-dark text-white"> <b>{{ $products->marca}}</b> </label><label class="badge badge-warning text-white"> <b>{{ $products->industria }}</b> </label>
+                                        <label><b>  Unidad: </b>{{$products->unidad ? $products->unidad : "No definido" }}</label> | <label> <b> Marca:</b>{{$products->marca ? $products->marca : "No definido" }} | </label><b> Industria:<label> </b>{{$products->industria ? $products->industria : "No definido" }}</label>
                                         <h6>{{ $products->caracteristicas }}</h6>
 
                                     </td>

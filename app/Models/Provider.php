@@ -11,9 +11,9 @@ class Provider extends Model
     use HasFactory;
     protected $fillable = ['nombre_prov', 'apellido','direccion','nit',
     'telefono','compañia','correo','status',];
-    public function products()
+    public function compras()
     {
-        return $this->hasMany(Product::class);
+        return $this->hasMany(Compra::class,'proveedor_id','id');
     }
     public function getImagenAttribute()
     {
