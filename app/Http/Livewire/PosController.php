@@ -908,6 +908,7 @@ class PosController extends Component
                 'procedencia_cliente_id' => 1,
         ]);
         }
+        
         $this->cliente_id = $newclient->id;
         $this->mensaje_toast = "Se selecciono al cliente creado: '" . $newclient->nombre . "'";
         //Ocultando ventana modal
@@ -944,5 +945,11 @@ class PosController extends Component
 
         //Mostrando la ventana modal
         $this->emit('show-stockinsuficiente');
+    }
+
+    
+    public function selectLote(Product $id){
+        dd($id);
+       // $this->emit('seleccionarlote');
     }
 }

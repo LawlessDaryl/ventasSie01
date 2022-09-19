@@ -27,6 +27,7 @@ class CreateProductsTable extends Migration
             $table->string('industria')->nullable();
             $table->decimal('precio_venta',10,2);
             $table->enum('status', ['ACTIVO','INACTIVO'])->default('ACTIVO');
+            $table->enum('control', ['AUTOMATICO','MANUAL'])->default('AUTOMATICO');
             $table->string('image',55)->nullable();
             $table->unsignedBigInteger('category_id');
             $table->foreign('category_id')->references('id')->on('categories');

@@ -56,7 +56,8 @@
                 </select>
                 
                     <a href="javascript:void(0)" class="btn btn-dark pl-2 pr-2" data-toggle="modal" title="Agregar Unidad"
-                        data-target="#modalUnidad"> <i class="fas fa-plus text-white"></i> </a>
+                        data-target="#modalUnidad"> <i class="fas fa-plus text-white"></i>
+                    </a>
             </div>
             @error('unidad') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>
@@ -163,7 +164,17 @@
         
     @endif
 
-   
+    <div class="col-sm-12 col-md-4">
+        <div class="form-group">
+            <label>Control Lote</label>
+            <select wire:model='cont_lote' class="form-control">
+                <option value="null" disabled>Elegir</option>
+                <option value="Manual">Seleccion Manual</option>
+                <option value="Automatico">FIFO automatico</option>
+            </select>
+            @error('cont_lote') <span class="text-danger er">{{ $message }}</span>@enderror
+        </div>
+    </div>
 
     <div class="col-sm-12 col-md-8">
         <label> <b> Subir Imagen</b></label>

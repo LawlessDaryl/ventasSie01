@@ -466,8 +466,10 @@ EXISTEN PRODUCTOS QUE HAN INGRESADO POR AJUSTE DE INVENTARIOS O INVENTARIO INICI
 
                 $compracosto= CompraDetalle::where('product_id',$data3->product_id)->latest('created_at')->value('precio');
                 //dd($compracosto);
-                $costoproducto=Product::where('id',$data3->product_id)->value('costo');
-
+                $costoproducto=Product::where('id',$data3->product_id)->value('costo','precio_venta');
+                $precio_venta= Product::where('id',$data3->product_id)->value('precio_venta');
+               //dd($precio_venta);
+               
                 DB::beginTransaction();
                 try {
 
@@ -483,7 +485,8 @@ EXISTEN PRODUCTOS QUE HAN INGRESADO POR AJUSTE DE INVENTARIOS O INVENTARIO INICI
                         'existencia'=>$data3->sum,
                         'costo'=> $compracosto != null ? $compracosto : $costoproducto,
                         'status'=>'Activo',
-                        'product_id'=>$data3->product_id
+                        'product_id'=>$data3->product_id,
+                        'pv_lote'=> $precio_venta
                     ]);
     
                        DetalleEntradaProductos::create([

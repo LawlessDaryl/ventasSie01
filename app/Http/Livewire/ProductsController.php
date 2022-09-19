@@ -24,10 +24,12 @@ class ProductsController extends Component
      $image, $selected_id, $pageTitle, $componentName,$cate,$marca,$garantia,$stock,$stock_v
      ,$selected_categoria,$selected_sub,$nro=1,$sub,$change=[],$estados,$searchData=[],$data2,$archivo,$failures,$productError;
     public $checkAll= false;
-public $errormessage;
-public $selectedProduct=[];
-public $newunidad,$newmarca,$subcategory;
-public $des_subcategory;
+    public $errormessage;
+    public $selectedProduct=[];
+    public $newunidad,$newmarca,$subcategory;
+    public $des_subcategory;
+    //Variable para configurar el seguimiento de los lotes, de acuerdo a si quiere que sea manual la eleccion del lote o si quiere que sea por defecto automatico FIFO
+    public $cont_lote;
     private $pagination = 100;
     public $selected_id2;
     public function paginationView()
@@ -45,6 +47,7 @@ public $des_subcategory;
         $this->selectedProduct= collect();
         $this->marca=null;
         $this->unidad=null;
+        $this->cont_lote=null;
         
     }
 
@@ -244,7 +247,8 @@ public $des_subcategory;
             'cantidad_minima' => $this->cantidad_minima,
             'industria' => $this->industria,
             'precio_venta' => $this->precio_venta,
-            'category_id' => $this->categoryid
+            'category_id' => $this->categoryid,
+            'control'=>$this->cont_lote
         ]);
         if ($this->image) {
             $customFileName = uniqid() . '_.' . $this->image->extension();
@@ -289,6 +293,8 @@ public $des_subcategory;
         $this->image = null;
         $this->marca= $product->marca;
         $this->unidad=$product->unidad;
+        $this->cont_lote=$product->control;
+
         $this->emit('modal-show');
     }
     public function Update()
@@ -328,7 +334,8 @@ public $des_subcategory;
             'industria' => $this->industria,
             'precio_venta' => $this->precio_venta,
             'category_id' => $this->categoryid,
-            'status'=>$this->estado
+            'status'=>$this->estado,
+            'control'=>$this->cont_lote
         ]);
         if ($this->image) {
             //dd($this->image);
@@ -401,6 +408,7 @@ public $des_subcategory;
         $this->image = null;
         $this->marca=null;
         $this->unidad= null;
+        $this->cont_lote=null;
       
 
         $this->resetValidation();//clear the error bag
@@ -577,6 +585,7 @@ public $des_subcategory;
    
    
     }
+
 
 
 }
