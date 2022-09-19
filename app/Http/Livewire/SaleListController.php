@@ -116,11 +116,12 @@ class SaleListController extends Component
                         ->join("cajas as cj","cj.id","c.caja_id")
                         ->select("sales.id as codigo","sales.created_at as fechaventa", "u.name as nombreusuario","c.nombre as nombrecartera",
                         "sales.total as totalbs","sales.change as totalcambio",
+                        "sales.status as estado",
                         DB::raw('0 as nombresucursal'),
                         DB::raw('0 as totaldescuento'),
                         DB::raw('0 as datoscliente'),
                         DB::raw('0 as ventareciente'))
-                        ->where("sales.status","PAID")
+                        //->where("sales.status","PAID")
                         ->where("cj.sucursal_id",$this->sucursal_id)
                         ->whereBetween('sales.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
                         ->orderBy("sales.created_at","desc")
@@ -146,11 +147,12 @@ class SaleListController extends Component
                         ->join("cajas as cj","cj.id","c.caja_id")
                         ->select("sales.id as codigo","sales.created_at as fechaventa", "u.name as nombreusuario","c.nombre as nombrecartera",
                         "sales.total as totalbs","sales.change as totalcambio",
+                        "sales.status as estado",
                         DB::raw('0 as nombresucursal'),
                         DB::raw('0 as totaldescuento'),
                         DB::raw('0 as datoscliente'),
                         DB::raw('0 as ventareciente'))
-                        ->where("sales.status","PAID")
+                        //->where("sales.status","PAID")
                         ->where("cj.sucursal_id",$this->sucursal_id)
     
                         ->whereBetween('sales.created_at', [$from, $to])
@@ -183,11 +185,12 @@ class SaleListController extends Component
                         ->join("cajas as cj","cj.id","c.caja_id")
                         ->select("sales.id as codigo","sales.created_at as fechaventa", "u.name as nombreusuario","c.nombre as nombrecartera",
                         "sales.total as totalbs","sales.change as totalcambio",
+                        "sales.status as estado",
                         DB::raw('0 as nombresucursal'),
                         DB::raw('0 as totaldescuento'),
                         DB::raw('0 as datoscliente'),
                         DB::raw('0 as ventareciente'))
-                        ->where("sales.status","PAID")
+                        //->where("sales.status","PAID")
                         ->where("sales.user_id",$this->user_id)
                         ->where("cj.sucursal_id",$this->sucursal_id)
                         ->whereBetween('sales.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
@@ -214,11 +217,12 @@ class SaleListController extends Component
                         ->join("cajas as cj","cj.id","c.caja_id")
                         ->select("sales.id as codigo","sales.created_at as fechaventa", "u.name as nombreusuario","c.nombre as nombrecartera",
                         "sales.total as totalbs","sales.change as totalcambio",
+                        "sales.status as estado",
                         DB::raw('0 as nombresucursal'),
                         DB::raw('0 as totaldescuento'),
                         DB::raw('0 as datoscliente'),
                         DB::raw('0 as ventareciente'))
-                        ->where("sales.status","PAID")
+                        //->where("sales.status","PAID")
                         ->where("sales.user_id",$this->user_id)
                         ->where("cj.sucursal_id",$this->sucursal_id)
     
@@ -255,11 +259,12 @@ class SaleListController extends Component
                         ->join("cajas as cj","cj.id","c.caja_id")
                         ->select("sales.id as codigo","sales.created_at as fechaventa", "u.name as nombreusuario","c.nombre as nombrecartera",
                         "sales.total as totalbs","sales.change as totalcambio",
+                        "sales.status as estado",
                         DB::raw('0 as nombresucursal'),
                         DB::raw('0 as totaldescuento'),
                         DB::raw('0 as datoscliente'),
                         DB::raw('0 as ventareciente'))
-                        ->where("sales.status","PAID")
+                        //->where("sales.status","PAID")
                         ->whereBetween('sales.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
                         ->orderBy("sales.created_at","desc")
                         ->paginate($this->paginacion);
@@ -284,11 +289,12 @@ class SaleListController extends Component
                         ->join("cajas as cj","cj.id","c.caja_id")
                         ->select("sales.id as codigo","sales.created_at as fechaventa", "u.name as nombreusuario","c.nombre as nombrecartera",
                         "sales.total as totalbs","sales.change as totalcambio",
+                        "sales.status as estado",
                         DB::raw('0 as nombresucursal'),
                         DB::raw('0 as totaldescuento'),
                         DB::raw('0 as datoscliente'),
                         DB::raw('0 as ventareciente'))
-                        ->where("sales.status","PAID")
+                        //->where("sales.status","PAID")
     
                         ->whereBetween('sales.created_at', [$from, $to])
                         ->whereTime('sales.created_at', '>=', $this->timeFrom)
@@ -320,11 +326,12 @@ class SaleListController extends Component
                         ->join("cajas as cj","cj.id","c.caja_id")
                         ->select("sales.id as codigo","sales.created_at as fechaventa", "u.name as nombreusuario","c.nombre as nombrecartera",
                         "sales.total as totalbs","sales.change as totalcambio",
+                        "sales.status as estado",
                         DB::raw('0 as nombresucursal'),
                         DB::raw('0 as totaldescuento'),
                         DB::raw('0 as datoscliente'),
                         DB::raw('0 as ventareciente'))
-                        ->where("sales.status","PAID")
+                        //->where("sales.status","PAID")
                         ->where("sales.user_id",$this->user_id)
                         ->whereBetween('sales.created_at', [Carbon::parse(Carbon::now())->format('Y-m-d') . ' 00:00:00', Carbon::parse(Carbon::now())->format('Y-m-d') . ' 23:59:59'])
                         ->orderBy("sales.created_at","desc")
@@ -350,11 +357,12 @@ class SaleListController extends Component
                         ->join("cajas as cj","cj.id","c.caja_id")
                         ->select("sales.id as codigo","sales.created_at as fechaventa", "u.name as nombreusuario","c.nombre as nombrecartera",
                         "sales.total as totalbs","sales.change as totalcambio",
+                        "sales.status as estado",
                         DB::raw('0 as nombresucursal'),
                         DB::raw('0 as totaldescuento'),
                         DB::raw('0 as datoscliente'),
                         DB::raw('0 as ventareciente'))
-                        ->where("sales.status","PAID")
+                        //->where("sales.status","PAID")
                         ->where("sales.user_id",$this->user_id)
     
                         ->whereBetween('sales.created_at', [$from, $to])
@@ -387,6 +395,7 @@ class SaleListController extends Component
                         ->join("cajas as cj","cj.id","c.caja_id")
                         ->select("sales.id as codigo","sales.created_at as fechaventa", "u.name as nombreusuario","c.nombre as nombrecartera",
                         "sales.total as totalbs","sales.change as totalcambio",
+                        "sales.status as estado",
                         DB::raw('0 as nombresucursal'),
                         DB::raw('0 as totaldescuento'),
                         DB::raw('0 as datoscliente'),
