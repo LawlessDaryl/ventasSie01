@@ -73,9 +73,26 @@
                         </div>
                     </div>
 
+                    <div class="col-sm-12 col-md-12" style="padding-left: 27px;">
+                        @if($this->categoria_ie_id != "Elegir")
+                        <b>Detalles de la Categoria Seleccionada:</b>
+                        <br>
+                            @if($detalle)
+                            {{$detalle}}
+                            @else
+                                No se puso ningún detalle a la categoria seleccionada
+                            @endif
+
+
+                        @endif
+                    </div>
+
+
+
+
                     <div class="col-sm-12 col-md-12">
                         <div class="form-group">
-                            <h6>Comentario (Obligatorio)</h6>
+                            <h6><b>Comentario (Obligatorio)</b></h6>
                             <textarea wire:model.lazy="comentario" class="form-control" name="" rows="2"></textarea>
                             @error('comentario')
                                 <span class="text-danger er">{{ $message }}</span>

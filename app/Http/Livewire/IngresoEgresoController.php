@@ -438,12 +438,21 @@ class IngresoEgresoController extends Component
        ->where("cartera_mov_categorias.status", "ACTIVO")
        ->get();
 
+       $detalle = null;
+
        if($this->type != "Elegir")
        {
            $categorias_ie = CarteraMovCategoria::select("cartera_mov_categorias.*")
            ->where("cartera_mov_categorias.status", "ACTIVO")
            ->where("cartera_mov_categorias.tipo", $this->type)
            ->get();
+            if($this->categoria_ie_id != "Elegir")
+            {
+                //Guardando el detalle de la categoria seleccionada
+                $detalle = CarteraMovCategoria::find($this->categoria_ie_id)->detalle;
+            }
+
+
        }
        else
        {
@@ -457,7 +466,9 @@ class IngresoEgresoController extends Component
             'cajas2'=> $cajab,
             'data'=>$this->data,
             'categorias'=>$categorias,
-            'categorias_ie'=>$categorias_ie
+            'categorias_ie'=>$categorias_ie,
+            'detalle'=>$detalle
+
 
         ])
         ->extends('layouts.theme.app')

@@ -320,7 +320,8 @@
                                 <i class="fas fa-search"></i>
                             </span>
                         </div>
-                        <input type="text" wire:model="buscarproducto" placeholder="Buscar Producto..." class="form-control">
+                        <input id="code" type="text" wire:keydown.enter.prevent="$emit('scan-code',$('#code').val())" wire:model="buscarproducto" class="form-control " placeholder="Escanear o Buscar Producto..." autofocus>
+                        {{-- <input type="text" wire:model="buscarproducto" placeholder="Buscar Producto..." class="form-control"> --}}
                     </div>
                     <br>
                     @if(strlen($this->buscarproducto) > 0)
