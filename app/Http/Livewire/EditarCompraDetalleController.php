@@ -135,23 +135,40 @@ class EditarCompraDetalleController extends Component
      {
          $this->datalistcarrito=Compra::join('compra_detalles','compra_detalles.compra_id','compras.id')
          ->join('products','products.id','compra_detalles.product_id')
-         ->select('compras.*','products.id as product_id','compra_detalles.cantidad as cantidad','compra_detalles.precio as precio')
+         ->join('lotes','lotes.id','compra_detalles.lote_compra')
+         ->select('compras.*','products.id as product_id','products.codigo as codigo_prod','products.nombre as product_nombre','compra_detalles.cantidad as cantidad','compra_detalles.precio as precio','lotes.pv_lote')
          ->where('compras.id',$this->ide)
          ->get();
          //$bn =EditarTransferencia::getContent();
+
+         dd($this->datalistcarrito);
  
          foreach ($this->datalistcarrito as $value) 
          {
-             $product = Product::select('products.*')
-             ->where('products.id',$value->product_id)->first();
+            
       
             if ($value->tipo_doc == 'FACTURA') {
+
                 
-                EditarCompra::add($product->id, $product->nombre,($value->precio/0.87), $value->cantidad);
+        $attributos=[
+            'precio'=>$value->pv_lote,
+            'codigo'=>$value->codigo_prod,
+            
+        ];
+
+        $products = array(
+            'id'=>$value->product_id,
+            'name'=>$value->product_nombre,
+            'price'=>$value->precio,
+            'quantity'=>$value->cantidad,
+            'attributes'=>$attributos
+        );
+                
+                EditarCompra::add($products);
             }
             
             else{
-                EditarCompra::add($product->id, $product->nombre,$value->precio, $value->cantidad);
+                EditarCompra::add($products);
             }
          }
  
@@ -464,10 +481,10 @@ class EditarCompraDetalleController extends Component
     public function guardarCompra()
     {
         $this->verificarLotes();
-//dd($this->passed);
+            //dd($this->passed);
 
         if($this->passed == true){
-            dd("si pasa");
+           // dd("si pasa");
 
             $rules = [
                 'provider'=>'required',
@@ -511,13 +528,26 @@ class EditarCompraDetalleController extends Component
                     }
     
                     $bn = CompraDetalle::where('compra_id',$this->ide);
+                    $lt=Lote::join('compra_detalles','compra_detalles.lote_compra','lotes.id')
+                    ->join('compras as comp','comp.id','compra_detalles.compra_id')->where('comp.id',$this->ide)->delete();
 
-                    
-
+                    //dd($this->ide,$lt);
                     $bn->forceDelete();
+                
                   
                     $items = EditarCompra::getContent();
                     foreach ($items as $item) {
+
+
+                        $lot= Lote::create([
+                            'existencia'=>$item->quantity,
+                            'costo'=>$item->price,
+                            'status'=>'Activo',
+                            'product_id'=>$item->id,
+                            'pv_lote'=>$item->attributes->precio
+                        ]);
+
+
                         CompraDetalle::create([
                             'precio' => $this->tipo_documento== 'FACTURA'?$item->price*0.87:$item->price,
                             'cantidad' => $item->quantity,
@@ -527,8 +557,8 @@ class EditarCompraDetalleController extends Component
                             
                         ]);
 
-                        Lote::where();
-                        
+                     
+                      
                         /*DB::table('productos_destinos')
                         ->updateOrInsert(['stock'],$item->quantity, ['product_id' => $item->id, 'destino_id'=>$this->destino]);*/
                       

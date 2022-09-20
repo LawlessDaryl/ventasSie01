@@ -169,8 +169,8 @@
             <label>Control Lote</label>
             <select wire:model='cont_lote' class="form-control">
                 <option value="null" disabled>Elegir</option>
-                <option value="Manual">Seleccion Manual</option>
-                <option value="Automatico">FIFO automatico</option>
+                <option value="MANUAL">Seleccion Manual</option>
+                <option value="AUTOMATICO">FIFO automatico</option>
             </select>
             @error('cont_lote') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>

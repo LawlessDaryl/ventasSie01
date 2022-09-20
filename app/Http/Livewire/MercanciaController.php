@@ -36,7 +36,7 @@ class MercanciaController extends Component
     $archivo,$searchproduct,$costo,$sm,$concepto,$destino,$detalle,$tipo_proceso,$col,$destinosucursal,$observacion,$cantidad,$result,$arr,$ing_prod_id,$destino_delete;
     private $pagination = 50;
 
-    public function paginationView()
+    public function paginationView()    
     {
         return 'vendor.livewire.bootstrap';
     }
@@ -55,9 +55,9 @@ class MercanciaController extends Component
        // $this->borrarLotes();
        //$this->ajustarLotes();
        //$this->productosajustados();
-        // $this->limpiarstock();
-        // $this->buscarproducto();
-        // $this->inactivarlotes();
+        //$this->limpiarstock();
+        //$this->buscarproducto();
+       // $this->inactivarlotes();
 
     }
     public function render()

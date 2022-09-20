@@ -50,6 +50,10 @@ class ProductsController extends Component
         $this->cont_lote=null;
         
     }
+/**
+ * Si sub_seleccionado no es nulo y la matriz de cambios tiene más de un elemento, establezca
+ * sub_seleccionado en nulo.
+ */
 
     public function updatedSelectedCategoria()
     {
@@ -62,30 +66,43 @@ class ProductsController extends Component
         }
     }
 
+   /**
+    * Restablece las variables selected_sub, selected_categoria, search y searchData a nulo.
+    */
     public function resetCategorias(){
         $this->selected_sub= null;
         $this->selected_categoria=null;
         $this->search=null;
         $this->searchData=[];
     }
-    public function resetSubcategorias(){
+    public function resetSubcategorias()
+    {
         $this->selected_sub= null;
-       
     }
 
 
+ /**
+  * Cuando el usuario cambia los parámetros de búsqueda, restablece la página a 1.
+  */
     public function updatingSearch()
     {
         $this->resetPage();
         
     }
 
+  /**
+   * Cuando el usuario cambie el valor del cuadro de selección, restablezca la página a 1 y borre la
+   * matriz searchData.
+   */
     public function updatingSelected_categoria()
     {
         $this->resetPage();
         $this->searchData=[];
         
     }
+   /**
+    * Restablece la página a 1 y borra la matriz searchData.
+    */
     public function updatingSelected_sub()
     {
         $this->resetPage();
@@ -357,6 +374,11 @@ class ProductsController extends Component
     }
     protected $listeners = ['deleteRow' => 'Destroy','deleteRowPermanently' => 'DestroyPermanently'];
 
+   /**
+    * Elimina el producto y su imagen de la base de datos y la carpeta de almacenamiento.
+    * 
+    * @param Product product El producto a eliminar
+    */
     public function Destroy(Product $product)
     {
         $imageTemp = $product->image;
@@ -434,6 +456,10 @@ class ProductsController extends Component
         $this->codigo= Carbon::now()->format('ymd').mt_rand($min,$max);
     }
 
+    /**
+     * Valida el formulario, crea una nueva categoría, la guarda, restablece el formulario, emite un
+     * mensaje.
+     */
     public function StoreCategory(){
 
         $rules = ['name' => 'required|unique:categories|min:3'];
@@ -444,6 +470,7 @@ class ProductsController extends Component
         ];
         $this->validate($rules, $messages);
             $category = Category::create([
+            /* Convirtiendo el nombre a mayúsculas. */
                 'name' =>  strtoupper($this->name),
                 'descripcion'=>$this->descripcion,
                 'categoria_padre'=>0
@@ -452,9 +479,13 @@ class ProductsController extends Component
         $category->save();
         $this->resetCategory();
         $this->emit('cat-added', 'Categoría Registrada');
-        $this->selected_id2=$category->id;
+        //$this->selected_id2=$category->id;
     }
 
+   /**
+    * Valida la entrada, crea un nuevo objeto Marca, lo guarda en la base de datos y luego reinicia la
+    * entrada y emite un evento
+    */
     public function StoreMarca()
     {
         $rules = ['newmarca' => 'required|unique:marcas,nombre|min:3'];
@@ -473,6 +504,9 @@ class ProductsController extends Component
         $this->emit('marca-added');
     }
 
+/**
+ * Valida la entrada, crea una nueva unidad, la guarda y luego reinicia la entrada y emite un evento.
+ */
     public function StoreUnidad()
     {
         $rules = ['newunidad' => 'required|unique:unidads,nombre|min:3'];
@@ -491,6 +525,9 @@ class ProductsController extends Component
         $this->emit('unidad-added');
     }
 
+/**
+ * Crea una nueva categoría y luego emite un evento al componente principal
+ */
     public function StoreSubcategory(){
         
         $rules = ['subcategory' => 'required|unique:categories,name|min:3'];
@@ -520,31 +557,31 @@ class ProductsController extends Component
             $this->descripcion="";
     }
 
+/**
+ * Estoy tratando de importar un archivo con la función Excel::import().
+ * 
+ * @param archivo El archivo a importar.
+ * 
+ * @return El método de importación devuelve una colección de las filas importadas.
+ */
 
     public function import($archivo){
-        
-        //$file = $request->file('import_file');
-       // dd($this->archivo);
-
        try {
         //$import->import('import-users.xlsx');
         Excel::import(new ProductsImport,$this->archivo);
         return redirect()->route('productos');
     } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
          $this->failures = $e->failures();
-        // dd($this->failures);
-        //  foreach ($failures as $failure) {
-        //      dd($failure->attribute()); // row that went wrong
-        //      $failure->attribute(); // either heading key (if using heading row concern) or column index
-        //      $failure->errors(); // Actual error messages from Laravel validator
-        //      $failure->values(); // The values of the row that has failed.
-        //  }
+   
     }
-
-
-     
-       //dd($errors->all());
     }
+/**
+ * Si la casilla de verificación está marcada, la matriz de productos seleccionados se completará con
+ * todos los ID de productos. Si la casilla de verificación no está marcada, la matriz de productos
+ * seleccionados se vaciará.
+ * 
+ * @param value El valor de la casilla de verificación.
+ */
 
     public function updatedCheckAll($value){
         if ($value) {
@@ -555,6 +592,10 @@ class ProductsController extends Component
         }
     }
 
+   /**
+    * Elimina un producto de la base de datos, pero primero verifica si el producto se está utilizando
+    * en otras tablas. Si es así, emite un evento a la interfaz.
+    */
     public function deleteProducts(){
 
         $auxi=0;
