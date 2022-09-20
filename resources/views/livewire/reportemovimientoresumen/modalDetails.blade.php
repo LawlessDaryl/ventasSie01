@@ -47,13 +47,13 @@
                         <div class="form-group">
                             @if($this->type != "Elegir")
                             <h6>Categoria</h6>
-                            <select wire:model='categoria_id' class="form-control">
+                            <select wire:model='categoria_ie_id' class="form-control">
                                 <option value="Elegir" selected disabled>Elegir</option>
-                                @foreach ($categorias as $c)
+                                @foreach ($categorias_ie as $c)
                                     <option value="{{ $c->id }}">{{ $c->nombre }}</option>
                                 @endforeach
                             </select>
-                            @error('categoria_id')
+                            @error('categoria_ie_id')
                                 <span class="text-danger er">{{ $message }}</span>
                             @enderror
 

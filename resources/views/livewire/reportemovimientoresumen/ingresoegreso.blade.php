@@ -38,7 +38,7 @@
                     </div>
                     @endforeach
                 </div>
-                <div class="col-lg-3 col-md-4 col-sm-12">
+                <div class="col-sm-12 col-md-2">
                     <div class="form-group" >
                         <label>Buscar</label>
                         <div class="input-group mb-4">
@@ -80,12 +80,11 @@
                                         <option value="{{$item->id}}">{{$item->nombre}}</option>
                                         @endforeach
                                         <option value="TODAS">TODAS</option>
-                                       
                                     </select>
                                            
                     </div>
                 </div>
-                <div class="col-sm-12 col-md-1">
+                <div class="col-sm-12 col-md-2">
                    <div class="form-group">
                                     <label>Sucursal</label>
                                     <select wire:model="sucursal" class="form-control">
@@ -96,12 +95,12 @@
                                            
                     </div>
                 </div>
-                <div class="col-sm-12 col-md-1">
+                <div class="col-sm-12 col-md-2">
                    <div class="form-group">
                                     <label>Categoria</label>
-                                    <select wire:model='categoriatodo_id' class="form-control">
-                                        <option value="Todos" selected disabled>Todas las Categorias</option>
-                                        @foreach ($categoriastodo as $c)
+                                    <select wire:model='categoria_id' class="form-control">
+                                        <option value="Todos">Todas las Categorias</option>
+                                        @foreach ($categorias as $c)
                                             <option value="{{ $c->id }}">{{ $c->nombre }} - {{ $c->tipo }}</option>
                                         @endforeach
                                     </select>
@@ -117,10 +116,10 @@
                                 <tr>
                                     <th class="table-th text-withe text-center" style="font-size: 100%">#</th>
                                     <th class="table-th text-withe text-center" style="font-size: 100%">FECHA</th>
-                                    <th class="table-th text-withe text-center" style="font-size: 100%">TIPO DE MOVIMIENTO</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 100%">MOVIMIENTO</th>
                                     <th class="table-th text-withe text-center" style="font-size: 100%">CATEGORIA</th>
                                     <th class="table-th text-withe text-center" style="font-size: 100%">CAJA</th>
-                                    <th class="table-th text-withe text-center" style="font-size: 100%">NOMBRE CARTERA</th>
+                                    <th class="table-th text-withe text-center" style="font-size: 100%">CARTERA</th>
                                     <th class="table-th text-withe text-center" style="font-size: 100%">IMPORTE</th>
                                     <th class="table-th text-withe text-center" style="font-size: 100%">MOTIVO</th>
                                     <th class="table-th text-withe text-center" style="font-size: 100%">USUARIO</th>
@@ -147,7 +146,13 @@
                                      
                                         <td>
                                             <h6 class="text-center" style="font-size: 100%">
-                                                {{ $p->nombrecategoria }}
+                                                @if($p->nombrecategoria != null)
+                                                    <b>{{ $p->nombrecategoria }}</b>
+                                                @else
+                                                    Sin Categoria
+                                                @endif
+
+
                                             </h6>
                                         </td>
                                         <td>

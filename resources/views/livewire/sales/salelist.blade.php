@@ -438,15 +438,17 @@
                                             <i class="fas fa-bars"></i>
                                         </button>
                                         @if(Auth::user()->hasPermissionTo('VentasListaMasFiltros'))
-                                        <a href="#" onclick="ConfirmarAnular({{ $lv->codigo }}, '{{$lv->nombrecartera}}')" class="btn btn-sm" title="Anular Venta" style="background-color: red; color:white">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </a>
-                                        {{-- <button wire:click="editsale({{$d->id}})" class="btn btn-sm" title="Editar Venta" style="background-color: rgb(13, 175, 220); color:white">
-                                            <i class="fas fa-edit"></i>
-                                        </button> --}}
-                                        <button wire:click="modalcambiarusuario({{$lv->codigo}})" class="btn btn-sm" title="Cambiar Usuario Vendedor" style="background: #ee761c; color:white">
-                                            <i class="fas fa-user-edit"></i>
-                                        </button>
+                                            @if($lv->estado == "PAID")
+                                            <a href="#" onclick="ConfirmarAnular({{ $lv->codigo }}, '{{$lv->nombrecartera}}')" class="btn btn-sm" title="Anular Venta" style="background-color: red; color:white">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </a>
+                                            {{-- <button wire:click="editsale({{$d->id}})" class="btn btn-sm" title="Editar Venta" style="background-color: rgb(13, 175, 220); color:white">
+                                                <i class="fas fa-edit"></i>
+                                            </button> --}}
+                                            <button wire:click="modalcambiarusuario({{$lv->codigo}})" class="btn btn-sm" title="Cambiar Usuario Vendedor" style="background: #ee761c; color:white">
+                                                <i class="fas fa-user-edit"></i>
+                                            </button>
+                                            @endif
                                         @endif
                                         <button wire:click="crearcomprobante({{$lv->codigo}})" class="btn btn-sm" title="Crear Comprobante" style="background-color: rgb(0, 104, 21); color:white">
                                             <i class="fas fa-print"></i>

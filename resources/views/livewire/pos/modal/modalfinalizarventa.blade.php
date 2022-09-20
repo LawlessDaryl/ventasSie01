@@ -87,7 +87,15 @@
                 </div>
                 <div class="col-4 text-center">
                     @if ($dinero_recibido >= $total_bs && $total_bs>0)
-                    <button wire:click.prevent="savesale()" type="button" class="btn btn-primary">VENDER</button>
+                        <div wire:loading.remove>
+                            <button wire:click.prevent="savesale()" type="button" class="btn btn-primary">VENDER</button>
+                        </div>
+
+                        <div id="preloader_3" wire:loading>
+                            <div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+                        </div>
+
+
                     @endif
                 </div>
             </div>
