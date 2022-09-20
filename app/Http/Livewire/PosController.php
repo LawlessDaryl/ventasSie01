@@ -963,13 +963,13 @@ class PosController extends Component
         //Mostrando la ventana modal
         $this->emit('show-stockinsuficiente');
     }
-<<<<<<< HEAD
 
     
-    public function selectLote(Product $id){
+    public function selectLote(Product $id)
+    {
         dd($id);
        // $this->emit('seleccionarlote');
-=======
+    }
     //Muestra una ventana modal con los detalles de precio y costo de un producto
     public function modal_lotes($idproducto, $cantidad)
     {
@@ -1030,6 +1030,5 @@ class PosController extends Component
 
         //Mostrando la ventana modal
         $this->emit('show-modallotesproducto');
->>>>>>> 4179f9e14669297e63118336e61c7218dc5b00e5
     }
 }
