@@ -374,7 +374,7 @@
                                     </td>
                                     <td>
                                         <div class="btn-group" role="group" aria-label="Basic example">
-                                            <button title="Ver Precio y Costos por Lotes" wire:click.prevent="modal_lotes({{ $item->id }}, {{$item->quantity}})" class="btn btn-sm" style="background-color: rgb(13, 156, 0); color:white">
+                                            <button title="Ver Precio y Costos por Lotes" wire:click.prevent="modal_lotes({{ $item->id }})" class="btn btn-sm" style="background-color: rgb(13, 156, 0); color:white">
                                                 <i class="fas fa-list-ul"></i>
                                             </button>
                                             <a title="Eliminar Producto" href="#" onclick="ConfirmarEliminar('{{ $item->id }}', '{{$item->name}}')" class="btn btn-sm" style="background-color: red; color:white">
@@ -624,6 +624,22 @@
                 padding: '2em',
             })
         });
+        //Cierra la ventana Modal Lotes Producto y muestra mensaje Toast Ok
+        window.livewire.on('hide-modallotesproducto', msg => {
+            $("#modallotesproducto").modal("hide");
+            const toast = swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 5000,
+            padding: '2em'
+            });
+            toast({
+                type: 'success',
+                title: @this.mensaje_toast,
+                padding: '2em',
+            })
+        });
         //Mostrar Mensaje Carrito de Ventas Vaciado exitosamente
         window.livewire.on('cart-clear', event => {
                 swal(
@@ -650,7 +666,7 @@
             })
         });
 
-        //Mostrar cualquier tipo de mensaje totast de un OK
+        //Mostrar cualquier tipo de mensaje toast de un OK
         window.livewire.on('mensaje-ok', msg => {
             const toast = swal.mixin({
             toast: true,
@@ -665,7 +681,7 @@
                 padding: '2em',
             })
         });
-        //Mostrar cualquier tipo de mensaje totast de un OK
+        //Mostrar cualquier tipo de mensaje toast de advertencia
         window.livewire.on('mensaje-advertencia', msg => {
             const toast = swal.mixin({
             toast: true,

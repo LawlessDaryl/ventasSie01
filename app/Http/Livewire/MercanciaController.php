@@ -50,14 +50,14 @@ class MercanciaController extends Component
         $this->concepto ="Elegir";
         $this->tipo_de_operacion="Entrada";
       
-       //$this->limpiarstock();
-        //$this->buscarproducto();
-       // $this->borrarLotes();
-       //$this->ajustarLotes();
-       //$this->productosajustados();
-        //$this->limpiarstock();
-        //$this->buscarproducto();
-       // $this->inactivarlotes();
+    //    $this->limpiarstock();
+    //     $this->buscarproducto();
+    //    $this->borrarLotes();
+    //    $this->ajustarLotes();
+    //    $this->productosajustados();
+    //     $this->limpiarstock();
+    //     $this->buscarproducto();
+    //    $this->inactivarlotes();
 
     }
     public function render()

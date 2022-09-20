@@ -80,7 +80,7 @@ class PosController extends Component
     public $producto_id;
     //Guarda todos los lotes activos de un producto
     public $lotes_producto;
-    //Guarda el promedio de precio de un producto
+    //Guarda el promedio de precio de un producto para la ventana modal lotes producto
     public $precio_promedio;
     //Guarda la candidad de un producto para la venta
     public $cantidad_venta;
@@ -888,7 +888,7 @@ class PosController extends Component
         ->get()->first();
         return $tiendaproducto->precio;
     }
-    //Crear cliente
+    //Crear Cliente
     public function crearcliente()
     {
         //Reglas de Validación
@@ -963,32 +963,24 @@ class PosController extends Component
         //Mostrando la ventana modal
         $this->emit('show-stockinsuficiente');
     }
-
-    
-    public function selectLote(Product $id)
+    //Muestra una ventana modal con los detalles de todos los lotes nesesarios para llegar a la cantida puesta en el carrito de ventas de un producto
+    public function modal_lotes($idproducto)
     {
-        dd($id);
-       // $this->emit('seleccionarlote');
-    }
-    //Muestra una ventana modal con los detalles de precio y costo de un producto
-    public function modal_lotes($idproducto, $cantidad)
-    {
-        
+        //Actualizando la variable  $this->producto_id para (de ser nesesario) aplicar un precio promedio por lotes con el método $this->aplicar_precio_promedio()
+        $this->producto_id = $idproducto;
+        //Guarda la cantidad a vender en el carrito de ventas para mostrar esa cantidad en la ventana modal lotes producto
         $this->cantidad_venta = Cart::get($idproducto)->quantity;
-
-
-
-        //Devuelve un array con todos los costos y precios en los lotes de un producto
+        //Guardando todos los lotes de un producto
         $this->lotes_producto = Lote::select("lotes.*")
         ->where("lotes.status", "Activo")
         ->where("lotes.product_id", $idproducto)
         ->orderBy("lotes.created_at","asc")
         ->get();
-
+        //Variable array en donde se guardarán todos los ids de los lotes de un producto que son nesesarios para llegar a la cantidad puesta en el carrito ded ventas
         $lotes = [];
-
+        //Guardando la cantidad para vender del producto de la variable $this->cantidad_venta (Cantidad obtenida del método $this->cambiarcantidad($idproducto, $cantidad_nueva))
         $cant = $this->cantidad_venta;
-
+        //Recorriendo todos los lotes nesesarios para llegar a la cantida ($cant) requerrida
         foreach($this->lotes_producto as $lp)
         {
             if($lp->existencia >= $cant)
@@ -1002,33 +994,61 @@ class PosController extends Component
                 array_push($lotes, $lp->id);
             }
         }
-
-
-        //Devuelve un array con todos los costos y precios en los lotes de un producto
+        //Guardando todos los lotes de un producto nesesarios para llegar a la cantidad puesta en el carrito ded ventas
         $this->lotes_producto = Lote::select("lotes.*")
         ->where("lotes.status", "Activo")
         ->where("lotes.product_id", $idproducto)
         ->whereIn('lotes.id', $lotes)
         ->orderBy("lotes.created_at","desc")
         ->get();
-
-
-
-
-
-        //Devuelve un promedio de precios en los lotes de un producto
+        //Guarda un promedio de precios en los lotes de un producto para mostrar en la ventana modal lotes producto 
         $this->precio_promedio = Lote::select("lotes.pv_lote as pv_lote")
         ->where("lotes.status", "Activo")
         ->where("lotes.product_id", $idproducto)
         ->avg('lotes.pv_lote');
-
-
-
         //Guardando el nombre del producto
         $this->nombreproducto = Product::find($idproducto)->nombre;
-        //Guardando la cantidad a vender del producto
-
-        //Mostrando la ventana modal
+        //Mostrando la Ventana Modal Lotes Producto
         $this->emit('show-modallotesproducto');
+    }
+    //Actualiza el precio (Que es el promedio de precios de la cantidad de lotes nesesarios para la venta) de un producto del carrito de ventas
+    public function aplicar_precio_promedio()
+    {
+        //Llamando al método cambiarprecio para actualizar el precio promedio por lotes de un produto en el carrito de ventas
+        $this->cambiarprecio($this->producto_id, number_format($this->precio_promedio,2));
+        $this->mensaje_toast = "Precio promedio: " . number_format($this->precio_promedio,2) . "Bs aplicado al producto " . $this->nombreproducto;
+        //Ocultando la Ventana Modal Lotes Producto
+        $this->emit('hide-modallotesproducto');
+    }
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //Roscio
+    public function selectLote(Product $id)
+    {
+        dd($id);
+       // $this->emit('seleccionarlote');
     }
 }
