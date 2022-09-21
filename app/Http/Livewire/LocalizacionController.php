@@ -20,7 +20,7 @@ class LocalizacionController extends Component
     use WithPagination;
     use WithFileUploads;
     public $sucursal, $codigo, $descripcion,$ubicacion, $tipo,$product,$product_name,
-    $selected_id, $categoria,$subcategoria,$location, $pageTitle, $componentName,$search,$search2,$destino,$listaproductos,$auxi=[];
+    $selected_id, $categoria,$subcategoria,$location, $pageTitle, $componentName,$search,$search2,$destino,$listaproductos,$auxi=[],$arr;
     private $pagination = 20;
     public $col,$selectedmob;
     public function paginationView()
@@ -66,27 +66,37 @@ class LocalizacionController extends Component
         $data_categoria= Category::where('categories.categoria_padre',0)->orderBy('name', 'asc')->get();
      
         if (strlen($this->search2) > 0)
-        $data_prod_mob = Product::select('products.*')
-        ->where('nombre', 'like', '%' . $this->search2 . '%')
-        ->orWhere('codigo','like','%'.$this->search2.'%')
-        ->take(2)
-        ->get();
-        else
-        $data_prod_mob=false;
+        {
 
-        $data_subcategoria= Category::where('categories.categoria_padre',$this->categoria)
-        ->where('categories.categoria_padre','!=','Elegir')
-        ->get();
-        $data_producto= Product::where('category_id',$this->subcategoria)->get();
+            $data_prod_mob = Product::select('products.*')
+                            ->join('productos_destinos','productos_destinos.product_id','id')
+                            
+                            ->whereNotIn('id',$this->arr)
+                            ->where('nombre', 'like', '%' . $this->search2 . '%')
+                            ->orWhere('codigo','like','%'.$this->search2.'%')
+                            ->take(3)
+                            ->get();
+    
+            //dd($this->arr);
+        }
+        else{
 
-        $data_destino=Sucursal::join('destinos as dest','sucursals.id','dest.sucursal_id')
-        ->select('dest.*','dest.id as destino_id','sucursals.*')->get();
-
-        $data_mobiliario=Location::join('destinos as dest', 'dest.id', 'locations.destino_id')
-        ->join('sucursals as suc','suc.id','dest.sucursal_id')
-        ->select('locations.*', 'dest.nombre as destino','suc.name as sucursal' )
-        ->where('dest.id',$this->destino)
-        ->get();
+            $data_prod_mob=false;
+        }
+            $data_subcategoria= Category::where('categories.categoria_padre',$this->categoria)
+                                ->where('categories.categoria_padre','!=','Elegir')
+                                ->get();
+            $data_producto= Product::where('category_id',$this->subcategoria)->get();
+    
+            $data_destino=Sucursal::join('destinos as dest','sucursals.id','dest.sucursal_id')
+                             ->select('dest.*','dest.id as destino_id','sucursals.*')->get();
+    
+            $data_mobiliario=Location::join('destinos as dest', 'dest.id', 'locations.destino_id')
+                                ->join('sucursals as suc','suc.id','dest.sucursal_id')
+                                ->select('locations.*', 'dest.nombre as destino','suc.name as sucursal' )
+                                ->where('dest.id',$this->destino)
+                                ->get();
+       
 
     
         return view('livewire.localizacion.component', [
@@ -264,7 +274,18 @@ class LocalizacionController extends Component
 
     public function asignaridmob($id){
 
+        $this->arr=[];
         $this->selectedmob=$id;
+        $loc=LocationProducto::where('location',$this->selectedmob)->get('product');
+        
+        foreach ($loc as $data) {
+            
+            array_push($this->arr, $data->product);
+
+        }
+
+  // dd($arr);
+
         
 
     }

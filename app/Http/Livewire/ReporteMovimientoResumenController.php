@@ -837,6 +837,7 @@ class ReporteMovimientoResumenController extends Component
 
         return $utilidad;
      }
+
      public function utilidadservicio($idmovimiento)
      {
 
@@ -857,6 +858,8 @@ class ReporteMovimientoResumenController extends Component
         $this->subtotalesIngresos = $this->totalesIngresosV->sum('importe') + $this->totalesIngresosS->sum('importe') + $this->totalesIngresosIE->sum('importe');
         //Totales carteras
 
+     /* Sumando la suma de la columna de importación en las tablas totalesIngresosV, totalesIngresosS y
+     totalesIngresosIE. */
         $this->ingresosTotales = $this->totalesIngresosV->sum('importe') + $this->totalesIngresosS->sum('importe') + $this->totalesIngresosIE->sum('importe');
 
 

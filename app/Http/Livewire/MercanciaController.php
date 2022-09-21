@@ -467,13 +467,15 @@ EXISTEN PRODUCTOS QUE HAN INGRESADO POR AJUSTE DE INVENTARIOS O INVENTARIO INICI
 
 
         //dd($object);
+        
                foreach ($ini as $data3) {
 
                 $compracosto= CompraDetalle::where('product_id',$data3->product_id)->latest('created_at')->value('precio');
                 //dd($compracosto);
                 $costoproducto=Product::where('id',$data3->product_id)->value('costo','precio_venta');
                 $precio_venta= Product::where('id',$data3->product_id)->value('precio_venta');
-               //dd($precio_venta);
+               
+                //dd($precio_venta);
                
                 DB::beginTransaction();
                 try {
