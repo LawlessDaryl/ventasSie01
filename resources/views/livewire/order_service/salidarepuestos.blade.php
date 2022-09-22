@@ -50,12 +50,12 @@
                                                             @forelse ($sm as $d)
                                                                 <tr>
                                                                     <td class="text-center">
-                                                                        <h6 class="text-center">{{ $d->nombre }}
+                                                                        <h6 class="text-center">{{ $d->prod_name }}- <b>{{$d->dest_name}}</b> 
                                                                         </h6>
                                                                     </td>
                                                                     <td class="text-center">
                                                                         <a href="javascript:void(0)"
-                                                                            wire:click="Seleccionar('{{ $d->id }}')"
+                                                                            wire:click="Seleccionar('{{ $d->pid }}')"
                                                                             class="btn btn-warning mtmobile"
                                                                             title="Seleccionar">
                                                                             <i class="fas fa-check"></i>

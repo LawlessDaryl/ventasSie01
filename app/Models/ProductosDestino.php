@@ -13,8 +13,7 @@ class ProductosDestino extends Model
 
     
     public function productos(){
-        
-       $this->belongsTo(Product::class);  
+       $this->belongsTo(Product::class,'productos_destinos.id','productos_dstinos');  
     }
 
    
