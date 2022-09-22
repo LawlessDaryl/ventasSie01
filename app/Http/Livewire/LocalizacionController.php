@@ -68,10 +68,10 @@ class LocalizacionController extends Component
         if (strlen($this->search2) > 0)
         {
 
-            $data_prod_mob = Product::select('products.*')
-                            ->join('productos_destinos','productos_destinos.product_id','id')
+            $data_prod_mob = Product::
+                            join('productos_destinos','productos_destinos.product_id','products.id')
                             
-                            ->whereNotIn('id',$this->arr)
+                            ->whereNotIn('products.id',$this->arr)
                             ->where('nombre', 'like', '%' . $this->search2 . '%')
                             ->orWhere('codigo','like','%'.$this->search2.'%')
                             ->take(3)
