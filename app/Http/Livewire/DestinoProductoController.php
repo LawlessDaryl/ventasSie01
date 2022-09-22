@@ -251,7 +251,9 @@ class DestinoProductoController extends Component
     
  
     public function incrementar(){
+
         $stockactual=ProductosDestino::where('productos_destinos.product_id',$this->productid)->where('productos_destinos.destino_id',$this->selected_id)->value('stock');
+
 
         ProductosDestino::where('productos_destinos.destino_id',$this->selected_id)->where('productos_destinos.product_id',$this->productid)
         ->update(['stock' => $stockactual + $this->cantidad ]);
