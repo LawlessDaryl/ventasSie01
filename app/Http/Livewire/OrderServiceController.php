@@ -8,6 +8,7 @@ use App\Models\CarteraMov;
 use App\Models\CatProdService;
 use App\Models\ClienteMov;
 use App\Models\Cliente;
+use App\Models\Destino;
 use App\Models\DetalleSalidaProductos;
 use App\Models\Lote;
 use App\Models\Movimiento;
@@ -81,7 +82,7 @@ class OrderServiceController extends Component
     public $edit_precioservicioterminado, $edit_acuentaservicioterminado, $edit_saldoterminado, $edit_costoservicioterminado, $edit_motivoservicioterminado, $edit_carteraservicioterminado;
 
     //Variables para cambiar técnico responsable
-    public $id_usuario, $tipo, $almacenrepuestos,$precio_venta,$repuestos;
+    public $id_usuario, $tipo, $almacenrepuestos,$precio_venta,$repuestos,$siguiente,$type2;
 
     //Variables para mostrar tecnico responsable en los sweet alerts (Alertas JavaScript)
     public $alert_responsabletecnico;
@@ -3206,6 +3207,7 @@ class OrderServiceController extends Component
     public function modaleditarservicio($type, $idservicio, $idordendeservicio)
     {
 
+
         //Actualizando variable $id_orden_de_servicio para mostrar el codigo de la orden del servicio en el titulo de la ventana modal
         $this->id_orden_de_servicio = $idordendeservicio;
 
@@ -3978,6 +3980,8 @@ class OrderServiceController extends Component
     public function addProduct(Product $id){
 
             $pd=ProductosDestino::where('product_id',$id->id)->where('destino_id',$this->destinosalida)->select('stock')->value('stock');
+            $dest=Destino::find($this->destinosalida);
+     
 
           if ($pd>0 and $this->cantidad < $pd) {
         
@@ -3996,7 +4000,7 @@ class OrderServiceController extends Component
             
             $this->validate($rules, $messages);
             
-            $this->col->push(['product_id'=> $id->id,'product-name'=>$id->nombre,'cantidad'=>$this->cantidad,'precio_venta'=>$this->precio_venta,'destino'=>$this->destinosalida]);
+            $this->col->push(['product_id'=> $id->id,'product-name'=>$id->nombre,'cantidad'=>$this->cantidad,'precio_venta'=>$this->precio_venta,'destino'=>$dest->nombre]);
     
             $this->result=null;
             $this->cantidad=null;
@@ -4029,6 +4033,7 @@ class OrderServiceController extends Component
         /* Se registra la salida de productos de almacen de repuestos*/ 
 
         //dd($this->col);
+       
        
         $rules = [
             'observacion' => 'required'
@@ -4133,6 +4138,7 @@ class OrderServiceController extends Component
                 }
  
                 $this->resetui();
+               $this->modaleditarservicio($this->tipo,$this->id_servicio,$this->id_orden_de_servicio);
                 $this->emit('salidaregistrada');
 }
 

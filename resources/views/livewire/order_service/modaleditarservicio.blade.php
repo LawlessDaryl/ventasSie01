@@ -148,7 +148,7 @@
                         </div>
                         <div class="form-row pt-3 mt-1" style="width: 25%;">
                             <div class="col-md-12">
-                                <button  type="button" class="btn btn-info" data-toggle="modal"
+                                <button  type="button" class="btn btn-info" data-toggle="modal" wire:click="$emit('hide-editarservicio')"
                                 data-target="#salidarepuestos">Registrar Repuestos</button>
                             </div>
                         </div>
