@@ -9,47 +9,58 @@
 </style>
 @endsection
 
-<div class="container">
+<div class="">
   <div class="row">
     <div class="col-12 text-center">
       <p class="h2">Reporte de Ventas por Gestión</p>
-      <button wire:click="$emit('cargar-grafico')">
-        Iniciar
-      </button>
     </div>
   </div>
-  <div class="row">
-    <div class="col order-first">
-      <div class="form-group">
-        <label for="exampleFormControlSelect1">Seleccione Sucursal</label>
-        <select wire:model="sucursal_id" class="form-control" id="exampleFormControlSelect1">
-          @foreach($listasucursales as $l)
-          <option value="{{$l->id}}">{{$l->name}}</option>
-          @endforeach
-        </select>
-      </div>
+
+
+
+
+
+  <div class="form-group">
+    <div class="row">
+        <div class="col-12 col-sm-6 col-md-3 text-center">
+            <b>Seleccione Sucursal</b>
+            <div class="form-group">
+              <select wire:model="sucursal_id" class="form-control" id="exampleFormControlSelect1">
+                @foreach($listasucursales as $l)
+                <option value="{{$l->id}}">{{$l->name}}</option>
+                @endforeach
+              </select>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-3 text-center">
+            <b>Seleccione Usuario</b>
+            <div class="form-group">
+              <select wire:model="usuario_id" class="form-control" id="exampleFormControlSelect1">
+                <option value="Todos">Todos los Usuarios</option>
+                @foreach($listausuarios as $lu)
+                <option value="{{$lu->id}}">{{$lu->name}}</option>
+                @endforeach
+              </select>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-3 text-center">
+            <b>Seleccione Gestión</b>
+            <div class="form-group">
+              <select wire:model="year" class="form-control" id="exampleFormControlSelect1">
+                @foreach($years_sales as $a)
+                <option value="{{$a->year}}">{{$a->year}}</option>
+                @endforeach
+              </select>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-3 text-center">
+          <b style="color: aliceblue;">|</b>
+            <div class="form-group">
+              <button wire:click.prevent="aplicar_filtros()" type="button" class="btn btn-outline-primary form-control">Aplicar Filtros</button>
+            </div>
+        </div>
     </div>
-    <div class="col">
-      <div class="form-group">
-        <label for="exampleFormControlSelect1">Seleccione Usuario</label>
-        <select wire:model="usuario_id" class="form-control" id="exampleFormControlSelect1">
-          @foreach($listausuarios as $lu)
-          <option value="{{$lu->id}}">{{$lu->name}}</option>
-          @endforeach
-        </select>
-      </div>
-    </div>
-    <div class="col order-last">
-      <div class="form-group">
-        <label for="exampleFormControlSelect1">Seleccione Gestión</label>
-        <select wire:model="year" class="form-control" id="exampleFormControlSelect1">
-          @foreach($years_sales as $a)
-          <option value="{{$a->year}}">{{$a->year}}</option>
-          @endforeach
-        </select>
-      </div>
-    </div>
-  </div>
+</div>
   <div id="chart">
   </div>
 </div>
@@ -81,7 +92,7 @@
             },
             series: [{
               name: 'Ventas',
-              data: [@this.enero, @this.febrero,@this.marzo,@this.abril,@this.mayo,@this.junio,@this.julio,@this.agosto,@this.septiembre,@this.octubre,@this.noviembre,@this.diciembre]
+              data: [@this.meses[0], @this.meses[1], @this.meses[2], @this.meses[3], @this.meses[4], @this.meses[5], @this.meses[6], @this.meses[7], @this.meses[8], @this.meses[9], @this.meses[10], @this.meses[11]]
             }],
             xaxis: {
               categories: ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
