@@ -15,24 +15,26 @@ class SaleStatisticController extends Component
 {
     //Guarda el id de una sucursal seleccionada
     public $sucursal_id;
-    //Guarda el id del usuario seleccionada
+    //Guarda el id del usuario seleccionado
     public $usuario_id;
     //Guarda el año seleccionado donde se mostrara las ventas
     public $year;
+    //Array en donde se guardaran el total Bs de las ventas por cada mes
+    public $meses;
 
-    //Meses en donde se almacenará el total de ventas de ese mes
-    public $enero, $febrero, $marzo, $abril, $mayo, $junio, $julio, $agosto, $septiembre, $octubre, $noviembre, $diciembre;
 
 
     public function mount()
     {
         $this->year = 2022;
         $this->sucursal_id = $this->idsucursal();
+        $this->usuario_id = "Todos";
+        $this->meses = [];
+
+
     }
     public function render()
     {
-        //Cargando los graficos cada que carga el render
-        $this->emit('cargar-grafico');
         //Obteniendo todos los años en los que se haya realizado ventas
         $years_sales = Sale::select(
         // DB::raw("DATE_FORMAT(created_at,'%M %Y') as months"))
@@ -48,48 +50,14 @@ class SaleStatisticController extends Component
         ->where("users.status","ACTIVE")
         ->get();
 
-        //CALCULANDO EL TOTAL BS EN LAS VENTAS POR CADA MES
 
+        
+        if($this->usuario_id != "Todos")
+        {
+            dd($this->sucursal_id);
+        }
 
-        $this->enero = Sale::whereYear('sales.created_at', $this->year)
-        ->whereMonth('sales.created_at', '01')
-        ->sum('total');
-        $this->febrero = Sale::whereYear('sales.created_at', $this->year)
-        ->whereMonth('sales.created_at', '02')
-        ->sum('total');
-        $this->marzo = Sale::whereYear('sales.created_at', $this->year)
-        ->whereMonth('sales.created_at', '03')
-        ->sum('total');
-        $this->abril = Sale::whereYear('sales.created_at', $this->year)
-        ->whereMonth('sales.created_at', '04')
-        ->sum('total');
-        $this->mayo = Sale::whereYear('sales.created_at', $this->year)
-        ->whereMonth('sales.created_at', '05')
-        ->sum('total');
-        $this->junio = Sale::whereYear('sales.created_at', $this->year)
-        ->whereMonth('sales.created_at', '06')
-        ->sum('total');
-        $this->julio = Sale::whereYear('sales.created_at', $this->year)
-        ->whereMonth('sales.created_at', '07')
-        ->sum('total');
-        $this->agosto = Sale::whereYear('sales.created_at', $this->year)
-        ->whereMonth('sales.created_at', '08')
-        ->sum('total');
-        $this->septiembre = Sale::whereYear('sales.created_at', $this->year)
-        ->whereMonth('sales.created_at', '09')
-        ->sum('total');
-        $this->octubre = Sale::whereYear('sales.created_at', $this->year)
-        ->whereMonth('sales.created_at', '10')
-        ->sum('total');
-        $this->noviembre = Sale::whereYear('sales.created_at', $this->year)
-        ->whereMonth('sales.created_at', '11')
-        ->sum('total');
-        $this->diciembre = Sale::whereYear('sales.created_at', $this->year)
-        ->whereMonth('sales.created_at', '12')
-        ->sum('total');
-
-
-
+        
         return view('livewire.sales.salestatistic', [
             'listasucursales' => Sucursal::all(),
             'listausuarios' => $listausuarios,
@@ -109,5 +77,27 @@ class SaleStatisticController extends Component
         ->first();
         return $idsucursal->id;
     }
+    //Devuelve el total Bs de un mes en las ventas
+    public function calcular_mes($month)
+    {
+        $mes_bs = Sale::join("carteras as c","c.id","sales.cartera_id")
+        ->join("cajas as cj","cj.id","c.caja_id")
+        ->where("cj.sucursal_id", $this->sucursal_id)
+        ->whereYear('sales.created_at', $this->year)
+        ->whereMonth('sales.created_at', $month)
+        ->sum('total');
+        return $mes_bs;
+    }
+    //
+    public function aplicar_filtros()
+    {
+        for ($i=1; $i < 13; $i++)
+        { 
+            array_push($this->meses, $this->calcular_mes($i));
+        }
+        //Cargando los graficos cada que carga el render
+        $this->emit('cargar-grafico');
+    }
+
 
 }

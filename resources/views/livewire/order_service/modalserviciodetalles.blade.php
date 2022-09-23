@@ -122,6 +122,17 @@
               <h3>
                 <b>Celular:</b> <a style="color: #0080a7" href="https://wa.me/{{$this->celularcliente}}" target="_blank">{{$this->celularcliente}}</a>
                 <i style="color: #0080a7" class="fab fa-whatsapp"></i>
+                <br>
+
+                @if($this->telefonocliente == 0)
+                <b>Teléfono:</b> No Tiene
+                @else
+                <b>Teléfono:</b> <a style="color: #0080a7" href="https://wa.me/{{$this->telefonocliente}}" target="_blank">{{$this->telefonocliente}}</a>
+                <i style="color: #0080a7" class="fab fa-whatsapp"></i>
+                @endif
+
+
+
               </h3>
             </div>
 

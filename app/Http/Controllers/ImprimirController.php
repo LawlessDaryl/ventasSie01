@@ -49,10 +49,11 @@ class ImprimirController extends Controller
         }
 
         $nombreempresa = Company::find(1)->name;
+        $logoempresa = Company::find(1)->image;
 
 
         
-        $pdf = PDF::loadView('livewire.pdf.ImprimirOrden', compact('data', 'datos', 'usuario','sucursal','nombreempresa'));
+        $pdf = PDF::loadView('livewire.pdf.ImprimirOrden', compact('data', 'datos', 'usuario','sucursal','nombreempresa','logoempresa'));
         /* $pdf->setPaper("A4", "landscape"); //orientacion y tamaño */
 
         return $pdf->stream('OrdenTrServicio.pdf');  //visualizar

@@ -58,7 +58,7 @@ class OrderServiceController extends Component
 
 
     //Variables para la (Ventana Modal) Detalles Servicio
-    public $responsabletecnico, $nombrecliente, $celularcliente, $fechaestimadaentrega, $fallaseguncliente,
+    public $responsabletecnico, $nombrecliente, $celularcliente, $telefonocliente, $fechaestimadaentrega, $fallaseguncliente,
     $tipotrabajo, $detalleservicio, $falla, $diagnostico, $solucion, $precioservicio, $acuenta,
     $saldo, $estado, $categoriaservicio, $costo, $detallecosto, $tiposervicio;
 
@@ -2899,6 +2899,7 @@ class OrderServiceController extends Component
         'mov.on_account as acuenta',
         'mov.saldo as saldo',
         'c.celular as celularcliente',
+        'c.telefono as telefonocliente',
         'services.falla_segun_cliente as falla_segun_cliente',
         'services.fecha_estimada_entrega as fecha_estimada_entrega',
         'services.detalle as detalleservicio',
@@ -2933,6 +2934,7 @@ class OrderServiceController extends Component
       
         $this->nombrecliente = $detallesservicio->nombrecliente;
         $this->celularcliente = $detallesservicio->celularcliente;
+        $this->telefonocliente = $detallesservicio->telefonocliente;
         $this->fechaestimadaentrega = $detallesservicio->fecha_estimada_entrega;
         $this->categoriaservicio = $detallesservicio->nombrecategoria;
         $this->detalleservicio = $detallesservicio->detalleservicio;
