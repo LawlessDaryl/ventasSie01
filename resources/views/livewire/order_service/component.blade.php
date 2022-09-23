@@ -858,6 +858,7 @@
     @include('livewire.order_service.modaleditarservicioterminado')
     @include('livewire.order_service.modalentregarservicio')
     @include('livewire.order_service.salidarepuestos')
+    @include('livewire.order_service.detallerepuestos')
 </div>
     
 @section('javascript')
@@ -885,6 +886,9 @@
         });
         window.livewire.on('salidaregistrada', Msg => {
             $('#salidarepuestos').modal('hide')
+        });
+        window.livewire.on('detallerepuestos', Msg => {
+            $('#detallerepuestos').modal('show')
         });
         window.livewire.on('hide-editarservicio', Msg => {
             $('#editarservicio').modal('hide')

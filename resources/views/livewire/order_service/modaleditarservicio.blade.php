@@ -152,30 +152,13 @@
                                 data-target="#salidarepuestos">Registrar Repuestos</button>
                             </div>
                         </div>
+                        <div class="form-row pt-3 mt-1" style="width: 25%;">
+                            <div class="col-md-12">
+                                <button  type="button" class="btn btn-danger" wire:click="verDetalleRep()"> <i class="fas fa-eye"></i> Ver Detalle Rep.</button>
+                            </div>
+                        </div>
                     </div>
 
-                    <br>
-                    <div class="form-row">
-                        @if ($repuestos != null)
-                            <table>
-
-                                @forelse ($repuestos as $item)
-                                
-                                <tr>
-                                    <td>{{$item->prod_name}}</td>
-                                    <td>{{$item->cant}} un. x {{$item->pv}} Bs.</td>
-                                <td> 
-                                   <button class="btn btn-sm btn-danger fas fa-times pl-1 pr-1 pt-0 pb-0 m-0"></button>
-                                </td>
-                                </tr>
-                                @empty
-                                <p></p>
-                                @endforelse
-                            </table>
-                                @endif
-                    </div>
-
-                    <br>
 
                     <div class="form-row">
                         <div class="form-row" style="width: 33.33%; margin-right: 7px;">

@@ -87,6 +87,7 @@ use App\Http\Livewire\SaleDailyMovementController;
 use App\Http\Livewire\SaleDevolutionController;
 use App\Http\Livewire\SaleStatisticController;
 use App\Http\Livewire\SaleReporteCantidadController;
+use App\Models\Product;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 
@@ -197,6 +198,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('Compras/pdf/{id}', [ExportComprasController::class, 'PrintCompraPdf']);
         Route::get('Transferencia/pdf', [ExportTransferenciaController::class, 'printPdf'])->name('transferencia.pdf');
         Route::get('reporteCompras/pdf/{filtro}/{fecha}/{fromDate}/{toDate}/{data?}', [ExportComprasController::class, 'reporteComprasPdf']);
+        Route::get('productos/export/', [ProductsController::class, 'export']);
         });
     
     

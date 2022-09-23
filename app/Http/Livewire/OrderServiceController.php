@@ -3244,13 +3244,7 @@ class OrderServiceController extends Component
         ->where('services.id', $idservicio)
         ->get()
         ->first();
-         
-        $this->repuestos= SalidaProductos::join('salida_servicios','salida_servicios.salida_id','salida_productos.id')
-        ->join('detalle_salida_productos','detalle_salida_productos.id_salida','salida_productos.id')
-        ->join('products','products.id','detalle_salida_productos.product_id')
-        ->where('salida_servicios.service_id',$this->id_servicio)
-        ->select('products.nombre as prod_name','salida_servicios.precio_venta as pv','detalle_salida_productos.cantidad as cant')
-        ->get();
+  
         //dd($this->repuestos);
 
         $this->detallesservicios($type, $idservicio);
@@ -4138,8 +4132,8 @@ class OrderServiceController extends Component
                 }
  
                 $this->resetui();
-               $this->modaleditarservicio($this->tipo,$this->id_servicio,$this->id_orden_de_servicio);
                 $this->emit('salidaregistrada');
+               $this->modaleditarservicio($this->tipo,$this->id_servicio,$this->id_orden_de_servicio);
 }
 
 public function resetui(){
@@ -4280,6 +4274,27 @@ public function guardarVentaRepuestos(){
         'movimiento_id' => $Movimiento->id,
     ]);
 }
+
+public function verDetalleRep(){
+
+    
+    $this->emit('hide-editarservicio');
+
+           
+    $this->repuestos= SalidaProductos::join('salida_servicios','salida_servicios.salida_id','salida_productos.id')
+    ->join('detalle_salida_productos','detalle_salida_productos.id_salida','salida_productos.id')
+    ->join('products','products.id','detalle_salida_productos.product_id')
+    ->where('salida_servicios.service_id',$this->id_servicio)
+    ->select('products.nombre as prod_name','salida_servicios.precio_venta as pv','detalle_salida_productos.cantidad as cant')
+    ->get();
+
+    //dd($this->repuestos);
+
+    $this->emit('detallerepuestos');
+
+
+}
+
 
 
 

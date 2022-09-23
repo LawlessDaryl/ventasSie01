@@ -121,7 +121,7 @@
                                         <td>
                                             <strong>{{$destino->nombre}}</strong>
                                             <label>{{ $destino->unidad}}</label>|<label>{{ $destino->marca}}</label>|<label>{{ $destino->industria }}</label>
-                                            {{ $destino->caracteristicas }}
+                                            {{ $destino->caracteristicas }}( <b>CODIGO:</b>  {{$destino->codigo}})
                                          
                                         </td>
                                       

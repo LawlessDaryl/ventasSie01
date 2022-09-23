@@ -167,14 +167,11 @@
                                     <button class="btn btn-sm btn-danger fas fa-times pl-1 pr-1 pt-0 pb-0 m-0" title="Quitar producto de la lista" wire:key="{{ $loop->index }}" wire:click="eliminaritem({{$value['product_id']}} )"></button>
                                 </td>
                             </tr>
-                         
-                          
                            @endforeach
                         </tbody>
                     </table>
                 </center> 
-
-@endif
+            @endif
 
 
                 </div>

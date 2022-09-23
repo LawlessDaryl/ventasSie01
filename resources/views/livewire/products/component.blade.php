@@ -48,6 +48,7 @@
                         data-target="#theModal"> <i class="fas fa-plus-circle"></i>Agregar Productos</a>
                     <a href="javascript:void(0)" class="btn btn-outline-primary" data-toggle="modal"
                         data-target="#modalimport"> <i class="fas fa-arrow-alt-circle-up"></i> Subir Productos</a>
+                    <a href='{{url('productos/export/')}}' class="btn btn-outline-primary" > <i class="fas fa-arrow-alt-circle-up"></i> Exportar Excel</a>
                        
                     </ul>
                 </div>

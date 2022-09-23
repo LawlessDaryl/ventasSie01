@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Http\Controllers\ExportExcelProductosController;
 use App\Imports\ProductsImport;
 use App\Imports\PruebaImport;
 use App\Models\Category;
@@ -115,7 +116,7 @@ class ProductsController extends Component
     {
      /**sssssssss */
      
-  
+   
 
        if ($this->selected_categoria !== null ) {
           
@@ -625,6 +626,11 @@ class ProductsController extends Component
 
    
    
+    }
+
+    public function export() 
+    {
+        return Excel::download(new ExportExcelProductosController, 'productos.xlsx');
     }
 
 

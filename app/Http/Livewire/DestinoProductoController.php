@@ -82,6 +82,7 @@ class DestinoProductoController extends Component
                 ->join('destinos as dest','dest.id','productos_destinos.destino_id')
                 ->select('p.*')
                 ->where('p.nombre', 'like', '%' . $this->search . '%')
+                ->where('p.codigo', 'like', '%' . $this->search . '%')
                 ->groupBy('productos_destinos.product_id')
                 ->selectRaw('sum(productos_destinos.stock) as stock_s')
                 ->paginate($this->pagination);
