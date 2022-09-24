@@ -29,7 +29,7 @@ class DestinoProductoController extends Component
     use WithFileUploads;
     use WithPagination;
 
-    public $selected_id,$search,$selected_ubicacion,$loteproducto,$filtro_stock,$componentName,$title,$sql,$prod,$grouped,$stocks,$productoajuste,$cant_operacion,$opcion_operacion,$obs_operacion,$cantidad,$productid,$productstock,$mobiliario,$mobs,$mop_prod, $active,$toogle;
+    public $selected_id,$search,$selected_ubicacion,$loteproducto,$filtro_stock,$componentName,$title,$sql,$prod,$grouped,$stocks,$productoajuste,$cant_operacion,$opcion_operacion,$obs_operacion,$cantidad,$productid,$productstock,$mobiliario,$mobs,$mop_prod, $active,$toogle,$qq;
     private $pagination = 50;
    
     public function paginationView()
@@ -82,7 +82,7 @@ class DestinoProductoController extends Component
                 ->join('destinos as dest','dest.id','productos_destinos.destino_id')
                 ->select('p.*')
                 ->where('p.nombre', 'like', '%' . $this->search . '%')
-                ->where('p.codigo', 'like', '%' . $this->search . '%')
+                ->orWhere('p.codigo', 'like', '%' . $this->search . '%')
                 ->groupBy('productos_destinos.product_id')
                 ->selectRaw('sum(productos_destinos.stock) as stock_s')
                 ->paginate($this->pagination);
@@ -293,6 +293,7 @@ class DestinoProductoController extends Component
     public function disminuir(){
         $stockactual=ProductosDestino::where('productos_destinos.product_id',$this->productid)->where('productos_destinos.destino_id',$this->selected_id)->value('stock');
 
+
         ProductosDestino::where('productos_destinos.destino_id',$this->selected_id)->where('productos_destinos.product_id',$this->productid)
         ->update(['stock' => $stockactual - $this->cantidad ]);
        
@@ -371,6 +372,31 @@ class DestinoProductoController extends Component
         $this->emit('show-modal-ajuste');
     }
 
+    public function aplicarCambios(){
+
+
+        $rules = [
+            'cantidad' => 'required|min:0'
+       
+            
+        ];
+        $messages = [
+            'cantidad.required' => 'La existencia es requerida',
+            'cantidad.min'=>'El monto minimo debe ser 0.' 
+         
+        ];
+        $this->validate($rules, $messages);
+
+        if ($this->cantidad>$this->productstock) {
+            $this->incrementar();
+        }
+        else{
+            $this->disminuir();
+        }
+
+
+    }
+
 
     public function asignmob(){
         if ($this->mobiliario) {
@@ -409,36 +435,135 @@ class DestinoProductoController extends Component
     }
 
     public function vaciarProducto(){
-
+        //dd($this->selected_id);
         $auxi2=ProductosDestino::where('productos_destinos.destino_id',$this->selected_id)->where('productos_destinos.product_id',$this->productid)->get();
-   // dd($auxi2->values('stock'));
+   //dd($auxi2->pluck('stock')[0]);
+   try{
         if ( $auxi2->pluck('stock')[0]>0) {
-         $operacion= IngresoSalida::create([
-        'proceso'=>'Salida',
+      
+    // ajuste de inventarios
+
+    $operacion= SalidaProductos::create([
+            
         'destino'=>$this->selected_id,
         'user_id'=> Auth()->user()->id,
         'concepto'=>'AJUSTE',
         'observacion'=>'Ajuste de inventarios por producto'
-             ]);
+    ]);
+        
+    
 
-        DetalleOperacion::create([
+    // dd($auxi2->pluck('stock')[0]);
+
+
+
+        $auxi=DetalleSalidaProductos::create([
         'product_id'=>$this->productid,
         'cantidad'=> $auxi2->pluck('stock')[0],
-        'id_operacion'=>$operacion->id
-    ]);
+        'id_salida'=>$operacion->id
+]);
+
+
+        $lot=Lote::where('product_id',$this->productid)
+        ->where('status','Activo')->get();
+
+        //obtener la cantidad del detalle de la venta 
+        $this->qq=$auxi2->pluck('stock')[0];//q=8
+        //dd($this->qq);
+        foreach ($lot as $val) { //lote1= 3 Lote2=3 Lote3=3
+        $this->lotecantidad = $val->existencia;
+        //dd($this->lotecantidad);
+        if($this->qq>0){
+            //true//5//2
+            //dd($val);
+            if ($this->qq > $this->lotecantidad) {
+                $ss=SalidaLote::create([
+                    'salida_detalle_id'=>$auxi->id,
+                    'lote_id'=>$val->id,
+                    'cantidad'=>$val->existencia
+                    
+                ]);
+                $val->update([
+                    
+                    'existencia'=>0,
+                    'status'=>'Inactivo'
+                    
+                    ]);
+                    $val->save();
+                    $this->qq=$this->qq-$this->lotecantidad;
+                    //dump("dam",$this->qq);
+            }
+       else{
+        //dd($this->lotecantidad);
+        $ss=SalidaLote::create([
+           'salida_detalle_id'=>$auxi->id,
+           'lote_id'=>$val->id,
+           'cantidad'=>$this->qq
+           
+       ]);
+         
+
+           $val->update([ 
+               'existencia'=>$this->lotecantidad-$this->qq
+           ]);
+           $val->save();
+           $this->qq=0;
+           //dd("yumi",$this->qq);
+       }
    }
+
+
+
+     }
+
+     
+     $q=ProductosDestino::where('product_id',$this->productid)
+     ->where('destino_id',$this->selected_id)->value('stock');
+
+     ProductosDestino::updateOrCreate(['product_id' => $this->productid, 'destino_id'=>$this->selected_id],['stock'=>$q-$auxi2->pluck('stock')[0]]); 
+
+
+    DB::commit();
+}
+   }
+ catch (Exception $e)
+{
+DB::rollback();
+dd($e->getMessage());
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   
+   foreach ($auxi2 as $data) 
+   {
+       $data->stock = 0;
+       $data->save();
+   }
+
+   $aux= Product::find($this->productid);
+   $this->ajuste($aux);
+   $this->emit('show-modal-ajuste');
+
+}
       
-        foreach ($auxi2 as $data) 
-        {
-            $data->stock = 0;
-            $data->save();
-        }
-
-        $aux= Product::find($this->productid);
-        $this->ajuste($aux);
-        $this->emit('show-modal-ajuste');
-
-    }
 
     public function guardarRegistro(){
         
