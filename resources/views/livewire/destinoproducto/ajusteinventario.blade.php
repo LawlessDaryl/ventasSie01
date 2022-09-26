@@ -1,11 +1,11 @@
 <div wire:ignore.self class="modal fade" id="ajustesinv" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalCenterTitle">Operaciones en Inventarios</h5>
                 <div class="d-flex justify-content-end">
                 
-                <button type="button" wire:click="resetajuste()" class="btn btn-success text-center"> Cerrar </button>
+                <button type="button" wire:click="resetajuste()" class="btn btn-sm btn-success text-center"> Cerrar </button>
                </div>
                
             </div>
@@ -68,26 +68,40 @@
         <div class="tab-pane fade {{$active1}}" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
 
 
-            <div class="m-2">
+            {{-- <div class="m-2">
                 <ul class="row justify-content-start">
                     <button class="btn btn-sm btn-dark" wire:click='vaciarProducto()'>Vaciar Stock </button>  
                 </ul>
-            </div>
+            </div> --}}
       
 
         <div class="row  m-2">
-            <div class="col-lg-9">
+            <div class="col-lg-4">
              
-                <label class="text">Agregar stock:</label>
-                <div class="input-group">
-                    <input type="text" class="form-control"  wire:model="cantidad"  aria-label="Recipient's username with two button addons">
-                    <button class="btn btn-outline-dark"  wire:click='incrementar()' type="button">Inc.</button>
-                    <button class="btn btn-outline-success"  wire:click='disminuir()' type="button">Dism.</button>
+                <label class="text"> <strong>Existencia Actual</strong></label>
+           
+                    <h2> {{$productstock}}</h2>
+     
+                   
+              
+            </div>
+            <div class="col-lg-4">
+             
+                <label class="text"> <strong>Nueva Existencia</strong> </label>
+           
                  
-                  </div>
-              </div>
-  
-         </div>
+                    <input type="text" class="form-control"  wire:model="cantidad"  aria-label="Recipient's username with two button addons">
+                    @error('cantidad') <span class="text-danger er">{{ $message }}</span>@enderror
+                   
+              
+            </div>
+
+            
+        </div>
+        <div class="row justify-content-end">
+            <button class="btn btn-outline-success"  wire:click='aplicarCambios()' type="button">Aplicar Cambios</button>
+
+        </div>
     </div>
         <div class="tab-pane fade {{$active2}}" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
                 <div class="row  m-2">
