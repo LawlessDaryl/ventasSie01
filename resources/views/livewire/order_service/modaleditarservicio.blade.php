@@ -146,17 +146,6 @@
                                 <input type="text" wire:model="edit_motivocostoservicio" class="form-control" placeholder="Se Compró Pantalla Nueva, Se Compró Nuevo Sócalo, Se Compró SSD, etc...">
                             </div>
                         </div>
-                        <div class="form-row pt-3 mt-1" style="width: 25%;">
-                            <div class="col-md-12">
-                                <button  type="button" class="btn btn-info" data-toggle="modal" wire:click="$emit('hide-editarservicio')"
-                                data-target="#salidarepuestos">Registrar Repuestos</button>
-                            </div>
-                        </div>
-                        <div class="form-row pt-3 mt-1" style="width: 25%;">
-                            <div class="col-md-12">
-                                <button  type="button" class="btn btn-danger" wire:click="verDetalleRep()"> <i class="fas fa-eye"></i> Ver Detalle Rep.</button>
-                            </div>
-                        </div>
                     </div>
 
 
@@ -229,8 +218,15 @@
             </div>
 
             <div class="modal-footer">
-                
+
+
+
+
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                
+                <button wire:click="modalrepuestos()" type="button" class="btn btn" style="background-color: rgb(160, 0, 139); color: aliceblue;">Agregar Repuestos</button>
+
+                
                 <button type="button" class="btn btn-success" wire:click="actualizarservicio()">Actualizar</button>
                 @if($this->mostrarterminar == "Si")
                 <button type="button" class="btn btn" style="background-color: rgb(224, 146, 0)" wire:click="terminarservicio()" title="Registrar Servicio Terminado con todos estos datos">Terminar Servicio</button>

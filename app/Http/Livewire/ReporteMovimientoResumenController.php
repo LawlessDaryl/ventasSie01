@@ -135,6 +135,7 @@ class ReporteMovimientoResumenController extends Component
             'movimientos.created_at as movcreacion',
             'movimientos.id as idmov',DB::raw('0 as detalle'),DB::raw('0 as utilidadventa'))
             ->where('movimientos.status', 'ACTIVO')
+            ->where('s.status', 'PAID')
             ->where('crms.type', 'INGRESO')
             ->where('crms.comentario','<>','RECAUDO DEL DIA')
             ->where('crms.tipoDeMovimiento', 'VENTA')
@@ -426,6 +427,7 @@ class ReporteMovimientoResumenController extends Component
             'movimientos.updated_at as movcreacion',
             'movimientos.id as idmov',DB::raw('0 as detalle'),DB::raw('0 as utilidadventa'))
             ->where('movimientos.status', 'ACTIVO')
+            ->where('s.status', 'PAID')
             ->where('crms.type', 'INGRESO')
             ->where('crms.comentario','<>', 'RECAUDO DEL DIA')
             ->where('crms.tipoDeMovimiento', 'VENTA')

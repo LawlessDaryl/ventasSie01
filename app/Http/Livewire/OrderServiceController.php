@@ -52,11 +52,6 @@ class OrderServiceController extends Component
     public $usuario;
     //Variable para buscar por Código o Nombre del Cliente
     public $search;
-
-    //variable para modal de busqueda de repuestos 
-    public $searchproduct,$buscarproducto,$result,$col,$selected,$cantidad,$destino,$destinosalida;
-
-
     //Variables para la (Ventana Modal) Detalles Servicio
     public $responsabletecnico, $nombrecliente, $celularcliente, $telefonocliente, $fechaestimadaentrega, $fallaseguncliente,
     $tipotrabajo, $detalleservicio, $falla, $diagnostico, $solucion, $precioservicio, $acuenta,
@@ -87,6 +82,17 @@ class OrderServiceController extends Component
     //Variables para mostrar tecnico responsable en los sweet alerts (Alertas JavaScript)
     public $alert_responsabletecnico;
 
+
+
+
+    //ROSCIO - REPUESTOS
+    //variable para modal de busqueda de repuestos 
+
+    //Guarda la lista donde se guardan todos los repuestos encontrados en el input de busqueda de repuestos ($searchproduct)
+    public $listaproductos;
+
+    public $searchproduct, $buscarproducto, $result, $col, $selected, $cantidad, $destino, $destinosalida;
+
     use WithPagination;
     public function paginationView()
     {
@@ -106,10 +112,11 @@ class OrderServiceController extends Component
         $this->dateTo = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->lista_de_usuarios = $this->listarusuarios();
         $this->mostrarterminar = "No";
-        $this->repuestos=null;
-        $this->col= collect();
-        //$this->destino=4;
-        $this->almacenrepuestos=5;
+
+
+        $this->listaproductos = [];
+
+        $this->list_produts_collect = collect();
 
         //Variable que guarda el id de la cartera
         $this->tipopago = 'Elegir';
@@ -2584,53 +2591,31 @@ class OrderServiceController extends Component
                                 }
         }
 
-
+        //REPUESTOS
+        //
         if (strlen($this->searchproduct) > 0) 
-       {
+        {
+            $this->listaproductos = Product::join('productos_destinos','productos_destinos.product_id','products.id')
+            ->join('destinos','destinos.id','productos_destinos.destino_id')
+            ->join('sucursals','sucursals.id','destinos.sucursal_id')
+            ->select('products.nombre as prod_name', 'destinos.nombre as dest_name','productos_destinos.id as pid')
+            ->where('sucursals.id', $this->idsucursal())
+            ->where('productos_destinos.stock','>',0)
+            ->where(function($querys)
+                    {
+                        $querys->where('products.nombre', 'like', '%' . $this->searchproduct . '%')
+                        ->orWhere('products.codigo', 'like', '%' . $this->searchproduct . '%');
+                    })
+            ->take(10)->get();
+
+            
+            $lista_nombres_ya_encontrados = $this->list_produts_collect->pluck('product-name');
 
 
+            $this->listaproductos = $this->listaproductos->whereNotIn('prod_name', $lista_nombres_ya_encontrados);
 
-        // $st = Product::join('productos_destinos','productos_destinos.product_id','products.id')
-        //  ->join('destinos','destinos.id','productos_destinos.destino_id')->select('products.nombre as prod_name','destinos.nombre as dest_name','products.*')
-        //  ->where(function($querys){
-        //     $querys->where('products.nombre', 'like', '%' . $this->search . '%')
-        //     ->orWhere('products.codigo', 'like', '%' . $this->search . '%');})
-      
-        //   ->get();
-
-        //   $arr= $this->col->pluck('product-name');
-        //   $this->sm=$st->whereNotIn('prod_name',$arr);
-          //dd($this->sm);
-
-
-
-       
-         $st = Product::join('productos_destinos','productos_destinos.product_id','products.id')
-         ->join('destinos','destinos.id','productos_destinos.destino_id')
-         ->join('sucursals','sucursals.id','destinos.sucursal_id')
-         ->select('products.nombre as prod_name', 'destinos.nombre as dest_name','productos_destinos.id as pid')
-         ->where('sucursals.id',$this->idsucursal())
-         ->where('productos_destinos.stock','>',0)
-         ->where(function($querys){
-            $querys->where('products.nombre', 'like', '%' . $this->searchproduct . '%')
-            ->orWhere('products.codigo', 'like', '%' . $this->searchproduct . '%');
-        })
-        ->take(4)->get();
-
-          $arr= $this->col->pluck('product-name');
-          $this->sm=$st->whereNotIn('nombre',$arr);
-          //dd($this->sm);
-
-          $this->buscarproducto=1;
           
        }
-       else
-       {
-
-        $this->buscarproducto=0;
-
-       }
-
 
         return view('livewire.order_service.component', [
             'orden_de_servicio' => $orden_de_servicio,
@@ -3952,15 +3937,26 @@ class OrderServiceController extends Component
     {
         $this->search = "";
     }
-
-   
-    public function exitModalRepuestos(){
-
-        
-
+    //Cierra la ventana modal editar servicio y muestra la ventana modal repuestos
+    public function modalrepuestos()
+    {
+        $this->emit('show-modalrepuestos');
     }
 
-    public function Seleccionar(ProductosDestino $id){
+
+
+
+
+
+
+
+
+
+    //ROSCIO
+
+
+    public function Seleccionar(ProductosDestino $id)
+    {
        
 
         $prod=Product::where('id',$id->product_id)->get();
@@ -3973,7 +3969,8 @@ class OrderServiceController extends Component
         // $this->emit('product-added');
     }
 
-    public function addProduct(Product $id){
+    public function addProduct(Product $id)
+    {
 
             $pd=ProductosDestino::where('product_id',$id->id)->where('destino_id',$this->destinosalida)->select('stock')->value('stock');
             $dest=Destino::find($this->destinosalida);
@@ -3996,7 +3993,7 @@ class OrderServiceController extends Component
             
             $this->validate($rules, $messages);
             
-            $this->col->push(['product_id'=> $id->id,'product-name'=>$id->nombre,'cantidad'=>$this->cantidad,'precio_venta'=>$this->precio_venta,'destino'=>$dest->nombre]);
+            $this->list_produts_collect->push(['product_id'=> $id->id,'product-name'=>$id->nombre,'cantidad'=>$this->cantidad,'precio_venta'=>$this->precio_venta,'destino'=>$dest->nombre]);
     
             $this->result=null;
             $this->cantidad=null;
@@ -4006,13 +4003,13 @@ class OrderServiceController extends Component
           else{
             $this->emit('stock-insuficiente');
           }
-            //dump($this->col);
+            //dump($this->list_produts_collect);
     }
 
     public function eliminaritem($id){
  
     $item=null;
-    foreach ($this->col as $key => $value) {
+    foreach ($this->list_produts_collect as $key => $value) {
    
      if ($value['product_id'] == $id) {
         $item=$key;
@@ -4020,7 +4017,7 @@ class OrderServiceController extends Component
          }
         }
     
-      $this->col->pull($item);
+      $this->list_produts_collect->pull($item);
      
     }
 
@@ -4028,7 +4025,7 @@ class OrderServiceController extends Component
         
         /* Se registra la salida de productos de almacen de repuestos*/ 
 
-        //dd($this->col);
+        //dd($this->list_produts_collect);
        
        
         $rules = [
@@ -4050,7 +4047,7 @@ class OrderServiceController extends Component
                         'observacion'=>$this->observacion]);
                         // dd($auxi2->pluck('stock')[0]);
 
-                foreach ($this->col as $datas) {
+                foreach ($this->list_produts_collect as $datas) {
 
                     $auxi=DetalleSalidaProductos::create([
                     'product_id'=>$datas['product_id'],
@@ -4144,9 +4141,9 @@ public function resetui(){
     'observacion'
     ,'cantidad']);
 
-    foreach ($this->col as $key => $value)
+    foreach ($this->list_produts_collect as $key => $value)
     {
-        $this->col->pull($key);
+        $this->list_produts_collect->pull($key);
     }
 
 }

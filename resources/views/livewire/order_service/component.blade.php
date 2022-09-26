@@ -285,6 +285,8 @@
         position: sticky;
         top: 0;
         left: 0;
+        background-color: #007bff;
+        color: white;
     }
         
 
@@ -295,61 +297,42 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     #preloader_3{
-    position:relative;
-}
-#preloader_3:before{
-    width:20px;
-    height:20px;
-    border-radius:20px;
-    background:blue;
-    content:'';
-    position:absolute;
-    background:#9b59b6;
-    animation: preloader_3_before 1.5s infinite ease-in-out;
-}
+        position:relative;
+    }
+    #preloader_3:before{
+        width:20px;
+        height:20px;
+        border-radius:20px;
+        background:blue;
+        content:'';
+        position:absolute;
+        background:#9b59b6;
+        animation: preloader_3_before 1.5s infinite ease-in-out;
+    }
  
-#preloader_3:after{
-    width:20px;
-    height:20px;
-    border-radius:20px;
-    background:blue;
-    content:'';
-    position:absolute;
-    background:#2ecc71;
-    left:22px;
-    animation: preloader_3_after 1.5s infinite ease-in-out;
-}
+    #preloader_3:after{
+        width:20px;
+        height:20px;
+        border-radius:20px;
+        background:blue;
+        content:'';
+        position:absolute;
+        background:#2ecc71;
+        left:22px;
+        animation: preloader_3_after 1.5s infinite ease-in-out;
+    }
  
-@keyframes preloader_3_before {
-    0% {transform: translateX(0px) rotate(0deg)}
-    50% {transform: translateX(50px) scale(1.2) rotate(260deg); background:#2ecc71;border-radius:0px;}
-      100% {transform: translateX(0px) rotate(0deg)}
-}
-@keyframes preloader_3_after {
-    0% {transform: translateX(0px)}
-    50% {transform: translateX(-50px) scale(1.2) rotate(-260deg);background:#9b59b6;border-radius:0px;}
-    100% {transform: translateX(0px)}
-}
+    @keyframes preloader_3_before {
+        0% {transform: translateX(0px) rotate(0deg)}
+        50% {transform: translateX(50px) scale(1.2) rotate(260deg); background:#2ecc71;border-radius:0px;}
+        100% {transform: translateX(0px) rotate(0deg)}
+    }
+    @keyframes preloader_3_after {
+        0% {transform: translateX(0px)}
+        50% {transform: translateX(-50px) scale(1.2) rotate(-260deg);background:#9b59b6;border-radius:0px;}
+        100% {transform: translateX(0px)}
+    }
 
 
 
@@ -520,7 +503,7 @@
             @endif
 
 
-            <center><div id="preloader_3" wire:loading></div></center>
+            <center><div id="preloader_3" wire:loading.delay.longest></div></center>
 
 
 
@@ -857,8 +840,13 @@
     @include('livewire.order_service.modaleditarservicio')
     @include('livewire.order_service.modaleditarservicioterminado')
     @include('livewire.order_service.modalentregarservicio')
-    @include('livewire.order_service.salidarepuestos')
-    @include('livewire.order_service.detallerepuestos')
+    @include('livewire.order_service.modalrepuestos')
+
+
+
+
+    {{-- @include('livewire.order_service.salidarepuestos')
+    @include('livewire.order_service.detallerepuestos') --}}
 </div>
     
 @section('javascript')
@@ -884,6 +872,20 @@
         window.livewire.on('show-entregarservicio', Msg => {
             $('#entregarservicio').modal('show')
         });
+        //Cierra una ventana modal y muestra otra
+        window.livewire.on('show-modalrepuestos', Msg => {
+            $('#editarservicio').modal('hide')
+            $('#modalrepuestos').modal('show')
+        });
+
+
+
+
+
+
+
+
+
         window.livewire.on('salidaregistrada', Msg => {
             $('#salidarepuestos').modal('hide')
         });
@@ -893,6 +895,11 @@
         window.livewire.on('hide-editarservicio', Msg => {
             $('#editarservicio').modal('hide')
         });
+
+
+
+
+
 
         //Cerrar Ventana Modal y Mostrar Toast Técnico Responsable Asignado Exitosamente
         window.livewire.on('show-asignartecnicoresponsablecerrar', msg => {

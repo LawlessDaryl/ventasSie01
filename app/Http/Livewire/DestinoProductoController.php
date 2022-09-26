@@ -587,7 +587,7 @@ dd($e->getMessage());
    $this->ajuste($aux);
    $this->emit('show-modal-ajuste');
 
-}
+
       
 
     }
