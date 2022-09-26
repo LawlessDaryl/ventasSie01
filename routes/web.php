@@ -199,6 +199,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('Transferencia/pdf', [ExportTransferenciaController::class, 'printPdf'])->name('transferencia.pdf');
         Route::get('reporteCompras/pdf/{filtro}/{fecha}/{fromDate}/{toDate}/{data?}', [ExportComprasController::class, 'reporteComprasPdf']);
         Route::get('productos/export/', [ProductsController::class, 'export']);
+        Route::get('almacen/export/', [DestinoProductoController::class, 'export']);
         });
     
     

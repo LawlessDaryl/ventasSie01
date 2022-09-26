@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Livewire;
+
+use App\Http\Controllers\ExportExcelAlmacenController;
 use App\Models\Category;
 use App\Models\Destino;
 use App\Models\DetalleEntradaProductos;
@@ -21,15 +23,14 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
-
-
+use Maatwebsite\Excel\Facades\Excel;
 
 class DestinoProductoController extends Component
 {
     use WithFileUploads;
     use WithPagination;
 
-    public $selected_id,$search,$selected_ubicacion,$loteproducto,$filtro_stock,$componentName,$title,$sql,$prod,$grouped,$stocks,$productoajuste,$cant_operacion,$opcion_operacion,$obs_operacion,$cantidad,$productid,$productstock,$mobiliario,$mobs,$mop_prod, $active,$toogle;
+    public $selected_id,$search,$selected_mood,$selected_ubicacion,$loteproducto,$filtro_stock,$componentName,$title,$sql,$prod,$grouped,$stocks,$productoajuste,$cant_operacion,$opcion_operacion,$obs_operacion,$cantidad,$productid,$productstock,$mobiliario,$mobs,$mop_prod, $active,$toogle;
     private $pagination = 50;
    
     public function paginationView()
@@ -45,6 +46,7 @@ class DestinoProductoController extends Component
         $this->title='ssss';
         $this->pr=20;
         $this->toogle=1;
+        $this->selected_mood='todos';
    
     
     }
@@ -75,28 +77,53 @@ class DestinoProductoController extends Component
 
             if($this->selected_id === 'General')
 
-            
-
-            if (strlen($this->search) > 0) {
-                $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
-                ->join('destinos as dest','dest.id','productos_destinos.destino_id')
-                ->select('p.*')
-                ->where('p.nombre', 'like', '%' . $this->search . '%')
-                ->where('p.codigo', 'like', '%' . $this->search . '%')
-                ->groupBy('productos_destinos.product_id')
-                ->selectRaw('sum(productos_destinos.stock) as stock_s')
-                ->paginate($this->pagination);
+            if ($this->selected_mood == 'todos') {
+              
+                if (strlen($this->search) > 0) {
+                    $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
+                    ->join('destinos as dest','dest.id','productos_destinos.destino_id')
+                    ->select('p.*')
+                    ->where('p.nombre', 'like', '%' . $this->search . '%')
+                    ->orWhere('p.codigo', 'like', '%' . $this->search . '%')
+                    ->groupBy('productos_destinos.product_id')
+                    ->selectRaw('sum(productos_destinos.stock) as stock_s');
+                }
+                else{
+                    $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
+                    ->join('destinos as dest','dest.id','productos_destinos.destino_id')
+                    ->select('p.*')
+                    ->groupBy('productos_destinos.product_id')
+                    ->selectRaw('sum(productos_destinos.stock) as stock_s');
+                   // dd($almacen);
+                    
+                }
             }
             else{
-                $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
-                ->join('destinos as dest','dest.id','productos_destinos.destino_id')
-                ->select('p.*')
-                ->groupBy('productos_destinos.product_id')
-                ->selectRaw('sum(productos_destinos.stock) as stock_s')
-                ->paginate($this->pagination);
-               // dd($almacen);
-                
+                if (strlen($this->search) > 0) {
+                    $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
+                    ->join('destinos as dest','dest.id','productos_destinos.destino_id')
+                    ->select('p.*')
+                    ->where('p.nombre', 'like', '%' . $this->search . '%')
+                    ->orWhere('p.codigo', 'like', '%' . $this->search . '%')
+                    ->groupBy('productos_destinos.product_id')
+                    ->selectRaw('sum(productos_destinos.stock) as stock_s')
+                    ->where('stock_s',0)
+                   ;
+                }
+                else{
+                    $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
+                    ->join('destinos as dest','dest.id','productos_destinos.destino_id')
+               
+                    ->groupBy('productos_destinos.product_id')
+                    ->selectRaw('sum(productos_destinos.stock) as stock_s')
+                    ->select('p.*','stock_s')
+                   -> where('stock_s',0)->get();
+                   
+               
+                    
+                }
             }
+
 
             // if ($this->filtro_stock == 'BAJO_STOCK') {
             //     $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
@@ -119,7 +146,7 @@ class DestinoProductoController extends Component
                                                   ->orWhere('p.codigo', 'like', '%' . $this->search . '%');
                                         })
                                         ->orderBy('p.nombre','desc')
-                                        ->paginate($this->pagination);  
+                                        ;  
 
                                         /* para hacer merge $collection = collect(['Desk', 'Chair']);
                                         $merged = $collection->merge(['Bookcase', 'Door']);
@@ -134,7 +161,7 @@ class DestinoProductoController extends Component
                                             ->select('p.*')
                                             ->groupBy('productos_destinos.product_id')
                                             ->selectRaw('sum(productos_destinos.stock) as stock_s')
-                                            ->paginate($this->pagination);
+                                            ;
             }
              $sucursal_ubicacion=Destino::join('sucursals as suc','suc.id','destinos.sucursal_id')
                                         ->select ('suc.name as sucursal','destinos.nombre as destino','destinos.id')
@@ -145,7 +172,7 @@ class DestinoProductoController extends Component
                            
 
         return view('livewire.destinoproducto.almacenproductos',[
-            'destinos_almacen'=>$almacen,
+            'destinos_almacen'=>$almacen->paginate($this->pagination),
             'data_suc' =>  $sucursal_ubicacion->get(),
         'data_cat'=>Category::select('categories.name')->where('categories.categoria_padre','0')->get()
         ])  
@@ -394,8 +421,6 @@ class DestinoProductoController extends Component
         $this->mobiliario = null;
         $this->emit('hide-modal-ajuste');
 
-        
-        
     }
     protected $listeners = ['vaciarDestino' => 'vaciarAlmacen'];
 
@@ -413,20 +438,48 @@ class DestinoProductoController extends Component
         $auxi2=ProductosDestino::where('productos_destinos.destino_id',$this->selected_id)->where('productos_destinos.product_id',$this->productid)->get();
    // dd($auxi2->values('stock'));
         if ( $auxi2->pluck('stock')[0]>0) {
-         $operacion= IngresoSalida::create([
-        'proceso'=>'Salida',
-        'destino'=>$this->selected_id,
-        'user_id'=> Auth()->user()->id,
-        'concepto'=>'AJUSTE',
-        'observacion'=>'Ajuste de inventarios por producto'
-             ]);
+    //      $operacion= IngresoSalida::create([
+    //     'proceso'=>'Salida',
+    //     'destino'=>$this->selected_id,
+    //     'user_id'=> Auth()->user()->id,
+    //     'concepto'=>'AJUSTE',
+    //     'observacion'=>'Ajuste de inventarios por producto'
+    //          ]);
 
-        DetalleOperacion::create([
-        'product_id'=>$this->productid,
-        'cantidad'=> $auxi2->pluck('stock')[0],
-        'id_operacion'=>$operacion->id
-    ]);
-   }
+    //     DetalleOperacion::create([
+    //     'product_id'=>$this->productid,
+    //     'cantidad'=> $auxi2->pluck('stock')[0],
+    //     'id_operacion'=>$operacion->id
+    // ]);
+
+
+    $operacion= SalidaProductos::create([
+            
+                'destino'=>$this->selected_id,
+                'user_id'=> Auth()->user()->id,
+                'concepto'=>'AJUSTE',
+                'observacion'=>'Ajuste de inventarios por producto']);
+        // dd($auxi2->pluck('stock')[0]);
+
+                $auxi=DetalleSalidaProductos::create([
+                'product_id'=>$this->productid,
+                'cantidad'=> $auxi2->pluck('stock')[0],
+                'id_salida'=>$operacion->id
+        ]);
+
+
+        $lot=Lote::where('product_id',$this->productid)->where('status','Activo')->get();
+
+
+        foreach ($lot as $data) {
+            $data->existencia = 0;
+            $data->status='Inactivo';
+        }
+
+
+
+
+
       
         foreach ($auxi2 as $data) 
         {
@@ -437,12 +490,11 @@ class DestinoProductoController extends Component
         $aux= Product::find($this->productid);
         $this->ajuste($aux);
         $this->emit('show-modal-ajuste');
+    }
 
     }
 
-    public function guardarRegistro(){
-        
-    }
+  
 
     public function eliminarmob(LocationProducto $id){
 
@@ -461,5 +513,12 @@ class DestinoProductoController extends Component
         //dd($this->loteproducto);
         $this->emit('show-modal-lotes');
     }
+
+
+    public function export() 
+    {
+        return Excel::download(new ExportExcelAlmacenController, 'almacen.xlsx');
+    }
+
 
 }

@@ -35,9 +35,18 @@
 <div class="row sales layout-top-spacing">
     <div class="col-sm-12">
         <div class="widget widget-chart-one">
+
             <div class="text-center">
                    <h2> <b>Almacen Producto</b> </h2>  
             </div>
+            <div class="widget-heading">
+              
+                <ul class="row justify-content-end">
+                  
+                    <a href='{{url('almacen/export/')}}' class="btn btn-outline-primary" > <i class="fas fa-arrow-alt-circle-up"></i> Exportar Excel</a>
+                       
+                    </ul>
+                </div>
           
 
             {{--SELECT DE LAS SUCURSALES--}}
@@ -63,6 +72,14 @@
                               @foreach ($data_suc as $data)
                                 <option value="{{ $data->id }}">{{ $data->sucursal }}-{{$data->destino}}</option>
                               @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <select wire:model='selected_mood' class="form-control">
+                                <option value="todos">TODOS</option>
+                                <option value="agotados">Productos agotados</option>
+                                <option value="bajo">Productos bajo stock</option>
+                            
                             </select>
                         </div>
     
