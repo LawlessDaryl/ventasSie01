@@ -430,7 +430,7 @@
                                         <h5 class="text-dark text-center">{{ number_format($ingresosTotalesCF,2)}}</h5>
                                     </td>
                                 </tr>
-                                @if ($caja == 'TODAS')
+                             
                                     
                                 <tr>
                                     <td>
@@ -440,16 +440,7 @@
                                         <h5 class="text-dark text-center" >{{ number_format($this->ingresosTotalesNoCFBancos,2)}}</h5>
                                     </td>
                                 </tr>
-                                @else
-                                <tr>
-                                    <td>
-                                        <h5 class="text-dark text-center" ><b> Ingresos por Bancos </b></h5>
-                                    </td>
-                                    <td>
-                                        <h5 class="text-dark text-center" >{{ number_format($this->sumaBanco,2)}}</h5>
-                                    </td>
-                                </tr>
-                                @endif
+                             
                                 <tr>
                                     <td>
                                         <h5 class="text-dark text-left m-0" ><b> Ingresos Totales </b></h5>

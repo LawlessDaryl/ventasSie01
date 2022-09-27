@@ -32,6 +32,7 @@
                         <tr>
                             <th class="text-center">Nombre Producto</th>
                             <th class="text-center">Nombre Destino</th>
+                            <th class="text-center">Disp.</th>
                             <th class="text-center">Seleccionar</th>
                         </tr>
                     </thead>
@@ -45,12 +46,35 @@
                                     {{$l->dest_name}}
                                 </td>
                                 <td class="text-center">
-                                    
+                                    {{-- {{$data->correo ? $data->correo : "No definido" }} --}}
+                                    {{$l->stock >0 ? 'Disponible':'Sin Stock'}}
                                 </td>
+                                @if ($l->stock >0)
+                                <td class="text-center">
+                                    <a href="javascript:void(0)"
+                                        wire:click="Seleccionar('{{ $d->pid }}')"
+                                        class="btn btn-warning mtmobile"
+                                        title="Seleccionar">
+                                        <i class="fas fa-check"></i>
+                                    </a>
+                                </td>
+                                @else
+
+                                <td class="text-center">
+                                     
+                                    <a href="javascript:void(0)"
+                                    wire:click="SolicitarCompra('{{ $d->pid }}')"
+                                    class="btn btn-warning mtmobile"
+                                    title="Solicitar compra">
+                                    Solicitar Compra
+                                </a>
+
+                                </td>
+                                @endif
                             </tr>
                         @empty
                             <tr>
-                                <td class="text-center" colspan="3" style="width: 15px !important;">
+                                <td class="text-center" colspan="4" style="width: 15px !important;">
                                     <button class="botoneditarterminado">
                                         Crear y solicitar el producto: {{$this->searchproduct}}
                                     </button>

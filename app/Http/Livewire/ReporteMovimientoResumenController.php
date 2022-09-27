@@ -141,6 +141,7 @@ class ReporteMovimientoResumenController extends Component
             ->where('crms.tipoDeMovimiento', 'VENTA')
             ->where('ca.id',$this->caja)
             ->whereBetween('movimientos.created_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
+            ->where('movimientos.status','ACTIVO')
             ->orderBy('movimientos.created_at', 'asc')
             ->get();
 
@@ -161,6 +162,7 @@ class ReporteMovimientoResumenController extends Component
             'movimientos.id as idmov',DB::raw('0 as detalle'),DB::raw('0 as utilidadventa'))
             ->whereIn('movimientos.id',$this->ventas)
             ->whereBetween('movimientos.updated_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
+            ->where('movimientos.status','ACTIVO')
             ->orderBy('movimientos.updated_at', 'asc')
             ->get();
 
@@ -248,6 +250,7 @@ class ReporteMovimientoResumenController extends Component
                 DB::raw('0 as utilidadservicios'))
             ->whereIn('movimientos.id',$this->servicios)
             ->whereBetween('movimientos.created_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
+            ->where('movimientos.status','ACTIVO')
             ->orderBy('movimientos.created_at', 'asc')
             ->get();
 
@@ -307,6 +310,7 @@ class ReporteMovimientoResumenController extends Component
             ->whereIn('movimientos.id',$this->ingresoEgreso)
             ->where('crms.type','INGRESO')
             ->whereBetween('movimientos.updated_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
+            ->where('movimientos.status','ACTIVO')
             ->orderBy('movimientos.updated_at', 'asc')
             ->get();
 
@@ -389,6 +393,7 @@ class ReporteMovimientoResumenController extends Component
            ->whereIn('movimientos.id',$this->ingresoEgreso)
            ->where('crms.type','EGRESO')
            ->whereBetween('movimientos.updated_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
+           ->where('movimientos.status','ACTIVO')
            ->orderBy('movimientos.updated_at', 'asc')
            ->get();
 
@@ -456,6 +461,7 @@ class ReporteMovimientoResumenController extends Component
             'movimientos.id as idmov',DB::raw('0 as detalle'),DB::raw('0 as utilidadventa'))
             ->whereIn('movimientos.id',$this->ventas)
             ->whereBetween('movimientos.updated_at',[ Carbon::parse($this->fromDate)->format('Y-m-d') . ' 00:00:00',Carbon::parse($this->toDate)->format('Y-m-d') . ' 23:59:59'])
+            ->where('movimientos.status','ACTIVO')
             ->orderBy('movimientos.updated_at', 'asc')
             ->get();
 
@@ -875,6 +881,7 @@ class ReporteMovimientoResumenController extends Component
         //Totales carteras tipo No Caja Fisica CON BANCOS
 
         $this->ingresosTotalesNoCFBancos = $this->totalesIngresosV->where('ctipo','Banco')->sum('importe') + $this->totalesIngresosS->where('ctipo','Banco')->sum('importe') + $this->totalesIngresosIE->where('ctipo','Banco')->sum('importe');
+       //dd($this->ingresosTotalesNoCFBancos);
 
         //Total Utilidad Ventas y Servicios
         $this->totalutilidadSV = $this->totalesIngresosV->sum('utilidadventa') + $this->totalesIngresosS->sum('utilidadservicios');
@@ -914,12 +921,12 @@ class ReporteMovimientoResumenController extends Component
         else{
             $this->op_recaudo=0;
         }
-        $this->op_sob_falt = Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')
-        ->join('carteras as c', 'c.id', 'crms.cartera_id')
-        ->join('cajas as ca', 'ca.id', 'c.caja_id')
-        ->where('movimientos.status', 'ACTIVO')
-        ->where('ca.id','=',$this->caja)
-        ->where(function($query){
+            $this->op_sob_falt = Movimiento::join('cartera_movs as crms', 'crms.movimiento_id', 'movimientos.id')
+            ->join('carteras as c', 'c.id', 'crms.cartera_id')
+            ->join('cajas as ca', 'ca.id', 'c.caja_id')
+            ->where('movimientos.status', 'ACTIVO')
+            ->where('ca.id','=',$this->caja)
+            ->where(function($query){
             $query->where('crms.comentario', 'like', '%' . 'SOBRANTE' . '%')
                     ->orWhere('crms.comentario', 'like', '%' . 'FALTANTE' . '%');
         })
@@ -1599,7 +1606,7 @@ class ReporteMovimientoResumenController extends Component
      
              }
 
-             $this->sumaBanco= Movimiento::whereIn('movimientos.id',$this->Banco)->sum('movimientos.import');
+             $this->sumaBanco= Movimiento::whereIn('movimientos.id',$this->Banco)->where('movimientos.status','ACTIVO')->sum('movimientos.import');
                 
      
             }

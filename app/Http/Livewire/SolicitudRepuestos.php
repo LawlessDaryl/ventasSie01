@@ -8,6 +8,10 @@ class SolicitudRepuestos extends Component
 {
     public function render()
     {
-        return view('livewire.solicitud-repuestos');
+
+        
+        return view('livewire.solicitudrepuestos.component')
+        ->extends('layouts.theme.app')
+        ->section('content');
     }
 }

@@ -433,6 +433,13 @@
 											Repor. Servi. Entregados </a>
 									</li>
 								@endcan
+								@can('Reporte_Servicios_Index')
+									<li>
+										<a href="{{ url('solicitudrepuestos') }}">
+											<i class="fa fas fa-minus"></i>
+											Repuestos Servicios </a>
+									</li>
+								@endcan
 								</ul>
 							</div>
 						</li>

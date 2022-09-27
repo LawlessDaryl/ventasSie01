@@ -2598,9 +2598,9 @@ class OrderServiceController extends Component
             $this->listaproductos = Product::join('productos_destinos','productos_destinos.product_id','products.id')
             ->join('destinos','destinos.id','productos_destinos.destino_id')
             ->join('sucursals','sucursals.id','destinos.sucursal_id')
-            ->select('products.nombre as prod_name', 'destinos.nombre as dest_name','productos_destinos.id as pid')
+            ->select('products.nombre as prod_name', 'destinos.nombre as dest_name','productos_destinos.id as pid','productos_destinos.stock as stock')
             ->where('sucursals.id', $this->idsucursal())
-            ->where('productos_destinos.stock','>',0)
+          
             ->where(function($querys)
                     {
                         $querys->where('products.nombre', 'like', '%' . $this->searchproduct . '%')
