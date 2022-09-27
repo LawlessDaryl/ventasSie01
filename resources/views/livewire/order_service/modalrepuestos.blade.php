@@ -26,8 +26,8 @@
             
 
             @if(strlen($this->searchproduct) > 0)
-            <div class="table-wrapper form-group">
-                <table class="tablaservicios" style="min-width: 400px;">
+            <div class="table-repuesto">
+                <table>
                     <thead>
                         <tr>
                             <th class="text-center">Nombre Producto</th>
@@ -38,24 +38,25 @@
                     </thead>
                     <tbody>
                         @forelse($listaproductos as $l)
-                            <tr>
-                                <td>
+                            <tr class="tablaserviciostr">
+                                <td style="font-size: 0.8rem;">
                                     {{$l->prod_name}}
                                 </td>
-                                <td class="text-center">
+                                <td class="text-center" style="font-size: 0.8rem;">
                                     {{$l->dest_name}}
                                 </td>
-                                <td class="text-center">
+                                <td class="text-center" style="font-size: 0.8rem;">
                                     {{-- {{$data->correo ? $data->correo : "No definido" }} --}}
                                     {{$l->stock >0 ? 'Disponible':'Sin Stock'}}
                                 </td>
                                 @if ($l->stock >0)
                                 <td class="text-center">
                                     <a href="javascript:void(0)"
-                                        wire:click="Seleccionar('{{ $d->pid }}')"
-                                        class="btn btn-warning mtmobile"
+                                        wire:click="InsertarSolicitud('{{ $l->pid }}')"
+                                        class="btn btn-warning mtmobile btn-sm"
                                         title="Seleccionar">
-                                        <i class="fas fa-check"></i>
+                                        {{-- <i class="fas fa-check"></i> --}}
+                                        Solicitar
                                     </a>
                                 </td>
                                 @else
@@ -63,11 +64,11 @@
                                 <td class="text-center">
                                      
                                     <a href="javascript:void(0)"
-                                    wire:click="SolicitarCompra('{{ $d->pid }}')"
-                                    class="btn btn-warning mtmobile"
+                                    wire:click="InsertarSolicitudCompra('{{ $l->pid }}')"
+                                    class="btn btn-warning mtmobile btn-sm"
                                     title="Solicitar compra">
                                     Solicitar Compra
-                                </a>
+                                    </a>
 
                                 </td>
                                 @endif
@@ -75,8 +76,19 @@
                         @empty
                             <tr>
                                 <td class="text-center" colspan="4" style="width: 15px !important;">
-                                    <button class="botoneditarterminado">
-                                        Crear y solicitar el producto: {{$this->searchproduct}}
+
+                                    <a href="javascript:void(0)"
+                                    class="btn btn-warning mtmobile btn-sm"
+                                    title="Solicitar compra">
+                                    Crear y solicitar el producto: {{$this->searchproduct}}
+                                    </a>
+
+
+
+
+                                        
+
+
                                     </button>
                                 </td>
                             </tr>
@@ -117,17 +129,98 @@
             <br>
             <br>
             <br>
-            <br>
-            <br>
 
 
             @endif
             
 
+
+
+
+            <br>
+
+
+
+
+
+
+
+
+
+
+            @if($this->lista_solicitudes->count() > 0)
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h2>Lista de Solicitudes</h2>
+                </div>
+
+            </div>
+                <div class="table-repuesto">
+                    <table>
+                      <thead>
+                          <tr>
+                              <th class="text-center">Nombre Producto</th>
+                              <th class="text-center">Cantidad</th>
+                              <th class="text-center">Tipo</th>
+                              <th class="text-center">Acciones</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          @foreach ($lista_solicitudes as $l)
+                          <tr>
+                              <td class="text-left">
+                                {{$l['product_name']}}
+                                  {{-- {{ ucwords(strtolower($lc->nombre)) }} --}}
+                              </td>
+                              <td class="text-center">
+                                {{$l['quantity']}}
+                              </td>
+                              <td class="text-center">
+                                {{$l['type']}}
+                              </td>
+                              <td class="text-center">
+
+
+
+                                <div class="btn-group" role="group" aria-label="Basic example">
+                                    <button wire:click.prevent="seleccionar_cliente({{$l['product_id']}})" class="btn btn-sm" title="Ver detalles de la venta" style="background-color: rgb(10, 137, 235); color:white">
+                                        <i class="fas fa-chevron-up"></i>
+                                    </button>
+                                    <button wire:click.prevent="seleccionar_cliente({{$l['product_id']}})" class="btn btn-sm" title="Ver detalles de la venta" style="background-color: rgb(255, 124, 1); color:white">
+                                        <i class="fas fa-chevron-down"></i>
+                                    </button>
+                                    <button wire:click.prevent="seleccionar_cliente({{$l['product_id']}})" class="btn btn-sm" title="Ver detalles de la venta" style="background-color: rgb(230, 0, 0); color:white">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>
+
+
+                              </td>
+                          </tr>
+                          @endforeach
+                      </tbody>
+                  </table>
+                </div>
+                @endif
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-          <button type="button" class="btn btn-primary">Guardar Cambios</button>
+          <button wire:click.prevent="CrearSolicitud()" type="button" class="btn btn-primary">Crear Solicitud</button>
         </div>
       </div>
     </div>

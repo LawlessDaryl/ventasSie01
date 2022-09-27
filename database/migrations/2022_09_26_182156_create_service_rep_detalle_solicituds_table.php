@@ -20,6 +20,7 @@ class CreateServiceRepDetalleSolicitudsTable extends Migration
             $table->unsignedBigInteger('product_id');
             $table->foreign('product_id')->references('id')->on('products');
             $table->integer('cantidad');
+            $table->enum('tipo',['CompraRepuesto','Repuesto']);
             $table->enum('status',['Activo','Inactivo'])->default('Activo');
             $table->timestamps();
         });
