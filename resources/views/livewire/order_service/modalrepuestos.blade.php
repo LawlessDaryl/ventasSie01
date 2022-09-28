@@ -51,22 +51,21 @@
                                 </td>
                                 @if ($l->stock >0)
                                 <td class="text-center">
-                                    <a href="javascript:void(0)"
+                                    <button
                                         wire:click="InsertarSolicitud('{{ $l->pid }}')"
                                         class="btn btn-warning mtmobile btn-sm"
-                                        title="Seleccionar">
+                                        title="Solicitar Repuesto">
                                         {{-- <i class="fas fa-check"></i> --}}
                                         Solicitar
-                                    </a>
+                                    </button>
                                 </td>
                                 @else
 
                                 <td class="text-center">
-                                     
                                     <a href="javascript:void(0)"
                                     wire:click="InsertarSolicitudCompra('{{ $l->pid }}')"
                                     class="btn btn-warning mtmobile btn-sm"
-                                    title="Solicitar compra">
+                                    title="Solicitar Compra Repuesto">
                                     Solicitar Compra
                                     </a>
 
@@ -166,7 +165,7 @@
                           </tr>
                       </thead>
                       <tbody>
-                          @foreach ($lista_solicitudes as $l)
+                          @foreach ($lista_solicitudes->sortBy("product_id") as $l)
                           <tr>
                               <td class="text-left">
                                 {{$l['product_name']}}
@@ -183,13 +182,13 @@
 
 
                                 <div class="btn-group" role="group" aria-label="Basic example">
-                                    <button wire:click.prevent="seleccionar_cliente({{$l['product_id']}})" class="btn btn-sm" title="Ver detalles de la venta" style="background-color: rgb(10, 137, 235); color:white">
+                                    <button wire:click.prevent="InsertarSolicitud({{$l['product_id']}})" class="btn btn-sm" title="Ver detalles de la venta" style="background-color: rgb(10, 137, 235); color:white">
                                         <i class="fas fa-chevron-up"></i>
                                     </button>
-                                    <button wire:click.prevent="seleccionar_cliente({{$l['product_id']}})" class="btn btn-sm" title="Ver detalles de la venta" style="background-color: rgb(255, 124, 1); color:white">
+                                    <button wire:click.prevent="DecrementarSolicitud({{$l['product_id']}},'{{$l['type']}}')" class="btn btn-sm" title="Ver detalles de la venta" style="background-color: rgb(255, 124, 1); color:white">
                                         <i class="fas fa-chevron-down"></i>
                                     </button>
-                                    <button wire:click.prevent="seleccionar_cliente({{$l['product_id']}})" class="btn btn-sm" title="Ver detalles de la venta" style="background-color: rgb(230, 0, 0); color:white">
+                                    <button wire:click.prevent="EliminarSolicitud({{$l['product_id']}})" class="btn btn-sm" title="Ver detalles de la venta" style="background-color: rgb(230, 0, 0); color:white">
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
                                 </div>
@@ -220,7 +219,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-          <button wire:click.prevent="CrearSolicitud()" type="button" class="btn btn-primary">Crear Solicitud</button>
+          <button wire:click.prevent="EnviarSolicitud()" type="button" class="btn btn-primary">Crear Solicitud</button>
         </div>
       </div>
     </div>

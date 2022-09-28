@@ -1112,6 +1112,31 @@
 					});
             });
 
+
+        //Para mostrar cualquier tipo de mensaje Succeed
+        window.livewire.on('message-succeed', Msg => {
+        
+            const toast = swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 2700,
+            padding: '2em'
+            });
+            toast({
+                type: 'success',
+                title: @this.message_toast,
+                padding: '2em',
+            })
+
+        });
+
+
+
+
+
+
+
         //Crear pdf de Informe técnico de un servicio
         window.livewire.on('informe-tecnico', Msg => {
         var idservicio = @this.id_servicio;

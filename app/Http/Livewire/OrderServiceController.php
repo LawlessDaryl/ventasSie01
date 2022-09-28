@@ -84,6 +84,9 @@ class OrderServiceController extends Component
     //Variables para mostrar tecnico responsable en los sweet alerts (Alertas JavaScript)
     public $alert_responsabletecnico;
 
+    //Guarda el emnsaje que se mostrara en la parte superior derecha de la pantalla
+    public $message_toast;
+
 
 
 
@@ -2622,6 +2625,8 @@ class OrderServiceController extends Component
           
        }
 
+
+       
         return view('livewire.order_service.component', [
             'orden_de_servicio' => $orden_de_servicio,
             'listasucursales' => Sucursal::all(),
@@ -3319,7 +3324,7 @@ class OrderServiceController extends Component
 
 
 
-        $this->detallesservicios($type, $idservicio);
+        //$this->detallesservicios($type, $idservicio);
         $this->edit_tipodetrabajo = $detallesservicio->idtipotrabajo;
         $this->edit_categoriatrabajo = $detallesservicio->idnombrecategoria;
         $this->edit_marca = $detallesservicio->marca;
@@ -3983,6 +3988,10 @@ class OrderServiceController extends Component
                 'quantity'=> $cantidad,
                 'type'=> 'Repuesto'
             ]);
+
+            $this->message_toast = "¡Cantidad Actualizada!";
+
+            $this->emit("message-succeed");
         }
         else
         {
@@ -3993,6 +4002,15 @@ class OrderServiceController extends Component
                 'quantity'=> 1,
                 'type'=> 'Repuesto'
             ]);
+
+             
+             
+
+            $this->message_toast = "¡Producto " . $nombre_producto . " insertado con éxito!";
+
+            $this->emit("message-succeed");
+
+
         }
 
 
@@ -4017,13 +4035,47 @@ class OrderServiceController extends Component
             'quantity'=> 1,
             'type'=> 'CompraRepuesto'
         ]);
+         
+         
     }
+    //Elimina una solicitud
+    public function EliminarSolicitud($idproducto)
+    {
+        //Buscamos el elemento en la colección
+        $result = $this->lista_solicitudes->where('product_id', $idproducto);
+        //Eliminando la fila del elemento en coleccion
+        $this->lista_solicitudes->pull($result->keys()->first());
+        
+        
+    }
+    //Decrementa el valor (Stock) de una solicitud
+    public function DecrementarSolicitud($idproducto, $type)
+    {
+        //Buscamos el elemento en la colección
+        $result = $this->lista_solicitudes->where('product_id', $idproducto);
 
-    public function CrearSolicitud()
+        //Guardando la cantidad del producto
+        $cantidad = $result->first()['quantity'];
+        //Incrementando en una unidad
+        $cantidad--;
+        //Eliminando la fila del elemento en coleccion
+        $this->lista_solicitudes->pull($result->keys()->first());
+        //Lo volvemos a agregar con la cantidad actualizada
+        $nombre_producto = Product::find($idproducto)->nombre;
+        $this->lista_solicitudes->push([
+            'product_id' => $idproducto,
+            'product_name'=> $nombre_producto,
+            'quantity'=> $cantidad,
+            'type'=> $type
+        ]);
+
+        $this->message_toast = "¡Cantidad Decrementada!";
+
+        $this->emit("message-succeed");
+    }
+    public function EnviarSolicitud()
     {
         //Creando la solicitud
-
-       
         $solicitud = ServiceRepSolicitud::create([
             'user_id' => Auth()->user()->id,
             'service_id' => $this->id_servicio
