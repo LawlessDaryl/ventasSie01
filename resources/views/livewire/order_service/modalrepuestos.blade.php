@@ -148,7 +148,7 @@
 
 
 
-            @if($this->lista_solicitudes->count() > 0)
+            @if($this->lista_solicitudes != null)
             <div class="row">
                 <div class="col-12 text-center">
                     <h2>Lista de Solicitudes</h2>

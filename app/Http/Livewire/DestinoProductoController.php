@@ -82,19 +82,18 @@ class DestinoProductoController extends Component
                 if (strlen($this->search) > 0) {
                     $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
                     ->join('destinos as dest','dest.id','productos_destinos.destino_id')
-                    ->select('p.*')
                     ->where('p.nombre', 'like', '%' . $this->search . '%')
                     ->orWhere('p.codigo', 'like', '%' . $this->search . '%')
                     ->groupBy('productos_destinos.product_id')
-                    ->selectRaw('sum(productos_destinos.stock) as stock_s');
+                    ->selectRaw('sum(productos_destinos.stock) as stock_s,p.*');
                 }
                 else{
-                    $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
+                    $almacen= ProductosDestino::join('products','products.id','productos_destinos.product_id')
                     ->join('destinos as dest','dest.id','productos_destinos.destino_id')
-                    ->select('p.*')
-                    ->groupBy('productos_destinos.product_id')
-                    ->selectRaw('sum(productos_destinos.stock) as stock_s');
-                   // dd($almacen);
+                    ->groupBy('products.id')
+                    ->selectRaw('sum(productos_destinos.stock) as stock_s,products.*');
+                    //dd("d");
+                  
                     
                 }
             }
@@ -102,13 +101,18 @@ class DestinoProductoController extends Component
                 if (strlen($this->search) > 0) {
                     $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
                     ->join('destinos as dest','dest.id','productos_destinos.destino_id')
-                    ->select('p.*')
                     ->where('p.nombre', 'like', '%' . $this->search . '%')
                     ->orWhere('p.codigo', 'like', '%' . $this->search . '%')
                     ->groupBy('productos_destinos.product_id')
-                    ->selectRaw('sum(productos_destinos.stock) as stock_s')
-                    ->where('stock_s',0)
-                   ;
+                    ->selectRaw('sum(productos_destinos.stock) as stock_s,p.*')
+                    ->when($this->selected_mood=='cero',function($q){
+                        return $q->having('stock_s',0);
+                    })
+                    ->when($this->selected_mood=='bajo',function($q){
+                        return $q->having('stock_s','<','p.cantidad_minima');
+                    });
+
+                    ddd($almacen);
                 }
                 else{
                     $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
@@ -117,10 +121,7 @@ class DestinoProductoController extends Component
                     ->groupBy('productos_destinos.product_id')
                     ->selectRaw('sum(productos_destinos.stock) as stock_s')
                     ->select('p.*','stock_s')
-                   -> where('stock_s',0)->get();
-                   
-               
-                    
+                    -> where('stock_s',0)->get();  
                 }
             }
 
@@ -558,25 +559,6 @@ dd($e->getMessage());
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   
    foreach ($auxi2 as $data) 
    {
        $data->stock = 0;

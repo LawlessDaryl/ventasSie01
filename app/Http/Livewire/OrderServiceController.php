@@ -3996,11 +3996,6 @@ class OrderServiceController extends Component
         }
 
 
-
-        
-
-
-
         // $prod = Product::where('id',$id->product_id)->get();
 
         // dd($prod);
@@ -4027,6 +4022,8 @@ class OrderServiceController extends Component
     public function CrearSolicitud()
     {
         //Creando la solicitud
+
+       
         $solicitud = ServiceRepSolicitud::create([
             'user_id' => Auth()->user()->id,
             'service_id' => $this->id_servicio
@@ -4037,12 +4034,17 @@ class OrderServiceController extends Component
         {
             //Creando el detalle de la solicitud
 
+          
             ServiceRepDetalleSolicitud::create([
                 'solicitud_id' => $solicitud->id,
                 'product_id' => $l['product_id'],
                 'cantidad' => $l['quantity'],
                 'tipo' => $l['type']
             ]);
+
+            if ($l['type'] == 'CompraRepuesto') {
+                              
+            }
         }
 
         $this->lista_solicitudes = null;

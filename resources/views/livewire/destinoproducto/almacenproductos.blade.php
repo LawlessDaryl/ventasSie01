@@ -77,7 +77,7 @@
                         <div class="form-group">
                             <select wire:model='selected_mood' class="form-control">
                                 <option value="todos">TODOS</option>
-                                <option value="agotados">Productos agotados</option>
+                                <option value='cero'>Productos agotados</option>
                                 <option value="bajo">Productos bajo stock</option>
                             
                             </select>

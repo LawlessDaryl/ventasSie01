@@ -233,13 +233,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('informetecnico/pdf/{id}', [ServicioInformeTecnicoController::class, 'print']);
     Route::get('reporteservices', ReporteServiceController::class)->name('tw2')->middleware('permission:Reporte_Servicios_Index');
     Route::group(['middleware' => ['permission:Reporte_Servicios_Export']], function () {
-        Route::get('reporteServicio/pdf/{user}/{estado}/{sucursal}/{type}/{f1}/{f2}', [ExportServicioPdfController::class, 'reporteServPDF']);
-        Route::get('reporteServicio/pdf/{user}/{estado}/{sucursal}/{type}', [ExportServicioPdfController::class, 'reporteServPDF']);
-    });
+    Route::get('reporteServicio/pdf/{user}/{estado}/{sucursal}/{type}/{f1}/{f2}', [ExportServicioPdfController::class, 'reporteServPDF']);
+    Route::get('reporteServicio/pdf/{user}/{estado}/{sucursal}/{type}', [ExportServicioPdfController::class, 'reporteServPDF']);});
     Route::get('reportentregservices', ReportEntregadoServController::class)->name('res')->middleware('permission:Boton_Entregar_Servicio');
     Route::get('solicitudrepuestos', SolicitudRepuestos::class)->name('solrep')->middleware('permission:Agregar_Repuestos');
     Route::get('reporteServicEntreg/pdf/{type}/{f1}/{f2}/{sucursal}/{sE}/{sB}/{caja}', [ExportServicioEntregPdfController::class, 'reporteServPDF']);
-    Route::get('reporteServicEntreg/pdf/{type}/{sucursal}', [ExportServicioEntregPdfController::class, 'reporteServPDF']);
+    Route::get('reporteServicEntreg/pdf/{type}/{sucursal}', [ExportServicioEntregPdfController::class,'reporteServPDF']);
     //Lista de Ventas
     Route::get('salelist', SaleListController::class)->name('salelist')->middleware('permission:VentasLista_Index');
     Route::get('estadisticas', SaleStatisticController::class)->name('estadisticas');
