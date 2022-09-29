@@ -134,8 +134,7 @@ class ProductsController extends Component
                         ->orWhere('products.marca', 'like', '%' . $this->search . '%')
                         ->orWhere('products.caracteristicas', 'like', '%' . $this->search . '%') 
                         ->orWhere('products.costo', 'like', '%' . $this->search . '%')
-                        ->orWhere('products.precio_venta', 'like', '%' . $this->search . '%');
-                          
+                        ->orWhere('products.precio_venta', 'like', '%' . $this->search . '%');    
             })
             ->orderBy('products.id', 'desc');
         }

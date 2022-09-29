@@ -3949,14 +3949,6 @@ class OrderServiceController extends Component
     }
 
 
-
-
-
-
-
-
-
-
     //ROSCIO
 
 
@@ -4094,8 +4086,9 @@ class OrderServiceController extends Component
                 'tipo' => $l['type']
             ]);
 
-            if ($l['type'] == 'CompraRepuesto') {
-                              
+            if ($l['type'] == 'CompraRepuesto') 
+            {
+                
             }
         }
 
@@ -4110,42 +4103,6 @@ class OrderServiceController extends Component
 
 
 
-    public function addProduct(Product $id)
-    {
-
-            $pd=ProductosDestino::where('product_id',$id->id)->where('destino_id',$this->destinosalida)->select('stock')->value('stock');
-            $dest=Destino::find($this->destinosalida);
-     
-
-          if ($pd>0 and $this->cantidad < $pd) {
-        
-            $rules = [
-                'result' => 'required',
-                'cantidad' => 'required',
-                'precio_venta'=>'required'
-            ];
-            
-            $messages = [
-              
-                'result.required'=>'El producto es requerido',
-                'cantidad.required' => 'La cantidad es requerida',
-                'precio_venta.required'=>'Defina un precio de venta'
-            ];
-            
-            $this->validate($rules, $messages);
-            
-            $this->list_produts_collect->push(['product_id'=> $id->id,'product-name'=>$id->nombre,'cantidad'=>$this->cantidad,'precio_venta'=>$this->precio_venta,'destino'=>$dest->nombre]);
-    
-            $this->result=null;
-            $this->cantidad=null;
-            $this->costo=null;
-            $this->precio_venta=null;
-          }
-          else{
-            $this->emit('stock-insuficiente');
-          }
-            //dump($this->list_produts_collect);
-    }
 
     public function eliminaritem($id)
     {
@@ -4163,120 +4120,7 @@ class OrderServiceController extends Component
      
     }
 
-    public function GuardarOperacion()
-    {
-        /* Se registra la salida de productos de almacen de repuestos*/ 
-
-        //dd($this->list_produts_collect);
-        $rules = [
-            'observacion' => 'required'
-        ];
-
-        $messages = [
-            'observacion.required' => 'Agregue una observacion'
-        ];
-
-        $this->validate($rules, $messages);
-                    
-        try
-        {
-            $operacion= SalidaProductos::create([
-
-                'destino'=>$this->almacenrepuestos,
-                'user_id'=> Auth()->user()->id,
-                'concepto'=>'SALIDA',
-                'observacion'=>$this->observacion]);
-                // dd($auxi2->pluck('stock')[0]);
-
-            foreach ($this->list_produts_collect as $datas) {
-
-                $auxi=DetalleSalidaProductos::create([
-                'product_id'=>$datas['product_id'],
-                'cantidad'=> $datas['cantidad'],
-                'id_salida'=>$operacion->id
-            ]);
-
-            /* Se registra la disminucion del lote de repuestos de almacen*/ 
-
-            $lot=Lote::where('product_id',$datas['product_id'])->where('status','Activo')->get();
-
-            //obtener la cantidad del detalle de la venta 
-            $this->qq=$datas['cantidad'];//q=8
-            foreach ($lot as $val)
-            { //lote1= 3 Lote2=3 Lote3=3
-            $this->lotecantidad = $val->existencia;
-            //dd($this->lotecantidad);
-            if($this->qq>0){
-                //true//5//2
-                //dd($val);
-                if ($this->qq > $this->lotecantidad) {
-                    $ss=SalidaLote::create([
-                        'salida_detalle_id'=>$auxi->id,
-                        'lote_id'=>$val->id,
-                        'cantidad'=>$val->existencia
-                        
-                    ]);
-                    $val->update([
-                        
-                        'existencia'=>0,
-                        'status'=>'Inactivo'
-                        
-                        ]);
-                        $val->save();
-                        $this->qq=$this->qq-$this->lotecantidad;
-                        //dump("dam",$this->qq);
-                }
-                else{
-                    //dd($this->lotecantidad);
-                    $ss=SalidaLote::create([
-                    'salida_detalle_id'=>$auxi->id,
-                    'lote_id'=>$val->id,
-                    'cantidad'=>$this->qq
-                    
-                ]);
-                    
-
-                    $val->update([ 
-                        'existencia'=>$this->lotecantidad-$this->qq
-                    ]);
-                    $val->save();
-                    $this->qq=0;
-                    //dd("yumi",$this->qq);
-                }
-            }
-
-
-        
-                }
-
-                /*Se disminuye la cantidad de stock de productos destinos*/
-                $q=ProductosDestino::where('product_id',$datas['product_id'])
-                ->where('destino_id',$this->almacenrepuestos)->value('stock');
-
-                ProductosDestino::updateOrCreate(['product_id' => $datas['product_id'], 'destino_id'=>$this->almacenrepuestos],['stock'=>$q-$datas['cantidad']]); 
-
-                SalidaServicio::create([
-                    'salida_id'=>$operacion->id,
-                    'service_id'=>$this->id_servicio,
-                    'estado'=>'Activo',
-                    'precio_venta'=>$datas['precio_venta']
-                ]);
-
-            }
-
-            DB::commit();
-         }
-        catch (Exception $e)
-        {
-            DB::rollback();
-            dd($e->getMessage());
-        }
- 
-                $this->resetui();
-                $this->emit('salidaregistrada');
-               $this->modaleditarservicio($this->tipo,$this->id_servicio,$this->id_orden_de_servicio);
-    }
-
+  
     public function resetui()
     {
         /*Restablecer variables del modal de registro de salida de repuestos*/
@@ -4291,132 +4135,7 @@ class OrderServiceController extends Component
 
     }
 
-    public function guardarVentaRepuestos()
-    {
-
-        $Movimiento = Movimiento::create([
-            'type' => "VENTAS",
-            'import' => $this->total_bs,
-            'user_id' => Auth()->user()->id,
-        ]);
-
-        //Creando Cliente Movimiento
-        ClienteMov::create([
-            'movimiento_id' => $Movimiento->id,
-            'cliente_id' => $this->cliente_id,
-        ]);
-        //Para saber toda la informacionde del id de la cartera seleccionada
-        $cartera = Cartera::find($this->cartera_id);
-        //Creando la venta
-        $sale = Sale::create([
-            'total' => $this->total_bs,
-            'items' => $this->total_items,
-            'cash' => $this->dinero_recibido,
-            'change' => $this->cambio,
-            'tipopago' => $cartera->nombre,
-            'factura' => $this->invoice,
-            'cartera_id' => $cartera->id,
-            'observacion' => $this->observacion,
-            'movimiento_id' => $Movimiento->id,
-            'user_id' => Auth()->user()->id
-        ]);
-        //Actualizando la variable $this->venta_id para poder crear un comprobante de venta
-        $this->venta_id = $sale->id;
-
-
-        //Obteniendo todos los productos del Carrito de Ventas (Carrito de Ventas)
-        $productos = Cart::getContent();
-
-        foreach($productos as $p)
-        {
-            $sd = SaleDetail::create([
-                'price' => $p->price,
-                'quantity' => $p->quantity,
-                'product_id' => $p->id,
-                'sale_id' => $sale->id,
-            ]);
-
-            //Para obtener la cantidad del producto que se va a vender
-            $cantidad_producto_venta = $p->quantity;
-
-            //Buscamos todos los lotes que tengan ese producto
-            $lotes = Lote::where('product_id', $p->id)->where('status','Activo')->get();
-
-            //Recorremos todos los lotes que tengan ese producto
-            foreach($lotes as $l)
-            {
-                //Obtenemos la cantidad de existencia que tenga ese lote de ese producto
-                $cantidad_producto_lote = $l->existencia;
-
-                //Si la cantidad del producto para la venta supera la existencia en el lote
-                //Vaciamos toda la existencia de ese lote y lo inactivamos
-                if($cantidad_producto_venta > $cantidad_producto_lote)
-                {
-                    //Creamos un registro en la tabla SaleLote con la cantidad total del producto en el lote
-                    $sale_lote = SaleLote::create([
-                        'sale_detail_id' => $sd->id,
-                        'lote_id' => $l->id,
-                        'cantidad' => $cantidad_producto_lote
-                    ]);
-                    //Dismunuimos la cantidad del producto para la venta por el total cantidad del producto en el lote
-                    $cantidad_producto_venta = $cantidad_producto_venta - $cantidad_producto_lote;
-
-
-                    //Actualizamos el lote
-                    $l->update([
-                        'existencia' => 0,
-                        'status' => 'Inactivo'
-                        ]);
-                    $l->save();
-                }
-                else
-                {
-                    //Si la cantidad del producto para la venta no supera la existencia en el lote
-                    //Reducimos la existencia de ese lote por la cantidad del producto para la venta
-                    SaleLote::create([
-                        'sale_detail_id' => $sd->id,
-                        'lote_id' => $l->id,
-                        'cantidad' => $cantidad_producto_venta
-                    ]);
-
-                    $l->update([ 
-                        'existencia'=> $cantidad_producto_lote - $cantidad_producto_venta
-                    ]);
-                    $l->save();
-                }
-            }
-
-
-
-
-
-
-            //Decrementando el stock en tienda
-            $tiendaproducto = ProductosDestino::join("products as p", "p.id", "productos_destinos.product_id")
-            ->join('destinos as des', 'des.id', 'productos_destinos.destino_id')
-            ->select("productos_destinos.id as id","p.nombre as name",
-            "productos_destinos.stock as stock")
-            ->where("p.id", $p->id)
-            ->where("des.nombre", 'TIENDA')
-            ->where("des.sucursal_id", $this->idsucursal())
-            ->get()->first();
-
-
-            $tiendaproducto->update([
-                'stock' => $tiendaproducto->stock - $p->quantity
-            ]);
-
-        }
-
-        //Creando Cartera Movimiento
-        CarteraMov::create([
-            'type' => "INGRESO",
-            'tipoDeMovimiento' => "VENTA",
-            'comentario' => "Venta",
-            'cartera_id' => $cartera->id,
-            'movimiento_id' => $Movimiento->id,
-        ]);
-    }
+    
 
     public function verDetalleRep()
     {

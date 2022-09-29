@@ -50,7 +50,8 @@ class DestinoProductoController extends Component
    
     
     }
-    public function cerrar(){
+    public function cerrar()
+    {
         $this->grouped=false;
     }
 
@@ -73,97 +74,22 @@ class DestinoProductoController extends Component
             $this->active3="active show";
         }
 
-        if($this->selected_id !== null){
-
-            if($this->selected_id === 'General')
-
-            if ($this->selected_mood == 'todos') {
-              
-                if (strlen($this->search) > 0) {
-                    $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
+        $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
                     ->join('destinos as dest','dest.id','productos_destinos.destino_id')
-                    ->where('p.nombre', 'like', '%' . $this->search . '%')
-                    ->orWhere('p.codigo', 'like', '%' . $this->search . '%')
-                    ->groupBy('productos_destinos.product_id')
-                    ->selectRaw('sum(productos_destinos.stock) as stock_s,p.*');
-                }
-                else{
-                    $almacen= ProductosDestino::join('products','products.id','productos_destinos.product_id')
-                    ->join('destinos as dest','dest.id','productos_destinos.destino_id')
-                    ->groupBy('products.id')
-                    ->selectRaw('sum(productos_destinos.stock) as stock_s,products.*');
-                    //dd("d");
-                  
                     
-                }
-            }
-            else{
-                if (strlen($this->search) > 0) {
-                    $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
-                    ->join('destinos as dest','dest.id','productos_destinos.destino_id')
-                    ->where('p.nombre', 'like', '%' . $this->search . '%')
-                    ->orWhere('p.codigo', 'like', '%' . $this->search . '%')
-                    ->groupBy('productos_destinos.product_id')
-                    ->selectRaw('sum(productos_destinos.stock) as stock_s,p.*')
-                    ->when($this->selected_mood=='cero',function($q){
-                        return $q->having('stock_s',0);
-                    })
-                    ->when($this->selected_mood=='bajo',function($q){
-                        return $q->having('stock_s','<','p.cantidad_minima');
-                    });
+                    //->select('productos_destinos.stock','p.*')
+                    ->when($this->selected_id == 'General',function($query){
+                       return $query->select('p.*',DB::raw('SUM(productos_destinos.stock) as mb'));
+                    })->get();
 
-                    ddd($almacen);
-                }
-                else{
-                    $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
-                    ->join('destinos as dest','dest.id','productos_destinos.destino_id')
-               
-                    ->groupBy('productos_destinos.product_id')
-                    ->selectRaw('sum(productos_destinos.stock) as stock_s')
-                    ->select('p.*','stock_s')
-                    -> where('stock_s',0)->get();  
-                }
-            }
+                    //dd($almacen);
+      
 
 
-            // if ($this->filtro_stock == 'BAJO_STOCK') {
-            //     $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
-            //     ->join('destinos as dest','dest.id','productos_destinos.destino_id')
-            //     ->select('p.*')
-            //     ->groupBy('productos_destinos.product_id')
-            //     ->selectRaw('sum(productos_destinos.stock) as stock_s')
-            //     ->where('stock_s','<','p.cantidad_minima')
-            //     ->paginate($this->pagination);
-            // }
 
-             
-            else
-             $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
-                                        ->join('destinos as dest','dest.id','productos_destinos.destino_id')
-                                        ->select('productos_destinos.*','p.*')
-                                        ->where('dest.id',$this->selected_id)
-                                        ->where(function($query){
-                                            $query->where('p.nombre', 'like', '%' . $this->search . '%')
-                                                  ->orWhere('p.codigo', 'like', '%' . $this->search . '%');
-                                        })
-                                        ->orderBy('p.nombre','desc')
-                                        ;  
 
-                                        /* para hacer merge $collection = collect(['Desk', 'Chair']);
-                                        $merged = $collection->merge(['Bookcase', 'Door']);
-                                        $merged->all();*/ 
 
-                                                             }
-            
-            else{
-               
-             $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
-                                            ->join('destinos as dest','dest.id','productos_destinos.destino_id')
-                                            ->select('p.*')
-                                            ->groupBy('productos_destinos.product_id')
-                                            ->selectRaw('sum(productos_destinos.stock) as stock_s')
-                                            ;
-            }
+        
              $sucursal_ubicacion=Destino::join('sucursals as suc','suc.id','destinos.sucursal_id')
                                         ->select ('suc.name as sucursal','destinos.nombre as destino','destinos.id')
                                         ->orderBy('suc.name','asc');
@@ -568,13 +494,7 @@ dd($e->getMessage());
    $aux= Product::find($this->productid);
    $this->ajuste($aux);
    $this->emit('show-modal-ajuste');
-
-
-      
-
     }
-
-  
 
     public function eliminarmob(LocationProducto $id){
 
