@@ -19,6 +19,8 @@ class CreateServiceRepDetalleSolicitudsTable extends Migration
             $table->foreign('solicitud_id')->references('id')->on('service_rep_solicituds');
             $table->unsignedBigInteger('product_id');
             $table->foreign('product_id')->references('id')->on('products');
+            $table->unsignedBigInteger('service_id');
+            $table->foreign('service_id')->references('id')->on('services');
             $table->integer('cantidad');
             $table->enum('tipo',['CompraRepuesto','Repuesto']);
             $table->enum('status',['Activo','Inactivo'])->default('Activo');

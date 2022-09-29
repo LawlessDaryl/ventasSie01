@@ -87,7 +87,7 @@ use App\Http\Livewire\SaleDailyMovementController;
 use App\Http\Livewire\SaleDevolutionController;
 use App\Http\Livewire\SaleStatisticController;
 use App\Http\Livewire\SaleReporteCantidadController;
-use App\Http\Livewire\SolicitudRepuestos;
+use App\Http\Livewire\SolicitudRepuestosController;
 use App\Models\Product;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
@@ -236,7 +236,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('reporteServicio/pdf/{user}/{estado}/{sucursal}/{type}/{f1}/{f2}', [ExportServicioPdfController::class, 'reporteServPDF']);
     Route::get('reporteServicio/pdf/{user}/{estado}/{sucursal}/{type}', [ExportServicioPdfController::class, 'reporteServPDF']);});
     Route::get('reportentregservices', ReportEntregadoServController::class)->name('res')->middleware('permission:Boton_Entregar_Servicio');
-    Route::get('solicitudrepuestos', SolicitudRepuestos::class)->name('solrep')->middleware('permission:Agregar_Repuestos');
+    Route::get('solicitudrepuestos', SolicitudRepuestosController::class)->name('solrep')->middleware('permission:Agregar_Repuestos');
     Route::get('reporteServicEntreg/pdf/{type}/{f1}/{f2}/{sucursal}/{sE}/{sB}/{caja}', [ExportServicioEntregPdfController::class, 'reporteServPDF']);
     Route::get('reporteServicEntreg/pdf/{type}/{sucursal}', [ExportServicioEntregPdfController::class,'reporteServPDF']);
     //Lista de Ventas
