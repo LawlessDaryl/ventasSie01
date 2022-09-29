@@ -39,78 +39,44 @@
                     <tbody>
                         @forelse($listaproductos as $l)
                             <tr class="tablaserviciostr">
-                                <td style="font-size: 0.8rem;">
-                                    {{$l->prod_name}}
+                                <td class="text-center">
+                                    {{$l->nombreproducto}}
                                 </td>
-                                <td class="text-center" style="font-size: 0.8rem;">
-                                    {{$l->dest_name}}
+                                <td class="text-center">
+                                    {{$l->nombredestino}}
                                 </td>
-                                <td class="text-center" style="font-size: 0.8rem;">
-                                    {{-- {{$data->correo ? $data->correo : "No definido" }} --}}
-                                    {{$l->stock >0 ? 'Disponible':'Sin Stock'}}
+                                <td class="text-center">
+                                    {{$l->stock > 0 ? 'Disponible':'Sin Stock'}}
                                 </td>
-                                @if ($l->stock >0)
+                                @if ($l->stock > 0)
                                 <td class="text-center">
                                     <button
-                                        wire:click="InsertarSolicitud('{{ $l->pid }}')"
+                                        wire:click="InsertarSolicitud('{{ $l->pdid }}')"
                                         class="btn btn-warning mtmobile btn-sm"
                                         title="Solicitar Repuesto">
-                                        {{-- <i class="fas fa-check"></i> --}}
                                         Solicitar
                                     </button>
                                 </td>
                                 @else
-
                                 <td class="text-center">
-                                    <a href="javascript:void(0)"
-                                    wire:click="InsertarSolicitudCompra('{{ $l->pid }}')"
+                                    <button
+                                    wire:click="InsertarSolicitudCompra('{{ $l->pdid }}')"
                                     class="btn btn-warning mtmobile btn-sm"
                                     title="Solicitar Compra Repuesto">
                                     Solicitar Compra
-                                    </a>
-
+                                    </button>
                                 </td>
                                 @endif
                             </tr>
                         @empty
                             <tr>
                                 <td class="text-center" colspan="4" style="width: 15px !important;">
-
-                                    <a href="javascript:void(0)"
-                                    class="btn btn-warning mtmobile btn-sm"
-                                    title="Solicitar compra">
-                                    Crear y solicitar el producto: {{$this->searchproduct}}
-                                    </a>
-
-
-
-
-                                        
-
-
+                                    <button class="btn btn-warning mtmobile btn-sm" title="Solicitar Compra">
+                                        Crear y solicitar el producto: {{$this->searchproduct}}
                                     </button>
                                 </td>
                             </tr>
                         @endforelse
-
-
-
-
-
-                        {{-- @foreach($listaproductos as $l)
-                            <tr>
-                                <td>
-                                    {{$l->prod_name}}
-                                </td>
-                                <td class="text-center">
-                                    {{$l->dest_name}}
-                                </td>
-                                <td class="text-center">
-                                    
-                                </td>
-                            </tr>
-                        @endforeach --}}
-
                     </tbody>
                 </table>
             </div>
@@ -129,12 +95,7 @@
             <br>
             <br>
 
-
             @endif
-            
-
-
-
 
             <br>
 
@@ -158,29 +119,29 @@
                     <table>
                       <thead>
                           <tr>
-                              <th class="text-center">Nombre Producto</th>
-                              <th class="text-center">Cantidad</th>
-                              <th class="text-center">Tipo</th>
-                              <th class="text-center">Acciones</th>
+                            <th class="text-center">Producto</th>
+                            <th class="text-center">Destino</th>
+                            <th class="text-center">Cantidad</th>
+                            <th class="text-center">Tipo</th>
+                            <th class="text-center">Acciones</th>
                           </tr>
                       </thead>
                       <tbody>
-                          @foreach ($lista_solicitudes->sortBy("product_id") as $l)
+                          @foreach ($lista_solicitudes->sortBy("product_name") as $l)
                           <tr>
-                              <td class="text-left">
-                                {{$l['product_name']}}
-                                  {{-- {{ ucwords(strtolower($lc->nombre)) }} --}}
-                              </td>
-                              <td class="text-center">
-                                {{$l['quantity']}}
-                              </td>
-                              <td class="text-center">
-                                {{$l['type']}}
-                              </td>
-                              <td class="text-center">
-
-
-
+                            <td class="text-left">
+                              {{$l['product_name']}}
+                            </td>
+                            <td class="text-left">
+                              {{$l['destiny_name']}}
+                            </td>
+                            <td class="text-center">
+                            {{$l['quantity']}}
+                            </td>
+                            <td class="text-center">
+                            {{$l['type']}}
+                            </td>
+                            <td class="text-center">
                                 <div class="btn-group" role="group" aria-label="Basic example">
                                     <button wire:click.prevent="InsertarSolicitud({{$l['product_id']}})" class="btn btn-sm" title="Ver detalles de la venta" style="background-color: rgb(10, 137, 235); color:white">
                                         <i class="fas fa-chevron-up"></i>
@@ -192,8 +153,6 @@
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
                                 </div>
-
-
                               </td>
                           </tr>
                           @endforeach

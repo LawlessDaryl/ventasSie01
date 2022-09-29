@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
-class SolicitudRepuestos extends Component
+class SolicitudRepuestosController extends Component
 {
     public $asd;
     public function render()
