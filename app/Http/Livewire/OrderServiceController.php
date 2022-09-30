@@ -5,12 +5,14 @@ namespace App\Http\Livewire;
 use App\Models\Caja;
 use App\Models\Cartera;
 use App\Models\CarteraMov;
+use App\Models\Category;
 use App\Models\CatProdService;
 use App\Models\ClienteMov;
 use App\Models\Cliente;
 use App\Models\Destino;
 use App\Models\DetalleSalidaProductos;
 use App\Models\Lote;
+use App\Models\Marca;
 use App\Models\Movimiento;
 use App\Models\MovService;
 use App\Models\Service;
@@ -25,6 +27,7 @@ use App\Models\ServiceRepSolicitud;
 use App\Models\SubCatProdService;
 use App\Models\Sucursal;
 use App\Models\TypeWork;
+use App\Models\Unidad;
 use App\Models\User;
 use Carbon\Carbon;
 use DateTime;
@@ -93,7 +96,7 @@ class OrderServiceController extends Component
     //ROSCIO - REPUESTOS
     //variable para modal de busqueda de repuestos 
     public $nombre,$costo2, $precio_venta2,$codigo,$caracteristicas,$lote,$unidad, $marca, $garantia,$industria,
-    $categoryid,$component,$selected_categoria,$image,$selected_id2,$name,$descripcion;
+    $categoryid,$component,$selected_categoria,$image,$selected_id2,$name,$descripcion,$unidades,$marcasp,$show_more;
 
     //Guarda la lista donde se guardan todos los repuestos encontrados en el input de busqueda de repuestos ($searchproduct)
     public $listaproductos;
@@ -130,6 +133,8 @@ class OrderServiceController extends Component
 
         //Variable que guarda el id de la cartera
         $this->tipopago = 'Elegir';
+        $this->unidades=null;
+        $this->marcasp=null;
 
         //Verificando si el usuario tiene una caja abierta
         if($this->listarcarteras() == null)
@@ -4046,8 +4051,8 @@ class OrderServiceController extends Component
                 'product_name'=> $nombre_producto,
                 'destino_id' => $pd->id,
                 'destiny_name' => $pd->id,
-                'quantity'=> $cantidad,
-                'type'=> 'CompraRepuesto'
+                'quantity'=>$cantidad,
+                'type'=>'CompraRepuesto'
             ]);
 
             $this->message_toast = "¡Cantidad Actualizada!";
@@ -4133,29 +4138,67 @@ class OrderServiceController extends Component
 
         $this->emit('hide-sd');
         
+    
     }
 
+    public function addProducts(){
+
+        $this->unidades= Unidad::all();
+        $this->marcasp=Marca::all();
+
+
+        $this->emit('show-modalproducts');
+
+    }
+
+
+
+
     public function Store(){
-        $prod = new Product();
-        $prod->selected_id2=$this->selected_id2;
-        $prod->nombre= $this->nombre;
-        $prod->costo=$this->costo;
-        $prod->precio_venta=$this->precio_venta;
-        $prod->barcode=$this->barcode;
-        $prod->codigo =$this->codigo;
-        $prod->caracteristicas=$this->caracteristicas;
-        $prod->lote =$this->lote;
-        $prod->unidad=$this->unidad;
-        $prod->marca=$this->marca;
-        $prod->cantidad_minima=$this->cantidad_minima;
-        $prod->garantia =$this->garantia;
-        $prod->industria=$this->industria;
-        $prod->categoryid=$this->categoryid;
-        $prod->Store();
-        $this->emit('products_added','ahola');
+
+        $rules = [
+            'nombre' => 'required|unique:products|min:5',
+            'caracteristicas'=>'required',
+            'precio_venta2'=>'required'
+          
+        ];
+
+        $messages = [
+            'nombre.required' => 'Nombre del repuesto es  requerido',
+            'nombre.unique' => 'Este producto ya existe',
+            'nombre.min' => 'El nombre del repuesto debe  contener al menos 5 caracteres',
+            'caracteristicas.required' =>'Describa algunas caracteristicas',
+            'precio_venta2.required'=>'El precio aproximado de compra del repuesto es requerido'
+       
+        ];
+
+        $this->validate($rules, $messages);
+        $categories = Category::pluck('id', 'name');
+ 
+        $categories['No definido'];
+        $product = Product::create([
+            'nombre' => $this->nombre,
+            'costo' => $this->precio_venta2,
+            'caracteristicas'=>$this->caracteristicas,
+            'codigo'=>$this->GenerateCode(),
+            'unidad'=>$this->unidad,
+            'marca' => $this->marcap,
+            'industria' => $this->industria,
+            'precio_venta' => $this->precio_venta2,
+            'category_id' => $categories['No definido']
+            
+        ]);
+
         $pr=Product::where('nombre',$this->nombre)->pluck('id');
         $this->increaseQty($pr);
         $this->resetUI();
 
+    }
+
+    public function GenerateCode(){
+        
+        $min=10000;
+        $max= 99999;
+        $this->codigo= Carbon::now()->format('ymd').mt_rand($min,$max);
     }
 }

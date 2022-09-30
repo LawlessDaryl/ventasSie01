@@ -885,6 +885,7 @@
     @include('livewire.order_service.modaleditarservicioterminado')
     @include('livewire.order_service.modalentregarservicio')
     @include('livewire.order_service.modalrepuestos')
+    @include('livewire.order_service.productform')
 
 
 
@@ -920,6 +921,12 @@
         window.livewire.on('show-modalrepuestos', Msg => {
             $('#editarservicio').modal('hide')
             $('#modalrepuestos').modal('show')
+        });
+        window.livewire.on('show-modalproducts', Msg => {
+            $('#modalProduct').modal('show')
+            $('#editarservicio').modal('hide')
+            $('#modalrepuestos').modal('hide')
+            
         });
 
         //Cierra la ventana modal repuestos

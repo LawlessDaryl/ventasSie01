@@ -71,7 +71,7 @@
                         @empty
                             <tr>
                                 <td class="text-center" colspan="4" style="width: 15px !important;">
-                                    <button class="btn btn-warning mtmobile btn-sm" title="Solicitar Compra">
+                                    <button class="btn btn-warning mtmobile btn-sm" title="Solicitar Compra" wire:click="addProducts()">
                                         Crear y solicitar el producto: {{$this->searchproduct}}
                                     </button>
                                 </td>
