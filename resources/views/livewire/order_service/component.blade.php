@@ -929,6 +929,12 @@
             
         });
 
+        window.livewire.on('show-p', Msg => {
+            $('#modalProduct').modal('hide')
+            $('#modalrepuestos').modal('show')
+           
+        });
+
         //Cierra la ventana modal repuestos
         window.livewire.on('hide-sd', Msg => {
             $('#modalrepuestos').modal('hide')
