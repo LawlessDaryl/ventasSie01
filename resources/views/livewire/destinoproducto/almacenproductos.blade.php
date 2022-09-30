@@ -78,7 +78,7 @@
                             <select wire:model='selected_mood' class="form-control">
                                 <option value="todos">TODOS</option>
                                 <option value='cero'>Productos agotados</option>
-                                <option value="bajo">Productos bajo stock</option>
+                                <option value='bajo'>Productos bajo stock</option>
                             
                             </select>
                         </div>
@@ -142,7 +142,7 @@
                                          
                                         </td>
                                       
-                                        @if ($selected_id == 'General' || $selected_id == null)
+                                        @if ($selected_id == 'General')
                                         <td>
                                             <center>{{ $destino->stock_s }}</center> 
                                         </td>
@@ -163,7 +163,7 @@
                                       </td>
                                         @else
                                         <td>
-                                            <h6 class="text-center">{{ $destino->stock }}</h6>
+                                            <h6 class="text-center">{{ $destino->stock}}</h6>
                                         </td>
                                         <td>
                                             <center>{{ $destino->cantidad_minima }}</center> 

@@ -92,6 +92,8 @@ class OrderServiceController extends Component
 
     //ROSCIO - REPUESTOS
     //variable para modal de busqueda de repuestos 
+    public $nombre,$costo2, $precio_venta2,$codigo,$caracteristicas,$lote,$unidad, $marca, $garantia,$industria,
+    $categoryid,$component,$selected_categoria,$image,$selected_id2,$name,$descripcion;
 
     //Guarda la lista donde se guardan todos los repuestos encontrados en el input de busqueda de repuestos ($searchproduct)
     public $listaproductos;
@@ -4131,5 +4133,29 @@ class OrderServiceController extends Component
 
         $this->emit('hide-sd');
         
+    }
+
+    public function Store(){
+        $prod = new Product();
+        $prod->selected_id2=$this->selected_id2;
+        $prod->nombre= $this->nombre;
+        $prod->costo=$this->costo;
+        $prod->precio_venta=$this->precio_venta;
+        $prod->barcode=$this->barcode;
+        $prod->codigo =$this->codigo;
+        $prod->caracteristicas=$this->caracteristicas;
+        $prod->lote =$this->lote;
+        $prod->unidad=$this->unidad;
+        $prod->marca=$this->marca;
+        $prod->cantidad_minima=$this->cantidad_minima;
+        $prod->garantia =$this->garantia;
+        $prod->industria=$this->industria;
+        $prod->categoryid=$this->categoryid;
+        $prod->Store();
+        $this->emit('products_added','ahola');
+        $pr=Product::where('nombre',$this->nombre)->pluck('id');
+        $this->increaseQty($pr);
+        $this->resetUI();
+
     }
 }

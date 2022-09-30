@@ -41,7 +41,7 @@ class DestinoProductoController extends Component
     public function mount()
     {
 
-        $this->selected_id="General";
+        $this->selected_id='General';
         $this->componentName='crear';
         $this->title='ssss';
         $this->pr=20;
@@ -76,20 +76,40 @@ class DestinoProductoController extends Component
 
         $almacen= ProductosDestino::join('products as p','p.id','productos_destinos.product_id')
                     ->join('destinos as dest','dest.id','productos_destinos.destino_id')
+                    ->where(function($query){
+                        $query->where('p.nombre', 'like', '%' . $this->search . '%')
+                                ->orWhere('p.codigo', 'like', '%' . $this->search . '%');    
+                    })
                     
                     //->select('productos_destinos.stock','p.*')
-                    ->when($this->selected_id == 'General',function($query){
-                       return $query->select('p.*',DB::raw('SUM(productos_destinos.stock) as mb'));
-                    })->get();
+                    ->when($this->selected_id =='General',function($query){
+                       return $query->select('p.*','p.cantidad_minima as cant',DB::raw("SUM(productos_destinos.stock) as stock_s"))->groupBy('p.id');
+                    })
+                    ->when($this->selected_id != 'General',function($query){
+                        return $query->select('p.*','p.cantidad_minima as cant2','productos_destinos.stock as stock')->where('productos_destinos.destino_id',$this->selected_id);
+                     })
+                     ->when($this->selected_mood =='cero',function($query){
+                        if ($this->selected_id =='General') {
+                            return $query->having('stock_s',0);
+                        }
+                        else{
+                            return $query->where('stock',0);
+                        }
+                     })
+                     ->when($this->selected_mood =='bajo',function($query){
 
-                    //dd($almacen);
-      
+                        if ($this->selected_id =='General') {
+                           
+                            return $query->having('stock_s','<',DB::raw("cant"));
+                        }
+                        else{
+                            return $query->whereColumn('stock','<','cantidad_minima');
+                        }
 
+                     });
 
+                    //dd($almacen->get());
 
-
-
-        
              $sucursal_ubicacion=Destino::join('sucursals as suc','suc.id','destinos.sucursal_id')
                                         ->select ('suc.name as sucursal','destinos.nombre as destino','destinos.id')
                                         ->orderBy('suc.name','asc');
