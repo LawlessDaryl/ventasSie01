@@ -25,8 +25,7 @@ class CreateServiceRepDetalleSolicitudsTable extends Migration
             $table->unsignedBigInteger('service_id');
             $table->foreign('service_id')->references('id')->on('services');
 
-            $table->unsignedBigInteger('destino_id');
-            $table->foreign('destino_id')->references('id')->on('destinos');
+            $table->integer('destino_id');
 
             $table->integer('cantidad');
 
