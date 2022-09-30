@@ -15,10 +15,15 @@ class CreateServiceRepEstadoSolicitudsTable extends Migration
     {
         Schema::create('service_rep_estado_solicituds', function (Blueprint $table) {
             $table->id();
+
             $table->unsignedBigInteger('detalle_solicitud_id');
             $table->foreign('detalle_solicitud_id')->references('id')->on('service_rep_detalle_solicituds');
-            $table->enum('status',['Pendiente','Proceso','Finalizado'])->default('Pendiente');
-            $table->enum('estado',['Activo','Inactivo'])->default('Activo');
+
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
+
+            $table->string('status',100)->default('PENDIENTE');
+            $table->enum('estado',['ACTIVO','INACTIVO'])->default('ACTIVO');
             $table->timestamps();
         });
     }

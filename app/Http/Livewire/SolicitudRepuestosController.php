@@ -14,14 +14,20 @@ class SolicitudRepuestosController extends Component
     public function render()
     {
 
-        $lista_solicitudes = ServiceRepDetalleSolicitud::select("service_rep_detalle_solicituds.*",DB::raw('0 as minutos'))
-        ->orderBy("service_rep_detalle_solicituds.created_at", "desc")
+        $lista_solicitudes = ServiceRepSolicitud::join("users as u","u.id","service_rep_solicituds.user_id")
+        ->select("service_rep_solicituds.*",
+        DB::raw('0 as minutos'),
+        DB::raw('0 as detalles'),
+        "service_rep_solicituds.order_service_id as codigo",
+        "u.name as nombresolicitante", "service_rep_solicituds.created_at as created_at")
+        ->orderBy("service_rep_solicituds.created_at", "desc")
         ->get();
 
 
         foreach($lista_solicitudes as $l)
         {
             $l->minutos = $this->solicitudreciente($l->id);
+            $l->detalles = $this->obtenerdetalles($l->id);
         }
 
 
@@ -32,6 +38,35 @@ class SolicitudRepuestosController extends Component
         ->section('content');
     }
 
+    //Devuelve los detalles de una solicitud
+    public function obtenerdetalles($idsolicitud)
+    {
+        $detalles = ServiceRepDetalleSolicitud::join("service_rep_solicituds as srs","srs.id","service_rep_detalle_solicituds.solicitud_id")
+        ->join("products as p","p.id","service_rep_detalle_solicituds.product_id")
+        ->join("service_rep_estado_solicituds as e","e.detalle_solicitud_id","service_rep_detalle_solicituds.id")
+        ->join("destinos as d","d.id","service_rep_detalle_solicituds.destino_id")
+        ->select("service_rep_detalle_solicituds.id as iddetalle","p.nombre as nombreproducto","p.costo as costoproducto","service_rep_detalle_solicituds.cantidad as cantidad"
+        ,"service_rep_detalle_solicituds.tipo as tipo","e.status as status", "d.nombre as nombredestino")
+        ->where("srs.id", $idsolicitud)
+        ->get();
+        return $detalles;
+    }
+    //Cambia el estado PENDIENTE del detalle de una sulicitad
+    public function cambiarpendiente($iddetalle)
+    {
+        $detalle = ServiceRepDetalleSolicitud::find($iddetalle);
+
+        if($detalle->tipo == "Repuesto")
+        {
+            $this->emit("Confirmar-Aceptar");
+        }
+        else
+        {
+            $this->emit("modalcomprarepuesto-show");
+        }
+
+        
+    }
 
     //Devuelve el tiempo en minutos de una Solicitud Reciente
     public function solicitudreciente($idsolicitud)
@@ -39,19 +74,19 @@ class SolicitudRepuestosController extends Component
         //Variable donde se guardaran los minutos de diferencia entre el tiempo de la solicitud y el tiempo actual
         $minutos = -1;
         //Guardando el tiempo en la cual se realizo la solicitud
-        $date = Carbon::parse(ServiceRepDetalleSolicitud::find($idsolicitud)->created_at)->format('Y-m-d');
+        $date = Carbon::parse(ServiceRepSolicitud::find($idsolicitud)->created_at)->format('Y-m-d');
         //Comparando que el dia-mes-año de la solicitud sean iguales al tiempo actual
         if($date == Carbon::parse(Carbon::now())->format('Y-m-d'))
         {
             //Obteniendo la hora en la que se realizo la solicitud
-            $hora = Carbon::parse(ServiceRepDetalleSolicitud::find($idsolicitud)->created_at)->format('H');
+            $hora = Carbon::parse(ServiceRepSolicitud::find($idsolicitud)->created_at)->format('H');
             //Obteniendo la hora de la solicitud mas 1 para incluir horas diferentes entre una hora solicitud y la hora actual en el else
             $hora_mas = $hora + 1;
             //Si la hora de la solicitud coincide con la hora actual
             if($hora == Carbon::parse(Carbon::now())->format('H'))
             {
                 //Obtenemmos el minuto de la solicitud
-                $minutos_solicitud = Carbon::parse(ServiceRepDetalleSolicitud::find($idsolicitud)->created_at)->format('i');
+                $minutos_solicitud = Carbon::parse(ServiceRepSolicitud::find($idsolicitud)->created_at)->format('i');
                 //Obtenemos el minuto actual
                 $minutos_actual = Carbon::parse(Carbon::now())->format('i');
                 //Calculamos la diferencia
@@ -69,7 +104,7 @@ class SolicitudRepuestosController extends Component
                 if($hora_mas == Carbon::parse(Carbon::now())->format('H'))
                 {
                     //Obtenemmos el minuto de la solicitud con una hora antes que la hora actual
-                    $minutos_solicitud = Carbon::parse(ServiceRepDetalleSolicitud::find($idsolicitud)->created_at)->format('i');
+                    $minutos_solicitud = Carbon::parse(ServiceRepSolicitud::find($idsolicitud)->created_at)->format('i');
                     //Obtenemos el minuto actual
                     $minutos_actual = Carbon::parse(Carbon::now())->format('i');
                     //Restamos el minuto de la solicitud con el minuto actual y despues le restamos 60 minutos por la hora antes añadida ($hora_mas)

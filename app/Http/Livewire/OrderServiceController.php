@@ -21,6 +21,7 @@ use App\Models\SalidaLote;
 use App\Models\SalidaProductos;
 use App\Models\SalidaServicio;
 use App\Models\ServiceRepDetalleSolicitud;
+use App\Models\ServiceRepEstadoSolicitud;
 use App\Models\ServiceRepSolicitud;
 use App\Models\SubCatProdService;
 use App\Models\Sucursal;
@@ -4015,7 +4016,7 @@ class OrderServiceController extends Component
                 'service_id' => $this->id_servicio,
                 'product_id' => $pd->product_id,
                 'product_name'=> $nombre_producto,
-                'destiny_id' => $pd->id,
+                'destiny_id' => $pd->destino_id,
                 'destiny_name' => $nombre_destino,
                 'quantity'=> 1,
                 'type'=> 'Repuesto'
@@ -4044,7 +4045,7 @@ class OrderServiceController extends Component
             $this->lista_solicitudes->push([
                 'product_id' => $pd->product_id,
                 'product_name'=> $nombre_producto,
-                'destino_id' => $pd->id,
+                'destiny_id' => $pd->id,
                 'destiny_name' => $pd->id,
                 'quantity'=> $cantidad,
                 'type'=> 'CompraRepuesto'
@@ -4057,12 +4058,13 @@ class OrderServiceController extends Component
         else
         {
             $nombre_producto = Product::find($pd->product_id)->nombre;
+            $nombre_destino = Destino::find($pd->destino_id)->nombre;
             $this->lista_solicitudes->push([
                 'service_id' => $this->id_servicio,
                 'product_id' => $pd->product_id,
                 'product_name'=> $nombre_producto,
-                'destino_id' => $pd->id,
-                'destiny_name' => $pd->id,
+                'destiny_id' => $pd->destino_id,
+                'destiny_name' => $nombre_destino,
                 'quantity'=> 1,
                 'type'=> 'CompraRepuesto'
             ]);
@@ -4121,12 +4123,19 @@ class OrderServiceController extends Component
         foreach($this->lista_solicitudes as $l)
         {
             //Creando el detalle de la solicitud
-            ServiceRepDetalleSolicitud::create([
+            $detallesolicitud = ServiceRepDetalleSolicitud::create([
                 'solicitud_id' => $solicitud->id,
                 'product_id' => $l['product_id'],
                 'service_id' => $l['service_id'],
+                'destino_id' => $l['destiny_id'],
                 'cantidad' => $l['quantity'],
                 'tipo' => $l['type']
+            ]);
+            ServiceRepEstadoSolicitud::create([
+                'detalle_solicitud_id' => $detallesolicitud->id,
+                'user_id' => Auth()->user()->id,
+                'status' => "PENDIENTE",
+                'estado' =>"ACTIVO"
             ]);
         }
 

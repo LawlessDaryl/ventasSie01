@@ -15,13 +15,21 @@ class CreateServiceRepDetalleSolicitudsTable extends Migration
     {
         Schema::create('service_rep_detalle_solicituds', function (Blueprint $table) {
             $table->id();
+
             $table->unsignedBigInteger('solicitud_id');
             $table->foreign('solicitud_id')->references('id')->on('service_rep_solicituds');
+
             $table->unsignedBigInteger('product_id');
             $table->foreign('product_id')->references('id')->on('products');
+
             $table->unsignedBigInteger('service_id');
             $table->foreign('service_id')->references('id')->on('services');
+
+            $table->unsignedBigInteger('destino_id');
+            $table->foreign('destino_id')->references('id')->on('destinos');
+
             $table->integer('cantidad');
+
             $table->enum('tipo',['CompraRepuesto','Repuesto']);
             $table->enum('status',['Activo','Inactivo'])->default('Activo');
             $table->timestamps();
