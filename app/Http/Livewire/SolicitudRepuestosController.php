@@ -2,8 +2,10 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Cartera;
 use App\Models\ServiceRepDetalleSolicitud;
 use App\Models\ServiceRepSolicitud;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
@@ -30,12 +32,35 @@ class SolicitudRepuestosController extends Component
             $l->detalles = $this->obtenerdetalles($l->id);
         }
 
+        $lista_usuarios = User::select("users.*")
+        ->where("users.status","ACTIVE")
+        ->get();
+
+        $lista_carteras = Cartera::join("cajas as c","c.id", "carteras.caja_id")
+        ->select("carteras.id as carteraid","carteras.nombre as nombrecartera")
+        ->where("c.sucursal_id", $this->idsucursal())
+        ->get();
+
+
 
         return view('livewire.solicitudrepuestos.component', [
             'lista_solicitudes' => $lista_solicitudes,
+            'lista_usuarios' => $lista_usuarios,
+            'lista_carteras' => $lista_carteras
         ])
         ->extends('layouts.theme.app')
         ->section('content');
+    }
+    //Obtener el Id de la Sucursal donde esta el Usuario
+    public function idsucursal()
+    {
+        $idsucursal = User::join("sucursal_users as su","su.user_id","users.id")
+        ->select("su.sucursal_id as id","users.name as n")
+        ->where("users.id",Auth()->user()->id)
+        ->where("su.estado","ACTIVO")
+        ->get()
+        ->first();
+        return $idsucursal->id;
     }
 
     //Devuelve los detalles de una solicitud
@@ -54,19 +79,16 @@ class SolicitudRepuestosController extends Component
     //Cambia el estado PENDIENTE del detalle de una sulicitad
     public function cambiarpendiente($iddetalle)
     {
-        $detalle = ServiceRepDetalleSolicitud::find($iddetalle);
-
-        if($detalle->tipo == "Repuesto")
-        {
-            $this->emit("Confirmar-Aceptar");
-        }
-        else
-        {
-            $this->emit("modalcomprarepuesto-show");
-        }
-
-        
+        $this->emit("Confirmar-Aceptar");
     }
+
+    public function generarcompra($idsolicitud)
+    {
+        $this->emit("modalcomprarepuesto-show");
+    }
+
+
+
 
     //Devuelve el tiempo en minutos de una Solicitud Reciente
     public function solicitudreciente($idsolicitud)
