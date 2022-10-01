@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\Cartera;
 use App\Models\ServiceRepDetalleSolicitud;
+use App\Models\ServiceRepEstadoSolicitud;
 use App\Models\ServiceRepSolicitud;
 use App\Models\User;
 use Carbon\Carbon;
@@ -12,7 +13,9 @@ use Livewire\Component;
 
 class SolicitudRepuestosController extends Component
 {
-    public $asd;
+    //Para poner cualquier mensaje en pantalla
+    public $message;
+
     public function render()
     {
 
@@ -62,7 +65,6 @@ class SolicitudRepuestosController extends Component
         ->first();
         return $idsucursal->id;
     }
-
     //Devuelve los detalles de una solicitud
     public function obtenerdetalles($idsolicitud)
     {
@@ -73,6 +75,7 @@ class SolicitudRepuestosController extends Component
         ->select("service_rep_detalle_solicituds.id as iddetalle","p.nombre as nombreproducto","p.costo as costoproducto","service_rep_detalle_solicituds.cantidad as cantidad"
         ,"service_rep_detalle_solicituds.tipo as tipo","e.status as status", "d.nombre as nombredestino")
         ->where("srs.id", $idsolicitud)
+        ->where("e.estado", "ACTIVO")
         ->get();
         return $detalles;
     }
@@ -81,15 +84,11 @@ class SolicitudRepuestosController extends Component
     {
         $this->emit("Confirmar-Aceptar");
     }
-
-    public function generarcompra($idsolicitud)
+    //Genera 
+    public function iniciar_compra($idsolicitud)
     {
         $this->emit("modalcomprarepuesto-show");
     }
-
-
-
-
     //Devuelve el tiempo en minutos de una Solicitud Reciente
     public function solicitudreciente($idsolicitud)
     {
@@ -142,5 +141,32 @@ class SolicitudRepuestosController extends Component
 
         
         return $minutos;
+    }
+    //Escucha los eventos javascript de la vista
+    protected $listeners = [
+        'aceptarsolicitud' => 'aceptar_solicitud'
+    ];
+    //Pasa el estado de un detalle de una solicitud de PENDIENTE a ACEPTADO
+    public function aceptar_solicitud($iddetalle)
+    {
+        $detalle_solicitud = ServiceRepDetalleSolicitud::find($iddetalle);
+
+        foreach($detalle_solicitud->estado_solicitud as $estado)
+        {
+            $estado->update([
+                'estado' => 'INACTIVO'
+            ]);
+        }
+
+        ServiceRepEstadoSolicitud::create([
+            'detalle_solicitud_id' => $detalle_solicitud->id,
+            'user_id' => Auth()->user()->id,
+            'status' => 'ACEPTADO'
+        ]);
+
+        $this->message = "¡Solicitud de la Orden de Servicio: " . $iddetalle . " Aceptada!";
+
+        $this->emit("mensaje-ok");
+
     }
 }

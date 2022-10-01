@@ -41,7 +41,7 @@
         /*Estilos para el Boton Pendiente en la Tabla*/
         .pendienteestilos {
         text-decoration: none !important; 
-        background-color: rgb(110, 2, 252);
+        background-color: rgb(161, 0, 224);
         cursor: pointer;
         color: white;
         border-color: rgb(161, 0, 224);
@@ -68,6 +68,36 @@
         transform: scale(1.05);
         
     }
+
+
+
+
+    /*Estilos para el Boton Aceptado en la Tabla*/
+
+    .aceptadoestilos {
+        text-decoration: none !important; 
+        background-color: rgb(22, 192, 0);
+        color: white !important; 
+        cursor: default;
+        border:none;
+        border-radius: 7px;
+        padding-top: 2px;
+        padding-bottom: 2px;
+        padding-left: 5px;
+        padding-right: 5px;
+        box-shadow: none;
+        border-width: 2px;
+        border-style: solid;
+        border-color: rgb(22, 192, 0);
+        display: inline-block;
+    }
+    .aceptadoestilos:hover {
+        color: rgb(255, 255, 255) !important; 
+    }
+
+
+
+
 
     /*Estilos para el Boton Pendiente en la Tabla*/
     .compraestilos {
@@ -137,7 +167,7 @@
                             <b>{{$l->nombresolicitante}}</b>
                         </td>
                         <td>
-                            <b>{{$l->created_at}}</b>
+                           <b>{{ \Carbon\Carbon::parse($l->created_at)->format('d/m/Y H:i') }}</b>
                         </td>
                         <td>
                             @if($l->minutos >= 0)
@@ -203,10 +233,21 @@
                                             </td>
                                             <td class="text-center">
                                                 @if($d->status == "PENDIENTE" && $d->tipo != "CompraRepuesto")
-                                                <button wire:click="cambiarpendiente({{$d->iddetalle}})" class="pendienteestilos">
+                                            
+
+
+                                                <a href="#" onclick="ConfirmarCambiar({{ $d->iddetalle }})"  class="pendienteestilos" title="Aceptar Solicitud">
                                                     {{$d->status}}
-                                                </button>
+                                                </a>
+
+
+
+
                                                 @else
+
+                                                <a href="#" class="aceptadoestilos">
+                                                    {{$d->status}}
+                                                </a>
 
                                                 @endif
                                             </td>
@@ -260,9 +301,23 @@
             $('#modalcomprarepuesto').modal('show')
         });
 
-        //Mostrar Mensaje a ocurrido un error en la venta
-        window.livewire.on('Confirmar-Aceptar', event => {
-        swal({
+
+        //Mostrar cualquier tipo de Mensaje Ventana de Ok
+        window.livewire.on('mensaje-ok', event => {
+                swal(
+                    '¡Solicitud Aceptada!',
+                    @this.message,
+                    'success'
+                    )
+            });
+
+
+    });
+
+
+    // Código para lanzar la Alerta de Cambiar el estado de una solicitud
+    function ConfirmarCambiar(iddetalle) {
+    swal({
         title: '¿Aceptar la Solicitud?',
         text: "Se registrará la solicitud como aceptada",
         type: 'warning',
@@ -271,14 +326,11 @@
         confirmButtonText: 'Aceptar',
         padding: '2em'
         }).then(function(result) {
-            if (result.value) {
-                window.livewire.emit('aceptarsolicitud')
-                }
-            })
-        });
-
-
-    });
+        if (result.value) {
+            window.livewire.emit('aceptarsolicitud', iddetalle)
+            }
+        })
+    }
 
 </script>
 
