@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\Cartera;
+use App\Models\Service;
 use App\Models\ServiceRepDetalleSolicitud;
 use App\Models\ServiceRepEstadoSolicitud;
 use App\Models\ServiceRepSolicitud;
@@ -16,13 +17,27 @@ class SolicitudRepuestosController extends Component
     //Para poner cualquier mensaje en pantalla
     public $message;
 
+    //Guarda el id de una solicitud
+    public $solicitud_id;
+    //Guarda el Total Bs de todos los productos a comprar
+    public $total_bs;
+    //Almacena todos los productos a comprar de una solicitud
+    public $lista_productos;
+
+
+    public function mount()
+    {
+        $this->lista_productos = collect([]);
+    }
+
     public function render()
     {
 
         $lista_solicitudes = ServiceRepSolicitud::join("users as u","u.id","service_rep_solicituds.user_id")
-        ->select("service_rep_solicituds.*",
+        ->select("service_rep_solicituds.id as id",
         DB::raw('0 as minutos'),
         DB::raw('0 as detalles'),
+        DB::raw('0 as compra'),
         "service_rep_solicituds.order_service_id as codigo",
         "u.name as nombresolicitante", "service_rep_solicituds.created_at as created_at")
         ->orderBy("service_rep_solicituds.created_at", "desc")
@@ -33,6 +48,7 @@ class SolicitudRepuestosController extends Component
         {
             $l->minutos = $this->solicitudreciente($l->id);
             $l->detalles = $this->obtenerdetalles($l->id);
+            $l->compra = $this->scan_buy($l->id);
         }
 
         $lista_usuarios = User::select("users.*")
@@ -53,6 +69,36 @@ class SolicitudRepuestosController extends Component
         ])
         ->extends('layouts.theme.app')
         ->section('content');
+    }
+    //Busca en los detalles de una soicitud si existe alguna compra con estado PENDIENTE, devuelve true o false dependiendo el caso
+    public function scan_buy($idsolicitud)
+    {
+        $respuesta = false;
+
+
+        $solicitud = ServiceRepSolicitud::find($idsolicitud);
+
+
+        foreach($solicitud->detalle_solicitud as $d)
+        {
+
+            if($d->tipo == "CompraRepuesto")
+            {
+                $detalle = ServiceRepDetalleSolicitud::find($d->id);
+
+                foreach($detalle->estado_solicitud as $e)
+                {
+                    if($e->status == "PENDIENTE")
+                    {
+                        $respuesta = true;
+                    }
+                    break;
+                }
+                break;
+            }
+        }
+
+        return $respuesta;
     }
     //Obtener el Id de la Sucursal donde esta el Usuario
     public function idsucursal()
@@ -79,16 +125,52 @@ class SolicitudRepuestosController extends Component
         ->get();
         return $detalles;
     }
-    //Cambia el estado PENDIENTE del detalle de una sulicitad
-    public function cambiarpendiente($iddetalle)
+    //Muestra el Modal Iniciar Compra
+    public function modal_iniciar_compra($idsolicitud)
     {
-        $this->emit("Confirmar-Aceptar");
-    }
-    //Genera 
-    public function iniciar_compra($idsolicitud)
-    {
+        $this->solicitud_id = $idsolicitud;
+
+        $productos = $this->productos_solicitud($idsolicitud);
+
+        $bs = 0;
+
+        foreach($productos as $p)
+        {
+            $this->lista_productos->push([
+                'product_name' => $p->nombreproducto,
+                'price'=> $p->precio,
+                'cost' => $p->costo,
+                'quantity' => $p->cantidad
+            ]);
+            $bs = $p->precio + $bs;
+        }
+
+        $this->total_bs = $bs;
+
+
         $this->emit("modalcomprarepuesto-show");
     }
+    //
+    public function iniciar_compra()
+    {
+
+
+
+        dd("Hola");
+    }
+    //Devuelve todos los productos de una solicitud
+    public function productos_solicitud($idsolicitud)
+    {
+        $productos = ServiceRepSolicitud::join("service_rep_detalle_solicituds as d", "d.solicitud_id", "service_rep_solicituds.id")
+        ->join("products as p", "p.id", "d.product_id")
+        ->select("p.nombre as nombreproducto","p.precio_venta as precio", "p.costo as costo", "d.cantidad as cantidad")
+        ->where("service_rep_solicituds.id", $idsolicitud)
+        ->groupBy("p.id")
+        ->get();
+        return $productos;
+    }
+
+
     //Devuelve el tiempo en minutos de una Solicitud Reciente
     public function solicitudreciente($idsolicitud)
     {
@@ -147,7 +229,7 @@ class SolicitudRepuestosController extends Component
         'aceptarsolicitud' => 'aceptar_solicitud'
     ];
     //Pasa el estado de un detalle de una solicitud de PENDIENTE a ACEPTADO
-    public function aceptar_solicitud($iddetalle)
+    public function aceptar_solicitud($iddetalle, $codigo)
     {
         $detalle_solicitud = ServiceRepDetalleSolicitud::find($iddetalle);
 
@@ -164,7 +246,7 @@ class SolicitudRepuestosController extends Component
             'status' => 'ACEPTADO'
         ]);
 
-        $this->message = "¡Solicitud de la Orden de Servicio: " . $iddetalle . " Aceptada!";
+        $this->message = "¡Solicitud de la Orden de Servicio: " . $codigo . " Aceptada!";
 
         $this->emit("mensaje-ok");
 

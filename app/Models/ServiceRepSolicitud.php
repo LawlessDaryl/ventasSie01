@@ -9,4 +9,9 @@ class ServiceRepSolicitud extends Model
 {
     use HasFactory;
     protected $fillable = ['user_id','order_service_id','status'];
+
+    public function detalle_solicitud()
+    {
+        return $this->hasMany(ServiceRepDetalleSolicitud::class,"solicitud_id");
+    }
 }
