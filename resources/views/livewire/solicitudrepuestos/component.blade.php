@@ -41,7 +41,7 @@
         /*Estilos para el Boton Pendiente en la Tabla*/
         .pendienteestilos {
         text-decoration: none !important; 
-        background-color: rgb(161, 0, 224);
+        background-color: rgb(110, 2, 252);
         cursor: pointer;
         color: white;
         border-color: rgb(161, 0, 224);
@@ -67,6 +67,37 @@
         -ms-transform: scale(1.05);
         transform: scale(1.05);
         
+    }
+
+    /*Estilos para el Boton Pendiente en la Tabla*/
+    .compraestilos {
+        text-decoration: none !important; 
+        background-color: rgb(224, 101, 0);
+        cursor: pointer;
+        color: white;
+        border-color: rgb(224, 101, 0);
+        border-radius: 5px;
+        padding-top: 2px;
+        padding-bottom: 2px;
+        padding-left: 2px;
+        padding-right: 2px;
+        box-shadow: none;
+        border-width: 2px;
+        border-style: solid;
+        border-color: rgb(224, 101, 0);
+        display: inline-block;
+        }
+        .compraestilos:hover {
+        background-color: rgb(255, 255, 255);
+        color: rgb(224, 101, 0);
+        transition: all 0.4s ease-out;
+        border-color: rgb(224, 101, 0);
+        text-decoration: underline;
+        -webkit-transform: scale(1.05);
+        -moz-transform: scale(1.05);
+        -ms-transform: scale(1.05);
+        transform: scale(1.05);
+
     }
 
 
@@ -121,8 +152,8 @@
                         <td>
 
                         </td>
-                        <td>
-
+                        <td class="text-center">
+                            
                         </td>
                         <td>
 
@@ -171,7 +202,7 @@
                                                 @endif
                                             </td>
                                             <td class="text-center">
-                                                @if($d->status == "PENDIENTE")
+                                                @if($d->status == "PENDIENTE" && $d->tipo != "CompraRepuesto")
                                                 <button wire:click="cambiarpendiente({{$d->iddetalle}})" class="pendienteestilos">
                                                     {{$d->status}}
                                                 </button>
@@ -192,8 +223,10 @@
 
 
                         </td>
-                        <td>
-
+                        <td class="text-center">
+                            <button wire:click="generarcompra({{$l->codigo}})" class="compraestilos">
+                                Generar Compra
+                            </button>
                         </td>
                         <td>
 

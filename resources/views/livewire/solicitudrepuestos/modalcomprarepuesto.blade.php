@@ -12,23 +12,30 @@
         <div class="modal-body">
             <form>
                 <div class="form-group">
-                  <label for="exampleFormControlInput1">Nombre Categoria</label>
-                  <input wire:model.lazy="nombrecategoria" type="email" class="form-control" id="exampleFormControlInput1" placeholder="Ingrese nombre de la categoria">
-                  @error('nombrecategoria')
-                    <span class="text-danger er">{{ $message }}</span>
-                  @enderror
+                    <label for="exampleFormControlInput1">Será Comprado Por:</label>
+                    <select wire:model="tipo" class="form-control" aria-label="Default select example">
+                      <option value="Elegir">Seleccione Usuario</option>
+                      @foreach($lista_usuarios as $u)
+                      <option value="{{$u->id}}">{{ucwords(strtolower($u->name))}}</option>
+                      @endforeach
+                    </select>
                 </div>
                 <div class="form-group">
-                  <label for="exampleFormControlTextarea1">Detalle Categoria</label>
-                  <textarea wire:model.lazy="detallecategoria" placeholder="Ingrese las caracteristicas de la categoria" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                    <label for="exampleFormControlTextarea1">Monto Dado para la Compra</label>
+                    <input type="number" wire:model.lazy="detallecategoria" placeholder="Ingrese Bs" class="form-control">
                 </div>
+                {{-- <div class="form-group">
+                <label for="exampleFormControlTextarea1">Monto Dado para la Compra</label>
+                <textarea wire:model.lazy="detallecategoria" placeholder="Ingrese las caracteristicas de la categoria" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                </div> --}}
                 <div class="form-group">
-                  <label for="exampleFormControlInput1">Tipo</label>
-                  <select wire:model="tipo" class="form-control" aria-label="Default select example">
-                    <option value="Elegir">Seleccione a donde irá la categoria</option>
-                    <option value="INGRESO">INGRESO</option>
-                    <option value="EGRESO">EGRESO</option>
-                  </select>
+                <label for="exampleFormControlInput1">Cartera de Donde Sale el Dinero</label>
+                <select wire:model="tipo" class="form-control" aria-label="Default select example">
+                    <option value="Elegir">Seleccione Cartera</option>
+                    @foreach($lista_carteras as $c)
+                    <option value="{{$c->carteraid}}">{{ucwords(strtolower($c->nombrecartera))}}</option>
+                    @endforeach
+                </select>
                 </div>
                 @error('tipo')
                   <span class="text-danger er">{{ $message }}</span>
@@ -37,7 +44,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-          <button wire:click="save()" type="button" class="btn btn-primary">Guardar Cambios</button>
+          <button wire:click="save()" type="button" class="btn btn-primary">Guardar</button>
         </div>
       </div>
     </div>
