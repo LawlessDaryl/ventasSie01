@@ -38,6 +38,7 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
+use Symfony\Component\ErrorHandler\Debug;
 
 class OrderServiceController extends Component
 {
@@ -97,7 +98,7 @@ class OrderServiceController extends Component
     //ROSCIO - REPUESTOS
     //variable para modal de busqueda de repuestos 
     public $nombre,$costo2, $precio_venta2,$codigo,$caracteristicas,$lote,$unidad, $marca, $garantia,$industria,
-    $categoryid,$component,$selected_categoria,$image,$selected_id2,$name,$descripcion,$unidades,$marcasp,$show_more,$cant;
+    $categoryid,$component,$selected_categoria,$image,$selected_id2,$name,$descripcion,$unidades,$marcas2,$show_more,$cant;
 
     //Guarda la lista donde se guardan todos los repuestos encontrados en el input de busqueda de repuestos ($searchproduct)
     public $listaproductos;
@@ -135,7 +136,7 @@ class OrderServiceController extends Component
         //Variable que guarda el id de la cartera
         $this->tipopago = 'Elegir';
         $this->unidades=null;
-        $this->marcasp=null;
+        $this->marcas2=null;
 
         //Verificando si el usuario tiene una caja abierta
         if($this->listarcarteras() == null)
@@ -2614,7 +2615,7 @@ class OrderServiceController extends Component
             $this->listaproductos = Product::join('productos_destinos as pd','pd.product_id','products.id')
             ->join('destinos as d','d.id','pd.destino_id')
             ->join('sucursals as s','s.id','d.sucursal_id')
-            ->select('products.nombre as nombreproducto', 'd.nombre as nombredestino','pd.id as pdid','pd.stock as stock')
+            ->select('products.nombre as nombreproducto', 'd.nombre as nombredestino','pd.id as pdid','pd.stock as stock','products.id as pid','d.id as did')
             ->where('s.id', $this->idsucursal())
             ->where(function($querys)
                     {
@@ -3960,83 +3961,91 @@ class OrderServiceController extends Component
         $this->emit('show-modalrepuestos');
     }
     //Crea una solicitud de un repuesto existente
-    public function InsertarSolicitud(ProductosDestino $pd)
+    public function InsertarSolicitud(Product $pid,Destino $did)
     {
+        //dd($pid,$did);
         //Buscamos el elemento en la colección
-        $result = $this->lista_solicitudes->where('product_id', $pd->product_id);
-        if($result->count() > 0)
+        $result = $this->lista_solicitudes->where('product_id', $pid->id)->where('destiny_id',$did->id);
+        $stock=ProductosDestino::where('product_id', $pid->id)->where('destino_id',$did->id)->value('stock');
+        //dd($stock);
+        if($result->count()>0)
         {
+            //dd($result);
+          $cantidadyasolicitada=$result->first()['quantity'];
+          
+            $producto = $this->lista_solicitudes->where('destiny_id', $did->id)->where('product_id',$pid->id);
 
-            $destinos = $this->lista_solicitudes->where('destiny_id', $pd->destino_id);
-
-            $producto = $destinos->where('product_id', $pd->product_id);
-
+            if ($stock-$cantidadyasolicitada>0) {
+                if($producto->count()>0)
+                {
+                    //Guardando el id_destino
+               
+                    //Guardando la cantidad del producto
+                    $cantidad = $result->first()['quantity'];
+                    //Incrementando en una unidad
+                    $cantidad++;
+                    //Eliminando la fila del elemento en coleccion
+                    $this->lista_solicitudes->pull($producto->keys()->first());
+                    //Lo volvemos a agregar con la cantidad actualizada
+                 
+                    $this->lista_solicitudes->push([
+                        'product_id' => $pid->id,
+                        'product_name'=> $pid->nombre,
+                        'destiny_id' => $did->id,
+                        'destiny_name' => $did->nombre,
+                        'quantity'=> $cantidad,
+                        'type'=> 'Repuesto'
+                    ]);
+                    $this->message_toast = "¡Cantidad Actualizada!";
+                    $this->emit("message-succeed");
+                }
+                else
+                {
+                    //Lo volvemos a agregar con la cantidad actualizada
+             
+                    $this->lista_solicitudes->push([
+                        'product_id' => $pid->id,
+                        'product_name'=> $pid->nombre,
+                        'destiny_id' => $did->id,
+                        'destiny_name' => $did->nombre,
+                        'quantity'=> 1,
+                        'type'=> 'Repuesto'
+                    ]);
+                    $this->message_toast = "¡Cantidad Actualizada!";
+                    $this->emit("message-succeed");
+                }
+            } else {
+                $this->emit('sin_stock');
+            }
             
-            if($producto->count() > 0)
-            {
-                //Guardando el id_destino
-                $destino_id = $result->first()['destiny_id'];
-                //Guardando la cantidad del producto
-                $cantidad = $result->first()['quantity'];
-                //Incrementando en una unidad
-                $cantidad++;
-                //Eliminando la fila del elemento en coleccion
-                $this->lista_solicitudes->pull($producto->keys()->first());
-                //Lo volvemos a agregar con la cantidad actualizada
-                $nombre_producto = Product::find($pd->product_id)->nombre;
-                $nombre_destino = Destino::find($destino_id)->nombre;
-                $this->lista_solicitudes->push([
-                    'product_id' => $pd->product_id,
-                    'product_name'=> $nombre_producto,
-                    'destiny_id' => $destino_id,
-                    'destiny_name' => $nombre_destino,
-                    'quantity'=> $cantidad,
-                    'type'=> 'Repuesto'
-                ]);
-                $this->message_toast = "¡Cantidad Actualizada!";
-                $this->emit("message-succeed");
-            }
-            else
-            {
-                //Lo volvemos a agregar con la cantidad actualizada
-                $nombre_producto = Product::find($pd->product_id)->nombre;
-                $nombre_destino = Destino::find($pd->destino_id)->nombre;
-                $this->lista_solicitudes->push([
-                    'product_id' => $pd->product_id,
-                    'product_name'=> $nombre_producto,
-                    'destiny_id' => $pd->destino_id,
-                    'destiny_name' => $nombre_destino,
-                    'quantity'=> 1,
-                    'type'=> 'Repuesto'
-                ]);
-                $this->message_toast = "¡Cantidad Actualizada!";
-                $this->emit("message-succeed");
-            }
+            
+         
         }
         else
         {
-            $nombre_producto = Product::find($pd->product_id)->nombre;
-            $nombre_destino = Destino::find($pd->destino_id)->nombre;
+           
             $this->lista_solicitudes->push([
                 'service_id' => $this->id_servicio,
-                'product_id' => $pd->product_id,
-                'product_name'=> $nombre_producto,
-                'destiny_id' => $pd->destino_id,
-                'destiny_name' => $nombre_destino,
-                'quantity'=> 1,
-                'type'=> 'Repuesto'
+                'product_id' => $pid->id,
+                    'product_name'=> $pid->nombre,
+                    'destiny_id' => $did->id,
+                    'destiny_name' => $did->nombre,
+                    'quantity'=> 1,
+                    'type'=> 'Repuesto'
             ]);
 
-            $this->message_toast = "¡Producto " . $nombre_producto . " insertado con éxito!";
+            $this->message_toast = "¡Producto " . $pid->nombre . " insertado con éxito!";
 
             $this->emit("message-succeed");
         }
     }
     //Crea una solicitud de un repuesto no existente (Compra)
-    public function InsertarSolicitudCompra(ProductosDestino $pd)
+    public function InsertarSolicitudCompra(Product $pid,Destino $did)
     {
+        
         //Buscamos el elemento en la colección
-        $result = $this->lista_solicitudes->where('product_id', $pd->product_id);
+        $result = $this->lista_solicitudes->where('product_id', $pid->id)->where('destiny_id',$did->id);
+
         if($result->count() > 0)
         {
             //Guardando la cantidad del producto
@@ -4046,13 +4055,13 @@ class OrderServiceController extends Component
             //Eliminando la fila del elemento en coleccion
             $this->lista_solicitudes->pull($result->keys()->first());
             //Lo volvemos a agregar con la cantidad actualizada
-            $nombre_producto = Product::find($pd->product_id)->nombre;
+         
             $this->lista_solicitudes->push([
-                'product_id' => $pd->product_id,
-                'product_name'=> $nombre_producto,
-                'destiny_id' => $pd->id,
-                'destiny_name' => $pd->id,
-                'quantity'=>$cantidad,
+                'product_id' => $pid->id,
+                'product_name'=> $pid->nombre,
+                'destiny_id' => $did->id,
+                'destiny_name' => $did->nombre,
+                'quantity'=> $cantidad,
                 'type'=>'CompraRepuesto'
             ]);
 
@@ -4062,19 +4071,18 @@ class OrderServiceController extends Component
         }
         else
         {
-            $nombre_producto = Product::find($pd->product_id)->nombre;
-            $nombre_destino = Destino::find($pd->destino_id)->nombre;
+           
             $this->lista_solicitudes->push([
                 'service_id' => $this->id_servicio,
-                'product_id' => $pd->product_id,
-                'product_name'=> $nombre_producto,
-                'destiny_id' => $pd->destino_id,
-                'destiny_name' => $nombre_destino,
+                'product_id' => $pid->id,
+                'product_name'=> $pid->nombre,
+                'destiny_id' => $did->id,
+                'destiny_name' => $did->nombre,
                 'quantity'=> 1,
                 'type'=> 'CompraRepuesto'
             ]);
 
-            $this->message_toast = "¡Producto " . $nombre_producto . " insertado con éxito!";
+            $this->message_toast = "¡Producto " . $pid->nombre . " insertado con éxito!";
 
             $this->emit("message-succeed");
 
@@ -4082,10 +4090,10 @@ class OrderServiceController extends Component
         }
     }
     //Elimina una solicitud
-    public function EliminarSolicitud($idproducto)
+    public function EliminarSolicitud(Product $pid,Destino $did)
     {
         //Buscamos el elemento en la colección
-        $result = $this->lista_solicitudes->where('product_id', $idproducto);
+        $result = $this->lista_solicitudes->where('product_id', $pid->id)->where('destiny_id',$did->id);
         //Eliminando la fila del elemento en coleccion
         $this->lista_solicitudes->pull($result->keys()->first());
         
@@ -4125,17 +4133,18 @@ class OrderServiceController extends Component
         ]);
         $solicitud->save();
 
+        //dd($this->lista_solicitudes);
         foreach($this->lista_solicitudes as $l)
         {
             //Creando el detalle de la solicitud
             $detallesolicitud = ServiceRepDetalleSolicitud::create([
                 'solicitud_id' => $solicitud->id,
                 'product_id' => $l['product_id'],
-                'service_id' => $l['service_id'],
                 'destino_id' => $l['destiny_id'],
                 'cantidad' => $l['quantity'],
                 'tipo' => $l['type']
             ]);
+           // dump($detallesolicitud);
             ServiceRepEstadoSolicitud::create([
                 'detalle_solicitud_id' => $detallesolicitud->id,
                 'user_id' => Auth()->user()->id,
@@ -4154,14 +4163,12 @@ class OrderServiceController extends Component
 
         $this->unidades= Unidad::all();
         $this->marcasp=Marca::all();
+        $this->nombre=$this->searchproduct;
 
 
         $this->emit('show-modalproducts');
 
     }
-
-
-
 
     public function guardarProducto(){
 
@@ -4191,14 +4198,13 @@ class OrderServiceController extends Component
             'caracteristicas'=>$this->caracteristicas,
             'codigo'=>$this->GenerateCode(),
             'unidad'=>$this->unidad,
-            'marca' => $this->marcasp,
+            'marca' => $this->marcas2,
             'industria' => $this->industria,
-          
             'category_id' => $categories['No definido']
-            
         ]);
 
         $this->lista_solicitudes->push([
+            'service_id' => $this->id_servicio,
             'product_id' => $product->id,
             'product_name'=> $product->nombre,
             'destiny_id' => 0,
@@ -4213,6 +4219,8 @@ class OrderServiceController extends Component
         $this->reset(['nombre', 'precio_venta2','caracteristicas','industria']);
     
     }
+
+    
 
     public function GenerateCode(){
         

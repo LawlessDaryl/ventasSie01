@@ -95,7 +95,7 @@
             <div class="input-group-prepend mb-3">
                 @if (isset($marcasp))
                     
-                <select wire:model.lazy='marca2' class="form-control">
+                <select wire:model.lazy='marcas2' class="form-control">
                     <option value=null selected disabled>Elegir</option>
                     @foreach($marcasp as $unidad)
                     <option value="{{ $unidad->nombre }}" selected>{{ $unidad->nombre }}</option>

@@ -51,7 +51,7 @@
                                 @if ($l->stock > 0)
                                 <td class="text-center">
                                     <button
-                                        wire:click="InsertarSolicitud('{{ $l->pdid }}')"
+                                        wire:click="InsertarSolicitud({{ $l->pid }}, '{{ $l->did }}')"
                                         class="btn btn-warning mtmobile btn-sm"
                                         title="Solicitar Repuesto">
                                         Solicitar
@@ -60,7 +60,7 @@
                                 @else
                                 <td class="text-center">
                                     <button
-                                    wire:click="InsertarSolicitudCompra('{{ $l->pdid }}')"
+                                    wire:click="InsertarSolicitudCompra({{ $l->pid }}, '{{ $l->did }}')"
                                     class="btn btn-warning mtmobile btn-sm"
                                     title="Solicitar Compra Repuesto">
                                     Solicitar Compra
@@ -143,13 +143,13 @@
                             </td>
                             <td class="text-center">
                                 <div class="btn-group" role="group" aria-label="Basic example">
-                                    <button wire:click.prevent="InsertarSolicitud({{$l['product_id']}})" class="btn btn-sm" title="Ver detalles de la venta" style="background-color: rgb(10, 137, 235); color:white">
+                                    <button wire:click.prevent="InsertarSolicitud({{$l['product_id']}},'{{$l['destiny_id']}}')" class="btn btn-sm" title="Ver detalles de la venta" style="background-color: rgb(10, 137, 235); color:white">
                                         <i class="fas fa-chevron-up"></i>
                                     </button>
-                                    <button wire:click.prevent="DecrementarSolicitud({{$l['product_id']}},'{{$l['type']}}')" class="btn btn-sm" title="Ver detalles de la venta" style="background-color: rgb(255, 124, 1); color:white">
+                                    <button wire:click.prevent="DecrementarSolicitud({{$l['product_id']}},'{{$l['destiny_id']}}')" class="btn btn-sm" title="Ver detalles de la venta" style="background-color: rgb(255, 124, 1); color:white">
                                         <i class="fas fa-chevron-down"></i>
                                     </button>
-                                    <button wire:click.prevent="EliminarSolicitud({{$l['product_id']}})" class="btn btn-sm" title="Ver detalles de la venta" style="background-color: rgb(230, 0, 0); color:white">
+                                    <button wire:click.prevent="EliminarSolicitud({{$l['product_id']}},'{{$l['destiny_id']}}')" class="btn btn-sm" title="Ver detalles de la venta" style="background-color: rgb(230, 0, 0); color:white">
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
                                 </div>

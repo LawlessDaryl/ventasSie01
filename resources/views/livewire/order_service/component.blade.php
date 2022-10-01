@@ -1036,6 +1036,21 @@
                 padding: '2em',
             })
         });
+        window.livewire.on('sin_stock', msg => {
+                     
+            const toast = swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 2500,
+            padding: '2em'
+            });
+            toast({
+                type: 'error',
+                title: '¡Sin stock disponible!',
+                padding: '2em',
+            })
+        });
 
         //Cerrar Ventana Modal y Mostrar Toast Servicio Entregado Exitosamente
         window.livewire.on('servicioentregado', msg => {
