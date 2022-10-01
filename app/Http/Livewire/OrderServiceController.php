@@ -97,7 +97,7 @@ class OrderServiceController extends Component
     //ROSCIO - REPUESTOS
     //variable para modal de busqueda de repuestos 
     public $nombre,$costo2, $precio_venta2,$codigo,$caracteristicas,$lote,$unidad, $marca, $garantia,$industria,
-    $categoryid,$component,$selected_categoria,$image,$selected_id2,$name,$descripcion,$unidades,$marcasp,$show_more;
+    $categoryid,$component,$selected_categoria,$image,$selected_id2,$name,$descripcion,$unidades,$marcasp,$show_more,$cant;
 
     //Guarda la lista donde se guardan todos los repuestos encontrados en el input de busqueda de repuestos ($searchproduct)
     public $listaproductos;
@@ -4163,7 +4163,7 @@ class OrderServiceController extends Component
 
 
 
-    public function Store(){
+    public function guardarProducto(){
 
         $rules = [
             'nombre' => 'required|unique:products|min:5',
@@ -4191,17 +4191,27 @@ class OrderServiceController extends Component
             'caracteristicas'=>$this->caracteristicas,
             'codigo'=>$this->GenerateCode(),
             'unidad'=>$this->unidad,
-            'marca' => $this->marcap,
+            'marca' => $this->marcasp,
             'industria' => $this->industria,
-            'precio_venta' => $this->precio_venta2,
+          
             'category_id' => $categories['No definido']
             
         ]);
 
-        $pr=Product::where('nombre',$this->nombre)->pluck('id');
-        $this->increaseQty($pr);
-        $this->resetUI();
+        $this->lista_solicitudes->push([
+            'product_id' => $product->id,
+            'product_name'=> $product->nombre,
+            'destiny_id' => 0,
+            'destiny_name' =>'ninguno',
+            'quantity'=>$this->cant,
+            'type'=>'CompraRepuesto'
+        ]);
+        $this->emit('show-p');
 
+        $this->unidad=null;
+        $this->marcap=null;
+        $this->reset(['nombre', 'precio_venta2','caracteristicas','industria']);
+    
     }
 
     public function GenerateCode(){
@@ -4211,3 +4221,7 @@ class OrderServiceController extends Component
         $this->codigo= Carbon::now()->format('ymd').mt_rand($min,$max);
     }
 }
+
+
+
+

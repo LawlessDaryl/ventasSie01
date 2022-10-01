@@ -11,9 +11,9 @@
             <div class="modal-body">
     
 <div class="row">
-    <div class="col-sm-12 col-lg-5 col-md-8">
+    <div class="col-sm-12 col-lg-4 col-md-8">
         <div class="form-group">
-            <label>Nombre del Repuesto</label>
+            <label>Nombre del Repuesto<br></label>
             <input type="text" wire:model.lazy="nombre" class="form-control" placeholder="ej:Celular Samsung Galaxy A01">
             @error('nombre') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>
@@ -21,17 +21,24 @@
 
     <div class="col-sm-12 col-md-4 col-lg-4">
         <div class="form-group">
-            <label>Agregar Caracteristicas</label>
+            <label>Agregar Caracteristicas<br></label>
             <input type="text" wire:model.lazy="caracteristicas" class="form-control" placeholder="ej: Producto nuevo">
             @error('caracteristicas') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>
     </div>
 
-    <div class="col-sm-12 col-md-4 col-lg-3">
-        <div class="form-group">
-            <label>Precio Aprox. del Rep.</label>
-            <input type="text" wire:model.lazy="precio_venta2" class="form-control" placeholder="ej: 150">
+    <div class="col-sm-12 col-md-4 col-lg-2">
+        <div class="form-group pr-0">
+            <label class="mr-0 ml-0" style="margin-top:-1.25rem">Precio Aprox. <br> del Rep.</label>
+            <input type="text" wire:model.lazy="precio_venta2" class="form-control mr-0 pr-0" placeholder="ej: 150">
             @error('precio_venta2') <span class="text-danger er">{{ $message }}</span>@enderror
+        </div>  
+    </div>
+    <div class="col-sm-12 col-md-4 col-lg-2">
+        <div class="form-group pl-0">
+            <label>Cant.<br></label>
+            <input type="text" wire:model.lazy="cant" class="form-control ml-0 pl-0" placeholder="ej:5">
+            @error('cant') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>  
     </div>
   <div class="col-sm-12 col-md-12 col-lg-12">
@@ -56,6 +63,12 @@
             @error('codigo') <span class="text-danger er">{{ $message }}</span>@enderror
         </div>
     </div> --}}
+
+
+
+
+
+
 
    
 
