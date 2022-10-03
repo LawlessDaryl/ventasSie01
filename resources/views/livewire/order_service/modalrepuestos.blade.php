@@ -127,7 +127,7 @@
                           </tr>
                       </thead>
                       <tbody>
-                          @foreach ($lista_solicitudes->sortBy("product_name") as $l)
+                          @foreach ($lista_solicitudes->sortBy("orderP") as $l)
                           <tr>
                             <td class="text-left">
                               {{$l['product_name']}}
@@ -146,7 +146,7 @@
                                     <button wire:click.prevent="InsertarSolicitud({{$l['product_id']}},'{{$l['destiny_id']}}')" class="btn btn-sm" title="Ver detalles de la venta" style="background-color: rgb(10, 137, 235); color:white">
                                         <i class="fas fa-chevron-up"></i>
                                     </button>
-                                    <button wire:click.prevent="DecrementarSolicitud({{$l['product_id']}},'{{$l['destiny_id']}}')" class="btn btn-sm" title="Ver detalles de la venta" style="background-color: rgb(255, 124, 1); color:white">
+                                    <button wire:click.prevent="DecrementarSolicitud({{$l['product_id']}},'{{$l['destiny_id']}}','{{$l['type']}}')" class="btn btn-sm" title="Ver detalles de la venta" style="background-color: rgb(255, 124, 1); color:white">
                                         <i class="fas fa-chevron-down"></i>
                                     </button>
                                     <button wire:click.prevent="EliminarSolicitud({{$l['product_id']}},'{{$l['destiny_id']}}')" class="btn btn-sm" title="Ver detalles de la venta" style="background-color: rgb(230, 0, 0); color:white">

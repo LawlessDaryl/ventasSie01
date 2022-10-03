@@ -98,7 +98,7 @@ class OrderServiceController extends Component
     //ROSCIO - REPUESTOS
     //variable para modal de busqueda de repuestos 
     public $nombre,$costo2, $precio_venta2,$codigo,$caracteristicas,$lote,$unidad, $marca, $garantia,$industria,
-    $categoryid,$component,$selected_categoria,$image,$selected_id2,$name,$descripcion,$unidades,$marcas2,$show_more,$cant;
+    $categoryid,$component,$selected_categoria,$image,$selected_id2,$name,$descripcion,$unidades,$marcas2,$show_more,$cant,$orderP;
 
     //Guarda la lista donde se guardan todos los repuestos encontrados en el input de busqueda de repuestos ($searchproduct)
     public $listaproductos;
@@ -127,6 +127,7 @@ class OrderServiceController extends Component
         $this->dateTo = Carbon::parse(Carbon::now())->format('Y-m-d');
         $this->lista_de_usuarios = $this->listarusuarios();
         $this->mostrarterminar = "No";
+        $this->orderP=1;
 
 
         $this->listaproductos = [];
@@ -2612,11 +2613,13 @@ class OrderServiceController extends Component
         //
         if (strlen($this->searchproduct) > 0) 
         {
-            $this->listaproductos = Product::join('productos_destinos as pd','pd.product_id','products.id')
+            $this->listaproductos = new \Illuminate\Database\Eloquent\Collection;
+            $listap = Product::join('productos_destinos as pd','pd.product_id','products.id')
             ->join('destinos as d','d.id','pd.destino_id')
             ->join('sucursals as s','s.id','d.sucursal_id')
             ->select('products.nombre as nombreproducto', 'd.nombre as nombredestino','pd.id as pdid','pd.stock as stock','products.id as pid','d.id as did')
             ->where('s.id', $this->idsucursal())
+            ->where('productos_destinos.stock','>',0)
             ->where(function($querys)
                     {
                         $querys->where('products.nombre', 'like', '%' . $this->searchproduct . '%')
@@ -2624,6 +2627,7 @@ class OrderServiceController extends Component
                     })
             ->take(50)->get();
 
+            $sin_stock=Product::all();
             
             $lista_nombres_ya_encontrados = $this->list_produts_collect->pluck('product-name');
 
@@ -3976,12 +3980,12 @@ class OrderServiceController extends Component
             $producto = $this->lista_solicitudes->where('destiny_id', $did->id)->where('product_id',$pid->id);
 
             if ($stock-$cantidadyasolicitada>0) {
-                if($producto->count()>0)
-                {
+              
                     //Guardando el id_destino
                
                     //Guardando la cantidad del producto
                     $cantidad = $result->first()['quantity'];
+                    $orderM=$result->first()['orderP'];
                     //Incrementando en una unidad
                     $cantidad++;
                     //Eliminando la fila del elemento en coleccion
@@ -3989,6 +3993,7 @@ class OrderServiceController extends Component
                     //Lo volvemos a agregar con la cantidad actualizada
                  
                     $this->lista_solicitudes->push([
+                        'orderP'=>$orderM,
                         'product_id' => $pid->id,
                         'product_name'=> $pid->nombre,
                         'destiny_id' => $did->id,
@@ -3996,25 +4001,13 @@ class OrderServiceController extends Component
                         'quantity'=> $cantidad,
                         'type'=> 'Repuesto'
                     ]);
+                   
                     $this->message_toast = "¡Cantidad Actualizada!";
                     $this->emit("message-succeed");
-                }
-                else
-                {
-                    //Lo volvemos a agregar con la cantidad actualizada
-             
-                    $this->lista_solicitudes->push([
-                        'product_id' => $pid->id,
-                        'product_name'=> $pid->nombre,
-                        'destiny_id' => $did->id,
-                        'destiny_name' => $did->nombre,
-                        'quantity'=> 1,
-                        'type'=> 'Repuesto'
-                    ]);
-                    $this->message_toast = "¡Cantidad Actualizada!";
-                    $this->emit("message-succeed");
-                }
-            } else {
+                
+           
+            }
+            else {
                 $this->emit('sin_stock');
             }
             
@@ -4025,6 +4018,7 @@ class OrderServiceController extends Component
         {
            
             $this->lista_solicitudes->push([
+                'orderP'=>$this->orderP,
                 'service_id' => $this->id_servicio,
                 'product_id' => $pid->id,
                     'product_name'=> $pid->nombre,
@@ -4034,6 +4028,7 @@ class OrderServiceController extends Component
                     'type'=> 'Repuesto'
             ]);
 
+            $this->orderP++;
             $this->message_toast = "¡Producto " . $pid->nombre . " insertado con éxito!";
 
             $this->emit("message-succeed");
@@ -4050,6 +4045,7 @@ class OrderServiceController extends Component
         {
             //Guardando la cantidad del producto
             $cantidad = $result->first()['quantity'];
+            $orderM=$result->first()['orderP'];
             //Incrementando en una unidad
             $cantidad++;
             //Eliminando la fila del elemento en coleccion
@@ -4057,6 +4053,7 @@ class OrderServiceController extends Component
             //Lo volvemos a agregar con la cantidad actualizada
          
             $this->lista_solicitudes->push([
+                'orderP'=>$orderM,
                 'product_id' => $pid->id,
                 'product_name'=> $pid->nombre,
                 'destiny_id' => $did->id,
@@ -4074,6 +4071,7 @@ class OrderServiceController extends Component
            
             $this->lista_solicitudes->push([
                 'service_id' => $this->id_servicio,
+                'orderP'=>$this->orderP,
                 'product_id' => $pid->id,
                 'product_name'=> $pid->nombre,
                 'destiny_id' => $did->id,
@@ -4100,26 +4098,31 @@ class OrderServiceController extends Component
         
     }
     //Decrementa el valor (Stock) de una solicitud
-    public function DecrementarSolicitud($idproducto, $type)
+    public function DecrementarSolicitud(Product $pid,Destino $did,$type)
     {
         //Buscamos el elemento en la colección
-        $result = $this->lista_solicitudes->where('product_id', $idproducto);
+        $result = $this->lista_solicitudes->where('product_id', $pid->id)->where('destiny_id',$did->id);
 
         //Guardando la cantidad del producto
         $cantidad = $result->first()['quantity'];
+        $orderM=$result->first()['orderP'];
         //Incrementando en una unidad
         $cantidad--;
         //Eliminando la fila del elemento en coleccion
         $this->lista_solicitudes->pull($result->keys()->first());
         //Lo volvemos a agregar con la cantidad actualizada
-        $nombre_producto = Product::find($idproducto)->nombre;
+    
         $this->lista_solicitudes->push([
-            'product_id' => $idproducto,
-            'product_name'=> $nombre_producto,
+            'orderP'=>$orderM,
+            'product_id' => $pid->id,
+            'product_name'=> $pid->nombre,
+            'destiny_id' => $did->id,
+            'destiny_name' => $did->nombre,
             'quantity'=> $cantidad,
             'type'=> $type
         ]);
 
+        //dd($this->lista_solicitudes);
         $this->message_toast = "¡Cantidad Decrementada!";
 
         $this->emit("message-succeed");
@@ -4127,6 +4130,7 @@ class OrderServiceController extends Component
     public function EnviarSolicitud()
     {
         //Creando la solicitud
+        //dd($this->id_orden_de_servicio);
         $solicitud = ServiceRepSolicitud::create([
             'user_id' => Auth()->user()->id,
             'order_service_id' => $this->id_orden_de_servicio
@@ -4138,6 +4142,7 @@ class OrderServiceController extends Component
         {
             //Creando el detalle de la solicitud
             $detallesolicitud = ServiceRepDetalleSolicitud::create([
+                'service_id'=>$this->id_servicio,
                 'solicitud_id' => $solicitud->id,
                 'product_id' => $l['product_id'],
                 'destino_id' => $l['destiny_id'],
@@ -4217,6 +4222,7 @@ class OrderServiceController extends Component
         $this->unidad=null;
         $this->marcap=null;
         $this->reset(['nombre', 'precio_venta2','caracteristicas','industria']);
+        $this->searchproduct=null;
     
     }
 
