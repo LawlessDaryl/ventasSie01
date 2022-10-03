@@ -42,18 +42,18 @@
         min-height: 140px;
     }
     .tablaservicios thead {
-        background-color: #1572e8;
+        background-color: #02b1ce;
         color: white;
     }
     .tablaservicios th, td {
-        border: 0.5px solid #1571e894;
+        border: 0.5px solid #02b1ce;
         padding: 4px;
     }
     .tablaserviciostr:hover {
         background-color: rgba(0, 195, 255, 0.336);
     }
     .detalleservicios{
-        border: 1px solid #1572e8;
+        border: 1px solid #02b1ce;
         border-radius: 10px;
         background-color: #ffffff00;
         /* border-top: 4px; */
@@ -285,7 +285,7 @@
         position: sticky;
         top: 0;
         left: 0;
-        background-color: #007bff;
+        background-color: #02b1ce;
         color: white;
     }
         
@@ -358,8 +358,8 @@
     .table-repuesto table {
         border-collapse: separate;
         border-spacing: 0;
-        border-left: 0.1px solid #1572e8;
-        border-bottom: 0.1px solid #1572e8;
+        border-left: 0.1px solid #02b1ce;
+        border-bottom: 0.1px solid #02b1ce;
         width: 100%;
     }
 
@@ -370,16 +370,16 @@
         left: 0;
     }
     .table-repuesto table thead tr {
-    background: #1572e8;
+    background: #02b1ce;
     color: white;
     }
     .table-repuesto table tbody tr:hover {
         background-color: rgba(0, 195, 255, 0.336);
     }
     .table-repuesto table td {
-        border-top: 0.1px solid #1572e8;
+        border-top: 0.1px solid #02b1ce;
         padding-left: 10px;
-        border-right: 0.1px solid #1572e8;
+        border-right: 0.1px solid #02b1ce;
     }
 
     
@@ -590,7 +590,7 @@
                                         {{ ($orden_de_servicio->currentpage()-1) * $orden_de_servicio->perpage() + $loop->index + 1 }}
                                     </td>
                                     <td class="text-center">
-                                        <span class="stamp stamp" style="background-color: #1572e8">
+                                        <span class="stamp stamp" style="background-color: #02b1ce">
                                             {{$os->codigo}}
                                         </span>
                                     </td>

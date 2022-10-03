@@ -10,8 +10,8 @@
     .table-wrapper table {
         border-collapse: separate;
         border-spacing: 0;
-        border-left: 0.3px solid #007bff;
-        border-bottom: 0.3px solid #007bff;
+        border-left: 0.3px solid #02b1ce;
+        border-bottom: 0.3px solid #02b1ce;
         width: 100%;
     }
 
@@ -22,7 +22,7 @@
         left: 0;
     }
     .table-wrapper table thead tr {
-    /* background: #007bff; */
+    /* background: #02b1ce; */
     /* color: white; */
     }
     /* .table-wrapper table tbody tr {
@@ -32,9 +32,9 @@
         background-color: #fff0c1a4;
     }
     .table-wrapper table td {
-        border-top: 0.3px solid #007bff;
+        border-top: 0.3px solid #02b1ce;
         padding-left: 10px;
-        border-right: 0.3px solid #007bff;
+        border-right: 0.3px solid #02b1ce;
     }
 
 
@@ -132,15 +132,15 @@
     /* Estilos para las tablas de la ventana modal repuestos */
     .table-repuesto {
     width: 100%;/* Anchura de ejemplo */
-    height: 100px;  /*Altura de ejemplo */
+    height: 300px;  /*Altura de ejemplo */
     overflow: auto;
     }
 
     .table-repuesto table {
         border-collapse: separate;
         border-spacing: 0;
-        border-left: 0.1px solid #1572e8;
-        border-bottom: 0.1px solid #1572e8;
+        border-left: 0.1px solid #02b1ce;
+        border-bottom: 0.1px solid #02b1ce;
         width: 100%;
     }
 
@@ -151,16 +151,17 @@
         left: 0;
     }
     .table-repuesto table thead tr {
-    background: #1572e8;
+    background: #02b1ce;
     color: white;
     }
     .table-repuesto table tbody tr:hover {
         background-color: rgba(0, 195, 255, 0.336);
     }
     .table-repuesto table td {
-        border-top: 0.1px solid #1572e8;
+        border-top: 0.1px solid #02b1ce;
         padding-left: 10px;
-        border-right: 0.1px solid #1572e8;
+        padding-right: 10px;
+        border-right: 0.1px solid #02b1ce;
     }
 
 
@@ -172,10 +173,39 @@
     <div class="col-12 text-center">
         <p class="h1">SOLICITUDES</p>
     </div>
+
+    <div class="col-12 col-sm-6 col-md-3 text-center">
+        <b>XXXXXXXX</b>
+        <div class="form-group">
+
+        </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-md-3 text-center">
+        <b>XXXXXXX</b>
+        <div class="form-group">
+            
+        </div>
+    </div>
+    <div class="col-12 col-sm-6 col-md-3 text-center">
+        <b>XXXXXX</b>
+        <div class="form-group">
+            
+        </div>
+    </div>
+    <div class="col-12 col-sm-6 col-md-3 text-center">
+        <b>|</b>
+        <div class="form-group">
+            <button wire:click="modal_iniciar_compra2()" type="button" class="btn btn-primary">Generar Órden de Compra</button>
+        </div>
+    </div>
+
+
+
     <div class="col-12">
         <div class="table-wrapper">
             <table>
-                <thead class="text-center" style="background: #007bff; color: white;">
+                <thead class="text-center" style="background: #02b1ce; color: white;">
                     <tr class="text-center">
                         <th>No</th>
                         <th>ORDEN DE SERVICIO</th>
@@ -191,7 +221,7 @@
                             <B>{{$loop->iteration}}</B>
                         </td>
                         <td>
-                            <span class="stamp stamp" style="background-color: #1572e8">
+                            <span class="stamp stamp" style="background-color: #02b1ce">
                                 {{$l->codigo}}
                             </span>
                         </td>
@@ -291,11 +321,7 @@
 
                         </td>
                         <td class="text-center">
-                            @if($l->compra)
-                            <button wire:click="modal_iniciar_compra({{$l->id}})" class="compraestilos">
-                                Iniciar Compra
-                            </button>
-                            @endif
+                            
                         </td>
                         <td>
 
@@ -327,6 +353,15 @@
         //Mostrar ventana modal comprar repuesto
         window.livewire.on('modalcomprarepuesto-show', msg => {
             $('#modalcomprarepuesto').modal('show')
+        });
+        //Ocultar ventana modal comprar repuesto
+        window.livewire.on('modalcomprarepuesto-hide', msg => {
+            $('#modalcomprarepuesto').modal('hide')
+            swal(
+            '¡Compra Enviada!',
+            @this.message,
+            'success'
+            )
         });
 
 

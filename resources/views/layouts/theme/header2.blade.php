@@ -1,7 +1,7 @@
 <div class="main-header">
   <!-- Logo Header -->
   {{-- <div class="logo-header" data-background-color="blue"> --}}
-  <div class="logo-header" data-background-color="" style="background-color: #007bff">
+  <div class="logo-header" data-background-color="" style="background-color: #02b1ce">
     <livewire:name-controller>
 
       </livewire:name-controller>
@@ -21,7 +21,7 @@
 
   <!-- Navbar Header -->
   {{-- <nav class="navbar navbar-header navbar-expand-lg" data-background-color="blue2"> --}}
-  <nav class="navbar navbar-header navbar-expand-lg" data-background-color="" style="background-color: #007bff">
+  <nav class="navbar navbar-header navbar-expand-lg" data-background-color="" style="background-color: #02b1ce">
     <div class="container-fluid">
       <livewire:search-controller>
 

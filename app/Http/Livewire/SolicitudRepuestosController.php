@@ -2,7 +2,10 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Caja;
 use App\Models\Cartera;
+use App\Models\CarteraMov;
+use App\Models\Movimiento;
 use App\Models\Service;
 use App\Models\ServiceRepDetalleSolicitud;
 use App\Models\ServiceRepEstadoSolicitud;
@@ -16,28 +19,45 @@ class SolicitudRepuestosController extends Component
 {
     //Para poner cualquier mensaje en pantalla
     public $message;
-
+    //Guarda el id de una Órden de Servicio
+    public $orden_de_servicio_id;
     //Guarda el id de una solicitud
     public $solicitud_id;
     //Guarda el Total Bs de todos los productos a comprar
     public $total_bs;
-    //Almacena todos los productos a comprar de una solicitud
+    //Almacena todos los productos a comprar
     public $lista_productos;
+
+    //Guarda el id de un usuario para que realice la compra
+    public $usuario_id;
+    //Guarda el Monto en Bs para la Compra
+    public $monto_bs_compra;
+    //Guarda el id de una cartera seleccionada para la compra
+    public $cartera_id;
 
 
     public function mount()
     {
         $this->lista_productos = collect([]);
+
+        $this->cartera_id = 'Elegir';
+        foreach($this->listarcarteras() as $list)
+        {
+            if($list->tipo == 'CajaFisica')
+            {
+                $this->cartera_id = $list->idcartera;
+                break;
+            }
+            
+        }
     }
 
     public function render()
     {
-
         $lista_solicitudes = ServiceRepSolicitud::join("users as u","u.id","service_rep_solicituds.user_id")
         ->select("service_rep_solicituds.id as id",
         DB::raw('0 as minutos'),
         DB::raw('0 as detalles'),
-        DB::raw('0 as compra'),
         "service_rep_solicituds.order_service_id as codigo",
         "u.name as nombresolicitante", "service_rep_solicituds.created_at as created_at")
         ->orderBy("service_rep_solicituds.created_at", "desc")
@@ -48,58 +68,52 @@ class SolicitudRepuestosController extends Component
         {
             $l->minutos = $this->solicitudreciente($l->id);
             $l->detalles = $this->obtenerdetalles($l->id);
-            $l->compra = $this->scan_buy($l->id);
         }
 
         $lista_usuarios = User::select("users.*")
         ->where("users.status","ACTIVE")
         ->get();
 
-        $lista_carteras = Cartera::join("cajas as c","c.id", "carteras.caja_id")
-        ->select("carteras.id as carteraid","carteras.nombre as nombrecartera")
-        ->where("c.sucursal_id", $this->idsucursal())
-        ->get();
-
-
 
         return view('livewire.solicitudrepuestos.component', [
             'lista_solicitudes' => $lista_solicitudes,
             'lista_usuarios' => $lista_usuarios,
-            'lista_carteras' => $lista_carteras
+            'lista_carteras' => $this->listarcarteras(),
+            'lista_cartera_general' => $this->listarcarterasg()
         ])
         ->extends('layouts.theme.app')
         ->section('content');
     }
     //Busca en los detalles de una soicitud si existe alguna compra con estado PENDIENTE, devuelve true o false dependiendo el caso
-    public function scan_buy($idsolicitud)
-    {
-        $respuesta = false;
+    // public function scan_buy($idsolicitud)
+    // {
+    //     $respuesta = false;
 
 
-        $solicitud = ServiceRepSolicitud::find($idsolicitud);
+    //     $solicitud = ServiceRepSolicitud::find($idsolicitud);
 
 
-        foreach($solicitud->detalle_solicitud as $d)
-        {
+    //     foreach($solicitud->detalle_solicitud as $d)
+    //     {
 
-            if($d->tipo == "CompraRepuesto")
-            {
-                $detalle = ServiceRepDetalleSolicitud::find($d->id);
+    //         if($d->tipo == "CompraRepuesto")
+    //         {
+    //             $detalle = ServiceRepDetalleSolicitud::find($d->id);
 
-                foreach($detalle->estado_solicitud as $e)
-                {
-                    if($e->status == "PENDIENTE")
-                    {
-                        $respuesta = true;
-                    }
-                    break;
-                }
-                break;
-            }
-        }
+    //             foreach($detalle->estado_solicitud as $e)
+    //             {
+    //                 if($e->status == "PENDIENTE")
+    //                 {
+    //                     $respuesta = true;
+    //                 }
+    //                 break;
+    //             }
+    //             break;
+    //         }
+    //     }
 
-        return $respuesta;
-    }
+    //     return $respuesta;
+    // }
     //Obtener el Id de la Sucursal donde esta el Usuario
     public function idsucursal()
     {
@@ -126,12 +140,15 @@ class SolicitudRepuestosController extends Component
         return $detalles;
     }
     //Muestra el Modal Iniciar Compra
-    public function modal_iniciar_compra($idsolicitud)
+    public function modal_iniciar_compra($idsolicitud, $codigo)
     {
-        $this->solicitud_id = $idsolicitud;
+        //Actualizando la variable $orden_de_servicio_id para guardar como comentario para el método iniciar_compra()
+        $this->orden_de_servicio_id = $codigo;
+        //
+        //$this->solicitud_id = $idsolicitud;
 
         $productos = $this->productos_solicitud($idsolicitud);
-
+        
         $bs = 0;
 
         foreach($productos as $p)
@@ -142,7 +159,38 @@ class SolicitudRepuestosController extends Component
                 'cost' => $p->costo,
                 'quantity' => $p->cantidad
             ]);
-            $bs = $p->precio + $bs;
+            $bs = ($p->precio * $p->cantidad) + $bs;
+        }
+
+        $this->total_bs = $bs;
+
+
+        $this->emit("modalcomprarepuesto-show");
+    }
+    //Muestra el Modal Iniciar Compra
+    public function modal_iniciar_compra2()
+    {
+        $productos = ServiceRepDetalleSolicitud::join("service_rep_estado_solicituds as e", "e.detalle_solicitud_id", "service_rep_detalle_solicituds.id")
+        ->join("products as p", "p.id", "service_rep_detalle_solicituds.product_id")
+        ->select("p.id as idproducto","p.nombre as nombreproducto","service_rep_detalle_solicituds.cantidad as cantidad", "p.costo as costo", "p.precio_venta as precio")
+        ->where("service_rep_detalle_solicituds.tipo", "CompraRepuesto")
+        ->where("e.status", "PENDIENTE")
+        ->where("e.estado", "ACTIVO")
+        ->get();
+
+
+        $bs = 0;
+
+        foreach($productos as $p)
+        {
+            $this->lista_productos->push([
+                'product_id' => $p->idproducto,
+                'product_name' => $p->nombreproducto,
+                'price'=> $p->precio,
+                'cost' => $p->costo,
+                'quantity' => $p->cantidad
+            ]);
+            $bs = ($p->precio * $p->cantidad) + $bs;
         }
 
         $this->total_bs = $bs;
@@ -153,10 +201,41 @@ class SolicitudRepuestosController extends Component
     //
     public function iniciar_compra()
     {
+        $rules = [ /* Reglas de validacion */
+            'usuario_id' => 'required|not_in:Elegir',
+            'monto_bs_compra' => 'required|not_in:0',
+            'cartera_id' => 'required|not_in:Elegir',
+        ];
+        $messages = [ /* mensajes de validaciones */
+            'usuario_id.required' => 'Seleccione un usuario',
+            'monto_bs_compra.required' => 'Escriba un monto válido',
+            'cartera_id.required' => 'Escriba una cartera',
+        ];
+
+        $this->validate($rules, $messages);
 
 
+        $movimiento = Movimiento::create([
+            'type' => 'TERMINADO',
+            'status' => 'ACTIVO',
+            'import' => $this->monto_bs_compra,
+            'user_id' => Auth()->user()->id,
+        ]);
 
-        dd("Hola");
+        CarteraMov::create([
+            'type' => 'EGRESO',
+            'tipoDeMovimiento' => 'EGRESO/INGRESO',
+            'comentario' => "Por la compra de repuestos de la orden de Servicio: " . $this->orden_de_servicio_id,
+            'cartera_id' => $this->cartera_id,
+            'movimiento_id' => $movimiento->id,
+        ]);
+
+        $nombrecartera = Cartera::find($this->cartera_id)->nombre;
+
+        $this->message = "Se creó el egreso de: " . $this->monto_bs_compra . " Bs de la cartera " . $nombrecartera;
+        $this->emit("modalcomprarepuesto-hide");
+
+
     }
     //Devuelve todos los productos de una solicitud
     public function productos_solicitud($idsolicitud)
@@ -169,8 +248,6 @@ class SolicitudRepuestosController extends Component
         ->get();
         return $productos;
     }
-
-
     //Devuelve el tiempo en minutos de una Solicitud Reciente
     public function solicitudreciente($idsolicitud)
     {
@@ -250,5 +327,29 @@ class SolicitudRepuestosController extends Component
 
         $this->emit("mensaje-ok");
 
+    }
+    //Listar las Carteras disponibles en su corte de caja
+    public function listarcarteras()
+    {
+        $carteras = Caja::join('carteras as car', 'cajas.id', 'car.caja_id')
+        ->join('cartera_movs as cartmovs', 'car.id', 'cartmovs.cartera_id')
+        ->join('movimientos as mov', 'mov.id', 'cartmovs.movimiento_id')
+        ->where('cajas.estado', 'Abierto')
+        ->where('mov.user_id', Auth()->user()->id)
+        ->where('mov.status', 'ACTIVO')
+        ->where('mov.type', 'APERTURA')
+        ->where('cajas.sucursal_id', $this->idsucursal())
+        ->select('car.id as idcartera', 'car.nombre as nombrecartera', 'car.descripcion as dc','car.tipo as tipo')
+        ->get();
+        return $carteras;
+    }
+    //Listar las carteras generales
+    public function listarcarterasg()
+    {
+        $carteras = Caja::join('carteras as car', 'cajas.id', 'car.caja_id')
+        ->where('cajas.id', 1)
+        ->select('car.id as idcartera', 'car.nombre as nombrecartera', 'car.descripcion as dc','car.tipo as tipo')
+        ->get();
+        return $carteras;
     }
 }

@@ -10,7 +10,7 @@
                 <div class="col-12 col-sm-6 col-md-12 text-center">
                     <div class="form-group">
                         <div class="input-group">
-                            <div style="border: 0.3px solid #007bff" class="input-group-prepend">
+                            <div style="border: 0.3px solid #02b1ce" class="input-group-prepend">
                                 <span class="input-group-text input-gp">
                                     <i class="fas fa-search"></i>
                                 </span>

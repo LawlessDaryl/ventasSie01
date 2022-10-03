@@ -40,8 +40,8 @@
 					<ul class="nav nav-primary">
 						@can('Admin_Views')
 						<li class="nav-item active">
-							<a data-toggle="collapse" href="#dashboard" class="collapsed" aria-expanded="false" style="background-color: #007bff!important;">
-								<svg width="25" height="35"><defs><style>.cls-1{fill:#007bff!important;}</style></svg>
+							<a data-toggle="collapse" href="#dashboard" class="collapsed" aria-expanded="false" style="background-color: #02b1ce!important;">
+								<svg width="25" height="35"><defs><style>.cls-1{fill:#02b1ce!important;}</style></svg>
 									<i class="fas icon-chart"></i>
 									<p>Movimiento Diario</p>
 								<span class="caret"></span>
@@ -737,7 +737,7 @@
 						</li>
 						@endcan
 						<li class="mx-4 mt-2">
-								<a style="background-color: #007bff!important;" class="btn btn-primary btn-block" href="{{ route('logout') }}"
+								<a style="background-color: #02b1ce!important;" class="btn btn-primary btn-block" href="{{ route('logout') }}"
 									onclick="event.preventDefault(); document.getElementById('logout-form').submit()">
 									<span class="btn-label mr-2">
 										<i class="fa icon-logout"></i> 
