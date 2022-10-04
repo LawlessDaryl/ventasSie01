@@ -98,7 +98,7 @@ class OrderServiceController extends Component
     //ROSCIO - REPUESTOS
     //variable para modal de busqueda de repuestos 
     public $nombre,$costo2, $precio_venta2,$codigo,$caracteristicas,$lote,$unidad, $marca, $garantia,$industria,
-    $categoryid,$component,$selected_categoria,$image,$selected_id2,$name,$descripcion,$unidades,$marcas2,$show_more,$cant,$orderP;
+    $categoryid,$component,$selected_categoria,$image,$selected_id2,$name,$descripcion,$unidades,$marcas2,$show_more,$cant,$orderP,$listacompra;
 
     //Guarda la lista donde se guardan todos los repuestos encontrados en el input de busqueda de repuestos ($searchproduct)
     public $listaproductos;
@@ -128,6 +128,7 @@ class OrderServiceController extends Component
         $this->lista_de_usuarios = $this->listarusuarios();
         $this->mostrarterminar = "No";
         $this->orderP=1;
+        $this->listacompra=collect([]);
 
 
         $this->listaproductos = [];
@@ -2610,25 +2611,45 @@ class OrderServiceController extends Component
         }
 
         //REPUESTOS
-        //
+        //Contar los id productos destinos donde se encuentra el producto, y si estos son mayores a cero no mostrar la otra collection de comprar producto q sera
+        //solamente si el producto esta creado pero no tiene stock.
         if (strlen($this->searchproduct) > 0) 
         {
-            $this->listaproductos = new \Illuminate\Database\Eloquent\Collection;
+            
             $listap = Product::join('productos_destinos as pd','pd.product_id','products.id')
             ->join('destinos as d','d.id','pd.destino_id')
             ->join('sucursals as s','s.id','d.sucursal_id')
             ->select('products.nombre as nombreproducto', 'd.nombre as nombredestino','pd.id as pdid','pd.stock as stock','products.id as pid','d.id as did')
             ->where('s.id', $this->idsucursal())
-            ->where('productos_destinos.stock','>',0)
             ->where(function($querys)
                     {
                         $querys->where('products.nombre', 'like', '%' . $this->searchproduct . '%')
                         ->orWhere('products.codigo', 'like', '%' . $this->searchproduct . '%');
                     })
-            ->take(50)->get();
+            ->take(10)->get();
+            $this->listaproductos=$listap->where('stock','>',0);
+            //mostar los productos que no se encuentren disponibles en ningun lugar
 
-            $sin_stock=Product::all();
-            
+            if (count($this->listaproductos)>0) {
+                
+                $listapsinstock= $listap->groupBy('pid')->map(function ($row){
+                    return $row->sum('stock');
+                });
+              //dd($listapsinstock);
+                foreach ($listapsinstock as $key=>$data) {
+                
+                    if ($data==0) {
+                        $ms=Product::find($key);
+                        $this->listacompra->push($ms);
+                     
+                    }
+                   // dump($key);
+                }
+                //dd($this->listacompra);
+            }
+
+          
+            //dd($this->listacompra);
             $lista_nombres_ya_encontrados = $this->list_produts_collect->pluck('product-name');
 
 
