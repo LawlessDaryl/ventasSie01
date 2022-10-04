@@ -72,7 +72,7 @@
 
             <div class="row mt-5">
                 <div class="col-sm-12 col-md-3 mbmobile">
-                    <div class="form-control" style="background: #ee761c">
+                    <div class="form-control" style="background: #02b1ce">
                         <h5 class="text-white">Transacciones Totales : <br> ${{number_format($total,2)}}</h5>
                     </div>
                 </div>
@@ -80,7 +80,7 @@
                 <div class="col-sm-12 col-md-9">
                     <div class="table-responsive">
                         <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
-                            <thead class="text-white" style="background: #ee761c">
+                            <thead class="text-white" style="background: #02b1ce">
                                 <tr>
                                     <th class="table-th text-center text-white">CEDULA</th>
                                     <th class="table-th text-center text-white">TELEFONO</th>

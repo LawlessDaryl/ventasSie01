@@ -2626,7 +2626,7 @@ class OrderServiceController extends Component
                         $querys->where('products.nombre', 'like', '%' . $this->searchproduct . '%')
                         ->orWhere('products.codigo', 'like', '%' . $this->searchproduct . '%');
                     })
-            ->take(10)->get();
+            ->take(100)->get();
             $this->listaproductos=$listap->where('stock','>',0);
             //mostar los productos que no se encuentren disponibles en ningun lugar
 
@@ -4058,12 +4058,14 @@ class OrderServiceController extends Component
     //Crea una solicitud de un repuesto no existente (Compra)
     public function InsertarSolicitudCompra(Product $pid,Destino $did)
     {
-        
         //Buscamos el elemento en la colección
         $result = $this->lista_solicitudes->where('product_id', $pid->id)->where('destiny_id',$did->id);
 
+        
+
         if($result->count() > 0)
         {
+            
             //Guardando la cantidad del producto
             $cantidad = $result->first()['quantity'];
             $orderM=$result->first()['orderP'];
@@ -4100,6 +4102,7 @@ class OrderServiceController extends Component
                 'quantity'=> 1,
                 'type'=> 'CompraRepuesto'
             ]);
+
 
             $this->message_toast = "¡Producto " . $pid->nombre . " insertado con éxito!";
 
@@ -4185,7 +4188,8 @@ class OrderServiceController extends Component
     
     }
 
-    public function addProducts(){
+    public function addProducts()
+    {
 
         $this->unidades= Unidad::all();
         $this->marcasp=Marca::all();
@@ -4196,7 +4200,8 @@ class OrderServiceController extends Component
 
     }
 
-    public function guardarProducto(){
+    public function guardarProducto()
+    {
 
         $rules = [
             'nombre' => 'required|unique:products|min:5',
@@ -4249,7 +4254,8 @@ class OrderServiceController extends Component
 
     
 
-    public function GenerateCode(){
+    public function GenerateCode()
+    {
         
         $min=10000;
         $max= 99999;

@@ -23,7 +23,7 @@
 
     .table-wrapper table thead th {
     border: 1px solid #000;
-    background: #ee761c;
+    background: #02b1ce;
     }
     .table-wrapper table tbody td {
     border: 1px solid #000;
@@ -79,7 +79,7 @@
 
     .table-wrapper2 table thead th {
     border: 1px solid #000;
-    background: #ee761c;
+    background: #02b1ce;
     }
     .table-wrapper2 table tbody td {
     border: 1px solid #000;
@@ -135,7 +135,7 @@
 
             <div class="table-responsive mb-4 mt-4">
                 <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4" style="min-width: 1000px;">
-                    <thead class="text-white" style="background: #ee761c">
+                    <thead class="text-white" style="background: #02b1ce">
                         <tr>
                             <th class="table-th text-withe text-center">No</th>
                             <th class="table-th text-withe text-center">Fecha</th>

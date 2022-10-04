@@ -77,7 +77,7 @@
                     <div class="col-sm-12 col-md-12">
                         <div class="table-responsive">
                             <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
-                                <thead class="text-white" style="background: #ee761c">
+                                <thead class="text-white" style="background: #02b1ce">
                                     <tr>
                                         <th class="table-th text-withe text-center">CEDULA</th>
                                         <th class="table-th text-withe text-center">TELEFONO</th>

@@ -11,8 +11,8 @@
     .table-wrapper table {
         border-collapse: separate;
         border-spacing: 0;
-        border-left: 0.3px solid #ee761c;
-        border-bottom: 0.3px solid #ee761c;
+        border-left: 0.3px solid #02b1ce;
+        border-bottom: 0.3px solid #02b1ce;
         width: 100%;
     }
 
@@ -23,7 +23,7 @@
         left: 0;
     }
     .table-wrapper table thead tr {
-    background: #ee761c;
+    background: #02b1ce;
     color: white;
     }
     /* .table-wrapper table tbody tr {
@@ -33,9 +33,9 @@
         background-color: #ffdf76a4;
     }
     .table-wrapper table td {
-        border-top: 0.3px solid #ee761c;
+        border-top: 0.3px solid #02b1ce;
         padding-left: 10px;
-        border-right: 0.3px solid #ee761c;
+        border-right: 0.3px solid #02b1ce;
     }
 
 </style>

@@ -17,7 +17,7 @@
                   <p class="text-center">Esta acción devolvera los siguientes productos a la Tienda</p>
             
                   <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
-                    <thead class="text-white" style="background: #ee761c">
+                    <thead class="text-white" style="background: #02b1ce">
                       <tr>
                         <th>N°</th>
                         <th>Nombre Producto</th>

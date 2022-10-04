@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Serv_Orden_Detalle extends Model
+class ServOrdenDetalle extends Model
 {
     use HasFactory;
 }

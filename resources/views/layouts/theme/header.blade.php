@@ -1,180 +1,273 @@
-<div class="header-container fixed-top">
-    <header class="header navbar navbar-expand-sm 3838" style="background: #383838;">
-        <ul class="navbar-item flex-row">
-            <li class="nav-item theme-logo">
-                <a href="{{url('inicio')}}">
-                    {{-- Logo --}}
-                    <img src="assets/img/fav08.png" class="navbar-logo" alt="logo">
-                </a>
-            </li>
-        </ul>
+<div class="main-header">
+  <!-- Logo Header -->
+  {{-- <div class="logo-header" data-background-color="blue"> --}}
+  <div class="logo-header" data-background-color="" style="background-color: #02b1ce">
+    <livewire:name-controller>
 
-        <a href="javascript:void(0);" class="sidebarCollapse" data-placement="bottom">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                style="color: #ffffff;" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                stroke-linejoin="round" class="feather feather-list">
-                <line x1="8" y1="6" x2="21" y2="6"></line>
-                <line x1="8" y1="12" x2="21" y2="12"></line>
-                <line x1="8" y1="18" x2="21" y2="18"></line>
-                <line x1="3" y1="6" x2="3" y2="6"></line>
-                <line x1="3" y1="12" x2="3" y2="12"></line>
-                <line x1="3" y1="18" x2="3" y2="18"></line>
-            </svg></a>
+      </livewire:name-controller>
+    <button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon">
+        <i class="icon-menu"></i>
+      </span>
+    </button>
+    <button class="topbar-toggler more"><i class="icon-options-vertical"></i></button>
+    <div class="nav-toggle">
+      <button class="btn btn-toggle toggle-sidebar">
+        <i class="icon-menu"></i>
+      </button>
+    </div>
+  </div>
+  <!-- End Logo Header -->
 
-        <livewire:search-controller>
+  <!-- Navbar Header -->
+  {{-- <nav class="navbar navbar-header navbar-expand-lg" data-background-color="blue2"> --}}
+  <nav class="navbar navbar-header navbar-expand-lg" data-background-color="" style="background-color: #02b1ce">
+    <div class="container-fluid">
+      <livewire:search-controller>
 
-        </livewire:search-controller>
+      </livewire:search-controller>
+        
+
+
+      <li class="nav-item dropdown hidden-caret">
         @if (@Auth::user()->hasPermissionTo('Corte_Caja_Index'))
-        <ul class="tabs tab-pills text-center mt-2">            
-            <a href="{{ url('cortecajas') }}" class="btn btn-warning btn-lg active" role="button" aria-pressed="true">CORTE DE CAJA</a>            
-        </ul>
+        <a href="{{ url('cortecajas') }}" class="btn btn-warning btn-lg active" role="button" aria-pressed="true">CORTE DE CAJA</a>            
         @endif
+      </li>
+        
 
-        <ul class="tabs tab-pills text-center mt-4">
-            @if (empty(session('sesionCaja')))
-                <h5 style="background-color: #ff7600; color:#ffffff">No tienes ninguna caja abierta</h5>
-            @else
-                <marquee behavior="" direction="">
-                    <h5 style="background-color: #ff7600; color:#ffffff;font-size:24px">Usted tiene la {{ session('sesionCaja') }} abierta</h5>
-                </marquee>
-            @endif
-        </ul>
-        <ul class="navbar-item flex-row navbar-dropdown">
-            {{-- <li class="nav-item dropdown message-dropdown">
-                <a href="javascript:void(0);" class="nav-link dropdown-toggle" id="messageDropdown"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <svg style="color: #ff6700;" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round" class="feather feather-message-circle">
-                        <path
-                            d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
-                        </path>
-                    </svg><span class="badge badge-primary"></span>
-                </a>
-                <div class="dropdown-menu position-absolute animated fadeInUp" aria-labelledby="messageDropdown">
-                    <div class="">
-                        <a class="dropdown-item">
-                            <div class="">
-
-                                <div class="media">
-                                    <div class="user-img">
-                                        <div class="avatar avatar-xl">
-                                            <span class="avatar-title rounded-circle">KY</span>
-                                        </div>
-                                    </div>
-                                    <div class="media-body">
-                                        <div class="">
-                                            <h5 class="usr-name">Kara Young</h5>
-                                            <p class="msg-title">ACCOUNT UPDATE</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </a>
-                        <a class="dropdown-item">
-                            <div class="">
-                                <div class="media">
-                                    <div class="user-img">
-                                        <div class="avatar avatar-xl">
-                                            <span class="avatar-title rounded-circle">DA</span>
-                                        </div>
-                                    </div>
-                                    <div class="media-body">
-                                        <div class="">
-                                            <h5 class="usr-name">Daisy Anderson</h5>
-                                            <p class="msg-title">ACCOUNT UPDATE</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                        <a class="dropdown-item">
-                            <div class="">
-
-                                <div class="media">
-                                    <div class="user-img">
-                                        <div class="avatar avatar-xl">
-                                            <span class="avatar-title rounded-circle">OG</span>
-                                        </div>
-                                    </div>
-                                    <div class="media-body">
-                                        <div class="">
-                                            <h5 class="usr-name">Oscar Garner</h5>
-                                            <p class="msg-title">ACCOUNT UPDATE</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </a>
-                    </div>
-                </div>
+      <livewire:home-controller>
+      </livewire:home-controller>
+   
+        {{-- <li class="nav-item dropdown hidden-caret">
+          <a class="nav-link dropdown-toggle" href="#" id="messageDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-envelope"></i>
+          </a>
+          <ul class="dropdown-menu messages-notif-box animated fadeIn" aria-labelledby="messageDropdown">
+            <li>
+              <div class="dropdown-title d-flex justify-content-between align-items-center">
+                Messages 									
+                <a href="#" class="small">Mark all as read</a>
+              </div>
             </li>
-
-            <livewire:noti-controller>
-
-            </livewire:noti-controller>
-
-            <li class="nav-item dropdown user-profile-dropdown  order-lg-0 order-1">
-                <a href="javascript:void(0);" class="nav-link dropdown-toggle user" id="userProfileDropdown"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <img src="{{ asset('storage/usuarios/' . auth()->user()->imagen) }}" alt="admin-profile"
-                        class="img-fluid">
-                </a>
-                <div class="dropdown-menu position-absolute animated fadeInUp" aria-labelledby="userProfileDropdown"">
-                    <div class="       user-profile-section" style="background: #ee761c;">
-                    <div class="media mx-auto">
-                        <img src="{{ asset('storage/usuarios/' . auth()->user()->imagen) }}" class="img-fluid mr-2"
-                            alt="avatar">
-                        <div class="media-body">
-                            <h4>{{ auth()->user()->name }}</h4>
-                            <p>{{ auth()->user()->profile }}</p>
-                            @foreach(auth()->user()->sucursalusers as $sucu)
-                                @if($sucu->estado == 'ACTIVO')
-                                    <p>{{$sucu->sucursal->name}}</p>
-                                @endif
-                            @endforeach
-                            <p></p>
-                        </div>
+            <li>
+              <div class="message-notif-scroll scrollbar-outer">
+                <div class="notif-center">
+                  <a href="#">
+                    <div class="notif-img"> 
+                      <img src="assets/img/jm_denis.jpg" alt="Img Profile">
                     </div>
+                    <div class="notif-content">
+                      <span class="subject">Jimmy Denis</span>
+                      <span class="block">
+                        How are you ?
+                      </span>
+                      <span class="time">5 minutes ago</span> 
+                    </div>
+                  </a>
+                  <a href="#">
+                    <div class="notif-img"> 
+                      <img src="assets/img/chadengle.jpg" alt="Img Profile">
+                    </div>
+                    <div class="notif-content">
+                      <span class="subject">Chad</span>
+                      <span class="block">
+                        Ok, Thanks !
+                      </span>
+                      <span class="time">12 minutes ago</span> 
+                    </div>
+                  </a>
+                  <a href="#">
+                    <div class="notif-img"> 
+                      <img src="assets/img/mlane.jpg" alt="Img Profile">
+                    </div>
+                    <div class="notif-content">
+                      <span class="subject">Jhon Doe</span>
+                      <span class="block">
+                        Ready for the meeting today...
+                      </span>
+                      <span class="time">12 minutes ago</span> 
+                    </div>
+                  </a>
+                  <a href="#">
+                    <div class="notif-img"> 
+                      <img src="assets/img/talha.jpg" alt="Img Profile">
+                    </div>
+                    <div class="notif-content">
+                      <span class="subject">Talha</span>
+                      <span class="block">
+                        Hi, Apa Kabar ?
+                      </span>
+                      <span class="time">17 minutes ago</span> 
+                    </div>
+                  </a>
                 </div>
-                {{-- <div class="dropdown-item">
-                    <a href="user_profile.html">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="feather feather-user">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="12" cy="7" r="4"></circle>
-                        </svg> <span>My Profile</span>
-                    </a>
+              </div>
+            </li>
+            <li>
+              <a class="see-all" href="javascript:void(0);">See all messages<i class="fa fa-angle-right"></i> </a>
+            </li>
+          </ul>
+        </li> --}}
+        {{-- <li class="nav-item dropdown hidden-caret">
+          <a class="nav-link dropdown-toggle" href="#" id="notifDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-bell"></i>
+            <span class="notification">4</span>
+          </a>
+          <ul class="dropdown-menu notif-box animated fadeIn" aria-labelledby="notifDropdown">
+            <li>
+              <div class="dropdown-title">You have 4 new notification</div>
+            </li>
+            <li>
+              <div class="notif-scroll scrollbar-outer">
+                <div class="notif-center">
+                  <a href="#">
+                    <div class="notif-icon notif-primary"> <i class="fa fa-user-plus"></i> </div>
+                    <div class="notif-content">
+                      <span class="block">
+                        New user registered
+                      </span>
+                      <span class="time">5 minutes ago</span> 
+                    </div>
+                  </a>
+                  <a href="#">
+                    <div class="notif-icon notif-success"> <i class="fa fa-comment"></i> </div>
+                    <div class="notif-content">
+                      <span class="block">
+                        Rahmad commented on Admin
+                      </span>
+                      <span class="time">12 minutes ago</span> 
+                    </div>
+                  </a>
+                  <a href="#">
+                    <div class="notif-img"> 
+                      <img src="assets/img/profile2.jpg" alt="Img Profile">
+                    </div>
+                    <div class="notif-content">
+                      <span class="block">
+                        Reza send messages to you
+                      </span>
+                      <span class="time">12 minutes ago</span> 
+                    </div>
+                  </a>
+                  <a href="#">
+                    <div class="notif-icon notif-danger"> <i class="fa fa-heart"></i> </div>
+                    <div class="notif-content">
+                      <span class="block">
+                        Farrah liked Admin
+                      </span>
+                      <span class="time">17 minutes ago</span> 
+                    </div>
+                  </a>
                 </div>
-                <div class="dropdown-item">
-                    <a href="auth_lockscreen.html">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="feather feather-lock">
-                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                        </svg> <span>Lock Screen</span>
-                    </a>
-                </div> --}}
-                <div class="dropdown-item">
-                    <a class="" href="{{ route('logout') }}"
-                        onclick="event.preventDefault(); document.getElementById('logout-form').submit()">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="feather feather-log-out">
-                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                            <polyline points="16 17 21 12 16 7"></polyline>
-                            <line x1="21" y1="12" x2="9" y2="12"></line>
-                        </svg> Salir</a>
-                    <form action="{{ route('logout') }}" method="POST" id="logout-form">
-                        @csrf
-                    </form>
+              </div>
+            </li>
+            <li>
+              <a class="see-all" href="javascript:void(0);">See all notifications<i class="fa fa-angle-right"></i> </a>
+            </li>
+          </ul>
+        </li> --}}
+
+        {{-- <li class="nav-item dropdown hidden-caret">
+          <a class="nav-link" data-toggle="dropdown" href="#" aria-expanded="false">
+            <i class="fas fa-layer-group"></i>
+          </a>
+          <div class="dropdown-menu quick-actions quick-actions-info animated fadeIn">
+            <div class="quick-actions-header">
+              <span class="title mb-1">Quick Actions</span>
+              <span class="subtitle op-8">Shortcuts</span>
+            </div>
+            <div class="quick-actions-scroll scrollbar-outer">
+              <div class="quick-actions-items">
+                <div class="row m-0">
+                  <a class="col-6 col-md-4 p-0" href="#">
+                    <div class="quick-actions-item">
+                      <i class="flaticon-file-1"></i>
+                      <span class="text">Generated Report</span>
+                    </div>
+                  </a>
+                  <a class="col-6 col-md-4 p-0" href="#">
+                    <div class="quick-actions-item">
+                      <i class="flaticon-database"></i>
+                      <span class="text">Create New Database</span>
+                    </div>
+                  </a>
+                  <a class="col-6 col-md-4 p-0" href="#">
+                    <div class="quick-actions-item">
+                      <i class="flaticon-pen"></i>
+                      <span class="text">Create New Post</span>
+                    </div>
+                  </a>
+                  <a class="col-6 col-md-4 p-0" href="#">
+                    <div class="quick-actions-item">
+                      <i class="flaticon-interface-1"></i>
+                      <span class="text">Create New Task</span>
+                    </div>
+                  </a>
+                  <a class="col-6 col-md-4 p-0" href="#">
+                    <div class="quick-actions-item">
+                      <i class="flaticon-list"></i>
+                      <span class="text">Completed Tasks</span>
+                    </div>
+                  </a>
+                  <a class="col-6 col-md-4 p-0" href="#">
+                    <div class="quick-actions-item">
+                      <i class="flaticon-file"></i>
+                      <span class="text">Create New Invoice</span>
+                    </div>
+                  </a>
                 </div>
-</div>
-</li>
-</ul>
-</header>
+              </div>
+            </div>
+          </div>
+        </li> --}}
+
+        <li class="nav-item dropdown hidden-caret">
+          <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false">
+            <div class="avatar-sm">
+              <img src="{{ asset('storage/usuarios/' . auth()->user()->imagen) }}" alt="..." class="avatar-img rounded-circle">
+            </div>
+          </a>
+          <ul class="dropdown-menu dropdown-user animated fadeIn">
+            <div class="dropdown-user-scroll scrollbar-outer">
+              <li>
+                <div class="user-box">
+                  <div class="avatar-lg"><img src="{{ asset('storage/usuarios/' . auth()->user()->imagen) }}" alt="image profile" class="avatar-img rounded"></div>
+                  <div class="u-text">
+                    <h4>{{ auth()->user()->name }}</h4>
+                    <p>{{ auth()->user()->profile }}</p>
+                    @foreach(auth()->user()->sucursalusers as $sucu)
+                        @if($sucu->estado == 'ACTIVO')
+                            <p>{{$sucu->sucursal->name}}</p>
+                        @endif
+                    @endforeach
+                    {{-- <p>{{ auth()->user()->email }}</p><a href="profile.html" class="btn btn-xs btn-secondary btn-sm">View Profile</a> --}}
+                    
+                  </div>
+                </div>
+              </li>
+              <li>
+                <div class="dropdown-divider"></div>
+                {{-- <a class="dropdown-item" href="#">My Profile</a>
+                <a class="dropdown-item" href="#">My Balance</a>
+                <a class="dropdown-item" href="#">Inbox</a> --}}
+                <div class="dropdown-divider"></div>
+                {{-- <a class="dropdown-item" href="#">Account Setting</a> --}}
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="{{ route('logout') }}"
+                onclick="event.preventDefault(); document.getElementById('logout-form').submit()">
+                Cerrar Sesión</a>
+                <form action="{{ route('logout') }}" method="POST" id="logout-form">
+                  @csrf
+                </form>
+                
+                    
+              </li>
+            </div>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <!-- End Navbar -->
 </div>

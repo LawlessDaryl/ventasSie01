@@ -2,7 +2,7 @@
 <div wire:ignore.self class="modal fade" id="modallotesproducto" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
-        <div class="modal-header" style="background-color: #ee761c; color: white;">
+        <div class="modal-header" style="background-color: #02b1ce; color: white;">
           <h5 class="modal-title" id="exampleModalLongTitle">
             Lotes Producto
           </h5>

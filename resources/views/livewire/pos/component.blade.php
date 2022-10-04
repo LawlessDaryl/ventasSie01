@@ -32,10 +32,10 @@
     transition: .4s;
     }
     input:checked + .slider {
-    background-color: #f59953;
+    background-color: #02b1ce;
     }
     input:focus + .slider {
-    box-shadow: 0 0 1px #f59953;
+    box-shadow: 0 0 1px #02b1ce;
     }
     input:checked + .slider:before {
     -webkit-transform: translateX(19px);
@@ -59,8 +59,8 @@
     .table-wrapper table {
         border-collapse: separate;
         border-spacing: 0;
-        border-left: 0.3px solid #ee761c;
-        border-bottom: 0.3px solid #ee761c;
+        border-left: 0.3px solid #02b1ce;
+        border-bottom: 0.3px solid #02b1ce;
         width: 100%;
     }
 
@@ -71,7 +71,7 @@
         left: 0;
     }
     .table-wrapper table thead tr {
-    background: #ee761c;
+    background: #02b1ce;
     color: white;
     }
     /* .table-wrapper table tbody tr {
@@ -81,17 +81,17 @@
         background-color: #ffdf76a4;
     }
     .table-wrapper table td {
-        border-top: 0.3px solid #ee761c;
+        border-top: 0.3px solid #02b1ce;
         padding-left: 10px;
-        border-right: 0.3px solid #ee761c;
+        border-right: 0.3px solid #02b1ce;
     }
 
     /* Estilos para el encabesado de la pagina */
     .caja{
         position: relative;
         margin: 0 10px;
-        border: 1.7px solid rgb(230, 140, 22);
-        background-color: rgb(255, 241, 204);
+        border: 1.7px solid #02b1ce;
+        background-color: #c4f6ff;
         border-radius: 15px;
     }
 
@@ -138,7 +138,7 @@
 
     /* Fondo de buscar productos */
     .animado {
-	background: linear-gradient(-45deg, #fcf9d4, #fff2d9, #fdfdfd, #e2e2cd);
+	background: linear-gradient(-45deg, #bdffff, #ffffff, #d5faff, #ffffff);
 	background-size: 400% 400%;
 	animation: gradient 15s ease infinite;
     border-radius: 15px;
@@ -177,7 +177,7 @@
         width: 7px;
         height: 7px;
         border-radius: 50%;
-        background: #ee761c;
+        background: #02b1ce;
         margin: -4px 0 0 -4px;
         }
         .lds-roller div:nth-child(1) {
@@ -463,16 +463,16 @@
                                     </td>
                                     <td>
                                         <div class="btn-group" role="group" aria-label="Basic example">
-                                            <button title="Ver Precio y Costos por Lotes" wire:click.prevent="modal_lotes({{ $item->id }})" class="btn btn-sm" style="background-color: rgb(13, 156, 0); color:white">
+                                            <button title="Ver Precio y Costos por Lotes" wire:click.prevent="modal_lotes({{ $item->id }})" class="btn btn-sm" style="background-color: rgb(0, 156, 135); color:white">
                                                 <i class="fas fa-list-ul"></i>
                                             </button>
                                             <a title="Eliminar Producto" href="#" onclick="ConfirmarEliminar('{{ $item->id }}', '{{$item->name}}')" class="btn btn-sm" style="background-color: red; color:white">
                                                 <i class="fas fa-trash-alt"></i>
                                             </a>
-                                            <button title="Quitar una unidad" wire:click.prevent="decrease({{ $item->id }})" class="btn btn-sm" style="background-color: rgb(99, 123, 142); color:white">
+                                            <button title="Quitar una unidad" wire:click.prevent="decrease({{ $item->id }})" class="btn btn-sm" style="background-color: #11be32; color:white">
                                                 <i class="fas fa-minus"></i>
                                             </button>
-                                            <button title="Incrementar una unidad" wire:click.prevent="increase({{ $item->id }})" class="btn btn-sm" style="background-color: rgb(10, 137, 235); color:white">
+                                            <button title="Incrementar una unidad" wire:click.prevent="increase({{ $item->id }})" class="btn btn-sm" style="background-color: #11be32; color:white">
                                                 <i class="fas fa-plus"></i>
                                             </button>
                                             <div>
@@ -523,10 +523,16 @@
                             <h5>Nombre Cliente: <b>{{ucwords(strtolower($nombrecliente))}}</b></h5>
                             <div class="btn-group" role="group" aria-label="Basic example">
                                 @if($this->total_items > 0)
-                                <button onclick="ConfirmarLimpiar()" class="btn btn-button" style="background-color: chocolate; color: white;">Vaciar Todo</button>
+                                <button onclick="ConfirmarLimpiar()" class="btn btn-button" style="background-color: #373839; color: white; border-color: black;">
+                                    Vaciar Todo
+                                </button>
                                 @endif
-                                <a href="{{ url('salelist') }}" class="btn btn-button" style="background-color: rgb(12, 143, 0); color: white;">Lista de Ventas</a>
-                                <button wire:click.prevent="modalfinalizarventa()" class="btn btn-button" style="background-color: rgb(0, 114, 180); color: white;">Finalizar Venta</button>
+                                <a href="{{ url('salelist') }}" class="btn btn-button" style="background-color: rgb(255, 255, 255); border: 1.8px solid #000000; color: black;">
+                                    <b>Lista de Ventas</b>
+                                </a>
+                                <button wire:click.prevent="modalfinalizarventa()" class="btn btn-button" style="background-color: #11be32; color: white;">
+                                    Finalizar Venta
+                                </button>
                             </div>
                         </div>
                         <div class="col-1 text-right">

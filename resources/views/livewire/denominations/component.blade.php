@@ -13,11 +13,10 @@
                 </ul>
             </div>
             @include('common.searchbox')
-
             <div class="widget-content">
                 <div class="table-responsive">
                     <table class="table table-unbordered table-hover mt-2">
-                        <thead class="text-white" style="background: #3B3F5C">
+                        <thead>
                             <tr>
                                 <th class="table-th text-withe">TIPO</th>
                                 <th class="table-th text-withe text-center">VALOR</th>

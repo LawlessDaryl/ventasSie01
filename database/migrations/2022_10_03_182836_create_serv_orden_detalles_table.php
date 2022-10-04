@@ -13,10 +13,18 @@ class CreateServOrdenDetallesTable extends Migration
      */
     public function up()
     {
-        Schema::create('serv__orden__detalles', function (Blueprint $table) {
+        Schema::create('serv_orden_detalles', function (Blueprint $table) {
             $table->id();
             
 
+            $table->integer('detalle_solicitud_id');
+
+            $table->unsignedBigInteger('product_id');
+            $table->foreign('product_id')->references('id')->on('products');
+
+            $table->integer('cantidad');
+
+            $table->enum('status',['ACTIVO','INACTIVO'])->default('ACTIVO');
 
             $table->timestamps();
         });

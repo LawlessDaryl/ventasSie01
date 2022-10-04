@@ -46,7 +46,7 @@
 
                             @if($permisosseleccionado == "Todos")
                             <table class="table table-hover table table-bordered table-bordered-bd-warning">
-                                <thead class="text-white" style="background: #ee761c">
+                                <thead class="text-white" style="background: #02b1ce">
                                     <tr>
                                         <th class="table-th text-withe text-center">ID</th>
                                         <th class="table-th text-withe text-center">#</th>
@@ -121,7 +121,7 @@
                             @else
                             
                             <table class="table table-hover table table-bordered table-bordered-bd-warning">
-                                <thead class="text-white" style="background: #ee761c">
+                                <thead class="text-white" style="background: #02b1ce">
                                     <tr>
                                         <th class="table-th text-withe text-center">ID</th>
                                         <th class="table-th text-withe text-center">#</th>

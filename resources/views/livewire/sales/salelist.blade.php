@@ -3,38 +3,33 @@
     /* Estilos para las tablas */
     .table-wrapper {
     width: 100%;/* Anchura de ejemplo */
-    /*height: 750px;  Altura de ejemplo */
-    /* overflow: auto; */
+    height: 500px;  /*Altura de ejemplo*/
+    overflow: auto;
     }
 
     .table-wrapper table {
         border-collapse: separate;
         border-spacing: 0;
-        border-left: 0.3px solid #ee761c;
-        border-bottom: 0.3px solid #ee761c;
+        border-left: 0.3px solid #02b1ce;
+        border-bottom: 0.3px solid #02b1ce;
         width: 100%;
     }
-
     .table-wrapper table thead {
-        position: -webkit-sticky; /* Safari... */
         position: sticky;
         top: 0;
-        left: 0;
+        z-index: 10;
     }
     .table-wrapper table thead tr {
-    background: #ee761c;
+    background: #02b1ce;
     color: white;
     }
-    /* .table-wrapper table tbody tr {
-        border-top: 0.3px solid rgb(0, 0, 0);
-    } */
     .table-wrapper table tbody tr:hover {
-        background-color: #ffdf76a4;
+        background-color: #bbf7ffa4;
     }
     .table-wrapper table td {
-        border-top: 0.3px solid #ee761c;
+        border-top: 0.3px solid #02b1ce;
         padding-left: 10px;
-        border-right: 0.3px solid #ee761c;
+        border-right: 0.3px solid #02b1ce;
     }
 
 
@@ -59,7 +54,7 @@
         width: 7px;
         height: 7px;
         border-radius: 50%;
-        background: #ee761c;
+        background: #02b1ce;
         margin: -4px 0 0 -4px;
         }
         .lds-roller div:nth-child(1) {
@@ -183,6 +178,41 @@
 
 
 
+    .loader {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: inline-block;
+  border-top: 4px solid #FFF;
+  border-right: 4px solid transparent;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+.loader::after {
+  content: '';  
+  box-sizing: border-box;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border-bottom: 4px solid #FF3D00;
+  border-left: 4px solid transparent;
+}
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+} 
+
+
+
+
+
 
 
 
@@ -191,50 +221,27 @@
 </style>
 @endsection
 
-<div class="row sales layout-top-spacing">
+<div class="row">
     <div class="col-sm-12">
-        <div class="widget widget-chart-one">
+        <div>
 
-            <div class="form-group">
-                <div class="row">
+            <div class="row">
 
-                    <div class="col-12 col-sm-12 col-md-4 text-center">
-
-                    </div>
-
-                    <div class="col-12 col-sm-12 col-md-4 text-center">
-                        <h2><b>LISTA DE VENTAS</b></h2>
-                        Ordenados por Fecha de Venta
-                    </div>
-
-                    <div class="col-12 col-sm-12 col-md-4">
-                        <ul class="tabs tab-pills text-right">
-                            {{-- <a href="javascript:void(0)" wire:click="irservicio()" class="btn btn-outline-primary">Nuevo Servicio</a> --}}
-                            <a href="{{ url('pos') }}" class="btn btn-button" style="background-color: rgb(12, 143, 0); color: white;">Nueva Venta</a>
-                            {{-- <br>
-                            <br>
-
-
-
-
-
-
-
-
-
-                            <div class="btn-group" role="group" aria-label="Basic example">
-                                <label class="switch">
-                                    <input type="checkbox" wire:change="mostrarocultarmasfiltros()" {{ $masfiltros ? 'checked' : '' }}>
-                                    <span class="slider round"></span>
-                                    </label>
-                                    <label>+Filtros</label>
-                                    
-                            </div> --}}
-                        </ul>
-                    </div>
+                <div class="col-12 col-sm-12 col-md-4 text-center">
 
                 </div>
-            </div> 
+
+                <div class="col-12 col-sm-12 col-md-4 text-center">
+                    <h2><b>LISTA DE VENTAS</b></h2>
+                </div>
+
+                <div class="col-12 col-sm-12 col-md-4">
+                    <ul class="tabs tab-pills text-right">
+                        <a href="{{ url('pos') }}" style="background-color: #11be32; color: white;">Nueva Venta</a>
+                    </ul>
+                </div>
+
+            </div>
 
 
             <center><div id="preloader_3" wire:loading>
@@ -245,107 +252,102 @@
             
             </div></center>
 
-            <div class="form-group">
-                <div class="row">
+            <div class="row">
 
-                    <div class="col-12 col-sm-6 col-md-3 text-center">
-                        <b wire:click="limpiarsearch()" style="cursor: pointer;">Buscar...</b>
-                        <div class="form-group">
-                            <div class="input-group mb-4">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text input-gp">
-                                        <i class="fas fa-search"></i>
-                                    </span>
-                                </div>
-                                <input type="text" wire:model="search" placeholder="Buscar por Código..." class="form-control">
+                <div class="col-12 col-sm-6 col-md-3 text-center">
+                    <b wire:click="limpiarsearch()" style="cursor: pointer;">Buscar...</b>
+                    <div class="form-group">
+                        <div class="input-group mb-4">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text input-gp">
+                                    <i class="fas fa-search"></i>
+                                </span>
                             </div>
+                            <input type="text" wire:model="search" placeholder="Buscar por Código..." class="form-control">
                         </div>
                     </div>
-                    @if(Auth::user()->hasPermissionTo('VentasListaMasFiltros'))
-                    <div class="col-12 col-sm-6 col-md-3 text-center">
-                        <b>Seleccionar Sucursal</b>
-                        <div class="form-group">
-                            <select wire:model="sucursal_id" class="form-control">
-                                @foreach($listasucursales as $sucursal)
-                                <option value="{{$sucursal->id}}">{{$sucursal->name}}</option>
-                                @endforeach
-                                <option value="Todos">Todas las Sucursales</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-6 col-md-3 text-center">
-                        <b>Seleccionar Usuario</b>
-                        <div class="form-group">
-                            <select wire:model="user_id" class="form-control">
-                                <option value="Todos" selected>Todos</option>
-                                @foreach ($listausuarios as $u)
-                                    <option value="{{ $u->id }}">{{ ucwords(strtolower($u->name)) }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-
-                    @else
-
-                    <div class="col-12 col-sm-6 col-md-3 text-center">
-                        <b>Ventas del Usuario</b>
-                        <div class="form-group">
-                            <label class="form-control">
-                                {{Auth::user()->name}}
-                            </label>
-                        </div>
-                    </div>
-
-                    @endif
-                    <div class="col-12 col-sm-6 col-md-3 text-center">
-                        <b>Tipo de Fecha</b>
-                        <div class="form-group">
-                            <select wire:model="tipofecha" class="form-control">
-                                <option value="hoy" selected>Hoy</option>
-                                <option value="rango">Rango de Fechas</option>
-                            </select>
-                        </div>
-                    </div>
-
                 </div>
+                @if(Auth::user()->hasPermissionTo('VentasListaMasFiltros'))
+                <div class="col-12 col-sm-6 col-md-3 text-center">
+                    <b>Seleccionar Sucursal</b>
+                    <div class="form-group">
+                        <select wire:model="sucursal_id" class="form-control">
+                            @foreach($listasucursales as $sucursal)
+                            <option value="{{$sucursal->id}}">{{$sucursal->name}}</option>
+                            @endforeach
+                            <option value="Todos">Todas las Sucursales</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-6 col-md-3 text-center">
+                    <b>Seleccionar Usuario</b>
+                    <div class="form-group">
+                        <select wire:model="user_id" class="form-control">
+                            <option value="Todos" selected>Todos</option>
+                            @foreach ($listausuarios as $u)
+                                <option value="{{ $u->id }}">{{ ucwords(strtolower($u->name)) }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                @else
+
+                <div class="col-12 col-sm-6 col-md-3 text-center">
+                    <b>Ventas del Usuario</b>
+                    <div class="form-group">
+                        <label class="form-control">
+                            {{Auth::user()->name}}
+                        </label>
+                    </div>
+                </div>
+
+                @endif
+                <div class="col-12 col-sm-6 col-md-3 text-center">
+                    <b>Tipo de Fecha</b>
+                    <div class="form-group">
+                        <select wire:model="tipofecha" class="form-control">
+                            <option value="hoy" selected>Hoy</option>
+                            <option value="rango">Rango de Fechas</option>
+                        </select>
+                    </div>
+                </div>
+
             </div>
 
             @if($this->tipofecha != "hoy")
 
-            <div class="form-group">
-                <div class="row">
+            <div class="row">
 
-                    <div class="col-12 col-sm-6 col-md-3 text-center">
-                        <b>Fecha Inicio</b>
-                        <div class="form-group">
-                            <input @if ($tipofecha == 'hoy') disabled @endif type="date" wire:model="dateFrom" class="form-control flatpickr" >
-                        </div>
+                <div class="col-12 col-sm-6 col-md-3 text-center">
+                    <b>Fecha Inicio</b>
+                    <div class="form-group">
+                        <input @if ($tipofecha == 'hoy') disabled @endif type="date" wire:model="dateFrom" class="form-control flatpickr" >
                     </div>
+                </div>
 
-                    <div class="col-12 col-sm-6 col-md-3 text-center">
-                        <b>Fecha Fin</b>
-                        <div class="form-group">
-                            <input @if ($tipofecha == 'hoy') disabled @endif type="date" wire:model="dateTo" class="form-control flatpickr" >
-                        </div>
+                <div class="col-12 col-sm-6 col-md-3 text-center">
+                    <b>Fecha Fin</b>
+                    <div class="form-group">
+                        <input @if ($tipofecha == 'hoy') disabled @endif type="date" wire:model="dateTo" class="form-control flatpickr" >
                     </div>
-                    <div class="col-12 col-sm-6 col-md-3 text-center">
-                        <b>Hora Inicio</b>
-                        <div class="form-group">
-                            <input @if ($tipofecha == 'hoy') disabled @endif type="time" wire:model="timeFrom" class="form-control flatpickr" >
-                        </div>
+                </div>
+                <div class="col-12 col-sm-6 col-md-3 text-center">
+                    <b>Hora Inicio</b>
+                    <div class="form-group">
+                        <input @if ($tipofecha == 'hoy') disabled @endif type="time" wire:model="timeFrom" class="form-control flatpickr" >
                     </div>
-                    <div class="col-12 col-sm-6 col-md-3 text-center">
-                        <b>Hora Fin</b>
-                        <div class="form-group">
-                            <input @if ($tipofecha == 'hoy') disabled @endif type="time" wire:model="timeTo" class="form-control flatpickr" >
-                        </div>
+                </div>
+                <div class="col-12 col-sm-6 col-md-3 text-center">
+                    <b>Hora Fin</b>
+                    <div class="form-group">
+                        <input @if ($tipofecha == 'hoy') disabled @endif type="time" wire:model="timeTo" class="form-control flatpickr" >
                     </div>
                 </div>
             </div>
 
             @endif
 
-            <br>
 
             <div class="table-wrapper table-responsive">
                 <table style="min-width: 900px;">
@@ -370,7 +372,7 @@
                                     {{ ($listaventas->currentpage()-1) * $listaventas->perpage() + $loop->index + 1 }}
                                 </td>
                                 <td class="text-center">
-                                    <span class="stamp stamp" style="background-color: #ee761c">
+                                    <span class="stamp stamp" style="background-color: #02b1ce">
                                         {{$lv->codigo}}
                                     </span>
                                 </td>
@@ -427,14 +429,14 @@
                                 </td>
                                 <td class="text-center">
                                     @if($lv->estado == "PAID")
-                                        <p style="color: #002df3;"><b>Normal</b></p>
+                                        <p style="color: #4894ef;"><b>NORMAL</b></p>
                                     @else
-                                        <p style="color: #f30000;"><b>Anulado</b></p>
+                                        <p style="color: #f3112b;"><b>ANULADO</b></p>
                                     @endif
                                 </td>
                                 <td class="text-center">
                                     <div class="btn-group" role="group" aria-label="Basic example">
-                                        <button wire:click="modaldetalle({{ $lv->codigo }})" class="btn btn-sm" title="Ver detalles de la venta" style="background-color: rgb(10, 137, 235); color:white">
+                                        <button wire:click="modaldetalle({{ $lv->codigo }})" class="btn btn-sm" title="Ver detalles de la venta" style="background-color: #4894ef; color:white">
                                             <i class="fas fa-bars"></i>
                                         </button>
                                         @if(Auth::user()->hasPermissionTo('VentasListaMasFiltros'))
@@ -445,12 +447,12 @@
                                             {{-- <button wire:click="editsale({{$d->id}})" class="btn btn-sm" title="Editar Venta" style="background-color: rgb(13, 175, 220); color:white">
                                                 <i class="fas fa-edit"></i>
                                             </button> --}}
-                                            <button wire:click="modalcambiarusuario({{$lv->codigo}})" class="btn btn-sm" title="Cambiar Usuario Vendedor" style="background: #ee761c; color:white">
+                                            <button wire:click="modalcambiarusuario({{$lv->codigo}})" class="btn btn-sm" title="Cambiar Usuario Vendedor" style="background: #4894ef; color:white">
                                                 <i class="fas fa-user-edit"></i>
                                             </button>
                                             @endif
                                         @endif
-                                        <button wire:click="crearcomprobante({{$lv->codigo}})" class="btn btn-sm" title="Crear Comprobante" style="background-color: rgb(0, 104, 21); color:white">
+                                        <button wire:click="crearcomprobante({{$lv->codigo}})" class="btn btn-sm" title="Crear Comprobante" style="background-color: #11be32; color:white">
                                             <i class="fas fa-print"></i>
                                         </button>
                                     </div>
@@ -459,7 +461,7 @@
                         @endforeach
                     </tbody>
                 </table>
-            </div>
+        </div>
             {{ $listaventas->links() }}
 
 

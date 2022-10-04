@@ -9,7 +9,7 @@
             </div>
             <div class="table-responsive">
                 <table class="table table-hover table table-bordered" style="min-width: 770px;">
-                    <thead class="text-white" style="background: #ee761c">
+                    <thead class="text-white" style="background: #02b1ce">
                       <tr>
                         <th>No</th>
                         <th>Nombre</th>

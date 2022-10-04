@@ -170,6 +170,14 @@ class SolicitudRepuestosController extends Component
     //Muestra el Modal Iniciar Compra
     public function modal_iniciar_compra2()
     {
+        //Eliminando todos los componentes de la colección
+        foreach($this->lista_productos as $l)
+        {
+            //Eliminando la fila del elemento en coleccion
+            $this->lista_productos->pull($l->keys()->first());
+        }
+
+
         $productos = ServiceRepDetalleSolicitud::join("service_rep_estado_solicituds as e", "e.detalle_solicitud_id", "service_rep_detalle_solicituds.id")
         ->join("products as p", "p.id", "service_rep_detalle_solicituds.product_id")
         ->select("p.id as idproducto","p.nombre as nombreproducto","service_rep_detalle_solicituds.cantidad as cantidad", "p.costo as costo", "p.precio_venta as precio")

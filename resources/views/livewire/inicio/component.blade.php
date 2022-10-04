@@ -93,7 +93,7 @@
             <div class="widget-content">
                 <div class="table-responsive">
                     <table class="table table-head-bg-primary table-hover" style="min-width: 1000px;">
-                        <thead class="text-white" style="background: #ee761c">
+                        <thead class="text-white" style="background: #02b1ce">
                             <tr>
                                 <th class="text-withe text-center">FECHA ENTREGA</th>
                                 @if($this->type == "TERMINADO")

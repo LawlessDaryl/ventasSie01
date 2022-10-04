@@ -24,7 +24,7 @@
             <div class="modal-body" style="color: black">
             
                   <table class="table table-hover table table-bordered table-bordered-bd-warning mt-4">
-                    <thead class="text-white" style="background: #ee761c">
+                    <thead class="text-white" style="background: #02b1ce">
                       <tr>
                         <th>Nombre Usuario</th>
                         <th class="table-th text-withe text-center">Seleccionar</th>
@@ -37,7 +37,7 @@
                             {{ ucwords(strtolower($dv->name)) }}
                         </td>
                         <td class="text-center">
-                            <button wire:click="seleccionarusuario({{$dv->id}})" title="Seleccionar Usuario" style="background: #ee761c; color:white; border-color: white; cursor: pointer;">
+                            <button wire:click="seleccionarusuario({{$dv->id}})" title="Seleccionar Usuario" style="background: #02b1ce; color:white; border-color: white; cursor: pointer;">
                                 <i class="fas fa-check"></i>
                             </button>
                         </td>

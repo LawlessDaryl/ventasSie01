@@ -1,974 +1,777 @@
-<div class="sidebar-wrapper sidebar-theme">
+		<!-- Sidebar -->
+		<div class="sidebar sidebar-style-2">			
+			<div class="sidebar-wrapper scrollbar scrollbar-inner">
+				<div class="sidebar-content">
+					<div class="user">
+						<div class="avatar-sm float-left mr-2">
+							<img src="{{ asset('storage/usuarios/' . auth()->user()->imagen) }}" alt="..." class="avatar-img rounded-circle">
+						</div>
+						<div class="info">
+							<a data-toggle="collapse" href="#collapseExample" aria-expanded="true">
+								<span>
+									{{ auth()->user()->name }}
+									<span class="user-level">{{ auth()->user()->profile }}</span>
+									{{-- <span class="caret"></span> --}}
+								</span>
+							</a>
+							<div class="clearfix"></div>
 
-    <nav id="compactSidebar">
-        <ul class="menu-categories">
-            <li class="menu {{ request()->routeIs('tigomoney') ? 'active' : '' }}">
-                <a href="#tigomoney" data-active="false" class="menu-toggle">
-                    <div class="base-menu">
-                        <div class="img">
-                            <img src="{{ asset('storage/icons/tigoMoney.png') }}" alt="TigoMoney"
-                                class="img-responsive" width="50px">
-                        </div>
-                        <span>TIGO MONEY</span>
-                    </div>
-                </a>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="feather feather-chevron-left">
-                    <polyline points="15 18 9 12 15 6"></polyline>
-                </svg>
-            </li>
+							<div class="collapse in" id="collapseExample">
+								{{-- <ul class="nav">
+									<li>
+										<a href="#profile">
+											<span class="link-collapse">Mi Perfil</span>
+										</a>
+									</li>
+									<li>
+										<a href="#edit">
+											<span class="link-collapse">Editar Perfil</span>
+										</a>
+									</li>
+									<li>
+										<a href="#settings">
+											<span class="link-collapse">Ajustes</span>
+										</a>
+									</li>
+								</ul> --}}
+							</div>
+						</div>
+					</div>
+					<ul class="nav nav-primary">
+						@can('Admin_Views')
+						<li class="nav-item active">
+							<a data-toggle="collapse" href="#dashboard" class="collapsed" aria-expanded="false" style="background-color: #02b1ce!important;">
+								<svg width="25" height="35"><defs><style>.cls-1{fill:#02b1ce!important;}</style></svg>
+									<i class="fas icon-chart"></i>
+									<p>Movimiento Diario</p>
+								<span class="caret"></span>
+							</a>
+							<div class="collapse" id="dashboard">
+								<ul class="nav nav-collapse">
+									<li>
+										<a href="{{ url('reportentregservices') }}">
+											<span class="sub-item">Servicios</span>
+										</a>
+									</li>
+									{{-- <li>
+										<a href="{{ url('reportStreaming') }}">
+											<span class="sub-item">Streaming</span>
+										</a>
+									</li> --}}
+									<li>
+										<a href="{{ url('salemovimientodiario') }}">
+											<span class="sub-item">Ventas</span>
+										</a>
+									</li>
+									@can('Reporte_Movimientos_General')
+									<li>
+										<a href="{{ url('movimientos') }}">
+											<i class="fa fas fa-minus"></i>
+											Reportes Movimientos</a>
+									</li>
+									@endcan
+									@can('Reporte_Movimientos_General')
+									<li>
+										<a href="{{ url('resumenmovimientos') }}">
+											<i class="fa fas fa-minus"></i>
+											Resumen Reportes</a>
+									</li>
+									@endcan
+									@can('Reporte_Movimientos_General')
+									<li>
+										<a href="{{ url('ingresoegreso') }}">
+											<i class="fa fas fa-minus"></i>
+											Ingresos/Egresos</a>
+									</li>
+									@endcan
+								</ul>
+							</div>
+						</li>
+						@endcan
+						<li class="nav-section">
+							<span class="sidebar-mini-icon">
+								<i class="fa fa-ellipsis-h"></i>
+							</span>
+							<h4 class="text-section">Menús y SubMenus</h4>
+						</li>
 
-            <li class="menu {{ request()->routeIs('streaming') ? 'active' : '' }}">
-                <a href="#streaming" data-active="false" class="menu-toggle">
-                    <div class="base-menu">
-                        <div class="img">
-                            <img src="{{ asset('storage/icons/disney.png') }}" alt="Streaming" class="img-responsive"
-                                width="90px">
-                        </div>
-                        <span>STREAMING</span>
-                    </div>
-                </a>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="feather feather-chevron-left">
-                    <polyline points="15 18 9 12 15 6"></polyline>
-                </svg>
-            </li>
+						@can('Admin_Views')
+						<li class="nav-item">
+							<a data-toggle="collapse" href="#tables">
+								{{-- <img src="assets/img/administracion.png" width="25" height="35" alt="navbar brand" class="navbar-brand"> --}}
+								<svg width="25" height="35" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><style>.cls-1{fill:#393933;}</style></defs><g id="Capa_6" data-name="Capa 6"><g id="Menu"><g id="Boton_Administración" data-name="Boton Administración"><path class="cls-1" d="M87.91,196.8Q87,188.46,86,180.11c-.26-2.26-.44-4.52-.78-6.76a1.92,1.92,0,0,0-1-1.24c-5.55-2.18-11.12-4.28-17.09-6.56l-9,7.28-9.25,7.46L31.6,163c.25-.32.73-1,1.23-1.58,4.32-5.34,8.61-10.7,13-16a2.08,2.08,0,0,0,.23-2.62q-3.19-7.23-6.06-14.6c-.43-1.08-.8-1.6-2-1.72-7.21-.69-14.41-1.47-21.6-2.29-.48-.05-1.26-.7-1.27-1.09C15,119.42,15,115.77,15,112H71.33c.35,9,3.82,16.6,10.93,22.3a28.6,28.6,0,0,0,38-2.26,28.47,28.47,0,0,0,8.36-20.1H185c0,3.84,0,7.6-.05,11.35,0,.32-.8.86-1.27.91-7.13.81-14.27,1.6-21.41,2.26-1.4.13-1.8.71-2.27,1.92-1.88,4.86-3.9,9.66-6,14.42a2.07,2.07,0,0,0,.24,2.62c4.32,5.25,8.58,10.56,12.85,15.85.51.63,1,1.27,1.43,1.8l-17.39,17.24-18.23-14.72c-6,2.28-11.55,4.37-17.08,6.57a2.24,2.24,0,0,0-1.06,1.61c-.81,7.07-1.54,14.14-2.3,21.22-.06.62-.22,1.23-.33,1.85Z"/><path class="cls-1" d="M142.74,100.36H57.32a4.83,4.83,0,0,1-.14-.8c0-9.13-.14-18.26,0-27.39a19.32,19.32,0,0,1,19.33-19q23.41-.18,46.85,0A19.34,19.34,0,0,1,142.8,72.31c.18,9,0,18,0,27A10,10,0,0,1,142.74,100.36Z"/><path class="cls-1" d="M100.05,47.06a21.93,21.93,0,1,1,21.89-21.87A22,22,0,0,1,100.05,47.06Z"/><path class="cls-1" d="M45.82,100.34H15.11c0-.67-.09-1.22-.09-1.78,0-7.31,0-14.62,0-21.93C15.07,69.15,18.1,63.33,25,60a15.66,15.66,0,0,1,6.12-1.64c6-.21,12.05-.07,18.14-.07A39.36,39.36,0,0,0,47.13,64a55.76,55.76,0,0,0-1.25,9.69c-.17,8.12-.06,16.25-.06,24.38Z"/><path class="cls-1" d="M184.75,100.34H154.2V98q0-13.12-.07-26.27a28.56,28.56,0,0,0-2.9-12.2c-.19-.39-.33-.79-.57-1.38.7,0,1.24-.09,1.77-.08,5.79.09,11.6-.06,17.37.34,7.66.54,14.59,7.48,14.87,15.15C185,82.4,184.75,91.28,184.75,100.34Z"/><path class="cls-1" d="M53.36,13.37c14.08,0,23.8,14.64,18.15,27.38a3.19,3.19,0,0,1-2.39,2.07,30.67,30.67,0,0,0-15,8.71,3.65,3.65,0,0,1-2.58.95A19.59,19.59,0,0,1,42.36,16.8,19.45,19.45,0,0,1,53.36,13.37Z"/><path class="cls-1" d="M146.53,13.37c10.28,0,19.24,8.37,19.64,18.4a19.66,19.66,0,0,1-18,20.74,3.2,3.2,0,0,1-2.24-.88,32.3,32.3,0,0,0-15.28-9,3.49,3.49,0,0,1-2-1.65C122.67,28.43,132.39,13.39,146.53,13.37Z"/></g></g></g></svg>
+								<p style="padding-left: 7px;">Administración</p>
+								<span class="caret"></span>
+							</a>
+							<div class="collapse" id="tables">
+								<ul class="nav nav-collapse">
+									@can('Roles_Index')
+									<li>
+										<a href="{{ url('roles') }}">
+											<i class="fa fas fa-minus"></i>
+											Roles </a>
+									</li>
+									@endcan
+									@can('Permission_Index')
+										<li>
+											<a href="{{ url('permisos') }}">
+												<i class="fa fas fa-minus"></i>
+												Permisos </a>
+										</li>
+									@endcan
+									@can('Asignar_Index')
+										<li>
+											<a href="{{ url('asignar') }}">
+												<i class="fa fas fa-minus"></i>
+												Asignar permisos </a>
+										</li>
+									@endcan
+									@can('Usuarios_Index')
+										<li>
+											<a href="{{ url('users') }}">
+												<i class="fa fas fa-minus"></i>
+												Usuarios </a>
+										</li>
+									@endcan
+									@can('Cliente_Index')
+										<li>
+											<a href="{{ url('clientes') }}">
+												<i class="fa fas fa-minus"></i>
+												Clientes </a>
+										</li>
+									@endcan
+									@can('Procedencia_Index')
+										<li>
+											<a href="{{ url('procedenciaCli') }}">
+												<i class="fa fas fa-minus"></i>
+												Procedencia Clientes </a>
+										</li>
+									@endcan
+									@can('Empresa_Index')
+										<li>
+											<a href="{{ url('companies') }}">
+												<i class="fa fas fa-minus"></i>
+												Empresa </a>
+										</li>
+									@endcan
+									@can('Sucursal_Index')
+										<li>
+											<a href="{{ url('sucursales') }}">
+												<i class="fa fas fa-minus"></i>
+												Sucursales </a>
+										</li>
+									@endcan
+									@can('Caja_Index')
+										<li>
+											<a href="{{ url('cajas') }}">
+												<i class="fa fas fa-minus"></i>
+												Cajas </a>
+										</li>
+									@endcan
+									@can('Cartera_Index')
+										<li>
+											<a href="{{ url('carteras') }}">
+												<i class="fa fas fa-minus"></i>
+												Cartera </a>
+										</li>
+										<li>
+											<a href="{{ url('carteramovcategoria') }}">
+												<i class="fa fas fa-minus"></i>
+												Cartera Mov Categoria </a>
+										</li>
 
-            {{-- <li class="menu {{ request()->routeIs('notificaciones') ? 'active' : '' }}">
-                <a href="#notificaciones" data-active="false" class="menu-toggle">
-                    <div class="base-menu">
-                        <div class="base-icons">
-                            <svg aria-hidden="true" focusable="false" data-prefix="fab" data-icon="whatsapp" role="img"
-                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"
-                                class="svg-inline--fa fa-whatsapp fa-w-14 fa-9x">
-                                <path fill="currentColor"
-                                    d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"
-                                    class=""></path>
-                            </svg>
-                        </div>
-                        <span>NOTIFY</span>
-                    </div>
-                </a>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="feather feather-chevron-left">
-                    <polyline points="15 18 9 12 15 6"></polyline>
-                </svg>
-            </li> --}}
-
-            <li class="menu {{ request()->routeIs('servicio') ? 'active' : '' }}">
-                <a href="#servicio" data-active="false" class="menu-toggle">
-                    <div class="base-menu">
-                        <div class="base-icons">
-                            <i class="fa-solid fa-user-clock"></i>
-
-                        </div>
-                        <span>SERVICIO</span>
-                    </div>
-                </a>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="feather feather-chevron-left">
-                    <polyline points="15 18 9 12 15 6"></polyline>
-                </svg>
-            </li>
-
-            @can('Roles_Index')
-                <li class="menu {{ request()->routeIs('inventario') ? 'active' : '' }}">
-                    <a href="#inventario" data-active="false" class="menu-toggle">
-                        <div class="base-menu">
-                            <div class="base-icons">
-                                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2"
-                                    fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                    <circle cx="12" cy="7" r="4"></circle>
-                                </svg>
-
-                            </div>
-                            <span>INVENTARIO</span>
-                        </div>
-                    </a>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="feather feather-chevron-left">
-                        <polyline points="15 18 9 12 15 6"></polyline>
-                    </svg>
-                </li>
-
-                <li class="menu {{ request()->routeIs('parametros') ? 'active' : '' }}">
-                    <a href="#parametros" data-active="false" class="menu-toggle">
-                        <div class="base-menu">
-                            <div class="base-icons">
-                                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2"
-                                    fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                    <circle cx="12" cy="7" r="4"></circle>
-                                </svg>
-
-                            </div>
-                            <span>PARAMETROS</span>
-                        </div>
-                    </a>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="feather feather-chevron-left">
-                        <polyline points="15 18 9 12 15 6"></polyline>
-                    </svg>
-                </li>
-
+									@endcan
+									@can('Corte_Caja_Index')
+										<li>
+											<a href="{{ url('cortecajas') }}">
+												<i class="fa fas fa-minus"></i>
+												Corte caja </a>
+										</li>
+									@endcan
+								</ul>
+							</div>
+						</li>
+						@endcan
 
 
-                <li class="menu {{ request()->routeIs('registro') ? 'active' : '' }}">
-                    <a href="#registro" data-active="false" class="menu-toggle">
-                        <div class="base-menu">
-                            <div class="base-icons">
-                                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2"
-                                    fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                    <circle cx="12" cy="7" r="4"></circle>
-                                </svg>
-                            </div>
-                            <span>ADMINISTRACION</span>
-                        </div>
-                    </a>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="feather feather-chevron-left">
-                        <polyline points="15 18 9 12 15 6"></polyline>
-                    </svg>
-                </li>
 
-            <li class="menu {{ request()->routeIs('ventas') ? 'active' : '' }}">
-                <a href="#ventas" data-active="false" class="menu-toggle">
-                    <div class="base-menu">
-                        <div class="base-icons">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="feather feather-shopping-bag">
-                                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-                                <line x1="3" y1="6" x2="21" y2="6"></line>
-                                <path d="M16 10a4 4 0 0 1-8 0"></path>
-                            </svg>
-                        </div>
-                        <span>VENTAS</span>
-                    </div>
-                </a>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="feather feather-chevron-left">
-                    <polyline points="15 18 9 12 15 6"></polyline>
-                </svg>
-            </li>
+						@can('Ver_TigoMoney_SideBar')
+						<li class="nav-item">
+							<a data-toggle="collapse" href="#base">
+								{{-- <img src="assets/img/tigomoney.png" width="29" height="30" alt="navbar brand" class="navbar-brand"> --}}
 
-            <li class="menu {{ request()->routeIs('permisos') ? 'active' : '' }}">
-                <a href="#permisos" data-active="false" class="menu-toggle">
-                    <div class="base-menu">
-                        <div class="base-icons">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="feather feather-check-square">
-                                <polyline points="9 11 12 14 22 4"></polyline>
-                                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
-                            </svg>
-                        </div>
-                        <span>PERMISOS</span>
-                    </div>
-                </a>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="feather feather-chevron-left">
-                    <polyline points="15 18 9 12 15 6"></polyline>
-                </svg>
-            </li>
 
-            <li class="menu {{ request()->routeIs('contabilidad') ? 'active' : '' }}">
-                <a href="#contabilidad" data-active="false" class="menu-toggle">
-                    <div class="base-menu">
-                        <div class="base-icons">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="feather feather-dollar-sign">
-                                <line x1="12" y1="1" x2="12" y2="23"></line>
-                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                            </svg>
-                        </div>
-                        <span>CONTABILIDAD</span>
-                    </div>
-                </a>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="feather feather-chevron-left">
-                    <polyline points="15 18 9 12 15 6"></polyline>
-                </svg>
-            </li>
+								<svg width="25" height="35" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><style>.cls-1{fill:#393933;}</style></defs><g id="Capa_6" data-name="Capa 6"><g id="Menu"><g id="Boton_tigo" data-name="Boton tigo"><path id="tigo" class="cls-1" d="M103.14,89.83c0-23.85,13.7-42.92,39.26-42.92,23.86,0,37.6,19.07,37.6,40.2,0,23.73-13.74,42.77-39.3,42.77-23.86,0-37.56-19-37.56-40m56.38,0c0-15.92-5.87-25.35-18.82-25.35-11.3,0-17.1,9.43-17.1,22.63,0,15.74,5.8,25.12,18.8,25.12,11.54,0,17.12-9.38,17.12-22.4M107,38.45h.42c6.42-9.08,19-16.72,36.17-16.72,15.82,0,26.61,7.55,34.28,16.78h.33V30.15a18,18,0,0,0-3-9.19C169,12.92,156.55,6.12,142,6.12c-14.81,0-28.15,8.65-32.31,15.37A18.26,18.26,0,0,0,107,29.81Zm42.6,105.63H149c-9.68,15.07-28.52,27.9-54.53,27.9-23.86,0-40.13-12.68-51.66-28h-.61v9.93a31.72,31.72,0,0,0,4.65,15.19c9.16,13.48,27.93,24.76,50,24.76,22.33,0,42.47-14.37,48.77-25.64,2.19-4.13,3.93-10,3.93-13.84ZM83.15,89.67H72.66L73,91.5a47.37,47.37,0,0,1,1.27,11.21v6.38c0,3.14-.69,6-8.65,6-11.49,0-25.29-4.65-25.29-26.45,0-13.81,10.8-23.94,25.46-23.94,9.36,0,18.14,2.52,23.18,6.41l.37.3H92V64.6c0-8.32-7.54-17.14-24.09-17.14C39.68,47.46,20,65.33,20,90.9c0,27.26,22,41.49,43.73,41.49,19.91,0,29.56-7,29.56-21.3V98.45c0-4.52-4.83-8.78-10.14-8.78"/></g></g></g></svg>
 
-        </ul>
-    </nav>
 
-    <div id="compact_submenuSidebar" class="submenu-sidebar">
-        @if (empty(session('sesionCaja')))
-            <div class="submenu" id="tigomoney">
-                <ul class="submenu-list" data-parent-element="#app">
-                    <li>
-                        <strong>
-                            <p> No tiene una caja abierta </p>
-                            <p> para hacer transacciones </p>
-                        </strong>
-                    </li>
-                    @can('Origen_Index')
-                        <li>
-                            <a href="{{ url('origenes') }}">
-                                <img src="{{ asset('storage/icons/origen.png') }}" alt="Origen CRUD" width="25px">
-                                Origen CRUD </a>
-                        </li>
-                    @endcan
-                    @can('Motivo_Index')
-                        <li>
-                            <a href="{{ url('motivos') }}">
-                                <img src="{{ asset('storage/icons/motivo.png') }}" alt="Motivo CRUD" width="25px">
-                                Motivo CRUD </a>
-                        </li>
-                    @endcan
-                    @can('Comision_Index')
-                        <li>
-                            <a href="{{ url('comisiones') }}">
-                                <img src="{{ asset('storage/icons/comision.png') }}" alt="Comision CRUD" width="25px">
-                                Comisión CRUD </a>
-                        </li>
-                    @endcan
-                    @can('Origen_Mot_Index')
-                        <li>
-                            <a href="{{ url('origen-motivo') }}">
-                                <img src="{{ asset('storage/icons/comision.png') }}" alt="Comision CRUD" width="25px">
-                                Origen motivo </a>
-                        </li>
-                    @endcan
-                    @can('Origen_Mot_Com_Index')
-                        <li>
-                            <a href="{{ url('origen-motivo-comision') }}">
-                                <img src="{{ asset('storage/icons/comision.png') }}" alt="Comision CRUD" width="25px">
-                                Origen motivo comisiones</a>
-                        </li>
-                    @endcan
-                    @can('Jornada_Tigo_Index')
-                        <li>
-                            <a href="{{ url('ReporteJornalTM') }}">
-                                <i class="fa-solid fa-baht-sign"></i>
-                                Reporte Jornada T.M.</a>
-                        </li>
-                    @endcan
-                    @can('Arqueos_Tigo_Index')
-                        <li>
-                            <a href="{{ url('arqueostigo') }}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
-                                    stroke-linejoin="round" class="feather feather-dollar-sign">
-                                    <line x1="12" y1="1" x2="12" y2="23"></line>
-                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                                </svg>
-                                Arqueos Tigo</a>
-                        </li>
-                    @endcan
-                    @can('Reportes_Tigo_Index')
-                        <li>
-                            <a href="{{ url('reportestigo') }}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="feather feather-pie-chart">
-                                    <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
-                                    <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
-                                </svg>
-                                Reportes Tigo</a>
-                        </li>
-                    @endcan
-                    <li>
-                        <a href="{{ url('movimientos') }}">
-                            <i class="fa-solid fa-book"></i>
-                            Reportes Movimientos</a>
-                    </li>
-                </ul>
-            </div>
-        @else
-            <div class="submenu" id="tigomoney">
-                <ul class="submenu-list" data-parent-element="#app">
-                    @can('Tigo_Money_Index')
-                        <li>
-                            <a href="{{ url('tigomoney') }}">
-                                <img src="{{ asset('storage/icons/transfer.png') }}" alt="Transacciones" width="25px">
-                                Nueva Transacción </a>
-                        </li>
-                    @endcan
-                    @can('Origen_Index')
-                        <li>
-                            <a href="{{ url('origenes') }}">
-                                <img src="{{ asset('storage/icons/origen.png') }}" alt="Origen CRUD" width="25px">
-                                Origen CRUD </a>
-                        </li>
-                    @endcan
-                    @can('Motivo_Index')
-                        <li>
-                            <a href="{{ url('motivos') }}">
-                                <img src="{{ asset('storage/icons/motivo.png') }}" alt="Motivo CRUD" width="25px">
-                                Motivo CRUD </a>
-                        </li>
-                    @endcan
-                    @can('Comision_Index')
-                        <li>
-                            <a href="{{ url('comisiones') }}">
-                                <img src="{{ asset('storage/icons/comision.png') }}" alt="Comision CRUD" width="25px">
-                                Comisión CRUD </a>
-                        </li>
-                    @endcan
-                    @can('Origen_Mot_Index')
-                        <li>
-                            <a href="{{ url('origen-motivo') }}">
-                                <img src="{{ asset('storage/icons/comision.png') }}" alt="Comision CRUD" width="25px">
-                                Origen motivo </a>
-                        </li>
-                    @endcan
-                    @can('Origen_Mot_Com_Index')
-                        <li>
-                            <a href="{{ url('origen-motivo-comision') }}">
-                                <img src="{{ asset('storage/icons/comision.png') }}" alt="Comision CRUD" width="25px">
-                                Origen motivo comisiones</a>
-                        </li>
-                    @endcan
-                    @can('Jornada_Tigo_Index')
-                        <li>
-                            <a href="{{ url('ReporteJornalTM') }}">
-                                <i class="fa-solid fa-baht-sign"></i>
-                                Reporte Jornada T.M.</a>
-                        </li>
-                    @endcan
-                    @can('Arqueos_Tigo_Index')
-                        <li>
-                            <a href="{{ url('arqueostigo') }}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
-                                    stroke-linejoin="round" class="feather feather-dollar-sign">
-                                    <line x1="12" y1="1" x2="12" y2="23"></line>
-                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                                </svg>
-                                Arqueos Tigo</a>
-                        </li>
-                    @endcan
+								<p style="padding-left: 7px;">Tigo Money</p>
+								<span class="caret"></span>
+							</a>
+							<div class="collapse" id="base">
+								@if (empty(session('sesionCaja')))
+								<ul class="nav nav-collapse">
+									<li>
+										<strong style="color: black; ">
+											<p> No tiene una caja abierta </p>
+											<p> para hacer transacciones </p>
+										</strong>
+									</li>
+									@can('Origen_Index')
+										<li>
+											<a href="{{ url('origenes') }}">
+												<i class="fa fas fa-minus"></i>
+											Origen CRUD </a>
+										</li>
+									@endcan
+									@can('Motivo_Index')
+										<li>
+											<a href="{{ url('motivos') }}">
+												<i class="fa fas fa-minus"></i>
+											Motivo CRUD </a>
+										</li>
+									@endcan
+									@can('Comision_Index')
+										<li>
+											<a href="{{ url('comisiones') }}">
+												<i class="fa fas fa-minus"></i>
+											Comisión CRUD </a>
+										</li>
+									@endcan
+									@can('Origen_Mot_Index')
+										<li>
+											<a href="{{ url('origen-motivo') }}">
+												<i class="fa fas fa-minus"></i>
+											Origen motivo </a>
+										</li>
+									@endcan
+									@can('Origen_Mot_Com_Index')
+										<li>
+											<a href="{{ url('origen-motivo-comision') }}">
+												<i class="fa fas fa-minus"></i>
+											Origen motivo comisiones</a>
+										</li>
+									@endcan
+									@can('Jornada_Tigo_Index')
+										<li>
+											<a href="{{ url('ReporteJornalTM') }}">
+												<i class="fa fas fa-minus"></i>
+											Reporte Jornada T.M.</a>
+										</li>
+									@endcan
+									@can('Arqueos_Tigo_Index')
+										<li>
+											<a href="{{ url('arqueostigo') }}" style="width="17" height="17""> 
+												<i class="fa fas fa-minus"></i>
+											Arqueos Tigo</a>
+										</li>
+									@endcan
+									
+								
 
-                    @can('Reportes_Tigo_Index')
-                        <li>
-                            <a href="{{ url('reportestigo') }}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="feather feather-pie-chart">
-                                    <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
-                                    <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
-                                </svg>
-                                Reportes Tigo</a>
-                        </li>
-                    @endcan
-                    <li>
-                        <a href="{{ url('movimientos') }}">
-                            <i class="fa-solid fa-book"></i>
-                            Reportes Movimientos</a>
-                    </li>
-                </ul>
-            </div>
-        @endif
+									<li>
+										<a href="{{ url('movimientos') }}">
+											<i class="fa fas fa-minus"></i>
+											Reportes Movimientos</a>
+									</li>
+								</ul>
+								@else
+								<ul class="nav nav-collapse">
+									@can('Tigo_Money_Index')
+									<li>
+										<a href="{{ url('tigomoney') }}">
+											<i class="fa fas fa-minus"></i>
+											Nueva Transacción </a>
+									</li>
+									@endcan
+									  @can('Origen_Index')
+									  <li>
+										  <a href="{{ url('origenes') }}">
+											<i class="fa fas fa-minus"></i>
+											Origen CRUD </a>
+									  </li>
+								  	@endcan
+								  @can('Motivo_Index')
+									  <li>
+										  <a href="{{ url('motivos') }}">
+											<i class="fa fas fa-minus"></i>
+											Motivo CRUD </a>
+									  </li>
+								  @endcan
+								  @can('Comision_Index')
+									  <li>
+										  <a href="{{ url('comisiones') }}">
+											<i class="fa fas fa-minus"></i>
+											Comisión CRUD </a>
+									  </li>
+								  @endcan
+								  @can('Origen_Mot_Index')
+									  <li>
+										  <a href="{{ url('origen-motivo') }}">
+											<i class="fa fas fa-minus"></i>
+											Origen motivo </a>
+									  </li>
+								  @endcan
+								  @can('Origen_Mot_Com_Index')
+									  <li>
+										  <a href="{{ url('origen-motivo-comision') }}">
+											<i class="fa fas fa-minus"></i>
+											Origen motivo comisiones</a>
+									  </li>
+								  @endcan
+								  @can('Jornada_Tigo_Index')
+									  <li>
+										  <a href="{{ url('ReporteJornalTM') }}">
+											<i class="fa fas fa-minus"></i>
+											  Reporte Jornada T.M.</a>
+									  </li>
+								  @endcan
+								  @can('Arqueos_Tigo_Index')
+									  <li>
+										  <a href="{{ url('arqueostigo') }}">
+											<i class="fa fas fa-minus"></i>
+											  Arqueos Tigo</a>
+									  </li>
+								  @endcan
+			  
+								  @can('Reportes_Tigo_Index')
+									  <li>
+										  <a href="{{ url('reportestigo') }}">
+											<i class="fa fas fa-minus"></i>
+											  Reportes Tigo</a>
+									  </li>
+								  @endcan
+								  @can('Reportes_Tigo_Index')
+								  <li>
+									  <a href="{{ url('movimientos') }}">
+										<i class="fa fas fa-minus"></i>
+										  Reportes Movimientos</a>
+								  </li>
+								  @endcan
+								</ul>
+								@endif
+							</div>
+						</li>
+						@endcan
+						{{-- <li class="nav-item">
+							<a data-toggle="collapse" href="#sidebarLayouts">
+								<img src="assets/img/disney.png" width="30" height="40" alt="navbar brand" class="navbar-brand">
+								<p>Streaming</p>
+								<span class="caret"></span>
+							</a>
+							<div class="collapse" id="sidebarLayouts">
+								@if (empty(session('sesionCaja')))
+								<ul class="nav nav-collapse">
+									<li>
+										<strong style="color: black; ">
+											<p> No tiene una caja abierta </p>
+											<p> para vender planes </p>
+										</strong>
+									</li>
+									@can('Cuentas_Index')
+										<li>
+											<a href="{{ url('cuentas') }}">
+												<i class="fa fas fa-minus"></i>
+												Cuentas </a>
+										</li>
+									@endcan
+									@can('Perfiles_Index')
+										<li>
+											<a href="{{ url('perfiles') }}">
+												<i class="fa fas fa-minus"></i>
+												Perfiles </a>
+										</li>
+									@endcan
+									@can('Plataforma_Index')
+										<li>
+											<a href="{{ url('plataformas') }}">
+												<i class="fa fas fa-minus"></i>
+												Plataformas </a>
+										</li>
+									@endcan
+									@can('Proveedor_Index')
+										<li>
+											<a href="{{ url('strproveedores') }}">
+												<i class="fa fas fa-minus"></i>
+												Proveedores </a>
+										</li>
+									@endcan
+									@can('Correos_Index')
+										<li>
+											<a href="{{ url('emails') }}">
+												<i class="fa fas fa-minus"></i>
+												Correos </a>
+										</li>
+									@endcan
+									@can('Reportes_Streaming_Index')
+										<li>
+											<a href="{{ url('reportStreaming') }}">
+												<i class="fa fas fa-minus"></i>
+												Reportes Streaming </a>
+										</li>
+									@endcan
+								</ul>
+								@else
+								<ul class="nav nav-collapse">
+									@can('Planes_Index')
+										<li>
+											<a href="{{ url('planes') }}">
+												<i class="fa fas fa-minus"></i>
+												Nuevo Plan </a>
+										</li>
+									@endcan
+									@can('Cuentas_Index')
+										<li>
+											<a href="{{ url('cuentas') }}">
+												<i class="fa fas fa-minus"></i>
+												Cuentas </a>
+										</li>
+									@endcan
+									@can('Perfiles_Index')
+										<li>
+											<a href="{{ url('perfiles') }}">
+												<i class="fa fas fa-minus"></i>
+												Perfiles </a>
+										</li>
+									@endcan
+									@can('Plataforma_Index')
+										<li>
+											<a href="{{ url('plataformas') }}">
+												<i class="fa fas fa-minus"></i>
+												Plataformas </a>
+										</li>
+									@endcan
+									@can('Proveedor_Index')
+										<li>
+											<a href="{{ url('strproveedores') }}">
+												<i class="fa fas fa-minus"></i>
+												Proveedores </a>
+										</li>
+									@endcan
+									@can('Correos_Index')
+										<li>
+											<a href="{{ url('emails') }}">
+												<i class="fa fas fa-minus"></i>
+												Correos </a>
+										</li>
+									@endcan
+									@can('Arqueos_Streaming_Index')
+										<li>
+											<a href="{{ url('arqueosStreaming') }}">
+												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+													fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+													stroke-linejoin="round" class="feather feather-dollar-sign">
+													<line x1="12" y1="1" x2="12" y2="23"></line>
+													<path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+												</svg>
+												Arqueos Streaming </a>
+										</li>
+									@endcan
+									@can('Reportes_Streaming_Index')
+										<li>
+											<a href="{{ url('reportStreaming') }}">
+												<i class="fa fas fa-minus"></i>
+												Reportes Streaming </a>
+										</li>
+									@endcan
+									<li>
+										<a href="{{ url('reportGananciaStreaming') }}">
+											<i class="fa fas fa-minus"></i>
+											Reportes Ganancias Streaming </a>
+									</li>
+								</ul>
+								@endif
+							</div>
+						</li> --}}
+						@can('Service_Index')
+						<li class="nav-item">
+							<a data-toggle="collapse" href="#forms">
+								{{-- <img src="assets/img/serviciotecnico.png" width="30" height="40" alt="navbar brand" class="navbar-brand"> --}}
+								<svg  width="25" height="35" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><style>.cls-1{fill:#393933;}</style></defs><g id="Capa_6" data-name="Capa 6"><g id="Menu"><g id="Boton_Servicios" data-name="Boton Servicios"><path class="cls-1" d="M35.72,177.15V113a4.17,4.17,0,0,1,.78-.16c8.24,0,16.48-.13,24.71.09a8.49,8.49,0,0,1,4.95,2.15c3.35,3,6.36,6.32,9.62,9.41a4.47,4.47,0,0,0,2.74,1.15c10.32.08,20.63,0,31,.07a9.68,9.68,0,0,1,9.33,6.65A9.18,9.18,0,0,1,115.28,143a12.24,12.24,0,0,1-6,1.88c-7.83.22-15.67.09-23.51.09H84.2c-2.26.08-3.58,1.25-3.59,3.2s1.32,3.2,3.55,3.22c3.55,0,7.1,0,10.65,0,4.89,0,9.78,0,14.66,0a16.13,16.13,0,0,0,15.83-12.64,3.53,3.53,0,0,1,1.48-2.08q20.46-11.11,41-22.06A15.13,15.13,0,0,1,190,128.89c-.33,5.33-3.08,9.25-7.49,12.16q-22.72,15-45.38,30-8.53,5.66-17,11.38c-11.52,7.73-24,9.42-37.23,5.7-10.87-3.07-21.64-6.52-32.39-10a28,28,0,0,0-8.89-1Z"/><path class="cls-1" d="M48.51,35.7c.71.27,1.26.46,1.79.69q22.46,10,44.91,19.93c1,.43,1.59.82,1.59,2.13-.06,17.74,0,35.48,0,53.22,0,.26,0,.53-.07,1-.69-.27-1.29-.48-1.87-.73Q74,102.67,53.24,93.41a7.23,7.23,0,0,1-4.75-7.35c.06-16.13,0-32.26,0-48.39Z"/><path class="cls-1" d="M103.19,112.73V58.94c0-1.07,0-1.92,1.29-2.51,15.25-6.7,30.45-13.49,45.67-20.26.35-.16.73-.26,1.29-.45v1.94c0,16.14,0,32.29,0,48.43,0,3.5-1.4,5.83-4.6,7.25q-21.09,9.36-42.15,18.8C104.3,112.32,103.87,112.47,103.19,112.73Z"/><path class="cls-1" d="M147.81,30.18,121.9,41.69c-6.78,3-13.55,6.07-20.37,9a3.85,3.85,0,0,1-2.77.12Q76,40.82,53.27,30.66c-.29-.13-.57-.3-1.05-.56.59-.33,1-.62,1.48-.82Q75.26,20,96.82,10.7a7,7,0,0,1,5.82-.2L147,29.63A6.3,6.3,0,0,1,147.81,30.18Z"/><path class="cls-1" d="M10,183.57V106.5c4.69,0,9.37-.24,14,.08,3.16.22,5.2,3.17,5.21,6.63,0,7.83,0,15.67,0,23.5q0,19.69,0,39.38c0,5-2.46,7.47-7.55,7.48Z"/></g></g></g></svg>
+								<p style="padding-left: 7px;">Servicios</p>
+								<span class="caret"></span>
+							</a>
+							<div class="collapse" id="forms">
+								<ul class="nav nav-collapse">
+								@can('Cat_Prod_Service_Index')
+								<li>
+									<a href="{{ url('catprodservice') }}">
+										<i class="fa fas fa-minus"></i>
+										Categoria Equipo </a>
+								</li>
+								@endcan
+								@can('SubCat_Prod_Service_Index')
+									<li>
+										<a href="{{ url('subcatprodservice') }}">
+											<i class="fa fas fa-minus"></i>
+											Sub Categ. Equipo </a>
+									</li>
+								@endcan
+								@can('Type_Work_Index')
+									<li>
+										<a href="{{ url('typework') }}">
+											<i class="fa fas fa-minus"></i>
+											Tipo de Trabajo </a>
+									</li>
+								@endcan
+								@can('Orden_Servicio_Index')
+									<li>
+										<a href="{{ url('orderservice') }}">
+											<i class="fa fas fa-minus"></i>
+											Orden de Servicio </a>
+									</li>
+								@endcan
+								@can('Reporte_Servicios_Index')
+									<li>
+										<a href="{{ url('reporteservices') }}">
+											<i class="fa fas fa-minus"></i>
+											Reporte de Servicios </a>
+									</li>
+								@endcan
+								@can('Reporte_Servicios_Index')
+									<li>
+										<a href="{{ url('reportentregservices') }}">
+											<i class="fa fas fa-minus"></i>
+											Repor. Servi. Entregados </a>
+									</li>
+								@endcan
+								@can('Reporte_Servicios_Index')
+									<li>
+										<a href="{{ url('solicitudrepuestos') }}">
+											<i class="fa fas fa-minus"></i>
+											Repuestos Servicios </a>
+									</li>
+								@endcan
+								</ul>
+							</div>
+						</li>
+						@endcan
+						@can('Almacen_Index')
+						<li class="nav-item">
+							<a data-toggle="collapse" href="#charts">
+								<svg width="25" height="35"  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><style>.cls-1{fill:#393933;}</style></defs><g id="Capa_6" data-name="Capa 6"><g id="Menu"><g id="Boton_Inventarios" data-name="Boton Inventarios"><path class="cls-1" d="M98.52,6.12h2.94l2.4,1.23q40.79,20.25,81.58,40.46c3.24,1.59,4.56,3.75,4.55,7.3q-.11,44.77,0,89.54c0,3.74-1.48,6-4.78,7.61Q144,172.54,103,193A7.18,7.18,0,0,1,96,193q-40.89-20.44-81.82-40.8A6.91,6.91,0,0,1,10,145.31q.08-45.32,0-90.64a6.78,6.78,0,0,1,4.23-6.78q16-7.8,31.83-15.83a2.71,2.71,0,0,1,2.84.07q41.43,21.42,82.89,42.76a2.82,2.82,0,0,1,1.8,2.93c-.06,13.82,0,27.64,0,41.47,0,3.86,1,4.46,4.51,2.64,4.61-2.41,9.17-4.89,13.83-7.17a4.41,4.41,0,0,0,2.8-4.56q-.15-21.11,0-42.2a4.42,4.42,0,0,0-2.82-4.63Q111.32,42.69,70.83,21.86c-.56-.28-1.1-.63-1.93-1.1Z"/></g></g></g></svg>
+								<p style="padding-left: 7px;">Inventarios</p>
+								<span class="caret"></span>
+							</a>
+							<div class="collapse" id="charts">
+								<ul class="nav nav-collapse">
+									<li>
+										<a href="{{url('proveedores')}}">
+											<i class="fa fas fa-minus"></i>
+											Proveedores </a>
+									</li>
+									<li>
+										<a href="{{ url('categories') }}">
+											<i class="fa fas fa-minus"></i>
+											Categorias </a>
+									</li>
+									<li>
+										<a href="{{ url('products') }}">
+											<i class="fa fas fa-minus"></i>
+											Productos </a>
+									</li>
+									{{-- <li>
+										<a href="{{url('transacciones')}}">
+											<i class="fa fas fa-minus"></i>
+											Devolucion en Compras </a>
+									</li> --}}
+									<li>
+										<a href="{{url('compras')}}">
+											<i class="fa fas fa-minus"></i>
+											Compras </a>
+									</li>
+									<li>
+										<a href="{{url('destino_prod')}}">
+											<i class="fa fas fa-minus"></i>
+											Almacen Producto </a>
+									</li>
+									<li>
+										<a href="{{url('operacionesinv')}}">
+											<i class="fa fas fa-minus"></i>
+											Entrada/Salida de Productos </a>
+									</li>
+									<li>
+										<a href="{{url('all_transferencias')}}">
+											<i class="fa fas fa-minus"></i>
+											Transferencia de Productos </a>
+									</li>
+									<li>
+										<a href="{{url('destino')}}">
+											<i class="fa fas fa-minus"></i>
+											Locacion/Estancia </a>
+									</li>
+									<li>
+										<a href="{{url('locations')}}">
+											<i class="fa fas fa-minus"></i>
+											Mobiliario </a>
+									</li>
+									<li>
+										<a href="{{ url('unidades') }}">
+											<i class="fa fas fa-minus"></i>
+											Unidades </a>
+									</li>
+									<li>
+										<a href="{{ url('marcas') }}">
+											<i class="fa fas fa-minus"></i>
+											Marcas </a>
+									</li>
+								</ul>
+							</div>
+						</li>
 
-        @if (empty(session('sesionCaja')))
-            <div class="submenu" id="streaming">
-                <ul class="submenu-list" data-parent-element="#app">
-                    <li>
-                        <strong>
-                            <p> No tiene una caja abierta </p>
-                            <p> para vender planes </p>
-                        </strong>
-                    </li>
-                    @can('Cuentas_Index')
-                        <li>
-                            <a href="{{ url('cuentas') }}">
-                                <i class="fa-solid fa-address-book"></i>
-                                Cuentas </a>
-                        </li>
-                    @endcan
-                    @can('Perfiles_Index')
-                        <li>
-                            <a href="{{ url('perfiles') }}">
-                                <i class="fa-solid fa-address-book"></i>
-                                Perfiles </a>
-                        </li>
-                    @endcan
-                    @can('Plataforma_Index')
-                        <li>
-                            <a href="{{ url('plataformas') }}">
-                                <img src="{{ asset('storage/icons/cuentas.png') }}" alt="Origen CRUD" width="25px">
-                                Plataformas </a>
-                        </li>
-                    @endcan
-                    @can('Proveedor_Index')
-                        <li>
-                            <a href="{{ url('strproveedores') }}">
-                                <i class="fa-solid fa-user-pen"></i>
-                                Proveedores </a>
-                        </li>
-                    @endcan
-                    @can('Correos_Index')
-                        <li>
-                            <a href="{{ url('emails') }}">
-                                <i class="fa-regular fa-envelope"></i>
-                                Correos </a>
-                        </li>
-                    @endcan
-                    @can('Reportes_Streaming_Index')
-                        <li>
-                            <a href="{{ url('reportStreaming') }}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="25" viewBox="0 0 24 24" fill="none"
-                                    stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"
-                                    class="feather feather-pie-chart">
-                                    <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
-                                    <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
-                                </svg>
-                                Reportes Streaming </a>
-                        </li>
-                    @endcan
-                </ul>
-            </div>
-        @else
-            <div class="submenu" id="streaming">
-                <ul class="submenu-list" data-parent-element="#app">
-                    @can('Planes_Index')
-                        <li>
-                            <a href="{{ url('planes') }}">
-                                <i class="fa-regular fa-calendar-plus"></i>
-                                Nuevo Plan </a>
-                        </li>
-                    @endcan
-                    @can('Cuentas_Index')
-                        <li>
-                            <a href="{{ url('cuentas') }}">
-                                <i class="fa-solid fa-address-book"></i>
-                                Cuentas </a>
-                        </li>
-                    @endcan
-                    @can('Perfiles_Index')
-                        <li>
-                            <a href="{{ url('perfiles') }}">
-                                <i class="fa-solid fa-address-book"></i>
-                                Perfiles </a>
-                        </li>
-                    @endcan
-                    @can('Plataforma_Index')
-                        <li>
-                            <a href="{{ url('plataformas') }}">
-                                <img src="{{ asset('storage/icons/cuentas.png') }}" alt="Origen CRUD" width="25px">
-                                Plataformas </a>
-                        </li>
-                    @endcan
-                    @can('Proveedor_Index')
-                        <li>
-                            <a href="{{ url('strproveedores') }}">
-                                <i class="fa-solid fa-user-pen"></i>
-                                Proveedores </a>
-                        </li>
-                    @endcan
-                    @can('Correos_Index')
-                        <li>
-                            <a href="{{ url('emails') }}">
-                                <i class="fa-regular fa-envelope"></i>
-                                Correos </a>
-                        </li>
-                    @endcan
-                    {{-- @can('Arqueos_Streaming_Index')
-                        <li>
-                            <a href="{{ url('arqueosStreaming') }}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="feather feather-dollar-sign">
-                                    <line x1="12" y1="1" x2="12" y2="23"></line>
-                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                                </svg>
-                                Arqueos Streaming </a>
-                        </li>
-                    @endcan --}}
-                    @can('Reportes_Streaming_Index')
-                        <li>
-                            <a href="{{ url('reportStreaming') }}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="25" viewBox="0 0 24 24" fill="none"
-                                    stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"
-                                    class="feather feather-pie-chart">
-                                    <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
-                                    <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
-                                </svg>
-                                Reportes Streaming </a>
-                        </li>
-                    @endcan
-                    <li>
-                        <a href="{{ url('reportGananciaStreaming') }}">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="25" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"
-                                class="feather feather-pie-chart">
-                                <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
-                                <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
-                            </svg>
-                            Reportes Ganancias Streaming </a>
-                    </li>
-                </ul>
-            </div>
-        @endif
-        {{-- <div class="submenu" id="notificaciones">
-            <ul class="submenu-list" data-parent-element="#uiKit">
-                <li>
-                    <a href="{{ url('modulos') }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="feather feather-users">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="9" cy="7" r="4"></circle>
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                        </svg>
-                        Modulos </a>
-                </li>
-
-                <li>
-                    <a href="{{ url('modulos') }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="feather feather-users">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="9" cy="7" r="4"></circle>
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                        </svg>
-                        Modulos </a>
-                </li>
-            </ul>
-        </div> --}}
-
-        <div class="submenu" id="servicio">
-            <ul class="submenu-list" data-parent-element="servicio">
-                @can('Cat_Prod_Service_Index')
-                    <li>
-                        <a href="{{ url('catprodservice') }}">
-                            <i class="fa-solid fa-laptop"></i>
-                            Categoria Equipo </a>
-                    </li>
-                @endcan
-                @can('SubCat_Prod_Service_Index')
-                    <li>
-                        <a href="{{ url('subcatprodservice') }}">
-                            <i class="fa-solid fa-mobile-screen-button"></i>
-                            Sub Categ. Equipo </a>
-                    </li>
-                @endcan
-                @can('Type_Work_Index')
-                    <li>
-                        <a href="{{ url('typework') }}">
-                            <i class="fa-regular fa-file-lines"></i>
-                            Tipo de Trabajo </a>
-                    </li>
-                @endcan
-                @can('Orden_Servicio_Index')
-                    <li>
-                        <a href="{{ url('orderservice') }}">
-                            <i class="fa-solid fa-pen-to-square"></i>
-                            Orden de Servicio </a>
-                    </li>
-                @endcan
-                @can('Reporte_Servicios_Index')
-                    <li>
-                        <a href="{{ url('reporteservices') }}">
-                            <i class="fa-regular fa-clipboard"></i>
-                            Reporte de Servicios </a>
-                    </li>
-                @endcan
-                @can('Boton_Entregar_Servicio')
-                    <li>
-                        <a href="{{ url('reportentregservices') }}">
-                            <i class="fa-regular fa-clipboard"></i>
-                            Repor. Servi. Entregados </a>
-                    </li>
-                @endcan
-            </ul>
-        </div>
-        <div class="submenu" id="inventario">
-            <ul class="submenu-list" data-parent-element="inventario">
-
-                <li>
-                    <a href="{{ url('categories') }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="feather feather-layers">
-                            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-                            <polyline points="2 17 12 22 22 17"></polyline>
-                            <polyline points="2 12 12 17 22 12"></polyline>
-                        </svg>
-                        Categorias </a>
-                </li>
-
-                <li>
-                    <a href="{{url('products')}}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-package"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
-                        Productos </a>
-                </li>
-
-                <li>
-                    <a href="{{url('transacciones')}}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-repeat"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
-                        Devolucion en Compras</a>
-                </li>
-
-                <li>
-                    <a href="{{url('proveedores')}}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                        Proveedores</a>
-                </li>
-                <li>
-                    <a href="{{url('compras')}}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-cart"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
-                        Compras</a>
-                </li>
-                <li>
-                    <a href="{{url('destino_prod')}}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-archive"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line></svg>
-                        Almacen Producto</a>
-                </li>
-            </ul>
-        </div>
-        <div class="submenu" id="parametros">
-            <ul class="submenu-list" data-parent-element="app">
-
-                <li>
-                    <a href="{{ url('unidades') }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="feather feather-layers">
-                            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-                            <polyline points="2 17 12 22 22 17"></polyline>
-                            <polyline points="2 12 12 17 22 12"></polyline>
-                        </svg>
-                        Unidades </a>
-                </li>
-                <li>
-                    <a href="{{url('locations')}}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-watch"><circle cx="12" cy="12" r="7"></circle><polyline points="12 9 12 12 13.5 13.5"></polyline><path d="M16.51 17.35l-.35 3.83a2 2 0 0 1-2 1.82H9.83a2 2 0 0 1-2-1.82l-.35-3.83m.01-10.7l.35-3.83A2 2 0 0 1 9.83 1h4.35a2 2 0 0 1 2 1.82l.35 3.83"></path></svg>    
-                    Mobiliario</a>
-                </li>
-
-                <li>
-                    <a href="{{ url('marcas') }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="feather feather-watch">
-                            <circle cx="12" cy="12" r="7"></circle>
-                            <polyline points="12 9 12 12 13.5 13.5"></polyline>
-                            <path
-                                d="M16.51 17.35l-.35 3.83a2 2 0 0 1-2 1.82H9.83a2 2 0 0 1-2-1.82l-.35-3.83m.01-10.7l.35-3.83A2 2 0 0 1 9.83 1h4.35a2 2 0 0 1 2 1.82l.35 3.83">
-                            </path>
-                        </svg>
-                        Marcas</a>
-                </li>
-                <li>
-                    <a href="{{url('destino')}}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-watch"><circle cx="12" cy="12" r="7"></circle><polyline points="12 9 12 12 13.5 13.5"></polyline><path d="M16.51 17.35l-.35 3.83a2 2 0 0 1-2 1.82H9.83a2 2 0 0 1-2-1.82l-.35-3.83m.01-10.7l.35-3.83A2 2 0 0 1 9.83 1h4.35a2 2 0 0 1 2 1.82l.35 3.83"></path></svg>    
-                    Locacion/Estancia</a>
-                </li>
-
-            </ul>
-        </div>
-
-        <div class="submenu" id="registro">
-            <ul class="submenu-list" data-parent-element="#components">
-                @can('Roles_Index')
-                    <li>
-                        <a href="{{ url('roles') }}">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                class="feather feather-users">
-                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="9" cy="7" r="4"></circle>
-                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                            </svg>
-                            Roles </a>
-                    </li>
-                @endcan
-                @can('Permission_Index')
-                    <li>
-                        <a href="{{ url('permisos') }}">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                class="feather feather-user-check">
-                                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="8.5" cy="7" r="4"></circle>
-                                <polyline points="17 11 19 13 23 9"></polyline>
-                            </svg>
-                            Permisos </a>
-                    </li>
-                @endcan
-                @can('Asignar_Index')
-                    <li>
-                        <a href="{{ url('asignar') }}">
-                            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" data-prefix="fas"
-                                data-icon="user-plus" class="svg-inline--fa fa-user-plus fa-w-20" role="img"
-                                viewBox="0 0 640 512">
-                                <path fill="currentColor"
-                                    d="M624 208h-64v-64c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v64h-64c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h64v64c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16v-64h64c8.8 0 16-7.2 16-16v-32c0-8.8-7.2-16-16-16zm-400 48c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm89.6 32h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4z" />
-                            </svg>
-                            Asignar permisos </a>
-                    </li>
-                @endcan
-                @can('Usuarios_Index')
-                    <li>
-                        <a href="{{ url('users') }}">
-                            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" data-prefix="fas"
-                                data-icon="user" class="svg-inline--fa fa-user fa-w-14" role="img" viewBox="0 0 448 512">
-                                <path fill="currentColor"
-                                    d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm89.6 32h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4z" />
-                            </svg>
-                            Usuarios </a>
-                    </li>
-                @endcan
-                @can('Cliente_Index')
-                    <li>
-                        <a href="{{ url('clientes') }}">
-                            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" data-prefix="fas"
-                                data-icon="user-tag" class="svg-inline--fa fa-user-tag fa-w-20" role="img"
-                                viewBox="0 0 640 512">
-                                <path fill="currentColor"
-                                    d="M630.6 364.9l-90.3-90.2c-12-12-28.3-18.7-45.3-18.7h-79.3c-17.7 0-32 14.3-32 32v79.2c0 17 6.7 33.2 18.7 45.2l90.3 90.2c12.5 12.5 32.8 12.5 45.3 0l92.5-92.5c12.6-12.5 12.6-32.7.1-45.2zm-182.8-21c-13.3 0-24-10.7-24-24s10.7-24 24-24 24 10.7 24 24c0 13.2-10.7 24-24 24zm-223.8-88c70.7 0 128-57.3 128-128C352 57.3 294.7 0 224 0S96 57.3 96 128c0 70.6 57.3 127.9 128 127.9zm127.8 111.2V294c-12.2-3.6-24.9-6.2-38.2-6.2h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 287.9 0 348.1 0 422.3v41.6c0 26.5 21.5 48 48 48h352c15.5 0 29.1-7.5 37.9-18.9l-58-58c-18.1-18.1-28.1-42.2-28.1-67.9z" />
-                            </svg>
-                            Clientes </a>
-                    </li>
-                @endcan
-                @can('Procedencia_Index')
-                    <li>
-                        <a href="{{ url('procedenciaCli') }}">
-                            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" data-prefix="fas"
-                                data-icon="user-tag" class="svg-inline--fa fa-user-tag fa-w-20" role="img"
-                                viewBox="0 0 640 512">
-                                <path fill="currentColor"
-                                    d="M630.6 364.9l-90.3-90.2c-12-12-28.3-18.7-45.3-18.7h-79.3c-17.7 0-32 14.3-32 32v79.2c0 17 6.7 33.2 18.7 45.2l90.3 90.2c12.5 12.5 32.8 12.5 45.3 0l92.5-92.5c12.6-12.5 12.6-32.7.1-45.2zm-182.8-21c-13.3 0-24-10.7-24-24s10.7-24 24-24 24 10.7 24 24c0 13.2-10.7 24-24 24zm-223.8-88c70.7 0 128-57.3 128-128C352 57.3 294.7 0 224 0S96 57.3 96 128c0 70.6 57.3 127.9 128 127.9zm127.8 111.2V294c-12.2-3.6-24.9-6.2-38.2-6.2h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 287.9 0 348.1 0 422.3v41.6c0 26.5 21.5 48 48 48h352c15.5 0 29.1-7.5 37.9-18.9l-58-58c-18.1-18.1-28.1-42.2-28.1-67.9z" />
-                            </svg>
-                            Procedencia Clientes </a>
-                    </li>
-                @endcan
-                @can('Empresa_Index')
-                    <li>
-                        <a href="{{ url('companies') }}">
-                            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" data-prefix="fas"
-                                data-icon="user-plus" class="svg-inline--fa fa-user-plus fa-w-20" role="img"
-                                viewBox="0 0 640 512">
-                                <path fill="currentColor"
-                                    d="M624 208h-64v-64c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v64h-64c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h64v64c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16v-64h64c8.8 0 16-7.2 16-16v-32c0-8.8-7.2-16-16-16zm-400 48c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm89.6 32h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4z" />
-                            </svg>
-                            Empresas </a>
-                    </li>
-                @endcan
-                @can('Sucursal_Index')
-                    <li>
-                        <a href="{{ url('sucursales') }}">
-                            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" data-prefix="fas"
-                                data-icon="user-plus" class="svg-inline--fa fa-user-plus fa-w-20" role="img"
-                                viewBox="0 0 640 512">
-                                <path fill="currentColor"
-                                    d="M624 208h-64v-64c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v64h-64c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h64v64c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16v-64h64c8.8 0 16-7.2 16-16v-32c0-8.8-7.2-16-16-16zm-400 48c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm89.6 32h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4z" />
-                            </svg>
-                            Sucursales </a>
-                    </li>
-                @endcan
-                @can('Caja_Index')
-                    <li>
-                        <a href="{{ url('cajas') }}">
-                            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" data-prefix="fas"
-                                data-icon="user-plus" class="svg-inline--fa fa-user-plus fa-w-20" role="img"
-                                viewBox="0 0 640 512">
-                                <path fill="currentColor"
-                                    d="M624 208h-64v-64c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v64h-64c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h64v64c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16v-64h64c8.8 0 16-7.2 16-16v-32c0-8.8-7.2-16-16-16zm-400 48c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm89.6 32h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4z" />
-                            </svg>
-                            Cajas </a>
-                    </li>
-                @endcan
-                @can('Cartera_Index')
-                    <li>
-                        <a href="{{ url('carteras') }}">
-                            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" data-prefix="fas"
-                                data-icon="user-plus" class="svg-inline--fa fa-user-plus fa-w-20" role="img"
-                                viewBox="0 0 640 512">
-                                <path fill="currentColor"
-                                    d="M624 208h-64v-64c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v64h-64c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h64v64c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16v-64h64c8.8 0 16-7.2 16-16v-32c0-8.8-7.2-16-16-16zm-400 48c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm89.6 32h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4z" />
-                            </svg>
-                            Cartera </a>
-                    </li>
-                @endcan
-                @can('Corte_Caja_Index')
-                    <li>
-                        <a href="{{ url('cortecajas') }}">
-                            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" data-prefix="fas"
-                                data-icon="user-plus" class="svg-inline--fa fa-user-plus fa-w-20" role="img"
-                                viewBox="0 0 640 512">
-                                <path fill="currentColor"
-                                    d="M624 208h-64v-64c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v64h-64c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h64v64c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16v-64h64c8.8 0 16-7.2 16-16v-32c0-8.8-7.2-16-16-16zm-400 48c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm89.6 32h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4z" />
-                            </svg>
-                            Corte caja </a>
-                    </li>
-                @endcan
-            </ul>
-        </div>
-
-        <div class="submenu" id="ventas">
-            <ul class="submenu-list" data-parent-element="ventas">
+						{{-- <li class="nav-item">
+							<a data-toggle="collapse" href="#charts2">
+								<svg width="25" height="35" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><style>.cls-1{fill:#393933;}</style></defs><g id="Capa_6" data-name="Capa 6"><g id="Menu"><g id="Boton_Parámetros" data-name="Boton Parámetros"><path class="cls-1" d="M36.73,190c-3.33-1-6.81-1.74-9.94-3.19a29.77,29.77,0,0,1,3.82-55.12,2.28,2.28,0,0,0,1.94-2.64q-.07-55.29,0-110.58c0-4.46,2.05-7.35,5.84-8.28a7.41,7.41,0,0,1,8.92,5.65,18.56,18.56,0,0,1,.25,3.5q0,54.77,0,109.52c0,1.68.48,2.35,2.11,2.88,13.29,4.3,21.47,17.18,20.19,31.6-1.16,13.12-12.05,24.4-25.4,26.31a13.22,13.22,0,0,0-1.34.35Z"/><path class="cls-1" d="M158.36,190a24.67,24.67,0,0,1-3.53-2.16c-2-1.75-2.36-4.18-2.36-6.72q0-44.82,0-89.64c0-7,0-13.95,0-20.92a1.91,1.91,0,0,0-1.61-2.19c-13.66-4.29-22-17.12-20.68-31.75C131.4,23.36,142.43,12.09,156,10.3a29.92,29.92,0,0,1,33.7,25.44,5.74,5.74,0,0,0,.33,1V43a6,6,0,0,0-.31,1c-2,11.92-8.7,19.95-19.94,24.14-1.81.67-2.3,1.4-2.29,3.26.06,36.37,0,72.73.09,109.1,0,4.66-1.5,7.93-6,9.49Z"/><path class="cls-1" d="M98.6,190c-4.59-1.48-6.16-4.72-6.12-9.4.13-16.59,0-33.17.09-49.75a2.19,2.19,0,0,0-1.88-2.51A29.8,29.8,0,0,1,90.8,71.6a2.07,2.07,0,0,0,1.76-2.42q-.07-25.4,0-50.8c0-4.44,2.11-7.32,5.91-8.21a7.44,7.44,0,0,1,9,6.46c.08.87.08,1.75.08,2.63,0,16.64,0,33.28,0,49.92a2.07,2.07,0,0,0,1.75,2.42,29.8,29.8,0,0,1,0,56.81,2,2,0,0,0-1.7,2.27c0,16.64,0,33.29.08,49.93,0,4.68-1.53,7.92-6.12,9.4Z"/></g></g></g></svg>
+								<p style="padding-left: 7px;">Parámetros</p>
+								<span class="caret"></span>
+							</a>
+							<div class="collapse" id="charts2">
+								<ul class="nav nav-collapse">
+									<li>
+										<a href="{{url('destino')}}">
+											<i class="fa fas fa-minus"></i>
+											Locacion/Estancia </a>
+									</li>
+									<li>
+										<a href="{{url('locations')}}">
+											<i class="fa fas fa-minus"></i>
+											Mobiliario </a>
+									</li>
+									<li>
+										<a href="{{ url('unidades') }}">
+											<i class="fa fas fa-minus"></i>
+											Unidades </a>
+									</li>
+									<li>
+										<a href="{{ url('marcas') }}">
+											<i class="fa fas fa-minus"></i>
+											Marcas </a>
+									</li>
+								</ul>
+							</div>
+						</li> --}}
+						@endcan
 
 
 
 
-                @if (empty(session('sesionCaja')))
-                <li>
-                    <strong>
-                    <p> No tiene una caja abierta </p>
-                    </strong>
-                </li>
-                @else
 
-
-                <li>
-                    <a href="{{ url('pos') }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="feather feather-shopping-cart">
-                            <circle cx="9" cy="21" r="1"></circle>
-                            <circle cx="20" cy="21" r="1"></circle>
-                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                        </svg>
-                        Nueva Venta </a>
-                </li>
-
-                <li>
-                    <a href="{{ url('salelist') }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-                        Lista de Ventas</a>
-                </li>
-
-                <li>
-                    <a href="{{ url('categories') }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="feather feather-layers">
-                            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-                            <polyline points="2 17 12 22 22 17"></polyline>
-                            <polyline points="2 12 12 17 22 12"></polyline>
-                        </svg>
-                        Categorias </a>
-                </li>
-
-                <li>
-                    <a href="{{ url('products') }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="feather feather-watch">
-                            <circle cx="12" cy="12" r="7"></circle>
-                            <polyline points="12 9 12 12 13.5 13.5"></polyline>
-                            <path
-                                d="M16.51 17.35l-.35 3.83a2 2 0 0 1-2 1.82H9.83a2 2 0 0 1-2-1.82l-.35-3.83m.01-10.7l.35-3.83A2 2 0 0 1 9.83 1h4.35a2 2 0 0 1 2 1.82l.35 3.83">
-                            </path>
-                        </svg>
-                        Productos </a>
-                </li>
-
-                <li>
-                    <a href="{{ url('coins') }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="feather feather-stop-circle">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <rect x="9" y="9" width="6" height="6"></rect>
-                        </svg>
-                        Denominaciones </a>
-                </li>
-                <li>
-                    <a href="{{ url('estadisticas') }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trending-up"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
-                        Estadísticas </a>
-                </li>
-                <li>
-                    <a href="{{ url('devolucionventa') }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-refresh-ccw"><polyline points="1 4 1 10 7 10"></polyline><polyline points="23 20 23 14 17 14"></polyline><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path></svg>
-                        Devolución Ventas </a>
-                </li>
-                <li>
-                    <a href="{{ url('salemovimientodiario') }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sun"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
-                        Movimiento Diario </a>
-                </li>
+						{{-- <li class="nav-item">
+							<a href="widgets.html">
+								<i class="fas fa-desktop"></i>
+								<p>Widgets</p>
+								<span class="badge badge-success">4</span>
+							</a>
+						</li> --}}
 
 
 
-                <li class="sub-submenu">
-                    <a role="menu" class="collapsed" data-toggle="collapse" data-target="#datatables" aria-expanded="false"><div><span class="icon">
+						@can('Sales_Index')
+						<li class="nav-item">
+							<a data-toggle="collapse" href="#submenu">
+								{{-- <img src="assets/img/ventas.png" width="25" height="35" alt="navbar brand" class="navbar-brand"> --}}
+								<svg width="25" height="35" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><style>.cls-1{fill:#282828;}</style></defs><g id="Capa_6" data-name="Capa 6"><g id="Menu"><g id="Boton_Ventas" data-name="Boton Ventas"><path class="cls-1" d="M190,57c-1.05,4.61-2.14,9.2-3.13,13.82q-5.51,25.56-11,51.13c-1.36,6.34-6.38,10.29-13,10.29H52.72c.46,3.39.81,6.59,1.39,9.74.11.59,1.11,1.1,1.79,1.47.36.2.92,0,1.39,0h109a11.74,11.74,0,0,1,2.45.14,5.6,5.6,0,0,1-1.11,11.08c-3.46.07-6.91,0-10.37,0h-1.8c2.06,8.2.14,15-6.88,19.7a15.56,15.56,0,0,1-18,.17c-7.24-4.65-9.25-11.53-7.19-19.8H93.54c1.85,6.75.64,12.77-4.41,17.72a16,16,0,0,1-12.63,4.66,16.33,16.33,0,0,1-13-7.53c-3.05-4.56-3.54-9.56-1.93-14.92-2.11,0-4,0-6,0A12.55,12.55,0,0,1,43,143.94c-2.16-15-4.22-30-6.32-45q-3.25-23.29-6.53-46.6c-.75-5.39-1.54-10.78-2.21-16.18-.21-1.64-.81-2.38-2.56-2.33-3.16.1-6.32.05-9.49,0A5.65,5.65,0,0,1,10,28.17c0-3.2,2.51-5.56,6-5.58s7-.05,10.54,0A12.59,12.59,0,0,1,38.84,33.25c.48,2.94.87,5.9,1.32,9H174.29c9.37,0,12.32,2,15.71,10.54Zm-33.74,57.79a5.79,5.79,0,0,0,5,6.17c3,.31,5.53-1.69,6.19-5q5.56-27.78,11.09-55.56a6.63,6.63,0,0,0-.08-2.77,5.5,5.5,0,0,0-5.6-4.16,5.72,5.72,0,0,0-5.38,4.92Q162.95,81.22,158.4,104C157.65,107.74,156.92,111.47,156.26,114.82Z"/></g></g></g></svg>
+								<p style="padding-left: 7px;">Ventas</p>
+								<span class="caret"></span>
+							</a>
+							<div class="collapse" id="submenu">
+								<ul class="nav nav-collapse">
+
+									<li>
+										<a href="{{ url('pos') }}">
+											<i class="fas fa-cart-arrow-down"></i>
+											Nueva Venta </a>
+									</li>
+									<li>
+										<a href="{{ url('salelist') }}">
+											<i class="fas fa-clipboard-list"></i>
+											Lista de Ventas </a>
+									</li>
+									<li>
+										<a href="{{ url('estadisticas') }}">
+											<i class="fas fa-chart-line"></i>
+											Estadísticas </a>
+									</li>
+									@can('VentasMovDia_Index')
+									<li>
+										<a href="{{ url('coins') }}">
+											<i class="fas fa-money-bill-alt"></i>
+											Denominaciones </a>
+									</li>
+									<li>
+										<a href="{{ url('devolucionventa') }}">
+											<i class="fas fa-sync-alt"></i>
+											Devolución Ventas </a>
+									</li>
+									<li>
+										<a href="{{ url('salemovimientodiario') }}">
+											<i class="fas fa-calendar-alt"></i>
+											Movimiento Diario Ventas</a>
+									</li>
+									<li>
+										<a href="{{ url('ventasreportecantidad') }}">
+											<i class="fas fa-chart-pie"></i>
+											Reporte Ventas Usuarios</a>
+									</li>
+									@endcan
 
 
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-crosshair"><circle cx="12" cy="12" r="10"></circle><line x1="22" y1="12" x2="18" y2="12"></line><line x1="6" y1="12" x2="2" y2="12"></line><line x1="12" y1="6" x2="12" y2="2"></line><line x1="12" y1="22" x2="12" y2="18"></line></svg>
-                    
-                    </span> Reportes</div> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"></polyline></svg> </a>
-                    <ul id="datatables" class="collapse" data-parent="#compact_submenuSidebar">
-                        <li>
-                            <a href="table_dt_basic.html"> Ventas por Mes </a>
-                        </li>
-                        <li>
-                            <a href="table_dt_basic-dark.html"> Ventas por Usuario </a>
-                        </li>
-                    </ul>
-                </li>
-
-
-
-
-                {{-- <li class="sub-submenu">
-                    <a role="menu" class="collapsed" data-toggle="collapse" data-target="#datatables"
-                     aria-expanded="false"><div><span class="icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-refresh-ccw"><polyline points="1 4 1 10 7 10"></polyline><polyline points="23 20 23 14 17 14"></polyline><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path></svg>
-                        
-                    </span> Devolución Ventas</div> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"></polyline></svg> </a>
-                    <ul id="datatables" class="collapse" data-parent="#compact_submenuSidebar">
-                        <li>
-                            <a href="{{ url('#') }}"> Por Venta </a>
-                        </li>
-                        <li>
-                            <a href="{{ url('devolucionventa') }}"> Por Producto </a>
-                        </li>
-                    </ul>
-                </li> --}}
-                @endif
-
-            </ul>
-        </div>
-
-        <div class="submenu" id="contabilidad">
-            <ul class="submenu-list" data-parent-element="contabilidad">
-                <li>
-                    <a href="{{ url('cashout') }}"><span>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="feather feather-dollar-sign">
-                                <line x1="12" y1="1" x2="12" y2="23"></line>
-                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                            </svg>
-                        </span> Arqueos </a>
-                </li>
-
-                <li>
-                    <a href="{{ url('reports') }}"><span>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="feather feather-pie-chart">
-                                <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
-                                <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
-                            </svg>
-                        </span> Reportes </a>
-                </li>
-            </ul>
-        </div>
-    </div>
-
-</div>
+									{{-- <li>
+										<a data-toggle="collapse" href="#subnav1">
+											<span class="sub-item">Level 1</span>
+											<span class="caret"></span>
+										</a>
+										<div class="collapse" id="subnav1">
+											<ul class="nav nav-collapse subnav">
+												<li>
+													<a href="#">
+														<span class="sub-item">Level 2</span>
+													</a>
+												</li>
+												<li>
+													<a href="#">
+														<span class="sub-item">Level 2</span>
+													</a>
+												</li>
+											</ul>
+										</div>
+									</li>
+									<li>
+										<a data-toggle="collapse" href="#subnav2">
+											<span class="sub-item">Level 1</span>
+											<span class="caret"></span>
+										</a>
+										<div class="collapse" id="subnav2">
+											<ul class="nav nav-collapse subnav">
+												<li>
+													<a href="#">
+														<span class="sub-item">Level 2</span>
+													</a>
+												</li>
+											</ul>
+										</div>
+									</li>
+									<li>
+										<a href="#">
+											<span class="sub-item">Level 1</span>
+										</a>
+									</li> --}}
+								</ul>
+							</div>
+						</li>
+						@endcan
+						<li class="mx-4 mt-2">
+								<a style="background-color: #02b1ce!important;" class="btn btn-primary btn-block" href="{{ route('logout') }}"
+									onclick="event.preventDefault(); document.getElementById('logout-form').submit()">
+									<span class="btn-label mr-2">
+										<i class="fa icon-logout"></i> 
+									   </span>Cerrar Sesión
+								</a>
+								<form action="{{ route('logout') }}" method="POST" id="logout-form">
+								@csrf
+								</form>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<!-- End Sidebar -->

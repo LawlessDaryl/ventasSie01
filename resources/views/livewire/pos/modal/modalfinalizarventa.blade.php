@@ -2,7 +2,7 @@
 <div wire:ignore.self class="modal fade" id="modalfinalizarventa" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-        <div class="modal-header" style="background-color: rgb(252, 130, 42); color: white;">
+        <div class="modal-header" style="background-color: #02b1ce; color: white;">
             <h5 class="modal-title" id="exampleModalLongTitle">Finalizar Venta</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -18,7 +18,7 @@
                             <div class="row">
                                 @foreach ($denominations as $d)
                                     <div class="col-sm mt-2">
-                                        <button wire:click.prevent="sumar({{ $d->value }})" class="btn btn btn-block den" style="background-color: #ee761c; color: white;">
+                                        <button wire:click.prevent="sumar({{ $d->value }})" class="btn btn btn-block den" style="background-color: #02b1ce; color: white;">
                                             {{ $d->value > 0 ? 'Bs '. number_format($d->value, 2, '.', '') : 'Exacto'}}
                                         </button>
                                     </div>
@@ -37,7 +37,7 @@
                                     <div class="input-group input-group-md mb-3">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text input-gp hideonsm" 
-                                            style="background-color: #ee761c; color: white;">Bs Recibido
+                                            style="background-color: #02b1ce; color: white;">Bs Recibido
                                             </span>
                                         </div>
                                         <input type="number" id="cash" wire:model="dinero_recibido" class="form-control text-center">
@@ -45,7 +45,7 @@
                                             
                                         <div class="input-group-append">
                                             <span wire:click="$set('dinero_recibido',0)" class="input-group-text" title="Borrar Todo"
-                                            style="background-color: #ee761c; color: white; cursor: pointer;">
+                                            style="background-color: #02b1ce; color: white; cursor: pointer;">
                                                 <i class="fas fa-backspace fa-2x"></i>
                                             </span>
 

@@ -63,7 +63,7 @@
             
                
                    
-                        <thead class="text-white" style="background: #ee761c">
+                        <thead class="text-white" style="background: #02b1ce">
                             <tr>
                                 <th class="table-th text-withe text-center" style="font-size: 100%">#</th>
                                 <th class="table-th text-withe text-center" style="font-size: 100%">FECHA</th>

@@ -4,15 +4,15 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<title>Sistema SIE</title>
 	<meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
-	@include('layouts.theme.styles2')
+	@include('layouts.theme.styles')
 	@yield('css')
 </head>
 <body>
 	<div class="wrapper">
 		
-    @include('layouts.theme.header2')
+    @include('layouts.theme.header')
 
-    @include('layouts.theme.sidebar2')
+    @include('layouts.theme.sidebar')
 
 		<div class="main-panel">
 			<div class="content">
@@ -21,7 +21,7 @@
 				</div>
 			</div>
 
-      @include('layouts.theme.footer2')
+      @include('layouts.theme.footer')
 		</div>
 		
 		<!-- Custom template | don't include it in your project! -->
@@ -99,7 +99,7 @@
 
 
 
-  @include('layouts.theme.scripts2')
+  @include('layouts.theme.scripts')
 
 
 
