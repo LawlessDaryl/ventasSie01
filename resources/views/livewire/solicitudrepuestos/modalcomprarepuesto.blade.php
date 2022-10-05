@@ -68,14 +68,14 @@
 
 
             <div class="row">
-              <div class="table-repuesto">
+              <div class="table-1">
                 <table>
                   <thead>
                       <tr class="text-center">
-                        <th>Nombre Producto</th>
+                        <th>Nombre</th>
                         <th>Cantidad</th>
-                        <th>Precio Bs</th>
-                        <th>Total Bs</th>
+                        <th>Precio</th>
+                        <th>Total</th>
                         <th>Acciones</th>
                       </tr>
                   </thead>

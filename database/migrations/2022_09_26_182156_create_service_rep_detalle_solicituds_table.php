@@ -30,7 +30,7 @@ class CreateServiceRepDetalleSolicitudsTable extends Migration
             $table->integer('cantidad');
 
             $table->enum('tipo',['CompraRepuesto','Repuesto']);
-            $table->enum('status',['Activo','Inactivo'])->default('Activo');
+            $table->enum('status',['ACTIVO','INACTIVO'])->default('ACTIVO');
             $table->timestamps();
         });
     }

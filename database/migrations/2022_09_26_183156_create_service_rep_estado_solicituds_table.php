@@ -22,8 +22,10 @@ class CreateServiceRepEstadoSolicitudsTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
 
-            $table->string('status',100)->default('PENDIENTE');
-            $table->enum('estado',['ACTIVO','INACTIVO'])->default('ACTIVO');
+            $table->string('estado',100)->default('PENDIENTE');
+
+            $table->enum('status',['ACTIVO','INACTIVO'])->default('ACTIVO');
+            
             $table->timestamps();
         });
     }
