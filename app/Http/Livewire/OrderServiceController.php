@@ -131,7 +131,7 @@ class OrderServiceController extends Component
         $this->listacompra=collect([]);
 
 
-        $this->listaproductos = [];
+   
 
         $this->list_produts_collect = collect();
 
@@ -2630,25 +2630,17 @@ class OrderServiceController extends Component
             $this->listaproductos=$listap->where('stock','>',0);
             //mostar los productos que no se encuentren disponibles en ningun lugar
 
-            if (count($this->listaproductos)>0) {
                 
-                $listapsinstock= $listap->groupBy('pid')->map(function ($row){
+                $this->listacompra= $listap->groupBy('pid')->map(function ($row){
                     return $row->sum('stock');
                 });
-              //dd($listapsinstock);
-                foreach ($listapsinstock as $key=>$data) {
-                
-                    if ($data==0) {
-                        $ms=Product::find($key);
-                        $this->listacompra->push($ms);
-                     
-                    }
-                   // dump($key);
-                }
-                //dd($this->listacompra);
-            }
+              
+             
+           
 
-          
+          $this->listacompra=$this->listacompra->filter(function($value, $key){
+            return $value == 0;
+          });
             //dd($this->listacompra);
             $lista_nombres_ya_encontrados = $this->list_produts_collect->pluck('product-name');
 
