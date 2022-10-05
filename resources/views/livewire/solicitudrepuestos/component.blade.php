@@ -1,42 +1,5 @@
 @section('css')
 <style>
-    /* Estilos para las tablas */
-    .table-wrapper {
-    width: 100%;/* Anchura de ejemplo */
-    /*height: 750px;  Altura de ejemplo */
-    /* overflow: auto; */
-    }
-
-    .table-wrapper table {
-        border-collapse: separate;
-        border-spacing: 0;
-        border-left: 0.3px solid #02b1ce;
-        border-bottom: 0.3px solid #02b1ce;
-        width: 100%;
-    }
-
-    .table-wrapper table thead {
-        position: -webkit-sticky; /* Safari... */
-        position: sticky;
-        top: 0;
-        left: 0;
-    }
-    .table-wrapper table thead tr {
-    /* background: #02b1ce; */
-    /* color: white; */
-    }
-    /* .table-wrapper table tbody tr {
-        border-top: 0.3px solid rgb(0, 0, 0);
-    } */
-    .table-wrapper table tbody tr:hover {
-        background-color: #fff0c1a4;
-    }
-    .table-wrapper table td {
-        border-top: 0.3px solid #02b1ce;
-        padding-left: 10px;
-        border-right: 0.3px solid #02b1ce;
-    }
-
 
         /*Estilos para el Boton Pendiente en la Tabla*/
         .pendienteestilos {
@@ -129,43 +92,6 @@
         transform: scale(1.05);
 
     }
-    /* Estilos para las tablas de la ventana modal repuestos */
-    .table-repuesto {
-    width: 100%;/* Anchura de ejemplo */
-    height: 300px;  /*Altura de ejemplo */
-    overflow: auto;
-    }
-
-    .table-repuesto table {
-        border-collapse: separate;
-        border-spacing: 0;
-        border-left: 0.1px solid #02b1ce;
-        border-bottom: 0.1px solid #02b1ce;
-        width: 100%;
-    }
-
-    .table-repuesto table thead {
-        position: -webkit-sticky; /* Safari... */
-        position: sticky;
-        top: 0;
-        left: 0;
-    }
-    .table-repuesto table thead tr {
-    background: #02b1ce;
-    color: white;
-    }
-    .table-repuesto table tbody tr:hover {
-        background-color: rgba(0, 195, 255, 0.336);
-    }
-    .table-repuesto table td {
-        border-top: 0.1px solid #02b1ce;
-        padding-left: 10px;
-        padding-right: 10px;
-        border-right: 0.1px solid #02b1ce;
-    }
-
-
-
 
 </style>
 @endsection
@@ -203,7 +129,7 @@
 
 
     <div class="col-12">
-        <div class="table-wrapper">
+        <div class="table-1">
             <table>
                 <thead class="text-center" style="background: #02b1ce; color: white;">
                     <tr class="text-center">
@@ -285,7 +211,7 @@
                                             <td class="text-center">
                                                 @if($d->tipo == "CompraRepuesto")
                                                 
-                                                <div style="background-color: rgb(206, 0, 0); color: white;">
+                                                <div style="background-color: rgb(255, 82, 82); color: white;">
                                                     Compra
                                                 </div>
 
@@ -294,18 +220,30 @@
                                                 @endif
                                             </td>
                                             <td class="text-center">
-                                                @if($d->status == "PENDIENTE" && $d->tipo != "CompraRepuesto")
+                                                @if($d->estado == "PENDIENTE" && $d->tipo != "CompraRepuesto")
 
                                                 <a href="#" onclick="ConfirmarCambiar({{ $d->iddetalle }}, {{$l->codigo}})"  class="pendienteestilos" title="Aceptar Solicitud">
-                                                    {{$d->status}}
+                                                    {{$d->estado}}
                                                 </a>
 
                                                 @else
 
-                                                    @if($d->status == "ACEPTADO")
+                                                    @if($d->estado == "ACEPTADO")
+
                                                         <a href="#" class="aceptadoestilos">
-                                                            {{$d->status}}
+                                                            {{$d->estado}}
                                                         </a>
+
+                                                    @else
+
+                                                        @if($d->estado == "COMPRANDO")
+
+                                                        <a href="#" class="">
+                                                            {{$d->estado}}
+                                                        </a>
+
+                                                        @endif
+                                                    
                                                     @endif
 
                                                 

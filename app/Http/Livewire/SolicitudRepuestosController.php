@@ -10,10 +10,13 @@ use App\Models\Service;
 use App\Models\ServiceRepDetalleSolicitud;
 use App\Models\ServiceRepEstadoSolicitud;
 use App\Models\ServiceRepSolicitud;
+use App\Models\ServOrdenCompra;
+use App\Models\ServOrdenDetalle;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+use phpDocumentor\Reflection\Types\This;
 
 class SolicitudRepuestosController extends Component
 {
@@ -133,9 +136,9 @@ class SolicitudRepuestosController extends Component
         ->join("service_rep_estado_solicituds as e","e.detalle_solicitud_id","service_rep_detalle_solicituds.id")
         ->join("destinos as d","d.id","service_rep_detalle_solicituds.destino_id")
         ->select("service_rep_detalle_solicituds.id as iddetalle","p.nombre as nombreproducto","p.costo as costoproducto","service_rep_detalle_solicituds.cantidad as cantidad"
-        ,"service_rep_detalle_solicituds.tipo as tipo","e.status as status", "d.nombre as nombredestino")
+        ,"service_rep_detalle_solicituds.tipo as tipo","e.estado as estado", "d.nombre as nombredestino")
         ->where("srs.id", $idsolicitud)
-        ->where("e.estado", "ACTIVO")
+        ->where("e.status", "ACTIVO")
         ->get();
         return $detalles;
     }
@@ -170,20 +173,15 @@ class SolicitudRepuestosController extends Component
     //Muestra el Modal Iniciar Compra
     public function modal_iniciar_compra2()
     {
-        //Eliminando todos los componentes de la colección
-        foreach($this->lista_productos as $l)
-        {
-            //Eliminando la fila del elemento en coleccion
-            $this->lista_productos->pull($l->keys()->first());
-        }
 
+        $this->lista_productos = collect([]);
 
         $productos = ServiceRepDetalleSolicitud::join("service_rep_estado_solicituds as e", "e.detalle_solicitud_id", "service_rep_detalle_solicituds.id")
         ->join("products as p", "p.id", "service_rep_detalle_solicituds.product_id")
-        ->select("p.id as idproducto","p.nombre as nombreproducto","service_rep_detalle_solicituds.cantidad as cantidad", "p.costo as costo", "p.precio_venta as precio")
+        ->select("service_rep_detalle_solicituds.id as iddetalle","p.id as idproducto","p.nombre as nombreproducto","service_rep_detalle_solicituds.cantidad as cantidad", "p.costo as costo", "p.precio_venta as precio")
         ->where("service_rep_detalle_solicituds.tipo", "CompraRepuesto")
-        ->where("e.status", "PENDIENTE")
-        ->where("e.estado", "ACTIVO")
+        ->where("e.status", "ACTIVO")
+        ->where("e.estado", "PENDIENTE")
         ->get();
 
 
@@ -192,6 +190,7 @@ class SolicitudRepuestosController extends Component
         foreach($productos as $p)
         {
             $this->lista_productos->push([
+                'detalle_id' => $p->iddetalle,
                 'product_id' => $p->idproducto,
                 'product_name' => $p->nombreproducto,
                 'price'=> $p->precio,
@@ -223,13 +222,62 @@ class SolicitudRepuestosController extends Component
         $this->validate($rules, $messages);
 
 
+
+        //Creando la órden de Compra
+        $orden_compra = ServOrdenCompra::create([
+            'user_id' => Auth()->user()->id,
+        ]);
+        
+        //Obtenemos los detalles de la coleccion lista_productos
+        foreach($this->lista_productos as $l)
+        {
+            //Buscando el detalle de la solicitud
+            $detalle = ServiceRepDetalleSolicitud::find($l['detalle_id']);
+            //Buscando los estados Pendientes del detalle de la solicitud
+            foreach($detalle->estado_solicitud as $e)
+            {
+
+                if($e->estado == 'PENDIENTE')
+                {
+                    //Actualizando los estados pendientes
+                    $e->update([
+                        'status' => 'INACTIVO'
+                    ]);
+                    ServiceRepEstadoSolicitud::create([
+                        'detalle_solicitud_id' => $l['detalle_id'],
+                        'user_id' => Auth()->user()->id,
+                        'estado' => 'COMPRANDO',
+                        'status' => 'ACTIVO',
+                    ]);
+
+                    //Creando el detalle de la orden de compra
+                    ServOrdenDetalle::create([
+                        'detalle_solicitud_id' => $l['detalle_id'],
+                        'user_id' => Auth()->user()->id,
+                        'estado' => 'COMPRANDO',
+                        'status' => 'ACTIVO',
+                    ]);
+                }
+
+
+
+            }
+        }
+
+
+
+
+
+
+
+        //Creando el movimiento con el monto dado para la compra
         $movimiento = Movimiento::create([
             'type' => 'TERMINADO',
             'status' => 'ACTIVO',
             'import' => $this->monto_bs_compra,
             'user_id' => Auth()->user()->id,
         ]);
-
+        //Creando el egreso de cartera movimiento 
         CarteraMov::create([
             'type' => 'EGRESO',
             'tipoDeMovimiento' => 'EGRESO/INGRESO',

@@ -203,8 +203,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('almacen/export/', [DestinoProductoController::class, 'export']);
         });
     
-    
-
     /* VENTAS */
     Route::get('coins', CoinsController::class)->name('monedas')->middleware('permission:Coins_Index');
     Route::get('pos', PosController::class)->name('ventas')->middleware('permission:Sales_Index');

@@ -20,6 +20,8 @@ class CreateServOrdenComprasTable extends Migration
             
             $table->foreign('user_id')->references('id')->on('users');
 
+            $table->enum('status',['ACTIVO','INACTIVO'])->default('ACTIVO');
+
             $table->timestamps();
         });
     }

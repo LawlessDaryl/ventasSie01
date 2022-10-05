@@ -128,7 +128,8 @@ class OrderServiceController extends Component
         $this->lista_de_usuarios = $this->listarusuarios();
         $this->mostrarterminar = "No";
         $this->orderP=1;
-        $this->listacompra=collect([]);
+        $this->listacompra=collect();
+        //$this->searchproduct='CARGADOR RAPIDO,MICRO USB , CARGA RAPIDA, EF-1204Q, E Y F';
 
 
    
@@ -189,9 +190,6 @@ class OrderServiceController extends Component
                 $this->usuario = Auth()->user()->id;
             }
         }
-
-
-
 
 
         //Para Actualizar Saldo en la Ventana Modal Editar Servicio
@@ -2610,12 +2608,12 @@ class OrderServiceController extends Component
                                 }
         }
 
+
         //REPUESTOS
         //Contar los id productos destinos donde se encuentra el producto, y si estos son mayores a cero no mostrar la otra collection de comprar producto q sera
         //solamente si el producto esta creado pero no tiene stock.
         if (strlen($this->searchproduct) > 0) 
         {
-            
             $listap = Product::join('productos_destinos as pd','pd.product_id','products.id')
             ->join('destinos as d','d.id','pd.destino_id')
             ->join('sucursals as s','s.id','d.sucursal_id')
@@ -3267,7 +3265,6 @@ class OrderServiceController extends Component
         ->get()
         ->first();
   
-        //dd($this->repuestos);
 
         $this->detallesservicios($type, $idservicio);
         $this->edit_tipodetrabajo = $detallesservicio->idtipotrabajo;
@@ -3980,14 +3977,11 @@ class OrderServiceController extends Component
     //Crea una solicitud de un repuesto existente
     public function InsertarSolicitud(Product $pid,Destino $did)
     {
-        //dd($pid,$did);
         //Buscamos el elemento en la colección
         $result = $this->lista_solicitudes->where('product_id', $pid->id)->where('destiny_id',$did->id);
         $stock=ProductosDestino::where('product_id', $pid->id)->where('destino_id',$did->id)->value('stock');
-        //dd($stock);
         if($result->count()>0)
         {
-            //dd($result);
           $cantidadyasolicitada=$result->first()['quantity'];
           
             $producto = $this->lista_solicitudes->where('destiny_id', $did->id)->where('product_id',$pid->id);
@@ -4138,7 +4132,6 @@ class OrderServiceController extends Component
             'type'=> $type
         ]);
 
-        //dd($this->lista_solicitudes);
         $this->message_toast = "¡Cantidad Decrementada!";
 
         $this->emit("message-succeed");
@@ -4146,14 +4139,12 @@ class OrderServiceController extends Component
     public function EnviarSolicitud()
     {
         //Creando la solicitud
-        //dd($this->id_orden_de_servicio);
         $solicitud = ServiceRepSolicitud::create([
             'user_id' => Auth()->user()->id,
             'order_service_id' => $this->id_orden_de_servicio
         ]);
         $solicitud->save();
 
-        //dd($this->lista_solicitudes);
         foreach($this->lista_solicitudes as $l)
         {
             //Creando el detalle de la solicitud
