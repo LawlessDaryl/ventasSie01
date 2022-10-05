@@ -759,6 +759,110 @@
 							</div>
 						</li>
 						@endcan
+
+
+
+						<li class="nav-item">
+							<a data-toggle="collapse" href="#Employees">
+								<i class="fas fa-layer-group"></i>
+								<p>Empleados</p>
+								<span class="caret"></span>
+							</a>
+							<div class="collapse" id="Employees">
+								<ul class="nav nav-collapse">
+									<li>
+										<a href="{{ url('employees') }}">
+											<i class="fa fas fa-minus"></i>
+											Registro</a>
+									  </li>
+								
+									<li>
+											<a href="{{ url('areas_de_trabajos') }}">
+												<i class="fa fas fa-minus"></i>
+												Areas de Trabajo</a>
+									  </li>
+								  @can('Arqueos_Tigo_Index')
+									  <li>
+										<a href="{{ url('function_areas') }}">
+											<i class="fa fas fa-minus"></i>
+											Funciones</a>
+									  </li>
+								  @endcan
+
+								  @can('Reportes_Tigo_Index')
+									  <li>
+										<a href="{{ url('cargos') }}">
+											<i class="fa fas fa-minus"></i>
+											Cargos</a>
+									  </li>
+								  @endcan
+								  @can('Reportes_Tigo_Index')
+								  <li>
+									<a href="{{ url('contratos') }}">
+										<i class="fa fas fa-minus"></i>
+										Contrato</a>
+								  </li>
+								  @endcan
+								</ul>
+							</div>
+						</li>
+
+						<li class="nav-item">
+							<a data-toggle="collapse" href="#Asistencia">
+								<i class="fas fa-layer-group"></i>
+								<p>Asistencia</p>
+								<span class="caret"></span>
+							</a>
+							<div class="collapse" id="Asistencia">
+								<ul class="nav nav-collapse">
+								@can('Cat_Prod_Service_Index')
+								<li>
+									<a href="{{ url('attendance') }}">
+										<i class="fa fas fa-minus"></i>
+										Horario </a>
+								</li>
+								@endcan
+
+								<li>
+									<a href="{{ url('assistances') }}">
+										<i class="fa fas fa-minus"></i>
+										Permisos ó  Licencias</a>
+								</li>
+								
+								
+								</ul>
+							</div>
+						</li>
+
+
+
+
+
+
+						<li class="nav-item">
+							<a data-toggle="collapse" href="#Descuentos">
+								<i class="fas fa-layer-group"></i>
+								<p>Descuentos o Adelantos</p>
+								<span class="caret"></span>
+							</a>
+							<div class="collapse" id="Descuentos">
+								<ul class="nav nav-collapse">
+									<li>
+										<a href="{{ url('anticipos') }}">
+											<i class="fa fas fa-minus"></i>
+											Adelantos ò Anticipos</a>
+									</li>
+									<li>
+											<a href="{{ url('descuentos') }}">
+												<i class="fa fas fa-minus"></i>
+												Descuentos o Varios</a>
+									</li>
+								</ul>
+							</div>
+						</li>
+
+
+
 						<li class="mx-4 mt-2">
 								<a style="background-color: #02b1ce!important;" class="btn btn-primary btn-block" href="{{ route('logout') }}"
 									onclick="event.preventDefault(); document.getElementById('logout-form').submit()">

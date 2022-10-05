@@ -15,10 +15,16 @@ use App\Http\Controllers\ExportTransferenciaController;
 use App\Http\Controllers\ExportMovDiaGenController;
 use App\Http\Controllers\ExportMovDiaResController;
 use App\Http\Controllers\ServicioInformeTecnicoController;
+use App\Http\Livewire\AnticipoController;
+use App\Http\Livewire\AreasPermissionsController;
+use App\Http\Livewire\AreaTrabajoController;
 use App\Http\Livewire\ArqueosStreamingController;
 use App\Http\Livewire\ArqueosTigoController;
 use App\Http\Livewire\AsignarController;
+use App\Http\Livewire\AssistanceController;
+use App\Http\Livewire\AttendancesController;
 use App\Http\Livewire\CajasController;
+use App\Http\Livewire\CargoController;
 use App\Http\Livewire\CarteraController;
 use App\Http\Livewire\CarteraMovCategoriaController;
 use App\Http\Livewire\CashoutController;
@@ -47,6 +53,7 @@ use App\Http\Livewire\PlataformasController;
 use App\Http\Livewire\SucursalController;
 use App\Http\Livewire\CatProdServiceController;
 use App\Http\Livewire\ComprasController;
+use App\Http\Livewire\ContratoController;
 use App\Http\Livewire\DetalleComprasController;
 use App\Http\Livewire\EditarCompraDetalleController;
 use App\Http\Livewire\MercanciaController;
@@ -83,10 +90,15 @@ use App\Http\Livewire\NotificationController;
 use App\Http\Livewire\DestinoProductoController;
 use App\Http\Livewire\TransferirProductoController;
 use App\Http\Livewire\DestinoController;
+use App\Http\Livewire\DiscountsvController;
+use App\Http\Livewire\EmployeeController;
+use App\Http\Livewire\FunctionAreaController;
+use App\Http\Livewire\SalariesController;
 use App\Http\Livewire\SaleDailyMovementController;
 use App\Http\Livewire\SaleDevolutionController;
 use App\Http\Livewire\SaleStatisticController;
 use App\Http\Livewire\SaleReporteCantidadController;
+use App\Http\Livewire\ShiftsController;
 use App\Http\Livewire\SolicitudRepuestosController;
 use App\Models\Product;
 use Illuminate\Support\Facades\Artisan;
@@ -251,6 +263,42 @@ Route::middleware(['auth'])->group(function () {
     //     Artisan::call('route:clear');
     //     return "Cache is cleared";
     // });
+
+
+
+
+    //RECURSOS HUMANOS
+
+    Route::get('employees', EmployeeController::class);
+    Route::get('areas_de_trabajos', AreaTrabajoController::class);
+    Route::get('function_areas', FunctionAreaController::class);
+    Route::get('attendance', AttendancesController::class);
+    Route::get('areaspermissions', AreasPermissionsController::class);
+    Route::get('cargos', CargoController::class);
+    Route::get('contratos', ContratoController::class);
+    Route::get('assistances', AssistanceController::class);
+    Route::get('anticipos', AnticipoController::class);
+    Route::get('descuentos', DiscountsvController::class);
+
+    Route::get('shifts',ShiftsController::class);
+    Route::get('Salaries',SalariesController::class);
+    
+
+     //reporte horario Excel
+     Route::get('report/excel/{user}/{type}/{fi}/{f2}', [ExportController::class, 'reporteExcel']);
+     Route::get('report/excel/{user}/{type}', [ExportController::class, 'reporteExcel']);
+     //tecnico
+     Route::get('report/excelTecnico/{user}/{type}/{fi}/{f2}', [ExportController::class, 'reporteExcelTecnico']);
+     Route::get('report/excelTecnico/{user}/{type}', [ExportController::class, 'reporteExcelTecnico']);
+     //administrativo
+     Route::get('report/excelAdministrativo/{user}/{type}/{fi}/{f2}', [ExportController::class, 'reporteExcelAdministrativo']);
+     Route::get('report/excelAdministrativo/{user}/{type}', [ExportController::class, 'reporteExcelAdministrativo']);
+     //mandar un evento post de la vista attendance
+     Route::post('POST', [ExportController::class, 'store']);
+
+
+
+
 
 });
 

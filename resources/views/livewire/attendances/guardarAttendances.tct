@@ -1,0 +1,13 @@
+<div class="col-sm-4 mt-4">
+                            <a class="btn btn-primary {{/*count($data) < 1? 'disabled' : ''*/}}"
+                            href="{{ url('report/excelAdministrativo' . '/' . $userId . '/' . $reportType. '/' . $dateFrom. '/' . $dateTo) }}"
+                            target="_blank">Reporte Sueldos Administrativo</a>
+
+                        </div>
+
+                        <div class="col-sm-2 mt-4">
+                            <a class="btn btn-primary {{count($data) < 1? 'disabled' : ''}}"
+                            href="{{ url('report/excelTecnico' . '/' . $userId . '/' . $reportType. '/' . $dateFrom. '/' . $dateTo) }}"
+                            target="_blank">Reporte Sueldos Tecnico</a>
+
+                        </div>
