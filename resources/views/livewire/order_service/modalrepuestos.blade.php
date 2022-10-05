@@ -21,10 +21,6 @@
                 </div>
             </div>
 
-
-
-            
-
             @if(strlen($this->searchproduct) > 0)
             <div class="table-repuesto">
                 <table>
@@ -38,58 +34,44 @@
                     </thead>
                     <tbody>
 
-                        @if ($listaproductos != null)
+                        @if ($listaproductos->isNotEmpty())
                         
-                        
-                        @if (count($listaproductos)>0)
-                            
-                        
-                                                    @foreach ($listaproductos as $l)
+                                          @foreach ($listaproductos as $l)
                                                         
-                                                    <tr class="tablaserviciostr">
-                                                        <td class="text-center">
-                                                            {{$l->nombreproducto}}
-                                                        </td>
-                                                        <td class="text-center">
-                                                            {{$l->nombredestino}}
-                                                        </td>
-                                                        <td class="text-center">
-                                                            {{$l->stock > 0 ? 'Disponible':'Sin Stock'}}
-                                                        </td>
-                                                     
-                                                        <td class="text-center">
-                                                            <button
-                                                                wire:click="InsertarSolicitud({{ $l->pid }}, '{{ $l->did }}')"
-                                                                class="btn btn-warning mtmobile btn-sm"
-                                                                title="Solicitar Repuesto">
-                                                                Solicitar
-                                                            </button>
-                                                        </td>
-                                                      
-                                                    </tr>
-                                                    @endforeach
-                        
-                                                    @if ($listacompra != null and count($listacompra)>0 )
-                                                        @foreach ($listacompra as $list)
+                                                            <tr class="tablaserviciostr">
+                                                                <td class="text-center">
+                                                                    {{$l->nombreproducto}}
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    {{$l->nombredestino}}
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    {{$l->stock > 0 ? 'Disponible':'Sin Stock'}}
+                                                                </td>
                                                             
-                                                            <tr>
-                            
-                                                                <td class="text-center" wire:key="foo">
-                                                                    {{$list->nombre}}
+                                                                <td class="text-center">
+                                                                    <button
+                                                                        wire:click="InsertarSolicitud({{ $l->pid }}, '{{ $l->did }}')"
+                                                                        class="btn btn-warning mtmobile btn-sm"
+                                                                        title="Solicitar Repuesto">
+                                                                        Solicitar
+                                                                    </button>
                                                                 </td>
-                                                                <td class="text-center" colspan="3" wire:key="dds">
-                                                                    <button wire:key="nm"
-                                                                    wire:click="InsertarSolicitudCompra({{ $list->id }})"
-                                                                    class="btn btn-warning mtmobile btn-sm"
-                                                                    title="Solicitar Repuesto">
-                                                                    Solicitar Compra
-                                                                </button>
-                                                                </td>
-                                                            </tr>
+                                                            
+                                                                </tr>
+                                            @endforeach
+                        @endif
+                        @if($listacompra->isNotEmpty())
+                                            @foreach ($listacompra as $data)
+                                                                                                        
+                                                                    <tr>
+                                                                    {{$data}}
+                                                                    </tr>
                                                         
-                                                        @endforeach
-                                                    @endif
-                        @else
+                                            @endforeach
+                        @endif
+                        @if($listaproductos->isEmpty() and $listacompra->isEmpty())
+                       
                         <tr>
                             <td class="text-center" colspan="4" style="width: 15px !important;">
                                 <button class="btn btn-warning mtmobile btn-sm" title="Solicitar Compra" wire:click="addProducts()">
@@ -97,8 +79,7 @@
                                 </button>
                             </td>
                         </tr>
-                        @endif
-
+                      
                         @endif
 
                     </tbody>

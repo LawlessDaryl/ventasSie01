@@ -128,10 +128,11 @@ class OrderServiceController extends Component
         $this->lista_de_usuarios = $this->listarusuarios();
         $this->mostrarterminar = "No";
         $this->orderP=1;
-        $this->listacompra=collect([]);
+        $this->listacompra=collect();
+        //$this->searchproduct='CARGADOR RAPIDO,MICRO USB , CARGA RAPIDA, EF-1204Q, E Y F';
 
 
-        $this->listaproductos = [];
+        
 
         $this->list_produts_collect = collect();
 
@@ -189,9 +190,6 @@ class OrderServiceController extends Component
                 $this->usuario = Auth()->user()->id;
             }
         }
-
-
-
 
 
         //Para Actualizar Saldo en la Ventana Modal Editar Servicio
@@ -2610,12 +2608,12 @@ class OrderServiceController extends Component
                                 }
         }
 
+
         //REPUESTOS
         //Contar los id productos destinos donde se encuentra el producto, y si estos son mayores a cero no mostrar la otra collection de comprar producto q sera
         //solamente si el producto esta creado pero no tiene stock.
         if (strlen($this->searchproduct) > 0) 
         {
-            
             $listap = Product::join('productos_destinos as pd','pd.product_id','products.id')
             ->join('destinos as d','d.id','pd.destino_id')
             ->join('sucursals as s','s.id','d.sucursal_id')
@@ -2626,27 +2624,26 @@ class OrderServiceController extends Component
                         $querys->where('products.nombre', 'like', '%' . $this->searchproduct . '%')
                         ->orWhere('products.codigo', 'like', '%' . $this->searchproduct . '%');
                     })
-            ->take(100)->get();
+            ->take(50)->get();
             $this->listaproductos=$listap->where('stock','>',0);
             //mostar los productos que no se encuentren disponibles en ningun lugar
 
-            if (count($this->listaproductos)>0) {
-                
                 $listapsinstock= $listap->groupBy('pid')->map(function ($row){
                     return $row->sum('stock');
                 });
               //dd($listapsinstock);
-                foreach ($listapsinstock as $key=>$data) {
+                foreach ($listapsinstock as $key=>$data) 
+                {
                 
                     if ($data==0) {
                         $ms=Product::find($key);
                         $this->listacompra->push($ms);
-                     
                     }
                    // dump($key);
                 }
-                //dd($this->listacompra);
-            }
+                
+                dump($this->listaproductos,$this->listacompra);
+            
 
           
             //dd($this->listacompra);
