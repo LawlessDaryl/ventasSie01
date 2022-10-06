@@ -20,6 +20,7 @@
                     </div>
                 </div>
             </div>
+         
 
             @if(strlen($this->searchproduct) > 0)
             <div class="table-repuesto">
@@ -62,10 +63,21 @@
                                             @endforeach
                         @endif
                         @if($listacompra->isNotEmpty())
-                                            @foreach ($listacompra as $data)
+                                            @foreach ($listacompra as $key=>$data)
                                                                                                         
                                                                     <tr>
-                                                                    {{$data}}
+                                                                        <td class="text-center">
+                                                                            {{$key}}
+                                                                        </td>
+                                                                    
+                                                                        <td class="text-center" colspan="3">
+                                                                            <button
+                                                                            wire:click="InsertarSolicitudCompra('{{$key}}')"
+                                                                                class="btn btn-warning mtmobile btn-sm"
+                                                                                title="Solicitar Repuesto">
+                                                                                Solicitar Compra
+                                                                            </button>
+                                                                        </td>
                                                                     </tr>
                                                         
                                             @endforeach
@@ -148,6 +160,20 @@
                             </td>
                             <td class="text-center">
                                 <div class="btn-group" role="group" aria-label="Basic example">
+
+                                 
+                                    @if ($l['type']== 'CompraRepuesto')
+                                    <button wire:click.prevent="InsertarSolicitudCompra('{{$l['product_name']}}')" class="btn btn-sm" title="Ver detalles de la venta" style="background-color: rgb(10, 137, 235); color:white">
+                                        <i class="fas fa-chevron-up"></i>
+                                    </button>
+                                    <button wire:click.prevent="DecrementarSolicitudCompra('{{$l['product_name']}}')" class="btn btn-sm" title="Ver detalles de la venta" style="background-color: rgb(255, 124, 1); color:white">
+                                        <i class="fas fa-chevron-down"></i>
+                                    </button>
+                                    <button wire:click.prevent="EliminarSolicitudCompe('{{$l['product_name']}}')" class="btn btn-sm" title="Ver detalles de la venta" style="background-color: rgb(230, 0, 0); color:white">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                  
+                                    @else
                                     <button wire:click.prevent="InsertarSolicitud({{$l['product_id']}},'{{$l['destiny_id']}}')" class="btn btn-sm" title="Ver detalles de la venta" style="background-color: rgb(10, 137, 235); color:white">
                                         <i class="fas fa-chevron-up"></i>
                                     </button>
@@ -157,6 +183,10 @@
                                     <button wire:click.prevent="EliminarSolicitud({{$l['product_id']}},'{{$l['destiny_id']}}')" class="btn btn-sm" title="Ver detalles de la venta" style="background-color: rgb(230, 0, 0); color:white">
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
+                                   
+                                    @endif
+                                  
+                                 
                                 </div>
                               </td>
                           </tr>
@@ -182,7 +212,7 @@
 
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" wire:click="$emit('hide-mr')" >Cerrar</button>
           <button wire:click.prevent="EnviarSolicitud()" type="button" class="btn btn-primary">Crear Solicitud</button>
         </div>
       </div>

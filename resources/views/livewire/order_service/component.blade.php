@@ -944,6 +944,11 @@
                 'success'
                 )
         });
+        window.livewire.on('hide-mr', Msg => {
+            $('#modalrepuestos').modal('hide')
+            $('#editarservicio').modal('show')
+            
+        });
 
 
 

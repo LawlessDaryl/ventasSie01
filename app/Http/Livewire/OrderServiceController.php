@@ -22,6 +22,7 @@ use App\Models\ProductosDestino;
 use App\Models\SalidaLote;
 use App\Models\SalidaProductos;
 use App\Models\SalidaServicio;
+use App\Models\ServiceRepCompra;
 use App\Models\ServiceRepDetalleSolicitud;
 use App\Models\ServiceRepEstadoSolicitud;
 use App\Models\ServiceRepSolicitud;
@@ -98,7 +99,7 @@ class OrderServiceController extends Component
     //ROSCIO - REPUESTOS
     //variable para modal de busqueda de repuestos 
     public $nombre,$costo2, $precio_venta2,$codigo,$caracteristicas,$lote,$unidad, $marca, $garantia,$industria,
-    $categoryid,$component,$selected_categoria,$image,$selected_id2,$name,$descripcion,$unidades,$marcas2,$show_more,$cant,$orderP,$listacompra;
+    $categoryid,$component,$selected_categoria,$image,$selected_id2,$name,$descripcion,$unidades,$marcas2,$show_more,$cant,$orderP,$listacompra,$toogle,$solicitudservicio;
 
     //Guarda la lista donde se guardan todos los repuestos encontrados en el input de busqueda de repuestos ($searchproduct)
     public $listaproductos;
@@ -129,6 +130,7 @@ class OrderServiceController extends Component
         $this->mostrarterminar = "No";
         $this->orderP=1;
         $this->listacompra=collect();
+        $this->toogle=1;
         //$this->searchproduct='CARGADOR RAPIDO,MICRO USB , CARGA RAPIDA, EF-1204Q, E Y F';
 
 
@@ -174,6 +176,18 @@ class OrderServiceController extends Component
     }
     public function render()
     {
+        //vista de pestañas para visualizar el servicio y el detalle de repuestos
+        if ($this->toogle == 1) {
+            $this->active1="active show";
+            $this->active2="";
+       
+        }
+        if ($this->toogle == 2) {
+            $this->active1="";
+            $this->active2="active show";
+          
+        }
+   
 
         if(Auth::user()->hasPermissionTo('Asignar_Tecnico_Servicio'))
         {
@@ -2608,6 +2622,20 @@ class OrderServiceController extends Component
                                 }
         }
 
+        if ($this->id_servicio != null) {
+            
+            $this->solicitudservicio= ServiceRepDetalleSolicitud::join('products','products.id','service_rep_detalle_solicituds.product_id')
+            ->join('destinos','destinos.id','service_rep_detalle_solicituds.destino_id')
+            ->join('service_rep_estado_solicituds','service_rep_estado_solicituds.detalle_solicitud_id','service_rep_detalle_solicituds.id')
+            ->where('service_id',$this->id_servicio)
+            ->where('service_rep_detalle_solicituds.status','ACTIVO')
+            ->select('products.nombre as prodnombre','destinos.nombre as dest','service_rep_detalle_solicituds.id as id','service_rep_estado_solicituds.estado as estado_sol')
+            ->get();
+
+        }
+
+    
+
 
         //REPUESTOS
         //Contar los id productos destinos donde se encuentra el producto, y si estos son mayores a cero no mostrar la otra collection de comprar producto q sera
@@ -2628,21 +2656,17 @@ class OrderServiceController extends Component
             $this->listaproductos=$listap->where('stock','>',0);
             //mostar los productos que no se encuentren disponibles en ningun lugar
 
-                $listapsinstock= $listap->groupBy('pid')->map(function ($row){
+                $this->listacompra= $listap->groupBy('nombreproducto')->map(function ($row){
                     return $row->sum('stock');
                 });
-                foreach ($listapsinstock as $key=>$data) 
-                {
-                
-                    if ($data==0) {
-                        $ms=Product::find($key);
-                        $this->listacompra->push($ms);
-                    }
-                   // dump($key);
-                }
+          
+
+            $this->listacompra= $this->listacompra->filter(function ($value,$key){
+                    return $value == 0;
+            });
                 
                 //dump($this->listaproductos,$this->listacompra);
-            
+            //dd($this->listacompra);
 
           
             $lista_nombres_ya_encontrados = $this->list_produts_collect->pluck('product-name');
@@ -3984,6 +4008,7 @@ class OrderServiceController extends Component
     {
         //Buscamos el elemento en la colección
         $result = $this->lista_solicitudes->where('product_id', $pid->id)->where('destiny_id',$did->id);
+
         $stock=ProductosDestino::where('product_id', $pid->id)->where('destino_id',$did->id)->value('stock');
         if($result->count()>0)
         {
@@ -4047,12 +4072,17 @@ class OrderServiceController extends Component
         }
     }
     //Crea una solicitud de un repuesto no existente (Compra)
-    public function InsertarSolicitudCompra(Product $pid,Destino $did)
+    public function InsertarSolicitudCompra($key)
     {
-        //Buscamos el elemento en la colección
-        $result = $this->lista_solicitudes->where('product_id', $pid->id)->where('destiny_id',$did->id);
 
-        
+
+        //Buscamos el elemento en la colección
+        $result = $this->lista_solicitudes->where('product_name', $key)->where('type','CompraRepuesto');
+        //dd($result);
+
+        $pro=Product::where('nombre',$key)->first();
+
+ 
 
         if($result->count() > 0)
         {
@@ -4068,10 +4098,10 @@ class OrderServiceController extends Component
          
             $this->lista_solicitudes->push([
                 'orderP'=>$orderM,
-                'product_id' => $pid->id,
-                'product_name'=> $pid->nombre,
-                'destiny_id' => $did->id,
-                'destiny_name' => $did->nombre,
+                'product_id' => $pro->id,
+                'product_name'=> $pro->nombre,
+                'destiny_id' => 0,
+                'destiny_name' =>'ninguno',
                 'quantity'=> $cantidad,
                 'type'=>'CompraRepuesto'
             ]);
@@ -4082,22 +4112,23 @@ class OrderServiceController extends Component
         }
         else
         {
-           
+          // dd($pro->id);
             $this->lista_solicitudes->push([
                 'service_id' => $this->id_servicio,
                 'orderP'=>$this->orderP,
-                'product_id' => $pid->id,
-                'product_name'=> $pid->nombre,
-                'destiny_id' => $did->id,
-                'destiny_name' => $did->nombre,
+                'product_id' => $pro->id,
+                'product_name'=> $pro->nombre,
+                'destiny_id' => 0,
+                'destiny_name' =>'ninguno',
                 'quantity'=> 1,
                 'type'=> 'CompraRepuesto'
             ]);
 
 
-            $this->message_toast = "¡Producto " . $pid->nombre . " insertado con éxito!";
+            $this->message_toast = "¡Producto " . $pro->nombre . " insertado con éxito!";
 
             $this->emit("message-succeed");
+            $this->orderP++;
 
 
         }
@@ -4135,6 +4166,37 @@ class OrderServiceController extends Component
             'destiny_name' => $did->nombre,
             'quantity'=> $cantidad,
             'type'=> $type
+        ]);
+
+        $this->message_toast = "¡Cantidad Decrementada!";
+
+        $this->emit("message-succeed");
+    }
+    public function DecrementarSolicitudCompra($key)
+    {
+        $result = $this->lista_solicitudes->where('product_name', $key)->where('type','CompraRepuesto');
+        //dd($result);
+
+        $pro=Product::where('nombre',$key)->first();
+
+
+        //Guardando la cantidad del producto
+        $cantidad = $result->first()['quantity'];
+        $orderM=$result->first()['orderP'];
+        //Incrementando en una unidad
+        $cantidad--;
+        //Eliminando la fila del elemento en coleccion
+        $this->lista_solicitudes->pull($result->keys()->first());
+        //Lo volvemos a agregar con la cantidad actualizada
+    
+        $this->lista_solicitudes->push([
+            'orderP'=>$orderM,
+            'product_id' => $pro->id,
+            'product_name'=> $pro->nombre,
+            'destiny_id' => 0,
+            'destiny_name' => 'ninguno',
+            'quantity'=> $cantidad,
+            'type'=> 'CompraRepuesto'
         ]);
 
         $this->message_toast = "¡Cantidad Decrementada!";
@@ -4248,6 +4310,15 @@ class OrderServiceController extends Component
         $min=10000;
         $max= 99999;
         $this->codigo= Carbon::now()->format('ymd').mt_rand($min,$max);
+    }
+
+    public function descartarSolicitud(ServiceRepDetalleSolicitud $id){
+
+        $id->update([
+            'status' =>'INACTIVO'
+        ]);
+        $id->save();
+
     }
 }
 
